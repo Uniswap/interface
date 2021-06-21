@@ -107,7 +107,7 @@ export default function DensityChart({
               allowDrag={interactive}
               allowResize={interactive}
               brushDimension="x"
-              handleWidth={40 /* handle width must be as large as handle head */}
+              handleWidth={30 /* handle width must be as large as handle head */}
               brushDomain={
                 leftPrice && rightPrice
                   ? {
@@ -160,7 +160,7 @@ export default function DensityChart({
                 />
               }
               style={{
-                data: { stroke: theme.secondary1 },
+                data: { stroke: theme.text1, opacity: '0.5' },
               }}
             />
           )}
