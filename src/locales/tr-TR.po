@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "Kapat"
 msgid "Closed"
 msgstr "Kapalı"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Kapalı pozisyonlar"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Kod"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Discord ile ilgili destek alın"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Kapalı pozisyonları gizle"
+msgid "Hide"
+msgstr "Saklamak"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1279,6 +1283,10 @@ msgstr "Havuz Payı"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Havuz Payı:"
+
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Göstermek"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"

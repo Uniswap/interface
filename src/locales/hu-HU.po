@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -171,7 +171,7 @@ msgstr "Adja hozzá a likviditást."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "{0} hozzáadása a Metamask <0 /> elemhez"
+msgstr "{0} hozzáadása a Metamask <0/> elemhez"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -399,6 +399,10 @@ msgstr "Bezárás"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Zárva"
+
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Zárt pozíciók"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -728,8 +732,8 @@ msgid "Get support on Discord"
 msgstr "Kérjen támogatást a Discordon"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Zárt pozíciók elrejtése"
+msgid "Hide"
+msgstr "Elrejt"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1281,6 +1285,10 @@ msgstr "Pool részesedése"
 msgid "Share of Pool:"
 msgstr "Pool részesedése:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Előadás"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Portis megjelenítése"
@@ -1337,7 +1345,7 @@ msgstr "{0} {1} cseréje a következőre {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Köszönjük, hogy az Uniswap közösség tagja <0 />"
+msgstr "Köszönjük, hogy az Uniswap közösség tagja <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1873,7 +1881,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> per <1 />"
+msgstr "{0} <0/> per <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -2001,7 +2009,7 @@ msgstr "{tokenB} per {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

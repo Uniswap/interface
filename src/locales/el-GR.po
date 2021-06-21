@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "Κλείσιμο"
 msgid "Closed"
 msgstr "Κλειστό"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Κλειστές θέσεις"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Κωδικός"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Βρείτε υποστήριξη για τη Διαφωνία"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Απόκρυψη κλειστών θέσεων"
+msgid "Hide"
+msgstr "Κρύβω"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1280,6 +1284,10 @@ msgstr "Μερίδιο από τη Δεξαμενή"
 msgid "Share of Pool:"
 msgstr "Μερίδιο από τη Δεξαμενή:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "προβολή"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Εμφάνιση Portis"
@@ -1554,7 +1562,7 @@ msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεί�
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Ξεδιπλώνω"
+msgstr "Αποκαλύπτω"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1688,7 +1696,7 @@ msgstr "Πραγματοποιήθηκε ανάληψη UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Σύνοψη"
+msgstr "Καλύπτω"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

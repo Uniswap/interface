@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-16 08:05\n"
+"PO-Revision-Date: 2021-06-18 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -316,7 +316,7 @@ msgstr "Добавляя этот список, вы подразумевает�
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap </1>."
+msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -399,6 +399,10 @@ msgstr "Закрыть"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Закрыто"
+
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Закрытые позиции"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Получите поддержку в Discord"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Скрыть закрытые позиции"
+msgid "Hide"
+msgstr "Скрыть"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1280,6 +1284,10 @@ msgstr "Доля в пуле"
 msgid "Share of Pool:"
 msgstr "Доля в пуле:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Показать"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Показать Portis"
@@ -1336,7 +1344,7 @@ msgstr "Идет обмен {0} {1} на {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Спасибо, что присоединились к сообществу Uniswap <0 />"
+msgstr "Спасибо, что присоединились к сообществу Uniswap <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."

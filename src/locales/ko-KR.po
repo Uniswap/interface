@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "닫기"
 msgid "Closed"
 msgstr "닫힘"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "폐쇄 포지션"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "코드"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Discord에서 지원 받기"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "마감된 포지션 숨기기"
+msgid "Hide"
+msgstr "숨는 장소"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1280,6 +1284,10 @@ msgstr "풀 쉐어"
 msgid "Share of Pool:"
 msgstr "풀 쉐어:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "보여 주다"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Portis 표시"
@@ -1336,7 +1344,7 @@ msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0 />"
+msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."

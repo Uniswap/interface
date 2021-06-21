@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "Закрити"
 msgid "Closed"
 msgstr "Закрито"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Закриті позиції"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Код"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Отримайте підтримку в Discord"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Приховати закриті позиції"
+msgid "Hide"
+msgstr "Сховати"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1280,6 +1284,10 @@ msgstr "Частка пулу"
 msgid "Share of Pool:"
 msgstr "Частка пулу:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Показати"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Показати Portis"
@@ -1729,7 +1737,7 @@ msgstr "Ви маєте дати дозвіл розумних контракт�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Ви маєте вносити ліквідність у Uniswap V3 лише за ціною, яку ви вважаєте правильною. <0 /> Якщо ціна здається неправильною, ви можете здійснити обмін, аби перемістити ціну, або дочекатися, поки цього зробить хтось інший."
+msgstr "Ви маєте вносити ліквідність у Uniswap V3 лише за ціною, яку ви вважаєте правильною. <0/> Якщо ціна здається неправильною, ви можете здійснити обмін, аби перемістити ціну, або дочекатися, поки цього зробить хтось інший."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
