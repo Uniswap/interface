@@ -48,7 +48,7 @@ import RainMaker from '../../assets/images/rain-maker.webp'
 import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
 import { Reward } from 'state/farms/types'
-import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
+import { useFarmRewards, useFarmRewardsUSD, useRewardTokensFullInfo } from 'utils/dmm'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import useFairLaunch from 'hooks/useFairLaunch'
 
@@ -116,6 +116,8 @@ const Farms = () => {
 
     return canHarvest
   }
+
+  const rewardTokens = useRewardTokensFullInfo()
 
   return (
     <>
@@ -235,7 +237,7 @@ const Farms = () => {
             </Panel>
           </>
         ) : (
-          <Vesting />
+          <Vesting rewardTokens={rewardTokens} />
         )}
       </PageWrapper>
       <FarmClaimModal />

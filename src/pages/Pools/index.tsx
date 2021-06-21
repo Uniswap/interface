@@ -107,7 +107,7 @@ const Pools = ({
         history.push(`/pools/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, history, currencyIdA]
+    [currencyIdB, history, currencyIdA, chainId]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -122,7 +122,7 @@ const Pools = ({
         history.push(`/pools/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB]
+    [currencyIdA, history, currencyIdB, chainId]
   )
 
   const poolsList = useMemo(
