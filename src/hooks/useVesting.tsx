@@ -6,16 +6,18 @@ import { useBlockNumber } from 'state/application/hooks'
 import { useRewardLockerContract } from './useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useRewardTokensFullInfo } from 'utils/dmm'
-import { ChainId, WETH } from 'libs/sdk/src'
+import { ChainId, Token, WETH } from 'libs/sdk/src'
+import { useRewardTokens } from 'state/farms/hooks'
+import { useAllTokens } from './Tokens'
+import { useActiveListUrls } from 'state/lists/hooks'
 
-const useVesting = () => {
+const useVesting = (rewardTokens: Token[]) => {
   // SLP is usually 18, KMP is 6
   const addTransaction = useTransactionAdder()
   const [schedules, setSchedules] = useState([])
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const lockerContract = useRewardLockerContract()
-  const rewardTokens = useRewardTokensFullInfo()
 
   const fetchSchedules = useCallback(async () => {
     const getSchedules = async (address: string): Promise<any> => {
@@ -33,13 +35,13 @@ const useVesting = () => {
     }
     const schedules = !!chainId && !!account ? await getSchedules(account) : []
     setSchedules(schedules)
-  }, [account, chainId, lockerContract])
+  }, [account, chainId, lockerContract, rewardTokens])
 
   useEffect(() => {
     if (account && chainId && lockerContract) {
       fetchSchedules()
     }
-  }, [account, setSchedules, currentBlockNumber, fetchSchedules, lockerContract, chainId])
+  }, [account, setSchedules, currentBlockNumber, fetchSchedules, lockerContract, chainId, rewardTokens])
 
   const vestAtIndex = useCallback(
     async (token: string, index: number[]) => {

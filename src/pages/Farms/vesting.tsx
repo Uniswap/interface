@@ -56,7 +56,7 @@ const Seperator = styled.div`
   border: 1px solid #404b51;
 `
 
-const Vesting = () => {
+const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
 
@@ -66,7 +66,7 @@ const Vesting = () => {
   )
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
-  const { schedules } = useVesting()
+  const { schedules } = useVesting(rewardTokens)
   console.log('==schedules', schedules)
 
   const info = schedules.reduce<{
@@ -157,7 +157,7 @@ const Vesting = () => {
   )
 
   const [pendingTx, setPendingTx] = useState(false)
-  const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting()
+  const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting(rewardTokens)
   const onClaimAll = async () => {
     if (!chainId || !account) return
     console.log('===claim all active')
@@ -280,14 +280,14 @@ const Vesting = () => {
           (s, index) =>
             !BigNumber.from(s[2])
               .sub(BigNumber.from(s[3]))
-              .isZero() && <Schedule schedule={s} key={index} index={index} />
+              .isZero() && <Schedule schedule={s} key={index} rewardTokens={rewardTokens} />
         )}
 
         {schedules.map(
           (s, index) =>
             BigNumber.from(s[2])
               .sub(BigNumber.from(s[3]))
-              .isZero() && <Schedule schedule={s} key={index} index={index} />
+              .isZero() && <Schedule schedule={s} key={index} rewardTokens={rewardTokens} />
         )}
       </ExpandedContent>
     </>
@@ -299,7 +299,7 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
   return parseFloat(res).toString()
 }
 
-const Schedule = ({ schedule }: any) => {
+const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Token[] }) => {
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
   const toUSD = useCallback(
@@ -355,7 +355,7 @@ const Schedule = ({ schedule }: any) => {
 
   const { account, chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
-  const { vestAtIndex } = useVesting()
+  const { vestAtIndex } = useVesting(rewardTokens)
   const onVest = async () => {
     if (!chainId || !account) return
     console.log('===vest', schedule[4].address, schedule[5])
