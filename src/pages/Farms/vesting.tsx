@@ -19,6 +19,8 @@ import { formattedNum, getTokenSymbol } from 'utils'
 import { useFarmRewardsUSD } from 'utils/dmm'
 import { Reward } from 'state/farms/types'
 
+import { useMedia } from 'react-use'
+
 const VestAllGroup = styled.div`
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
@@ -57,6 +59,7 @@ const Seperator = styled.div`
 `
 
 const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
+  const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
 
@@ -180,6 +183,80 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
     // await vestAtIndex(KNC[chainId].address, fullyIndexes)
     // setPendingTx(false)
   }
+
+  const totalBlock = (
+    <div>
+      {Object.keys(info).map(k => (
+        <div key={k}>
+          <TYPE.body color={theme.text11} fontWeight={600} fontSize={28}>
+            {fixedFormatting(info[k].totalAmount, 18)} {k}
+          </TYPE.body>
+        </div>
+      ))}
+
+      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={24}>
+        {formattedNum(totalUSD.toString(), true)}
+      </TYPE.body>
+    </div>
+  )
+
+  const lockedBlock = (
+    <div>
+      <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+        Locked Rewards
+      </TYPE.body>
+      {Object.keys(info).map(k => (
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+          {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
+        </TYPE.body>
+      ))}
+
+      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
+        {formattedNum(lockedUSD.toString(), true)}
+      </TYPE.body>
+    </div>
+  )
+
+  const claimedBlock = (
+    <div>
+      <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+        Claimed Rewards
+      </TYPE.body>
+      {Object.keys(info).map(k => (
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+          {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
+        </TYPE.body>
+      ))}
+
+      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
+        {formattedNum(claimedUSD.toString(), true)}
+      </TYPE.body>
+    </div>
+  )
+
+  const unLockedBlock = (
+    <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
+      <div>
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+          Unlocked Rewards
+        </TYPE.body>
+        {Object.keys(info).map(k => (
+          <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+            {fixedFormatting(info[k].vestableAmount, 18)} {k}
+          </TYPE.body>
+        ))}
+
+        <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
+          {formattedNum(unlockedUSD.toString(), true)}
+        </TYPE.body>
+      </div>
+      <div>
+        <ButtonPrimary height="30px" onClick={onClaimAll}>
+          Claim All
+        </ButtonPrimary>
+      </div>
+    </Tag>
+  )
   return (
     <>
       <ExpandedContent>
@@ -191,77 +268,27 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
             }
           />
         </TYPE.body>
-        <AutoRow justify="space-between">
-          <div>
-            {Object.keys(info).map(k => (
-              <div key={k}>
-                <TYPE.body color={theme.text11} fontWeight={600} fontSize={28}>
-                  {fixedFormatting(info[k].totalAmount, 18)} {k}
-                </TYPE.body>
-              </div>
-            ))}
-
-            <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={24}>
-              {formattedNum(totalUSD.toString(), true)}
-            </TYPE.body>
-          </div>
-
-          <Seperator />
-          <div>
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-              Locked Rewards
-            </TYPE.body>
-            {Object.keys(info).map(k => (
-              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-                {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
-              </TYPE.body>
-            ))}
-
-            <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-              {formattedNum(lockedUSD.toString(), true)}
-            </TYPE.body>
-          </div>
-          <Seperator />
-          <div>
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-              Claimed Rewards
-            </TYPE.body>
-            {Object.keys(info).map(k => (
-              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-                {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
-              </TYPE.body>
-            ))}
-
-            <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-              {formattedNum(claimedUSD.toString(), true)}
-            </TYPE.body>
-          </div>
-          <Seperator />
-          <Tag style={{ width: '300px', padding: '20px' }}>
-            <div>
-              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-                Unlocked Rewards
-              </TYPE.body>
-              {Object.keys(info).map(k => (
-                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-                  {fixedFormatting(info[k].vestableAmount, 18)} {k}
-                </TYPE.body>
-              ))}
-
-              <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-                {formattedNum(unlockedUSD.toString(), true)}
-              </TYPE.body>
-            </div>
-            <div>
-              <ButtonPrimary height="30px" onClick={onClaimAll}>
-                Claim All
-              </ButtonPrimary>
-            </div>
-          </Tag>
-          {/* <AutoRow>
-            <ButtonPrimary height="30px">Claim all</ButtonPrimary>
-          </AutoRow> */}
-        </AutoRow>
+        {above1400 ? (
+          <AutoRow justify="space-between">
+            {totalBlock}
+            <Seperator />
+            {lockedBlock}
+            <Seperator />
+            {claimedBlock}
+            <Seperator />
+            {unLockedBlock}
+          </AutoRow>
+        ) : (
+          <>
+            <div style={{ paddingBottom: '10px', borderBottom: '1px solid #404b51' }}>{totalBlock}</div>
+            <AutoRow justify="space-between" style={{ margin: '10px 0' }}>
+              {lockedBlock}
+              <Seperator />
+              {claimedBlock}
+            </AutoRow>
+            {unLockedBlock}
+          </>
+        )}
       </ExpandedContent>
       <ExpandedContent style={{ margin: '20px 0' }}>
         <VestSchedule style={{ padding: ' 0 0 20px 0', margin: '0 0 20px 0', borderBottom: '1px solid #404b51' }}>
@@ -300,6 +327,7 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 }
 
 const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Token[] }) => {
+  const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
   const toUSD = useCallback(
@@ -363,39 +391,51 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
     await vestAtIndex(schedule[4].address, [schedule[5]])
     setPendingTx(false)
   }
+  const rewardBlock = (
+    <AutoRow gap={'5px'} style={{ flex: '2' }}>
+      <TYPE.body color={theme.text11} fontWeight={600} fontSize={16}>
+        Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
+      </TYPE.body>
+
+      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
+        {toUSD(BigNumber.from(schedule[2]))}
+      </TYPE.body>
+      {vestedAndVestablePercent == 100 && !fullyVestedAlready && (
+        <Tag tag={'active'} style={{ color: '#1f292e', fontSize: '14px', padding: '6px 20px' }}>
+          Fully Vested
+        </Tag>
+      )}
+    </AutoRow>
+  )
+  const claimBlock = !fullyVestedAlready && (
+    <AutoRow gap={'5px'} style={{ flex: '1' }}>
+      <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
+        Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
+      </Tag>
+
+      <ButtonPrimary height="30px" onClick={onVest} style={{ flex: '1' }}>
+        Claim
+      </ButtonPrimary>
+    </AutoRow>
+  )
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
         Vesting stared: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}
       </TYPE.body>
 
-      <AutoRow margin="0 0 20px 0" justify="space-between">
-        <AutoRow gap={'5px'} style={{ flex: '2' }}>
-          <TYPE.body color={theme.text11} fontWeight={600} fontSize={16}>
-            Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
-          </TYPE.body>
-
-          <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-            {toUSD(BigNumber.from(schedule[2]))}
-          </TYPE.body>
-          {vestedAndVestablePercent == 100 && !fullyVestedAlready && (
-            <Tag tag={'active'} style={{ color: '#1f292e', fontSize: '14px', padding: '6px 20px' }}>
-              Fully Vested
-            </Tag>
-          )}
+      {above1400 ? (
+        <AutoRow margin="0 0 20px 0" justify="space-between">
+          {rewardBlock}
+          {claimBlock}
         </AutoRow>
-        {!fullyVestedAlready && (
-          <AutoRow gap={'5px'} style={{ flex: '1' }}>
-            <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
-              Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
-            </Tag>
+      ) : (
+        <>
+          {rewardBlock}
+          <div style={{ margin: '20px 0' }}>{claimBlock}</div>
+        </>
+      )}
 
-            <ButtonPrimary height="30px" onClick={onVest} style={{ flex: '1' }}>
-              Claim
-            </ButtonPrimary>
-          </AutoRow>
-        )}
-      </AutoRow>
       <div
         style={{
           position: 'relative',
@@ -451,7 +491,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
                 zIndex: 2
               }}
             ></div>
-            {vestedPercent < 100 && (
+            {vestedPercent < 100 && above1400 && (
               <>
                 {/* <TYPE.body
                   color={theme.text7}

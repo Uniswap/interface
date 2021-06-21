@@ -582,9 +582,13 @@ export default function RemoveLiquidity({
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/${
-                              currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
+                              currencyA && currencyEquals(currencyA, WETH[chainId])
+                                ? convertToNativeTokenFromETH(ETHER, chainId).symbol
+                                : currencyIdA
                             }/${
-                              currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB
+                              currencyB && currencyEquals(currencyB, WETH[chainId])
+                                ? convertToNativeTokenFromETH(ETHER, chainId).symbol
+                                : currencyIdB
                             }/${pairAddress}`}
                           >
                             Receive Native Token
