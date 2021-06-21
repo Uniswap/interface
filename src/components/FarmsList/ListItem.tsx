@@ -20,6 +20,8 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards } from 'utils/dmm'
 import { ExternalLink } from 'theme'
+import { RewardToken } from 'pages/Farms/styleds'
+import InfoHelper from 'components/InfoHelper'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -249,7 +251,11 @@ const ListItem = ({ farm }: ListItemProps) => {
           {formattedNum(liquidity.toString(), true)}
         </DataText>
         <APY grid-area="apy">{apr.toFixed(2)}%</APY>
-        <DataText grid-area="reward" align="right">
+        <DataText
+          grid-area="reward"
+          align="right"
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
+        >
           {farmRewards.map((reward, index) => {
             return (
               <span key={reward.token.address}>
@@ -316,7 +322,14 @@ const ListItem = ({ farm }: ListItemProps) => {
     <>
       <StyledItemCard onClick={() => setExpand(!expand)}>
         <GridItem style={{ gridColumn: '1 / span 2' }}>
-          <DataTitle>Pool | AMP</DataTitle>
+          <DataTitle>
+            <span>Pool | AMP</span>
+            <InfoHelper
+              text={
+                'AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.'
+              }
+            />
+          </DataTitle>
           <DataText grid-area="pools">
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <>
@@ -342,7 +355,10 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>APY</DataTitle>
+          <DataTitle>
+            <span>APY</span>
+            <InfoHelper text={'Estimated total annualized yield from rewards.'} />
+          </DataTitle>
           <DataText grid-area="apy">
             <APY grid-area="apy">{apr.toFixed(2)}%</APY>
           </DataText>
@@ -350,13 +366,13 @@ const ListItem = ({ farm }: ListItemProps) => {
 
         <GridItem noBorder>
           <DataTitle>My Rewards</DataTitle>
-          <DataText>
+          <DataText style={{ display: 'flex', flexDirection: 'column' }}>
             {farmRewards.map((reward, index) => {
               return (
-                <span key={reward.token.address}>
+                <RewardToken key={reward.token.address}>
                   <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
                   {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-                </span>
+                </RewardToken>
               )
             })}
           </DataText>
