@@ -144,11 +144,10 @@ export default function DensityChart({
           {price && (
             <VictoryLine
               data={
-                /* plot at `priceAtActiveTick` to put on same axis as VictoryBar, but display `price` as label */
-                maxLiquidity && activeChartEntry
+                maxLiquidity && price
                   ? [
-                      { x: activeChartEntry.price0, y: 0 },
-                      { x: activeChartEntry.price0, y: maxLiquidity },
+                      { x: parseFloat(price), y: 0 },
+                      { x: parseFloat(price), y: maxLiquidity },
                     ]
                   : []
               }
