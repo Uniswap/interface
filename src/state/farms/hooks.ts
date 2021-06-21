@@ -92,7 +92,7 @@ export const useFarmsData = () => {
 
       const stakedBalances = await Promise.all(
         pids.map(async (pid: number) => {
-          const stakedBalance = await contract?.getUserInfo(pid, account as string)
+          const stakedBalance = account ? await contract?.getUserInfo(pid, account as string) : { amount: 0 }
 
           return stakedBalance.amount
         })
@@ -100,7 +100,7 @@ export const useFarmsData = () => {
 
       const pendingRewards = await Promise.all(
         pids.map(async (pid: number) => {
-          const pendingRewards = await contract?.pendingRewards(pid, account as string)
+          const pendingRewards = account ? await contract?.pendingRewards(pid, account as string) : null
 
           return pendingRewards
         })
