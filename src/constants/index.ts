@@ -4,27 +4,42 @@ import { injected, ledger, walletconnect, walletlink, trezor } from '../connecto
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xD8358861251E1af3081cD722Ae96c8753Ab7591D'
+      : '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
   [ChainId.ROPSTEN]: '0x96E8B9E051c81661C36a18dF64ba45F86AC80Aae',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
+      : '0x546C79662E028B661dFB4767664d0273184E4dD1',
   [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x5C1cBdc3b8dD2a3456643A62547ef9AA5e1571f3'
+      : '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
   [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '0x10908C875D865C66f271F5d3949848971c9595C9',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
   [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453'
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x6a65e062ce8290007301296f3c6ae446af7bdeec',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x2f99E688cfe6FB7Add8F383779f259f370E16C25'
+      : '0x6A65e062cE8290007301296F3C6AE446Af7BDEeC',
   [ChainId.ROPSTEN]: '0x247B641bB4eAff621987E2B5c3D0247489556E75',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -33,8 +48,6 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: ''
 }
 
-export const ROUTER_ADDRESS = process.env.REACT_APP_ROUTER_ADDRESS || '0x12807818B584a3Fa65D38B6C25B13983fE888D6E'
-export const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS || '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9'
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
 export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
@@ -47,7 +60,10 @@ export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESSES[ChainId.MAIN
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: 'https://info.dmm.exchange',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://staging-dmm-info.knstats.com'
+      : 'https://info.dmm.exchange',
   [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
   [ChainId.RINKEBY]: 'https://info.dmm.exchange',
   [ChainId.GÖRLI]: 'https://info.dmm.exchange',
@@ -338,22 +354,30 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
 }
 
 export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
-  [ChainId.MAINNET]: [''],
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A'] : [''],
   [ChainId.ROPSTEN]: ['0xCa0767cb6473628F27287c04096f242Ca649f5B6'],
   [ChainId.RINKEBY]: [''],
   [ChainId.GÖRLI]: [''],
   [ChainId.KOVAN]: [''],
-  [ChainId.MATIC]: ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB'],
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
+      : ['0x7e90d285c567e3EAb9858aaF28cEdA94a211a3DD', '0xf0fb5bD9EB287A902Bd45b57AE4CF5F9DcEBe550'],
   [ChainId.MUMBAI]: ['0xDF79298D220934a6bb7c6647553733d25A837c78', '0x0f7696c307a2eDb5b3Ff631Aba9D834BE6339e6B']
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD' : '',
   [ChainId.ROPSTEN]: '0x68eFA21972109CB315c61B33A1ab8b7e9ef78242',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
+      : '0x9f928e6A9465Ffd8Fdd8FB5f7d17c3F48EB23357',
   [ChainId.MUMBAI]: '0x865CCCCEab0d73d361efC02D89D1B9D87905957b'
 }
 
