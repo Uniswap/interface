@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
+import { useMedia } from 'react-use'
 
 import InfoHelper from 'components/InfoHelper'
 import ListItem from './ListItem'
@@ -9,6 +10,10 @@ import { Farm } from 'state/farms/types'
 const FarmListWrapper = styled.div`
   padding-bottom: 50px;
   background-color: ${({ theme }) => theme.bg15};
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    background: transparent;
+  `}
 `
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
@@ -56,8 +61,10 @@ interface FarmsListProps {
 }
 
 const FarmsList = ({ farms }: FarmsListProps) => {
+  const xxlBreakpoint = useMedia('(min-width: 1200px)')
+
   const renderHeader = () => {
-    return (
+    return xxlBreakpoint ? (
       <TableHeader>
         <Flex grid-area="pools" alignItems="center" justifyContent="flex-start">
           <ClickableText>Pools | AMP</ClickableText>
@@ -85,7 +92,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
           <ClickableText>My Deposit</ClickableText>
         </Flex>
       </TableHeader>
-    )
+    ) : null
   }
 
   return (

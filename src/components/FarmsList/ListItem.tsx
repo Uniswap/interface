@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useMedia } from 'react-use'
 
 import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
 import { DMM_ANALYTICS_URL } from '../../constants'
@@ -103,7 +105,7 @@ const GetLP = styled.span`
 
 const StyledItemCard = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 4px;
   border-radius: 10px;
   margin-bottom: 0;
@@ -119,10 +121,35 @@ const DataText = styled(Flex)<{ align?: string }>`
   color: ${({ theme }) => theme.text7};
   justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
   font-weight: 500;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    font-size: 14px;
+  `}
 `
 
 const APY = styled(DataText)`
   color: ${({ theme }) => theme.text12};
+`
+
+const GridItem = styled.div<{ noBorder?: boolean }>`
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
+  padding-bottom: 12px;
+`
+
+const DataTitle = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.text6};
+  &:hover {
+    opacity: 0.6;
+  }
+  user-select: none;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-size: 12px;
 `
 
 interface ListItemProps {
@@ -130,17 +157,10 @@ interface ListItemProps {
   oddRow?: boolean
 }
 
-export const ItemCard = ({ farm }: ListItemProps) => {
-  return (
-    <div>
-      <StyledItemCard>{farm.id}</StyledItemCard>
-    </div>
-  )
-}
-
 const ListItem = ({ farm }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const [expand, setExpand] = useState<boolean>(false)
+  const xxlBreakpoint = useMedia('(min-width: 1200px)')
 
   const currency0 = useToken(farm.token0?.id) as Token
   const currency1 = useToken(farm.token1?.id) as Token
@@ -202,7 +222,7 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const amp = farm.amp / 10000
 
-  return (
+  return xxlBreakpoint ? (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
         <DataText grid-area="pools">
@@ -282,6 +302,60 @@ const ListItem = ({ farm }: ListItemProps) => {
         </ExpandedSection>
       )}
     </>
+  ) : (
+    <StyledItemCard onClick={() => setExpand(!expand)}>
+      <GridItem style={{ gridColumn: '1 / span 2' }}>
+        <DataTitle>Pool | AMP</DataTitle>
+        <DataText grid-area="pools">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+              <span>
+                {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
+              </span>
+            </>
+          </div>
+        </DataText>
+
+        <span style={{ position: 'absolute', top: '0', right: '0' }}>
+          <ExpandableSectionButton expanded={expand} />
+        </span>
+      </GridItem>
+
+      <GridItem>
+        <DataTitle>
+          <span>Liquidity</span>
+        </DataTitle>
+        <DataText grid-area="liq">
+          <div>{formattedNum(liquidity.toString(), true)}</div>
+        </DataText>
+      </GridItem>
+      <GridItem>
+        <DataTitle>APY</DataTitle>
+        <DataText grid-area="apy">
+          <APY grid-area="apy">{apr.toFixed(2)}%</APY>
+        </DataText>
+      </GridItem>
+
+      <GridItem noBorder>
+        <DataTitle>My Rewards</DataTitle>
+        <DataText>
+          {farmRewards.map((reward, index) => {
+            return (
+              <span key={reward.token.address}>
+                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
+                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+              </span>
+            )
+          })}
+        </DataText>
+      </GridItem>
+
+      <GridItem noBorder>
+        <DataTitle>My Deposit</DataTitle>
+        <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
+      </GridItem>
+    </StyledItemCard>
   )
 }
 
