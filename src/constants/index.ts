@@ -382,7 +382,10 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
 }
 
 export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e'
+      : '',
   [ChainId.ROPSTEN]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -392,8 +395,11 @@ export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
 }
 
 export const FARM_HARVEST_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x4534f107610758c3931de9ad1e176476fcfb8c74adf920167e1d54ee84fcfe76',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4'
+      : '',
+  [ChainId.ROPSTEN]: '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
@@ -402,7 +408,10 @@ export const FARM_HARVEST_TOPIC: { [chainId in ChainId]: string } = {
 }
 
 export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178'
+      : '',
   [ChainId.ROPSTEN]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -412,7 +421,10 @@ export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
 }
 
 export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94'
+      : '',
   [ChainId.ROPSTEN]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -422,7 +434,10 @@ export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
 }
 
 export const FARM_TRANSFER_TOKEN_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+      : '',
   [ChainId.ROPSTEN]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
