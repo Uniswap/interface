@@ -64,6 +64,11 @@ export const ExpandedContent = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 16px 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    background-color: ${({ theme }) => theme.evenRow};
+    margin-bottom: 1rem;
+  `};
 `
 
 const StakeGroup = styled.div`
@@ -72,6 +77,11 @@ const StakeGroup = styled.div`
   grid-template-columns: 3fr 3fr 2fr;
   grid-template-areas: 'stake unstake harvest';
   margin-bottom: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-template-columns: 1fr;
+    grid-template-areas: 'stake';
+  `};
 `
 
 const BalanceInfo = styled.div`
@@ -110,7 +120,7 @@ const StyledItemCard = styled.div`
   border-radius: 10px;
   margin-bottom: 0;
   padding: 8px 20px 4px 20px;
-  background-color: ${({ theme }) => theme.bg6};
+  background-color: ${({ theme }) => theme.bg13};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-bottom: 20px;
@@ -303,59 +313,106 @@ const ListItem = ({ farm }: ListItemProps) => {
       )}
     </>
   ) : (
-    <StyledItemCard onClick={() => setExpand(!expand)}>
-      <GridItem style={{ gridColumn: '1 / span 2' }}>
-        <DataTitle>Pool | AMP</DataTitle>
-        <DataText grid-area="pools">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <>
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-              <span>
-                {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
-              </span>
-            </>
-          </div>
-        </DataText>
+    <>
+      <StyledItemCard onClick={() => setExpand(!expand)}>
+        <GridItem style={{ gridColumn: '1 / span 2' }}>
+          <DataTitle>Pool | AMP</DataTitle>
+          <DataText grid-area="pools">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <>
+                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+                <span>
+                  {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
+                </span>
+              </>
+            </div>
+          </DataText>
 
-        <span style={{ position: 'absolute', top: '0', right: '0' }}>
-          <ExpandableSectionButton expanded={expand} />
-        </span>
-      </GridItem>
+          <span style={{ position: 'absolute', top: '0', right: '0' }}>
+            <ExpandableSectionButton expanded={expand} />
+          </span>
+        </GridItem>
 
-      <GridItem>
-        <DataTitle>
-          <span>Liquidity</span>
-        </DataTitle>
-        <DataText grid-area="liq">
-          <div>{formattedNum(liquidity.toString(), true)}</div>
-        </DataText>
-      </GridItem>
-      <GridItem>
-        <DataTitle>APY</DataTitle>
-        <DataText grid-area="apy">
-          <APY grid-area="apy">{apr.toFixed(2)}%</APY>
-        </DataText>
-      </GridItem>
+        <GridItem>
+          <DataTitle>
+            <span>Liquidity</span>
+          </DataTitle>
+          <DataText grid-area="liq">
+            <div>{formattedNum(liquidity.toString(), true)}</div>
+          </DataText>
+        </GridItem>
+        <GridItem>
+          <DataTitle>APY</DataTitle>
+          <DataText grid-area="apy">
+            <APY grid-area="apy">{apr.toFixed(2)}%</APY>
+          </DataText>
+        </GridItem>
 
-      <GridItem noBorder>
-        <DataTitle>My Rewards</DataTitle>
-        <DataText>
-          {farmRewards.map((reward, index) => {
-            return (
-              <span key={reward.token.address}>
-                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
-                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-              </span>
-            )
-          })}
-        </DataText>
-      </GridItem>
+        <GridItem noBorder>
+          <DataTitle>My Rewards</DataTitle>
+          <DataText>
+            {farmRewards.map((reward, index) => {
+              return (
+                <span key={reward.token.address}>
+                  <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
+                  {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                </span>
+              )
+            })}
+          </DataText>
+        </GridItem>
 
-      <GridItem noBorder>
-        <DataTitle>My Deposit</DataTitle>
-        <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
-      </GridItem>
-    </StyledItemCard>
+        <GridItem noBorder>
+          <DataTitle>My Deposit</DataTitle>
+          <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
+        </GridItem>
+      </StyledItemCard>
+
+      {expand && (
+        <ExpandedContent>
+          <StakeGroup style={{ marginBottom: '14px' }}>
+            <BalanceInfo grid-area="stake">
+              <GreyText>
+                Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                {farm.token1?.symbol} LP
+              </GreyText>
+              <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
+            </BalanceInfo>
+            <BalanceInfo grid-area="unstake">
+              <GreyText>
+                Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                {farm.token1?.symbol} LP
+              </GreyText>
+              <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
+            </BalanceInfo>
+            <div grid-area="harvest">
+              <GreyText>Reward</GreyText>
+            </div>
+
+            <InputGroup
+              fairLaunchAddress={farm.fairLaunchAddress}
+              pid={farm.pid}
+              pairAddress={farm.id}
+              pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
+              token0Address={farm.token0.id}
+              token1Address={farm.token1.id}
+              farmRewards={farmRewards}
+            />
+
+            <LPInfoContainer>
+              <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
+                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+              </ExternalLink>
+              <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
+                <GetLP>
+                  Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
+                </GetLP>
+              </Link>
+            </LPInfoContainer>
+          </StakeGroup>
+        </ExpandedContent>
+      )}
+    </>
   )
 }
 
