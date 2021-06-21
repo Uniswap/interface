@@ -2,7 +2,10 @@ import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/clie
 import { ChainId } from 'libs/sdk/src'
 
 export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
+  uri:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'
+      : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
   cache: new InMemoryCache()
 })
 
@@ -12,7 +15,10 @@ export const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
 })
 
 export const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
+  uri:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'
+      : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
   cache: new InMemoryCache()
 })
 

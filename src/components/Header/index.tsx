@@ -260,15 +260,28 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.MUMBAI]: 'Mumbai'
 }
 
+const getPoolsMenuLink = (chainId?: ChainId) => {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.ROPSTEN:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.MATIC:
+      return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
+    case ChainId.MUMBAI:
+      return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    default:
+      return '/pools/ETH'
+  }
+}
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
-  const poolsMenuLink = chainId
-    ? `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
-    : '/pools/ETH'
+  const poolsMenuLink = getPoolsMenuLink(chainId)
 
   return (
     <HeaderFrame>
@@ -291,19 +304,21 @@ export default function Header() {
               <NewText>{t('new')}</NewText>
             </YieldMenuWrapper>
           </StyledNavLink>
-          <StyledNavLink
-            id={`my-pools-nav-link`}
-            to={'/myPools'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              (pathname.startsWith('/find') && pathname.endsWith('find'))
-            }
-          >
-            {t('My Dashboard')}
-          </StyledNavLink>
+          <HideSmall>
+            <StyledNavLink
+              id={`my-pools-nav-link`}
+              to={'/myPools'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                (pathname.startsWith('/find') && pathname.endsWith('find'))
+              }
+            >
+              {t('My Dashboard')}
+            </StyledNavLink>
+          </HideSmall>
           <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (

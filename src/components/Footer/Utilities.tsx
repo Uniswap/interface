@@ -26,11 +26,12 @@ const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
     left: 0;
     right: auto;
     height: fit-content;
+    z-index: 99;
   `}
 `
 
 export default function Utilities() {
-  let aboutPage = useRouteMatch("/about");
+  const aboutPage = useRouteMatch('/about')
 
   return (
     <StyledUtilities isAboutpage={aboutPage?.isExact}>

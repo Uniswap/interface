@@ -54,7 +54,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 8.125rem;
+  min-width: 9rem;
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -69,7 +69,7 @@ const MenuFlyout = styled.span`
   z-index: 100;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
+    top: -14.25rem;
   `};
 `
 
@@ -116,6 +116,10 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
+          <NavMenuItem to="/myPools">
+            <Info size={14} />
+            Dashboard
+          </NavMenuItem>
           <NavMenuItem to="/about">
             <Info size={14} />
             About
