@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-19 04:05\n"
+"PO-Revision-Date: 2021-06-21 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1336,7 +1336,7 @@ msgstr "スワップ"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "とにかくスワップする"
+msgstr "問題発生の可能性があるが、スワップする"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1380,7 +1380,7 @@ msgstr "追加するトークンの比率によって、プールの価格が決
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短くないかご確認ください。"
+msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短すぎないかご確認ください。"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1400,7 +1400,7 @@ msgstr "価格変動により、この取引は成功しません。スリッペ
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "この取引は、価格変動または転送時の手数料のいずれかにより成功しません。スリッページの許容範囲を広げてみてください。"
+msgstr "この取引は、価格変動または転送時に手数料が発生するため、成功しません。スリッページの許容範囲を広げてみてください。"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1616,7 +1616,7 @@ msgstr "エクスプローラーで見る"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr "Explorer でトランザクションを表示する"
+msgstr "エクスプローラーで取引を表示する"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1737,7 +1737,7 @@ msgstr "{0}を使用するには、Uniswapスマートコントラクトに許�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Uniswap V3への流動性の預け入れは、正しいと思われる価格でのみ行ってください。<0/>もし価格が正しくないと思われる場合は、スワップをして価格を動かすか、他の人がそうするのを待つことができます。"
+msgstr "Uniswap V3への流動性の預け入れは、正しいと思われる価格でのみ行ってください。<0/>もし価格が正しくないと思われる場合は、スワップをして価格を動かすか、他の人が同様のことをするのを待つことができます。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1813,7 +1813,7 @@ msgstr "流動性トークン合計："
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "プールを作成するガス代が含まるため、取引コストははるかに高くなります。"
+msgstr "プールを作成するガス代が含まれるため、取引コストははるかに高くなります。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
