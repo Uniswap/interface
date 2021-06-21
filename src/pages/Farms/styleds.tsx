@@ -29,6 +29,11 @@ export const KNCPriceContainer = styled.div`
   padding: 4px 10px 4px 8px;
   font-size: 14px;
   font-weight: normal;
+  z-index: 99;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: none;
+  `};
 `
 
 export const KNCPriceWrapper = styled.div`
@@ -38,7 +43,19 @@ export const KNCPriceWrapper = styled.div`
 
 export const TabContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  `}
+`
+
+export const TabWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 `
@@ -58,6 +75,10 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   &:focus {
     text-decoration: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin-right: 12px;
+  `}
 `
 
 export const PoolTitleContainer = styled.div`
@@ -80,6 +101,10 @@ export const StakedOnlyToggleText = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.text7};
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin-left: 4px;
+  `}
 `
 
 export const AdContainer = styled.div`
@@ -93,11 +118,24 @@ export const HeadingContainer = styled.div`
   background-color: ${({ theme }) => theme.bg16};
   padding: 28px 32px;
   margin-bottom: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-template-columns: 1fr;
+    flex-direction: column-reverse;
+  `}
 `
 
 export const LearnMoreContainer = styled.div`
   padding-right: 56px;
   border-right: 1px solid #404b51;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-row: 2;
+    padding-top: 24px;
+    padding-right: 0;
+    border-top: 1px solid #404b51;
+    border-right: none;
+  `}
 `
 
 export const LearnMoreInstruction = styled.div`
@@ -113,10 +151,21 @@ export const HarvestAllContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding-left: 36px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-row: 1;
+    flex-direction: column;
+    padding-bottom: 24px;
+    padding-left: 0;
+  `}
 `
 
 export const TotalRewardsContainer = styled.div`
   margin-right: 16px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin-bottom: 32px;
+  `}
 `
 
 export const TotalRewardsTitleWrapper = styled.div`
@@ -130,11 +179,18 @@ export const TotalRewardsTitle = styled.div`
   margin-bottom: 4px;
 `
 
-export const RewardNumber = styled.div`
+export const RewardNumberContainer = styled.div`
   font-size: 24px;
   font-weight: 500;
   color: ${({ theme }) => theme.text11};
   margin-right: 12px;
+`
+
+export const RewardToken = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: block;
+    margin-bottom: 4px;
+  `}
 `
 
 export const RewardUSD = styled.span`

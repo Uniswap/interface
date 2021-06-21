@@ -304,19 +304,21 @@ export default function Header() {
               <NewText>{t('new')}</NewText>
             </YieldMenuWrapper>
           </StyledNavLink>
-          <StyledNavLink
-            id={`my-pools-nav-link`}
-            to={'/myPools'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              (pathname.startsWith('/find') && pathname.endsWith('find'))
-            }
-          >
-            {t('My Dashboard')}
-          </StyledNavLink>
+          <HideSmall>
+            <StyledNavLink
+              id={`my-pools-nav-link`}
+              to={'/myPools'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                (pathname.startsWith('/find') && pathname.endsWith('find'))
+              }
+            >
+              {t('My Dashboard')}
+            </StyledNavLink>
+          </HideSmall>
           <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (

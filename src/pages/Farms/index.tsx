@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 
 import { ChainId } from 'libs/sdk/src'
 import { ButtonPrimary } from 'components/Button'
@@ -21,6 +22,7 @@ import {
   KNCPriceContainer,
   KNCPriceWrapper,
   TabContainer,
+  TabWrapper,
   Tab,
   PoolTitleContainer,
   StakedOnlyToggleWrapper,
@@ -35,7 +37,8 @@ import {
   TotalRewardsContainer,
   TotalRewardsTitleWrapper,
   TotalRewardsTitle,
-  RewardNumber,
+  RewardNumberContainer,
+  RewardToken,
   RewardUSD,
   RemainingTimeContainer,
   EndInTitle,
@@ -44,7 +47,8 @@ import {
 import { formattedNum, getTokenSymbol } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import RainMaker from '../../assets/images/rain-maker.webp'
+import RainMakerBannel from '../../assets/images/rain-maker.webp'
+import RainMakerMobileBanner from '../../assets/images/rain-maker-mobile.webp'
 import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
 import { Reward } from 'state/farms/types'
@@ -59,6 +63,8 @@ const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
+  const lgBreakpoint = useMedia('(min-width: 992px)')
+  const xxlBreakpoint = useMedia('(min-width: 1200px)')
   const { loading, data: farms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
@@ -137,37 +143,41 @@ const Farms = () => {
           )}
         </KNCPriceContainer>
         <TabContainer>
-          <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
-            <PoolTitleContainer>
-              <span style={{ marginRight: '4px' }}>{t('allPools')}</span>
-              {loading && <Loader />}
-            </PoolTitleContainer>
-          </Tab>
-          <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
-            <div>{t('vesting')}</div>
-          </Tab>
-          {activeTab === 0 && (
-            <StakedOnlyToggleWrapper>
-              <StakedOnlyToggle
-                className="staked-only-switch"
-                checked={stakedOnly}
-                onClick={() => setStakedOnly(!stakedOnly)}
-              />
-              <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
-            </StakedOnlyToggleWrapper>
-          )}
-          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-            <HistoryButton onClick={toggleFarmHistoryModal}>
-              <img src={HistoryImg} alt="HistoryImg" />
-              History
-            </HistoryButton>
-          )}
+          <TabWrapper>
+            <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
+              <PoolTitleContainer>
+                <span style={{ marginRight: '4px' }}>{t('allPools')}</span>
+                {loading && <Loader />}
+              </PoolTitleContainer>
+            </Tab>
+            <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
+              <div>{t('vesting')}</div>
+            </Tab>
+            {activeTab === 0 && (
+              <StakedOnlyToggleWrapper>
+                <StakedOnlyToggle
+                  className="staked-only-switch"
+                  checked={stakedOnly}
+                  onClick={() => setStakedOnly(!stakedOnly)}
+                />
+                <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
+              </StakedOnlyToggleWrapper>
+            )}
+          </TabWrapper>
+          <div>
+            {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+              <HistoryButton onClick={toggleFarmHistoryModal}>
+                <img src={HistoryImg} alt="HistoryImg" />
+                History
+              </HistoryButton>
+            )}
+          </div>
         </TabContainer>
 
         {activeTab === 0 ? (
           <>
             <AdContainer>
-              <img src={RainMaker} alt="RainMaker" width="100%" />
+              <img src={lgBreakpoint ? RainMakerBannel : RainMakerMobileBanner} alt="RainMaker" width="100%" />
             </AdContainer>
             <HeadingContainer>
               <LearnMoreContainer>
@@ -188,23 +198,24 @@ const Farms = () => {
                       }
                     />
                   </TotalRewardsTitleWrapper>
-                  <RewardNumber>
+                  <RewardNumberContainer>
                     {totalRewards.map((reward, index) => {
                       return (
-                        <span key={reward.token.address}>
+                        <RewardToken key={reward.token.address}>
                           <span>
                             {`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}
                           </span>
                           {index + 1 < totalRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-                        </span>
+                        </RewardToken>
                       )
                     })}
-                  </RewardNumber>
+                  </RewardNumberContainer>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
                 {shouldShowHarvestAllButton() && (
                   <div>
                     <ButtonPrimary
+                      width="fit-content"
                       disabled={!canHarvest(totalRewards) || pendingTx}
                       padding="10px 36px"
                       onClick={handleClickHarvestAll}

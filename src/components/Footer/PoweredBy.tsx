@@ -21,6 +21,7 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     top: auto;
     bottom: 4.5rem;
+    z-index: 99;
   `}
 
   ${({ isAboutpage }) => `
@@ -30,7 +31,7 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
 
 export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
-  let aboutPage = useRouteMatch('/about')
+  const aboutPage = useRouteMatch('/about')
 
   return (
     <ExternalLink href="https://kyber.network/">
