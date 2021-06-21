@@ -12,6 +12,7 @@ import {
   tickToPrice,
   TICK_SPACINGS,
   encodeSqrtRatioX96,
+  nearestUsableTick,
 } from '@uniswap/v3-sdk/dist/'
 import { Currency, Token, CurrencyAmount, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
@@ -513,8 +514,16 @@ export function useRangeHopCallbacks(
 
   const getSetFullRange = useCallback(() => {
     if (baseToken && quoteToken && feeAmount && pool) {
-      const newPriceLower = tickToPrice(baseToken, quoteToken, TickMath.MIN_TICK)
-      const newPriceUpper = tickToPrice(baseToken, quoteToken, TickMath.MAX_TICK)
+      const newPriceLower = tickToPrice(
+        baseToken,
+        quoteToken,
+        nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount])
+      )
+      const newPriceUpper = tickToPrice(
+        baseToken,
+        quoteToken,
+        nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount])
+      )
 
       return [
         newPriceLower.toSignificant(8, undefined, Rounding.ROUND_UP),
