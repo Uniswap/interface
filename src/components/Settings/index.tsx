@@ -25,7 +25,6 @@ import { DarkCard } from '../Card'
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
   width: 18px;
-  margin: 0 8px;
   cursor: pointer;
 
   > * {
@@ -56,7 +55,7 @@ const EmojiWrapper = styled.div`
 `
 
 const StyledMenu = styled.div`
-  margin-left: 0.5rem;
+  margin-left: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
