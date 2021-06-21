@@ -81,7 +81,7 @@ const HeaderElement = styled.div`
 
 const MoreLinksIcon = styled(HeaderElement)`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
   `};
 `
@@ -95,11 +95,7 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 1rem 0 1rem 0;
   `};
 `
 
@@ -139,11 +135,7 @@ const Title = styled.a`
   }
 `
 
-const activeClassName = 'ACTIVE'
-
-export const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
+export const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -157,12 +149,15 @@ export const StyledNavLink = styled(NavLink).attrs({
   font-size: 16px;
   line-height: 19.5px;
 
-  &.${activeClassName} {
+  &.active {
     font-weight: 600;
     color: ${({ theme }) => theme.white};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin: 0 8px;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -175,7 +170,7 @@ const StyledNavLinkWithBadge = styled.a`
   font-size: 16px;
   line-height: 19.5px;
   color: ${({ theme }) => transparentize(0.6, theme.text5)};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -185,9 +180,7 @@ const AbsoluteComingSoonBadgeFlex = styled(Flex)`
   top: 20px;
 `
 
-const StyledExternalLink = styled(ExternalLink).attrs({
-  activeClassName
-})<{ isActive?: boolean }>`
+const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   outline: none;
@@ -200,7 +193,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   width: fit-content;
   text-decoration: none !important;
   margin: 0 12px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -217,7 +210,7 @@ function Header({ history }: { history: any }) {
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
   }, [])
-
+  
   return (
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
@@ -225,18 +218,17 @@ function Header({ history }: { history: any }) {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
+          <StyledNavLink
+            id="swap-nav-link"
+            to="/swap"
+            activeClassName="active"
+          >
             {t('swap')}
           </StyledNavLink>
           <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pools'}
-            isActive={() =>
-              history.location.pathname.includes('/pools') ||
-              history.location.pathname.includes('/add') ||
-              history.location.pathname.includes('/remove') ||
-              history.location.pathname.includes('/create')
-            }
+            id="pool-nav-link"
+            to="/pools"
+            activeClassName="active"
           >
             {t('pool')}
           </StyledNavLink>
@@ -248,16 +240,17 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+          <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
               ↗
             </Text>
           </StyledExternalLink>
-          {isMobile && <Settings />}
           <MoreLinksIcon>
+            
             <MobileOptions history={history} />
           </MoreLinksIcon>
+          {isMobile && <Settings />}
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
