@@ -13,8 +13,8 @@ export const MUMBAI_TOKEN_LIST = {
     {
       chainId: 80001,
       address: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
+      symbol: 'ETH',
+      name: 'Ether',
       decimals: 18
     },
     {
