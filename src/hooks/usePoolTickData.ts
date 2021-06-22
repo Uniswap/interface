@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, nearestUsableTick, TickMath, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { FeeAmount, nearestUsableTick, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import keyBy from 'lodash.keyby'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
@@ -26,8 +26,11 @@ export function usePoolTickData(
   const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
   // Find nearest valid tick for pool in case tick is not initialized.
-  const activeTick =
+  let activeTick =
     pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
+  if (tickSpacing && activeTick) {
+    activeTick -= activeTick % tickSpacing
+  }
 
   const { loading, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
