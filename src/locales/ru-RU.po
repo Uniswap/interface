@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-22 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>Подсказка:</0> Погашение токенов пула п
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0> Совет:</0> Выберите действие и опишите свое предложение для сообщества. Предложение не может быть изменено после подачи, поэтому, пожалуйста, проверьте всю информацию перед отправкой. Период голосования начнется немедленно и продлится 7 дней. Чтобы предложить настраиваемое действие, <1> прочтите документацию</1> ."
+msgstr "<0> Подсказка:</0> выберите действие и опишите свое предложение для сообщества. Предложение невозможно изменить после подачи, поэтому, пожалуйста, проверьте всю информацию перед отправкой. Период голосования начнется немедленно и продлится 7 дней. Чтобы предложить собственное действие, <1> прочтите документацию</1>."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -241,7 +241,7 @@ msgstr "Одобрить"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr "Утвердить токен"
+msgstr "Одобрить токен"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1504,7 +1504,7 @@ msgstr "Cрок действия транзакции"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "Перенести токен"
+msgstr "Перевести токен"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1779,7 +1779,7 @@ msgstr "Теперь вы можете торговать {0}"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
-msgstr "У вас недостаточно голосов для подачи предложения"
+msgstr "У вас недостаточно голосов для внесения предложения"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -1795,7 +1795,7 @@ msgstr "Вы должны дать разрешение смарт-контра�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr "У вас должно быть {formattedProposalThreshold} голосов, чтобы отправить предложение"
+msgstr "У вас должно быть {formattedProposalThreshold} голосов, чтобы внести предложение"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
