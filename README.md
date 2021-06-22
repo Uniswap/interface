@@ -28,7 +28,7 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 
 ## Contributions
 
-See [CONTRIBUTING](./CONTRIBUTING.md).
+For steps on local deployment, development, and code contribution, please see [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Accessing Uniswap V2
 
