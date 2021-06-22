@@ -1562,7 +1562,7 @@ msgstr "不支持的代币"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "展开"
+msgstr "兑换"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1696,7 +1696,7 @@ msgstr "已赎回 UNI-V2！"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "换行"
+msgstr "兑换"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
