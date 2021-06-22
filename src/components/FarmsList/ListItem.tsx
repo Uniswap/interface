@@ -4,24 +4,42 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { ethers } from 'ethers'
+import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
-import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
+import { ChainId, Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
+import { ZERO } from 'libs/sdk/src/constants'
 import { DMM_ANALYTICS_URL } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
-import { Farm } from 'state/farms/types'
-import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
-import InputGroup from './InputGroup'
+import { Dots } from 'components/swap/styleds'
+import { ButtonPrimary } from 'components/Button'
+import { AutoRow } from 'components/Row'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import InfoHelper from 'components/InfoHelper'
+import { Farm, Reward } from 'state/farms/types'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import useFairLaunch from 'hooks/useFairLaunch'
+import useStakedBalance from 'hooks/useStakedBalance'
+import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards } from 'utils/dmm'
+import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 import { RewardToken } from 'pages/Farms/styleds'
-import InfoHelper from 'components/InfoHelper'
+
+const fixedFormatting = (value: BigNumber, decimals: number) => {
+  const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
+
+  if (fraction.equalTo(ZERO)) {
+    return '0'
+  }
+
+  return fraction.toFixed(18)
+}
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -83,6 +101,7 @@ const StakeGroup = styled.div`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 1fr;
     grid-template-areas: 'stake';
+    grid-gap: 1rem;
   `};
 `
 
@@ -100,6 +119,12 @@ const LPInfoContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  `};
 `
 
 const LPInfo = styled.div`
@@ -124,9 +149,20 @@ const StyledItemCard = styled.div`
   padding: 8px 20px 4px 20px;
   background-color: ${({ theme }) => theme.bg13};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 20px;
   `}
+`
+
+const RewardBalanceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`
+
+const RewardUSD = styled.div`
+  color: ${({ theme }) => theme.primaryText2};
 `
 
 const DataText = styled(Flex)<{ align?: string }>`
@@ -162,6 +198,10 @@ const DataTitle = styled.div`
   text-transform: uppercase;
   margin-bottom: 4px;
   font-size: 12px;
+`
+
+const Seperator = styled.div`
+  border: 1px solid ${({ theme }) => theme.bg14};
 `
 
 interface ListItemProps {
@@ -234,6 +274,77 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const amp = farm.amp / 10000
 
+  const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
+  const [pendingTx, setPendingTx] = useState(false)
+  const [depositValue, setDepositValue] = useState('')
+  const [withdrawValue, setWithdrawValue] = useState('')
+  const pairAddressChecksum = isAddressString(farm.id)
+  const balance = useTokenBalance(pairAddressChecksum)
+  const staked = useStakedBalance(farm.fairLaunchAddress, farm.pid)
+  const rewardUSD = useFarmRewardsUSD(farmRewards)
+
+  const [approvalState, approve] = useApproveCallback(
+    new TokenAmount(
+      new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
+      MaxUint256.toString()
+    ),
+    !!chainId ? farm.fairLaunchAddress : undefined
+  )
+
+  let isStakeInvalidAmount
+
+  try {
+    isStakeInvalidAmount =
+      depositValue === '' ||
+      parseFloat(depositValue) === 0 ||
+      ethers.utils.parseUnits(depositValue || '0', balance.decimals).gt(balance.value) // This causes error if number of decimals > 18
+  } catch (err) {
+    isStakeInvalidAmount = true
+  }
+
+  const isStakeDisabled = pendingTx || isStakeInvalidAmount
+
+  let isUnstakeInvalidAmount
+
+  try {
+    isUnstakeInvalidAmount =
+      withdrawValue === '' ||
+      parseFloat(withdrawValue) === 0 ||
+      ethers.utils.parseUnits(withdrawValue || '0', staked.decimals).gt(staked.value) // This causes error if number of decimals > 18
+  } catch (err) {
+    isUnstakeInvalidAmount = true
+  }
+
+  const isUnstakeDisabled = pendingTx || isUnstakeInvalidAmount
+
+  const canHarvest = (rewards: Reward[]): boolean => {
+    const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
+
+    return canHarvest
+  }
+
+  const isHarvestDisabled = pendingTx || !canHarvest(farmRewards)
+
+  const { deposit, withdraw, harvest } = useFairLaunch(farm.fairLaunchAddress)
+
+  const handleClickStake = async (pid: number) => {
+    setPendingTx(true)
+    await deposit(pid, ethers.utils.parseUnits(depositValue, balance.decimals), pairSymbol, false)
+    setPendingTx(false)
+  }
+
+  const handleWithdraw = async (pid: number) => {
+    setPendingTx(true)
+    await withdraw(pid, ethers.utils.parseUnits(withdrawValue, staked.decimals), pairSymbol)
+    setPendingTx(false)
+  }
+
+  const handleClickHarvest = async (pid: number) => {
+    setPendingTx(true)
+    await harvest(pid, pairSymbol)
+    setPendingTx(false)
+  }
+
   return xxlBreakpoint ? (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
@@ -294,15 +405,111 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div>
             </StakeGroup>
             <StakeGroup>
-              <InputGroup
-                fairLaunchAddress={farm.fairLaunchAddress}
-                pid={farm.pid}
-                pairAddress={farm.id}
-                pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
-                token0Address={farm.token0.id}
-                token1Address={farm.token1.id}
-                farmRewards={farmRewards}
-              />
+              <>
+                {approvalState === ApprovalState.UNKNOWN && <Dots></Dots>}
+                {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
+                  <div className="px-4">
+                    <ButtonPrimary color="blue" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
+                      {approvalState === ApprovalState.PENDING ? <Dots>Approving </Dots> : 'Approve'}
+                    </ButtonPrimary>
+                  </div>
+                )}
+                {approvalState === ApprovalState.APPROVED && (
+                  <>
+                    <AutoRow justify="space-between">
+                      {chainId && (
+                        <>
+                          <CurrencyInputPanel
+                            value={depositValue}
+                            onUserInput={value => {
+                              setDepositValue(value)
+                            }}
+                            onMax={() => {
+                              setDepositValue(fixedFormatting(balance.value, balance.decimals))
+                            }}
+                            showMaxButton={true}
+                            currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
+                            id="stake-lp-input"
+                            disableCurrencySelect
+                            balancePosition="left"
+                            hideBalance={true}
+                            hideLogo={true}
+                            fontSize="14px"
+                          />
+
+                          <ButtonPrimary
+                            disabled={isStakeDisabled}
+                            padding="12px"
+                            margin="14px 0"
+                            onClick={() => handleClickStake(farm.pid)}
+                          >
+                            {depositValue && isStakeInvalidAmount ? 'Invalid Amount' : 'Stake'}
+                          </ButtonPrimary>
+                        </>
+                      )}
+                    </AutoRow>
+                    <AutoRow justify="space-between">
+                      {chainId && (
+                        <>
+                          <CurrencyInputPanel
+                            value={withdrawValue}
+                            onUserInput={value => {
+                              setWithdrawValue(value)
+                            }}
+                            onMax={() => {
+                              setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
+                            }}
+                            showMaxButton={true}
+                            currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
+                            id="unstake-lp-input"
+                            disableCurrencySelect
+                            customBalanceText={`Deposited LP: ${fixedFormatting(staked.value, staked.decimals)}`}
+                            balancePosition="left"
+                            hideBalance={true}
+                            hideLogo={true}
+                            fontSize="14px"
+                          />
+
+                          <ButtonPrimary
+                            disabled={isUnstakeDisabled}
+                            padding="12px"
+                            margin="14px 0"
+                            onClick={() => handleWithdraw(farm.pid)}
+                          >
+                            {withdrawValue && isUnstakeInvalidAmount ? 'Invalid Amount' : 'Unstake'}
+                          </ButtonPrimary>
+                        </>
+                      )}
+                    </AutoRow>
+                    <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
+                      <RewardBalanceWrapper>
+                        <div>
+                          {farmRewards?.map((reward, index) => {
+                            return (
+                              <span key={reward.token.address}>
+                                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(
+                                  reward.token,
+                                  chainId
+                                )}`}</span>
+                                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                              </span>
+                            )
+                          })}
+                        </div>
+                        <RewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</RewardUSD>
+                      </RewardBalanceWrapper>
+                      <ButtonPrimary
+                        disabled={isHarvestDisabled}
+                        padding="12px"
+                        margin="15px 0"
+                        onClick={() => handleClickHarvest(farm.pid)}
+                      >
+                        Harvest
+                      </ButtonPrimary>
+                    </AutoRow>
+                  </>
+                )}
+              </>
             </StakeGroup>
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
@@ -394,26 +601,51 @@ const ListItem = ({ farm }: ListItemProps) => {
               </GreyText>
               <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
             </BalanceInfo>
-            <BalanceInfo grid-area="unstake">
-              <GreyText>
-                Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                {farm.token1?.symbol} LP
-              </GreyText>
-              <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
-            </BalanceInfo>
-            <div grid-area="harvest">
-              <GreyText>Reward</GreyText>
-            </div>
 
-            <InputGroup
-              fairLaunchAddress={farm.fairLaunchAddress}
-              pid={farm.pid}
-              pairAddress={farm.id}
-              pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
-              token0Address={farm.token0.id}
-              token1Address={farm.token1.id}
-              farmRewards={farmRewards}
-            />
+            {approvalState === ApprovalState.UNKNOWN && <Dots></Dots>}
+            {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
+              <div className="px-4">
+                <ButtonPrimary color="blue" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
+                  {approvalState === ApprovalState.PENDING ? <Dots>Approving </Dots> : 'Approve'}
+                </ButtonPrimary>
+              </div>
+            )}
+            {approvalState === ApprovalState.APPROVED && (
+              <>
+                <AutoRow justify="space-between">
+                  {chainId && (
+                    <>
+                      <CurrencyInputPanel
+                        value={depositValue}
+                        onUserInput={value => {
+                          setDepositValue(value)
+                        }}
+                        onMax={() => {
+                          setDepositValue(fixedFormatting(balance.value, balance.decimals))
+                        }}
+                        showMaxButton={true}
+                        currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
+                        id="stake-lp-input"
+                        disableCurrencySelect
+                        balancePosition="left"
+                        hideBalance={true}
+                        hideLogo={true}
+                        fontSize="14px"
+                      />
+
+                      <ButtonPrimary
+                        disabled={isStakeDisabled}
+                        padding="12px"
+                        margin="14px 0"
+                        onClick={() => handleClickStake(farm.pid)}
+                      >
+                        {depositValue && isStakeInvalidAmount ? 'Invalid Amount' : 'Stake'}
+                      </ButtonPrimary>
+                    </>
+                  )}
+                </AutoRow>
+              </>
+            )}
 
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
@@ -425,6 +657,87 @@ const ListItem = ({ farm }: ListItemProps) => {
                 </GetLP>
               </Link>
             </LPInfoContainer>
+
+            <Seperator />
+
+            <BalanceInfo grid-area="unstake">
+              <GreyText>
+                Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                {farm.token1?.symbol} LP
+              </GreyText>
+              <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
+            </BalanceInfo>
+
+            {approvalState === ApprovalState.APPROVED && (
+              <AutoRow justify="space-between">
+                {chainId && (
+                  <>
+                    <CurrencyInputPanel
+                      value={withdrawValue}
+                      onUserInput={value => {
+                        setWithdrawValue(value)
+                      }}
+                      onMax={() => {
+                        setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
+                      }}
+                      showMaxButton={true}
+                      currency={new Token(chainId, farm.id, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
+                      id="unstake-lp-input"
+                      disableCurrencySelect
+                      customBalanceText={`Deposited LP: ${fixedFormatting(staked.value, staked.decimals)}`}
+                      balancePosition="left"
+                      hideBalance={true}
+                      hideLogo={true}
+                      fontSize="14px"
+                    />
+
+                    <ButtonPrimary
+                      disabled={isUnstakeDisabled}
+                      padding="12px"
+                      margin="14px 0"
+                      onClick={() => handleWithdraw(farm.pid)}
+                    >
+                      {withdrawValue && isUnstakeInvalidAmount ? 'Invalid Amount' : 'Unstake'}
+                    </ButtonPrimary>
+                  </>
+                )}
+              </AutoRow>
+            )}
+
+            <Seperator />
+
+            <div grid-area="harvest">
+              <GreyText>Reward</GreyText>
+            </div>
+
+            {approvalState === ApprovalState.APPROVED && (
+              <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
+                <RewardBalanceWrapper>
+                  <div>
+                    {farmRewards?.map((reward, index) => {
+                      return (
+                        <span key={reward.token.address}>
+                          <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(
+                            reward.token,
+                            chainId
+                          )}`}</span>
+                          {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                        </span>
+                      )
+                    })}
+                  </div>
+                  <RewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</RewardUSD>
+                </RewardBalanceWrapper>
+                <ButtonPrimary
+                  disabled={isHarvestDisabled}
+                  padding="12px"
+                  margin="15px 0"
+                  onClick={() => handleClickHarvest(farm.pid)}
+                >
+                  Harvest
+                </ButtonPrimary>
+              </AutoRow>
+            )}
           </StakeGroup>
         </ExpandedContent>
       )}
