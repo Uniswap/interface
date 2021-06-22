@@ -50,7 +50,7 @@ const LoadMoreButtonContainer = styled.div`
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     background-color: transparent;
   `};
 `

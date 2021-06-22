@@ -52,7 +52,7 @@ const StyledItemCard = styled.div`
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 20px;
   `}
 `
