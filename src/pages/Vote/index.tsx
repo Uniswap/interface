@@ -135,6 +135,8 @@ export default function Vote() {
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
+  const maxGovernorIndex = allProposals.reduce((max, p) => Math.max(p.governorIndex, max), 0)
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -261,7 +263,9 @@ export default function Vote() {
           {allProposals?.reverse()?.map((p: ProposalData) => {
             return (
               <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
-                <ProposalNumber>{p.id}</ProposalNumber>
+                <ProposalNumber>
+                  {maxGovernorIndex - p.governorIndex}.{p.id}
+                </ProposalNumber>
                 <ProposalTitle>{p.title}</ProposalTitle>
                 <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
               </Proposal>
