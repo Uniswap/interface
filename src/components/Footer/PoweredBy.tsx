@@ -9,8 +9,8 @@ import { useRouteMatch } from 'react-router'
 const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   position: fixed;
   display: flex;
+  top: 8rem;
   right: 0;
-  bottom: 0;
   padding: 1rem;
   opacity: 0.7;
   transition: opacity 0.25s ease;

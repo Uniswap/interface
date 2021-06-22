@@ -1,7 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import styled from 'styled-components'
-import { Box, Flex } from 'rebass'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 
@@ -19,59 +17,25 @@ import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
 import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
-
-const PageWrapper = styled.div`
-  padding: 0 17em;
-  width: 100%;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-  `};
-`
-
-const ToolbarWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-`
-
-const CurrencyWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 8px;
-    flex-direction: column;
-  `};
-`
-
-const SearchWrapper = styled(Flex)`
-  align-items: center;
-`
-
-const SelectPairInstructionWrapper = styled.div`
-  text-align: center;
-  height: 100%;
-  padding: 24px;
-`
-
-const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.red1};
-  font-style: italic;
-  font-weight: 400;
-  text-align: center;
-  margin-top: 1rem;
-`
+import { useGlobalData } from 'state/about/hooks'
+import {
+  PageWrapper,
+  GlobalDataContainer,
+  GlobalDataItem,
+  GlobalDataItemTitle,
+  GlobalDataItemValue,
+  AddLiquidityInstructionContainer,
+  AddLiquidityTitleContainer,
+  AddLiquidityTitle,
+  AddLiquidityInstructionText,
+  ToolbarWrapper,
+  CurrencyWrapper,
+  SearchWrapper,
+  SelectPairInstructionWrapper
+} from './styleds'
+import { formatBigLiquidity } from 'utils/formatBalance'
+import Loader from 'components/Loader'
+import AddLiquidityIcon from 'assets/svg/add-liquidity-icon.svg'
 
 const Pools = ({
   match: {
@@ -156,9 +120,47 @@ const Pools = ({
   const loadingUserLiquidityPositions = !account ? false : temp.loading
   const userLiquidityPositions = !account ? { liquidityPositions: [] } : temp.data
 
+  const data = useGlobalData()
+
+  const globalData = data && data.dmmFactories[0]
+
   return (
     <>
       <PageWrapper>
+        <GlobalDataContainer>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total Trading Volume:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total Value Locked:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total AMP Liquidity:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+        </GlobalDataContainer>
+
+        <AddLiquidityInstructionContainer>
+          <AddLiquidityTitleContainer>
+            <span>
+              <img src={AddLiquidityIcon} alt="Add liquidity icon" />
+            </span>
+            <AddLiquidityTitle>Add liquidity:</AddLiquidityTitle>
+          </AddLiquidityTitleContainer>
+          <AddLiquidityInstructionText>
+            Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees
+            are automatically claimed when you withdraw your liquidity.
+          </AddLiquidityInstructionText>
+        </AddLiquidityInstructionContainer>
+
         {above1400 ? (
           <>
             <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
