@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-22 22:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -447,7 +447,7 @@ msgstr "Gebühren einziehen wird für Sie derzeit verfügbare Gebühren abheben.
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "Gemeinsame Basen"
+msgstr "Häufige Basistoken"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
