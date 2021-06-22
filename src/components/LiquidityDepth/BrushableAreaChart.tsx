@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useWindowSize } from 'hooks/useWindowSize'
 import { ChartEntry } from './hooks'
 import { select, scaleLinear, max, axisBottom, area, curveStep, brushX, min } from 'd3'
 import usePrevious from 'hooks/usePrevious'
@@ -13,12 +12,19 @@ interface Dimensions {
 }
 
 interface BrushableAreaChartProps {
+  id?: string
+
+  data: ChartEntry[]
+
   dimensions: Dimensions
+
   style: {
     fill?: string
     stroke?: string
   }
-  data: ChartEntry[]
+
+  brushDomain: [number, number] | undefined
+  onBrushDomainChange: (domain: [number, number]) => void
 }
 
 const SVG = styled.svg`
@@ -42,30 +48,44 @@ const getScales = (data: ChartEntry[], width: number, height: number) => {
 //const brushHandle = (g: SVGGElement, selection: [[number, number]]): SVGGElement =>
 //g.selectAll('.handle--custom')
 
-export function BrushableAreaChart({ data, dimensions, style: { fill, stroke } }: BrushableAreaChartProps) {
+export function BrushableAreaChart({
+  id = 'myBrushableAreaChart',
+  data,
+  dimensions,
+  style: { fill, stroke },
+  brushDomain = [0, 10],
+  onBrushDomainChange,
+}: BrushableAreaChartProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  const [brushSelection, setBrushSelection] = useState([0, 0])
+  const [currentSelection, setCurrentSelection] = useState(brushDomain)
+  const previousSelection = usePrevious(brushDomain)
 
-  const previousSelection = usePrevious(brushSelection)
+  useEffect(() => {
+    setCurrentSelection(brushDomain)
+  }, [brushDomain])
 
   // will be called initially, and on every data change
   useEffect(() => {
     if (!wrapperRef.current || !svgRef.current || data.length === 0) return
 
     // @ts-ignore
-    function brushed({ selection }) {
+    function brushed({ type, selection }) {
       // @ts-ignore
-      if (selection === null) {
-      } else {
-        const [x0, x1] = selection.map(xScale.invert)
-        setBrushSelection([x0, x1])
-        console.log(brushSelection)
+      if (selection === null || selection[0] === NaN || selection[1] === NaN) {
+        return
       }
 
+      const newSelection = selection.map(xScale.invert)
+
+      if (type === 'end') {
+        onBrushDomainChange(newSelection)
+      }
+
+      setCurrentSelection(newSelection)
       // @ts-ignore
-      //select(this).call(brushHandle, brushSelection)
+      //select(this).call(brushHandle, currentSelection)
     }
 
     const svg = select(svgRef.current)
@@ -114,23 +134,28 @@ export function BrushableAreaChart({ data, dimensions, style: { fill, stroke } }
       ])
       .on('start brush end', brushed)
 
-    if (previousSelection === brushSelection) {
+    if (previousSelection === currentSelection) {
       svg
         .select('#brush')
         // @ts-ignore
         .call(brush)
         // @ts-ignore
-        .call(brush.move, brushSelection.map(xScale))
+        .call(brush.move, currentSelection.map(xScale))
     }
-  }, [data, fill, stroke, dimensions, brushSelection, previousSelection])
+  }, [data, fill, stroke, dimensions, currentSelection, previousSelection, onBrushDomainChange])
 
   return (
     <div ref={wrapperRef}>
       <SVG ref={svgRef}>
-        <g id="content" />
+        <defs>
+          <clipPath id={id}>
+            <rect x="0" y="0" width="100%" height="100%" />
+          </clipPath>
+        </defs>
+        <g id="content" clipPath={`url(#${id})`} />
+        <g id="brush" />
         <g id="x-axis" />
         <g id="y-axis" />
-        <g id="brush" />
       </SVG>
     </div>
   )
