@@ -3,7 +3,6 @@ import { SupportedChainId } from '../constants/chains'
 
 const NETWORK_POLLING_INTERVALS: { [chainId: number]: number } = {
   [SupportedChainId.ARBITRUM_ONE]: 1_000,
-  [SupportedChainId.ARBITRUM_KOVAN]: 1_000,
 }
 
 export default function getLibrary(provider: any): Web3Provider {
