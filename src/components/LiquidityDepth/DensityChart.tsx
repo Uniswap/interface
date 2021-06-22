@@ -12,6 +12,7 @@ import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
 import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
+import { BrushableAreaChart } from './BrushableAreaChart'
 
 const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
@@ -97,95 +98,103 @@ export default function DensityChart({
           </TYPE.darkGray>
         </ColumnCenter>
       ) : (
-        <VictoryChart
-          height={275}
-          padding={40}
-          minDomain={{ y: 0 }}
-          containerComponent={
-            <VictoryBrushContainer
-              allowDraw={false}
-              allowDrag={interactive}
-              allowResize={interactive}
-              brushDimension="x"
-              brushDomain={
-                leftPrice && rightPrice
-                  ? {
-                      x: [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))],
-                    }
-                  : undefined
-              }
-              brushComponent={
-                <Brush
-                  leftHandleColor={currencyA ? tokenAColor : theme.primary1}
-                  leftLabel={
-                    price && leftPrice
-                      ? `${((parseFloat(leftPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
-                      : undefined
-                  }
-                  rightLabel={
-                    price && rightPrice
-                      ? `${((parseFloat(rightPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
-                      : undefined
-                  }
-                  rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
-                  allowDrag={interactive}
-                />
-              }
-              onBrushDomainChangeEnd={(domain) => {
-                const leftRangeValue = Number(domain.x[0])
-                const rightRangeValue = Number(domain.x[1])
-
-                // simulate user input for auto-formatting and other validations
-                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
-              }}
-              handleWidth={30 /* handle width must be as large as handle head */}
-            />
-          }
-        >
-          <VictoryArea
-            data={filteredData ? filteredData : sampleData}
-            style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.5' } }}
-            x={'price0'}
-            y={'activeLiquidity'}
-            interpolation="step"
+        <>
+          <BrushableAreaChart
+            data={filteredData ?? []}
+            dimensions={{ width: 400, height: 225, boundedHeight: 0, boundedWidth: 0 }}
+            style={{ fill: theme.primaryText1, stroke: 'transparent' }}
           />
-
-          {price && (
-            <VictoryLine
-              data={
-                maxLiquidity && price
-                  ? [
-                      { x: parseFloat(price), y: 0 },
-                      { x: parseFloat(price), y: maxLiquidity },
-                    ]
-                  : []
-              }
-              labels={({ datum }) => (datum.y !== 0 ? price : '')}
-              labelComponent={
-                <VictoryLabel
-                  renderInPortal
-                  dy={-10}
-                  style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
-                />
-              }
-              style={{
-                data: { stroke: theme.text1, opacity: '0.5' },
-              }}
-            />
-          )}
-
-          <VictoryAxis
-            fixLabelOverlap={true}
-            style={{
-              tickLabels: {
-                fill: theme.text1,
-                opacity: '0.6',
-              },
-            }}
-          />
-        </VictoryChart>
+        </>
       )}
     </Wrapper>
   )
 }
+
+//          <VictoryChart
+//            height={275}
+//            padding={40}
+//            minDomain={{ y: 0 }}
+//            containerComponent={
+//              <VictoryBrushContainer
+//                allowDraw={false}
+//                allowDrag={interactive}
+//                allowResize={interactive}
+//                brushDimension="x"
+//                brushDomain={
+//                  leftPrice && rightPrice
+//                    ? {
+//                        x: [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))],
+//                      }
+//                    : undefined
+//                }
+//                brushComponent={
+//                  <Brush
+//                    leftHandleColor={currencyA ? tokenAColor : theme.primary1}
+//                    leftLabel={
+//                      price && leftPrice
+//                        ? `${((parseFloat(leftPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+//                        : undefined
+//                    }
+//                    rightLabel={
+//                      price && rightPrice
+//                        ? `${((parseFloat(rightPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+//                        : undefined
+//                    }
+//                    rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
+//                    allowDrag={interactive}
+//                  />
+//                }
+//                onBrushDomainChangeEnd={(domain) => {
+//                  const leftRangeValue = Number(domain.x[0])
+//                  const rightRangeValue = Number(domain.x[1])
+//
+//                  // simulate user input for auto-formatting and other validations
+//                  leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+//                  rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+//                }}
+//                handleWidth={30 /* handle width must be as large as handle head */}
+//              />
+//            }
+//          >
+//            <VictoryArea
+//              data={filteredData ? filteredData : sampleData}
+//              style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.5' } }}
+//              x={'price0'}
+//              y={'activeLiquidity'}
+//              interpolation="step"
+//            />
+//
+//            {price && (
+//              <VictoryLine
+//                data={
+//                  maxLiquidity && price
+//                    ? [
+//                        { x: parseFloat(price), y: 0 },
+//                        { x: parseFloat(price), y: maxLiquidity },
+//                      ]
+//                    : []
+//                }
+//                labels={({ datum }) => (datum.y !== 0 ? price : '')}
+//                labelComponent={
+//                  <VictoryLabel
+//                    renderInPortal
+//                    dy={-10}
+//                    style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
+//                  />
+//                }
+//                style={{
+//                  data: { stroke: theme.text1, opacity: '0.5' },
+//                }}
+//              />
+//            )}
+//
+//            <VictoryAxis
+//              fixLabelOverlap={true}
+//              style={{
+//                tickLabels: {
+//                  fill: theme.text1,
+//                  opacity: '0.6',
+//                },
+//              }}
+//            />
+//          </VictoryChart>
