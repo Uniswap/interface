@@ -359,8 +359,8 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      <SwapNetworkAlert />
       <AppBody>
-        <SwapNetworkAlert />
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
