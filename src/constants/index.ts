@@ -70,7 +70,7 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: 'https://info.dmm.exchange',
   [ChainId.MATIC]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? 'https://polygon-matic-dmm-info.knstats.com'
+      ? 'https://staging-matic-dmm-info.knstats.com'
       : 'https://polygon-info.dmm.exchange',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com'
 }
