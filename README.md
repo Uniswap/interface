@@ -26,7 +26,7 @@ To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
 
-## Contributions
+## Building Locally and Contributions
 
 See [CONTRIBUTING](./CONTRIBUTING.md).
 
