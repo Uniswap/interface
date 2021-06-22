@@ -18,19 +18,13 @@ export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap(
 )
 
 // most current governance contract address should always be the 0 index
-// only support governance on mainnet
 export const GOVERNANCE_ADDRESSES: AddressMap[] = [
   {
     [SupportedChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
   },
-  {
-    [SupportedChainId.MAINNET]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
-  },
+  constructSameAddressMap('0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F', false),
 ]
-export const TIMELOCK_ADDRESS: AddressMap = {
-  [SupportedChainId.MAINNET]: '0x1a9C8182C09F50C8318d769245beA52c32BE35BC',
-}
-
+export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC', false)
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }
@@ -66,3 +60,5 @@ export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xA5644E29708357803b5A882D272c41cC0dF92B34',
   true
 )
+
+export const TICK_LENS_ADDRESSES = constructSameAddressMap('0xbfd8137f7d1516D3ea5cA83523914859ec47F573', true)
