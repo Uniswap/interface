@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-21 15:11+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-21 16:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -110,6 +110,10 @@ msgstr "V3に<0>戻る</0>"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>ヒント:</0> 流動性トークンを削除すると、プールのシェアに比例して現在の価格で元のトークンに戻ります。発生した報酬は受け取るトークンに含まれます。"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0>ヒント：</0>アクションを選択し、コミュニティへの提案を説明してください。提出後に提案を変更することはできませんので、提出する前にすべての情報を確認してください。投票期間はすぐに始まり、7日間続きます。カスタムアクションを提案するには、<1>ドキュメントをお読みください</1>。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -234,6 +238,10 @@ msgstr "アナリティクス"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "承認"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "トークンを承認する"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -518,6 +526,11 @@ msgstr "アドレスをコピー"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "プール作成と流動性の追加"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "提案を作成する"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -1140,6 +1153,18 @@ msgstr "価格:"
 msgid "Prices and pool share"
 msgstr "価格とプールシェア"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "提案"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "提出された提案"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "提案タイトル"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "提案"
@@ -1147,6 +1172,10 @@ msgstr "提案"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "コミュニティメンバーが提出した提案はここに表示されます。"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "提案されたアクション"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1220,6 +1249,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "スワップをダイレクトペアのみに制限します。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "戻る"
 
@@ -1250,6 +1280,10 @@ msgstr "トークン選択"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "トークンを選択して、V2の流動性を見つけます。"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "アクションを選択します"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1312,6 +1346,14 @@ msgstr "何らかの問題が発生しました"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "ステップ1. UNI-V2流動性トークンを入手"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "提出された新しい提案"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "提案の提出"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1460,6 +1502,10 @@ msgstr "取引が送信されました"
 msgid "Transaction deadline"
 msgstr "取引期限"
 
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "トークンの転送"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "もう一度試す"
@@ -1605,6 +1651,10 @@ msgstr "発生した報酬と分析を見る<0>↗</0>"
 msgid "View list"
 msgstr "リストを表示"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Etherscanで表示"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1703,6 +1753,10 @@ msgstr "ラップ"
 msgid "Wrong Network"
 msgstr "ネットワークが間違っています"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "すでにアクティブまたは保留中の提案があります"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "プールを作成しています"
@@ -1723,6 +1777,10 @@ msgstr "各提案に対して自分で投票するか、または第三者に投
 msgid "You can now trade {0}"
 msgstr "{0}を取引できるようになりました"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "提案を提出するのに十分な票がありません"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "プールにはまだ流動性がありません。"
@@ -1734,6 +1792,10 @@ msgstr "アカウントに接続してください。"
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "{0}を使用するには、Uniswapスマートコントラクトに許可を与える必要があります。トークンごとに1回だけ行う必要があります。"
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "提案を送信するには、 {formattedProposalThreshold} 票が必要です"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."

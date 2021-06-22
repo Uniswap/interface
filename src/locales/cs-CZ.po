@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-21 15:11+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-21 16:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -110,6 +110,10 @@ msgstr "<0> Zpět na</0> V3"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>Tip:</0> Odstranění žetonů fondu převede Vaši pozici zpět na základní žetony při aktuální sazbě, úměrně Vašemu podílu na fondu. Do částek, které obdržíte, jsou zahrnuty naběhlé poplatky."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> Tip:</0> Vyberte akci a popište svůj návrh pro komunitu. Po odeslání nelze nabídku upravit, proto prosím před odesláním ověřte všechny informace. Hlasovací období začne okamžitě a bude trvat 7 dní. Chcete-li navrhnout vlastní akci, přečtěte si <1> dokumenty</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -234,6 +238,10 @@ msgstr "Analýza"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Schválit"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "Schválit token"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -518,6 +526,11 @@ msgstr "Zkopírovat adresu"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Vytvořit fond a zásobu"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "Vytvořit návrh"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -1140,6 +1153,18 @@ msgstr "Cena:"
 msgid "Prices and pool share"
 msgstr "Ceny a podíl na trhu"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Návrh"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "Návrh předložen"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "Název návrhu"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "Návrhy"
@@ -1147,6 +1172,10 @@ msgstr "Návrhy"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Zde se budou zobrazovat návrhy předkládané členy komunity."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "Navrhovaná akce"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1220,6 +1249,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "Omezte swapy jen na přímé páry."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Návrat"
 
@@ -1250,6 +1280,10 @@ msgstr "Vyberte žeton"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Chcete-li najít svou likviditu v2, vyberte žeton."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Vyberte akci"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1312,6 +1346,14 @@ msgstr "Něco je špatně"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Krok 1. Získejte žetony likvidity UNI-V2"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "Předložený nový návrh"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "Podání návrhu"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1460,6 +1502,10 @@ msgstr "Transakce odeslána"
 msgid "Transaction deadline"
 msgstr "Lhůta pro transakce"
 
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "Přenosový token"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Zkusit znovu"
@@ -1605,6 +1651,10 @@ msgstr "Zobrazit naběhlé poplatky a analýzy<0>↗</0>"
 msgid "View list"
 msgstr "Zobrazit seznam"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Pohled na Etherscan"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1703,6 +1753,10 @@ msgstr "Zalomit"
 msgid "Wrong Network"
 msgstr "Nesprávná síť"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "Již máte aktivní nebo nevyřízenou nabídku"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "Vytváříte fond"
@@ -1723,6 +1777,10 @@ msgstr "Buď můžete o každém návrhu hlasovat sami, nebo můžete své hlasy
 msgid "You can now trade {0}"
 msgstr "Nyní můžete obchodovat {0}"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "Nemáte dostatek hlasů k odeslání návrhu"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "V tomto fondu zatím nemáte likviditu."
@@ -1734,6 +1792,10 @@ msgstr "Musíte připojit nějaký účet."
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Musíte chytrým smlouvám Uniswap udělit oprávnění používat Vaše {0}. Toto musíte udělat pouze jednou pro každý žeton."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "K podání nabídky musíte mít {formattedProposalThreshold}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."

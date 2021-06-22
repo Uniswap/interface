@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-21 15:11+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-21 16:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -110,6 +110,10 @@ msgstr "<0> Vissza ide:</0> V3"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> Tipp:</0> A pool tokenek kivonása a pozícióját visszafordítja az alapjául szolgáló tokenekre az aktuális árfolyamon, a poolból való részesedésével arányosan. Az elhatárolt díjakat az Ön által kapott összegek tartalmazzák."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> Tipp:</0> Válasszon ki egy műveletet, és írja le javaslatát a közösség számára. Az ajánlat benyújtása után nem módosítható, ezért a benyújtás előtt ellenőrizze az összes információt. A szavazási időszak azonnal megkezdődik és 7 napig tart. Egyéni művelet javaslatához <1> olvassa el a dokumentumokat</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -234,6 +238,10 @@ msgstr "Analitika"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Jóváhagyás"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "Token jóváhagyása"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -518,6 +526,11 @@ msgstr "Cím másolása"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Pool és kínálat létrehozása"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "Javaslat létrehozása"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -1141,6 +1154,18 @@ msgstr "Ár:"
 msgid "Prices and pool share"
 msgstr "Árak és pool-részesedés"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Javaslat"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "Javaslat benyújtva"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "A javaslat címe"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "Javaslatok"
@@ -1148,6 +1173,10 @@ msgstr "Javaslatok"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "A közösség tagjai által benyújtott javaslatok itt jelennek meg."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "Javasolt cselekvés"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1221,6 +1250,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "Kizárólag a közvetlen párokra korlátozza a swapokat."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Visszatérés"
 
@@ -1251,6 +1281,10 @@ msgstr "Token választása"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Válasszon egy tokent a v2 likviditásának megkereséséhez."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Válasszon ki egy műveletet"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1313,6 +1347,14 @@ msgstr "Valami elromlott"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1. lépés: Szerezzen UNI-V2 likviditási tokeneket"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "Új javaslatot nyújtott be"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "Javaslat benyújtása"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1461,6 +1503,10 @@ msgstr "Tranzakció benyújtva"
 msgid "Transaction deadline"
 msgstr "Tranzakció határideje"
 
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "Transfer Token"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Próbálja meg újra"
@@ -1606,6 +1652,10 @@ msgstr "Felhalmozott díjak és elemzések megtekintése<0></0>"
 msgid "View list"
 msgstr "Lista megtekintése"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Nézd meg az Etherscan webhelyen"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1704,6 +1754,10 @@ msgstr "Becsomagolás"
 msgid "Wrong Network"
 msgstr "Rossz hálózat"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "Már van aktív vagy függőben lévő javaslata"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "Poolt hoz létre"
@@ -1724,6 +1778,10 @@ msgstr "Az egyes javaslatokról vagy saját maga szavazhat, vagy delegálhatja a
 msgid "You can now trade {0}"
 msgstr "Most kereskedhet {0}"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "Nincs elég szavazata a javaslat benyújtásához"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Ebben a poolban még nincs likviditása."
@@ -1735,6 +1793,10 @@ msgstr "Csatlakoznia kell egy fiókhoz."
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "Engedélyt kell adnia az Uniswap intelligens szerződéseknek a(z) {0} használatához. Ezt tokenenként csak egyszer kell megtennie."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "A javaslat benyújtásához {formattedProposalThreshold} szavazattal kell rendelkeznie"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
