@@ -157,7 +157,7 @@ export default function DensityChart({
                 maxLiquidity && price
                   ? [
                       { x: parseFloat(price), y: 0 },
-                      { x: parseFloat(price), y: maxLiquidity },
+                      { x: parseFloat(price), y: parseFloat(maxLiquidity.toString()) },
                     ]
                   : []
               }

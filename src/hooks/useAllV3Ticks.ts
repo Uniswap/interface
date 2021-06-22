@@ -68,9 +68,10 @@ export function useAllV3Ticks(
   const syncing = useMemo(() => callStates.some(({ syncing }) => syncing), [callStates])
   const valid = useMemo(() => callStates.some(({ valid }) => valid), [callStates])
 
-  const tickData = useMemo(
-    () =>
-      callStates
+  // return the latest synced tickdata even if we are still loading the newest data
+  useEffect(() => {
+    if (!syncing && !loading && !error && valid) {
+      const tickData = callStates
         .map(({ result }) => (result as Result)?.populatedTicks)
         .reduce(
           (accumulator, current) => [
@@ -79,21 +80,15 @@ export function useAllV3Ticks(
               return {
                 tick: tickData.tick,
                 liquidityNet: tickData.liquidityNet.toString(),
-                liquidityGross: tickData.liquidityGross.toString(),
               }
             }) ?? []),
           ],
           []
-        ),
-    [callStates]
-  )
+        )
 
-  // return the latest synced tickdata even if we are still loading the newest data
-  useEffect(() => {
-    if (!syncing && !loading && !error && valid) {
       setTickDataLatestSynced(tickData)
     }
-  }, [error, loading, syncing, tickData, valid])
+  }, [callStates, error, loading, syncing, valid, setTickDataLatestSynced])
 
   return useMemo(
     () => ({

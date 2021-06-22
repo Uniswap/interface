@@ -27,7 +27,7 @@ export function useDensityChartData({
 }) {
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
   const [activeChartEntry, setActiveChartEntry] = useState<ChartEntry | undefined>()
-  const [maxLiquidity, setMaxLiquidity] = useState<number>(0)
+  const [maxLiquidity, setMaxLiquidity] = useState<JSBI>(JSBI.BigInt(0))
 
   const { loading, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
 
@@ -51,9 +51,9 @@ export function useDensityChartData({
         const t: TickProcessed = tickData[i]
         const active = t.tickIdx === activeTick
 
-        maxLiquidity = JSBI.greaterThan(tickData[i].liquidityActive, maxLiquidity)
-          ? tickData[i].liquidityActive
-          : maxLiquidity
+        if (JSBI.greaterThan(tickData[i].liquidityActive, maxLiquidity)) {
+          maxLiquidity = tickData[i].liquidityActive
+        }
 
         const chartEntry = {
           index: i,
@@ -69,7 +69,7 @@ export function useDensityChartData({
         newData.push(chartEntry)
       }
 
-      setMaxLiquidity(parseFloat(maxLiquidity.toString()))
+      setMaxLiquidity(maxLiquidity)
 
       if (newData) {
         setFormattedData(newData)

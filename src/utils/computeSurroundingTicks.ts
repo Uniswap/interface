@@ -36,14 +36,12 @@ export default function computeSurroundingTicks(
       tickIdx: currentTickIdx,
       liquidityNet: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-      liquidityGross: JSBI.BigInt(0),
     }
 
     // Check if there is an initialized tick at our current tick.
-    // If so copy the gross and net liquidity from the initialized tick.
+    // If so copy the net liquidity from the initialized tick.
     const currentInitializedTick = tickIdxToInitializedTick[currentTickIdx.toString()]
     if (currentInitializedTick) {
-      currentTickProcessed.liquidityGross = JSBI.BigInt(currentInitializedTick.liquidityGross)
       currentTickProcessed.liquidityNet = JSBI.BigInt(currentInitializedTick.liquidityNet)
     }
 

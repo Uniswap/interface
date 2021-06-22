@@ -68,14 +68,12 @@ export function usePoolTickData(
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tickIdx: activeTick,
       liquidityNet: JSBI.BigInt(0),
-      liquidityGross: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // if active tick is initialized, fill liquidity
     if (tickToInitializedTick[activeTick]) {
       activeTickProcessed.liquidityNet = JSBI.BigInt(tickToInitializedTick[activeTick].liquidityNet)
-      activeTickProcessed.liquidityGross = JSBI.BigInt(tickToInitializedTick[activeTick].liquidityGross)
     }
 
     const subsequentTicks = computeSurroundingTicks(
