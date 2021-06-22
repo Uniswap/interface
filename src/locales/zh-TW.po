@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-21 16:05\n"
+"PO-Revision-Date: 2021-06-22 13:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1286,7 +1286,7 @@ msgstr "流動池份額："
 
 #: src/pages/Pool/index.tsx
 msgid "Show"
-msgstr "表演"
+msgstr "顯示"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
