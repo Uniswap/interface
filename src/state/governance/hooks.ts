@@ -241,7 +241,7 @@ export function useAllProposalData(): ProposalData[] {
     )
   }
 
-  return results.flat()
+  return results.reverse().flat()
 }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
