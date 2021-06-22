@@ -56,19 +56,11 @@ export function usePoolTickData(
 
     const tickToInitializedTick = keyBy(tickData, 'tick')
 
-    // ensure active tick is within supported range
-    let activeTickForPrice = activeTick
-    if (activeTickForPrice < TickMath.MIN_TICK) {
-      activeTickForPrice = TickMath.MIN_TICK
-    } else if (activeTickForPrice > TickMath.MAX_TICK) {
-      activeTickForPrice = TickMath.MAX_TICK
-    }
-
     const activeTickProcessed: TickProcessed = {
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tickIdx: activeTick,
       liquidityNet: JSBI.BigInt(0),
-      price0: tickToPrice(token0, token1, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
+      price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // if active tick is initialized, fill liquidity
