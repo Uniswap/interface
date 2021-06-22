@@ -26,11 +26,8 @@ export function usePoolTickData(
   const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
   // Find nearest valid tick for pool in case tick is not initialized.
-  let activeTick =
-    pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
-  if (tickSpacing && activeTick) {
-    activeTick -= activeTick % tickSpacing
-  }
+  const activeTick =
+    pool[1]?.tickCurrent && tickSpacing ? Math.floor(pool[1]?.tickCurrent / tickSpacing) * tickSpacing : undefined
 
   const { loading, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
