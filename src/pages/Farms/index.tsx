@@ -6,8 +6,6 @@ import { ChainId } from 'libs/sdk/src'
 import { ButtonPrimary } from 'components/Button'
 import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
-import FarmClaimModal from 'components/FarmClaimModal'
-import FarmStakeModal from 'components/FarmStakeModal'
 import { useFarmsData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -251,8 +249,6 @@ const Farms = () => {
           <Vesting rewardTokens={rewardTokens} />
         )}
       </PageWrapper>
-      <FarmClaimModal />
-      <FarmStakeModal />
       <FarmHistoryModal farms={farms} />
     </>
   )
