@@ -14,6 +14,7 @@ import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useMultipleContractMultipleData, useSingleCallResult } from '../multicall/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
+import { t } from '@lingui/macro'
 
 interface ProposalDetail {
   target: string
@@ -33,6 +34,14 @@ export interface ProposalData {
   endBlock: number
   details: ProposalDetail[]
   governorIndex: number // index in the governance address array for which this proposal pertains
+}
+
+export interface CreateProposalData {
+  targets: string[]
+  values: string[]
+  signatures: string[]
+  calldatas: string[]
+  description: string
 }
 
 export enum ProposalState {
@@ -324,4 +333,69 @@ export function useVoteCallback(): {
     [account, addTransaction, latestGovernanceContract]
   )
   return { voteCallback }
+}
+
+export function useCreateProposalCallback(): (
+  createProposalData: CreateProposalData | undefined
+) => undefined | Promise<string> {
+  const { account } = useActiveWeb3React()
+
+  const govContracts = useGovernanceContracts()
+  const latestGovernanceContract = govContracts ? govContracts[0] : null
+  const addTransaction = useTransactionAdder()
+
+  const createProposalCallback = useCallback(
+    (createProposalData: CreateProposalData | undefined) => {
+      if (!account || !latestGovernanceContract || !createProposalData) return undefined
+
+      const args = [
+        createProposalData.targets,
+        createProposalData.values,
+        createProposalData.signatures,
+        createProposalData.calldatas,
+        createProposalData.description,
+      ]
+
+      return latestGovernanceContract.estimateGas.propose(...args).then((estimatedGasLimit) => {
+        return latestGovernanceContract
+          .propose(...args, { gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              summary: t`Submitted new proposal`,
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, latestGovernanceContract]
+  )
+
+  return createProposalCallback
+}
+
+export function useLatestProposalId(address: string): string | undefined {
+  const govContracts = useGovernanceContracts()
+  const latestGovernanceContract = govContracts ? govContracts[0] : null
+  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
+
+  if (res?.result?.[0]) {
+    return (res.result[0] as BigNumber).toString()
+  }
+
+  return undefined
+}
+
+export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
+  const { chainId } = useActiveWeb3React()
+
+  const govContracts = useGovernanceContracts()
+  const latestGovernanceContract = govContracts ? govContracts[0] : null
+  const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')
+  const uni = chainId ? UNI[chainId] : undefined
+
+  if (res?.result?.[0] && uni) {
+    return CurrencyAmount.fromRawAmount(uni, res.result[0])
+  }
+
+  return undefined
 }
