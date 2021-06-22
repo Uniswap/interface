@@ -68,7 +68,10 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: 'https://info.dmm.exchange',
   [ChainId.GÖRLI]: 'https://info.dmm.exchange',
   [ChainId.KOVAN]: 'https://info.dmm.exchange',
-  [ChainId.MATIC]: 'https://info.dmm.exchange',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://polygon-matic-dmm-info.knstats.com'
+      : 'https://polygon-info.dmm.exchange',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com'
 }
 
@@ -146,7 +149,9 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.MATIC]: new Token(
     ChainId.MATIC,
-    '0x51E8D106C646cA58Caf32A47812e95887C071a62', // TODO: update later to the real KNC
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x51E8D106C646cA58Caf32A47812e95887C071a62'
+      : '0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -189,7 +194,9 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, KNC[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], KNC[ChainId.ROPSTEN]]
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], KNC[ChainId.ROPSTEN]],
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], KNC[ChainId.MATIC]],
+  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], KNC[ChainId.MUMBAI]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -355,7 +362,9 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
 
 export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A'] : [''],
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
+      : ['0x0a5443dF8d3b52c38B883dEb0284FbA1A9e4FFF9'],
   [ChainId.ROPSTEN]: ['0xCa0767cb6473628F27287c04096f242Ca649f5B6'],
   [ChainId.RINKEBY]: [''],
   [ChainId.GÖRLI]: [''],
@@ -369,7 +378,9 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD' : '',
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
+      : '0x27B067F10321Fb9bF0397da80b9F09856f229971',
   [ChainId.ROPSTEN]: '0x68eFA21972109CB315c61B33A1ab8b7e9ef78242',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',

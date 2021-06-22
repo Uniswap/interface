@@ -3,8 +3,16 @@ export const getMaticTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
     address = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
   }
-  if (address?.toLowerCase() === '0x51e8d106c646ca58caf32a47812e95887c071a62') {
-    // TODO: update later to the real KNC
+  if (
+    process.env.REACT_APP_MAINNET_ENV === 'staging' &&
+    address?.toLowerCase() === '0x51e8d106c646ca58caf32a47812e95887c071a62'
+  ) {
+    address = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+  }
+  if (
+    process.env.REACT_APP_MAINNET_ENV === 'production' &&
+    address?.toLowerCase() === '0x1c954e8fe737f99f68fa1ccda3e51ebdb291948c'
+  ) {
     address = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
   }
   if (address?.toLowerCase() === '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063') {
