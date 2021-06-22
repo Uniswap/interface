@@ -104,12 +104,14 @@ function CurrencyRow({
   isSelected,
   otherSelected,
   style,
+  showCurrencyAmount,
 }: {
   currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
+  showCurrencyAmount?: boolean
 }) {
   const { account } = useActiveWeb3React()
   const key = currencyKey(currency)
@@ -141,9 +143,11 @@ function CurrencyRow({
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-      </RowFixed>
+      {showCurrencyAmount && (
+        <RowFixed style={{ justifySelf: 'flex-end' }}>
+          {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+        </RowFixed>
+      )}
     </MenuItem>
   )
 }
@@ -189,6 +193,7 @@ export default function CurrencyList({
   fixedListRef,
   showImportView,
   setImportToken,
+  showCurrencyAmount,
 }: {
   height: number
   currencies: Currency[]
@@ -199,6 +204,7 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showImportView: () => void
   setImportToken: (token: Token) => void
+  showCurrencyAmount?: boolean
 }) {
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
@@ -237,13 +243,22 @@ export default function CurrencyList({
             isSelected={isSelected}
             onSelect={handleSelect}
             otherSelected={otherSelected}
+            showCurrencyAmount={showCurrencyAmount}
           />
         )
       } else {
         return null
       }
     },
-    [currencies.length, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
+    [
+      currencies.length,
+      onCurrencySelect,
+      otherCurrency,
+      selectedCurrency,
+      setImportToken,
+      showImportView,
+      showCurrencyAmount,
+    ]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {

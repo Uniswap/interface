@@ -6,7 +6,7 @@ import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
 import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
-import { RowBetween } from '../Row'
+import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 import { useAppDispatch } from 'state/hooks'
@@ -134,6 +134,19 @@ export function AddRemoveTabs({
         </TYPE.mediumHeader>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
+    </Tabs>
+  )
+}
+
+export function CreateProposalTabs() {
+  return (
+    <Tabs>
+      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
+        <HistoryLink to="/vote">
+          <StyledArrowLeft />
+        </HistoryLink>
+        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
+      </Row>
     </Tabs>
   )
 }
