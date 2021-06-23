@@ -285,7 +285,7 @@ export const StyledMenuButton = styled.button`
 `
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -343,7 +343,7 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           <HideSmall>
-            <NetworkCard chainId={chainId} />
+            <NetworkCard />
           </HideSmall>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>

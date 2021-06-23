@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import { YellowCard } from 'components/Card'
+import { BigNumber, utils } from 'ethers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useActiveWeb3React } from 'hooks/web3'
 import { transparentize } from 'polished'
 import React from 'react'
 import { ArrowDownCircle } from 'react-feather'
@@ -33,6 +35,7 @@ const BaseMenuItem = css`
   background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
   border-radius: 12px;
   color: ${({ theme }) => theme.text2};
+  cursor: pointer;
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -42,8 +45,22 @@ const BaseMenuItem = css`
   padding: 12px;
   :hover {
     color: ${({ theme }) => theme.text1};
-    cursor: pointer;
     text-decoration: none;
+  }
+`
+const DisabledMenuItem = styled.div`
+  ${BaseMenuItem}
+  align-items: center;
+  background-color: ${({ theme }) => theme.bg2};
+  cursor: auto;
+  display: flex;
+  font-size: 10px;
+  font-style: italic;
+  justify-content: center;
+  :hover,
+  :active,
+  :focus {
+    color: ${({ theme }) => theme.text2};
   }
 `
 const FallbackWrapper = styled(YellowCard)`
@@ -129,19 +146,55 @@ const NetworkInfo = styled.button`
     background-color: ${({ theme }) => theme.bg3};
   }
 `
-
-interface NetworkCardProps {
-  chainId?: SupportedChainId
-}
-export default function NetworkCard({ chainId }: NetworkCardProps) {
+export default function NetworkCard() {
+  const { chainId } = useActiveWeb3React()
   const node = React.useRef<HTMLDivElement>(null)
   const open = useModalOpen(ApplicationModal.ARBITRUM_OPTIONS)
   const toggle = useToggleModal(ApplicationModal.ARBITRUM_OPTIONS)
   useOnClickOutside(node, open ? toggle : undefined)
+  const { ethereum } = window
+  const [implements3085, setImplements3085] = React.useState(false)
+  React.useEffect(() => {
+    if (!ethereum || !chainId) {
+      return
+    }
+    // this is a noop to check if the user's setup supports EIP-3085
+    // https://eips.ethereum.org/EIPS/eip-3085
+    const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
+    ethereum
+      .request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: formattedChainId }],
+      })
+      .then((x) => {
+        // success case
+        if (x === null) {
+          setImplements3085(true)
+        }
+      })
+      .catch(() => {
+        setImplements3085(false)
+      })
+  }, [ethereum, chainId])
 
-  if (!chainId || chainId === SupportedChainId.MAINNET || !NETWORK_LABELS[chainId]) {
+  if (!chainId || chainId === SupportedChainId.MAINNET || !NETWORK_LABELS[chainId] || !ethereum) {
     return null
   }
+  function switchToL1() {
+    if (!ethereum) {
+      return
+    }
+    const formattedChainId = utils.hexStripZeros(BigNumber.from(SupportedChainId.MAINNET).toHexString())
+    ethereum
+      .request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: formattedChainId }],
+      })
+      .catch(() => {
+        setImplements3085(true)
+      })
+  }
+
   if (chainId === SupportedChainId.ARBITRUM_ONE) {
     return (
       <ArbitrumWrapper ref={node}>
@@ -170,12 +223,18 @@ export default function NetworkCard({ chainId }: NetworkCardProps) {
               </div>
               <LinkOutCircle />
             </MenuItem>
-            <ButtonMenuItem>
-              <div>
-                <Trans>Switch to Ethereum</Trans>
-              </div>
-              <L1Tag>L1</L1Tag>
-            </ButtonMenuItem>
+            {implements3085 ? (
+              <ButtonMenuItem onClick={switchToL1}>
+                <div>
+                  <Trans>Switch to Ethereum</Trans>
+                </div>
+                <L1Tag>L1</L1Tag>
+              </ButtonMenuItem>
+            ) : (
+              <DisabledMenuItem>
+                <Trans>Change your network to go back to L1</Trans>
+              </DisabledMenuItem>
+            )}
           </MenuFlyout>
         )}
       </ArbitrumWrapper>

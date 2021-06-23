@@ -12,6 +12,11 @@ interface Window {
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
+    request: (payload: Record<string, any>) => Promise<any>
+    sendAsync: (
+      payload: Record<string, any>,
+      callback?: (error: Error | null, result: JsonRpcResponse | undefined) => void
+    ) => void
   }
   web3?: Record<string, unknown>
 }

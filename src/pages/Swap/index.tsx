@@ -24,12 +24,12 @@ import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
+import { SupportedChainId } from '../../constants/chains'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
@@ -69,7 +69,10 @@ const StyledInfo = styled(Info)`
   }
 `
 
+const ARBITRUM_LOCAL_STORAGE_DISMISSED_KEY = 'HIDE_ARBITRUM_SWAP_ALERT'
+
 export default function Swap({ history }: RouteComponentProps) {
+  const { account, chainId, library } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -94,7 +97,6 @@ export default function Swap({ history }: RouteComponentProps) {
       return !Boolean(token.address in defaultTokens)
     })
 
-  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -351,6 +353,31 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
+  // arbitrum network alert
+  const [arbitrumAlertVisible, setArbitrumAlertVisible] = React.useState(false)
+  React.useEffect(() => {
+    const onArbitrum = chainId === SupportedChainId.ARBITRUM_ONE
+    if (onArbitrum && account && library) {
+      library.getBalance(account).then((balance) => {
+        if (balance.eq(0) || !localStorage.getItem(ARBITRUM_LOCAL_STORAGE_DISMISSED_KEY)) {
+          setArbitrumAlertVisible(true)
+        }
+      })
+    } else if (!onArbitrum) {
+      setArbitrumAlertVisible(false)
+    }
+  }, [account, chainId, library])
+  const dismissNetworkAlert = React.useCallback(() => {
+    setArbitrumAlertVisible(false)
+    if (account && library) {
+      library.getBalance(account).then((balance) => {
+        if (balance.gt(0)) {
+          localStorage.setItem(ARBITRUM_LOCAL_STORAGE_DISMISSED_KEY, '1')
+        }
+      })
+    }
+  }, [account, library])
+
   return (
     <>
       <TokenWarningModal
@@ -359,8 +386,8 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      {arbitrumAlertVisible && <SwapNetworkAlert dismiss={dismissNetworkAlert} />}
       <AppBody>
-        <SwapNetworkAlert />
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
