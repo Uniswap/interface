@@ -96,7 +96,6 @@ export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopov
     <div ref={popoverRef}>
       <StyledPopover
         placement="bottom-end"
-        offsetX={40}
         content={
           <>
             <OptionGrid>
