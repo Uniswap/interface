@@ -1,7 +1,7 @@
 import { ChainId, ETHER, Token } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -146,6 +146,16 @@ const NetworkCard = styled(YellowCard)`
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
+`
+const BridgeExternalLink = styled(ExternalLink)`
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: inherit;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  :hover {
+    text-decoration: none;
+  }
 `
 
 const BalanceText = styled(Text)`
@@ -344,6 +354,11 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
+          <HideSmall>
+            <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+              Bridge&nbsp;Assets&nbsp;↗
+            </BridgeExternalLink>
+          </HideSmall>
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
