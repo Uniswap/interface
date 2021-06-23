@@ -48,6 +48,8 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  showCurrencyAmount?: boolean
+  disableNonToken?: boolean
   showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
@@ -58,6 +60,8 @@ export function CurrencySearch({
   onCurrencySelect,
   otherSelectedCurrency,
   showCommonBases,
+  showCurrencyAmount,
+  disableNonToken,
   onDismiss,
   isOpen,
   showManageView,
@@ -203,7 +207,7 @@ export function CurrencySearch({
             {({ height }) => (
               <CurrencyList
                 height={height}
-                currencies={filteredSortedTokensWithETH}
+                currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
                 otherListTokens={filteredInactiveTokens}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
@@ -211,6 +215,7 @@ export function CurrencySearch({
                 fixedListRef={fixedList}
                 showImportView={showImportView}
                 setImportToken={setImportToken}
+                showCurrencyAmount={showCurrencyAmount}
               />
             )}
           </AutoSizer>

@@ -27,7 +27,6 @@ const NETWORK_URLS: {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.ARBITRUM_KOVAN]: `https://kovan5.arbitrum.io/rpc`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arb1.arbitrum.io/rpc`,
 }
 
@@ -37,7 +36,6 @@ const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.GOERLI,
   SupportedChainId.RINKEBY,
   SupportedChainId.ROPSTEN,
-  SupportedChainId.ARBITRUM_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
 ]
 
