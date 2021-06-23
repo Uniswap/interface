@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 const Web3StatusError = styled.div`
   display: flex;
   align-items: center;
-  padding: 2px 2px 2px 10px;
+  padding: 0 0 0 10px;
   color: ${({ theme }) => theme.text1};
   text-transform: uppercase;
   font-weight: bold;
@@ -33,6 +33,7 @@ const Web3StatusError = styled.div`
 const SwitchNetworkButton = styled.button`
   height: 29px;
   padding: 8px 14px;
+  margin-left: 8px;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
   border-radius: 12px;
