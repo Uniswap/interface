@@ -121,13 +121,13 @@ const ProposerAddressLink = styled(ExternalLink)`
 
 export default function VotePage({
   match: {
-    params: { id },
+    params: { governorIndex, id },
   },
-}: RouteComponentProps<{ id: string }>) {
+}: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(id)
+  const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
 
   // update support based on button interactions
   const [support, setSupport] = useState<boolean>(true)

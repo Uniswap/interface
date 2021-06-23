@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Afrikaans\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -92,12 +92,12 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0 /> Alle voorstelle"
+msgstr "<0/> Alle voorstelle"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> Stemme"
+msgstr "<0/> Stemme"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -110,6 +110,10 @@ msgstr "<0> Terug na</0> V3"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> Wenk:</0> As u poeltekens verwyder, verander u u posisie in onderliggende tekens teen die huidige koers, eweredig aan u deel van die poel. Opgelope fooie is ingesluit by die bedrae wat u ontvang."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> Wenk:</0> Kies 'n aksie en beskryf u voorstel vir die gemeenskap. Die voorstel kan nie na indiening gewysig word nie, en verifieer dus alle inligting voordat dit ingedien word. Die stemtydperk sal onmiddellik begin en vir 7 dae duur. Om 'n aangepaste handeling voor te stel, lees <1> die dokumente</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -171,7 +175,7 @@ msgstr "Voeg likiditeit by."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Voeg {0} by Metamask <0 />"
+msgstr "Voeg {0} by Metamask <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -223,8 +227,8 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #: src/hooks/useSwapCallback.ts
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "'n Fout het voorgekom tydens die uitvoer van hierdie ruil. U moet dalk u glyverdraagsaamheid verhoog. As dit nie werk nie, is daar moontlik 'n onverenigbaarheid met die teken wat u verhandel. Nota-fooi vir oordrag- en rebase-tekens is nie versoenbaar met Uniswap V3 nie."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "'N Fout het voorgekom tydens die uitvoering van hierdie ruil. U moet dalk u glyverdraagsaamheid verhoog. As dit nie werk nie, kan daar 'n onversoenbaarheid wees met die teken wat u verhandel. Opmerking: fooi vir oordrag en herbasis-tokens is nie versoenbaar met Uniswap V3 nie."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -234,6 +238,10 @@ msgstr "Analise"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "Goedkeur"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "Keur token goed"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -264,7 +272,7 @@ msgstr "Is jy seker?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "As lid van die Uniswap-gemeenskap kan u daarop aanspraak maak dat UNI gebruik word vir stemming en beheer. <0 /> <1 /> <2> Lees meer oor UNI</2>"
+msgstr "As lid van die Uniswap-gemeenskap kan u daarop aanspraak maak dat UNI gebruik word vir stemming en beheer. <0/> <1/> <2> Lees meer oor UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -400,6 +408,10 @@ msgstr "Naby"
 msgid "Closed"
 msgstr "Gesluit"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Geslote poste"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Kode"
@@ -514,6 +526,11 @@ msgstr "Kopieer adres"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Skep Poel en Verskaf"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "Skep 'n voorstel"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -727,8 +744,8 @@ msgid "Get support on Discord"
 msgstr "Kry ondersteuning op Discord"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Versteek geslote posisies"
+msgid "Hide"
+msgstr "Steek weg"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1136,6 +1153,18 @@ msgstr "Prys:"
 msgid "Prices and pool share"
 msgstr "Pryse en swembadaandeel"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "Voorstel"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "Voorstel ingedien"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "Voorstel Titel"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "Voorstelle"
@@ -1143,6 +1172,10 @@ msgstr "Voorstelle"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Voorstelle wat deur lede van die gemeenskap ingedien word, sal hier verskyn."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "Voorgestelde aksie"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1216,6 +1249,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "Beperk ruilings slegs vir direkte pare."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Keer terug"
 
@@ -1246,6 +1280,10 @@ msgstr "Kies 'n teken"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Kies 'n teken om u v2-likiditeit te vind."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "Kies 'n aksie"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1280,6 +1318,10 @@ msgstr "Deel van die swembad"
 msgid "Share of Pool:"
 msgstr "Aandeel van die poel:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Wys"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Wys Portis"
@@ -1304,6 +1346,14 @@ msgstr "Iets het verkeerd geloop"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Stap 1. Kry UNI-V2 likiditeitstekens"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "Nuwe voorstel ingedien"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "Voorlegging indien"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1336,7 +1386,7 @@ msgstr "Ruil {0} {1} vir {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Dankie dat u deel is van die Uniswap-gemeenskap <0 />"
+msgstr "Dankie dat u deel is van die Uniswap-gemeenskap <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1451,6 +1501,10 @@ msgstr "Transaksie ingedien"
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "Transaksiesperdatum"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "Oordragtoken"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1597,6 +1651,10 @@ msgstr "Kyk na opgelope fooie en analise <0> ↗</0>"
 msgid "View list"
 msgstr "Kyk na lys"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Uitsig op Etherscan"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1695,6 +1753,10 @@ msgstr "Draai toe"
 msgid "Wrong Network"
 msgstr "Verkeerde netwerk"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "U het reeds 'n aktiewe of hangende voorstel"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "U skep 'n poel"
@@ -1715,6 +1777,10 @@ msgstr "U kan self oor elke voorstel stem of u stemme aan 'n derde party delegee
 msgid "You can now trade {0}"
 msgstr "U kan nou {0} verhandel"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "U het nie genoeg stemme om 'n voorstel in te dien nie"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "U het nog nie likiditeit in hierdie poel nie."
@@ -1726,6 +1792,10 @@ msgstr "U moet 'n rekening koppel."
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "U moet die Uniswap-slimkontrakte toestemming gee om u {0}te gebruik. U hoef dit slegs een keer per teken te doen."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "U moet {formattedProposalThreshold} stemme hê om 'n voorstel in te dien"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -1872,7 +1942,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> per <1 />"
+msgstr "{0} <0/> per <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1999,7 +2069,7 @@ msgstr "{tokenB} per {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,12 +14,12 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-16 12:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
-msgstr "$ -"
+msgstr "$-"
 
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -92,12 +92,12 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0 /> כל ההצעות"
+msgstr "<0/> כל ההצעות"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> הצבעות"
+msgstr "<0/> הצבעות"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -110,6 +110,10 @@ msgstr "<0> חזרה אל</0> V3"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> טיפ:</0> הסרת אסימונים לבריכה ממירה את עמדתך בחזרה לאסימונים בסיסיים בקצב הנוכחי, פרופורציונלי ביחס לחלקך בבריכה. העמלות שנצברו כלולות בסכומים שאתה מקבל."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> טיפ:</0> בחר פעולה ותיאר את ההצעה שלך לקהילה. לא ניתן לשנות את ההצעה לאחר הגשתה, לכן אנא בדוק את כל המידע לפני הגשתה. תקופת ההצבעה תחל מיידית ותמשך 7 ימים. כדי להציע פעולה מותאמת אישית, <1> קרא את המסמכים</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -137,7 +141,7 @@ msgstr "אודות"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "קבלה"
+msgstr "לְקַבֵּל"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
@@ -171,7 +175,7 @@ msgstr "הוסף נזילות."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "הוסף {0} למטא-מסכה <0 />"
+msgstr "הוסף {0} למטא-מסכה <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -223,8 +227,8 @@ msgid "Amount"
 msgstr "כמות"
 
 #: src/hooks/useSwapCallback.ts
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. עמלת הערה על אסימוני העברה וריבוי בסיס אינם תואמים ל- Uniswap V3."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -234,6 +238,10 @@ msgstr "ניתוח"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "לְאַשֵׁר"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "אשר אסימון"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -264,7 +272,7 @@ msgstr "האם אתה בטוח?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "כחבר בקהילת Uniswap אתה יכול לטעון ש- UNI משמשת להצבעה ולממשל. <0 /> <1 /> <2> קרא עוד על UNI</2>"
+msgstr "כחבר בקהילת Uniswap אתה יכול לטעון ש- UNI משמשת להצבעה ולממשל. <0/> <1/> <2> קרא עוד על UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -316,7 +324,7 @@ msgstr "על ידי הוספת רשימה זו אתה סומך באופן מרו
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "על ידי חיבור ארנק אתה מסכים לתנאי השירות <0> של Uniswap Labs</0> ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול Uniswap</1>."
+msgstr "על ידי חיבור ארנק אתה מסכים <0>לתנאי השירות</0> של Uniswap Labs ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול <1>Uniswap</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -399,6 +407,10 @@ msgstr "סגור"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "סָגוּר"
+
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "תפקידים סגורים"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -515,6 +527,11 @@ msgstr "העתק כתובת"
 msgid "Create Pool & Supply"
 msgstr "צור בריכה ואספקה"
 
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "צור הצעה"
+
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
@@ -522,7 +539,7 @@ msgstr "צור זוג"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "צור בריכה"
+msgstr "צור מאגר"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -727,8 +744,8 @@ msgid "Get support on Discord"
 msgstr "קבל תמיכה בדיסקורד"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "הסתר עמדות סגורות"
+msgid "Hide"
+msgstr "להתחבא"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1136,6 +1153,18 @@ msgstr "מחיר:"
 msgid "Prices and pool share"
 msgstr "מחירים ונתח בריכה"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "הצעה"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "ההצעה הוגשה"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "כותרת ההצעה"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "הצעות"
@@ -1143,6 +1172,10 @@ msgstr "הצעות"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "הצעות שהוגשו על ידי חברי הקהילה יופיעו כאן."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "הצעה לפעולה"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1216,6 +1249,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "מגבלות מחליפות לזוגות ישירים בלבד."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "לַחֲזוֹר"
 
@@ -1246,6 +1280,10 @@ msgstr "בחר אסימון"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "בחר אסימון כדי למצוא את נזילות ה- v2 שלך."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "בחר פעולה"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1280,6 +1318,10 @@ msgstr "נתח המאגר"
 msgid "Share of Pool:"
 msgstr "נתח המאגר:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "הופעה"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "הראה את פורטיס"
@@ -1304,6 +1346,14 @@ msgstr "משהו השתבש"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "שלב 1. קבל תווי נזילות של UNI-V2"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "הוגשה הצעה חדשה"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "הגשת הצעה"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1452,6 +1502,10 @@ msgstr "העסקה הוגשה"
 msgid "Transaction deadline"
 msgstr "מועד אחרון לעסקה"
 
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "העברת אסימון"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "נסה שוב"
@@ -1597,6 +1651,10 @@ msgstr "צפו בעמלות וניתוחים צבורים <0> ↗</0>"
 msgid "View list"
 msgstr "רשימת צפייה"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "מבט על אתרסקאן"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1695,6 +1753,10 @@ msgstr "לַעֲטוֹף"
 msgid "Wrong Network"
 msgstr "רשת לא נכונה"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "כבר יש לך הצעה פעילה או ממתינה"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "אתה יוצר בריכה"
@@ -1715,6 +1777,10 @@ msgstr "אתה יכול להצביע בעצמך על כל הצעה או להאצ
 msgid "You can now trade {0}"
 msgstr "כעת אתה יכול לסחור ב {0}"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "אין לך מספיק קולות כדי להגיש הצעה"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "עדיין אין לך נזילות במאגר זה."
@@ -1727,9 +1793,13 @@ msgstr "עליך לחבר חשבון."
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "עליך לתת לחוזים החכמים של Uniswap להשתמש ב- {0}שלך. אתה צריך לעשות זאת רק פעם אחת לכל אסימון."
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "עליך {formattedProposalThreshold} קולות כדי להגיש הצעה"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "עליכם להפקיד נזילות רק ב- Uniswap V3 במחיר שלדעתכם נכון. <0 /> אם נראה שהמחיר שגוי, באפשרותך להחליף כדי להזיז את המחיר או לחכות שמישהו אחר יעשה זאת."
+msgstr "עליכם להפקיד נזילות רק ב- Uniswap V3 במחיר שלדעתכם נכון. <0/> אם נראה שהמחיר שגוי, באפשרותך להחליף כדי להזיז את המחיר או לחכות שמישהו אחר יעשה זאת."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1872,7 +1942,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> לכל <1 />"
+msgstr "{0} <0 /> לכל <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1999,7 +2069,7 @@ msgstr "{tokenB} לכל {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
