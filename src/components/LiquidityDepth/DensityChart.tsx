@@ -33,20 +33,20 @@ const Wrapper = styled(Box)`
 `
 
 export default function DensityChart({
-  price,
   currencyA,
   currencyB,
   feeAmount,
+  price,
   priceLower,
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
 }: {
-  price: string | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: number
+  price?: Price<Token, Token>
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
@@ -119,12 +119,18 @@ export default function DensityChart({
                   leftHandleColor={currencyA ? tokenAColor : theme.primary1}
                   leftLabel={
                     price && leftPrice
-                      ? `${((parseFloat(leftPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      ? `${(
+                          (parseFloat(leftPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
+                          100
+                        ).toFixed(2)}%`
                       : undefined
                   }
                   rightLabel={
                     price && rightPrice
-                      ? `${((parseFloat(rightPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      ? `${(
+                          (parseFloat(rightPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
+                          100
+                        ).toFixed(2)}%`
                       : undefined
                   }
                   rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
@@ -156,12 +162,12 @@ export default function DensityChart({
               data={
                 maxLiquidity && price
                   ? [
-                      { x: parseFloat(price), y: 0 },
-                      { x: parseFloat(price), y: parseFloat(maxLiquidity.toString()) },
+                      { x: parseFloat(price.toSignificant(5)), y: 0 },
+                      { x: parseFloat(price.toSignificant(5)), y: parseFloat(maxLiquidity.toString()) },
                     ]
                   : []
               }
-              labels={({ datum }) => (datum.y !== 0 ? price : '')}
+              labels={({ datum }) => (datum.y !== 0 ? price.toSignificant(5) : '')}
               labelComponent={
                 <VictoryLabel
                   renderInPortal
