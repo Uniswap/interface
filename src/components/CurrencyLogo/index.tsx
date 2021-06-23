@@ -16,25 +16,36 @@ const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
 const StyledLogo = styled(Logo)<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: ${({ size }) => size};
-  border: solid 1px ${props => props.theme.white};
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-`
-
-const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
-  margin-right: ${({ marginRight }) => marginRight}px;
-  margin-left: ${({ marginLeft }) => marginLeft}px;
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
-  background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+`
+
+const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
   position: relative;
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  margin-right: ${({ marginRight }) => marginRight}px;
+  margin-left: ${({ marginLeft }) => marginLeft}px;
+  border-radius: ${({ size }) => size};
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: inherit;
+    height: inherit;
+    background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+    border-radius: 50%;
+    z-index: -1;
+  }
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
