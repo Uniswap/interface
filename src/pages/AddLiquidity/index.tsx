@@ -144,10 +144,6 @@ export default function AddLiquidity({
     existingPosition
   )
 
-  console.log(atBounds)
-  console.log(ticks)
-  console.log(pricesAtTicks)
-
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
 

@@ -232,10 +232,13 @@ export function useV3DerivedMintInfo(
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
 
-  // invert and whatno
   const atBounds = {
-    [Bound.LOWER]: feeAmount && tickLower === nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]),
-    [Bound.UPPER]: feeAmount && tickUpper === nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]),
+    [Bound.LOWER]:
+      feeAmount &&
+      tickLower === nearestUsableTick(invertPrice ? TickMath.MAX_TICK : TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]),
+    [Bound.UPPER]:
+      feeAmount &&
+      tickUpper === nearestUsableTick(invertPrice ? TickMath.MIN_TICK : TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]),
   }
 
   // mark invalid range

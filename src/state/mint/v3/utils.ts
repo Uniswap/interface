@@ -21,10 +21,10 @@ export function tryParseTick(
   }
 
   // handle very small amounts manually
-  const isMinTick = parseFloat(parseFloat(value).toFixed(quoteToken.decimals)) === 0
+  const isMinPrice = parseFloat(parseFloat(value).toFixed(quoteToken.decimals)) === 0
 
   // base token fixed at 1 unit, quote token amount based on typed input
-  const amount = isMinTick
+  const amount = isMinPrice
     ? CurrencyAmount.fromRawAmount(quoteToken, JSBI.BigInt('0'))
     : tryParseAmount(value, quoteToken)
   const amountOne = tryParseAmount('1', baseToken)
