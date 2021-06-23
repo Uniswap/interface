@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-23 06:05\n"
+"PO-Revision-Date: 2021-06-23 08:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -228,7 +228,7 @@ msgstr "数量"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "このスワップを実行しようとしたときにエラーが発生しました。スリッページの許容範囲を広げる必要があるかもしれません。それが機能しない場合は、取引しているトークンとの互換性がない可能性があります。注：転送およびリベーストークンの料金は、UniswapV3と互換性がありません。"
+msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -401,7 +401,7 @@ msgstr "すべてクリア"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "終了"
+msgstr "閉じる"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
