@@ -51,20 +51,19 @@ export const GlobalDataItemValue = styled.span`
 `
 
 export const AddLiquidityInstructionContainer = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: 1fr 5fr;
+  display: flex;
   margin-bottom: 20px;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 1fr;
+  ${({ theme }) => theme.mediaWidth.upToXL`
+    flex-direction: column;
   `};
 `
 
 export const AddLiquidityTitleContainer = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
+  margin-right: 1rem;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     justify-content: flex-start;
@@ -77,6 +76,8 @@ export const AddLiquidityTitle = styled.div`
 `
 
 export const AddLiquidityInstructionText = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: ${({ theme }) => theme.text11};
 `
