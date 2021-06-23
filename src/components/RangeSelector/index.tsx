@@ -6,6 +6,7 @@ import { RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import PresetsButtons from './PresetsButtons'
 import { batch } from 'react-redux'
+import { Bound } from 'state/mint/v3/actions'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -22,6 +23,7 @@ export default function RangeSelector({
   currencyA,
   currencyB,
   feeAmount,
+  atBounds,
 }: {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
@@ -36,6 +38,7 @@ export default function RangeSelector({
   currencyA?: Currency | null
   currencyB?: Currency | null
   feeAmount?: number
+  atBounds: { [bound in Bound]?: boolean | undefined }
 }) {
   const tokenA = (currencyA ?? undefined)?.wrapped
   const tokenB = (currencyB ?? undefined)?.wrapped
@@ -65,11 +68,12 @@ export default function RangeSelector({
       />
       <RowBetween>
         <StepCounter
-          value={leftPrice?.toSignificant(5) ?? ''}
+          value={atBounds[Bound.LOWER] ? '0' : leftPrice?.toSignificant(5) ?? ''}
           onUserInput={onLeftRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
           increment={isSorted ? getIncrementLower : getDecrementUpper}
+          decrementDisabled={atBounds[Bound.LOWER]}
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
@@ -77,11 +81,12 @@ export default function RangeSelector({
           tokenB={currencyB?.symbol}
         />
         <StepCounter
-          value={rightPrice?.toSignificant(5) ?? ''}
+          value={atBounds[Bound.UPPER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
           onUserInput={onRightRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementUpper : getIncrementLower}
           increment={isSorted ? getIncrementUpper : getDecrementLower}
+          incrementDisabled={atBounds[Bound.UPPER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
           tokenA={currencyA?.symbol}

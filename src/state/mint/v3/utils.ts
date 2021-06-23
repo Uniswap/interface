@@ -6,7 +6,7 @@ import {
   encodeSqrtRatioX96,
   TickMath,
 } from '@uniswap/v3-sdk/dist/'
-import { Price, Token } from '@uniswap/sdk-core'
+import { Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { tryParseAmount } from 'state/swap/hooks'
 import JSBI from 'jsbi'
 
@@ -20,8 +20,13 @@ export function tryParseTick(
     return undefined
   }
 
+  // handle very small amounts manually
+  const isMinTick = parseFloat(parseFloat(value).toFixed(quoteToken.decimals)) === 0
+
   // base token fixed at 1 unit, quote token amount based on typed input
-  const amount = tryParseAmount(value, quoteToken)
+  const amount = isMinTick
+    ? CurrencyAmount.fromRawAmount(quoteToken, JSBI.BigInt('0'))
+    : tryParseAmount(value, quoteToken)
   const amountOne = tryParseAmount('1', baseToken)
 
   if (!amount || !amountOne) return undefined

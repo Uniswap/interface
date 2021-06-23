@@ -110,6 +110,7 @@ export function useV3DerivedMintInfo(
   depositADisabled: boolean
   depositBDisabled: boolean
   invertPrice: boolean
+  atBounds: { [bound in Bound]?: boolean | undefined }
 } {
   const { account } = useActiveWeb3React()
 
@@ -230,6 +231,12 @@ export function useV3DerivedMintInfo(
   }, [existingPosition, feeAmount, invertPrice, leftRangeTypedValue, rightRangeTypedValue, token0, token1])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
+
+  // invert and whatno
+  const atBounds = {
+    [Bound.LOWER]: feeAmount && tickLower === nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]),
+    [Bound.UPPER]: feeAmount && tickUpper === nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]),
+  }
 
   // mark invalid range
   const invalidRange = Boolean(typeof tickLower === 'number' && typeof tickUpper === 'number' && tickLower >= tickUpper)
@@ -429,6 +436,7 @@ export function useV3DerivedMintInfo(
     depositADisabled,
     depositBDisabled,
     invertPrice,
+    atBounds,
   }
 }
 
@@ -526,7 +534,7 @@ export function useRangeHopCallbacks(
       )
 
       return [
-        newPriceLower.toSignificant(8, undefined, Rounding.ROUND_UP),
+        newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),
         newPriceUpper.toSignificant(5, undefined, Rounding.ROUND_UP),
       ]
     }

@@ -175,6 +175,28 @@ export const ButtonPink = styled(Base)`
   }
 `
 
+export const ButtonYellow = styled(Base)`
+  background-color: ${({ theme }) => theme.yellow3};
+  color: white;
+
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.yellow3)};
+    background-color: ${({ theme }) => darken(0.05, theme.yellow3)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.yellow3)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.yellow3)};
+    background-color: ${({ theme }) => darken(0.1, theme.yellow3)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.yellow3};
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
 export const ButtonUNIGradient = styled(ButtonPrimary)`
   color: white;
   padding: 4px 8px;
@@ -195,19 +217,19 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
   }
 `
 
-export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+export const ButtonOutlined = styled(Base)<{ borderColor?: string }>`
+  border: 1px solid ${({ theme, borderColor }) => borderColor ?? theme.bg2};
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
 
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme, borderColor }) => (borderColor ? darken(0.05, borderColor) : theme.bg4)};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme, borderColor }) => (borderColor ? darken(0.05, borderColor) : theme.bg4)};
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme, borderColor }) => (borderColor ? darken(0.05, borderColor) : theme.bg4)};
   }
   &:disabled {
     opacity: 50%;
