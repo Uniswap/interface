@@ -42,17 +42,19 @@ const HeaderFrame = styled.div`
 
 const HeaderControls = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    width: 100%;
-    max-width: 960px;
-    padding: 1rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
     width: 100%;
-    z-index: 99;
     height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    max-width: 960px;
+    padding: 1rem;
+    z-index: 99;
+    background-color: ${({ theme }) => theme.bg2};
   `};
 `
 
@@ -173,6 +175,10 @@ const HeaderSubRow = styled(RowFlat)`
   align-items: center;
   justify-content: flex-end;
   margin-top: 10px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: 0;
+  `};
 `;
 
 const Amount = styled.p`

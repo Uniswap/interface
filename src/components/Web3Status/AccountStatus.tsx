@@ -88,6 +88,12 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   `};
 `
 
+const NetworkName = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`;
+
 interface AccountStatusProps {
   pendingTransactions: string[];
   ENSName?: string;
@@ -116,9 +122,11 @@ export function AccountStatus({pendingTransactions, ENSName, account, networkCon
           <IconWrapper size={20}>
             <img src={ChainLogo[networkConnectorChainId]} alt="chain logo" />
           </IconWrapper>
-          <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
-            {ChainLabel[networkConnectorChainId]}
-          </TYPE.white>
+          <NetworkName>
+            <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
+              {ChainLabel[networkConnectorChainId]}
+            </TYPE.white>
+          </NetworkName>
           <TriangleIcon/>
         </Web3StatusNetwork>
       </NetworkSwitcherPopover>
