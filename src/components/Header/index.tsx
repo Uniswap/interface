@@ -19,7 +19,6 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
-import { isMobile } from 'react-device-detect'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -194,6 +193,21 @@ const Amount = styled.p`
   }
 `;
 
+const DesktopSettingsWrapper = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`;
+
+const MobileSettingsWrapper = styled.div`
+  display: none;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+  `};
+`;
+
+
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -243,16 +257,19 @@ function Header({ history }: { history: any }) {
             </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
-            
             <MobileOptions history={history} />
           </MoreLinksIcon>
-          {isMobile && <Settings />}
+          <MobileSettingsWrapper>
+            <Settings />
+          </MobileSettingsWrapper>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
           <Web3Status />
-          {!isMobile && <Settings />}
+          <DesktopSettingsWrapper>
+            <Settings />
+          </DesktopSettingsWrapper>
         </HeaderElement>
         <HeaderSubRow>
           {account && userNativeCurrencyBalance ? (
