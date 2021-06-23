@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-23 06:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>ヒント:</0> 流動性トークンを削除すると、プールの
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0>ヒント：</0>アクションを選択し、コミュニティへの提案を説明してください。提出後に提案を変更することはできませんので、提出する前にすべての情報を確認してください。投票期間はすぐに始まり、7日間続きます。カスタムアクションを提案するには、<1>ドキュメントをお読みください</1>。"
+msgstr "<0>ヒント：</0>アクションを選択し、コミュニティへの提案を記載してください。提案は提出後に変更できませんので、提出する前にすべての情報を確認してください。投票期間はすぐに始まり、7日間続きます。カスタムアクションを提案する場合、<1>ドキュメントをお読みください</1>。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -232,7 +232,7 @@ msgstr "このスワップを実行しようとしたときにエラーが発生
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "アナリティクス"
+msgstr "分析"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -932,7 +932,7 @@ msgstr "最大："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "最大売却数量"
+msgstr "最大売却数"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -982,7 +982,7 @@ msgstr "最小:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
-msgstr "最小購入数量"
+msgstr "最小購入数"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1163,7 +1163,7 @@ msgstr "提出された提案"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal Title"
-msgstr "提案タイトル"
+msgstr "提案のタイトル"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1175,7 +1175,7 @@ msgstr "コミュニティメンバーが提出した提案はここに表示さ
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
-msgstr "提案されたアクション"
+msgstr "提案するアクション"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1283,7 +1283,7 @@ msgstr "トークンを選択して、V2の流動性を見つけます。"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr "アクションを選択します"
+msgstr "アクションの選択"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1353,7 +1353,7 @@ msgstr "提出された新しい提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "提案の提出"
+msgstr "提案を提出中"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1402,11 +1402,11 @@ msgstr "市場価格が設定した価格範囲から外れています。単一
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "買うトークンが転送できません。買うトークンに問題がある可能性があります。"
+msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "購入するトークンは転送できません。購入するトークンに問題がある可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
+msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1434,7 +1434,7 @@ msgstr "このトークンはご利用中のトークンリストに存在しま
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "本ツールで {0} の流動性をV3に安全に移行します。移行コントラクトは"
+msgstr "本ツールで {0} の流動性をV3に安全に移行します。このプロセスは以下によって特定の第三者を信用する必要が一切ないものになっています。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1504,7 +1504,7 @@ msgstr "取引期限"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "トークンの転送"
+msgstr "トークンを転送する"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1573,7 +1573,7 @@ msgstr "Uniswap流動性マイニング"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "こちら↗"
+msgstr "Uniswap移行コントラクト↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1795,7 +1795,7 @@ msgstr "{0}を使用するには、Uniswapスマートコントラクトに許�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr "提案を送信するには、 {formattedProposalThreshold} 票が必要です"
+msgstr "提案を提出するには、{formattedProposalThreshold}票が必要です"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
