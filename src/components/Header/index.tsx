@@ -30,7 +30,6 @@ const HeaderFrame = styled.div`
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
     width: calc(100%);
     position: relative;
   `};
