@@ -99,24 +99,27 @@ export default function DensityChart({
         </ColumnCenter>
       ) : (
         <>
-          <BrushableAreaChart
-            data={filteredData ?? []}
-            dimensions={{ width: 400, height: 225, boundedHeight: 0, boundedWidth: 0 }}
-            style={{ fill: theme.primaryText1, stroke: 'transparent' }}
-            brushDomain={
-              leftPrice && rightPrice
-                ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                : undefined
-            }
-            onBrushDomainChange={(domain) => {
-              const leftRangeValue = Number(domain[0])
-              const rightRangeValue = Number(domain[1])
+          {!filteredData || !price ? (
+            <div>Loading</div>
+          ) : (
+            <BrushableAreaChart
+              data={{ series: filteredData, current: parseFloat(price) }}
+              dimensions={{ width: 350, height: 225, boundedHeight: 0, boundedWidth: 0 }}
+              brushDomain={
+                leftPrice && rightPrice
+                  ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                  : undefined
+              }
+              onBrushDomainChange={(domain) => {
+                const leftRangeValue = Number(domain[0])
+                const rightRangeValue = Number(domain[1])
 
-              // simulate user input for auto-formatting and other validations
-              leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-              rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
-            }}
-          />
+                // simulate user input for auto-formatting and other validations
+                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+              }}
+            />
+          )}
         </>
       )}
     </Wrapper>
