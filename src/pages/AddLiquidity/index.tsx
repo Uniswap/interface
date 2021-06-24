@@ -460,6 +460,7 @@ export default function AddLiquidity({
                   priceLower={priceLower}
                   priceUpper={priceUpper}
                   outOfRange={outOfRange}
+                  atBounds={atBounds}
                 />
               )}
               bottomContent={() => (
@@ -535,6 +536,7 @@ export default function AddLiquidity({
                     position={existingPosition}
                     title={<Trans>Selected Range</Trans>}
                     inRange={!outOfRange}
+                    atBounds={atBounds}
                   />
                 ) : (
                   <FeeSelector

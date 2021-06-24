@@ -23,6 +23,7 @@ export const Badge = styled(Card)<{ inRange?: boolean }>`
 export function Review({
   position,
   outOfRange,
+  atBounds,
 }: {
   position?: Position
   existingPosition?: Position
@@ -30,11 +31,14 @@ export function Review({
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   outOfRange: boolean
+  atBounds: { [bound: string]: boolean }
 }) {
   return (
     <Wrapper>
       <AutoColumn gap="lg">
-        {position ? <PositionPreview position={position} inRange={!outOfRange} title={'Selected Range'} /> : null}
+        {position ? (
+          <PositionPreview position={position} inRange={!outOfRange} atBounds={atBounds} title={'Selected Range'} />
+        ) : null}
       </AutoColumn>
     </Wrapper>
   )
