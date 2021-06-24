@@ -32,7 +32,7 @@ export default function RangeSelector({
   getDecrementUpper: () => string
   getIncrementUpper: () => string
   getSetRange: (numTicks: number) => string[]
-  getSetFullRange: () => string[]
+  getSetFullRange: () => void
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   currencyA?: Currency | null
@@ -58,13 +58,7 @@ export default function RangeSelector({
             onRightRangeInput(isSorted ? range2 : range1)
           })
         }}
-        setFullRange={() => {
-          const [range1, range2] = getSetFullRange()
-          batch(() => {
-            onLeftRangeInput(isSorted ? range1 : range2)
-            onRightRangeInput(isSorted ? range2 : range1)
-          })
-        }}
+        setFullRange={getSetFullRange}
       />
       <RowBetween>
         <StepCounter
@@ -74,6 +68,7 @@ export default function RangeSelector({
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
           increment={isSorted ? getIncrementLower : getDecrementUpper}
           decrementDisabled={atBounds[Bound.LOWER]}
+          incrementDisabled={atBounds[Bound.LOWER]}
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
@@ -87,6 +82,7 @@ export default function RangeSelector({
           decrement={isSorted ? getDecrementUpper : getIncrementLower}
           increment={isSorted ? getIncrementUpper : getDecrementLower}
           incrementDisabled={atBounds[Bound.UPPER]}
+          decrementDisabled={atBounds[Bound.UPPER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
           tokenA={currencyA?.symbol}
