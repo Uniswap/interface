@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 
-import { BUNDLE_ID, FACTORY_ADDRESS } from '../constants'
+import { ChainId } from 'libs/sdk/src'
+import { BUNDLE_ID, FACTORY_ADDRESSES } from '../constants'
 
 export const ETH_PRICE = (block?: number) => {
   const queryString = block
@@ -22,11 +23,23 @@ export const ETH_PRICE = (block?: number) => {
   return gql(queryString)
 }
 
-export const GLOBAL_DATA = (block?: number) => {
+export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
+  const queryString = `
+    query tokens {
+      tokens(where: { id: "${tokenAddress.toLowerCase()}"} ) {
+        derivedETH
+      }
+    }
+    `
+
+  return gql(queryString)
+}
+
+export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
   const queryString = `query dmmFactories {
     dmmFactories(
        ${block ? `block: { number: ${block}}` : ``} 
-       where: { id: "${FACTORY_ADDRESS.toLowerCase()}" }) {
+       where: { id: "${FACTORY_ADDRESSES[chainId as ChainId].toLowerCase()}" }) {
         id
         totalVolumeUSD
         totalFeeUSD
@@ -34,6 +47,8 @@ export const GLOBAL_DATA = (block?: number) => {
         untrackedVolumeUSD
         totalLiquidityUSD
         totalLiquidityETH
+        totalAmplifiedLiquidityUSD
+        totalAmplifiedLiquidityETH
         txCount
         pairCount
       }
@@ -212,3 +227,26 @@ export const POOLS_HISTORICAL_BULK = (block: number, pools: string[]) => {
 
   return gql(queryString)
 }
+
+export const FARM_DATA = gql`
+  query farmData($poolsList: [Bytes]!) {
+    pools(where: { id_in: $poolsList }) {
+      id
+      token0 {
+        id
+        symbol
+        name
+        decimals
+      }
+      token1 {
+        id
+        symbol
+        name
+        decimals
+      }
+      amp
+      reserveUSD
+      totalSupply
+    }
+  }
+`

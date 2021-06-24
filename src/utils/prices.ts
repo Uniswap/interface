@@ -1,8 +1,9 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from 'libs/sdk/src'
+import { ChainId, Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from 'libs/sdk/src'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
+import { convertToNativeTokenFromETH } from './dmm'
 
 export function computeFee(pairs?: Array<Pair>): Fraction {
   let realizedLPFee: Fraction = new Fraction(JSBI.BigInt(0))
@@ -24,7 +25,7 @@ export function computeFee(pairs?: Array<Pair>): Fraction {
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
   trade?: Trade
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount, accruedFeePercent: Percent } {
+): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount; accruedFeePercent: Percent } {
   const pairs = trade ? trade.route.pairs : undefined
   const realizedLPFee: Fraction = computeFee(pairs)
   const accruedFeePercent: Percent = new Percent(realizedLPFee.numerator, JSBI.BigInt(1000000000000000000))
@@ -68,15 +69,16 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   return 0
 }
 
-export function formatExecutionPrice(trade?: Trade, inverted?: boolean): string {
-  if (!trade) {
+export function formatExecutionPrice(trade?: Trade, inverted?: boolean, chainId?: ChainId): string {
+  if (!trade || !chainId) {
     return ''
   }
+  const nativeInput =
+    trade.inputAmount.currency && convertToNativeTokenFromETH(trade.inputAmount.currency as Currency, chainId)
+
+  const nativeOutput =
+    trade.outputAmount.currency && convertToNativeTokenFromETH(trade.outputAmount.currency as Currency, chainId)
   return inverted
-    ? `${trade.executionPrice.invert().toSignificant(6)} ${trade.inputAmount.currency.symbol} / ${
-        trade.outputAmount.currency.symbol
-      }`
-    : `${trade.executionPrice.toSignificant(6)} ${trade.outputAmount.currency.symbol} / ${
-        trade.inputAmount.currency.symbol
-      }`
+    ? `${trade.executionPrice.invert().toSignificant(6)} ${nativeInput?.symbol} / ${nativeOutput?.symbol}`
+    : `${trade.executionPrice.toSignificant(6)} ${nativeOutput?.symbol} / ${nativeInput.symbol}`
 }

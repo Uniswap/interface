@@ -3,12 +3,13 @@ import { useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
-import { client } from 'apollo/client'
+import { exchangeCient } from 'apollo/client'
 import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
-import { Currency } from 'libs/sdk/src'
+import { ChainId, Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
 import { updatePools, setLoading, setError } from './actions'
-import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get2DayPercentChange } from 'utils'
+import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get24hValue } from 'utils'
+import { useActiveWeb3React } from 'hooks'
 
 export interface SubgraphPoolData {
   id: string
@@ -47,46 +48,25 @@ export function useUserLiquidityPositions(user: string | null | undefined) {
   return { loading, error, data }
 }
 
-function parseData(
-  data: any,
-  oneDayData: any,
-  twoDayData: any,
-  oneWeekData: any,
-  ethPrice: any,
-  oneDayBlock: any
-): SubgraphPoolData {
+function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any): SubgraphPoolData {
   // get volume changes
-  const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
-    data?.volumeUSD,
-    oneDayData?.volumeUSD ? oneDayData.volumeUSD : 0,
-    twoDayData?.volumeUSD ? twoDayData.volumeUSD : 0
-  )
+  const oneDayVolumeUSD = get24hValue(data?.volumeUSD, oneDayData?.volumeUSD ? oneDayData.volumeUSD : 0)
 
-  const [oneDayFeeUSD, feeChangeUSD] = get2DayPercentChange(
-    data?.feeUSD,
-    oneDayData?.feeUSD ? oneDayData.feeUSD : 0,
-    twoDayData?.feeUSD ? twoDayData.feeUSD : 0
-  )
-  const [oneDayVolumeUntracked, volumeChangeUntracked] = get2DayPercentChange(
+  const oneDayFeeUSD = get24hValue(data?.feeUSD, oneDayData?.feeUSD ? oneDayData.feeUSD : 0)
+  const oneDayVolumeUntracked = get24hValue(
     data?.untrackedVolumeUSD,
-    oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0,
-    twoDayData?.untrackedVolumeUSD ? twoDayData?.untrackedVolumeUSD : 0
+    oneDayData?.untrackedVolumeUSD ? parseFloat(oneDayData?.untrackedVolumeUSD) : 0
   )
-  const [oneDayFeeUntracked, feeChangeUntracked] = get2DayPercentChange(
+  const oneDayFeeUntracked = get24hValue(
     data?.untrackedFeeUSD,
-    oneDayData?.untrackedFeeUSD ? parseFloat(oneDayData?.untrackedFeeUSD) : 0,
-    twoDayData?.untrackedFeeUSD ? twoDayData?.untrackedFeeUSD : 0
+    oneDayData?.untrackedFeeUSD ? parseFloat(oneDayData?.untrackedFeeUSD) : 0
   )
-  const oneWeekVolumeUSD = parseFloat(oneWeekData ? data?.volumeUSD - oneWeekData?.volumeUSD : data.volumeUSD)
 
   // set volume properties
   data.oneDayVolumeUSD = oneDayVolumeUSD
-  data.oneWeekVolumeUSD = oneWeekVolumeUSD
   data.oneDayFeeUSD = oneDayFeeUSD
   data.oneDayFeeUntracked = oneDayFeeUntracked
-  data.volumeChangeUSD = volumeChangeUSD
   data.oneDayVolumeUntracked = oneDayVolumeUntracked
-  data.volumeChangeUntracked = volumeChangeUntracked
 
   // set liquiditry properties
   data.trackedReserveUSD = data.trackedReserveETH * ethPrice
@@ -98,9 +78,6 @@ function parseData(
   }
   if (!oneDayData && data) {
     data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
-  }
-  if (!oneWeekData && data) {
-    data.oneWeekVolumeUSD = parseFloat(data.volumeUSD)
   }
   if (data?.token0?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
     data.token0 = { ...data.token0, name: 'Ether (Wrapped)' }
@@ -116,12 +93,12 @@ function parseData(
   return data
 }
 
-export async function getBulkPoolData(poolList: string[], ethPrice?: string): Promise<any> {
-  const [t1, t2, tWeek] = getTimestampsForChanges()
-  const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
+export async function getBulkPoolData(poolList: string[], ethPrice?: string, chainId?: ChainId): Promise<any> {
+  const [t1] = getTimestampsForChanges()
+  const [{ number: b1 }] = await getBlocksFromTimestamps([t1], chainId)
 
   try {
-    const current = await client.query({
+    const current = await exchangeCient[chainId as ChainId].query({
       query: POOLS_BULK,
       variables: {
         allPools: poolList
@@ -129,9 +106,9 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
       fetchPolicy: 'network-only'
     })
 
-    const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
-      [b1, b2, bWeek].map(async block => {
-        const result = client.query({
+    const [oneDayResult] = await Promise.all(
+      [b1].map(async block => {
+        const result = exchangeCient[chainId as ChainId].query({
           query: POOLS_HISTORICAL_BULK(block, poolList),
           fetchPolicy: 'network-only'
         })
@@ -139,15 +116,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
       })
     )
 
-    const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any, i: any) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
-
-    const twoDayData = twoDayResult?.data?.pools.reduce((obj: any, cur: any, i: any) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
-
-    const oneWeekData = oneWeekResult?.data?.pools.reduce((obj: any, cur: any, i: any) => {
+    const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
       return { ...obj, [cur.id]: cur }
     }, {})
 
@@ -157,29 +126,14 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           let data = { ...pool }
           let oneDayHistory = oneDayData?.[pool.id]
           if (!oneDayHistory) {
-            const newData = await client.query({
+            const newData = await exchangeCient[chainId as ChainId].query({
               query: POOL_DATA(pool.id, b1),
               fetchPolicy: 'network-only'
             })
             oneDayHistory = newData.data.pools[0]
           }
-          let twoDayHistory = twoDayData?.[pool.id]
-          if (!twoDayHistory) {
-            const newData = await client.query({
-              query: POOL_DATA(pool.id, b2),
-              fetchPolicy: 'network-only'
-            })
-            twoDayHistory = newData.data.pools[0]
-          }
-          let oneWeekHistory = oneWeekData?.[pool.id]
-          if (!oneWeekHistory) {
-            const newData = await client.query({
-              query: POOL_DATA(pool.id, bWeek),
-              fetchPolicy: 'network-only'
-            })
-            oneWeekHistory = newData.data.pools[0]
-          }
-          data = parseData(data, oneDayHistory, twoDayHistory, oneWeekHistory, ethPrice, b1)
+
+          data = parseData(data, oneDayHistory, ethPrice, b1)
 
           return data
         })
@@ -201,6 +155,7 @@ export function useBulkPoolData(
   data: AppState['pools']['pools']
 } {
   const dispatch = useDispatch()
+  const { chainId } = useActiveWeb3React()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -211,7 +166,7 @@ export function useBulkPoolData(
       try {
         if (poolList.length > 0 && !error && poolsData.length === 0) {
           dispatch(setLoading(true))
-          const pools = await getBulkPoolData(poolList as string[], ethPrice)
+          const pools = await getBulkPoolData(poolList as string[], ethPrice, chainId)
           dispatch(updatePools({ pools }))
         }
       } catch (error) {

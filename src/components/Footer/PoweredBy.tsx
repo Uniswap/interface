@@ -9,8 +9,8 @@ import { useRouteMatch } from 'react-router'
 const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   position: fixed;
   display: flex;
+  top: 8rem;
   right: 0;
-  bottom: 0;
   padding: 1rem;
   opacity: 0.7;
   transition: opacity 0.25s ease;
@@ -18,9 +18,10 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
     opacity: 1;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     top: auto;
     bottom: 4.5rem;
+    z-index: 99;
   `}
 
   ${({ isAboutpage }) => `
@@ -30,7 +31,7 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
 
 export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
-  let aboutPage = useRouteMatch('/about')
+  const aboutPage = useRouteMatch('/about')
 
   return (
     <ExternalLink href="https://kyber.network/">

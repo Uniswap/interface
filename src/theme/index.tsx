@@ -13,10 +13,12 @@ import { Colors } from './styled'
 export * from './components'
 
 const MEDIA_WIDTHS = {
-  upToExtraSmall: 500,
-  upToSmall: 720,
-  upToMedium: 960,
-  upToLarge: 1280
+  upToExtraSmall: 576,
+  upToSmall: 768,
+  upToMedium: 992,
+  upToLarge: 1200,
+  upToXL: 1400,
+  upToXXL: 1800
 }
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
@@ -52,6 +54,7 @@ export function colors(darkMode: boolean): Colors {
     text9: darkMode ? '#859aa5' : '#859aa5',
     text10: darkMode ? '#00a2f7' : '#00a2f7',
     text11: darkMode ? '#f4f4f4' : '#565A69',
+    text12: darkMode ? '#4aff8c' : '#61d800',
 
     // backgrounds
     bg1: darkMode ? '#212429' : '#FFFFFF',
@@ -59,15 +62,17 @@ export function colors(darkMode: boolean): Colors {
     bg3: darkMode ? '#40444F' : '#dcdbdc',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#303e46' : '#FFFFFF',
+    bg6: darkMode ? '#243036' : '#FFFFFF',
     bg7: darkMode ? '#0aa1e7' : '#e1f5fe',
     bg8: darkMode ? '#0078b0' : '#b3e5fc',
     bg9: darkMode ? '#1d2a32' : '#ecebeb',
     bg10: darkMode ? '#263239' : '#f5f5f5',
     bg11: darkMode ? '#1b2226' : '#ebeaea',
-    bg12: darkMode ? '#222c31' : '#f5f5f5',
-    bg13: darkMode ? '#13191b' : '#e8e9ed',
-    bg14: darkMode ? '#40505a' : '#ffffff',
+    bg12: darkMode ? '#11171a' : '#f5f5f5',
+    bg13: darkMode ? '#1f292e' : '#e8e9ed',
+    bg14: darkMode ? '#40505a' : '#a9a9a9',
+    bg15: darkMode ? '#1f292e' : '#f5f5f5',
+    bg16: darkMode ? '#1f292e' : '#ffffff',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -83,6 +88,7 @@ export function colors(darkMode: boolean): Colors {
 
     // color text
     primaryText1: darkMode ? '#6da8ff' : 'white',
+    primaryText2: darkMode ? '#a7b6bd' : '#13191b',
 
     // secondary colors
     secondary1: darkMode ? '#08a1e7' : '#08a1e7',
@@ -104,8 +110,7 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#08a1e7',
-    warning: '#eeab2e',
-    custom_bg1: darkMode ? '#303e46' : '#FFFFFF'
+    warning: '#eeab2e'
   }
 }
 
@@ -246,5 +251,17 @@ html {
 body {
   min-height: 100vh;
   background: ${({ theme }) => theme.bg12};
+}
+
+.staked-only-switch[aria-checked="false"] {
+  background: ${({ theme }) => theme.bg14} !important;
+}
+
+.staked-only-switch[aria-checked="false"] div {
+  background: ${({ theme }) => theme.bg12} !important;
+}
+
+.staked-only-switch div {
+  background:  ${({ theme }) => theme.primary1};
 }
 `

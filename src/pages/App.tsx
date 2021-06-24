@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
-import { client } from 'apollo/client'
+import { defaultExchangeClient, exchangeCient } from 'apollo/client'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
@@ -20,6 +20,7 @@ import {
 import Pool from './Pool'
 import Migration from './Pool/lp'
 import Pools from './Pools'
+import Farms from './Farms'
 import PoolFinder from './PoolFinder'
 import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -31,6 +32,8 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import About from './Static/About'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
+import Vesting from './Farms/vesting'
+import { ChainId } from 'libs/sdk/src'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -68,13 +71,14 @@ const Marginer = styled.div`
 `
 
 export default function App() {
-  const { account } = useActiveWeb3React()
-  let aboutPage = useRouteMatch("/about");
+  const { account, chainId } = useActiveWeb3React()
+  const aboutPage = useRouteMatch('/about')
+  const apolloClient = exchangeCient[chainId as ChainId]
 
   return (
     <>
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
-        <ApolloProvider client={client}>
+        <ApolloProvider client={apolloClient || defaultExchangeClient}>
           <Suspense fallback={null}>
             <Route component={DarkModeQueryParamReader} />
             <AppWrapper>
@@ -95,6 +99,8 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                    <Route exact strict path="/farms" component={Farms} />
+                    <Route exact strict path="/farms/:lp" component={Vesting} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <Route exact strict path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />

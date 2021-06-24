@@ -15,7 +15,7 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ONE_BIPS, ROUTER_ADDRESS } from '../../constants'
+import { ONE_BIPS, ROUTER_ADDRESSES } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -40,7 +40,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import NumericalInput from 'components/NumericalInput'
 import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
-import { feeRangeCalc } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { useDerivedPairInfo } from 'state/pair/hooks'
 
 const ActiveText = styled.div`
@@ -86,6 +86,7 @@ export default function AddLiquidity({
   const isCreate = !pairAddress
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const oneCurrencyIsWETH = Boolean(
@@ -114,6 +115,10 @@ export default function AddLiquidity({
     error,
     unAmplifiedPairAddress
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
+
+  const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
+  const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
+
   const [amp, setAmp] = useState('')
   const onAmpChange = (e: any) => {
     if (e.toString().length < 20) setAmp(e)
@@ -170,8 +175,14 @@ export default function AddLiquidity({
     {}
   )
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_A],
+    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
+  )
+  const [approvalB, approveBCallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_B],
+    !!chainId ? ROUTER_ADDRESSES[chainId] : undefined
+  )
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
@@ -311,21 +322,24 @@ export default function AddLiquidity({
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
-          setAttemptingTxn(false)
+          const cA = currencies[Field.CURRENCY_A]
+          const cB = currencies[Field.CURRENCY_B]
+          if (!!cA && !!cB) {
+            setAttemptingTxn(false)
+            addTransaction(response, {
+              summary:
+                'Add ' +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(cA, chainId).symbol +
+                ' and ' +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(cB, chainId).symbol
+            })
 
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
-          })
-
-          setTxHash(response.hash)
+            setTxHash(response.hash)
+          }
         })
       )
       .catch(error => {
@@ -342,7 +356,7 @@ export default function AddLiquidity({
       <AutoColumn gap="5px">
         <RowFlat>
           <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
+            {nativeA?.symbol + '/' + nativeB?.symbol}
           </Text>
         </RowFlat>
       </AutoColumn>
@@ -354,9 +368,7 @@ export default function AddLiquidity({
           </Text>
         </RowFlat>
         <Row>
-          <Text fontSize="24px">
-            {'DMM ' + currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' LP Tokens'}
-          </Text>
+          <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           {`Output is estimated. If the price changes by more than ${allowedSlippage /
@@ -382,12 +394,12 @@ export default function AddLiquidity({
   }
 
   const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    currencies[Field.CURRENCY_A]?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
+    nativeA?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA)
+      const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
       } else {
@@ -398,7 +410,7 @@ export default function AddLiquidity({
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB)
+      const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
           history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
@@ -483,12 +495,12 @@ export default function AddLiquidity({
               <ColumnCenter>
                 <BlueCard>
                   <AutoColumn gap="10px">
-                    {isPoolExisted &&
+                    {isPoolExisted && (
                       <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
-                        Note: There are existing pools for this token pair. Please check {' '}
+                        Note: There are existing pools for this token pair. Please check{' '}
                         <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
                       </TYPE.link>
-                    }
+                    )}
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
                       You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
                       supply below will set the initial price of this pool. Once you are satisfied with the rate,
@@ -589,7 +601,7 @@ export default function AddLiquidity({
                 </AutoRow>
               </OutlineCard2>
             )}
-            
+
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (

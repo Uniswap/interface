@@ -1,22 +1,23 @@
-import { ChainId } from 'libs/sdk/src'
+import { ChainId, ETHER, Token } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-import { KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useETHBalances } from '../../state/wallet/hooks'
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -50,12 +51,11 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
     padding: 1rem;
     position: fixed;
     bottom: 0px;
@@ -147,6 +147,16 @@ const NetworkCard = styled(YellowCard)`
     flex-shrink: 1;
   `};
 `
+const BridgeExternalLink = styled(ExternalLink)`
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: inherit;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  :hover {
+    text-decoration: none;
+  }
+`
 
 const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -236,11 +246,43 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   `}
 `
 
+const YieldMenuWrapper = styled.div`
+  position: relative;
+  padding: 10px 16px 10px 0;
+`
+
+const NewText = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  font-weight: 500;
+  color: #ff537b;
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.MATIC]: 'Matic',
+  [ChainId.MUMBAI]: 'Mumbai'
+}
+
+const getPoolsMenuLink = (chainId?: ChainId) => {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.ROPSTEN:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.MATIC:
+      return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
+    case ChainId.MUMBAI:
+      return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    default:
+      return '/pools/ETH'
+  }
 }
 
 export default function Header() {
@@ -249,7 +291,7 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
-  const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
+  const poolsMenuLink = getPoolsMenuLink(chainId)
 
   return (
     <HeaderFrame>
@@ -266,33 +308,66 @@ export default function Header() {
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
             {t('pools')}
           </StyledNavLink>
-          <StyledNavLink
-            id={`my-pools-nav-link`}
-            to={'/myPools'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              (pathname.startsWith('/find') && pathname.endsWith('find'))
-            }
-          >
-            {t('My Dashboard')}
-          </StyledNavLink>
-          <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
-            {t('analytics')}
-          </StyledNavExternalLink>
-          <HideSmall>
+
+          {process.env.REACT_APP_MAINNET_ENV !== 'production' ||
+          !chainId ||
+          ![ChainId.MAINNET, ChainId.MATIC].includes(chainId) ? (
+            <>
+              <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
+                <YieldMenuWrapper>
+                  {t('yield')}
+                  <NewText>{t('new')}</NewText>
+                </YieldMenuWrapper>
+              </StyledNavLink>
+
+              <HideSmall>
+                <StyledNavLink
+                  id={`my-pools-nav-link`}
+                  to={'/myPools'}
+                  isActive={(match, { pathname }) =>
+                    Boolean(match) ||
+                    pathname.startsWith('/add') ||
+                    pathname.startsWith('/remove') ||
+                    pathname.startsWith('/create') ||
+                    (pathname.startsWith('/find') && pathname.endsWith('find'))
+                  }
+                >
+                  {t('My Dashboard')}
+                </StyledNavLink>
+              </HideSmall>
+            </>
+          ) : (
             <StyledNavLink
-              id={`migrations-nav-link`}
-              to={'/migration'}
+              id={`my-pools-nav-link`}
+              to={'/myPools'}
               isActive={(match, { pathname }) =>
-                Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                (pathname.startsWith('/find') && pathname.endsWith('find'))
               }
             >
-              Migrate Liquidity
+              {t('My Dashboard')}
             </StyledNavLink>
-          </HideSmall>
+          )}
+
+          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
+
+          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+            <HideSmall>
+              <StyledNavLink
+                id={`migrations-nav-link`}
+                to={'/migration'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
+                }
+              >
+                Migrate Liquidity
+              </StyledNavLink>
+            </HideSmall>
+          )}
+
           <HideSmall>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
               {t('About')}
@@ -303,6 +378,11 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           <HideSmall>
+            <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+              Bridge&nbsp;Assets&nbsp;↗
+            </BridgeExternalLink>
+          </HideSmall>
+          <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
@@ -310,7 +390,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                {userEthBalance?.toSignificant(4)} {chainId && [1, 3, 4, 5, 42].includes(chainId) ? `ETH` : `MATIC`}
               </BalanceText>
             ) : null}
             <Web3Status />

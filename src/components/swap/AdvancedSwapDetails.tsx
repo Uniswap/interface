@@ -1,4 +1,4 @@
-import { Trade, TradeType } from 'libs/sdk/src'
+import { ChainId, Currency, Trade, TradeType } from 'libs/sdk/src'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
@@ -11,7 +11,9 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-import { DMM_INFO_URL } from '../../constants'
+import { DMM_ANALYTICS_URL } from '../../constants'
+import { useActiveWeb3React } from 'hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -24,10 +26,13 @@ const InfoLink = styled(ExternalLink)`
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
+  const { chainId } = useActiveWeb3React()
   const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
+  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
+  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
   return (
     <>
       <AutoColumn style={{ padding: '0 20px' }}>
@@ -41,10 +46,8 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
           <RowFixed>
             <TYPE.black color={theme.text1} fontSize={14}>
               {isExactIn
-                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
-                  '-'
-                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
-                  '-'}
+                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${nativeOutput?.symbol}` ?? '-'
+                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${nativeInput?.symbol}` ?? '-'}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
@@ -70,7 +73,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
+            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${nativeInput?.symbol}` : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
@@ -83,6 +86,7 @@ export interface AdvancedSwapDetailsProps {
 }
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
+  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -109,7 +113,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={`${DMM_INFO_URL}/pool/${trade?.route.pairs[0].liquidityToken.address}`} target="_blank">
+            <InfoLink
+              href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${trade?.route.pairs[0].liquidityToken.address}`}
+              target="_blank"
+            >
               Token pool analytics →
             </InfoLink>
           </AutoColumn>

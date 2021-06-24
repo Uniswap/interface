@@ -1,10 +1,12 @@
 import React from 'react'
-import { Price } from 'libs/sdk/src'
+import { Currency, Price } from 'libs/sdk/src'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { StyledBalanceMaxMini } from './styleds'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { useActiveWeb3React } from 'hooks'
 
 interface TradePriceProps {
   price?: Price
@@ -14,21 +16,19 @@ interface TradePriceProps {
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
+  const { chainId } = useActiveWeb3React()
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
+  const nativeQuote = useCurrencyConvertedToNative(price?.quoteCurrency as Currency)
+  const nativeBase = useCurrencyConvertedToNative(price?.baseCurrency as Currency)
   const label = showInverted
-    ? `${price?.quoteCurrency?.symbol} = 1 ${price?.baseCurrency?.symbol}`
-    : `${price?.baseCurrency?.symbol} = 1 ${price?.quoteCurrency?.symbol}`
+    ? `${nativeQuote?.symbol} = 1 ${nativeBase?.symbol}`
+    : `${nativeBase?.symbol} = 1 ${nativeQuote?.symbol}`
 
   return (
-    <Text
-      fontWeight={500}
-      fontSize={14}
-      color={theme.text2}
-      style={{ alignItems: 'center', display: 'flex' }}
-    >
+    <Text fontWeight={500} fontSize={14} color={theme.text2} style={{ alignItems: 'center', display: 'flex' }}>
       {show ? (
         <>
           {formattedPrice ?? '-'} {label}

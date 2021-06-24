@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactPlayer from 'react-player/lazy'
 import style from './about.module.scss'
 
 import { Box, Flex, Image, Text } from 'rebass'
@@ -8,21 +9,21 @@ import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import LocalLoader from 'components/LocalLoader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
-import { formattedNum } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
-import { KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
+import { formatBigLiquidity } from 'utils/formatBalance'
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
 
   const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
-  const { loading, data } = useGlobalData()
+  const data = useGlobalData()
 
-  if (loading || !data) {
+  if (!data) {
     return <LocalLoader />
   }
 
@@ -34,7 +35,9 @@ export default function About() {
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300}>DeFi's First</Text>
+        <Text fontWeight={300} color={'#ffffff'}>
+          DeFi's First
+        </Text>
         <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
             Dynamic&nbsp;
@@ -45,32 +48,46 @@ export default function About() {
           <Text color={'#78d5ff'} display={'inline-block'}>
             Maker&nbsp;
           </Text>
-          <Text color={'#c9d2d7'} display={'inline-block'} fontWeight={300}>
+          <Text color={'#ffffff'} display={'inline-block'} fontWeight={300}>
             Protocol&nbsp;
           </Text>
         </Text>
       </Text>
-      <Text px={4} mt={10} fontSize={[16, 21]} color={'#c9d2d7'}>
-        Providing frictionless crypto liquidity with high capital efficiency and dynamic fees
+      <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
+        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
       </Text>
 
-      <div style={{ padding: '24px' }}>
-        <div className={style.section_number}>
+      <div className={style.section_number_container}>
+        <div className={`${style.section_number} ${style.trading_volume_section}`}>
           <div>
-            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF">
-              {formattedNum(globalData.totalVolumeUSD, true)}
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+              {formatBigLiquidity(globalData.totalVolumeUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Trading Volume
             </Text>
           </div>
-          <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
-          <div>
-            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF" mt={[4, 0]}>
-              {formattedNum(globalData.totalLiquidityUSD, true)}
+        </div>
+
+        <div className={style.section_number}>
+          <div className={style.liquidity_number}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+              {formatBigLiquidity(globalData.totalLiquidityUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Value Locked
+            </Text>
+          </div>
+          <div className={style.line}></div>
+          <div className={style.amp_liquidity_number}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+              {formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true)}
+            </Text>
+            <Text fontSize={14} mt={2}>
+              Total AMP Liquitity
+            </Text>
+            <Text fontSize={10} fontStyle="italic" mt={2}>
+              Equivalent TVL when compared to typical AMMs
             </Text>
           </div>
         </div>
@@ -91,7 +108,7 @@ export default function About() {
         </ButtonOutlined>
       </div>
       <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
-        <span>Programmable Pricing Curve</span>
+        <span>Amplified Liquidity Pools</span>
       </Text>
       <div className={style.section_curve_details}>
         <i>
@@ -189,10 +206,14 @@ export default function About() {
         padding="12px 18px"
         as={Link}
         to={poolsMenuLink}
-        style={{ margin: '60px auto', fontSize: '16px' }}
+        style={{ margin: '60px auto 100px auto', fontSize: '16px' }}
       >
         Explore pools
       </ButtonOutlined>
+
+      <div className={style.youtube_video}>
+        <ReactPlayer url="https://www.youtube.com/watch?v=2xgboyu7rss" />
+      </div>
 
       <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
         Access DMM Liquidity for your Blockchain Platform
@@ -225,7 +246,7 @@ export default function About() {
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
-          href={process.env.REACT_APP_DMM_ANALYTICS_URL || `https://dev-dmm-info.knstats.com/`}
+          href={DMM_ANALYTICS_URL[chainId as ChainId]}
           style={{ width: 'auto', fontSize: '16px' }}
         >
           Analytics
@@ -279,6 +300,12 @@ export default function About() {
             Bug Bounty
           </Text>
           <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
+        </div>
+        <div>
+          <Text fontSize={[12, 18]} fontWeight={500}>
+            Insured by
+          </Text>
+          <img src={require('../../assets/svg/unslashed.svg')} />
         </div>
       </div>
       <div className={style.powered}>

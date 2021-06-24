@@ -1,5 +1,6 @@
 import { currencyEquals, Trade, Currency } from 'libs/sdk/src'
 import React, { useCallback, useMemo } from 'react'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
@@ -34,7 +35,7 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
-  tokenAddtoMetaMask,
+  tokenAddtoMetaMask
 }: {
   isOpen: boolean
   trade: Trade | undefined
@@ -78,10 +79,12 @@ export default function ConfirmSwapModal({
     ) : null
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
+  const nativeInput = useCurrencyConvertedToNative(trade?.inputAmount?.currency)
+  const nativeOutput = useCurrencyConvertedToNative(trade?.outputAmount?.currency)
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
-    trade?.inputAmount?.currency?.symbol
-  } for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+    nativeInput?.symbol
+  } for ${trade?.outputAmount?.toSignificant(6)} ${nativeOutput?.symbol}`
 
   const confirmationContent = useCallback(
     () =>

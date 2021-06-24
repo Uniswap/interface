@@ -1,12 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import styled from 'styled-components'
-import { Box, Flex } from 'rebass'
 import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 
 import { Currency } from 'libs/sdk/src'
-import { ButtonOutlined } from 'components/Button'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
@@ -19,58 +17,25 @@ import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
 import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
-
-const PageWrapper = styled.div`
-  padding: 0 17em;
-  width: 100%;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-  `};
-`
-
-const ToolbarWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-`
-
-const CurrencyWrapper = styled.div`
-  display: flex;
-  align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 8px;
-    flex-direction: column;
-  `};
-`
-
-const SearchWrapper = styled(Flex)`
-  align-items: center;
-`
-
-const SelectPairInstructionWrapper = styled.div`
-  text-align: center;
-  height: 100%;
-  padding: 24px;
-`
-
-const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.red1};
-  font-style: italic;
-  font-weight: 400;
-  text-align: center;
-  margin-top: 1rem;
-`
+import { useGlobalData } from 'state/about/hooks'
+import {
+  PageWrapper,
+  GlobalDataContainer,
+  GlobalDataItem,
+  GlobalDataItemTitle,
+  GlobalDataItemValue,
+  AddLiquidityInstructionContainer,
+  AddLiquidityTitleContainer,
+  AddLiquidityTitle,
+  AddLiquidityInstructionText,
+  ToolbarWrapper,
+  CurrencyWrapper,
+  SearchWrapper,
+  SelectPairInstructionWrapper
+} from './styleds'
+import { formatBigLiquidity } from 'utils/formatBalance'
+import Loader from 'components/Loader'
+import AddLiquidityIcon from 'assets/svg/add-liquidity-icon.svg'
 
 const Pools = ({
   match: {
@@ -79,7 +44,7 @@ const Pools = ({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
   const above1400 = useMedia('(min-width: 1400px)')
@@ -99,18 +64,18 @@ const Pools = ({
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA)
+      const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/pools/${currencyIdB}/${currencyIdA}`)
       } else {
         history.push(`/pools/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, history, currencyIdA]
+    [currencyIdB, history, currencyIdA, chainId]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB)
+      const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
           history.push(`/pools/${currencyIdB}/${newCurrencyIdB}`)
@@ -121,7 +86,7 @@ const Pools = ({
         history.push(`/pools/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB]
+    [currencyIdA, history, currencyIdB, chainId]
   )
 
   const poolsList = useMemo(
@@ -131,7 +96,7 @@ const Pools = ({
         .filter(pair => pair !== null)
         .filter(pair => {
           if (searchValue) {
-            return pair?.address.includes(searchValue)
+            return pair?.address.toLowerCase().includes(searchValue.toLowerCase())
           }
 
           return true
@@ -155,9 +120,47 @@ const Pools = ({
   const loadingUserLiquidityPositions = !account ? false : temp.loading
   const userLiquidityPositions = !account ? { liquidityPositions: [] } : temp.data
 
+  const data = useGlobalData()
+
+  const globalData = data && data.dmmFactories[0]
+
   return (
     <>
       <PageWrapper>
+        <GlobalDataContainer>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total Trading Volume:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total Value Locked:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+          <GlobalDataItem>
+            <GlobalDataItemTitle>Total AMP Liquidity:</GlobalDataItemTitle>
+            <GlobalDataItemValue>
+              {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
+            </GlobalDataItemValue>
+          </GlobalDataItem>
+        </GlobalDataContainer>
+
+        <AddLiquidityInstructionContainer>
+          <AddLiquidityTitleContainer>
+            <span>
+              <img src={AddLiquidityIcon} alt="Add liquidity icon" />
+            </span>
+            <AddLiquidityTitle>Add liquidity:</AddLiquidityTitle>
+          </AddLiquidityTitleContainer>
+          <AddLiquidityInstructionText>
+            Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees
+            are automatically claimed when you withdraw your liquidity.
+          </AddLiquidityInstructionText>
+        </AddLiquidityInstructionContainer>
+
         {above1400 ? (
           <>
             <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
@@ -176,7 +179,23 @@ const Pools = ({
                   otherCurrency={currencies[Field.CURRENCY_A]}
                   id="input-tokenb"
                 />
+
+                {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && (
+                  <ButtonPrimary
+                    padding="8px 28px"
+                    as={Link}
+                    to={`/swap?inputCurrency=${currencyId(
+                      currencies[Field.CURRENCY_A] as Currency,
+                      chainId
+                    )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
+                    width="fit-content"
+                    style={{ marginLeft: '1rem', borderRadius: '8px' }}
+                  >
+                    <span>Trade</span>
+                  </ButtonPrimary>
+                )}
               </CurrencyWrapper>
+
               <SearchWrapper>
                 <Search searchValue={searchValue} setSearchValue={setSearchValue} />
                 <ButtonOutlined
@@ -231,11 +250,11 @@ const Pools = ({
         <Panel>
           {loadingUserLiquidityPositions || loadingPoolsData ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositions ? (
+          ) : poolsList.length > 0 ? (
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
-              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
+              userLiquidityPositions={userLiquidityPositions?.liquidityPositions}
               maxItems={3}
             />
           ) : (
@@ -245,8 +264,6 @@ const Pools = ({
             </SelectPairInstructionWrapper>
           )}
         </Panel>
-
-        {errorPoolsData ? <ErrorMessage>{t('somethingWentWrong')}</ErrorMessage> : null}
       </PageWrapper>
     </>
   )

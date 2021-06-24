@@ -15,11 +15,13 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { FACTORY_ADDRESS } from '../constants'
+import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, REWARD_LOCKER_ADDRESS } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
+import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
+import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
 
 // returns null on errors
-function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
@@ -31,6 +33,43 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+// returns null on errors
+export function useMultipleContracts(
+  addresses: string[] | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): {
+  [key: string]: Contract
+} | null {
+  const { library, account } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library) return null
+
+    const result: {
+      [key: string]: Contract
+    } = {}
+
+    try {
+      addresses.forEach(address => {
+        if (address) {
+          result[address] = getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+        }
+      })
+
+      if (Object.keys(result).length > 0) {
+        return result
+      }
+
+      return null
+    } catch (error) {
+      console.error('Failed to get contract', error)
+
+      return null
+    }
+  }, [addresses, ABI, library, withSignerIfPossible, account])
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -94,5 +133,32 @@ export function useSocksController(): Contract | null {
 }
 
 export function useFactoryContract(): Contract | null {
-  return useContract(FACTORY_ADDRESS, FACTORY_ABI)
+  const { chainId } = useActiveWeb3React()
+
+  return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
+}
+
+export function useFairLaunchContracts(
+  withSignerIfPossible?: boolean
+): {
+  [key: string]: Contract
+} | null {
+  const { chainId } = useActiveWeb3React()
+
+  return useMultipleContracts(chainId && FAIRLAUNCH_ADDRESSES[chainId], FAIRLAUNCH_ABI, withSignerIfPossible)
+}
+
+export function useFairLaunchContract(address: string, withSignerIfPossible?: boolean): Contract | null {
+  const fairLaunchContracts = useFairLaunchContracts(withSignerIfPossible)
+
+  if (!fairLaunchContracts) {
+    return null
+  }
+
+  return fairLaunchContracts[address]
+}
+
+export function useRewardLockerContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && REWARD_LOCKER_ADDRESS[chainId], REWARD_LOCKER_ABI, withSignerIfPossible)
 }

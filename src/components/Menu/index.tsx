@@ -3,11 +3,13 @@ import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
+import { ChainId } from 'libs/sdk/src'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-import { DMM_INFO_URL } from '../../constants'
+import { DMM_ANALYTICS_URL } from '../../constants'
+import { useActiveWeb3React } from 'hooks'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -52,7 +54,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 8.125rem;
+  min-width: 9rem;
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -67,7 +69,7 @@ const MenuFlyout = styled.span`
   z-index: 100;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
+    top: -14.25rem;
   `};
 `
 
@@ -100,6 +102,7 @@ const MenuItem = styled(ExternalLink)`
 `
 
 export default function Menu() {
+  const { chainId } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
@@ -113,6 +116,10 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
+          <NavMenuItem to="/myPools">
+            <Info size={14} />
+            Dashboard
+          </NavMenuItem>
           <NavMenuItem to="/about">
             <Info size={14} />
             About
@@ -121,7 +128,7 @@ export default function Menu() {
             <Zap size={14} />
             Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
           </NavMenuItem>
-          <MenuItem id="link" href={DMM_INFO_URL}>
+          <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
             <PieChart size={14} />
             Analytics
           </MenuItem>

@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
@@ -151,12 +152,14 @@ export function useDerivedMintInfoMigration(
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
-  if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+  const cA = currencies[Field.CURRENCY_A]
+  const cB = currencies[Field.CURRENCY_A]
+  if (!!cA && currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
+    error = 'Insufficient ' + convertToNativeTokenFromETH(cA, chainId).symbol + ' balance'
   }
 
-  if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+  if (!!cB && currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
+    error = 'Insufficient ' + convertToNativeTokenFromETH(cB, chainId).symbol + ' balance'
   }
 
   return {

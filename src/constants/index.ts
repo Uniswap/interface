@@ -3,8 +3,51 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink, trezor } from '../connectors'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 
-export const ROUTER_ADDRESS = process.env.REACT_APP_ROUTER_ADDRESS || '0x12807818B584a3Fa65D38B6C25B13983fE888D6E'
-export const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS || '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9'
+export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xD8358861251E1af3081cD722Ae96c8753Ab7591D'
+      : '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
+  [ChainId.ROPSTEN]: '0x96E8B9E051c81661C36a18dF64ba45F86AC80Aae',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
+      : '0x546C79662E028B661dFB4767664d0273184E4dD1',
+  [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956'
+}
+
+export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x5C1cBdc3b8dD2a3456643A62547ef9AA5e1571f3'
+      : '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
+  [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
+  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453'
+}
+
+export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x2f99E688cfe6FB7Add8F383779f259f370E16C25'
+      : '0x6A65e062cE8290007301296F3C6AE446Af7BDEeC',
+  [ChainId.ROPSTEN]: '0x247B641bB4eAff621987E2B5c3D0247489556E75',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: ''
+}
+
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
 export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
@@ -12,12 +55,25 @@ export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ABI = IUniswapV2Router02ABI
 // export const FACTORY_ABI = [{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"token0","type":"address"},{"indexed":true,"internalType":"address","name":"token1","type":"address"},{"indexed":false,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"totalPair","type":"uint256"}],"name":"PairCreated","type":"event"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"allPairs","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"allPairsLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"tokenA","type":"address"},{"internalType":"contract IERC20","name":"tokenB","type":"address"}],"name":"createPair","outputs":[{"internalType":"address","name":"pair","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"feeTo","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeToSetter","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"contract IERC20","name":"","type":"address"},{"internalType":"contract IERC20","name":"","type":"address"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_feeTo","type":"address"}],"name":"setFeeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_feeToSetter","type":"address"}],"name":"setFeeToSetter","outputs":[],"stateMutability":"nonpayable","type":"function"}]
 export const INIT_CODE_HASH = '0xf6eae63ebbc500de6e7310fc6568df4e6a4514aac0d3d423da5e4e3f332d04f5'
-export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESS, ROUTER_ADDRESS]
+export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESSES[ChainId.MAINNET], ROUTER_ADDRESSES[ChainId.MAINNET]]
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const DMM_INFO_URL: string =
-  String(process.env.REACT_APP_DMM_ANALYTICS_URL) || 'https://dev-dmm-info.knstats.com'
+export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://staging-dmm-info.knstats.com'
+      : 'https://info.dmm.exchange',
+  [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
+  [ChainId.RINKEBY]: 'https://info.dmm.exchange',
+  [ChainId.GÖRLI]: 'https://info.dmm.exchange',
+  [ChainId.KOVAN]: 'https://info.dmm.exchange',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://staging-matic-dmm-info.knstats.com'
+      : 'https://polygon-info.dmm.exchange',
+  [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com'
+}
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -34,6 +90,7 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
+export const BLOCKS_PER_YEAR = Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS) * 60 * 24 * 365) // 2252571
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
@@ -43,7 +100,9 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -51,36 +110,55 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
+  [ChainId.MATIC]: [WETH[ChainId.MATIC]],
+  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
 
-const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.RINKEBY]: new Token(
     ChainId.RINKEBY,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.ROPSTEN]: new Token(
     ChainId.ROPSTEN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.KOVAN]: new Token(
     ChainId.KOVAN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.MATIC]: new Token(
+    ChainId.MATIC,
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x51E8D106C646cA58Caf32A47812e95887C071a62'
+      : '0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.MUMBAI]: new Token(
+    ChainId.MUMBAI,
+    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -116,7 +194,9 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, KNC[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], KNC[ChainId.ROPSTEN]]
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], KNC[ChainId.ROPSTEN]],
+  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], KNC[ChainId.MATIC]],
+  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], KNC[ChainId.MUMBAI]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -266,7 +346,7 @@ export const BUNDLE_ID = '1'
 export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
   [key: string]: string
 } = {
-  '0xbe87e5634f9fc7cd3ed88ad58b1462f3c5a7eb5b': '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
+  '0x8b4ddf9f13f382aff76d262f6c8c50e6d7961b94': '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
   '0x7b2810576aa1cce68f2b118cef1f36467c648f92': '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
   '0x068b43f7f2f2c6a662c36e201144ae45f7a1c040': '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   '0x65bd1f48f1dd07bb285a3715c588f75684128ace': '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -279,3 +359,112 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
   '0x5f4f41e067e8ccf0d1f9ee007223af4d72990cdc': '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
   '0xc778417e063141139fce010982780140aa0cd5ab': '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 }
+
+export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
+      : ['0x0a5443dF8d3b52c38B883dEb0284FbA1A9e4FFF9'],
+  [ChainId.ROPSTEN]: ['0xCa0767cb6473628F27287c04096f242Ca649f5B6'],
+  [ChainId.RINKEBY]: [''],
+  [ChainId.GÖRLI]: [''],
+  [ChainId.KOVAN]: [''],
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
+      : ['0x7e90d285c567e3EAb9858aaF28cEdA94a211a3DD', '0xf0fb5bD9EB287A902Bd45b57AE4CF5F9DcEBe550'],
+  [ChainId.MUMBAI]: ['0xDF79298D220934a6bb7c6647553733d25A837c78', '0x0f7696c307a2eDb5b3Ff631Aba9D834BE6339e6B']
+}
+
+export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
+      : '0x27B067F10321Fb9bF0397da80b9F09856f229971',
+  [ChainId.ROPSTEN]: '0x68eFA21972109CB315c61B33A1ab8b7e9ef78242',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
+      : '0x9f928e6A9465Ffd8Fdd8FB5f7d17c3F48EB23357',
+  [ChainId.MUMBAI]: '0x865CCCCEab0d73d361efC02D89D1B9D87905957b'
+}
+
+export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e'
+      : '',
+  [ChainId.ROPSTEN]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e'
+}
+
+export const FARM_HARVEST_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4'
+      : '',
+  [ChainId.ROPSTEN]: '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: '0x4534f107610758c3931de9ad1e176476fcfb8c74adf920167e1d54ee84fcfe76'
+}
+
+export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178'
+      : '',
+  [ChainId.ROPSTEN]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178'
+}
+
+export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94'
+      : '',
+  [ChainId.ROPSTEN]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94'
+}
+
+export const FARM_TRANSFER_TOKEN_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+      : '',
+  [ChainId.ROPSTEN]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+}
+
+export const ETHERSCAN_API: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'https://api.etherscan.io',
+  [ChainId.ROPSTEN]: 'https://api-ropsten.etherscan.io',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: 'https://explorer-mainnet.maticvigil.com',
+  [ChainId.MUMBAI]: 'https://explorer-mumbai.maticvigil.com'
+}
+
+export const ETHERSCAN_API_KEY = 'ESP4NCWFSIBGYAXMRXGKS6HC29P62S6VSE'

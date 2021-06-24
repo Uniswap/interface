@@ -3,13 +3,14 @@ import { OutlineCard } from 'components/Card'
 import { FlyoutPriceRange } from 'components/Menu'
 import { FixedHeightRow } from 'components/PositionCard'
 import QuestionHelper from 'components/QuestionHelper'
+import { useActiveWeb3React } from 'hooks'
 import { Currency, Fraction, JSBI, Pair, Percent, Price } from 'libs/sdk/src'
 import React, { ReactNode, useContext } from 'react'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { priceRangeCalc, priceRangeCalcByPair } from 'utils/dmm'
+import { useCurrencyConvertedToNative, priceRangeCalc, priceRangeCalcByPair } from 'utils/dmm'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow, RowFixed } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
@@ -66,19 +67,23 @@ export function PoolPriceBar({
   // const percentToken0 = realPercentToken0.toSignificant(5)
   // const percentToken1 = realPercentToken1.toSignificant(5)
 
+  const { chainId } = useActiveWeb3React()
+  const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
+  const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
+
   return (
     <AutoColumn gap="md">
       <AutoRow justify="space-around" gap="4px">
         <AutoColumn justify="center">
           <TYPE.black>{price?.toSignificant(6) ?? '-'}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {currencies[Field.CURRENCY_B]?.symbol} per {currencies[Field.CURRENCY_A]?.symbol}
+            {nativeB?.symbol} per {nativeA?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
           <TYPE.black>{price?.invert()?.toSignificant(6) ?? '-'}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {currencies[Field.CURRENCY_A]?.symbol} per {currencies[Field.CURRENCY_B]?.symbol}
+            {nativeA?.symbol} per {nativeB?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
@@ -174,6 +179,9 @@ export function PoolPriceRangeBar({
   const theme = useContext(ThemeContext)
   // const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
   // const show = !!priceRangeCalc(price, amp)[0]
+  const { chainId } = useActiveWeb3React()
+  const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
+  const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
   const existedPriceRange = () => {
     const show = !!pair && !!priceRangeCalcByPair(pair)[0][0]
     return (
@@ -181,7 +189,7 @@ export function PoolPriceRangeBar({
         <AutoRow justify="space-between" gap="4px">
           <AutoColumn>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
+              {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
             {show && !!pair ? (
               <>
@@ -204,7 +212,7 @@ export function PoolPriceRangeBar({
           </AutoColumn>
           <AutoColumn justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
+              {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
             {show && !!pair ? (
               <>
@@ -237,7 +245,7 @@ export function PoolPriceRangeBar({
         <AutoRow justify="space-between" gap="4px">
           <AutoColumn>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
+              {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
             {show ? (
               <>
@@ -250,7 +258,7 @@ export function PoolPriceRangeBar({
           </AutoColumn>
           <AutoColumn justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
+              {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
             {show ? (
               <>

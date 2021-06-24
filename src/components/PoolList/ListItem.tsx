@@ -16,16 +16,19 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
+import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc, getTradingFeeAPR } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
+import Loader from 'components/Loader'
+import InfoHelper from 'components/InfoHelper'
+import { useActiveWeb3React } from 'hooks'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
+  grid-gap: 1.5rem;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
-  font-size: 12px;
+  font-size: 14px;
   align-items: flex-start;
   height: fit-content;
   position: relative;
@@ -48,7 +51,7 @@ const StyledItemCard = styled.div`
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 20px;
   `}
 `
@@ -99,10 +102,6 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
-const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
-  return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
-
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
@@ -111,6 +110,7 @@ interface ListItemProps {
 }
 
 export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps) => {
+  const { chainId } = useActiveWeb3React()
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   const realPercentToken0 = pool
@@ -122,8 +122,8 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  const percentToken0 = realPercentToken0.toSignificant(3)
+  const percentToken1 = realPercentToken1.toSignificant(3)
 
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
@@ -132,13 +132,18 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const volume = subgraphPoolData.oneDayVolumeUSD
-    ? subgraphPoolData.oneDayVolumeUSD
-    : subgraphPoolData.oneDayVolumeUntracked
+  const volume = subgraphPoolData?.oneDayVolumeUSD
+    ? subgraphPoolData?.oneDayVolumeUSD
+    : subgraphPoolData?.oneDayVolumeUntracked
 
-  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
+  const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getTradingFeeAPR(subgraphPoolData?.reserveUSD, fee).toFixed(2)
+
+  const ampLiquidity = formattedNum(
+    `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
+    true
+  )
 
   return (
     <div>
@@ -172,7 +177,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               <ButtonEmpty
                 padding="0"
                 as={Link}
-                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
+                to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
                 width="fit-content"
               >
                 <AddCircle />
@@ -182,15 +187,30 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
 
         <GridItem>
-          <DataTitle>Liquidity</DataTitle>
-          <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
+          <DataTitle>
+            <span>Liq/AMPL</span>
+            <InfoHelper
+              text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+            />
+          </DataTitle>
+          <DataText grid-area="liq">
+            <div>{!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}</div>
+            <div>{!subgraphPoolData ? <Loader /> : ampLiquidity}</div>
+          </DataText>
         </GridItem>
         <GridItem>
           <DataTitle>Volume (24h)</DataTitle>
-          <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
+          <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>Ratio</DataTitle>
+          <DataTitle>
+            <span>Ratio</span>
+            <InfoHelper
+              text={
+                'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+              }
+            />
+          </DataTitle>
           <DataText grid-area="ratio">
             <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
             <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
@@ -199,15 +219,22 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataTitle>Fee (24h)</DataTitle>
-          <DataText>{formattedNum(fee, true)}</DataText>
+          <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>AMP</DataTitle>
+          <DataTitle>
+            <span>AMP</span>
+            <InfoHelper
+              text={
+                'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+              }
+            />
+          </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>1y F/L</DataTitle>
-          <DataText>{`${oneYearFL}%`}</DataText>
+          <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -232,7 +259,10 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <ButtonPrimary
             padding="8px 48px"
             as={Link}
-            to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
+            to={`/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(
+              currency1,
+              chainId
+            )}`}
             width="fit-content"
           >
             <TradeButtonText>Trade</TradeButtonText>
@@ -244,6 +274,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 }
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
+  const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
   const togglePoolDetailModal = usePoolDetailModalToggle()
 
@@ -258,8 +289,8 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  const percentToken0 = realPercentToken0.toSignificant(3)
+  const percentToken1 = realPercentToken1.toSignificant(3)
 
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
@@ -268,13 +299,18 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const volume = subgraphPoolData.oneDayVolumeUSD
-    ? subgraphPoolData.oneDayVolumeUSD
-    : subgraphPoolData.oneDayVolumeUntracked
+  const volume = subgraphPoolData?.oneDayVolumeUSD
+    ? subgraphPoolData?.oneDayVolumeUSD
+    : subgraphPoolData?.oneDayVolumeUntracked
 
-  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
+  const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getTradingFeeAPR(subgraphPoolData?.reserveUSD, fee).toFixed(2)
+
+  const ampLiquidity = formattedNum(
+    `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
+    true
+  )
 
   const handleShowMore = () => {
     dispatch(
@@ -302,35 +338,29 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
           <CopyHelper toCopy={pool.address} />
         </PoolAddressContainer>
       </DataText>
+      <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
+      <DataText grid-area="liq">
+        {!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData?.reserveUSD, true)}
+      </DataText>
+      <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
+      <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
+      <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
+      <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
       </DataText>
-      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
-      <DataText>{formattedNum(fee, true)}</DataText>
-      <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-      <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
       <ButtonWrapper>
         <ButtonEmpty
           padding="0"
           as={Link}
-          to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
+          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
           width="fit-content"
         >
           <AddCircle />
         </ButtonEmpty>
-      </ButtonWrapper>
-      <ButtonWrapper>
-        <ButtonPrimary
-          padding="8px 16px"
-          as={Link}
-          to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
-          width="fit-content"
-        >
-          Trade
-        </ButtonPrimary>
+
         <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
           <StyledMoreHorizontal />
         </ButtonEmpty>

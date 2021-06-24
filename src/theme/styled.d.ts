@@ -18,6 +18,7 @@ export interface Colors {
   text9: Color
   text10: Color
   text11: Color
+  text12: Color
 
   // backgrounds / greys
   bg1: Color
@@ -34,6 +35,8 @@ export interface Colors {
   bg12: Color
   bg13: Color
   bg14: Color
+  bg15: Color
+  bg16: Color
 
   modalBG: Color
   advancedBG: Color
@@ -47,6 +50,7 @@ export interface Colors {
   primary5: Color
 
   primaryText1: Color
+  primaryText2: Color
 
   // pinks
   secondary1: Color
@@ -69,8 +73,6 @@ export interface Colors {
   yellow2: Color
   blue1: Color
   warning: Color
-
-  custom_bg1: Color
 }
 
 export interface Grids {
@@ -92,6 +94,8 @@ declare module 'styled-components' {
       upToSmall: ThemedCssFunction<DefaultTheme>
       upToMedium: ThemedCssFunction<DefaultTheme>
       upToLarge: ThemedCssFunction<DefaultTheme>
+      upToXL: ThemedCssFunction<DefaultTheme>
+      upToXXL: ThemedCssFunction<DefaultTheme>
     }
 
     // css snippets

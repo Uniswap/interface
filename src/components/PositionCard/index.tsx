@@ -1,4 +1,4 @@
-import { Fraction, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
+import { ChainId, Fraction, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -21,8 +21,8 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import WarningRightIcon from 'components/Icons/WarningRightIcon'
 import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
-import { priceRangeCalcByPair, getMyLiquidity } from 'utils/dmm'
+import { BIG_INT_ZERO, DMM_ANALYTICS_URL } from '../../constants'
+import { priceRangeCalcByPair, getMyLiquidity, useCurrencyConvertedToNative } from 'utils/dmm'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 
 export const FixedHeightRow = styled(RowBetween)`
@@ -97,7 +97,7 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
   const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
@@ -124,6 +124,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         ]
       : [undefined, undefined]
 
+  const native0 = useCurrencyConvertedToNative(currency0 || undefined)
+  const native1 = useCurrencyConvertedToNative(currency1 || undefined)
   return (
     <>
       <StyledPositionCard border={border}>
@@ -137,9 +139,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           </FixedHeightRow>
           <FixedHeightRow onClick={() => setShowMore(!showMore)}>
             <RowFixed>
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+              <DoubleCurrencyLogo currency0={native0} currency1={native1} margin={true} size={20} />
               <Text fontWeight={500} fontSize={20}>
-                {currency0.symbol}/{currency1.symbol}
+                {native0?.symbol}/{native1?.symbol}
               </Text>
             </RowFixed>
             <RowFixed>
@@ -159,7 +161,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                {currency0.symbol}:
+                {native0?.symbol}:
               </Text>
               {token0Deposited ? (
                 <RowFixed>
@@ -173,7 +175,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                {currency1.symbol}:
+                {native1?.symbol}:
               </Text>
               {token1Deposited ? (
                 <RowFixed>
@@ -193,7 +195,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance, myLiquidity }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
@@ -244,6 +246,9 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
       : pair.token1.symbol
     : undefined
 
+  const native0 = useCurrencyConvertedToNative(currency0 || undefined)
+  const native1 = useCurrencyConvertedToNative(currency1 || undefined)
+
   return (
     <StyledPositionCard border={border}>
       {isWarning && (
@@ -254,13 +259,13 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px" align="flex-start">
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
+            <DoubleCurrencyLogo currency0={native0} currency1={native1} size={20} />
             <Text fontWeight={500} fontSize={14} style={{ flexGrow: 1 }}>
               {!currency0 || !currency1 ? (
                 <Dots>Loading</Dots>
               ) : (
                 <RightColumn>
-                  <div>{`${currency0.symbol}/${currency1.symbol}`}</div>
+                  <div>{`${native0?.symbol}/${native1?.symbol}`}</div>
                   <div>
                     {!!token0Deposited && (
                       <div>
@@ -307,7 +312,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={14} fontWeight={500}>
-                  Pooled {currency0.symbol}:
+                  Pooled {native0?.symbol}:
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -325,7 +330,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={14} fontWeight={500}>
-                  Pooled {currency1.symbol}:
+                  Pooled {native1?.symbol}:
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -394,7 +399,10 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </Text>
             </RowBetween>
             <ButtonSecondary2 padding="8px" borderRadius="8px">
-              <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
+              <ExternalLink
+                style={{ width: '100%', textAlign: 'center' }}
+                href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
+              >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary2>
@@ -410,7 +418,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                     padding="8px"
                     as={Link}
                     width="150px"
-                    to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                    to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                   >
                     Remove
                   </ButtonOutlined2>
@@ -418,7 +426,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                   <ButtonPrimary
                     padding="8px"
                     as={Link}
-                    to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                    to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                     width="150px"
                   >
                     Add
@@ -430,7 +438,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               <ButtonPrimary
                 padding="8px"
                 as={Link}
-                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/uni/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool

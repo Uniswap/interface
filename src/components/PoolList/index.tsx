@@ -9,14 +9,14 @@ import { useMedia } from 'react-use'
 import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { getHealthFactor } from 'utils/dmm'
+import { getHealthFactor, getTradingFeeAPR } from 'utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
 import PoolDetailModal from './PoolDetailModal'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
+  grid-gap: 1.5rem;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -50,19 +50,15 @@ const LoadMoreButtonContainer = styled.div`
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     background-color: transparent;
   `};
 `
 
-const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
-  return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
-
 interface PoolListProps {
   poolsList: (Pair | null)[]
-  subgraphPoolsData: SubgraphPoolData[]
-  userLiquidityPositions: UserLiquidityPosition[]
+  subgraphPoolsData?: SubgraphPoolData[]
+  userLiquidityPositions?: UserLiquidityPosition[]
   maxItems?: number
 }
 
@@ -86,13 +82,15 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     [key: string]: UserLiquidityPosition
   } = {}
 
-  subgraphPoolsData.forEach(data => {
-    transformedSubgraphPoolsData[data.id] = data
-  })
+  subgraphPoolsData &&
+    subgraphPoolsData.forEach(data => {
+      transformedSubgraphPoolsData[data.id] = data
+    })
 
-  userLiquidityPositions.forEach(position => {
-    transformedUserLiquidityPositions[position.pool.id] = position
-  })
+  userLiquidityPositions &&
+    userLiquidityPositions.forEach(position => {
+      transformedUserLiquidityPositions[position.pool.id] = position
+    })
 
   // pagination
   const [page, setPage] = useState(1)
@@ -167,8 +165,8 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       case SORT_FIELD.FEES:
         return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       case SORT_FIELD.ONE_YEAR_FL:
-        const oneYearFLPoolA = getOneYearFL(poolASubgraphData?.reserveUSD, feeA)
-        const oneYearFLPoolB = getOneYearFL(poolBSubgraphData?.reserveUSD, feeB)
+        const oneYearFLPoolA = getTradingFeeAPR(poolASubgraphData?.reserveUSD, feeA)
+        const oneYearFLPoolB = getTradingFeeAPR(poolBSubgraphData?.reserveUSD, feeB)
 
         return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       default:
@@ -185,10 +183,10 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           <ClickableText>Pool</ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Ratio</ClickableText>
+          <ClickableText>AMP</ClickableText>
           <InfoHelper
             text={
-              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
             }
           />
         </Flex>
@@ -211,6 +209,12 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
+        <Flex alignItems="center" justifyContent="flexEnd">
+          <ClickableText>AMP Liquidity</ClickableText>
+          <InfoHelper
+            text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+          />
+        </Flex>
         <Flex alignItems="center">
           <ClickableText
             onClick={() => {
@@ -230,7 +234,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
-
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
@@ -250,16 +253,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
-
-        <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>AMP</ClickableText>
-          <InfoHelper
-            text={
-              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
-            }
-          />
-        </Flex>
-
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
@@ -279,6 +272,14 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
           <InfoHelper text={'1Yr Fees Collected/Liquidity based on 24H volume annualized'} />
+        </Flex>
+        <Flex alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Ratio</ClickableText>
+          <InfoHelper
+            text={
+              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+            }
+          />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
@@ -317,7 +318,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     <div>
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
-        if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
+        if (pool) {
           return above1400 ? (
             <ListItem
               key={pool.address}

@@ -11,6 +11,8 @@ import { AutoColumn } from 'components/Column'
 import { Separator } from 'components/SearchModal/styleds'
 import styled from 'styled-components'
 import { parseUnits } from 'ethers/lib/utils'
+import { useActiveWeb3React } from 'hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const DashedLine = styled.div`
   width: 100%;
@@ -39,37 +41,33 @@ export function ConfirmAddModalBottom({
   const amp = !!pair
     ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
     : amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
-
+  const { chainId } = useActiveWeb3React()
+  const tokenA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
+  const tokenB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
   return (
     <>
       <RowBetween>
-        <TYPE.body>Pooled {currencies[Field.CURRENCY_A]?.symbol}</TYPE.body>
+        <TYPE.body>Pooled {tokenA?.symbol}</TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={tokenA} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>Pooled {currencies[Field.CURRENCY_B]?.symbol}</TYPE.body>
+        <TYPE.body>
+          <TYPE.body>Pooled {tokenB?.symbol}</TYPE.body>
+        </TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={tokenB} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
         <TYPE.body>Rates</TYPE.body>
-        <TYPE.body>
-          {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
-            currencies[Field.CURRENCY_B]?.symbol
-          }`}
-        </TYPE.body>
+        <TYPE.body>{`1 ${tokenA?.symbol} = ${price?.toSignificant(4)} ${tokenB?.symbol}`}</TYPE.body>
       </RowBetween>
       <RowBetween style={{ justifyContent: 'flex-end' }}>
-        <TYPE.body>
-          {`1 ${currencies[Field.CURRENCY_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
-            currencies[Field.CURRENCY_A]?.symbol
-          }`}
-        </TYPE.body>
+        <TYPE.body>{`1 ${tokenB?.symbol} = ${price?.invert().toSignificant(4)} ${tokenA?.symbol}`}</TYPE.body>
       </RowBetween>
       <DashedLine />
       <TYPE.body>AMP{!!amp ? <>&nbsp;=&nbsp;{amp}</> : ''}</TYPE.body>

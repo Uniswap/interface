@@ -1,8 +1,10 @@
-import { Trade, TradeType } from 'libs/sdk/src'
+import { useActiveWeb3React } from 'hooks'
+import { Currency, Trade, TradeType } from 'libs/sdk/src'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import {
@@ -31,6 +33,7 @@ export default function SwapModalFooter({
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
 }) {
+  const { chainId } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useContext(ThemeContext)
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
@@ -42,6 +45,9 @@ export default function SwapModalFooter({
   ])
   const severity = warningSeverity(priceImpactWithoutFee)
 
+  const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
+
+  const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
   return (
     <>
       <AutoColumn gap="0px">
@@ -61,7 +67,7 @@ export default function SwapModalFooter({
               paddingLeft: '10px'
             }}
           >
-            {formatExecutionPrice(trade, showInverted)}
+            {formatExecutionPrice(trade, showInverted, chainId)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
               <Repeat size={14} />
             </StyledBalanceMaxMini>
@@ -82,9 +88,7 @@ export default function SwapModalFooter({
                 : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
             </TYPE.black>
             <TYPE.black fontSize={14} marginLeft={'4px'}>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? trade.outputAmount.currency.symbol
-                : trade.inputAmount.currency.symbol}
+              {trade.tradeType === TradeType.EXACT_INPUT ? nativeInput?.symbol : nativeOutput?.symbol}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
@@ -109,7 +113,7 @@ export default function SwapModalFooter({
             />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + nativeInput?.symbol : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>

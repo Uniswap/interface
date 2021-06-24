@@ -10,6 +10,7 @@ import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { useTradeExactIn } from './Trades'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 export enum SwapCallbackState {
   INVALID,
@@ -189,8 +190,8 @@ export function useSwapCallback(
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
+            const inputSymbol = convertToNativeTokenFromETH(trade.inputAmount.currency, chainId).symbol
+            const outputSymbol = convertToNativeTokenFromETH(trade.outputAmount.currency, chainId).symbol
             const inputAmount = trade.inputAmount.toSignificant(3)
             const outputAmount = trade.outputAmount.toSignificant(3)
 
