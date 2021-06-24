@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-24 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>提示：</0>退出资金池，按照当前汇率将您的资金池�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0>提示：</0>选择一项行动并描述您对社区的建议。提案提交后不可修改，提交前请核对所有信息。投票期将立即开始，持续 7 天。要提出自定义操作，请<1>阅读文档</1>."
+msgstr "<0>提示：</0>选择操作并描述您的提案。提案提交后不可修改，提交前请核对所有信息。投票期将立即开始，持续 7 天。若要提议自定义操作，请<1>阅读文档</1>。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -228,7 +228,7 @@ msgstr "数额"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试执行此交换时出错。您可能需要增加您的滑点容忍度。如果这不起作用，则可能与您交易的代币不兼容。注意：转账和 rebase 代币的费用与 Uniswap V3 不兼容。"
+msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与Uniswap不兼容。注：Uniswap V3不兼容转账时带扣除费用（fee-on-transfer）的代币和弹性供应（rebase）代币。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -241,7 +241,7 @@ msgstr "批准"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr "批准令牌"
+msgstr "批准代币"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1155,11 +1155,11 @@ msgstr "兑换率和流动池份额"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
-msgstr "提议"
+msgstr "提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Proposal Submitted"
-msgstr "提交的提案"
+msgstr "已提交提案"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal Title"
@@ -1175,7 +1175,7 @@ msgstr "社区成员提交的提案将在此显示。"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
-msgstr "提议的行动"
+msgstr "提议操作"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1283,7 +1283,7 @@ msgstr "选择代币以查找您的 v2 流动资金。"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr "选择一个动作"
+msgstr "选择一个操作。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1353,7 +1353,7 @@ msgstr "提交了新提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "提交提案"
+msgstr "正提交提案"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1504,7 +1504,7 @@ msgstr "交易截止期限"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "转移令牌"
+msgstr "代币转账"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1755,7 +1755,7 @@ msgstr "错误的网络"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
-msgstr "您已经有一个有效或待处理的提案"
+msgstr "您已经有一个现有或待处理的提案"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
@@ -1847,12 +1847,12 @@ msgstr "您的仓位没有任何流动资金，没在赚取手续费。"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
+msgstr "在此兑换率，您的仓位将 100% 由 {0} 代币所组成。"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
+msgstr "在此兑换率，您的仓位将 100% 由 {0} 代币所组成。"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
