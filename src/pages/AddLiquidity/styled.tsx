@@ -76,19 +76,11 @@ export const StyledInput = styled(Input)`
 
 export const ResponsiveTwoColumns = styled.div`
   display: grid;
-  grid-gap: 32px;
-  grid-template-columns: 1fr auto 1fr;
+  grid-gap: 50px;
+  grid-template-columns: 1fr 1fr;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
-  `};
-`
-
-export const Separator = styled.div`
-  border: ${({ theme }) => `1px solid ${theme.bg3}`};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
   `};
 `
 

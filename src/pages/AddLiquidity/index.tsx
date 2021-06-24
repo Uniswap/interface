@@ -50,7 +50,6 @@ import {
   Wrapper,
   ScrollablePage,
   ResponsiveTwoColumns,
-  Separator,
   PageWrapper,
   StackedContainer,
   StackedItem,
@@ -551,8 +550,6 @@ export default function AddLiquidity({
                 </HideMedium>
               </AutoColumn>
 
-              <Separator />
-
               <AutoColumn gap="lg" style={{ gridAutoRows: 'min-content' }}>
                 {!hasExistingPosition && noLiquidity && (
                   <DynamicSection disabled={!currencyA || !currencyB}>
@@ -630,56 +627,61 @@ export default function AddLiquidity({
                   </DynamicSection>
                 )}
 
-                <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
-                  <RowBetween>
-                    <TYPE.label>
-                      <Trans>Your Position</Trans>
-                    </TYPE.label>
+                {!hasExistingPosition && (
+                  <DynamicSection
+                    gap="md"
+                    disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
+                  >
+                    <RowBetween>
+                      <TYPE.label>
+                        <Trans>Your Position</Trans>
+                      </TYPE.label>
 
-                    {baseCurrency && quoteCurrency ? (
-                      <RateToggle
-                        currencyA={baseCurrency}
-                        currencyB={quoteCurrency}
-                        handleRateToggle={() => {
-                          onLeftRangeInput('')
-                          onRightRangeInput('')
-                          history.push(
-                            `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
-                          )
-                        }}
+                      {baseCurrency && quoteCurrency ? (
+                        <RateToggle
+                          currencyA={baseCurrency}
+                          currencyB={quoteCurrency}
+                          handleRateToggle={() => {
+                            onLeftRangeInput('')
+                            onRightRangeInput('')
+                            history.push(
+                              `/add/${currencyIdB as string}/${currencyIdA as string}${
+                                feeAmount ? '/' + feeAmount : ''
+                              }`
+                            )
+                          }}
+                        />
+                      ) : null}
+                    </RowBetween>
+                    <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
+                      <Trans>
+                        Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
+                        <ExternalLink
+                          href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
+                          style={{ fontSize: '14px' }}
+                        >
+                          Need help picking a range?
+                        </ExternalLink>
+                      </Trans>
+                    </TYPE.main>
+
+                    {!noLiquidity && (
+                      <LiquidityDepth
+                        currencyA={baseCurrency ?? undefined}
+                        currencyB={quoteCurrency ?? undefined}
+                        feeAmount={feeAmount}
+                        ticksAtLimit={ticksAtLimit}
+                        price={price ? (invertPrice ? price.invert() : price) : undefined}
+                        priceLower={priceLower}
+                        priceUpper={priceUpper}
+                        onLeftRangeInput={onLeftRangeInput}
+                        onRightRangeInput={onRightRangeInput}
+                        interactive={!hasExistingPosition}
                       />
-                    ) : null}
-                  </RowBetween>
-                  <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                    <Trans>
-                      Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
-                      <ExternalLink
-                        href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
-                        style={{ fontSize: '14px' }}
-                      >
-                        Need help picking a range?
-                      </ExternalLink>
-                    </Trans>
-                  </TYPE.main>
+                    )}
 
-                  {!noLiquidity && (
-                    <LiquidityDepth
-                      currencyA={baseCurrency ?? undefined}
-                      currencyB={quoteCurrency ?? undefined}
-                      feeAmount={feeAmount}
-                      ticksAtLimit={ticksAtLimit}
-                      price={price ? (invertPrice ? price.invert() : price) : undefined}
-                      priceLower={priceLower}
-                      priceUpper={priceUpper}
-                      onLeftRangeInput={onLeftRangeInput}
-                      onRightRangeInput={onRightRangeInput}
-                      interactive={!hasExistingPosition}
-                    />
-                  )}
-
-                  <StackedContainer>
-                    <StackedItem style={{ opacity: showCapitalEfficiencyWarning === 'prompting' ? '0.05' : 1 }}>
-                      {!hasExistingPosition && (
+                    <StackedContainer>
+                      <StackedItem style={{ opacity: showCapitalEfficiencyWarning === 'prompting' ? '0.05' : 1 }}>
                         <RangeSelector
                           priceLower={priceLower}
                           priceUpper={priceUpper}
@@ -701,123 +703,126 @@ export default function AddLiquidity({
                           feeAmount={feeAmount}
                           ticksAtLimit={ticksAtLimit}
                         />
-                      )}
-                    </StackedItem>
-
-                    {showCapitalEfficiencyWarning === 'prompting' && (
-                      <StackedItem zIndex={1}>
-                        <YellowCard
-                          padding="15px"
-                          borderRadius="12px"
-                          height="100%"
-                          style={{
-                            borderColor: theme.yellow3,
-                            border: '1px solid',
-                          }}
-                        >
-                          <AutoColumn gap="8px" style={{ height: '100%' }}>
-                            <RowFixed>
-                              <AlertTriangle stroke={theme.yellow3} size="16px" />
-                              <TYPE.yellow ml="12px" fontSize="15px">
-                                <Trans>Efficiency Comparison</Trans>
-                              </TYPE.yellow>
-                            </RowFixed>
-                            <RowFixed>
-                              <TYPE.yellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
-                                <Trans>
-                                  On Uniswap V3, setting a range across all prices like V2 is less capital efficient
-                                  than a concentrated one. Learn more{' '}
-                                  <ExternalLink style={{ color: theme.yellow3, textDecoration: 'underline' }} href={''}>
-                                    here
-                                  </ExternalLink>
-                                  .
-                                </Trans>
-                              </TYPE.yellow>
-                            </RowFixed>
-                            <Row>
-                              <ButtonYellow
-                                padding="8px"
-                                marginRight="8px"
-                                borderRadius="8px"
-                                width="auto"
-                                onClick={() => {
-                                  setShowCapitalEfficiencyWarning('accepted')
-                                }}
-                              >
-                                <TYPE.black fontSize={13} color="black">
-                                  <Trans>I Understand</Trans>
-                                </TYPE.black>
-                              </ButtonYellow>
-                              <ButtonOutlined
-                                padding="8px"
-                                borderRadius="8px"
-                                width="auto"
-                                borderColor={theme.yellow3}
-                                onClick={() => {
-                                  setShowCapitalEfficiencyWarning('denied')
-
-                                  // reset inputs
-                                  onLeftRangeInput('')
-                                  onRightRangeInput('')
-                                }}
-                              >
-                                <TYPE.yellow fontSize={13}>
-                                  <Trans>Decline</Trans>
-                                </TYPE.yellow>
-                              </ButtonOutlined>
-                            </Row>
-                          </AutoColumn>
-                        </YellowCard>
                       </StackedItem>
+
+                      {showCapitalEfficiencyWarning === 'prompting' && (
+                        <StackedItem zIndex={1}>
+                          <YellowCard
+                            padding="15px"
+                            borderRadius="12px"
+                            height="100%"
+                            style={{
+                              borderColor: theme.yellow3,
+                              border: '1px solid',
+                            }}
+                          >
+                            <AutoColumn gap="8px" style={{ height: '100%' }}>
+                              <RowFixed>
+                                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                                <TYPE.yellow ml="12px" fontSize="15px">
+                                  <Trans>Efficiency Comparison</Trans>
+                                </TYPE.yellow>
+                              </RowFixed>
+                              <RowFixed>
+                                <TYPE.yellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
+                                  <Trans>
+                                    On Uniswap V3, setting a range across all prices like V2 is less capital efficient
+                                    than a concentrated one. Learn more{' '}
+                                    <ExternalLink
+                                      style={{ color: theme.yellow3, textDecoration: 'underline' }}
+                                      href={''}
+                                    >
+                                      here
+                                    </ExternalLink>
+                                    .
+                                  </Trans>
+                                </TYPE.yellow>
+                              </RowFixed>
+                              <Row>
+                                <ButtonYellow
+                                  padding="8px"
+                                  marginRight="8px"
+                                  borderRadius="8px"
+                                  width="auto"
+                                  onClick={() => {
+                                    setShowCapitalEfficiencyWarning('accepted')
+                                  }}
+                                >
+                                  <TYPE.black fontSize={13} color="black">
+                                    <Trans>I Understand</Trans>
+                                  </TYPE.black>
+                                </ButtonYellow>
+                                <ButtonOutlined
+                                  padding="8px"
+                                  borderRadius="8px"
+                                  width="auto"
+                                  borderColor={theme.yellow3}
+                                  onClick={() => {
+                                    setShowCapitalEfficiencyWarning('denied')
+
+                                    // reset inputs
+                                    onLeftRangeInput('')
+                                    onRightRangeInput('')
+                                  }}
+                                >
+                                  <TYPE.yellow fontSize={13}>
+                                    <Trans>Decline</Trans>
+                                  </TYPE.yellow>
+                                </ButtonOutlined>
+                              </Row>
+                            </AutoColumn>
+                          </YellowCard>
+                        </StackedItem>
+                      )}
+                    </StackedContainer>
+
+                    {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                      <OutlineCard style={{ padding: '12px' }}>
+                        <AutoRow gap="4px" justify="center">
+                          <TYPE.body color="text2" fontSize={12}>
+                            <Trans>Current Price:</Trans>
+                          </TYPE.body>
+                          <TYPE.body fontWeight={500} color="text2" fontSize={12}>
+                            <HoverInlineText
+                              maxCharacters={20}
+                              text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                            />{' '}
+                          </TYPE.body>
+                          <TYPE.body color="text2" fontSize={12}>
+                            <Trans>
+                              {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                            </Trans>
+                          </TYPE.body>
+                        </AutoRow>
+                      </OutlineCard>
                     )}
-                  </StackedContainer>
 
-                  {price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity && (
-                    <OutlineCard style={{ padding: '12px' }}>
-                      <AutoRow gap="4px" justify="center">
-                        <TYPE.body color="text2" fontSize={12}>
-                          <Trans>Current Price:</Trans>
-                        </TYPE.body>
-                        <TYPE.body fontWeight={500} color="text2" fontSize={12}>
-                          <HoverInlineText
-                            maxCharacters={20}
-                            text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                          />{' '}
-                        </TYPE.body>
-                        <TYPE.body color="text2" fontSize={12}>
-                          <Trans>
-                            {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                          </Trans>
-                        </TYPE.body>
-                      </AutoRow>
-                    </OutlineCard>
-                  )}
+                    {outOfRange ? (
+                      <YellowCard padding="8px 12px" borderRadius="12px">
+                        <RowBetween>
+                          <AlertTriangle stroke={theme.yellow3} size="16px" />
+                          <TYPE.yellow ml="12px" fontSize="12px">
+                            <Trans>
+                              Your position will not earn fees or be used in trades until the market price moves into
+                              your range.
+                            </Trans>
+                          </TYPE.yellow>
+                        </RowBetween>
+                      </YellowCard>
+                    ) : null}
 
-                  {outOfRange ? (
-                    <YellowCard padding="8px 12px" borderRadius="12px">
-                      <RowBetween>
-                        <AlertTriangle stroke={theme.yellow3} size="16px" />
-                        <TYPE.yellow ml="12px" fontSize="12px">
-                          <Trans>
-                            Your position will not earn fees or be used in trades until the market price moves into your
-                            range.
-                          </Trans>
-                        </TYPE.yellow>
-                      </RowBetween>
-                    </YellowCard>
-                  ) : null}
-
-                  {invalidRange ? (
-                    <YellowCard padding="8px 12px" borderRadius="12px">
-                      <RowBetween>
-                        <AlertTriangle stroke={theme.yellow3} size="16px" />
-                        <TYPE.yellow ml="12px" fontSize="12px">
-                          <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
-                        </TYPE.yellow>
-                      </RowBetween>
-                    </YellowCard>
-                  ) : null}
-                </DynamicSection>
+                    {invalidRange ? (
+                      <YellowCard padding="8px 12px" borderRadius="12px">
+                        <RowBetween>
+                          <AlertTriangle stroke={theme.yellow3} size="16px" />
+                          <TYPE.yellow ml="12px" fontSize="12px">
+                            <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
+                          </TYPE.yellow>
+                        </RowBetween>
+                      </YellowCard>
+                    ) : null}
+                  </DynamicSection>
+                )}
 
                 <MediumOnly>
                   <DepositAmounts />
