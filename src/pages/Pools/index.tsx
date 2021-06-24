@@ -180,18 +180,20 @@ const Pools = ({
                   id="input-tokenb"
                 />
 
-                <ButtonPrimary
-                  padding="8px 28px"
-                  as={Link}
-                  to={`/swap?inputCurrency=${currencyId(
-                    currencies[Field.CURRENCY_A] as Currency,
-                    chainId
-                  )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
-                  width="fit-content"
-                  style={{ marginLeft: '1rem', borderRadius: '8px' }}
-                >
-                  <span>Trade</span>
-                </ButtonPrimary>
+                {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && (
+                  <ButtonPrimary
+                    padding="8px 28px"
+                    as={Link}
+                    to={`/swap?inputCurrency=${currencyId(
+                      currencies[Field.CURRENCY_A] as Currency,
+                      chainId
+                    )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
+                    width="fit-content"
+                    style={{ marginLeft: '1rem', borderRadius: '8px' }}
+                  >
+                    <span>Trade</span>
+                  </ButtonPrimary>
+                )}
               </CurrencyWrapper>
 
               <SearchWrapper>
