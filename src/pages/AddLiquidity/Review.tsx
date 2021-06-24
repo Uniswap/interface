@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field } from '../../state/mint/v3/actions'
+import { Bound, Field } from '../../state/mint/v3/actions'
 import { AutoColumn } from 'components/Column'
 import Card from 'components/Card'
 import styled from 'styled-components/macro'
@@ -23,7 +23,7 @@ export const Badge = styled(Card)<{ inRange?: boolean }>`
 export function Review({
   position,
   outOfRange,
-  atBounds,
+  ticksAtLimit,
 }: {
   position?: Position
   existingPosition?: Position
@@ -31,13 +31,18 @@ export function Review({
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   outOfRange: boolean
-  atBounds: { [bound: string]: boolean }
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 }) {
   return (
     <Wrapper>
       <AutoColumn gap="lg">
         {position ? (
-          <PositionPreview position={position} inRange={!outOfRange} atBounds={atBounds} title={'Selected Range'} />
+          <PositionPreview
+            position={position}
+            inRange={!outOfRange}
+            ticksAtLimit={ticksAtLimit}
+            title={'Selected Range'}
+          />
         ) : null}
       </AutoColumn>
     </Wrapper>

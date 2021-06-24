@@ -118,7 +118,7 @@ export function useV3DerivedMintInfo(
   depositADisabled: boolean
   depositBDisabled: boolean
   invertPrice: boolean
-  atBounds: { [bound in Bound]?: boolean | undefined }
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 } {
   const { account } = useActiveWeb3React()
 
@@ -217,15 +217,15 @@ export function useV3DerivedMintInfo(
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
-  // lower and upper bounds in the tick space for `feeAmount`
-  const extremeBounds: {
+  // lower and upper limits in the tick space for `feeAmount`
+  const tickSpaceLimits: {
     [bound in Bound]: number | undefined
   } = useMemo(
     () => ({
       [Bound.LOWER]: feeAmount ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]) : undefined,
       [Bound.UPPER]: feeAmount ? nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]) : undefined,
     }),
-    [invertPrice, feeAmount]
+    [feeAmount]
   )
 
   // parse typed range values and determine closest ticks
@@ -239,7 +239,7 @@ export function useV3DerivedMintInfo(
           ? existingPosition.tickLower
           : (invertPrice && typeof rightRangeTypedValue === 'boolean') ||
             (!invertPrice && typeof leftRangeTypedValue === 'boolean')
-          ? extremeBounds[Bound.LOWER]
+          ? tickSpaceLimits[Bound.LOWER]
           : invertPrice
           ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue.toString())
           : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue.toString()),
@@ -248,7 +248,7 @@ export function useV3DerivedMintInfo(
           ? existingPosition.tickUpper
           : (!invertPrice && typeof rightRangeTypedValue === 'boolean') ||
             (invertPrice && typeof leftRangeTypedValue === 'boolean')
-          ? extremeBounds[Bound.UPPER]
+          ? tickSpaceLimits[Bound.UPPER]
           : invertPrice
           ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue.toString())
           : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue.toString()),
@@ -261,18 +261,18 @@ export function useV3DerivedMintInfo(
     rightRangeTypedValue,
     token0,
     token1,
-    extremeBounds,
+    tickSpaceLimits,
   ])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
 
-  // specifies whether the lower and upper range is at the exteme bounds
-  const atBounds = useMemo(
+  // specifies whether the lower and upper ticks is at the exteme bounds
+  const ticksAtLimit = useMemo(
     () => ({
-      [Bound.LOWER]: feeAmount && tickLower === extremeBounds.LOWER,
-      [Bound.UPPER]: feeAmount && tickUpper === extremeBounds.UPPER,
+      [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
+      [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
     }),
-    [extremeBounds, tickLower, tickUpper, feeAmount]
+    [tickSpaceLimits, tickLower, tickUpper, feeAmount]
   )
 
   // mark invalid range
@@ -473,7 +473,7 @@ export function useV3DerivedMintInfo(
     depositADisabled,
     depositBDisabled,
     invertPrice,
-    atBounds,
+    ticksAtLimit,
   }
 }
 

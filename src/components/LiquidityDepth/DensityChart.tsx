@@ -43,7 +43,7 @@ export default function DensityChart({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
-  atBounds,
+  ticksAtLimit,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -54,7 +54,7 @@ export default function DensityChart({
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
-  atBounds: { [bound in Bound]?: boolean | undefined }
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 }) {
   const { zoom } = useContext(ChartContext)
 
@@ -121,7 +121,7 @@ export default function DensityChart({
                 <Brush
                   leftHandleColor={currencyA ? tokenAColor : theme.primary1}
                   leftLabel={
-                    atBounds[Bound.LOWER]
+                    ticksAtLimit[Bound.LOWER]
                       ? '0'
                       : price && leftPrice
                       ? `${(
@@ -131,7 +131,7 @@ export default function DensityChart({
                       : undefined
                   }
                   rightLabel={
-                    atBounds[Bound.UPPER]
+                    ticksAtLimit[Bound.UPPER]
                       ? '∞'
                       : price && rightPrice
                       ? `${(

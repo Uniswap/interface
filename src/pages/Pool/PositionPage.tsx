@@ -41,6 +41,9 @@ import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Loader from 'components/Loader'
 import Toggle from 'components/Toggle'
+import { Bound } from 'state/mint/v3/actions'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { formatTickPrice } from 'utils/formatTickPrice'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -289,6 +292,26 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
   )
 }
 
+const useInverter = (
+  priceLower?: Price<Token, Token>,
+  priceUpper?: Price<Token, Token>,
+  quote?: Token,
+  base?: Token,
+  invert?: boolean
+): {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+} => {
+  return {
+    priceUpper: invert ? priceUpper?.invert() : priceUpper,
+    priceLower: invert ? priceLower?.invert() : priceLower,
+    quote,
+    base,
+  }
+}
+
 export function PositionPage({
   match: {
     params: { tokenId: tokenIdFromUrl },
@@ -332,12 +355,20 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
+  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+
+  const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
+
   // handle manual inversion
-  if (manuallyInverted) {
-    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
-  }
+  const { priceLower, priceUpper, base } = useInverter(
+    pricesFromPosition.priceUpper,
+    pricesFromPosition.priceLower,
+    pricesFromPosition.quote,
+    pricesFromPosition.base,
+    manuallyInverted
+  )
+
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
@@ -782,7 +813,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Min price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">
+                      {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                    </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -804,7 +837,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Max price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(5)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">
+                      {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+                    </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>

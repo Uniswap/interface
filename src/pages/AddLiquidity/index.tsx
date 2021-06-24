@@ -135,7 +135,7 @@ export default function AddLiquidity({
     depositADisabled,
     depositBDisabled,
     invertPrice,
-    atBounds,
+    ticksAtLimit,
   } = useV3DerivedMintInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
@@ -460,7 +460,7 @@ export default function AddLiquidity({
                   priceLower={priceLower}
                   priceUpper={priceUpper}
                   outOfRange={outOfRange}
-                  atBounds={atBounds}
+                  ticksAtLimit={ticksAtLimit}
                 />
               )}
               bottomContent={() => (
@@ -536,7 +536,7 @@ export default function AddLiquidity({
                     position={existingPosition}
                     title={<Trans>Selected Range</Trans>}
                     inRange={!outOfRange}
-                    atBounds={atBounds}
+                    ticksAtLimit={ticksAtLimit}
                   />
                 ) : (
                   <FeeSelector
@@ -667,7 +667,7 @@ export default function AddLiquidity({
                       currencyA={baseCurrency ?? undefined}
                       currencyB={quoteCurrency ?? undefined}
                       feeAmount={feeAmount}
-                      atBounds={atBounds}
+                      ticksAtLimit={ticksAtLimit}
                       price={price ? (invertPrice ? price.invert() : price) : undefined}
                       priceLower={priceLower}
                       priceUpper={priceUpper}
@@ -699,7 +699,7 @@ export default function AddLiquidity({
                           currencyA={baseCurrency}
                           currencyB={quoteCurrency}
                           feeAmount={feeAmount}
-                          atBounds={atBounds}
+                          ticksAtLimit={ticksAtLimit}
                         />
                       )}
                     </StackedItem>

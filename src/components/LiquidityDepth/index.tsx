@@ -24,7 +24,7 @@ export default function LiquidityDepth({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
-  atBounds,
+  ticksAtLimit,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -35,7 +35,7 @@ export default function LiquidityDepth({
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
-  atBounds: { [bound in Bound]?: boolean | undefined }
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 }) {
   const [zoom, setZoom] = useState(60)
 
@@ -67,7 +67,7 @@ export default function LiquidityDepth({
             onLeftRangeInput={onLeftRangeInput}
             onRightRangeInput={onRightRangeInput}
             interactive={interactive}
-            atBounds={atBounds}
+            ticksAtLimit={ticksAtLimit}
           />
         </AutoColumn>
       </DarkBlueCard>
