@@ -6,7 +6,7 @@ import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
 
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
-import LocalLoader from 'components/LocalLoader'
+import Loader from 'components/Loader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { useActiveWeb3React } from 'hooks'
@@ -39,11 +39,7 @@ export default function About() {
   const poolsMenuLink = getPoolsMenuLink(chainId)
   const data = useGlobalData()
 
-  if (!data) {
-    return <LocalLoader />
-  }
-
-  const globalData = data.dmmFactories[0]
+  const globalData = data && data.dmmFactories[0]
 
   return (
     <div className={style.wrapper}>
@@ -77,7 +73,7 @@ export default function About() {
         <div className={`${style.section_number} ${style.trading_volume_section}`}>
           <div>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
-              {formatBigLiquidity(globalData.totalVolumeUSD, 2, true)}
+              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Trading Volume
@@ -88,7 +84,7 @@ export default function About() {
         <div className={style.section_number}>
           <div className={style.liquidity_number}>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
-              {formatBigLiquidity(globalData.totalLiquidityUSD, 2, true)}
+              {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Value Locked
@@ -97,7 +93,7 @@ export default function About() {
           <div className={style.line}></div>
           <div className={style.amp_liquidity_number}>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
-              {formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true)}
+              {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
               Total AMP Liquitity
