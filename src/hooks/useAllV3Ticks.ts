@@ -42,7 +42,7 @@ export function useAllV3Ticks(
 
   const tickLensArgs: [string, number][] = useMemo(
     () =>
-      maxIndex && minIndex && poolAddress && poolAddress !== ZERO_ADDRESS
+      maxIndex && minIndex && poolAddress
         ? new Array(maxIndex - minIndex + 1)
             .fill(0)
             .map((_, i) => i + minIndex)
