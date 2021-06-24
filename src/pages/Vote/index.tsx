@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { UNI } from '../../constants/tokens'
 import { ExternalLink, TYPE } from '../../theme'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -135,6 +135,8 @@ export default function Vote() {
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
+  const maxGovernorIndex = allProposals.reduce((max, p) => Math.max(p.governorIndex, max), 0)
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -182,34 +184,44 @@ export default function Vote() {
             <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
-            {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
-            {showUnlockVoting ? (
+            <AutoRow gap="6px" justify="flex-end">
+              {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+              {showUnlockVoting ? (
+                <ButtonPrimary
+                  style={{ width: 'fit-content' }}
+                  padding="8px"
+                  borderRadius="8px"
+                  onClick={toggleDelegateModal}
+                >
+                  <Trans>Unlock Voting</Trans>
+                </ButtonPrimary>
+              ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
+                <TYPE.body fontWeight={500} mr="6px">
+                  <Trans>
+                    <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
+                  </Trans>
+                </TYPE.body>
+              ) : uniBalance &&
+                userDelegatee &&
+                userDelegatee !== ZERO_ADDRESS &&
+                JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
+                <TYPE.body fontWeight={500} mr="6px">
+                  <Trans>
+                    <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+                  </Trans>
+                </TYPE.body>
+              ) : (
+                ''
+              )}
               <ButtonPrimary
-                style={{ width: 'fit-content' }}
+                as={Link}
+                to="/create-proposal"
+                style={{ width: 'fit-content', borderRadius: '8px' }}
                 padding="8px"
-                borderRadius="8px"
-                onClick={toggleDelegateModal}
               >
-                <Trans>Unlock Voting</Trans>
+                <Trans>Create Proposal</Trans>
               </ButtonPrimary>
-            ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-              <TYPE.body fontWeight={500} mr="6px">
-                <Trans>
-                  <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                </Trans>
-              </TYPE.body>
-            ) : uniBalance &&
-              userDelegatee &&
-              userDelegatee !== ZERO_ADDRESS &&
-              JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-              <TYPE.body fontWeight={500} mr="6px">
-                <Trans>
-                  <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-                </Trans>
-              </TYPE.body>
-            ) : (
-              ''
-            )}
+            </AutoRow>
           </WrapSmall>
           {!showUnlockVoting && (
             <RowBetween>
@@ -248,10 +260,12 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.reverse().map((p: ProposalData, i) => {
+          {allProposals?.reverse()?.map((p: ProposalData) => {
             return (
-              <Proposal as={Link} to={'/vote/' + p.id} key={i}>
-                <ProposalNumber>{p.id}</ProposalNumber>
+              <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
+                <ProposalNumber>
+                  {maxGovernorIndex - p.governorIndex}.{p.id}
+                </ProposalNumber>
                 <ProposalTitle>{p.title}</ProposalTitle>
                 <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
               </Proposal>

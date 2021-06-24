@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-22 19:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-22 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -110,6 +110,10 @@ msgstr "<0> 돌아가기</0> V3"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0> 팁 :</0> 풀 토큰을 제거하면 풀 쉐어에 비례하여 현재 요율로 포지션을 기본 토큰으로 다시 전환합니다. 미지급 수수료는 귀하가 받는 금액에 포함됩니다."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
+msgstr "<0> 팁 :</0> 조치를 선택하고 커뮤니티에 대한 제안을 설명하십시오. 제안서는 제출 후 수정할 수 없으므로 제출하기 전에 모든 정보를 확인하십시오. 투표 기간은 즉시 시작되어 7 일 동안 지속됩니다. 사용자 지정 작업을 제안하려면 <1> 문서 읽기</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -223,8 +227,8 @@ msgid "Amount"
 msgstr "금액"
 
 #: src/hooks/useSwapCallback.ts
-msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 슬리피지 허용치를 높여야 할 수도 있습니다. 그래도 되지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 이체 및 리베이스 토큰에 대한 수수료가 Uniswap V3와 호환되지 않을 수도 있음에 유의하십시오."
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -234,6 +238,10 @@ msgstr "분석"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
 msgstr "승인"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Approve Token"
+msgstr "토큰 승인"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -400,6 +408,10 @@ msgstr "닫기"
 msgid "Closed"
 msgstr "닫힘"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "폐쇄 포지션"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "코드"
@@ -514,6 +526,11 @@ msgstr "주소 복사"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "풀 생성 및 공급"
+
+#: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "Create Proposal"
+msgstr "제안 생성"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -727,8 +744,8 @@ msgid "Get support on Discord"
 msgstr "Discord에서 지원 받기"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "마감된 포지션 숨기기"
+msgid "Hide"
+msgstr "숨는 장소"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1136,6 +1153,18 @@ msgstr "가격:"
 msgid "Prices and pool share"
 msgstr "가격 및 풀 쉐어"
 
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal"
+msgstr "신청"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Proposal Submitted"
+msgstr "제출 된 제안"
+
+#: src/pages/CreateProposal/ProposalEditor.tsx
+msgid "Proposal Title"
+msgstr "제안 제목"
+
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
 msgstr "제안"
@@ -1143,6 +1172,10 @@ msgstr "제안"
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "커뮤니티 멤버가 제출한 제안이 여기에 표시됩니다."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Proposed Action"
+msgstr "제안 된 조치"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1216,6 +1249,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "스왑을 직접 쌍으로만 제한합니다."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "반환"
 
@@ -1246,6 +1280,10 @@ msgstr "토큰 선택"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "v2 유동성을 찾으려면 토큰을 선택하십시오."
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Select an action"
+msgstr "작업 선택"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1280,6 +1318,10 @@ msgstr "풀 쉐어"
 msgid "Share of Pool:"
 msgstr "풀 쉐어:"
 
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "보여 주다"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Portis 표시"
@@ -1304,6 +1346,14 @@ msgstr "문제가 발생했습니다"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1 단계. UNI-V2 유동성 토큰 받기"
+
+#: src/state/governance/hooks.ts
+msgid "Submitted new proposal"
+msgstr "새 제안 제출"
+
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "Submitting Proposal"
+msgstr "제안 제출"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1336,7 +1386,7 @@ msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0 />"
+msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1451,6 +1501,10 @@ msgstr "제출된 거래"
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "거래 마감 시간"
+
+#: src/pages/CreateProposal/ProposalActionSelector.tsx
+msgid "Transfer Token"
+msgstr "이전 토큰"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1597,6 +1651,10 @@ msgstr "발생한 수수료 및 분석 보기 <0> ↗</0>"
 msgid "View list"
 msgstr "목록 보기"
 
+#: src/pages/CreateProposal/ProposalSubmissionModal.tsx
+msgid "View on Etherscan"
+msgstr "Etherscan에서보기"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1695,6 +1753,10 @@ msgstr "랩"
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You already have an active or pending proposal"
+msgstr "이미 활성 또는 보류중인 제안이 있습니다."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
 msgstr "풀을 만들고 있습니다."
@@ -1715,6 +1777,10 @@ msgstr "각 제안에 대해 직접 투표하거나 제3자에게 투표를 위�
 msgid "You can now trade {0}"
 msgstr "{0}을(를) 거래할 수 있습니다."
 
+#: src/pages/CreateProposal/index.tsx
+msgid "You don't have enough votes to submit a proposal"
+msgstr "제안서를 제출할 수있는 표가 충분하지 않습니다."
+
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "아직 이 풀에 유동성이 없습니다."
@@ -1726,6 +1792,10 @@ msgstr "계정을 연결해야합니다."
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 msgstr "{0}을 사용하려면 Uniswap 스마트 계약에 권한을 부여해야합니다. 토큰 당 한 번만 이 작업을 수행하면 됩니다."
+
+#: src/pages/CreateProposal/index.tsx
+msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
+msgstr "제안서를 제출 {formattedProposalThreshold} 표가 있어야합니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."

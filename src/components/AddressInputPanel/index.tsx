@@ -40,7 +40,7 @@ const Input = styled.input<{ error?: boolean }>`
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.primary1)};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -67,10 +67,16 @@ const Input = styled.input<{ error?: boolean }>`
 
 export default function AddressInputPanel({
   id,
+  className = 'recipient-address-input',
+  label = 'Recipient',
+  placeholder,
   value,
   onChange,
 }: {
   id?: string
+  className?: string
+  label?: string
+  placeholder?: string
   // the typed string value
   value: string
   // triggers whenever the typed value changes
@@ -99,7 +105,7 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
-                Recipient
+                {label}
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink
@@ -111,13 +117,13 @@ export default function AddressInputPanel({
               )}
             </RowBetween>
             <Input
-              className="recipient-address-input"
+              className={className}
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="Wallet Address or ENS name"
+              placeholder={placeholder ?? 'Wallet Address or ENS name'}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
