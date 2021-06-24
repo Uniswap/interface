@@ -662,13 +662,11 @@ export default function AddLiquidity({
 
                   {!noLiquidity && (
                     <LiquidityDepth
-                      price={
-                        price ? (invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)) : undefined
-                      }
                       currencyA={baseCurrency ?? undefined}
                       currencyB={quoteCurrency ?? undefined}
                       feeAmount={feeAmount}
                       atBounds={atBounds}
+                      price={price ? (invertPrice ? price.invert() : price) : undefined}
                       priceLower={priceLower}
                       priceUpper={priceUpper}
                       onLeftRangeInput={onLeftRangeInput}

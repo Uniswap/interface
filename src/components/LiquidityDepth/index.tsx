@@ -26,10 +26,10 @@ export default function LiquidityDepth({
   interactive,
   atBounds,
 }: {
-  price: string | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount: FeeAmount | undefined
+  price?: Price<Token, Token>
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
@@ -58,10 +58,10 @@ export default function LiquidityDepth({
             <ZoomButtons />
           </RowBetween>
           <DensityChart
-            price={price}
             currencyA={currencyA}
             currencyB={currencyB}
             feeAmount={feeAmount}
+            price={price}
             priceLower={priceLower}
             priceUpper={priceUpper}
             onLeftRangeInput={onLeftRangeInput}
