@@ -13,6 +13,7 @@ import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
 import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
 import { BrushableAreaChart } from './BrushableAreaChart'
+import { lighten, linearGradient, saturate } from 'polished'
 
 const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
@@ -105,6 +106,30 @@ export default function DensityChart({
             <BrushableAreaChart
               data={{ series: filteredData, current: parseFloat(price) }}
               dimensions={{ width: 350, height: 225, boundedHeight: 0, boundedWidth: 0 }}
+              styles={{
+                area: {
+                  fill: theme.blue1,
+                },
+                current: {
+                  stroke: theme.text1,
+                },
+                axis: {
+                  fill: theme.text1,
+                },
+                brush: {
+                  selection: {
+                    fill0: tokenAColor ?? theme.red1,
+                    fill1: tokenBColor ?? theme.blue1,
+                  },
+                  handle: {
+                    west: saturate(0.1, tokenAColor) ?? theme.red1,
+                    east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                  },
+                },
+                focus: {
+                  stroke: theme.red1,
+                },
+              }}
               brushDomain={
                 leftPrice && rightPrice
                   ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]

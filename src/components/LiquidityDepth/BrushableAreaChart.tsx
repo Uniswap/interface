@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ChartEntry } from './hooks'
-import { select, scaleLinear, max, axisBottom, area, curveStep, brushX, min, zoom, format, arc } from 'd3'
+import { select, scaleLinear, max, axisBottom, area, curveStep, brushX, min, zoom } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import styled from 'styled-components'
-import useTheme from 'hooks/useTheme'
 
 interface Dimensions {
   width: number
@@ -18,6 +17,36 @@ interface BrushableAreaChartProps {
   data: {
     series: ChartEntry[]
     current: number
+  }
+
+  styles: {
+    area: {
+      fill: string
+    }
+
+    current: {
+      stroke: string
+    }
+
+    axis: {
+      fill: string
+    }
+
+    brush: {
+      selection: {
+        fill0: string
+        fill1: string
+      }
+
+      handle: {
+        west: string
+        east: string
+      }
+    }
+
+    focus: {
+      stroke: string
+    }
   }
 
   dimensions: Dimensions
@@ -47,16 +76,17 @@ const getScales = (series: ChartEntry[], width: number, height: number) => {
 export function BrushableAreaChart({
   id = 'myBrushableAreaChart',
   data: { series, current },
+  styles,
   dimensions,
   brushDomain = [0, 10],
   onBrushDomainChange,
 }: BrushableAreaChartProps) {
-  const theme = useTheme()
-
   const wrapperRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
 
   const [currentZoomState, setCurrentZoomState] = useState()
+
+  const [cursorPosition, setCursorPosition] = useState<number>(0)
 
   const [currentSelection, setCurrentSelection] = useState(brushDomain)
   const previousSelection = usePrevious(brushDomain)
@@ -91,7 +121,11 @@ export function BrushableAreaChart({
         .select('#brush')
         .selectAll('.v-brush-handle')
         .attr('display', null)
-        .attr('transform', (d, i) => `translate(${[selection[i], -height / 4]})`)
+        .attr('transform', (d, i) => {
+          // @ts-ignore
+          const e = d.type === 'e' ? '1' : '-1'
+          return `translate(${[selection[i], 0]}) scale(${e}, 1)`
+        })
     }
 
     // @ts-ignore
@@ -131,7 +165,7 @@ export function BrushableAreaChart({
       .attr('class', 'area')
       .transition()
       .attr('opacity', '0.5')
-      .attr('fill', theme.blue1)
+      .attr('fill', styles.area.fill)
       .attr('stroke', 'none')
       // @ts-ignore
       .attr('d', areaGenerator)
@@ -149,7 +183,7 @@ export function BrushableAreaChart({
       .attr('y2', height)
       .transition()
       .style('stroke-width', 3)
-      .style('stroke', theme.text1)
+      .style('stroke', styles.current.stroke)
       .style('fill', 'none')
 
     // axes
@@ -158,7 +192,7 @@ export function BrushableAreaChart({
     svg
       .select('#x-axis')
       .style('transform', `translateY(${height}px)`)
-      .style('fill', theme.text1)
+      .style('fill', styles.axis.fill)
       .style('opacity', '0.6')
       // @ts-ignore
       .call(xAxis)
@@ -207,25 +241,64 @@ export function BrushableAreaChart({
       .append('path')
       .classed('v-brush-handle', true)
       .attr('cursor', 'ew-resize')
-      .attr('stroke', 'white')
-      .attr('d', (d) => {
-        const e = +(d.type === 'e')
-        const h = height * 2
-        const x = e ? 1 : -1
-        const y = 0
+      .attr('stroke-width', '2')
+      .attr('stroke', (d) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
+      .attr('fill', (d) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
+      .attr('d', () => {
         return [
-          `M ${0.5 * x} ${y}`,
-          `A 6 6 0 0 ${e} ${6.5 * x} ${y + 6}`,
-          `V ${y + h - 6}`,
-          `A 6 6 0 0 ${e} ${0.5 * x} ${y + h}`,
-          'Z',
-          `M ${2.5 * x} ${y + 8}`,
-          `V ${y + h - 8}`,
-          `M ${4.5 * x} ${y + 8}`,
-          `V ${y + h - 8}`,
+          // handle
+          `M 0,${height}`, // move to [0, height]
+          `L 0 1`, // vertical line to [0, 0]
+          // head
+          `h 10`, // horizontal line
+          `q 5 0, 5 5`, // quadratic bezier curve to [5, 5] through [5, 0]
+          `v 15`, // vertical line
+          `q 0 5 -5 5`, // quadratic bezier curve to [-5, 5] through [0, -5]
+          `h -10`, // horizontal line backward
+          `z`, // close path
         ].join(' ')
+        // https://medium.com/@dennismphil/one-side-rounded-rectangle-using-svg-fb31cf318d90
       })
-  }, [series, current, theme, dimensions, currentSelection, previousSelection, onBrushDomainChange, currentZoomState])
+
+    svg.select('#brush').selectAll('.selection').attr('stroke', 'none').attr('fill', `url(#${id}-gradient-selection)`)
+
+    // focus
+    svg
+      .select('#focus')
+      .selectAll('.line')
+      .data([cursorPosition])
+      .join('line')
+      .attr('class', 'line')
+      .attr('x1', xScale(cursorPosition))
+      .attr('y1', 0)
+      .attr('x2', xScale(cursorPosition))
+      .attr('y2', height)
+      .transition()
+      .style('stroke-width', 3)
+      .style('stroke', styles.focus.stroke)
+      .style('fill', 'none')
+
+    // adds mouse events on brush to handle cursor
+    svg
+      .select('#brush')
+      .select('.overlay')
+      .on('mouseover', () => svg.select('#focus').style('display', null))
+      .on('mouseout', () => svg.select('#focus').style('display', 'none'))
+      .on('mousemove', ({ offsetX }) => {
+        //setCursorPosition(xScale.invert(offsetX))
+      })
+  }, [
+    series,
+    current,
+    dimensions,
+    currentSelection,
+    previousSelection,
+    onBrushDomainChange,
+    currentZoomState,
+    cursorPosition,
+    id,
+    styles,
+  ])
 
   return (
     <div ref={wrapperRef}>
@@ -234,9 +307,16 @@ export function BrushableAreaChart({
           <clipPath id={id}>
             <rect x="0" y="0" width="100%" height="100%" />
           </clipPath>
+
+          <linearGradient id={`${id}-gradient-selection`} x1="0%" y1="100%" x2="100%" y2="100%">
+            <stop stopColor={styles.brush.selection.fill0} />
+            <stop stopColor={styles.brush.selection.fill1} offset="1" />
+          </linearGradient>
         </defs>
+
         <g id="content" clipPath={`url(#${id})`} />
         <g id="brush" clipPath={`url(#${id})`} />
+        <g id="focus" />
         <g id="x-axis" />
         <g id="y-axis" />
       </SVG>
