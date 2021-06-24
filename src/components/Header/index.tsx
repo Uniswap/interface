@@ -308,13 +308,35 @@ export default function Header() {
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
             {t('pools')}
           </StyledNavLink>
-          <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
-            <YieldMenuWrapper>
-              {t('yield')}
-              <NewText>{t('new')}</NewText>
-            </YieldMenuWrapper>
-          </StyledNavLink>
-          <HideSmall>
+
+          {process.env.REACT_APP_MAINNET_ENV !== 'production' ||
+          !chainId ||
+          ![ChainId.MAINNET, ChainId.MATIC].includes(chainId) ? (
+            <>
+              <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
+                <YieldMenuWrapper>
+                  {t('yield')}
+                  <NewText>{t('new')}</NewText>
+                </YieldMenuWrapper>
+              </StyledNavLink>
+
+              <HideSmall>
+                <StyledNavLink
+                  id={`my-pools-nav-link`}
+                  to={'/myPools'}
+                  isActive={(match, { pathname }) =>
+                    Boolean(match) ||
+                    pathname.startsWith('/add') ||
+                    pathname.startsWith('/remove') ||
+                    pathname.startsWith('/create') ||
+                    (pathname.startsWith('/find') && pathname.endsWith('find'))
+                  }
+                >
+                  {t('My Dashboard')}
+                </StyledNavLink>
+              </HideSmall>
+            </>
+          ) : (
             <StyledNavLink
               id={`my-pools-nav-link`}
               to={'/myPools'}
@@ -328,7 +350,8 @@ export default function Header() {
             >
               {t('My Dashboard')}
             </StyledNavLink>
-          </HideSmall>
+          )}
+
           <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
