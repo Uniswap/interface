@@ -10,17 +10,33 @@ import LocalLoader from 'components/LocalLoader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId } from 'libs/sdk/src'
+import { ChainId, ETHER } from 'libs/sdk/src'
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
 import { formatBigLiquidity } from 'utils/formatBalance'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
+
+const getPoolsMenuLink = (chainId?: ChainId) => {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.ROPSTEN:
+      return `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    case ChainId.MATIC:
+      return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
+    case ChainId.MUMBAI:
+      return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    default:
+      return '/pools/ETH'
+  }
+}
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
 
-  const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
+  const poolsMenuLink = getPoolsMenuLink(chainId)
   const data = useGlobalData()
 
   if (!data) {
