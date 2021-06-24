@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-24 09:04\n"
+"PO-Revision-Date: 2021-06-24 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -228,7 +228,7 @@ msgstr "數額"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "嘗試執行此交換時出錯。您可能需要增加您的滑點容忍度。如果這不起作用，則可能與您交易的代幣不兼容。注意：轉賬和 rebase 代幣的費用與 Uniswap V3 不兼容。"
+msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -241,7 +241,7 @@ msgstr "批準"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr "批准令牌"
+msgstr "批准代幣"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -410,7 +410,7 @@ msgstr "已關閉"
 
 #: src/pages/Pool/index.tsx
 msgid "Closed positions"
-msgstr "平倉"
+msgstr "已關閉的倉位"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -1155,11 +1155,11 @@ msgstr "兌換率和流動池份額"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
-msgstr "提議"
+msgstr "提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Proposal Submitted"
-msgstr "提交的提案"
+msgstr "已提交提案"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal Title"
@@ -1175,7 +1175,7 @@ msgstr "社區成員提交的提案將在此顯示。"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
-msgstr "提議的行動"
+msgstr "提議操作"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1283,7 +1283,7 @@ msgstr "選擇代幣以查找您的 v2 流動資金。"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr "選擇一個動作"
+msgstr "選擇操作"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1353,7 +1353,7 @@ msgstr "提交了新提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr "提交提案"
+msgstr "正提交提案"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1504,7 +1504,7 @@ msgstr "交易截止期限"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
-msgstr "轉移令牌"
+msgstr "代幣轉賬"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
@@ -1755,7 +1755,7 @@ msgstr "錯誤的網絡"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
-msgstr "您已經有一個有效或待處理的提案"
+msgstr "您已經有一個現有或待處理的提案"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
