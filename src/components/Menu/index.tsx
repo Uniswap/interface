@@ -124,10 +124,12 @@ export default function Menu() {
             <Info size={14} />
             About
           </NavMenuItem>
-          <NavMenuItem to="/migration">
-            <Zap size={14} />
-            Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
-          </NavMenuItem>
+          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+            <NavMenuItem to="/migration">
+              <Zap size={14} />
+              Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
+            </NavMenuItem>
+          )}
           <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
             <PieChart size={14} />
             Analytics
