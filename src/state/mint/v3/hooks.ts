@@ -222,12 +222,8 @@ export function useV3DerivedMintInfo(
     [bound in Bound]: number | undefined
   } = useMemo(
     () => ({
-      [Bound.LOWER]: feeAmount
-        ? nearestUsableTick(invertPrice ? TickMath.MAX_TICK : TickMath.MIN_TICK, TICK_SPACINGS[feeAmount])
-        : undefined,
-      [Bound.UPPER]: feeAmount
-        ? nearestUsableTick(invertPrice ? TickMath.MIN_TICK : TickMath.MAX_TICK, TICK_SPACINGS[feeAmount])
-        : undefined,
+      [Bound.LOWER]: feeAmount ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]) : undefined,
+      [Bound.UPPER]: feeAmount ? nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]) : undefined,
     }),
     [invertPrice, feeAmount]
   )
