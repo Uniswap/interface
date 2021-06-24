@@ -362,9 +362,11 @@ export default function AddLiquidity({
 
   const handleFeePoolSelect = useCallback(
     (newFeeAmount: FeeAmount) => {
+      onLeftRangeInput('')
+      onRightRangeInput('')
       history.push(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
   )
 
   const handleDismissConfirmation = useCallback(() => {
