@@ -25,13 +25,26 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
   if (chainId === SupportedChainId.ARBITRUM_ONE) {
     switch (type) {
       case ExplorerDataType.TRANSACTION:
-        return `https://mainnet-arb-explorer.netlify.app/tx/${data}`
+        return `https://explorer.arbitrum.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
-        return `https://mainnet-arb-explorer.netlify.app/address/${data}`
+        return `https://explorer.arbitrum.io/address/${data}`
       case ExplorerDataType.BLOCK:
-        return `https://mainnet-arb-explorer.netlify.app/block/${data}`
+        return `https://explorer.arbitrum.io/block/${data}`
       default:
-        return `https://mainnet-arb-explorer.netlify.app`
+        return `https://explorer.arbitrum.io/`
+    }
+  }
+
+  if (chainId === SupportedChainId.ARBITRUM_RINKEBY) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://rinkeby-explorer.arbitrum.io/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+        return `https://rinkeby-explorer.arbitrum.io/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://rinkeby-explorer.arbitrum.io/block/${data}`
+      default:
+        return `https://rinkeby-explorer.arbitrum.io/`
     }
   }
 
