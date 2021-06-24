@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-24 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>提示：</0>退出資金池，按照當前匯率將您的資金池�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0>提示：</0>選擇一項行動並描述您對社區的建議。提案提交後無法修改，提交前請核對所有信息。投票期將立即開始，持續 7 天。要提出自定義操作，<1>閱讀文檔</1>."
+msgstr "<0>提示：</0>選擇操作並描述您的提案。提案提交後不可修改，提交前請核對所有信息。投票期將立即開始，持續 7 天。若要提議自定義操作，請<1>閱讀文檔</1>。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -1847,12 +1847,12 @@ msgstr "您的倉位沒有任何流動資金，沒在賺取手續費。"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "在達到此兌換率時，您的倉位流動資金將 100% 由 {0} 所組成。"
+msgstr "在此兌換率，您的倉位將 100% 由 {0} 所組成。"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "在達到此兌換率時，您的倉位流動資金將 100% 由 {0} 所組成。"
+msgstr "在此兌換率，您的倉位將 100% 由 {0} 所組成。"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
