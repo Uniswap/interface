@@ -124,14 +124,20 @@ export default function DensityChart({
                     atBounds[Bound.LOWER]
                       ? '0'
                       : price && leftPrice
-                      ? `${((parseFloat(leftPrice.toSignificant(5)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      ? `${(
+                          (parseFloat(leftPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
+                          100
+                        ).toFixed(2)}%`
                       : undefined
                   }
                   rightLabel={
                     atBounds[Bound.UPPER]
                       ? '∞'
                       : price && rightPrice
-                      ? `${((parseFloat(rightPrice.toSignificant(5)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      ? `${(
+                          (parseFloat(rightPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
+                          100
+                        ).toFixed(2)}%`
                       : undefined
                   }
                   rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
