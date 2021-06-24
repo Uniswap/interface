@@ -531,8 +531,6 @@ function V2PairMigration({
             getIncrementLower={getIncrementLower}
             getDecrementUpper={getDecrementUpper}
             getIncrementUpper={getIncrementUpper}
-            getSetRange={getSetRange}
-            getSetFullRange={getSetFullRange}
             onLeftRangeInput={onLeftRangeInput}
             onRightRangeInput={onRightRangeInput}
             currencyA={invertPrice ? currency1 : currency0}

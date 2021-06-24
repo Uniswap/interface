@@ -4,8 +4,6 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
-import PresetsButtons from './PresetsButtons'
-import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import { formatTickPrice } from 'utils/formatTickPrice'
 
@@ -19,8 +17,6 @@ export default function RangeSelector({
   getIncrementLower,
   getDecrementUpper,
   getIncrementUpper,
-  getSetRange,
-  getSetFullRange,
   currencyA,
   currencyB,
   feeAmount,
@@ -32,8 +28,6 @@ export default function RangeSelector({
   getIncrementLower: () => string
   getDecrementUpper: () => string
   getIncrementUpper: () => string
-  getSetRange: (numTicks: number) => string[]
-  getSetFullRange: () => void
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   currencyA?: Currency | null
@@ -50,20 +44,9 @@ export default function RangeSelector({
 
   return (
     <AutoColumn gap="md">
-      <PresetsButtons
-        feeAmount={feeAmount}
-        setRange={(numTicks) => {
-          const [range1, range2] = getSetRange(numTicks)
-          batch(() => {
-            onLeftRangeInput(isSorted ? range1 : range2)
-            onRightRangeInput(isSorted ? range2 : range1)
-          })
-        }}
-        setFullRange={getSetFullRange}
-      />
       <RowBetween>
         <StepCounter
-          value={formatTickPrice(leftPrice, ticksAtLimit, Bound.LOWER)}
+          value={formatTickPrice(leftPrice, ticksAtLimit, Bound.LOWER, '')}
           onUserInput={onLeftRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -77,7 +60,7 @@ export default function RangeSelector({
           tokenB={currencyB?.symbol}
         />
         <StepCounter
-          value={formatTickPrice(rightPrice, ticksAtLimit, Bound.UPPER)}
+          value={formatTickPrice(rightPrice, ticksAtLimit, Bound.UPPER, '')}
           onUserInput={onRightRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementUpper : getIncrementLower}

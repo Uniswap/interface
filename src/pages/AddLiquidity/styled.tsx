@@ -5,8 +5,8 @@ import { DarkGreyCard } from 'components/Card'
 import Input from 'components/NumericalInput'
 import { BodyWrapper } from 'pages/AppBody'
 
-export const PageWrapper = styled(BodyWrapper)`
-  max-width: 870px;
+export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
+  max-width: ${({ wide }) => (wide ? '870px' : '480px')};
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -74,10 +74,10 @@ export const StyledInput = styled(Input)`
   width: 100%;
 `
 
-export const ResponsiveTwoColumns = styled.div`
+export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   display: grid;
   grid-gap: 50px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${({ wide }) => (wide ? '1fr 1fr' : '1fr')};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;

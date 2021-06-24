@@ -5,7 +5,16 @@ import { formatPrice } from './formatCurrencyAmount'
 export function formatTickPrice(
   price: Price<Token, Token> | undefined,
   atLimit: { [bound in Bound]?: boolean | undefined },
-  direction: Bound
+  direction: Bound,
+  placeholder?: string
 ) {
-  return atLimit[direction] ? (direction === Bound.LOWER ? '0' : '∞') : formatPrice(price, 5)
+  if (atLimit[direction]) {
+    return direction === Bound.LOWER ? '0' : '∞'
+  }
+
+  if (!price && placeholder !== undefined) {
+    return placeholder
+  }
+
+  return formatPrice(price, 5)
 }
