@@ -8,6 +8,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { ChartContext } from './hooks'
 import ZoomButtons from './ZoomButtons'
+import { Bound } from 'state/mint/v3/actions'
 
 const MIN_ZOOM = 10
 const MAX_ZOOM = 200
@@ -23,6 +24,7 @@ export default function LiquidityDepth({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
+  atBounds,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -33,6 +35,7 @@ export default function LiquidityDepth({
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
+  atBounds: { [bound in Bound]?: boolean | undefined }
 }) {
   const [zoom, setZoom] = useState(60)
 
@@ -64,6 +67,7 @@ export default function LiquidityDepth({
             onLeftRangeInput={onLeftRangeInput}
             onRightRangeInput={onRightRangeInput}
             interactive={interactive}
+            atBounds={atBounds}
           />
         </AutoColumn>
       </DarkBlueCard>

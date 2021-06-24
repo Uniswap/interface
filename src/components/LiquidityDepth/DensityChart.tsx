@@ -12,6 +12,7 @@ import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
 import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
+import { Bound } from 'state/mint/v3/actions'
 
 const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
@@ -42,6 +43,7 @@ export default function DensityChart({
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
+  atBounds,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -52,6 +54,7 @@ export default function DensityChart({
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
+  atBounds: { [bound in Bound]?: boolean | undefined }
 }) {
   const { zoom } = useContext(ChartContext)
 
@@ -118,7 +121,9 @@ export default function DensityChart({
                 <Brush
                   leftHandleColor={currencyA ? tokenAColor : theme.primary1}
                   leftLabel={
-                    price && leftPrice
+                    atBounds[Bound.LOWER]
+                      ? '0'
+                      : price && leftPrice
                       ? `${(
                           (parseFloat(leftPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
                           100
@@ -126,7 +131,9 @@ export default function DensityChart({
                       : undefined
                   }
                   rightLabel={
-                    price && rightPrice
+                    atBounds[Bound.UPPER]
+                      ? '∞'
+                      : price && rightPrice
                       ? `${(
                           (parseFloat(rightPrice.toSignificant(5)) / parseFloat(price.toSignificant(5)) - 1) *
                           100

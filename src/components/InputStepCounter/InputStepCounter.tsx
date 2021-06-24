@@ -25,7 +25,6 @@ const pulse = (color: string) => keyframes`
 `
 
 const SmallButton = styled(ButtonPrimary)`
-  /* background-color: ${({ theme }) => theme.bg2}; */
   border-radius: 8px;
   padding: 4px 6px;
   width: 48%;
@@ -51,11 +50,17 @@ const InputTitle = styled(TYPE.small)`
   font-weight: 500;
 `
 
+const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
+  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.white)} !important;
+`
+
 interface StepCounterProps {
   value: string
   onUserInput: (value: string) => void
   decrement: () => string
   increment: () => string
+  decrementDisabled?: boolean
+  incrementDisabled?: boolean
   feeAmount?: FeeAmount
   label?: string
   width?: string
@@ -69,6 +74,8 @@ const StepCounter = ({
   value,
   decrement,
   increment,
+  decrementDisabled = false,
+  incrementDisabled = false,
   feeAmount,
   width,
   locked,
@@ -147,15 +154,15 @@ const StepCounter = ({
       </AutoColumn>
       {!locked ? (
         <RowBetween>
-          <SmallButton onClick={handleDecrement}>
-            <TYPE.white fontSize="12px">
+          <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
+            <ButtonLabel disabled={decrementDisabled} fontSize="12px">
               <Trans>-{feeAmountFormatted}%</Trans>
-            </TYPE.white>
+            </ButtonLabel>
           </SmallButton>
-          <SmallButton onClick={handleIncrement}>
-            <TYPE.white fontSize="12px">
+          <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
+            <ButtonLabel disabled={incrementDisabled} fontSize="12px">
               <Trans>+{feeAmountFormatted}%</Trans>
-            </TYPE.white>
+            </ButtonLabel>
           </SmallButton>
         </RowBetween>
       ) : null}

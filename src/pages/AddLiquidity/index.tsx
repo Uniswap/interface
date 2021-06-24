@@ -11,12 +11,19 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
+import {
+  ButtonError,
+  ButtonLight,
+  ButtonOutlined,
+  ButtonPrimary,
+  ButtonText,
+  ButtonYellow,
+} from '../../components/Button'
 import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
+import Row, { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
@@ -45,6 +52,8 @@ import {
   ResponsiveTwoColumns,
   Separator,
   PageWrapper,
+  StackedContainer,
+  StackedItem,
 } from './styled'
 import { Trans, t } from '@lingui/macro'
 import {
@@ -126,6 +135,7 @@ export default function AddLiquidity({
     depositADisabled,
     depositBDisabled,
     invertPrice,
+    atBounds,
   } = useV3DerivedMintInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
@@ -142,6 +152,8 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+  const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] =
+    useState<'initial' | 'prompting' | 'accepted' | 'denied'>('initial')
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -350,9 +362,11 @@ export default function AddLiquidity({
 
   const handleFeePoolSelect = useCallback(
     (newFeeAmount: FeeAmount) => {
+      onLeftRangeInput('')
+      onRightRangeInput('')
       history.push(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -651,6 +665,7 @@ export default function AddLiquidity({
                       currencyA={baseCurrency ?? undefined}
                       currencyB={quoteCurrency ?? undefined}
                       feeAmount={feeAmount}
+                      atBounds={atBounds}
                       price={price ? (invertPrice ? price.invert() : price) : undefined}
                       priceLower={priceLower}
                       priceUpper={priceUpper}
@@ -660,23 +675,100 @@ export default function AddLiquidity({
                     />
                   )}
 
-                  {!hasExistingPosition && (
-                    <RangeSelector
-                      priceLower={priceLower}
-                      priceUpper={priceUpper}
-                      getDecrementLower={getDecrementLower}
-                      getIncrementLower={getIncrementLower}
-                      getDecrementUpper={getDecrementUpper}
-                      getIncrementUpper={getIncrementUpper}
-                      getSetRange={getSetRange}
-                      getSetFullRange={getSetFullRange}
-                      onLeftRangeInput={onLeftRangeInput}
-                      onRightRangeInput={onRightRangeInput}
-                      currencyA={baseCurrency}
-                      currencyB={quoteCurrency}
-                      feeAmount={feeAmount}
-                    />
-                  )}
+                  <StackedContainer>
+                    <StackedItem style={{ opacity: showCapitalEfficiencyWarning === 'prompting' ? '0.05' : 1 }}>
+                      {!hasExistingPosition && (
+                        <RangeSelector
+                          priceLower={priceLower}
+                          priceUpper={priceUpper}
+                          getDecrementLower={getDecrementLower}
+                          getIncrementLower={getIncrementLower}
+                          getDecrementUpper={getDecrementUpper}
+                          getIncrementUpper={getIncrementUpper}
+                          getSetRange={getSetRange}
+                          getSetFullRange={() => {
+                            if (showCapitalEfficiencyWarning !== 'accepted') {
+                              setShowCapitalEfficiencyWarning('prompting')
+                            }
+                            return getSetFullRange()
+                          }}
+                          onLeftRangeInput={onLeftRangeInput}
+                          onRightRangeInput={onRightRangeInput}
+                          currencyA={baseCurrency}
+                          currencyB={quoteCurrency}
+                          feeAmount={feeAmount}
+                          atBounds={atBounds}
+                        />
+                      )}
+                    </StackedItem>
+
+                    {showCapitalEfficiencyWarning === 'prompting' && (
+                      <StackedItem zIndex={1}>
+                        <YellowCard
+                          padding="15px"
+                          borderRadius="12px"
+                          height="100%"
+                          style={{
+                            borderColor: theme.yellow3,
+                            border: '1px solid',
+                          }}
+                        >
+                          <AutoColumn gap="8px" style={{ height: '100%' }}>
+                            <RowFixed>
+                              <AlertTriangle stroke={theme.yellow3} size="16px" />
+                              <TYPE.yellow ml="12px" fontSize="15px">
+                                <Trans>Efficiency Comparison</Trans>
+                              </TYPE.yellow>
+                            </RowFixed>
+                            <RowFixed>
+                              <TYPE.yellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
+                                <Trans>
+                                  On Uniswap V3, setting a range across all prices like V2 is less capital efficient
+                                  than a concentrated one. Learn more{' '}
+                                  <ExternalLink style={{ color: theme.yellow3, textDecoration: 'underline' }} href={''}>
+                                    here
+                                  </ExternalLink>
+                                  .
+                                </Trans>
+                              </TYPE.yellow>
+                            </RowFixed>
+                            <Row>
+                              <ButtonYellow
+                                padding="8px"
+                                marginRight="8px"
+                                borderRadius="8px"
+                                width="auto"
+                                onClick={() => {
+                                  setShowCapitalEfficiencyWarning('accepted')
+                                }}
+                              >
+                                <TYPE.black fontSize={13} color="black">
+                                  <Trans>I Understand</Trans>
+                                </TYPE.black>
+                              </ButtonYellow>
+                              <ButtonOutlined
+                                padding="8px"
+                                borderRadius="8px"
+                                width="auto"
+                                borderColor={theme.yellow3}
+                                onClick={() => {
+                                  setShowCapitalEfficiencyWarning('denied')
+
+                                  // reset inputs
+                                  onLeftRangeInput('')
+                                  onRightRangeInput('')
+                                }}
+                              >
+                                <TYPE.yellow fontSize={13}>
+                                  <Trans>Decline</Trans>
+                                </TYPE.yellow>
+                              </ButtonOutlined>
+                            </Row>
+                          </AutoColumn>
+                        </YellowCard>
+                      </StackedItem>
+                    )}
+                  </StackedContainer>
 
                   {price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity && (
                     <OutlineCard style={{ padding: '12px' }}>
