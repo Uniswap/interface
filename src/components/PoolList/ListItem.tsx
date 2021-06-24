@@ -9,7 +9,6 @@ import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
-import TradeIcon from 'components/Icons/TradeIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
@@ -26,7 +25,7 @@ import { useActiveWeb3React } from 'hooks'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr repeat(8, 1fr) 0.5fr 1fr;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -361,16 +360,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         >
           <AddCircle />
         </ButtonEmpty>
-      </ButtonWrapper>
-      <ButtonWrapper>
-        <ButtonEmpty
-          padding="0"
-          as={Link}
-          to={`/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(currency1, chainId)}`}
-          width="fit-content"
-        >
-          <TradeIcon />
-        </ButtonEmpty>
+
         <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
           <StyledMoreHorizontal />
         </ButtonEmpty>

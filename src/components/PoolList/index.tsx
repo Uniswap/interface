@@ -16,7 +16,7 @@ import PoolDetailModal from './PoolDetailModal'
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr repeat(8, 1fr) 0.5fr 1fr;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -288,10 +288,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>Add liquidity</ClickableText>
-        </Flex>
-
-        <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Trade</ClickableText>
         </Flex>
       </TableHeader>
     ) : null

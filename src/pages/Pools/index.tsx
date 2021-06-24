@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
 
 import { Currency } from 'libs/sdk/src'
-import { ButtonOutlined } from 'components/Button'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
@@ -179,7 +179,21 @@ const Pools = ({
                   otherCurrency={currencies[Field.CURRENCY_A]}
                   id="input-tokenb"
                 />
+
+                <ButtonPrimary
+                  padding="8px 28px"
+                  as={Link}
+                  to={`/swap?inputCurrency=${currencyId(
+                    currencies[Field.CURRENCY_A] as Currency,
+                    chainId
+                  )}&outputCurrency=${currencyId(currencies[Field.CURRENCY_B] as Currency, chainId)}`}
+                  width="fit-content"
+                  style={{ marginLeft: '1rem', borderRadius: '8px' }}
+                >
+                  <span>Trade</span>
+                </ButtonPrimary>
               </CurrencyWrapper>
+
               <SearchWrapper>
                 <Search searchValue={searchValue} setSearchValue={setSearchValue} />
                 <ButtonOutlined
