@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { useLocation } from 'react-router'
 import styled from 'styled-components/macro'

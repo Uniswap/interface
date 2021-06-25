@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { darken } from 'polished'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'

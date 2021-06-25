@@ -1,5 +1,5 @@
 import Tooltip from 'components/Tooltip'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components/macro'
 
 const TextWrapper = styled.span<{ margin: boolean; link?: boolean; fontSize?: string; adjustSize?: boolean }>`
