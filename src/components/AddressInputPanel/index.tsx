@@ -69,7 +69,7 @@ const Input = styled.input<{ error?: boolean }>`
 export default function AddressInputPanel({
   id,
   className = 'recipient-address-input',
-  label = 'Recipient',
+  label,
   placeholder,
   value,
   onChange,
@@ -106,7 +106,7 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
-                <Trans>{label}</Trans>
+                {label ?? <Trans>Recipient</Trans>}
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink
