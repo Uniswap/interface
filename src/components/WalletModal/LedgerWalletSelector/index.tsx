@@ -1,11 +1,11 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import Loader from 'components/Loader'
-import { NETWORK_CHAIN_ID } from 'connectors'
-import { LedgerKit } from 'connectors/ledger/LedgerConnector'
 import { darken } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+import { NETWORK_CHAIN_ID } from '../../../connectors'
+import { LedgerKit } from '../../../connectors/ledger/LedgerConnector'
 import { LedgerAddress } from './LedgerAddress'
 
 interface Props {

@@ -7,7 +7,8 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import { CHAIN_INFO, ChainId } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ConnectorUpdate } from '@web3-react/types'
-import { NETWORK_CHAIN_ID } from 'connectors'
+
+import { NETWORK_CHAIN_ID } from '../'
 
 export class LedgerKit {
   private closed = false

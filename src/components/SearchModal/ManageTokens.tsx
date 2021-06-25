@@ -1,7 +1,4 @@
 import { getBlockscoutLink, Token } from '@ubeswap/sdk'
-import Card from 'components/Card'
-import Column from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
@@ -12,6 +9,9 @@ import { ButtonText, ExternalLink, ExternalLinkIcon, TrashIcon, TYPE } from 'the
 import { isAddress } from 'utils'
 
 import useTheme from '../../hooks/useTheme'
+import Card from '../Card'
+import Column from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
 import { CurrencyModalView } from './CurrencySearchModal'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'

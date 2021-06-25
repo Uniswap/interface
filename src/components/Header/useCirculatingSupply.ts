@@ -1,6 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { JSBI, TokenAmount } from '@ubeswap/sdk'
 import { UBE } from 'constants/tokens'
-import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks/index'
 import { useReleaseUbeContract, useTokenContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'

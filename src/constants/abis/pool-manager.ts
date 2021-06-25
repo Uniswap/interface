@@ -1,4 +1,4 @@
-import { Interface } from 'ethers/lib/utils'
+import { Interface } from '@ethersproject/abi'
 
 import POOL_MANAGER_ABI from './pool-manager.json'
 

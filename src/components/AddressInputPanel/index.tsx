@@ -1,9 +1,9 @@
 import { getBlockscoutLink } from '@ubeswap/sdk'
+import useENS from 'hooks/useENS'
 import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
-import useENS from '../../hooks/useENS'
 import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'

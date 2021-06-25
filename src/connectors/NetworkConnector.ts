@@ -2,8 +2,9 @@ import { ContractKit, newKit } from '@celo/contractkit'
 import { CHAIN_INFO, ChainId } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ConnectorUpdate } from '@web3-react/types'
-import { NETWORK_CHAIN_ID } from 'connectors'
 import invariant from 'tiny-invariant'
+
+import { NETWORK_CHAIN_ID } from '.'
 
 export interface NetworkConnectorArguments {
   defaultChainId?: ChainId

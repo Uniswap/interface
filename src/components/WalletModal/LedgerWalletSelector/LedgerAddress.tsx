@@ -1,11 +1,11 @@
 import { cUSD } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { NETWORK_CHAIN_ID } from 'connectors'
 import { LedgerConnector, LedgerKit } from 'connectors/ledger/LedgerConnector'
 import React from 'react'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { shortenAddress } from 'utils'
 
+import { NETWORK_CHAIN_ID } from '../../../connectors'
 import { InfoCard } from '.'
 
 interface Props {

@@ -1,6 +1,6 @@
 import { ConnectorUpdate } from '@web3-react/types'
-import { MiniRpcProvider, NetworkConnector } from 'connectors/NetworkConnector'
 
+import { MiniRpcProvider, NetworkConnector } from '../NetworkConnector'
 import { ValoraProvider } from './ValoraProvider'
 import { IValoraAccount, requestValoraAuth } from './valoraUtils'
 

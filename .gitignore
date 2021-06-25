@@ -29,3 +29,11 @@ package-lock.json
 
 /src/generated
 .eslintcache
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

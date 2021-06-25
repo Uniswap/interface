@@ -1,10 +1,10 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { TokenAmount, Trade } from '@ubeswap/sdk'
 import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useMoolaConfig } from 'components/swap/routing/moola/useMoola'
-import { BigNumber } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { useUserMinApprove } from 'state/user/hooks'
 

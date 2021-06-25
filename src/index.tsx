@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { ChainId } from '@ubeswap/sdk'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import { NETWORK_CHAIN_ID, NETWORK_CHAIN_NAME } from 'connectors/index'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
@@ -12,6 +11,7 @@ import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 
+import { NETWORK_CHAIN_ID, NETWORK_CHAIN_NAME } from './connectors'
 import { NetworkContextName } from './constants'
 import App from './pages/App'
 import store from './state'
@@ -66,23 +66,23 @@ if (GOOGLE_ANALYTICS_ID) {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
-// sentry
-const sentryCfg = {
-  environment: `${environment ?? 'unknown'}-${NETWORK_CHAIN_NAME}`,
-  release: `${process.env.REACT_APP_VERCEL_GIT_COMMIT_REF ?? 'unknown'}-${
-    process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA ?? 'unknown'
-  }`,
+if (process.env.REACT_APP_SENTRY_DSN) {
+  const sentryCfg = {
+    environment: `${process.env.REACT_APP_VERCEL_ENV ?? 'unknown'}`,
+    release: `${process.env.REACT_APP_VERCEL_GIT_COMMIT_REF?.replace(/\//g, '--') ?? 'unknown'}-${
+      process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA ?? 'unknown'
+    }`,
+  }
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    integrations: [new Integrations.BrowserTracing()],
+    tracesSampleRate: 0.2,
+    ...sentryCfg,
+  })
+  console.log(`Initializing Sentry environment at release ${sentryCfg.release} in environment ${sentryCfg.environment}`)
+} else {
+  console.warn(`REACT_APP_SENTRY_DSN not found. Sentry will not be loaded.`)
 }
-Sentry.init({
-  dsn: 'https://3a59012948e049a290f5e3ff6f6f68e2@o605929.ingest.sentry.io/5745027',
-  integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate: 0.001,
-  environment: `${environment ?? 'unknown'}-${NETWORK_CHAIN_NAME}`,
-  release: `${process.env.REACT_APP_VERCEL_GIT_COMMIT_REF ?? 'unknown'}-${
-    process.env.REACT_APP_VERCEL_GIT_COMMIT_SHA ?? 'unknown'
-  }`,
-})
-console.log(`Initializing Sentry environment at release ${sentryCfg.release} in environment ${sentryCfg.environment}`)
 
 // react GA error tracking
 window.addEventListener('error', (error) => {

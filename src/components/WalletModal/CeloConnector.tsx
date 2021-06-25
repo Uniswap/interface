@@ -1,7 +1,8 @@
 import { ChainId } from '@ubeswap/sdk'
-import { NETWORK_CHAIN_ID } from 'connectors'
 import React from 'react'
 import { Button } from 'theme'
+
+import { NETWORK_CHAIN_ID } from '../../connectors'
 
 const CELO_PARAMS = {
   chainId: '0xa4ec',

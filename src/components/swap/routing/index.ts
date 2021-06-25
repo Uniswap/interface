@@ -1,5 +1,7 @@
+import { Signer } from '@ethersproject/abstract-signer'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { CallOverrides, Contract, ContractTransaction, PayableOverrides } from '@ethersproject/contracts'
 import { ChainId, Trade } from '@ubeswap/sdk'
-import { BigNumber, BigNumberish, CallOverrides, Contract, ContractTransaction, PayableOverrides, Signer } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'

@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { DappKitRequestTypes, DappKitResponseStatus } from '@celo/utils'
-import { MiniRpcProvider } from 'connectors/NetworkConnector'
 
+import { MiniRpcProvider } from '../NetworkConnector'
 import { requestValoraTransaction } from './valoraUtils'
 
 /**

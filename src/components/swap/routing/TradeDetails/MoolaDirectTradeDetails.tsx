@@ -1,7 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { CELO, cUSD, Fraction, TokenAmount, TradeType } from '@ubeswap/sdk'
 import { ErrorText } from 'components/swap/styleds'
 import { usePair } from 'data/Reserves'
-import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import React, { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'

@@ -1,4 +1,4 @@
-import { Interface } from 'ethers/lib/utils'
+import { Interface } from '@ethersproject/abi'
 
 import STAKING_REWARDS_ABI from './StakingRewards.json'
 
