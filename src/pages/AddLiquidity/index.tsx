@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'

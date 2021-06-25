@@ -1,7 +1,7 @@
 import 'inter-ui'
 import '@reach/dialog/styles.css'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'

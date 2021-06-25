@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { WETH9_EXTENDED } from '../../constants/tokens'

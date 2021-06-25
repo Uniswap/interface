@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react'
+import { useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'

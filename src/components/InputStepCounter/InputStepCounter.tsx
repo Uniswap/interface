@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, ReactNode } from 'react'
+import { useState, useCallback, useEffect, ReactNode } from 'react'
 import { LightCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'

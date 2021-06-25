@@ -1,5 +1,5 @@
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
