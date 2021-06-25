@@ -79,6 +79,10 @@ const NativeRewardTokenSymbol = ({ chainId }: { chainId?: ChainId }) => {
 const RewardTokenSymbol = ({ address }: { address: string }) => {
   const token = useToken(address) as Currency
 
+  if (!token) {
+    return null
+  }
+
   return <span>{token.symbol}</span>
 }
 
