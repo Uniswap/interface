@@ -74,13 +74,36 @@ export const StyledInput = styled(Input)`
   width: 100%;
 `
 
+/* two-column layout where DepositAmount is moved at the very end on mobile. */
 export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   display: grid;
   grid-gap: 50px;
   grid-template-columns: ${({ wide }) => (wide ? '1fr 1fr' : '1fr')};
+  grid-template-rows: max-content;
+  grid-auto-flow: row;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: auto;
+    grid-template-columns: 1fr;
+  `};
+`
+
+export const DepositAmountsContainer = styled.div`
+  grid-column: 1;
+  grid-row: 2 / 3;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  grid-column: 1;
+  grid-row: 3 / 4;
+  `};
+`
+
+export const RightContainer = styled(AutoColumn)`
+  grid-row: 1 / 3;
+  grid-column: 2;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  grid-row: 2 / 3;
+  grid-column: 1;
   `};
 `
 

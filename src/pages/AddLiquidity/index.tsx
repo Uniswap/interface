@@ -38,7 +38,7 @@ import { Field, Bound } from '../../state/mint/v3/actions'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE, ExternalLink, HideMedium, MediumOnly } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
@@ -53,6 +53,8 @@ import {
   PageWrapper,
   StackedContainer,
   StackedItem,
+  DepositAmountsContainer,
+  RightContainer,
 } from './styled'
 import { Trans, t } from '@lingui/macro'
 import {
@@ -402,44 +404,6 @@ export default function AddLiquidity({
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
-  const DepositAmounts = () => (
-    <DynamicSection disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}>
-      <AutoColumn gap="md">
-        <TYPE.label>
-          {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
-        </TYPE.label>
-
-        <CurrencyInputPanel
-          value={formattedAmounts[Field.CURRENCY_A]}
-          onUserInput={onFieldAInput}
-          onMax={() => {
-            onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-          }}
-          showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-          currency={currencies[Field.CURRENCY_A]}
-          id="add-liquidity-input-tokena"
-          fiatValue={usdcValues[Field.CURRENCY_A]}
-          showCommonBases
-          locked={depositADisabled}
-        />
-
-        <CurrencyInputPanel
-          value={formattedAmounts[Field.CURRENCY_B]}
-          onUserInput={onFieldBInput}
-          onMax={() => {
-            onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-          }}
-          showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-          fiatValue={usdcValues[Field.CURRENCY_B]}
-          currency={currencies[Field.CURRENCY_B]}
-          id="add-liquidity-input-tokenb"
-          showCommonBases
-          locked={depositBDisabled}
-        />
-      </AutoColumn>
-    </DynamicSection>
-  )
-
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
@@ -550,7 +514,7 @@ export default function AddLiquidity({
           />
           <Wrapper>
             <ResponsiveTwoColumns wide={!hasExistingPosition}>
-              <AutoColumn gap="lg" style={{ gridAutoRows: 'min-content' }}>
+              <AutoColumn gap="lg">
                 {!hasExistingPosition && (
                   <>
                     <AutoColumn gap="md">
@@ -613,14 +577,51 @@ export default function AddLiquidity({
                   />
                 )}
 
-                <HideMedium>
-                  <DepositAmounts />
-                </HideMedium>
-
                 {hasExistingPosition && <Buttons />}
               </AutoColumn>
+
+              <DepositAmountsContainer>
+                <DynamicSection
+                  disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
+                >
+                  <AutoColumn gap="md">
+                    <TYPE.label>
+                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
+                    </TYPE.label>
+
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.CURRENCY_A]}
+                      onUserInput={onFieldAInput}
+                      onMax={() => {
+                        onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                      }}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                      currency={currencies[Field.CURRENCY_A]}
+                      id="add-liquidity-input-tokena"
+                      fiatValue={usdcValues[Field.CURRENCY_A]}
+                      showCommonBases
+                      locked={depositADisabled}
+                    />
+
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.CURRENCY_B]}
+                      onUserInput={onFieldBInput}
+                      onMax={() => {
+                        onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                      }}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                      fiatValue={usdcValues[Field.CURRENCY_B]}
+                      currency={currencies[Field.CURRENCY_B]}
+                      id="add-liquidity-input-tokenb"
+                      showCommonBases
+                      locked={depositBDisabled}
+                    />
+                  </AutoColumn>
+                </DynamicSection>
+              </DepositAmountsContainer>
+
               {!hasExistingPosition && (
-                <AutoColumn gap="lg" style={{ gridAutoRows: 'min-content' }}>
+                <RightContainer gap="lg">
                   {noLiquidity && (
                     <DynamicSection disabled={!currencyA || !currencyB}>
                       <AutoColumn gap="md">
@@ -902,12 +903,8 @@ export default function AddLiquidity({
                     ) : null}
                   </DynamicSection>
 
-                  <MediumOnly>
-                    <DepositAmounts />
-                  </MediumOnly>
-
                   <Buttons />
-                </AutoColumn>
+                </RightContainer>
               )}
             </ResponsiveTwoColumns>
           </Wrapper>
