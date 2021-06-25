@@ -5,9 +5,13 @@ import { PoolState, usePool } from './usePools'
 import { useAllV3Ticks } from './useAllV3Ticks'
 import { useEffect, useState } from 'react'
 import { TickProcessed } from 'constants/ticks'
-import computeSurroundingTicks from 'utils/computeSurroundingTicksSorted'
+import computeSurroundingTicks from 'utils/computeSurroundingTicks'
+import cloneDeep from 'lodash.clonedeep'
 
 const PRICE_FIXED_DIGITS = 8
+
+const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
+  tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
 
 export function usePoolTickData(
   currencyA: Currency | undefined,
@@ -22,50 +26,50 @@ export function usePoolTickData(
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
 
-  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
-
-  const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
-
   // Find nearest valid tick for pool in case tick is not initialized.
-  const activeTick =
-    pool[1]?.tickCurrent && tickSpacing ? Math.floor(pool[1]?.tickCurrent / tickSpacing) * tickSpacing : undefined
+  const activeTick = getActiveTick(pool[1]?.tickCurrent, feeAmount)
 
   const { loading, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
-  const token0 = currencyA?.wrapped
-  const token1 = currencyB?.wrapped
+  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
 
   useEffect(() => {
-    if (!token0 || !token1 || !activeTick || pool[0] !== PoolState.EXISTS || tickData.length === 0) {
+    if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || tickData.length === 0) {
       setTicksProcessed([])
       return
     }
 
-    //const tickToInitializedTick = keyBy(tickData, 'tick')
-    tickData.sort((a, b) => a.tick - b.tick)
-    let pivot = -1
-    for (let i = 1; i < tickData.length; i++) {
-      if (tickData[i].tick > activeTick) {
-        pivot = i - 1
-        break
-      }
+    const token0 = currencyA?.wrapped
+    const token1 = currencyB?.wrapped
+
+    const sortedTickData = cloneDeep(tickData).sort((a, b) => a.tick - b.tick)
+
+    // find where the active tick would be
+    const pivot = sortedTickData.findIndex(({ tick }) => tick > activeTick) - 1
+
+    if (pivot === -1) {
+      console.error('TickData pivot not found')
+      return
     }
 
     const activeTickProcessed: TickProcessed = {
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tickIdx: activeTick,
-      liquidityNet: tickData[pivot].tick === activeTick ? JSBI.BigInt(tickData[pivot].liquidityNet) : JSBI.BigInt(0),
+      liquidityNet:
+        sortedTickData[pivot].tick === activeTick ? JSBI.BigInt(sortedTickData[pivot].liquidityNet) : JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     }
 
-    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, tickData, pivot, true)
+    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, true)
 
-    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, tickData, pivot, false)
+    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, false)
 
-    const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
+    const newTicksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
-    setTicksProcessed(ticksProcessed)
-  }, [token0, token1, activeTick, pool, tickData])
+    console.log(JSON.stringify(newTicksProcessed.filter((t) => t.tickIdx === activeTick)))
+
+    setTicksProcessed(newTicksProcessed)
+  }, [currencyA, currencyB, activeTick, pool, tickData])
 
   return {
     loading: loading || pool[0] === PoolState.LOADING,
