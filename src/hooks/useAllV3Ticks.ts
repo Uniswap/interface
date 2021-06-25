@@ -1,7 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk/dist/'
-import { ZERO_ADDRESS } from '../constants/misc'
 import { useEffect, useMemo, useState } from 'react'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useTickLens } from './useContract'

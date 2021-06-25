@@ -15,6 +15,8 @@ export default function computeSurroundingTicks(
   tickSpacing: number,
   ascending: boolean
 ): TickProcessed[] {
+  const time = Date.now()
+
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
   }
@@ -69,6 +71,8 @@ export default function computeSurroundingTicks(
   if (!ascending) {
     processedTicks = processedTicks.reverse()
   }
+
+  console.log('judo. compute: ', (Date.now() - time) / 1000)
 
   return processedTicks
 }
