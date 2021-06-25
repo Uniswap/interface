@@ -66,8 +66,6 @@ export function usePoolTickData(
 
     const newTicksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
-    console.log(JSON.stringify(newTicksProcessed.filter((t) => t.tickIdx === activeTick)))
-
     setTicksProcessed(newTicksProcessed)
   }, [currencyA, currencyB, activeTick, pool, tickData])
 
