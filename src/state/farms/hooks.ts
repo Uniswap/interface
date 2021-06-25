@@ -1,13 +1,13 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Contract } from '@ethersproject/contracts'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { exchangeCient } from 'apollo/client'
-import { FARM_DATA } from 'apollo/queries'
+import { FARM_DATA, FARM_HISTORIES } from 'apollo/queries'
 import { ChainId, WETH } from 'libs/sdk/src'
 import { AppState, useAppDispatch } from 'state'
-import { Farm } from 'state/farms/types'
+import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setRewardTokens, setFarmsData, setLoading, setError } from './actions'
 import { useBlockNumber, useETHPrice } from 'state/application/hooks'
 import useFairLaunch from 'hooks/useFairLaunch'
@@ -162,4 +162,87 @@ export const useFarmsData = () => {
   }, [dispatch, ethPrice.currentPrice, chainId, fairLaunchContracts, account, blockNumber])
 
   return { loading, error, data: farmsData }
+}
+
+export const useFarmHistories = (isModalOpen: boolean) => {
+  const { chainId, account } = useActiveWeb3React()
+  const [histories, setHistories] = useState<FarmHistory[]>([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    async function fetchFarmHistories() {
+      if (!account || !isModalOpen) {
+        return
+      }
+
+      setLoading(true)
+
+      try {
+        const result = await exchangeCient[chainId as ChainId].query<FarmHistoriesSubgraphResult>({
+          query: FARM_HISTORIES,
+          variables: {
+            user: account
+          },
+          fetchPolicy: 'network-only'
+        })
+
+        const historiesData: FarmHistory[] = []
+
+        result.data.deposits.forEach(deposit => {
+          historiesData.push({
+            id: deposit.id,
+            timestamp: deposit.timestamp,
+            method: FarmHistoryMethod.DEPOSIT,
+            amount: deposit.amount,
+            stakeToken: deposit.stakeToken
+          })
+        })
+
+        result.data.withdraws.forEach(withdraw => {
+          historiesData.push({
+            id: withdraw.id,
+            timestamp: withdraw.timestamp,
+            method: FarmHistoryMethod.WITHDRAW,
+            amount: withdraw.amount,
+            stakeToken: withdraw.stakeToken
+          })
+        })
+
+        result.data.harvests.forEach(harvest => {
+          historiesData.push({
+            id: harvest.id,
+            timestamp: harvest.timestamp,
+            method: FarmHistoryMethod.HARVEST,
+            amount: harvest.amount,
+            stakeToken: harvest.stakeToken,
+            rewardToken: harvest.rewardToken
+          })
+        })
+
+        result.data.vests.forEach(vest => {
+          historiesData.push({
+            id: vest.id,
+            timestamp: vest.timestamp,
+            method: FarmHistoryMethod.CLAIM,
+            amount: vest.amount,
+            rewardToken: vest.rewardToken
+          })
+        })
+
+        historiesData.sort(function(a, b) {
+          return parseInt(b.timestamp) - parseInt(a.timestamp)
+        })
+
+        setHistories(historiesData)
+      } catch (err) {
+        setHistories([])
+      }
+
+      setLoading(false)
+    }
+
+    fetchFarmHistories()
+  }, [chainId, account, isModalOpen])
+
+  return { loading, data: histories }
 }

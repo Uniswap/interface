@@ -45,11 +45,12 @@ export const TabContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
+
   `}
 `
 
@@ -57,7 +58,10 @@ export const TabWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin-bottom: 1.5rem;
+  `}
 `
 
 export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`

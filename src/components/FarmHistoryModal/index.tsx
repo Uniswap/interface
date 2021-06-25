@@ -1,27 +1,20 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import Modal from 'components/Modal'
-import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useFarmHistoryModalToggle } from 'state/application/hooks'
+import React, { Fragment, useCallback } from 'react'
+import { BigNumber } from '@ethersproject/bignumber'
 import styled from 'styled-components'
 import { Box, Text } from 'rebass'
+
+import { ChainId, Currency, ETHER, Token } from 'libs/sdk/src'
+import { ZERO_ADDRESS } from 'constants/index'
+import Modal from 'components/Modal'
+import Loader from 'components/Loader'
 import { useActiveWeb3React } from 'hooks'
-import {
-  FAIRLAUNCH_ADDRESSES,
-  REWARD_LOCKER_ADDRESS,
-  FARM_DEPOSIT_TOPIC,
-  FARM_HARVEST_TOPIC,
-  FARM_CLAIM_TOPIC,
-  FARM_TRANSFER_TOKEN_TOPIC,
-  ETHERSCAN_API,
-  ETHERSCAN_API_KEY,
-  FARM_WITHDRAW_TOPIC
-} from 'constants/index'
-import { BigNumber } from '@ethersproject/bignumber'
-import { getFullDisplayBalance } from 'utils/formatBalance'
-import { ChainId, Token } from 'libs/sdk/src'
-import { Farm } from 'state/farms/types'
 import { useToken } from 'hooks/Tokens'
-import { Dots } from 'components/swap/styleds'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useFarmHistoryModalToggle } from 'state/application/hooks'
+import { Farm, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
+import { useFarmHistories } from 'state/farms/hooks'
+import { getFullDisplayBalance } from 'utils/formatBalance'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -40,7 +33,7 @@ const Wrapper = styled.div`
 `
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr;
   grid-gap: 5px;
   margin-top: 17px;
 `
@@ -68,135 +61,32 @@ const ScrollAble = styled.div`
   }
 `
 
-interface TxObj {
-  timeStamp: number
-  hash: string
-  method: string
-  amount: BigNumber
-  token: string
-  from?: string
-  to?: string
-  harvestAmount?: BigNumber // if it's withdrawing tx
+const LPTokenSymbol = ({ farm }: { farm: Farm }) => {
+  const currency0 = useToken(farm.token0?.id)
+  const currency1 = useToken(farm.token1?.id)
+
+  return (
+    <span>
+      {currency0 && currency0.symbol}-{currency1 && currency1.symbol} LP
+    </span>
+  )
+}
+
+const NativeRewardTokenSymbol = ({ chainId }: { chainId?: ChainId }) => {
+  return <span>{convertToNativeTokenFromETH(ETHER, chainId).symbol}</span>
+}
+
+const RewardTokenSymbol = ({ address }: { address: string }) => {
+  const token = useToken(address) as Currency
+
+  return <span>{token.symbol}</span>
 }
 
 const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
+  const { chainId } = useActiveWeb3React()
   const farmHistoryModalOpen = useModalOpen(ApplicationModal.FARM_HISTORY)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
-  const { library, account, chainId } = useActiveWeb3React()
-  const [txs, setTxs] = useState<Array<TxObj>>([])
-  const [isLoading, setIsLoading] = useState(false)
-
-  const fairLaunchAddress = useMemo(
-    () => (chainId ? FAIRLAUNCH_ADDRESSES[chainId]?.[0].toLocaleLowerCase() || '' : ''),
-    [chainId]
-  )
-  const rewardLockedAddress = useMemo(() => (chainId ? REWARD_LOCKER_ADDRESS[chainId].toLocaleLowerCase() : ''), [
-    chainId
-  ])
-
-  const getTxData = useCallback((txReceipt: any, chainId: ChainId) => {
-    let method = ''
-    let tokenDeposit = ''
-    let amount = BigNumber.from(0)
-    let harvestAmount = BigNumber.from(0)
-    let withdrawAmount = BigNumber.from(0)
-    let tokenWithdraw = ''
-    for (const log of txReceipt.logs) {
-      for (const topic of log.topics) {
-        if (topic === FARM_TRANSFER_TOKEN_TOPIC[chainId]) {
-          tokenDeposit = log.address
-          if (log.address !== REWARD_LOCKER_ADDRESS[chainId]) {
-            tokenWithdraw = log.address
-            withdrawAmount = BigNumber.from(log.data)
-          }
-        }
-        if (topic === FARM_DEPOSIT_TOPIC[chainId]) {
-          method = 'DEPOSIT'
-        }
-        if (topic === FARM_HARVEST_TOPIC[chainId]) {
-          method = 'HARVEST'
-          harvestAmount = harvestAmount.add(BigNumber.from(log.data))
-        }
-        if (topic === FARM_WITHDRAW_TOPIC[chainId]) {
-          method = 'WITHDRAW'
-        }
-        if (topic === FARM_CLAIM_TOPIC[chainId]) {
-          method = 'CLAIM'
-        }
-      }
-      if (method) {
-        if (method === 'CLAIM') {
-          amount = BigNumber.from(log.data.slice(0, 66)) // first 8 bytes for first param
-        } else if (method === 'WITHDRAW') {
-          amount = withdrawAmount
-        } else if (method === 'HARVEST') {
-          amount = harvestAmount
-        } else {
-          amount = BigNumber.from(log.data)
-        }
-      }
-    }
-    return {
-      method: method,
-      amount: amount,
-      token: method === 'DEPOSIT' ? tokenDeposit : tokenWithdraw,
-      harvestAmount: harvestAmount
-    }
-  }, [])
-
-  const filterFarmTxs = useCallback(
-    (txs: Array<TxObj>): Promise<TxObj>[] => {
-      if (library && chainId) {
-        return txs.map(tx => {
-          return new Promise((res, rej) => {
-            library
-              .getTransactionReceipt(tx.hash)
-              .then((txReceipt: any) => {
-                const txData = getTxData(txReceipt, chainId)
-                res({
-                  timeStamp: tx.timeStamp,
-                  hash: tx.hash,
-                  method: txData.method,
-                  amount: txData.amount,
-                  token: txData.token,
-                  harvestAmount: txData.harvestAmount
-                })
-              })
-              .catch(e => rej(e))
-          })
-        })
-      }
-      return []
-    },
-    [library, chainId]
-  )
-
-  const getTransactions = useCallback(
-    async (startBlockNumber?: number) => {
-      if (library && chainId) {
-        const currentBlock = library.blockNumber
-        setIsLoading(true)
-        fetch(
-          `${ETHERSCAN_API[chainId]}/api?module=account&action=txlist&address=${account}&startblock=${startBlockNumber}&endblock=${currentBlock}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
-        )
-          .then(res => res.json())
-          .then(data => {
-            if (data.status === '1') {
-              const filteredTxs = data.result.filter((tx: { to: string }) => {
-                return tx.to === fairLaunchAddress || tx.to === rewardLockedAddress
-              })
-              return Promise.all(filterFarmTxs(filteredTxs))
-            }
-            return Promise.resolve([])
-          })
-          .then(txs => {
-            setTxs(txs)
-            setIsLoading(false)
-          })
-      }
-    },
-    [library, chainId]
-  )
+  const { loading, data: histories } = useFarmHistories(farmHistoryModalOpen)
 
   const tokenToFarm = useCallback(
     (id: string) => {
@@ -211,75 +101,78 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
     [farms]
   )
 
-  useEffect(() => {
-    if (account && farmHistoryModalOpen) {
-      getTransactions()
+  const getTokenLabel = (history: FarmHistory, chainId?: ChainId) => {
+    if (
+      (history.stakeToken && history.method === FarmHistoryMethod.DEPOSIT) ||
+      history.method === FarmHistoryMethod.WITHDRAW
+    ) {
+      const farm = tokenToFarm(history.stakeToken as string)
+      return farm ? <LPTokenSymbol farm={farm} /> : 'KNC'
+    } else if (
+      (history.rewardToken && history.method === FarmHistoryMethod.HARVEST) ||
+      history.method === FarmHistoryMethod.CLAIM
+    ) {
+      if (history.rewardToken === ZERO_ADDRESS) {
+        return <NativeRewardTokenSymbol chainId={chainId} />
+      }
+
+      return <RewardTokenSymbol address={history.rewardToken as string} />
+    } else {
+      return 'Unknown'
     }
-  }, [farmHistoryModalOpen])
+  }
+
+  const getMethodLabel = (method: FarmHistoryMethod) => {
+    switch (method) {
+      case FarmHistoryMethod.DEPOSIT:
+        return 'DEPOSIT'
+      case FarmHistoryMethod.WITHDRAW:
+        return 'WITHDRAW'
+      case FarmHistoryMethod.HARVEST:
+        return 'HARVEST'
+      case FarmHistoryMethod.CLAIM:
+        return 'CLAIM'
+      default:
+        return 'UNKNOWN'
+    }
+  }
 
   return (
     <Modal isOpen={farmHistoryModalOpen} onDismiss={toggleFarmHistoryModal} maxHeight="fit-content" maxWidth="570px">
       <Wrapper>
         <Box overflow="hidden" height="100%">
           <Text className="title">Histories</Text>
-          {isLoading && (
+          {loading && (
             <Text textAlign="center" mt="3" fontSize="12px">
-              <Dots />
+              <Loader />
             </Text>
           )}
-          {!isLoading && txs.length === 0 && (
+          {!loading && histories.length === 0 && (
             <Text textAlign="center" mt="3" fontSize="12px">
               No records found.
             </Text>
           )}
           <ScrollAble>
-            {txs.map(tx => (
-              <Fragment key={tx.timeStamp}>
+            {histories.map(history => (
+              <Fragment key={`${history.method}-${history.id}`}>
                 <Row>
-                  <Text fontSize="14px">{new Date(tx.timeStamp * 1000).toLocaleString()}</Text>
+                  <Text fontSize="14px">{new Date(parseInt(history.timestamp) * 1000).toLocaleString()}</Text>
                   <Text className="break-word" fontSize="14px">
                     <Text mr={1} display="inline">
-                      {getFullDisplayBalance(tx.amount, undefined, 3)}
+                      {getFullDisplayBalance(BigNumber.from(history.amount))}
                     </Text>
-                    {(() => {
-                      const farm = tokenToFarm(tx.token)
-                      return farm ? <TokenSymbol farm={farm} /> : 'KNC'
-                    })()}
+                    {getTokenLabel(history, chainId)}
                   </Text>
                   <Text fontSize="12px" textAlign="right">
-                    {tx.method}
+                    {getMethodLabel(history.method)}
                   </Text>
                 </Row>
-                {tx.method === 'WITHDRAW' && tx.harvestAmount && !tx.harvestAmount.isZero() && (
-                  <Row>
-                    <div></div>
-                    <Text className="break-word" fontSize="14px">
-                      <Text mr={1} display="inline">
-                        {getFullDisplayBalance(tx.harvestAmount, undefined, 3)}
-                      </Text>
-                      KNC
-                    </Text>
-                    <Text fontSize="12px" textAlign="right">
-                      HARVEST
-                    </Text>
-                  </Row>
-                )}
               </Fragment>
             ))}
           </ScrollAble>
         </Box>
       </Wrapper>
     </Modal>
-  )
-}
-
-const TokenSymbol = ({ farm }: { farm: Farm }) => {
-  const currency0 = useToken(farm.token0?.id) as Token
-  const currency1 = useToken(farm.token1?.id) as Token
-  return (
-    <span>
-      {currency0.symbol}-{currency1.symbol} LP
-    </span>
   )
 }
 
