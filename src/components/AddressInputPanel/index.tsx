@@ -113,7 +113,7 @@ export default function AddressInputPanel({
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
                 >
-                  (<Trans>View on Explorer</Trans>)
+                  <Trans>(View on Explorer)</Trans>
                 </ExternalLink>
               )}
             </RowBetween>
