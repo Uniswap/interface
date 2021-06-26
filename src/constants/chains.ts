@@ -14,6 +14,6 @@ export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } 
   [SupportedChainId.ROPSTEN]: 'Ropsten',
   [SupportedChainId.GOERLI]: 'Görli',
   [SupportedChainId.KOVAN]: 'Kovan',
-  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum One',
+  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Testnet',
 }

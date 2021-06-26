@@ -1,14 +1,15 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { SupportedLocale } from 'constants/locales'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens } from '../../hooks/Tokens'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import {
   addSerializedPair,
@@ -17,16 +18,15 @@ import {
   SerializedPair,
   SerializedToken,
   toggleURLWarning,
+  updateArbitrumAlphaAcknowledged,
+  updateHideClosedPositions,
   updateUserDarkMode,
   updateUserDeadline,
-  updateHideClosedPositions,
   updateUserExpertMode,
+  updateUserLocale,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
-  updateUserLocale,
 } from './actions'
-import { SupportedLocale } from 'constants/locales'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -339,4 +339,15 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
+}
+
+export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const arbitrumAlphaAcknowledged = useAppSelector(({ user }) => user.arbitrumAlphaAcknowledged)
+  const setArbitrumAlphaAcknowledged = (arbitrumAlphaAcknowledged: boolean) => {
+    console.log(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
+    dispatch(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
+  }
+
+  return [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged]
 }
