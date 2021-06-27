@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-26 23:55+0000\n"
+"POT-Creation-Date: 2021-06-27 05:00+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-27 00:08\n"
+"PO-Revision-Date: 2021-06-27 05:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ETH"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(最大值)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "（在資源管理器上查看）"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -1225,6 +1229,10 @@ msgstr "閱讀有關不受支持的代幣的更多資訊"
 msgid "Recent Transactions"
 msgstr "最近交易"
 
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "接受者"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1477,6 +1485,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "提示：自定義代幣信息會本地存儲在您的瀏覽器中"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "至"
@@ -1733,6 +1743,10 @@ msgstr "投票大約結束於 {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "等待確認中"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "錢包地址或 ENS 名稱"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
