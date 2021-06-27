@@ -4,6 +4,7 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import styled from 'styled-components'
 import { ProposalAction } from './ProposalActionSelector'
 import { Currency } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
 
 enum ProposalActionDetailField {
   ADDRESS,
@@ -40,7 +41,7 @@ export const ProposalActionDetail = ({
     [ProposalAction.TRANSFER_TOKEN]: [
       {
         type: ProposalActionDetailField.ADDRESS,
-        label: 'To',
+        label: <Trans>To</Trans>,
       },
       {
         type: ProposalActionDetailField.CURRENCY,
@@ -49,7 +50,7 @@ export const ProposalActionDetail = ({
     [ProposalAction.APPROVE_TOKEN]: [
       {
         type: ProposalActionDetailField.ADDRESS,
-        label: 'To',
+        label: <Trans>To</Trans>,
       },
       {
         type: ProposalActionDetailField.CURRENCY,
