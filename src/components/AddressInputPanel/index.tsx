@@ -1,4 +1,5 @@
-import { useContext, useCallback } from 'react'
+import { t, Trans } from '@lingui/macro'
+import { useContext, useCallback, ReactNode } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -68,14 +69,14 @@ const Input = styled.input<{ error?: boolean }>`
 export default function AddressInputPanel({
   id,
   className = 'recipient-address-input',
-  label = 'Recipient',
+  label,
   placeholder,
   value,
   onChange,
 }: {
   id?: string
   className?: string
-  label?: string
+  label?: ReactNode
   placeholder?: string
   // the typed string value
   value: string
@@ -105,14 +106,14 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
-                {label}
+                {label ?? <Trans>Recipient</Trans>}
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
                 >
-                  (View on Explorer)
+                  <Trans>(View on Explorer)</Trans>
                 </ExternalLink>
               )}
             </RowBetween>
@@ -123,7 +124,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? 'Wallet Address or ENS name'}
+              placeholder={placeholder ?? t`Wallet Address or ENS name`}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
