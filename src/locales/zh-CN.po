@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-25 07:04\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "批准中"
 msgid "Approving {0}"
 msgstr "正在批准 {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "套利浏览器"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "套利代币桥"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "您确定吗？"
@@ -329,6 +337,10 @@ msgstr "通过连接钱包，您同意接受 Uniswap 实验室的<0>服务条款
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "更改"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "更改您的网络以返回 L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "充入 UNI-V2 流动池代币"
 msgid "Deposit liquidity"
 msgstr "充入流动资金"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "存款到 Arbitrum"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "充入您的流动池代币以领取 UNI（Uniswap 的治理代币）。"
@@ -851,6 +867,10 @@ msgstr "无效的接收方"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "学习"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "学到更多"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "仍要兑换"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "将 {0} {1} 兑换为 {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "切换到以太坊"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "感谢您加入 Uniswap 社区 <0/>"
@@ -1427,6 +1451,10 @@ msgstr "由于期限已过，因此无法发送交易。请检查您的交易截
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "这些代币通常与其他代币配对。"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您必须将 L1 资产桥接到网络才能交换它们。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Uniswap 流动资金挖矿："
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 迁移合约↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Uniswap on <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "Έγκριση"
 msgid "Approving {0}"
 msgstr "Έγκριση {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Γέφυρα Arbitrum Token"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Σίγουρα;"
@@ -329,6 +337,10 @@ msgstr "Συνδέοντας ένα πορτοφόλι, συμφωνείτε μ�
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Αλλαγή"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Αλλάξτε το δίκτυό σας για να επιστρέψετε στο L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "Κατάθεση μάρκας UNI-V2 LP"
 msgid "Deposit liquidity"
 msgstr "Κατάθεση ρευστότητας"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Κατάθεση στο Arbitrum"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "Καταθέστε τα διακριτικά του παρόχου ρευστότητας για να λάβετε UNI, το διακριτικό διακυβέρνησης πρωτοκόλλου Uniswap."
@@ -851,6 +867,10 @@ msgstr "Μη έγκυρος παραλήπτης"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Μάθετε"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Μάθε περισσότερα"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "Ανταλλάξτε ούτως ή άλλως"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Ανταλλαγή {0} {1} για {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Μετάβαση στο Ethereum"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Σας ευχαριστούμε που συμμετείχατε στην κοινότητα Uniswap <0 />"
@@ -1427,6 +1451,10 @@ msgstr "Δεν ήταν δυνατή η αποστολή της συναλλαγ
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Αυτές οι μάρκες δεν συνδυάζονται συνήθως με αλλά μάρκες."
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο Arbitrum. Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα ανταλλάξετε."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Εξόρυξη ρευστότητας Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Απεμπλοκή στο <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"

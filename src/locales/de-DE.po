@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-25 15:04\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "Bestätige"
 msgid "Approving {0}"
 msgstr "Schalte {0} frei"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum-Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum Token Bridge"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
@@ -329,6 +337,10 @@ msgstr "Durch das Verbinden mit einer Wallet erklären Sie sich mit den <0>Nutzu
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Ändern"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Ändern Sie Ihr Netzwerk, um zu L1 zurückzukehren"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "UNI-V2 LP Token einzahlen"
 msgid "Deposit liquidity"
 msgstr "Liquidität einzahlen"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Einzahlung bei Arbitrum"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "Hinterlegen Sie Ihre Liquiditätsgeber Token um UNI zu erhalten, welches das Governance-Token des Uniswap Protokolls ist."
@@ -851,6 +867,10 @@ msgstr "Ungültiger Empfänger"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Lernen"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Mehr erfahren"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "Trotzdem tauschen"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Tausche {0} {1} gegen {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Wechseln Sie zu Ethereum"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Danke, dass du Teil der Uniswap-Community bist <0/>"
@@ -1427,6 +1451,10 @@ msgstr "Die Transaktion konnte nicht gesendet werden, da die Frist abgelaufen is
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Diese Token werden üblicherweise mit anderen Token gepaart."
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Dies ist eine Alpha-Version von Uniswap im Arbitrum-Netzwerk. Sie müssen L1-Assets mit dem Netzwerk verbinden, um sie auszutauschen."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Uniswap Liquiditätsförderung"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap Migrations-contract ↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Uniswap auf <0>Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
