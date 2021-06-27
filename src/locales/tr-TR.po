@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-26 23:55+0000\n"
+"POT-Creation-Date: 2021-06-27 05:00+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-06-27 00:08\n"
+"PO-Revision-Date: 2021-06-27 05:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ETH"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Maks.)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Explorer'da Görüntüle)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -1225,6 +1229,10 @@ msgstr "Desteklenmeyen varlıklar hakkında daha fazla bilgi edinin"
 msgid "Recent Transactions"
 msgstr "Son İşlemler"
 
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "alıcı"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1477,6 +1485,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "İpucu: Özel jetonlar tarayıcınızda yerel olarak depolanır"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "Alıcı"
@@ -1733,6 +1743,10 @@ msgstr "Oylama yaklaşık şu zamanda bitecek: {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Onay Bekliyor"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Cüzdan Adresi veya ENS adı"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"

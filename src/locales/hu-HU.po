@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-26 23:55+0000\n"
+"POT-Creation-Date: 2021-06-27 05:00+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-27 00:08\n"
+"PO-Revision-Date: 2021-06-27 05:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ETH"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Max)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Megtekintés az Intézőben)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -1226,6 +1230,10 @@ msgstr "További információk a nem támogatott eszközökről"
 msgid "Recent Transactions"
 msgstr "Legutóbbi tranzakciók"
 
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Befogadó"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1478,6 +1486,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Tipp: Az egyedi tokenek helyileg vannak tárolva a böngészőben"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "-nak/-nek"
@@ -1734,6 +1744,10 @@ msgstr "A szavazás befejeződik körülbelül {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Visszaigazolásra vár"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Pénztárca címe vagy ENS neve"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
