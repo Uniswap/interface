@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "Hyväksytään"
 msgid "Approving {0}"
 msgstr "Hyväksytään {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum Token -silta"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Oletko varma?"
@@ -329,6 +337,10 @@ msgstr "Yhdistämällä lompakon hyväksyt Uniswap Labsin <0>käyttöehdot</0> j
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Muuta"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Vaihda verkko palataksesi kohtaan L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "Talleta UNI-V2 LP -rahakkeita"
 msgid "Deposit liquidity"
 msgstr "Talleta likviditeettiä"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Talletus Arbitrumille"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "Talleta likviditeetin tarjoajan rahakkeesi saadaksesi UNI-rahakkeita, Uniswap-protokollan hallintorahakkeita."
@@ -851,6 +867,10 @@ msgstr "Virheellinen vastaanottaja"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Opi"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Lisätietoja"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "Vaihda silti"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Vaihdetaan {0} {1} kohteeseen {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Vaihda Ethereumiin"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Kiitos, että olet osa Uniswap-yhteisöä <0/>"
@@ -1427,6 +1451,10 @@ msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, et
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Näitä rahakkeita liitetään usein muihin rahakkeisiin."
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Tämä on Uniswapin alfa-julkaisu Arbitrum-verkossa. Vaihda L1-varat verkkoon."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Uniswapin likviditeetin louhinta"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswapin siirtosopimus ↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Poista <0> Arbitrumin vaihto</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"

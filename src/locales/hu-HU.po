@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "Jóváhagyás"
 msgid "Approving {0}"
 msgstr "{0} jóváhagyása"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum Token Bridge"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Biztos ebben?"
@@ -329,6 +337,10 @@ msgstr "A pénztárca csatlakoztatásával Ön elfogadja az Uniswap Labs <0>Szol
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Módosítás"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Változtassa meg a hálózatát, hogy visszatérjen az L1-re"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "UNI-V2 LP tokenek letétbe helyezése"
 msgid "Deposit liquidity"
 msgstr "Likviditás letétbe helyezése"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Betét az Arbitrumba"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "Helyezze letétbe a likviditásszolgáltatói tokeneket, hogy megkapja az UNI-t, az Uniswap protokoll irányítási tokent."
@@ -852,6 +868,10 @@ msgstr "Érvénytelen címzett"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Tanulás"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Tudj meg többet"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1385,6 +1405,10 @@ msgstr "Swap mindenképp"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} cseréje a következőre {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Váltson Ethereumra"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Köszönjük, hogy az Uniswap közösség tagja <0/>"
@@ -1428,6 +1452,10 @@ msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kér
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ezeket a tokeneket általában más tokenekkel párosítják."
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Ez az Uniswap alfa kiadása az Arbitrum hálózaton. Az L1 eszközöket át kell kapcsolnia a hálózatra, hogy felcserélje őket."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1575,6 +1603,10 @@ msgstr "Uniswap likviditásbányászat"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Lecserélés az <0> Arbitrumról</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"

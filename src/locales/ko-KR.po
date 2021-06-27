@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "승인 중"
 msgid "Approving {0}"
 msgstr "{0} 승인 중"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum 탐색기"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum 토큰 브리지"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "확실합니까?"
@@ -329,6 +337,10 @@ msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관</0>에 동�
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "변경"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "L1로 돌아가도록 네트워크 변경"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "UNI-V2 LP 토큰 예치"
 msgid "Deposit liquidity"
 msgstr "예금 유동성"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Arbitrum에 입금"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "유동성 제공자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
@@ -851,6 +867,10 @@ msgstr "잘못된 수령인"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "학습"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "더 알아보기"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "어쨌든 스왑"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "이더 리움으로 전환"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
@@ -1427,6 +1451,10 @@ msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "이것은 Arbitrum 네트워크에서 Uniswap의 알파 릴리스입니다. L1 자산을 네트워크에 연결하여 스왑해야합니다."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Uniswap 유동성 채굴"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 마이그레이션 계약 ↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "<0> Arbitrum의 Uniswap</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"

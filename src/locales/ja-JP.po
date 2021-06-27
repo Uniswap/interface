@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-06-26 23:55+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-23 08:04\n"
+"PO-Revision-Date: 2021-06-27 00:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -266,6 +266,14 @@ msgstr "承認中"
 msgid "Approving {0}"
 msgstr "{0} を承認中"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "アービトラムエクスプローラー"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "アービトラムトークンブリッジ"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "本当によろしいですか？"
@@ -329,6 +337,10 @@ msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サ�
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "変更"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "ネットワークを変更してL1に戻ります"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -597,6 +609,10 @@ msgstr "UNI-V2 LP トークンを預け入れる"
 msgid "Deposit liquidity"
 msgstr "流動性を預ける"
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "アービトラムへの預金"
+
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
 msgstr "流動性トークンを預けて、UniswapプロトコルのガバナンストークンであるUNIを受け取ります。"
@@ -851,6 +867,10 @@ msgstr "受け取りアドレスが無効です"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "資料"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "もっと詳しく知る"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1384,6 +1404,10 @@ msgstr "問題発生の可能性があるが、スワップする"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} を {2} {3} にスワップ中"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "イーサリアムに切り替えます"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Uniswapコミュニティにご参加いただきありがとうございます <0/>"
@@ -1427,6 +1451,10 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "これらのトークンは一般的に他のトークンとペアになっています。"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "これは、Arbitrumネットワーク上のUniswapのアルファリリースです。それらを交換するには、L1アセットをネットワークにブリッジする必要があります。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,6 +1602,10 @@ msgstr "Uniswap流動性マイニング"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap移行コントラクト↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "<0>アービトラムでのユニスワップ</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
