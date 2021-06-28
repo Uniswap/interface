@@ -32,6 +32,7 @@ describe('multicall reducer', () => {
               callData: '0x',
             },
           ],
+          options: { blocksPerFetch: 1 },
         })
       )
       expect(store.getState()).toEqual({
@@ -58,6 +59,7 @@ describe('multicall reducer', () => {
             },
           ],
           chainId: 1,
+          options: { blocksPerFetch: 1 },
         })
       )
       expect(store.getState()).toEqual({ callResults: {}, callListeners: {} })
@@ -72,6 +74,7 @@ describe('multicall reducer', () => {
               callData: '0x',
             },
           ],
+          options: { blocksPerFetch: 1 },
         })
       )
       store.dispatch(
@@ -83,6 +86,7 @@ describe('multicall reducer', () => {
             },
           ],
           chainId: 1,
+          options: { blocksPerFetch: 1 },
         })
       )
       expect(store.getState()).toEqual({
