@@ -29,4 +29,6 @@ export const ProposalStatus = styled.span<{ status: ProposalState }>`
   width: fit-content;
   justify-self: flex-end;
   text-transform: uppercase;
+  flex: 0 0 100px;
+  text-align: center;
 `
