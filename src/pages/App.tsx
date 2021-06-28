@@ -66,6 +66,36 @@ const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
   `};
   z-index: 1;
 `
+
+const UtilitiesWrapper = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  top: 0;
+  right: 0;
+  opacity: 0.8;
+  transition: opacity 0.25s ease;
+  :hover {
+    opacity: 1;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: fixed;
+    top: auto;
+    bottom: 5.5rem;
+    left: 0;
+    right: auto;
+    height: fit-content;
+    z-index: 99;
+  `}
+`
+
 const Marginer = styled.div`
   margin-top: 5rem;
 `
@@ -88,8 +118,10 @@ export default function App() {
               </HeaderWrapper>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
                 <Popups />
-                <Utilities />
-                <PoweredBy />
+                <UtilitiesWrapper>
+                  <Utilities />
+                  <PoweredBy />
+                </UtilitiesWrapper>
                 <Web3ReactManager>
                   <Switch>
                     <Route exact strict path="/swap" component={Swap} />
