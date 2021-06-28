@@ -48,7 +48,10 @@ export const NEVER_RELOAD: ListenerOptions = {
 }
 
 // the lowest level call for subscribing to contract data
-function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): CallResult[] {
+function useCallsData(
+  calls: (Call | undefined)[],
+  { blocksPerFetch }: ListenerOptions = { blocksPerFetch: 1 }
+): CallResult[] {
   const { chainId } = useActiveWeb3React()
   const callResults = useAppSelector((state) => state.multicall.callResults)
   const dispatch = useAppDispatch()
@@ -73,7 +76,7 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
       addMulticallListeners({
         chainId,
         calls,
-        options,
+        options: { blocksPerFetch },
       })
     )
 
@@ -82,11 +85,11 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
         removeMulticallListeners({
           chainId,
           calls,
-          options,
+          options: { blocksPerFetch },
         })
       )
     }
-  }, [chainId, dispatch, options, serializedCallKeys])
+  }, [chainId, dispatch, blocksPerFetch, serializedCallKeys])
 
   return useMemo(
     () =>
