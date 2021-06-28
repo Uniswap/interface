@@ -411,4 +411,19 @@ body {
 	    width: auto !important;
 	}
 }
+
+.rc-pagination-simple-pager {
+  padding: 0 8px;
+}
+
+.rc-pagination-slash {
+  margin-right: 4px;
+}
+
+.rc-pagination-simple-pager > input {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: ${props => props.theme.text5};
+}
 `
