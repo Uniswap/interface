@@ -188,15 +188,9 @@ export default function FeeSelector({
                   </TYPE.main>
                 </>
               ) : (
-                <>
-                  <TYPE.label>
-                    <Trans>{FeeAmountLabel[feeAmount].label} % fee</Trans>
-                  </TYPE.label>
-
-                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                    <Trans>{FeeAmountLabel[feeAmount].description}</Trans>
-                  </TYPE.main>
-                </>
+                <TYPE.label>
+                  <Trans>{FeeAmountLabel[feeAmount].label} % fee tier</Trans>
+                </TYPE.label>
               )}
             </AutoColumn>
 
