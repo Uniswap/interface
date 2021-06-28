@@ -3355,10 +3355,10 @@
     "@uniswap/v3-core" "1.0.0"
     base64-sol "1.0.1"
 
-"@uniswap/v3-sdk@^3.0.0-alpha.9":
-  version "3.0.0-alpha.9"
-  resolved "https://registry.npmjs.org/@uniswap/v3-sdk/-/v3-sdk-3.0.0-alpha.9.tgz"
-  integrity sha512-mfISrPYixSwpwG2XLzXJXJdmGbO76bycXrpNe7kEpcyPUpByejAwuYOnmAZBwZuvDylXtQZS6DiDDRghzNrc9w==
+"@uniswap/v3-sdk@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.1.1.tgz#3ddeaad1ffc445f485f2886b27cf06bc025651c1"
+  integrity sha512-aJ4Rb7+S6PlHEwByxL4TQZW2bXWfANB1A6ZEqT/RDzheoC8PhdJ+h2dQMJHL/zsReKW53N6su7sGIjJnC3rwMA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"

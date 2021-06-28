@@ -118,6 +118,13 @@ export const UNI: { [chainId: number]: Token } = {
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [SupportedChainId.ARBITRUM_ONE]: new Token(
     SupportedChainId.ARBITRUM_ONE,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
