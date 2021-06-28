@@ -12,7 +12,7 @@ import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
 import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
-import { BrushableAreaChart } from './BrushableAreaChart'
+import { LiquidityChartRangeInput } from './LiquidityChartRangeInput'
 import { lighten, linearGradient, saturate } from 'polished'
 
 const sampleData: Partial<ChartEntry>[] = [
@@ -62,7 +62,7 @@ export default function DensityChart({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, activeChartEntry, maxLiquidity, formattedData } = useDensityChartData({
+  const { loading, activeChartEntry, , formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -103,7 +103,7 @@ export default function DensityChart({
           {!filteredData || !price ? (
             <div>Loading</div>
           ) : (
-            <BrushableAreaChart
+            <LiquidityChartRangeInput
               data={{ series: filteredData, current: parseFloat(price) }}
               dimensions={{ width: 350, height: 225 }}
               margins={{ top: 0, right: 0, bottom: 0, left: 0 }}
