@@ -7,11 +7,8 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useRouteMatch } from 'react-router'
 
 const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
-  position: fixed;
   display: flex;
-  top: 8rem;
-  right: 0;
-  padding: 1rem;
+  padding: 0 1rem;
   opacity: 0.7;
   transition: opacity 0.25s ease;
   :hover {
@@ -19,8 +16,6 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   }
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    top: auto;
-    bottom: 4.5rem;
     z-index: 99;
   `}
 

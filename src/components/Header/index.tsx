@@ -377,11 +377,13 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <HideSmall>
-            <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
-              Bridge&nbsp;Assets&nbsp;↗
-            </BridgeExternalLink>
-          </HideSmall>
+          {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
+            <HideSmall>
+              <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+                Bridge&nbsp;Assets&nbsp;↗
+              </BridgeExternalLink>
+            </HideSmall>
+          )}
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
