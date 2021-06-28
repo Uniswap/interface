@@ -14,7 +14,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
   const wrapped = wrappedCurrency(currency, chainId)
   const USDC =
     chainId == 1
-      ? USDC_MAINNET
+      ? USDC_MAINNET[ChainId.MAINNET]
       : new Token(ChainId.ROPSTEN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD//C')
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
