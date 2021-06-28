@@ -72,7 +72,7 @@ const SORT_FIELD = {
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
-  const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
+  const above1600 = useMedia('(min-width: 1600px)') // Wide desktop screen
 
   const transformedSubgraphPoolsData: {
     [key: string]: SubgraphPoolData
@@ -177,7 +177,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   }
 
   const renderHeader = () => {
-    return above1400 ? (
+    return above1600 ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
           <ClickableText>Pool</ClickableText>
@@ -319,7 +319,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool) {
-          return above1400 ? (
+          return above1600 ? (
             <ListItem
               key={pool.address}
               pool={pool}
