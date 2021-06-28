@@ -22,7 +22,7 @@ import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -89,7 +89,7 @@ export default function Swap() {
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -364,7 +364,7 @@ export default function Swap() {
             )}
             <div>
               {!account ? (
-                <ButtonPrimary onClick={toggleWalletModal}>Connect Wallet</ButtonPrimary>
+                <ButtonPrimary onClick={toggleWalletSwitcherPopover}>Connect Wallet</ButtonPrimary>
               ) : showWrap ? (
                 <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
