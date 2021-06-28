@@ -11,10 +11,11 @@ import styled, { keyframes } from 'styled-components/macro'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
-import { LightCard, OutlineCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { useBlockNumber } from 'state/application/hooks'
 import usePrevious from 'hooks/usePrevious'
+import ReactGA from 'react-ga'
 
 // maximum number of blocks past which we consider the data stale
 const MAX_DATA_BLOCK_AGE = 10
@@ -69,6 +70,14 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
     const { distributions, block: dataBlock } = data ?? { distributions: undefined, block: undefined }
 
     if (isLoading || isUninitialized || isError || !distributions || !latestBlock || !dataBlock) {
+      if (isError) {
+        ReactGA.event({
+          category: 'FeeSelector',
+          action: 'Auto select failed',
+          label: 'error',
+        })
+      }
+
       return {
         isLoading,
         isUninitialized,
@@ -77,6 +86,11 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
     }
 
     if (latestBlock - dataBlock > MAX_DATA_BLOCK_AGE) {
+      ReactGA.event({
+        category: 'FeeSelector',
+        action: 'Auto select Failed',
+        label: 'old',
+      })
       return {
         isLoading,
         isUninitialized,
@@ -88,6 +102,11 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
       .map((d) => Number(d))
       .filter((d: FeeAmount) => distributions[d] !== 0 && distributions[d] !== undefined)
       .reduce((a: FeeAmount, b: FeeAmount) => ((distributions[a] ?? 0) > (distributions[b] ?? 0) ? a : b), -1)
+
+    ReactGA.event({
+      category: 'FeeSelector',
+      action: 'Auto select',
+    })
 
     return {
       isLoading,
