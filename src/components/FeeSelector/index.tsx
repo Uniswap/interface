@@ -11,7 +11,7 @@ import styled, { keyframes } from 'styled-components/macro'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
-import { LightCard } from 'components/Card'
+import { LightCard, OutlineCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { useBlockNumber } from 'state/application/hooks'
 import usePrevious from 'hooks/usePrevious'
@@ -39,8 +39,8 @@ const ResponsiveText = styled(TYPE.label)`
   `};
 `
 
-const FocusedOutlineCard = styled(LightCard)<{ pulsing: boolean }>`
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.4s linear;
+const FocusedOutlineCard = styled(OutlineCard)<{ pulsing: boolean }>`
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.6s linear;
 `
 
 const FeeAmountLabel = {
@@ -189,7 +189,7 @@ export default function FeeSelector({
                 </>
               ) : (
                 <TYPE.label>
-                  <Trans>{FeeAmountLabel[feeAmount].label} % fee tier</Trans>
+                  <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
                 </TYPE.label>
               )}
             </AutoColumn>
@@ -212,12 +212,14 @@ export default function FeeSelector({
               onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <ResponsiveText>
-                  <Trans>0.05% fee</Trans>
-                </ResponsiveText>
-                <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                  <Trans>Best for stable pairs.</Trans>
-                </TYPE.main>
+                <AutoColumn justify="flex-start">
+                  <ResponsiveText>
+                    <Trans>0.05% fee</Trans>
+                  </ResponsiveText>
+                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                    <Trans>Best for stable pairs.</Trans>
+                  </TYPE.main>
+                </AutoColumn>
 
                 {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.LOW]} />}
               </AutoColumn>
@@ -228,12 +230,14 @@ export default function FeeSelector({
               onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <ResponsiveText>
-                  <Trans>0.3% fee</Trans>
-                </ResponsiveText>
-                <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                  <Trans>Best for most pairs.</Trans>
-                </TYPE.main>
+                <AutoColumn justify="flex-start">
+                  <ResponsiveText>
+                    <Trans>0.3% fee</Trans>
+                  </ResponsiveText>
+                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                    <Trans>Best for most pairs.</Trans>
+                  </TYPE.main>
+                </AutoColumn>
 
                 {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.MEDIUM]} />}
               </AutoColumn>
@@ -244,12 +248,14 @@ export default function FeeSelector({
               onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <ResponsiveText>
-                  <Trans>1% fee</Trans>
-                </ResponsiveText>
-                <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                  <Trans>Best for exotic pairs.</Trans>
-                </TYPE.main>
+                <AutoColumn justify="flex-start">
+                  <ResponsiveText>
+                    <Trans>1% fee</Trans>
+                  </ResponsiveText>
+                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                    <Trans>Best for exotic pairs.</Trans>
+                  </TYPE.main>
+                </AutoColumn>
 
                 {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.HIGH]} />}
               </AutoColumn>
