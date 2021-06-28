@@ -3,14 +3,19 @@ import { ChartEntry } from './hooks'
 import { select, scaleLinear, max, axisBottom, area, curveStep, brushX, min, zoom } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import styled from 'styled-components'
+import isEqual from 'lodash.isequal'
 
 interface Dimensions {
   width: number
   height: number
-  boundedWidth: number
-  boundedHeight: number
 }
 
+interface Margins {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
 interface BrushableAreaChartProps {
   id?: string
 
@@ -22,6 +27,7 @@ interface BrushableAreaChartProps {
   styles: {
     area: {
       fill: string
+      stroke: string
     }
 
     current: {
@@ -50,8 +56,10 @@ interface BrushableAreaChartProps {
   }
 
   dimensions: Dimensions
+  margins: Margins
 
   brushDomain: [number, number] | undefined
+  brushLabels: (x: number) => string | undefined
   onBrushDomainChange: (domain: [number, number]) => void
 }
 
@@ -62,23 +70,51 @@ const SVG = styled.svg`
 const xAccessor = (d: ChartEntry) => d.price0
 const yAccessor = (d: ChartEntry) => d.activeLiquidity
 
-const getScales = (series: ChartEntry[], width: number, height: number) => {
+const getScales = (series: ChartEntry[], width: number, height: number, margin: Margins) => {
   return {
     xScale: scaleLinear()
       .domain([min(series, xAccessor), max(series, xAccessor)] as number[])
-      .range([0, width]),
+      .range([margin.left, width - margin.right]),
     yScale: scaleLinear()
       .domain([0, max(series, yAccessor)] as number[])
-      .range([height, 0]),
+      .range([height - margin.bottom, margin.top]),
   }
 }
+
+/*
+ * Generates an SVG path for the east brush handle.
+ * Apply `scale(-1, 1)` to generate west brush handle.
+ *
+ * |```````\
+ * |  | |  |
+ * |______/
+ * |
+ * |
+ * |
+ *
+ */
+const brushHandlePath = (height: number) =>
+  [
+    // handle
+    `M 0 ${height}`, // move to [0, height]
+    'L 0 1', // vertical line to [0, 0]
+    // head
+    'h 10', // horizontal line
+    'q 5 0, 5 5', // quadratic bezier curve to [5, 5] through [5, 0]
+    'v 15', // vertical line
+    'q 0 5 -5 5', // quadratic bezier curve to [-5, 5] through [0, -5]
+    'h -10', // horizontal line backward
+    `z`, // close path
+  ].join(' ')
 
 export function BrushableAreaChart({
   id = 'myBrushableAreaChart',
   data: { series, current },
   styles,
   dimensions,
-  brushDomain = [0, 10],
+  margins,
+  brushDomain,
+  brushLabels,
   onBrushDomainChange,
 }: BrushableAreaChartProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -86,16 +122,21 @@ export function BrushableAreaChart({
 
   const [currentZoomState, setCurrentZoomState] = useState()
 
-  const [cursorPosition, setCursorPosition] = useState<number>(0)
+  //const [cursorPosition, setCursorPosition] = useState<number>(0)
 
-  const [currentSelection, setCurrentSelection] = useState(brushDomain)
-  const previousSelection = usePrevious(brushDomain)
+  // to avoid update loops
+  const previousDomain = usePrevious(brushDomain)
+
+  // controls the brush handles on `brush`
+  // allows updating the UI without broadcasting the domain on move
+  const [localSelection, setLocalSelection] = useState<[number, number] | undefined>(undefined)
 
   useEffect(() => {
-    if (brushDomain[0] !== currentSelection[0] && brushDomain[1] !== currentSelection[1]) {
-      setCurrentSelection(brushDomain)
+    if (brushDomain && !isEqual(brushDomain, localSelection)) {
+      // keeps the local selection in sync with the brush domain
+      setLocalSelection(brushDomain)
     }
-  }, [brushDomain, currentSelection])
+  }, [brushDomain, localSelection])
 
   // will be called initially, and on every data change
   useEffect(() => {
@@ -133,11 +174,11 @@ export function BrushableAreaChart({
       setCurrentZoomState(transform)
 
       // @ts-ignore
-      setCurrentSelection(currentSelection.map(xScale.invert))
+      localSelection && setLocalSelection(currentSelection.map(xScale.invert))
     }
 
     // scales + generators
-    const { xScale, yScale } = getScales(series, width, height)
+    const { xScale, yScale } = getScales(series, width, height, margins)
 
     if (currentZoomState) {
       // @ts-ignore
@@ -161,12 +202,13 @@ export function BrushableAreaChart({
       .select('#content')
       .selectAll('.area')
       .data([series])
+      // @ts-ignore
       .join('path')
       .attr('class', 'area')
       .transition()
       .attr('opacity', '0.5')
       .attr('fill', styles.area.fill)
-      .attr('stroke', 'none')
+      .attr('stroke', styles.area.stroke)
       // @ts-ignore
       .attr('d', areaGenerator)
 
@@ -191,7 +233,7 @@ export function BrushableAreaChart({
 
     svg
       .select('#x-axis')
-      .style('transform', `translateY(${height}px)`)
+      .style('transform', `translateY(${height - margins.bottom}px)`)
       .style('fill', styles.axis.fill)
       .style('opacity', '0.6')
       // @ts-ignore
@@ -207,11 +249,14 @@ export function BrushableAreaChart({
         [width, height],
       ])
       // @ts-ignore
-      .filter((key) => key.shiftKey)
+      //.filter((key) => key.shiftKey)
       .on('zoom', zoomed)
 
-    // @ts-ignore
-    svg.call(zoomBehavior)
+    svg
+      // @ts-ignore
+      .call(zoomBehavior)
+      // disables mouse drag/panning
+      .on('mousedown.zoom', null)
 
     // brush
     const brush = brushX()
@@ -220,17 +265,17 @@ export function BrushableAreaChart({
         [width, height],
       ])
       // @ts-ignore
-      .filter((key) => !key.shiftKey)
+      //.filter((key) => !key.shiftKey)
       .on('start brush end', brushed)
 
     // initial position + retaining position on resize
-    if (previousSelection === currentSelection) {
+    if (brushDomain && previousDomain === brushDomain) {
       svg
         .select('#brush')
         // @ts-ignore
         .call(brush)
         // @ts-ignore
-        .call(brush.move, currentSelection.map(xScale))
+        .call(brush.move, localSelection.map(xScale))
     }
 
     svg
@@ -242,61 +287,22 @@ export function BrushableAreaChart({
       .classed('v-brush-handle', true)
       .attr('cursor', 'ew-resize')
       .attr('stroke-width', '2')
-      .attr('stroke', (d) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
-      .attr('fill', (d) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
-      .attr('d', () => {
-        return [
-          // handle
-          `M 0,${height}`, // move to [0, height]
-          `L 0 1`, // vertical line to [0, 0]
-          // head
-          `h 10`, // horizontal line
-          `q 5 0, 5 5`, // quadratic bezier curve to [5, 5] through [5, 0]
-          `v 15`, // vertical line
-          `q 0 5 -5 5`, // quadratic bezier curve to [-5, 5] through [0, -5]
-          `h -10`, // horizontal line backward
-          `z`, // close path
-        ].join(' ')
-        // https://medium.com/@dennismphil/one-side-rounded-rectangle-using-svg-fb31cf318d90
-      })
+      .attr('stroke', (d: { type: string }) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
+      .attr('fill', (d: { type: string }) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
+      .attr('d', () => brushHandlePath(height))
 
     svg.select('#brush').selectAll('.selection').attr('stroke', 'none').attr('fill', `url(#${id}-gradient-selection)`)
-
-    // focus
-    svg
-      .select('#focus')
-      .selectAll('.line')
-      .data([cursorPosition])
-      .join('line')
-      .attr('class', 'line')
-      .attr('x1', xScale(cursorPosition))
-      .attr('y1', 0)
-      .attr('x2', xScale(cursorPosition))
-      .attr('y2', height)
-      .transition()
-      .style('stroke-width', 3)
-      .style('stroke', styles.focus.stroke)
-      .style('fill', 'none')
-
-    // adds mouse events on brush to handle cursor
-    svg
-      .select('#brush')
-      .select('.overlay')
-      .on('mouseover', () => svg.select('#focus').style('display', null))
-      .on('mouseout', () => svg.select('#focus').style('display', 'none'))
-      .on('mousemove', ({ offsetX }) => {
-        //setCursorPosition(xScale.invert(offsetX))
-      })
   }, [
-    series,
+    brushDomain,
     current,
-    dimensions,
-    currentSelection,
-    previousSelection,
-    onBrushDomainChange,
     currentZoomState,
-    cursorPosition,
+    dimensions,
     id,
+    localSelection,
+    margins,
+    onBrushDomainChange,
+    previousDomain,
+    series,
     styles,
   ])
 
@@ -316,7 +322,6 @@ export function BrushableAreaChart({
 
         <g id="content" clipPath={`url(#${id})`} />
         <g id="brush" clipPath={`url(#${id})`} />
-        <g id="focus" />
         <g id="x-axis" />
         <g id="y-axis" />
       </SVG>

@@ -105,10 +105,12 @@ export default function DensityChart({
           ) : (
             <BrushableAreaChart
               data={{ series: filteredData, current: parseFloat(price) }}
-              dimensions={{ width: 350, height: 225, boundedHeight: 0, boundedWidth: 0 }}
+              dimensions={{ width: 350, height: 225 }}
+              margins={{ top: 0, right: 0, bottom: 0, left: 0 }}
               styles={{
                 area: {
                   fill: theme.blue1,
+                  stroke: theme.blue2,
                 },
                 current: {
                   stroke: theme.text1,
@@ -135,6 +137,7 @@ export default function DensityChart({
                   ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
                   : undefined
               }
+              brushLabels={(x: number) => (price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined)}
               onBrushDomainChange={(domain) => {
                 const leftRangeValue = Number(domain[0])
                 const rightRangeValue = Number(domain[1])
