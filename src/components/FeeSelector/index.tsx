@@ -40,7 +40,7 @@ const ResponsiveText = styled(TYPE.label)`
 `
 
 const FocusedOutlineCard = styled(LightCard)<{ pulsing: boolean }>`
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.4s linear;
 `
 
 const FeeAmountLabel = {
