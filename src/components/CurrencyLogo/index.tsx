@@ -34,17 +34,8 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
   margin-left: ${({ marginLeft }) => marginLeft}px;
   border-radius: ${({ size }) => size};
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 97%;
-    height: 97%;
-    background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
-    border-radius: 50%;
-    z-index: -1;
+  img {
+    background: radial-gradient(circle,#fff 69%,hsla(0,0%,100%,0) 65%);
   }
 `
 
