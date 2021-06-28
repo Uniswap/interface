@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-27 05:04\n"
+"PO-Revision-Date: 2021-06-28 16:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(最大值)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
-msgstr "（在资源管理器上查看）"
+msgstr "（在浏览器查看）"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -272,11 +272,11 @@ msgstr "正在批准 {0}"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Arbitrum Explorer"
-msgstr "套利浏览器"
+msgstr "Arbitrum 浏览器"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Arbitrum Token Bridge"
-msgstr "套利代币桥"
+msgstr "Arbitrum 代币桥"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -874,7 +874,7 @@ msgstr "学习"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
-msgstr "学到更多"
+msgstr "了解更多"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1462,7 +1462,7 @@ msgstr "这些代币通常与其他代币配对。"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您必须将 L1 资产桥接到网络才能交换它们。"
+msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您需要先将 L1 资产桥接到 Arbitrum 网络才能使用。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
