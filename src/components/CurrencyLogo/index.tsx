@@ -40,8 +40,8 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: inherit;
-    height: inherit;
+    width: 97%;
+    height: 97%;
     background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
     border-radius: 50%;
     z-index: -1;
