@@ -5066,10 +5066,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ubeswap/default-token-list@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "@ubeswap/default-token-list@npm:3.3.1"
-  checksum: 30a1823b3275f419831af2ff1bb09497474e273d428153a046a0cafe4373cd1f8488c1610a4ae5325a39d0be09a4e52596e1c890b8e11a5cf6f0c4843a209132
+"@ubeswap/default-token-list@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@ubeswap/default-token-list@npm:3.3.2"
+  checksum: 8fae14915f018458f125abef4cbd85507d2be9c8aa9a0ff2d2007940b6bfcf9ae4356c6c09e7e81cbd1721adff73c80c6a25b560de3597bd0e33659b41155208
   languageName: node
   linkType: hard
 
@@ -5139,7 +5139,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^4.28.0
     "@typescript-eslint/parser": ^4.28.0
     "@ubeswap/core": ^1.0.2
-    "@ubeswap/default-token-list": ^3.3.1
+    "@ubeswap/default-token-list": ^3.3.2
     "@ubeswap/injected-connector": ^6.1.0
     "@ubeswap/moola": ^0.2.0
     "@ubeswap/sdk": ^2.1.0
