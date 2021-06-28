@@ -6,7 +6,6 @@
   "devDependencies": {
     "@ethersproject/experimental": "^5.2.0",
     "@graphql-codegen/cli": "1.21.5",
-    "@graphql-codegen/introspection": "1.18.2",
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
