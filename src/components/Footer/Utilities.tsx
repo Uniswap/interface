@@ -7,10 +7,7 @@ import SocialLinks from './SocialLinks'
 import { useRouteMatch } from 'react-router'
 
 const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
-  position: absolute;
   display: flex;
-  top: 0;
-  right: 0;
   padding: 20px 18px;
   opacity: 0.8;
   transition: opacity 0.25s ease;
@@ -20,11 +17,7 @@ const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
 
   ${({ theme, isAboutpage }) => theme.mediaWidth.upToLarge`
     ${isAboutpage ? `display: none;` : ``}
-    position: fixed;
-    top: auto;
-    bottom: 4.5rem;
-    left: 0;
-    right: auto;
+    padding: 0 18px;
     height: fit-content;
     z-index: 99;
   `}
