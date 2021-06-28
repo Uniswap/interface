@@ -27,14 +27,14 @@ import { useActiveWeb3React } from '../../hooks'
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.ARBITRUM]: ArbitrumLogo,
+  [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
 const ChainLabel: any = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM]: 'Arbitrum',
+  [ChainId.ARBITRUM_ONE]: 'Arbitrum',
   [ChainId.XDAI]: 'xDai'
 }
 

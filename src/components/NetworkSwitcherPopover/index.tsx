@@ -75,9 +75,9 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
             />
             <Option
               onClick={() => {
-                selectNetwork(ChainId.ARBITRUM)
+                selectNetwork(ChainId.ARBITRUM_ONE)
               }}
-              header={'Arbitrum'}
+              header={'Arbitrum one'}
               logoSrc={ArbitrumLogo}
             />
           </OptionGrid>
