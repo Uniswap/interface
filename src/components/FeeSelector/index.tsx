@@ -61,7 +61,7 @@ const FeeAmountLabel = {
 
 function useFeeDistribution(token0: Token | undefined, token1: Token | undefined) {
   const latestBlock = useBlockNumber()
-  const { isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
+  const { isFetching, isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken
   )
 
@@ -69,7 +69,7 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
   return useMemo(() => {
     const { distributions, block: dataBlock } = data ?? { distributions: undefined, block: undefined }
 
-    if (isLoading || isUninitialized || isError || !distributions || !latestBlock || !dataBlock) {
+    if (isLoading || isFetching || isUninitialized || isError || !distributions || !latestBlock || !dataBlock) {
       if (isError) {
         ReactGA.event({
           category: 'FeeSelector',
@@ -102,6 +102,8 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
       .map((d) => Number(d))
       .filter((d: FeeAmount) => distributions[d] !== 0 && distributions[d] !== undefined)
       .reduce((a: FeeAmount, b: FeeAmount) => ((distributions[a] ?? 0) > (distributions[b] ?? 0) ? a : b), -1)
+
+    console.log(`${token0?.symbol} ${token1?.symbol} ${isFetching} ${JSON.stringify(data)} ${largestUsageFeeTier}`)
 
     ReactGA.event({
       category: 'FeeSelector',
@@ -149,7 +151,7 @@ export default function FeeSelector({
   const { isLoading, isUninitialized, isError, distributions, largestUsageFeeTier } = useFeeDistribution(token0, token1)
 
   useEffect(() => {
-    if (largestUsageFeeTier === undefined) {
+    if (feeAmount || largestUsageFeeTier === undefined) {
       return
     }
 
@@ -159,7 +161,7 @@ export default function FeeSelector({
     }
 
     handleFeePoolSelect(largestUsageFeeTier)
-  }, [largestUsageFeeTier, handleFeePoolSelect])
+  }, [feeAmount, largestUsageFeeTier, handleFeePoolSelect])
 
   useEffect(() => {
     setShowOptions(false)
