@@ -7,21 +7,40 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonGray, ButtonRadioChecked } from 'components/Button'
-import styled from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components/macro'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 import { LightCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { useBlockNumber } from 'state/application/hooks'
+import usePrevious from 'hooks/usePrevious'
 
 // maximum number of blocks past which we consider the data stale
 const MAX_DATA_BLOCK_AGE = 10
+
+const pulse = (color: string) => keyframes`
+  0% {
+    box-shadow: 0 0 0 0 ${color};
+  }
+
+  70% {
+    box-shadow: 0 0 0 2px ${color};
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 ${color};
+  }
+`
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 12px;
   `};
+`
+
+const FocusedOutlineCard = styled(LightCard)<{ pulsing: boolean }>`
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `
 
 const FeeAmountLabel = {
@@ -105,6 +124,9 @@ export default function FeeSelector({
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
+  const [pulsing, setPulsing] = useState(false)
+  const previousFeeAmount = usePrevious(feeAmount)
+
   const { isLoading, isUninitialized, isError, distributions, largestUsageFeeTier } = useFeeDistribution(token0, token1)
 
   useEffect(() => {
@@ -128,6 +150,12 @@ export default function FeeSelector({
     setShowOptions(isError)
   }, [isError])
 
+  useEffect(() => {
+    if (feeAmount && previousFeeAmount !== feeAmount) {
+      setPulsing(true)
+    }
+  }, [previousFeeAmount, feeAmount])
+
   // in case of loading or error, we can ignore the query
   const feeTierPercentages =
     !isLoading && !isUninitialized && !isError && distributions
@@ -147,7 +175,7 @@ export default function FeeSelector({
   return (
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
-        <LightCard>
+        <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
             <AutoColumn>
               {!feeAmount || isLoading || isUninitialized ? (
@@ -180,7 +208,7 @@ export default function FeeSelector({
               </ButtonGray>
             )}
           </RowBetween>
-        </LightCard>
+        </FocusedOutlineCard>
 
         {showOptions && (
           <RowBetween>
