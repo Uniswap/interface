@@ -53,7 +53,7 @@ export const dataApi = createApi({
         const tvlByFeeTer = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
           (acc, value) => {
             acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken0)
-            acc[value.feeTier][1] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken1)
+            acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.totalValueLockedToken1)
             return acc
           },
           {
