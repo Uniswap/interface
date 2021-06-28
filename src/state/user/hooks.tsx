@@ -345,7 +345,6 @@ export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: b
   const dispatch = useAppDispatch()
   const arbitrumAlphaAcknowledged = useAppSelector(({ user }) => user.arbitrumAlphaAcknowledged)
   const setArbitrumAlphaAcknowledged = (arbitrumAlphaAcknowledged: boolean) => {
-    console.log(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
     dispatch(updateArbitrumAlphaAcknowledged({ arbitrumAlphaAcknowledged }))
   }
 
