@@ -1,10 +1,11 @@
+overwrite: true
 schema: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-alt'
 documents: 'src/**/!(*.d).{ts,tsx}'
 generates:
-  ./src/state/data/generated.d.ts:
+  ./src/state/data/generated.ts:
     plugins:
       - typescript
       - typescript-operations
       - typescript-rtk-query:
-          importBaseApiFrom: 'src/state/data/slice'
+          importBaseApiFrom: './slice'
           exportHooks: true
