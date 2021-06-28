@@ -1,5 +1,4 @@
-overwrite: true
-schema: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-alt'
+schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 documents: 'src/**/!(*.d).{ts,tsx}'
 generates:
   ./src/state/data/generated.ts:

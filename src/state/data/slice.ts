@@ -6,7 +6,7 @@ import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query'
 
 import { FeeTierDistribution, PoolTVL } from './types'
 
-export const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-alt'
+export const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 
 export const client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
 export const api = createApi({
