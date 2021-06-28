@@ -1,21 +1,22 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { gql } from 'graphql-request'
+import { gql, GraphQLClient } from 'graphql-request'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { reduce } from 'lodash'
+import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query'
 
-import { graphqlBaseQuery, UNISWAP_V3_GRAPH_URL } from './common'
 import { FeeTierDistribution, PoolTVL } from './types'
 
-export const dataApi = createApi({
+export const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+
+export const client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
+export const api = createApi({
   reducerPath: 'dataApi',
-  baseQuery: graphqlBaseQuery({
-    baseUrl: UNISWAP_V3_GRAPH_URL,
-  }),
+  baseQuery: graphqlRequestBaseQuery({ client }),
   endpoints: (builder) => ({
     getFeeTierDistribution: builder.query<FeeTierDistribution, { token0: string; token1: string }>({
       query: ({ token0, token1 }) => ({
         document: gql`
-          query pools($token0: Bytes!, $token1: Bytes!) {
+          query pools($token0: String!, $token1: String!) {
             _meta {
               block {
                 number
@@ -53,7 +54,7 @@ export const dataApi = createApi({
         const tvlByFeeTer = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
           (acc, value) => {
             acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken0)
-            acc[value.feeTier][1] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken1)
+            acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.totalValueLockedToken1)
             return acc
           },
           {
@@ -106,4 +107,4 @@ export const dataApi = createApi({
   }),
 })
 
-export const { useGetFeeTierDistributionQuery } = dataApi
+export const { useGetFeeTierDistributionQuery } = api

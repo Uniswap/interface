@@ -12,7 +12,7 @@ import lists from './lists/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import multicall from './multicall/reducer'
-import { dataApi } from './data/slice'
+import { api } from './data/slice'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -28,11 +28,11 @@ const store = configureStore({
     burnV3,
     multicall,
     lists,
-    [dataApi.reducerPath]: dataApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
-      .concat(dataApi.middleware)
+      .concat(api.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS }),
 })
