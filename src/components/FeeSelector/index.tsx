@@ -11,7 +11,7 @@ import styled from 'styled-components/macro'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
-import { DarkGreyCard } from 'components/Card'
+import { LightCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { useBlockNumber } from 'state/application/hooks'
 
@@ -147,7 +147,7 @@ export default function FeeSelector({
   return (
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
-        <DarkGreyCard>
+        <LightCard>
           <RowBetween>
             <AutoColumn>
               {!feeAmount || isLoading || isUninitialized ? (
@@ -180,7 +180,7 @@ export default function FeeSelector({
               </ButtonGray>
             )}
           </RowBetween>
-        </DarkGreyCard>
+        </LightCard>
 
         {showOptions && (
           <RowBetween>
