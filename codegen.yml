@@ -1,0 +1,10 @@
+schema: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-alt'
+documents: 'src/**/!(*.d).{ts,tsx}'
+generates:
+  ./src/state/data/generated.d.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query:
+          importBaseApiFrom: 'src/state/data/slice'
+          exportHooks: true
