@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react'
 import { useInjectedProvider } from './index'
 import { Chain } from '../constants/chains'
+import { injectedSupportedChainIds } from '../connectors'
 
 const SWITCH_ERROR_MSG = 'Failed to Switch Network'
 
 export default function useAddChain() {
   const [error, setError] = useState<string | undefined>()
   const provider = useInjectedProvider()
+  const chainId = Number(provider?.chainId)
 
   const addChain = useCallback(
     async (chain: Chain) => {
@@ -39,5 +41,13 @@ export default function useAddChain() {
     [provider]
   )
 
-  return { error, addChain, isSupported: provider?.isMetaMask, isUnlocked: provider?._state?.isUnlocked }
+  return {
+    error,
+    addChain,
+    isAddChainEnabled:
+      provider?.isMetaMask &&
+      provider?._state?.isUnlocked &&
+      !injectedSupportedChainIds.includes(chainId) &&
+      provider.selectedAddress
+  }
 }
