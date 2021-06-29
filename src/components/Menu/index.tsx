@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
@@ -117,7 +117,7 @@ export default function Menu() {
       {open && (
         <MenuFlyout>
           <NavMenuItem to="/myPools">
-            <Info size={14} />
+            <Monitor size={14} />
             Dashboard
           </NavMenuItem>
           <NavMenuItem to="/about">
@@ -137,6 +137,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://docs.dmm.exchange">
             <BookOpen size={14} />
             Docs
+          </MenuItem>
+          <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
+            <FileText size={14} />
+            Terms
           </MenuItem>
         </MenuFlyout>
       )}
