@@ -169,7 +169,6 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
         content={<List>{getOptions()}</List>}
         show={walletSwitcherPopoverOpen}
         placement="bottom-end"
-        offsetX={40}
       >
        {children} 
       </StyledPopover>
