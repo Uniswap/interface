@@ -24,7 +24,7 @@ import {
   TokenAmount as TokenAmountDMM,
   ChainId as ChainIdDMM
 } from 'libs/sdk/src'
-import { BLOCKS_PER_YEAR, KNC, ZERO_ADDRESS } from '../constants'
+import { BLOCKS_PER_YEAR, FARMING_POOLS, KNC, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
@@ -416,4 +416,14 @@ export function useRewardTokensFullInfo(): Token[] {
           : allTokens[address]
       )
     : []
+}
+
+export function checkIsFarmingPool(address: string, chainId?: ChainId): boolean {
+  if (!chainId) {
+    chainId = ChainId.MAINNET
+  }
+
+  const farmingPools = FARMING_POOLS[chainId]
+
+  return farmingPools.includes(address)
 }
