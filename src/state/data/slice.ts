@@ -13,6 +13,24 @@ export const api = createApi({
   reducerPath: 'dataApi',
   baseQuery: graphqlRequestBaseQuery({ client }),
   endpoints: (builder) => ({
+    getAllV3Ticks: builder.query({
+      query: ({ poolAddress, skip = 0 }) => ({
+        document: gql`
+          query allV3Ticks($poolAddress: String!, $skip: Int!) {
+            ticks(first: 1000, skip: $skip, where: { poolAddress: $poolAddress }) {
+              tickIdx
+              liquidityNet
+              price0
+              price1
+            }
+          }
+        `,
+        variables: {
+          poolAddress,
+          skip,
+        },
+      }),
+    }),
     getFeeTierDistribution: builder.query<FeeTierDistribution, { token0: string; token1: string }>({
       query: ({ token0, token1 }) => ({
         document: gql`

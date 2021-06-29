@@ -3926,6 +3926,20 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type AllV3TicksQueryVariables = Exact<{
+  poolAddress: Scalars['String'];
+  skip: Scalars['Int'];
+}>;
+
+
+export type AllV3TicksQuery = (
+  { __typename?: 'Query' }
+  & { ticks: Array<(
+    { __typename?: 'Tick' }
+    & Pick<Tick, 'tickIdx' | 'liquidityNet' | 'price0' | 'price1'>
+  )> }
+);
+
 export type PoolsQueryVariables = Exact<{
   token0: Scalars['String'];
   token1: Scalars['String'];
@@ -3950,6 +3964,16 @@ export type PoolsQuery = (
 );
 
 
+export const AllV3TicksDocument = `
+    query allV3Ticks($poolAddress: String!, $skip: Int!) {
+  ticks(first: 1000, skip: $skip, where: {poolAddress: $poolAddress}) {
+    tickIdx
+    liquidityNet
+    price0
+    price1
+  }
+}
+    `;
 export const PoolsDocument = `
     query pools($token0: String!, $token1: String!) {
   _meta {
@@ -3980,6 +4004,9 @@ export const PoolsDocument = `
 
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
+    allV3Ticks: build.query<AllV3TicksQuery, AllV3TicksQueryVariables>({
+      query: (variables) => ({ document: AllV3TicksDocument, variables })
+    }),
     pools: build.query<PoolsQuery, PoolsQueryVariables>({
       query: (variables) => ({ document: PoolsDocument, variables })
     }),
@@ -3987,5 +4014,5 @@ const injectedRtkApi = api.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { usePoolsQuery, useLazyPoolsQuery } = injectedRtkApi;
+export const { useAllV3TicksQuery, useLazyAllV3TicksQuery, usePoolsQuery, useLazyPoolsQuery } = injectedRtkApi;
 

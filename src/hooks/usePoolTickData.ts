@@ -1,0 +1,97 @@
+import { Currency } from '@uniswap/sdk-core'
+import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
+import { PoolState, usePool } from './usePools'
+import { useEffect, useState } from 'react'
+import { TickProcessed } from 'constants/ticks'
+import computeSurroundingTicks from 'utils/computeSurroundingTicks'
+import { useAllV3TicksQuery } from 'state/data/generated'
+import { skipToken } from '@reduxjs/toolkit/query/react'
+
+const PRICE_FIXED_DIGITS = 8
+
+const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
+  tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
+
+export function useAllV3Ticks(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined,
+  feeAmount: FeeAmount | undefined
+) {
+  const poolAddress =
+    currencyA && currencyB && feeAmount ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount) : undefined
+
+  //TODO(judo): determine if pagination is necessary
+  const { isLoading, isError, data } = useAllV3TicksQuery(
+    poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken
+  )
+
+  return {
+    isLoading,
+    isError,
+    ticks: data?.ticks,
+  }
+}
+
+export function usePoolActiveLiquidity(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined,
+  feeAmount: FeeAmount | undefined
+): {
+  isLoading: boolean
+  isError: boolean
+  activeTick: number | undefined
+  data: TickProcessed[]
+} {
+  const pool = usePool(currencyA, currencyB, feeAmount)
+
+  // Find nearest valid tick for pool in case tick is not initialized.
+  const activeTick = getActiveTick(pool[1]?.tickCurrent, feeAmount)
+
+  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
+
+  const { isLoading, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
+
+  useEffect(() => {
+    if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks) {
+      setTicksProcessed([])
+      return
+    }
+
+    const token0 = currencyA?.wrapped
+    const token1 = currencyB?.wrapped
+
+    const sortedTickData = [...ticks].sort((a, b) => a.tickIdx - b.tickIdx)
+
+    // find where the active tick would be
+    const pivot = sortedTickData.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
+
+    if (pivot < 0) {
+      console.error('TickData pivot not found')
+      return
+    }
+
+    const activeTickProcessed: TickProcessed = {
+      liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
+      tickIdx: activeTick,
+      liquidityNet:
+        sortedTickData[pivot].tickIdx === activeTick ? JSBI.BigInt(sortedTickData[pivot].liquidityNet) : JSBI.BigInt(0),
+      price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
+    }
+
+    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, true)
+
+    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, false)
+
+    const newTicksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
+
+    setTicksProcessed(newTicksProcessed)
+  }, [currencyA, currencyB, activeTick, pool, ticks])
+
+  return {
+    isLoading: isLoading || pool[0] === PoolState.LOADING,
+    isError: isError || pool[0] === PoolState.INVALID,
+    activeTick,
+    data: ticksProcessed,
+  }
+}
