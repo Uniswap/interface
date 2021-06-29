@@ -235,7 +235,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>1y F/L</DataTitle>
+          <DataTitle>APY</DataTitle>
           <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
         </GridItem>
 

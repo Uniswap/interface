@@ -258,7 +258,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
             }}
           >
-            1y F/L
+            APY
             {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />

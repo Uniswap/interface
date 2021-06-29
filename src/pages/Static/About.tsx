@@ -96,7 +96,7 @@ export default function About() {
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
-              Total AMP Liquitity
+              Total AMP Liquidity
             </Text>
             <Text fontSize={10} fontStyle="italic" mt={2}>
               Equivalent TVL when compared to typical AMMs
