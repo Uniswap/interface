@@ -185,7 +185,7 @@ export default function Vote() {
           </VoteCard>
         </TopSection>
         <TopSection gap="2px">
-          <WrapSmall>
+          <WrapSmall style={{ flexWrap: 'nowrap' }}>
             <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
