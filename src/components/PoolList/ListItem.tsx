@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import DropIcon from 'components/Icons/DropIcon'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -16,7 +17,7 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc, getTradingFeeAPR } from 'utils/dmm'
+import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc, getTradingFeeAPR, checkIsFarmingPool } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
 import InfoHelper from 'components/InfoHelper'
@@ -102,6 +103,10 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
+const APY = styled(DataText)`
+  color: ${({ theme }) => theme.text12};
+`
+
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
@@ -125,6 +130,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
   const percentToken0 = realPercentToken0.toSignificant(3)
   const percentToken1 = realPercentToken1.toSignificant(3)
 
+  const isFarmingPool = checkIsFarmingPool(pool.address, chainId)
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
   // Shorten address with 0x + 3 characters at start and end
@@ -147,6 +153,14 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   return (
     <div>
+      {isFarmingPool && (
+        <div style={{ position: 'absolute' }}>
+          <MouseoverTooltip text="Available for yield farming">
+            <DropIcon />
+          </MouseoverTooltip>
+        </div>
+      )}
+
       {isWarning && (
         <div style={{ position: 'absolute' }}>
           <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
@@ -236,7 +250,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
         <GridItem>
           <DataTitle>APY</DataTitle>
-          <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
+          <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -294,6 +308,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const percentToken0 = realPercentToken0.toSignificant(3)
   const percentToken1 = realPercentToken1.toSignificant(3)
 
+  const isFarmingPool = checkIsFarmingPool(pool.address, chainId)
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
   // Shorten address with 0x + 3 characters at start and end
@@ -327,6 +342,14 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   return (
     <TableRow oddRow={oddRow}>
+      {isFarmingPool && (
+        <div style={{ position: 'absolute' }}>
+          <MouseoverTooltip text="Available for yield farming">
+            <DropIcon />
+          </MouseoverTooltip>
+        </div>
+      )}
+
       {isWarning && (
         <div style={{ position: 'absolute' }}>
           <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
@@ -344,7 +367,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
       <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
-      <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
+      <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
