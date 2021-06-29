@@ -67,7 +67,7 @@ const Panel = styled(RebassBox)<{
 
   ${props => !props.last && panelPseudo}
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.mediaWidth.upToXL`
     background-color: transparent;
   `};
 `
