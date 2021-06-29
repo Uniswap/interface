@@ -129,11 +129,11 @@ const getEthPrice = async (chainId?: ChainId) => {
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
     const result = await exchangeCient[chainId as ChainId].query({
       query: ETH_PRICE(),
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     })
     const resultOneDay = await exchangeCient[chainId as ChainId].query({
       query: ETH_PRICE(oneDayBlock),
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     })
     const currentPrice = result?.data?.bundles[0]?.ethPrice
     const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
