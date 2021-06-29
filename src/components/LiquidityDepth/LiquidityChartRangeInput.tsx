@@ -4,7 +4,7 @@ import { select, axisBottom, area, curveStep, brushX, zoom } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import styled from 'styled-components'
 import isEqual from 'lodash.isequal'
-import { getScales, xAccessor, yAccessor, brushHandlePath, labelWidth } from './utils'
+import { getScales, xAccessor, yAccessor, brushHandlePath, getTextWidth, brushHandleAccentPath } from './utils'
 
 interface Dimensions {
   width: number
@@ -145,12 +145,12 @@ export function LiquidityChartRangeInput({
             .attr('x', (d) => {
               // @ts-ignore
               const e = d.type === 'e' ? '1' : '0'
-              return labelWidth(brushLabels(scaled[e])) / -2
+              return getTextWidth(brushLabels(scaled[e])) / -2
             })
             .attr('width', (d) => {
               // @ts-ignore
               const e = d.type === 'e' ? '1' : '0'
-              return labelWidth(brushLabels(scaled[e]))
+              return getTextWidth(brushLabels(scaled[e]))
             })
         )
         .call((g) => {
@@ -294,6 +294,14 @@ export function LiquidityChartRangeInput({
               d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west
             )
             .attr('d', () => brushHandlePath(height))
+        )
+        .call((g) =>
+          g
+            .append('path')
+            .attr('stroke-width', '1.3')
+            .attr('stroke', 'white')
+            .attr('opacity', '0.6')
+            .attr('d', () => brushHandleAccentPath())
         )
         .call((g) =>
           g
