@@ -9,7 +9,7 @@ import { RowBetween } from 'components/Row'
 import { ButtonGray, ButtonRadioChecked } from 'components/Button'
 import styled, { keyframes } from 'styled-components/macro'
 import Badge from 'components/Badge'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import Loader from 'components/Loader'
 import usePrevious from 'hooks/usePrevious'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
@@ -34,7 +34,8 @@ const ResponsiveText = styled(TYPE.label)`
   `};
 `
 
-const FocusedOutlineCard = styled(OutlineCard)<{ pulsing: boolean }>`
+const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
+  border: 1px solid ${({ theme }) => theme.bg2};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.6s linear;
 `
 
