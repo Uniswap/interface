@@ -281,13 +281,15 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
       rewardPerBlock.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
     ) {
       const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
-      const yearlyETHRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
+      const yearlyETHRewardAllocation =
+        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
       total += yearlyETHRewardAllocation * parseFloat(ethPrice.currentPrice)
     }
 
     if (kncPrice && rewardPerBlock.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
       const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
-      const yearlyKNCRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
+      const yearlyKNCRewardAllocation =
+        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
       total += yearlyKNCRewardAllocation * parseFloat(kncPrice)
     }
 

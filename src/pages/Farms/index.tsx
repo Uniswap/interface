@@ -11,7 +11,7 @@ import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
 import { useBlockNumber, useFarmHistoryModalToggle, useKNCPrice } from 'state/application/hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECS, FAIRLAUNCH_ADDRESSES } from '../../constants'
+import { AVERAGE_BLOCK_TIME_IN_SECSS, FAIRLAUNCH_ADDRESSES } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
@@ -77,7 +77,7 @@ const Farms = () => {
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
   const remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
-  const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS
+  const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
   const formattedEstimatedRemainingTime =
     estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
 
