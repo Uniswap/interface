@@ -135,9 +135,25 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
-export const BLOCKS_PER_YEAR = Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS) * 60 * 24 * 365) // 2252571
-export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
-export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
+export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
+  [ChainId.MAINNET]: 13.13,
+  [ChainId.RINKEBY]: 13.13,
+  [ChainId.ROPSTEN]: 13.13,
+  [ChainId.GÖRLI]: 13.13,
+  [ChainId.KOVAN]: 13.13,
+  [ChainId.MATIC]: 2.1,
+  [ChainId.MUMBAI]: 2.1
+}
+
+export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
+  [ChainId.MAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MAINNET]) * 60 * 24 * 365),
+  [ChainId.RINKEBY]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.RINKEBY]) * 60 * 24 * 365),
+  [ChainId.ROPSTEN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.ROPSTEN]) * 60 * 24 * 365),
+  [ChainId.GÖRLI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.GÖRLI]) * 60 * 24 * 365),
+  [ChainId.KOVAN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.KOVAN]) * 60 * 24 * 365),
+  [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MATIC]) * 60 * 24 * 365),
+  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MUMBAI]) * 60 * 24 * 365)
+}
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 export const UNI: { [chainId in ChainId]: Token } = {
