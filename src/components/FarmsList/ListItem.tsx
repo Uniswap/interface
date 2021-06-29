@@ -189,7 +189,7 @@ const GridItem = styled.div<{ noBorder?: boolean }>`
 
 const DataTitle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   color: ${({ theme }) => theme.text6};
   &:hover {
     opacity: 0.6;
@@ -535,6 +535,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               text={
                 'AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.'
               }
+              size={12}
             />
           </DataTitle>
           <DataText grid-area="pools">
@@ -564,7 +565,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         <GridItem>
           <DataTitle>
             <span>APY</span>
-            <InfoHelper text={'Estimated total annualized yield from rewards.'} />
+            <InfoHelper text={'Estimated total annualized yield from rewards.'} size={12} />
           </DataTitle>
           <DataText grid-area="apy">
             <APY grid-area="apy">{apr.toFixed(2)}%</APY>

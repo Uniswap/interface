@@ -44,7 +44,7 @@ const InfoMark = styled.span`
   font-size: 1rem;
 `
 
-export default function InfoHelper({ text }: { text: string }) {
+export default function InfoHelper({ text, size }: { text: string; size?: number }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -54,7 +54,7 @@ export default function InfoHelper({ text }: { text: string }) {
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <InfoWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Info size={16} />
+          <Info size={size || 16} />
         </InfoWrapper>
       </Tooltip>
     </span>
