@@ -28,17 +28,23 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
+  const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId:
+            currency instanceof Token
+              ? currency.address
+              : currency === ETHER
+              ? (convertToNativeTokenFromETH(ETHER, chainId).symbol as string)
+              : ''
         })
       )
     },
-    [dispatch]
+    [dispatch, chainId]
   )
 
   const onSwitchTokens = useCallback(() => {

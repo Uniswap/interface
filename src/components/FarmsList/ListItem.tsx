@@ -556,7 +556,7 @@ const ListItem = ({ farm }: ListItemProps) => {
 
         <GridItem>
           <DataTitle>
-            <span>Liquidity</span>
+            <span>Staked TVL</span>
           </DataTitle>
           <DataText grid-area="liq">
             <div>{formattedNum(liquidity.toString(), true)}</div>

@@ -76,7 +76,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
         </Flex>
 
         <Flex grid-area="liq" alignItems="center" justifyContent="flex-end">
-          <ClickableText>Liquidity</ClickableText>
+          <ClickableText>Staked TVL</ClickableText>
         </Flex>
 
         <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
