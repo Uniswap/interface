@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { useAllV3TicksQuery } from 'state/data/generated'
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import ms from 'ms.macro'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -31,7 +32,10 @@ export function useAllV3Ticks(
 
   //TODO(judo): determine if pagination is necessary for this query
   const { isLoading, isError, data } = useAllV3TicksQuery(
-    poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken
+    poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken,
+    {
+      pollingInterval: ms`2m`,
+    }
   )
 
   return {
