@@ -3,16 +3,24 @@ import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
 import { useEffect, useState } from 'react'
-import { TickProcessed } from 'constants/ticks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { useAllV3TicksQuery } from 'state/data/generated'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 
 const PRICE_FIXED_DIGITS = 8
 
+// Tick with fields parsed to JSBIs, and active liquidity computed.
+export interface TickProcessed {
+  tickIdx: number
+  liquidityActive: JSBI
+  liquidityNet: JSBI
+  price0: string
+}
+
 const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
   tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
 
+// Fetches all ticks for a given pool
 export function useAllV3Ticks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
@@ -21,7 +29,7 @@ export function useAllV3Ticks(
   const poolAddress =
     currencyA && currencyB && feeAmount ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount) : undefined
 
-  //TODO(judo): determine if pagination is necessary
+  //TODO(judo): determine if pagination is necessary for this query
   const { isLoading, isError, data } = useAllV3TicksQuery(
     poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken
   )
@@ -43,17 +51,17 @@ export function usePoolActiveLiquidity(
   activeTick: number | undefined
   data: TickProcessed[]
 } {
+  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
+
   const pool = usePool(currencyA, currencyB, feeAmount)
+
+  const { isLoading, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = getActiveTick(pool[1]?.tickCurrent, feeAmount)
 
-  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
-
-  const { isLoading, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
-
   useEffect(() => {
-    if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks) {
+    if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
       setTicksProcessed([])
       return
     }
@@ -63,7 +71,9 @@ export function usePoolActiveLiquidity(
 
     const sortedTickData = [...ticks].sort((a, b) => a.tickIdx - b.tickIdx)
 
-    // find where the active tick would be
+    // find where the active tick would be to partition the array
+    // if the active tick is initialized, the pivot will be an element
+    // if not, take the previous tick as pivot
     const pivot = sortedTickData.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
 
     if (pivot < 0) {
