@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useAppDispatch } from 'state/hooks'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { updateBlockNumber } from './actions'
-import { useAppDispatch } from 'state/hooks'
-import { SupportedChainId } from 'constants/chains'
 
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
@@ -53,26 +52,6 @@ export default function Updater(): null {
     if (!debouncedState.chainId || !debouncedState.blockNumber || !windowVisible) return
     dispatch(updateBlockNumber({ chainId: debouncedState.chainId, blockNumber: debouncedState.blockNumber }))
   }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId])
-
-  // manage background color
-  const background = document.getElementById('background-radial-gradient')
-  useEffect(() => {
-    if (!background) {
-      return
-    }
-
-    let gradient
-    switch (chainId) {
-      case SupportedChainId.ARBITRUM_ONE:
-        gradient =
-          'radial-gradient(96.19% 96.19% at 50% -5.43%, hsla(204, 87%, 55%, 0.2) 0%, hsla(227, 0%, 0%, 0) 100%)'
-        break
-      default:
-        gradient = 'radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%)'
-    }
-
-    background.style.background = gradient
-  }, [background, chainId])
 
   return null
 }
