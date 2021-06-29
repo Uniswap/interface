@@ -50,10 +50,10 @@ export default function LiquidityDepth({
     <ChartContext.Provider value={{ zoom, canZoomIn, canZoomOut, zoomIn, zoomOut }}>
       <DarkBlueCard>
         <AutoColumn>
-          <RowBetween>
+          {/* <RowBetween>
             <Trans>Liquidity Distribution</Trans>
             <ZoomButtons />
-          </RowBetween>
+          </RowBetween> */}
           <DensityChart
             price={price}
             currencyA={currencyA}
