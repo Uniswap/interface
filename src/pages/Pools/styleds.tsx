@@ -51,33 +51,19 @@ export const GlobalDataItemValue = styled.span`
 `
 
 export const AddLiquidityInstructionContainer = styled.div`
-  display: flex;
   margin-bottom: 20px;
-
-  ${({ theme }) => theme.mediaWidth.upToXL`
-    flex-direction: column;
-  `};
+  padding: 1rem;
+  background: ${({ theme }) => theme.bg17};
+  border-radius: 8px;
 `
 
-export const AddLiquidityTitleContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-right: 1rem;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-content: flex-start;
-  `};
-`
-
-export const AddLiquidityTitle = styled.div`
+export const AddLiquidityTitle = styled.span`
   font-size: 14px;
   color: #78d5ff;
+  margin-right: 0.5rem;
 `
 
-export const AddLiquidityInstructionText = styled.div`
-  display: flex;
-  align-items: center;
+export const AddLiquidityInstructionText = styled.span`
   font-size: 14px;
   color: ${({ theme }) => theme.text11};
 `
@@ -92,11 +78,15 @@ export const ToolbarWrapper = styled.div`
 export const CurrencyWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 0;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-bottom: 8px;
     flex-direction: column;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToXL`
+    margin-bottom: 15px;
   `};
 `
 

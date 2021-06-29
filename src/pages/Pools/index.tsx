@@ -25,7 +25,6 @@ import {
   GlobalDataItemTitle,
   GlobalDataItemValue,
   AddLiquidityInstructionContainer,
-  AddLiquidityTitleContainer,
   AddLiquidityTitle,
   AddLiquidityInstructionText,
   ToolbarWrapper,
@@ -35,7 +34,6 @@ import {
 } from './styleds'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import Loader from 'components/Loader'
-import AddLiquidityIcon from 'assets/svg/add-liquidity-icon.svg'
 
 const Pools = ({
   match: {
@@ -47,7 +45,8 @@ const Pools = ({
   const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
-  const above1400 = useMedia('(min-width: 1400px)')
+  const above992 = useMedia('(min-width: 993px)')
+  const above1400 = useMedia('(min-width: 1401px)')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -149,12 +148,7 @@ const Pools = ({
         </GlobalDataContainer>
 
         <AddLiquidityInstructionContainer>
-          <AddLiquidityTitleContainer>
-            <span>
-              <img src={AddLiquidityIcon} alt="Add liquidity icon" />
-            </span>
-            <AddLiquidityTitle>Add liquidity:</AddLiquidityTitle>
-          </AddLiquidityTitleContainer>
+          <AddLiquidityTitle>Add liquidity:</AddLiquidityTitle>
           <AddLiquidityInstructionText>
             Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees
             are automatically claimed when you withdraw your liquidity.
@@ -237,6 +231,7 @@ const Pools = ({
                 otherCurrency={currencies[Field.CURRENCY_B]}
                 id="input-tokena"
               />
+              {above992 && <span style={{ margin: '0 8px' }}>/</span>}
               <PoolsCurrencyInputPanel
                 onCurrencySelect={handleCurrencyBSelect}
                 currency={currencies[Field.CURRENCY_B]}
