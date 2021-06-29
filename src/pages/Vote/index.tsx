@@ -185,11 +185,11 @@ export default function Vote() {
           </VoteCard>
         </TopSection>
         <TopSection gap="2px">
-          <WrapSmall style={{ flexWrap: 'nowrap' }}>
+          <WrapSmall>
             <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
-            <AutoRow gap="6px" justify="flex-end">
+            <AutoRow gap="6px" justify="flex-end" width="auto">
               {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
               {showUnlockVoting ? (
                 <ButtonPrimary
