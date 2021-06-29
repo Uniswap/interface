@@ -191,6 +191,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
             <span>AMP Liquidity</span>
             <InfoHelper
               text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+              size={12}
             />
           </DataTitle>
           <DataText grid-area="liq">
@@ -208,6 +209,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               text={
                 'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
               }
+              size={12}
             />
           </DataTitle>
           <DataText grid-area="ratio">
@@ -227,6 +229,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               text={
                 'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
               }
+              size={12}
             />
           </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
