@@ -49,7 +49,5 @@ export const brushHandlePath = (height: number) =>
 const LABEL_PADDING = 10
 const LABEL_CHAR_WIDTH = 6
 
-const labelWidth = (label: string | undefined) =>
+export const labelWidth = (label: string | undefined) =>
   label ? label.split('').length * LABEL_CHAR_WIDTH + LABEL_PADDING * 2 : 0
-
-//export const brushTooltip = (label: string, height: number) => [<rect x="0" y={height} width={labelWidth(label)} />]

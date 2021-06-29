@@ -62,7 +62,7 @@ export default function DensityChart({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, activeChartEntry, , formattedData } = useDensityChartData({
+  const { loading, activeChartEntry, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -126,6 +126,10 @@ export default function DensityChart({
                   handle: {
                     west: saturate(0.1, tokenAColor) ?? theme.red1,
                     east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                  },
+                  tooltip: {
+                    fill: theme.bg2,
+                    color: theme.text1,
                   },
                 },
                 focus: {

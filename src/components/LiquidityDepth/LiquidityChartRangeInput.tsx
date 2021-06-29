@@ -4,7 +4,7 @@ import { select, axisBottom, area, curveStep, brushX, zoom } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import styled from 'styled-components'
 import isEqual from 'lodash.isequal'
-import { getScales, xAccessor, yAccessor, brushHandlePath } from './utils'
+import { getScales, xAccessor, yAccessor, brushHandlePath, labelWidth } from './utils'
 
 interface Dimensions {
   width: number
@@ -50,6 +50,11 @@ interface LiquidityChartRangeInputProps {
         west: string
         east: string
       }
+
+      tooltip: {
+        fill: string
+        color: string
+      }
     }
 
     focus: {
@@ -89,7 +94,7 @@ export function LiquidityChartRangeInput({
 
   // controls the brush handles on `brush`
   // allows updating the UI without broadcasting the domain on move
-  const [localSelection, setLocalSelection] = useState<[number, number] | undefined>(undefined)
+  const [localSelection, setLocalSelection] = useState<number[] | undefined>(undefined)
 
   useEffect(() => {
     if (brushDomain && !isEqual(brushDomain, localSelection)) {
@@ -113,8 +118,10 @@ export function LiquidityChartRangeInput({
         return
       }
 
+      const scaled = selection.map(xScale.invert)
+
       if (type === 'end') {
-        onBrushDomainChange(selection.map(xScale.invert))
+        onBrushDomainChange(scaled)
       }
 
       // move brush handle
@@ -127,14 +134,45 @@ export function LiquidityChartRangeInput({
           const e = d.type === 'e' ? '1' : '-1'
           return `translate(${[selection[i], 0]}) scale(${e}, 1)`
         })
+
+      // update tooltip
+      svg
+        .select('#brush')
+        .selectAll('.brush-handle')
+        .call((g) =>
+          g
+            .selectAll('rect')
+            .attr('x', (d) => {
+              // @ts-ignore
+              const e = d.type === 'e' ? '1' : '0'
+              return labelWidth(brushLabels(scaled[e])) / -2
+            })
+            .attr('width', (d) => {
+              // @ts-ignore
+              const e = d.type === 'e' ? '1' : '0'
+              return labelWidth(brushLabels(scaled[e]))
+            })
+        )
+        .call((g) => {
+          g.selectAll('text')
+            .attr('x', (d) => {
+              // @ts-ignore
+              const e = d.type === 'e' ? '1' : '0'
+              return 0 //labelWidth(brushLabels(scaled[e])) / 2
+            })
+            .text((d) => {
+              // @ts-ignore
+              const e = d.type === 'e' ? '1' : '0'
+              return brushLabels(scaled[e]) ?? ''
+            })
+        })
     }
 
     // @ts-ignore
     function zoomed({ transform }) {
       setCurrentZoomState(transform)
 
-      // @ts-ignore
-      localSelection && setLocalSelection(currentSelection.map(xScale.invert))
+      localSelection && setLocalSelection(localSelection.map(xScale.invert))
     }
 
     // scales + generators
@@ -165,10 +203,10 @@ export function LiquidityChartRangeInput({
       // @ts-ignore
       .join('path')
       .attr('class', 'area')
-      .transition()
       .attr('opacity', '0.5')
       .attr('fill', styles.area.fill)
       .attr('stroke', styles.area.stroke)
+      .transition()
       // @ts-ignore
       .attr('d', areaGenerator)
 
@@ -229,43 +267,60 @@ export function LiquidityChartRangeInput({
       .on('start brush end', brushed)
 
     // initial burhs position + retaining position on resize
-    if (brushDomain && previousDomain === brushDomain) {
+    if (localSelection && previousDomain === brushDomain) {
       svg
         .select('#brush')
         // @ts-ignore
         .call(brush)
         // @ts-ignore
         .call(brush.move, localSelection.map(xScale))
+
+      svg
+        .select('#brush')
+        .selectAll('.brush-handle')
+        .data([{ type: 'w' }, { type: 'e' }])
+        .enter()
+        .append('g')
+        .attr('class', 'brush-handle')
+        .call((g) =>
+          g
+            .append('path')
+            .attr('cursor', 'ew-resize')
+            .attr('stroke-width', '2')
+            .attr('stroke', (d: { type: string }) =>
+              d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west
+            )
+            .attr('fill', (d: { type: string }) =>
+              d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west
+            )
+            .attr('d', () => brushHandlePath(height))
+        )
+        .call((g) =>
+          g
+            .append('rect')
+            .attr('y', height - 30 / 2)
+            .attr('height', '20')
+            .attr('rx', '8')
+            .attr('fill', styles.brush.tooltip.fill)
+        )
+        .call((g) =>
+          g
+            .append('text')
+            .attr('class', 'brush-handle-label')
+            .attr('y', height)
+            // flip text since entire handle is flipped
+            .attr('transform', (d, i) => (i % 2 === 0 ? 'scale(-1, 1)' : ''))
+            .attr('text-anchor', 'middle')
+            .attr('font-size', '13')
+            .attr('fill', styles.brush.tooltip.color)
+        )
+
+      // brush linear gradient
+      svg.select('#brush').selectAll('.selection').attr('stroke', 'none').attr('fill', `url(#${id}-gradient-selection)`)
     }
-
-    const brushHandle = svg
-      .select('#brush')
-      .selectAll('.brush-handle')
-      .data([{ type: 'w' }, { type: 'e' }])
-
-    brushHandle
-      .enter()
-      .append('path')
-      .attr('class', 'brush-handle')
-      .attr('cursor', 'ew-resize')
-      .attr('stroke-width', '2')
-      .attr('stroke', (d: { type: string }) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
-      .attr('fill', (d: { type: string }) => (d.type === 'e' ? styles.brush.handle.east : styles.brush.handle.west))
-      .attr('d', () => brushHandlePath(height))
-
-    brushHandle
-      .enter()
-      .append('group')
-      .attr('class', 'brush-handle-tooltip')
-      .append('text')
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '9px')
-      .text('hello')
-
-    // brush linear gradient
-    svg.select('#brush').selectAll('.selection').attr('stroke', 'none').attr('fill', `url(#${id}-gradient-selection)`)
   }, [
     brushDomain,
+    brushLabels,
     current,
     currentZoomState,
     dimensions,
@@ -282,8 +337,12 @@ export function LiquidityChartRangeInput({
     <div ref={wrapperRef}>
       <SVG ref={svgRef}>
         <defs>
-          <clipPath id={id}>
+          <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width="100%" height="100%" />
+          </clipPath>
+
+          <clipPath id={`${id}-brush-clip`}>
+            <rect x="0" y="0" width="110%" height="105%" />
           </clipPath>
 
           <linearGradient id={`${id}-gradient-selection`} x1="0%" y1="100%" x2="100%" y2="100%">
@@ -292,8 +351,8 @@ export function LiquidityChartRangeInput({
           </linearGradient>
         </defs>
 
-        <g id="content" clipPath={`url(#${id})`} />
-        <g id="brush" clipPath={`url(#${id})`} />
+        <g id="content" clipPath={`url(#${id}-chart-clip)`} />
+        <g id="brush" clipPath={`url(#${id}-brush-clip)`} />
         <g id="x-axis" />
         <g id="y-axis" />
       </SVG>
