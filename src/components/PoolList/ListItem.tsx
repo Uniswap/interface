@@ -103,6 +103,10 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
+const APY = styled(DataText)`
+  color: ${({ theme }) => theme.text12};
+`
+
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
@@ -246,7 +250,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
         <GridItem>
           <DataTitle>APY</DataTitle>
-          <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
+          <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -363,7 +367,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
       <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
-      <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
+      <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
