@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
@@ -8,17 +8,11 @@ import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonGray, ButtonRadioChecked } from 'components/Button'
 import styled, { keyframes } from 'styled-components/macro'
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
-import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 import { OutlineCard } from 'components/Card'
 import Loader from 'components/Loader'
-import { useBlockNumber } from 'state/application/hooks'
 import usePrevious from 'hooks/usePrevious'
-import ReactGA from 'react-ga'
-
-// maximum number of blocks past which we consider the data stale
-const MAX_DATA_BLOCK_AGE = 10
+import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -59,72 +53,11 @@ const FeeAmountLabel = {
   },
 }
 
-function useFeeDistribution(token0: Token | undefined, token1: Token | undefined) {
-  const latestBlock = useBlockNumber()
-  const { isFetching, isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
-    token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken
-  )
-
-  // auto-select fee tier when available
-  return useMemo(() => {
-    const { distributions, block: dataBlock } = data ?? { distributions: undefined, block: undefined }
-
-    if (isLoading || isFetching || isUninitialized || isError || !distributions || !latestBlock || !dataBlock) {
-      if (isError) {
-        ReactGA.event({
-          category: 'FeeSelector',
-          action: 'Auto select failed',
-          label: 'error',
-        })
-      }
-
-      return {
-        isLoading,
-        isUninitialized,
-        isError,
-      }
-    }
-
-    if (latestBlock - dataBlock > MAX_DATA_BLOCK_AGE) {
-      ReactGA.event({
-        category: 'FeeSelector',
-        action: 'Auto select Failed',
-        label: 'old',
-      })
-      return {
-        isLoading,
-        isUninitialized,
-        isError,
-      }
-    }
-
-    const largestUsageFeeTier = Object.keys(distributions)
-      .map((d) => Number(d))
-      .filter((d: FeeAmount) => distributions[d] !== 0 && distributions[d] !== undefined)
-      .reduce((a: FeeAmount, b: FeeAmount) => ((distributions[a] ?? 0) > (distributions[b] ?? 0) ? a : b), -1)
-
-    console.log(`${token0?.symbol} ${token1?.symbol} ${isFetching} ${JSON.stringify(data)} ${largestUsageFeeTier}`)
-
-    ReactGA.event({
-      category: 'FeeSelector',
-      action: 'Auto select',
-    })
-
-    return {
-      isLoading,
-      isUninitialized,
-      isError,
-      distributions,
-      largestUsageFeeTier,
-    }
-  }, [isLoading, isUninitialized, isError, data, latestBlock])
-}
-
-const FeeTierPercentageBadge = ({ percentage }: { percentage: string | undefined }) => {
+const FeeTierPercentageBadge = ({ percentage }: { percentage: number | undefined }) => {
   return (
     <Badge>
       <TYPE.label fontSize={12}>
-        {Boolean(percentage) ? <Trans>{percentage}% select</Trans> : <Trans>Not created</Trans>}
+        {Boolean(percentage) ? <Trans>{percentage?.toFixed(0)}% select</Trans> : <Trans>Not created</Trans>}
       </TYPE.label>
     </Badge>
   )
@@ -143,25 +76,25 @@ export default function FeeSelector({
   token0?: Token | undefined
   token1?: Token | undefined
 }) {
+  const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(token0, token1)
+
   const [showOptions, setShowOptions] = useState(false)
 
   const [pulsing, setPulsing] = useState(false)
   const previousFeeAmount = usePrevious(feeAmount)
 
-  const { isLoading, isUninitialized, isError, distributions, largestUsageFeeTier } = useFeeDistribution(token0, token1)
-
   useEffect(() => {
-    if (feeAmount || largestUsageFeeTier === undefined) {
+    if (feeAmount || isLoading || isError) {
       return
     }
 
-    if (largestUsageFeeTier === -1) {
+    if (!largestUsageFeeTier) {
       // cannot recommend, open options
       setShowOptions(true)
+    } else {
+      handleFeePoolSelect(largestUsageFeeTier)
     }
-
-    handleFeePoolSelect(largestUsageFeeTier)
-  }, [feeAmount, largestUsageFeeTier, handleFeePoolSelect])
+  }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
 
   useEffect(() => {
     setShowOptions(false)
@@ -177,29 +110,13 @@ export default function FeeSelector({
     }
   }, [previousFeeAmount, feeAmount])
 
-  // in case of loading or error, we can ignore the query
-  const feeTierPercentages =
-    !isLoading && !isUninitialized && !isError && distributions
-      ? {
-          [FeeAmount.LOW]: distributions[FeeAmount.LOW]
-            ? ((distributions[FeeAmount.LOW] ?? 0) * 100).toFixed(0)
-            : undefined,
-          [FeeAmount.MEDIUM]: distributions[FeeAmount.MEDIUM]
-            ? ((distributions[FeeAmount.MEDIUM] ?? 0) * 100).toFixed(0)
-            : undefined,
-          [FeeAmount.HIGH]: distributions[FeeAmount.HIGH]
-            ? ((distributions[FeeAmount.HIGH] ?? 0) * 100).toFixed(0)
-            : undefined,
-        }
-      : undefined
-
   return (
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
             <AutoColumn>
-              {!feeAmount || isLoading || isUninitialized ? (
+              {!feeAmount || isLoading ? (
                 <>
                   <TYPE.label>
                     <Trans>Fee tier</Trans>
@@ -242,7 +159,7 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.LOW]} />}
+                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.LOW]} />}
               </AutoColumn>
             </ButtonRadioChecked>
             <ButtonRadioChecked
@@ -260,7 +177,7 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.MEDIUM]} />}
+                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.MEDIUM]} />}
               </AutoColumn>
             </ButtonRadioChecked>
             <ButtonRadioChecked
@@ -278,7 +195,7 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.HIGH]} />}
+                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.HIGH]} />}
               </AutoColumn>
             </ButtonRadioChecked>
           </RowBetween>
