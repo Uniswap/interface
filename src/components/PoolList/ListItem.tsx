@@ -25,7 +25,7 @@ import { useActiveWeb3React } from 'hooks'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr 0.5fr 1.5fr repeat(5, 1fr) 1fr;
+  grid-template-columns: 1.5fr 1fr 1.5fr repeat(5, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -75,7 +75,7 @@ const TradeButtonText = styled.span`
 
 const DataTitle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   color: ${({ theme }) => theme.text6};
   &:hover {
     opacity: 0.6;
