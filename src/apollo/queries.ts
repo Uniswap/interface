@@ -250,3 +250,36 @@ export const FARM_DATA = gql`
     }
   }
 `
+
+export const FARM_HISTORIES = gql`
+  query farmHistories($user: String!) {
+    deposits(where: { user: $user }) {
+      id
+      timestamp
+      poolID
+      stakeToken
+      amount
+    }
+    withdraws(where: { user: $user }) {
+      id
+      timestamp
+      poolID
+      stakeToken
+      amount
+    }
+    harvests(where: { user: $user }) {
+      id
+      timestamp
+      poolID
+      rewardToken
+      stakeToken
+      amount
+    }
+    vests(where: { user: $user }) {
+      id
+      timestamp
+      rewardToken
+      amount
+    }
+  }
+`

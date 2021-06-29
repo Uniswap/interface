@@ -17,6 +17,7 @@
     "anonymous": false,
     "inputs": [
       { "indexed": true, "internalType": "address", "name": "rewardContract", "type": "address" },
+      { "indexed": true, "internalType": "contract IERC20Ext", "name": "token", "type": "address" },
       { "indexed": false, "internalType": "bool", "name": "isAdded", "type": "bool" }
     ],
     "name": "RewardContractAdded",

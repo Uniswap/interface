@@ -25,7 +25,7 @@ import { useActiveWeb3React } from 'hooks'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
+  grid-template-columns: 1.5fr 1fr 1.5fr repeat(5, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -51,7 +51,7 @@ const StyledItemCard = styled.div`
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.mediaWidth.upToXL`
     margin-bottom: 20px;
   `}
 `
@@ -75,7 +75,7 @@ const TradeButtonText = styled.span`
 
 const DataTitle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   color: ${({ theme }) => theme.text6};
   &:hover {
     opacity: 0.6;
@@ -188,13 +188,13 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataTitle>
-            <span>Liq/AMPL</span>
+            <span>AMP Liquidity</span>
             <InfoHelper
               text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+              size={12}
             />
           </DataTitle>
           <DataText grid-area="liq">
-            <div>{!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}</div>
             <div>{!subgraphPoolData ? <Loader /> : ampLiquidity}</div>
           </DataText>
         </GridItem>
@@ -209,6 +209,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               text={
                 'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
               }
+              size={12}
             />
           </DataTitle>
           <DataText grid-area="ratio">
@@ -228,6 +229,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               text={
                 'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
               }
+              size={12}
             />
           </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
@@ -339,9 +341,6 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         </PoolAddressContainer>
       </DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-      <DataText grid-area="liq">
-        {!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData?.reserveUSD, true)}
-      </DataText>
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
       <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>

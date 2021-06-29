@@ -16,7 +16,7 @@ import PoolDetailModal from './PoolDetailModal'
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr;
+  grid-template-columns: 1.5fr 1fr 1.5fr repeat(5, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -72,7 +72,7 @@ const SORT_FIELD = {
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
-  const above1600 = useMedia('(min-width: 1600px)') // Wide desktop screen
+  const above1400 = useMedia('(min-width: 1400px)') // Wide desktop screen
 
   const transformedSubgraphPoolsData: {
     [key: string]: SubgraphPoolData
@@ -149,7 +149,8 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
     switch (sortedColumn) {
       case SORT_FIELD.LIQ:
-        return parseFloat(poolASubgraphData?.reserveUSD) > parseFloat(poolBSubgraphData?.reserveUSD)
+        return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolASubgraphData?.reserveUSD) >
+          parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolBSubgraphData?.reserveUSD)
           ? (sortDirection ? -1 : 1) * 1
           : (sortDirection ? -1 : 1) * -1
       case SORT_FIELD.VOL:
@@ -177,7 +178,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   }
 
   const renderHeader = () => {
-    return above1600 ? (
+    return above1400 ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
           <ClickableText>Pool</ClickableText>
@@ -197,7 +198,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection)
             }}
           >
-            Liquidity
+            AMP Liquidity
             {sortedColumn === SORT_FIELD.LIQ ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -208,9 +209,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
-        </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>AMP Liquidity</ClickableText>
           <InfoHelper
             text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
           />
@@ -319,7 +317,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool) {
-          return above1600 ? (
+          return above1400 ? (
             <ListItem
               key={pool.address}
               pool={pool}

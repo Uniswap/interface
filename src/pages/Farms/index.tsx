@@ -162,14 +162,12 @@ const Farms = () => {
               </StakedOnlyToggleWrapper>
             )}
           </TabWrapper>
-          {/* <div>
-            {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-              <HistoryButton onClick={toggleFarmHistoryModal}>
-                <img src={HistoryImg} alt="HistoryImg" />
-                History
-              </HistoryButton>
-            )}
-          </div> */}
+          <div>
+            <HistoryButton onClick={toggleFarmHistoryModal}>
+              <img src={HistoryImg} alt="HistoryImg" />
+              History
+            </HistoryButton>
+          </div>
         </TabContainer>
 
         {activeTab === 0 ? (

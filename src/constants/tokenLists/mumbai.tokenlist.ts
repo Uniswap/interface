@@ -37,6 +37,13 @@ export const MUMBAI_TOKEN_LIST = {
       symbol: 'DAI',
       name: 'DAI',
       decimals: 18
+    },
+    {
+      chainId: 80001,
+      address: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+      symbol: 'WMATIC',
+      name: 'Wrapped Matic',
+      decimals: 18
     }
   ],
   version: {

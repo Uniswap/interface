@@ -430,107 +430,30 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : ['0x0a5443dF8d3b52c38B883dEb0284FbA1A9e4FFF9'],
-  [ChainId.ROPSTEN]: ['0xCa0767cb6473628F27287c04096f242Ca649f5B6'],
+      : ['0x31De05f28568e3d3D612BFA6A78B356676367470'],
+  [ChainId.ROPSTEN]: ['0x0FEEa33C4dE6f37A0Fc550028FddA2401B2Ee5Ce', '0xfEf235b06AFe69589e6C7622F4C071BcCed5bb13'],
   [ChainId.RINKEBY]: [''],
   [ChainId.GÖRLI]: [''],
   [ChainId.KOVAN]: [''],
   [ChainId.MATIC]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
-      : ['0x7e90d285c567e3EAb9858aaF28cEdA94a211a3DD', '0xf0fb5bD9EB287A902Bd45b57AE4CF5F9DcEBe550'],
-  [ChainId.MUMBAI]: ['0xDF79298D220934a6bb7c6647553733d25A837c78', '0x0f7696c307a2eDb5b3Ff631Aba9D834BE6339e6B']
+      : ['0x829c27fd3013b944cbE76E92c3D6c45767c0C789', '0x3aDd3034Fcf921F20c74c6149FB44921709595B1'],
+  [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6']
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
-      : '0x27B067F10321Fb9bF0397da80b9F09856f229971',
-  [ChainId.ROPSTEN]: '0x68eFA21972109CB315c61B33A1ab8b7e9ef78242',
+      : '0xfab5186A194588F5AD5074Bd52659302906B4522',
+  [ChainId.ROPSTEN]: '0x912d70CeDbE55e9aB36431E3a86baD5351Da80B3',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
   [ChainId.MATIC]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
-      : '0x9f928e6A9465Ffd8Fdd8FB5f7d17c3F48EB23357',
-  [ChainId.MUMBAI]: '0x865CCCCEab0d73d361efC02D89D1B9D87905957b'
+      : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
+  [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391'
 }
-
-export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e'
-      : '',
-  [ChainId.ROPSTEN]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e'
-}
-
-export const FARM_HARVEST_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4'
-      : '',
-  [ChainId.ROPSTEN]: '0xf75f3d433c6628e04e01a0be1a2c6692a6011ce4b00389824cfa8b8a12f3c1c4',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0x4534f107610758c3931de9ad1e176476fcfb8c74adf920167e1d54ee84fcfe76'
-}
-
-export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178'
-      : '',
-  [ChainId.ROPSTEN]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178'
-}
-
-export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94'
-      : '',
-  [ChainId.ROPSTEN]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94'
-}
-
-export const FARM_TRANSFER_TOKEN_TOPIC: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
-      : '',
-  [ChainId.ROPSTEN]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
-}
-
-export const ETHERSCAN_API: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: 'https://api.etherscan.io',
-  [ChainId.ROPSTEN]: 'https://api-ropsten.etherscan.io',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: 'https://explorer-mainnet.maticvigil.com',
-  [ChainId.MUMBAI]: 'https://explorer-mumbai.maticvigil.com'
-}
-
-export const ETHERSCAN_API_KEY = 'ESP4NCWFSIBGYAXMRXGKS6HC29P62S6VSE'
