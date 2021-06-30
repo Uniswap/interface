@@ -178,7 +178,7 @@ export default function Vote() {
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
             <AutoRow gap="6px" justify="flex-end">
-              {loadingProposals && !availableVotes && <Loader />}
+              {loadingProposals || !availableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
                 <ButtonPrimary
                   style={{ width: 'fit-content' }}
