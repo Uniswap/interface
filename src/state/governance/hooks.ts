@@ -70,41 +70,38 @@ function useProposalCount(contract: Contract | null): number | undefined {
   return result?.[0]?.toNumber()
 }
 
+interface FormattedProposalLog {
+  description: string
+  details: { target: string; functionSig: string; callData: string }[]
+}
 /**
  * Need proposal events to get description data emitted from
  * new proposal event.
  */
-function useFormattedProposalCreatedLogs(contract: Contract | null):
-  | {
-      description: string
-      details: { target: string; functionSig: string; callData: string }[]
-    }[]
-  | undefined {
+function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedProposalLog[] | undefined {
   // create filters for ProposalCreated events
   const filter = useMemo(() => contract?.filters?.ProposalCreated(), [contract])
 
   const useLogsResult = useLogs(filter)
 
   return useMemo(() => {
-    return (
-      useLogsResult?.logs?.map((log) => {
-        const parsed = GovernanceInterface.parseLog(log).args
-        return {
-          description: parsed.description,
-          details: parsed.targets.map((target: string, i: number) => {
-            const signature = parsed.signatures[i]
-            const [name, types] = signature.substr(0, signature.length - 1).split('(')
-            const calldata = parsed.calldatas[i]
-            const decoded = defaultAbiCoder.decode(types.split(','), calldata)
-            return {
-              target,
-              functionSig: name,
-              callData: decoded.join(', '),
-            }
-          }),
-        }
-      }) ?? []
-    )
+    return useLogsResult?.logs?.map((log) => {
+      const parsed = GovernanceInterface.parseLog(log).args
+      return {
+        description: parsed.description,
+        details: parsed.targets.map((target: string, i: number) => {
+          const signature = parsed.signatures[i]
+          const [name, types] = signature.substr(0, signature.length - 1).split('(')
+          const calldata = parsed.calldatas[i]
+          const decoded = defaultAbiCoder.decode(types.split(','), calldata)
+          return {
+            target,
+            functionSig: name,
+            callData: decoded.join(', '),
+          }
+        }),
+      }
+    })
   }, [useLogsResult])
 }
 
