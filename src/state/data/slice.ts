@@ -28,7 +28,13 @@ export const graphqlRequestBaseQuery = (): BaseQueryFn<
           client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
           break
         default:
-          return { error: { name: 'Unsupported ChainId', message: '', stack: '' } }
+          return {
+            error: {
+              name: 'UnsupportedChainId',
+              message: `Subgraph queries again ChainId ${chainId} are not supported.`,
+              stack: '',
+            },
+          }
       }
 
       return { data: await client.request(document, variables), meta: {} }
