@@ -86,7 +86,7 @@ const AutonomousProposalCTA = styled.div`
 export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
 
-  const latestProposalId = useLatestProposalId(account ?? '0x0000000000000000000000000000000000000000') ?? '0'
+  const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
   const latestProposalData = useProposalData(0, latestProposalId)
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
