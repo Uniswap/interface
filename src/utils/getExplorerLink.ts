@@ -6,6 +6,7 @@ const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.RINKEBY]: 'rinkeby.',
   [SupportedChainId.GOERLI]: 'goerli.',
   [SupportedChainId.KOVAN]: 'kovan.',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
 }
 
 export enum ExplorerDataType {

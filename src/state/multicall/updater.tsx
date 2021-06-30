@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Multicall2 } from '../../abis/types'
+import { Multicall2, Multicall2Optimism } from '../../abis/types'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
  * @param minBlockNumber minimum block number of the result set
  */
 async function fetchChunk(
-  multicall2Contract: Multicall2,
+  multicall2Contract: Multicall2 | Multicall2Optimism,
   chunk: Call[],
   minBlockNumber: number
 ): Promise<{
