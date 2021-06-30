@@ -18,6 +18,7 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
+import Web3Network from 'components/Web3Network'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -135,18 +136,6 @@ const HideSmall = styled.span`
   `};
 `
 
-const NetworkCard = styled(YellowCard)`
-  border-radius: 12px;
-  padding: 8px 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin: 0;
-    margin-right: 0.5rem;
-    width: initial;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 1;
-  `};
-`
 const BridgeExternalLink = styled(ExternalLink)`
   border-radius: 12px;
   padding: 8px 12px;
@@ -260,16 +249,6 @@ const NewText = styled.div`
   color: #ff537b;
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
-  [ChainId.MATIC]: 'Polygon',
-  [ChainId.MUMBAI]: 'Mumbai'
-}
-
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -286,7 +265,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 }
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const { t } = useTranslation()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
@@ -365,8 +344,10 @@ export default function Header() {
             </HideSmall>
           )}
           <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+            {library && library.provider.isMetaMask && (
+              <div className="hidden sm:inline-block">
+                <Web3Network />
+              </div>
             )}
           </HideSmall>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
