@@ -11,7 +11,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice, useTokensPrice } from 'state/application/hooks'
 import { Fraction, JSBI, Token } from 'libs/sdk/src'
-import { AVERAGE_BLOCK_TIME_IN_SECS, KNC } from 'constants/index'
+import { AVERAGE_BLOCK_TIME_IN_SECSS, KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import InfoHelper from 'components/InfoHelper'
@@ -327,6 +327,7 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 }
 
 const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Token[] }) => {
+  const { account, chainId } = useActiveWeb3React()
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
@@ -345,10 +346,11 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
           .toNumber())
   const currentBlockNumber = useBlockNumber() || schedule[0]
   const endIn =
-    currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
+    chainId && currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
       ? BigNumber.from(schedule[1])
           .sub(currentBlockNumber)
-          .mul(AVERAGE_BLOCK_TIME_IN_SECS)
+          .mul(100 * AVERAGE_BLOCK_TIME_IN_SECSS[chainId])
+          .div(100)
           .toNumber()
       : undefined
   const fullyVestedAlready = BigNumber.from(schedule[2])
@@ -380,8 +382,6 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const unvestableAmount = BigNumber.from(schedule[2])
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
     .div(100)
-
-  const { account, chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
   const { vestAtIndex } = useVesting(rewardTokens)
   const onVest = async () => {
