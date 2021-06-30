@@ -21,7 +21,7 @@ export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
 }
 /**
- * The older V0 governance account
+ * The latest governor alpha that is currently admin of timelock
  */
 export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
