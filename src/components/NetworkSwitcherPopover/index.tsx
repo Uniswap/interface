@@ -104,7 +104,7 @@ export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopov
     if (chainId === ChainId.MAINNET) {
       closeModals()
     }
-  }, [chainId])
+  }, [chainId, closeModals])
   
   return (
     <div ref={popoverRef}>
