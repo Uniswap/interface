@@ -58,18 +58,16 @@ export function PoolPriceBar({
 
   return (
     <AutoColumn gap="md">
-      <AutoRow justify="space-around" gap="4px">
-        <AutoColumn justify="center">
-          <TYPE.black fontWeight={500} fontSize={14}>
-            {noLiquidity && price
-              ? '100'
-              : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
-            %
-          </TYPE.black>
-          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
-            Share of Pool
-          </Text>
-        </AutoColumn>
+      <AutoRow justify="space-between" gap="4px">
+        <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+          Share of Pool:
+        </Text>
+        <TYPE.black fontWeight={500} fontSize={14}>
+          {noLiquidity && price
+            ? '100'
+            : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
+          %
+        </TYPE.black>
       </AutoRow>
     </AutoColumn>
   )
