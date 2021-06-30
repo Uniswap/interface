@@ -21,7 +21,7 @@ export const Wrapper = styled.div`
 export const ScrollablePage = styled.div`
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `
 
 export const FixedPreview = styled.div`

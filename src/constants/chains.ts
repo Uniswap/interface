@@ -8,6 +8,8 @@ export enum SupportedChainId {
   ARBITRUM_RINKEBY = 421611,
 }
 
+export const L2_CHAIN_IDS = [SupportedChainId.ARBITRUM_ONE]
+
 export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } = {
   [SupportedChainId.MAINNET]: 'Mainnet',
   [SupportedChainId.RINKEBY]: 'Rinkeby',

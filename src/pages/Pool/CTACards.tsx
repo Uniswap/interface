@@ -1,16 +1,18 @@
+import { Trans } from '@lingui/macro'
+import { AutoColumn } from 'components/Column'
+import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
+import { RowBetween } from 'components/Row'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { Trans } from '@lingui/macro'
-import { ExternalLink } from '../../theme'
-import { AutoColumn } from 'components/Column'
-import Squiggle from '../../assets/images/squiggle.png'
 import Texture from '../../assets/images/sandtexture.webp'
-import { RowBetween } from 'components/Row'
+import Squiggle from '../../assets/images/squiggle.png'
+import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 8px;
+  margin-top: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: auto;
@@ -118,32 +120,35 @@ const StyledImage = styled.img`
 
 export default function CTACards() {
   return (
-    <CTASection>
-      <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
-        <ResponsiveColumn>
-          <HeaderText>
-            <Trans>Uniswap V3 is here!</Trans>
-          </HeaderText>
-          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-            <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-          </TYPE.body>
-          <RowBetween align="flex-end">
-            <HeaderText>↗</HeaderText>
-            <StyledImage src={Squiggle} />
-          </RowBetween>
-        </ResponsiveColumn>
-      </CTA1>
-      <CTA2 href={'https://info.uniswap.org/#/pools'}>
-        <ResponsiveColumn>
-          <HeaderText style={{ alignSelf: 'flex-start' }}>
-            <Trans>Top pools</Trans>
-          </HeaderText>
-          <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-            <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-          </TYPE.body>
-          <HeaderText style={{ alignSelf: 'flex-end' }}>↗</HeaderText>
-        </ResponsiveColumn>
-      </CTA2>
-    </CTASection>
+    <div>
+      <MinimalNetworkAlert />
+      <CTASection>
+        <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
+          <ResponsiveColumn>
+            <HeaderText>
+              <Trans>Uniswap V3 is here!</Trans>
+            </HeaderText>
+            <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+              <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
+            </TYPE.body>
+            <RowBetween align="flex-end">
+              <HeaderText>↗</HeaderText>
+              <StyledImage src={Squiggle} />
+            </RowBetween>
+          </ResponsiveColumn>
+        </CTA1>
+        <CTA2 href={'https://info.uniswap.org/#/pools'}>
+          <ResponsiveColumn>
+            <HeaderText style={{ alignSelf: 'flex-start' }}>
+              <Trans>Top pools</Trans>
+            </HeaderText>
+            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+              <Trans>Explore popular pools on Uniswap Analytics.</Trans>
+            </TYPE.body>
+            <HeaderText style={{ alignSelf: 'flex-end' }}>↗</HeaderText>
+          </ResponsiveColumn>
+        </CTA2>
+      </CTASection>
+    </div>
   )
 }
