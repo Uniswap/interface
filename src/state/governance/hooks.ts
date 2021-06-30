@@ -139,8 +139,6 @@ export function useAllProposalData(): ProposalData[] {
   return useMemo(() => {
     if (!formattedLogsV0 || !formattedLogsV1) return []
 
-    let results: ProposalData[] = []
-
     const proposalsCallData = proposalsV0.concat(proposalsV1)
     const proposalStatesCallData = proposalStatesV0.concat(proposalStatesV1)
     const formattedEvents = formattedLogsV0.concat(formattedLogsV1)
@@ -153,30 +151,26 @@ export function useAllProposalData(): ProposalData[] {
       return []
     }
 
-    results = results.concat(
-      proposalsCallData.map((proposal, i) => {
-        let description = formattedEvents[i]?.description
-        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
-        if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
-          description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
-        }
-        return {
-          id: proposal?.result?.id.toString(),
-          title: description?.split(/# |\n/g)[1] ?? 'Untitled',
-          description: description ?? 'No description.',
-          proposer: proposal?.result?.proposer,
-          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
-          forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
-          againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
-          startBlock,
-          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          details: formattedEvents[i]?.details,
-          governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
-        }
-      })
-    )
-
-    return results
+    return proposalsCallData.map((proposal, i) => {
+      let description = formattedEvents[i]?.description
+      const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+      if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
+        description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
+      }
+      return {
+        id: proposal?.result?.id.toString(),
+        title: description?.split(/# |\n/g)[1] ?? 'Untitled',
+        description: description ?? 'No description.',
+        proposer: proposal?.result?.proposer,
+        status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
+        forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
+        againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
+        startBlock,
+        endBlock: parseInt(proposal?.result?.endBlock?.toString()),
+        details: formattedEvents[i]?.details,
+        governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
+      }
+    })
   }, [formattedLogsV0, formattedLogsV1, proposalStatesV0, proposalStatesV1, proposalsV0, proposalsV1])
 }
 
