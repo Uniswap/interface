@@ -1,18 +1,33 @@
 import { ChartEntry } from './hooks'
 import { scaleLinear, max, min } from 'd3'
-import { Margins } from './LiquidityChartRangeInput'
 
+export interface Dimensions {
+  width: number
+  height: number
+}
+
+export interface Margins {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
 export const xAccessor = (d: ChartEntry) => d.price0
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity
 
-export const getScales = (series: ChartEntry[], width: number, height: number, margin: Margins) => {
+export const getDimensions = (dimensions: Dimensions, margin: Margins) => ({
+  width: dimensions.width - margin.left - margin.right,
+  height: dimensions.height - margin.top - margin.bottom,
+})
+
+export const getScales = (series: ChartEntry[], width: number, height: number) => {
   return {
     xScale: scaleLinear()
       .domain([min(series, xAccessor), max(series, xAccessor)] as number[])
-      .range([margin.left, width - margin.right]),
+      .range([0, width]),
     yScale: scaleLinear()
       .domain([0, max(series, yAccessor)] as number[])
-      .range([height - margin.bottom, margin.top]),
+      .range([height, 0]),
   }
 }
 
