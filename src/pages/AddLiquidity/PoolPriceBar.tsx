@@ -29,6 +29,7 @@ const OutlineCard2 = styled(OutlineCard)`
   padding: 0.75rem;
   border: 2px solid ${({ theme }) => theme.bg3};
   border-style: dashed;
+  border-radius: 8px;
 `
 
 const OutlineCard3 = styled(OutlineCard2)`
@@ -55,18 +56,6 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
-  // const realPercentToken0 = pair
-  //   ? pair.reserve0
-  //       .divide(pair.virtualReserve0)
-  //       .multiply('100')
-  //       .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
-  //   : new Fraction(JSBI.BigInt(50))
-
-  // const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
-
-  // const percentToken0 = realPercentToken0.toSignificant(5)
-  // const percentToken1 = realPercentToken1.toSignificant(5)
-
   const { chainId } = useActiveWeb3React()
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
@@ -75,25 +64,29 @@ export function PoolPriceBar({
     <AutoColumn gap="md">
       <AutoRow justify="space-around" gap="4px">
         <AutoColumn justify="center">
-          <TYPE.black>{price?.toSignificant(6) ?? '-'}</TYPE.black>
-          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {nativeB?.symbol} per {nativeA?.symbol}
+          <TYPE.black fontWeight={500} fontSize={14}>
+            {price?.toSignificant(6) ?? '-'}
+          </TYPE.black>
+          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+            {nativeB?.symbol}/{nativeA?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <TYPE.black>{price?.invert()?.toSignificant(6) ?? '-'}</TYPE.black>
-          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {nativeA?.symbol} per {nativeB?.symbol}
+          <TYPE.black fontWeight={500} fontSize={14}>
+            {price?.invert()?.toSignificant(6) ?? '-'}
+          </TYPE.black>
+          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+            {nativeA?.symbol}/{nativeB?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <TYPE.black>
+          <TYPE.black fontWeight={500} fontSize={14}>
             {noLiquidity && price
               ? '100'
               : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
             %
           </TYPE.black>
-          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
             Share of Pool
           </Text>
         </AutoColumn>
