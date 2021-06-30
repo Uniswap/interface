@@ -270,7 +270,8 @@ function V2PairMigration({
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
-      !v3Amount1Min
+      !v3Amount1Min ||
+      !chainId
     )
       return
 
@@ -331,7 +332,7 @@ function V2PairMigration({
       .multicall(data)
       .then((gasEstimate) => {
         return migrator
-          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
+          .multicall(data, { gasLimit: calculateGasMargin(chainId, gasEstimate) })
           .then((response: TransactionResponse) => {
             ReactGA.event({
               category: 'Migrate',
@@ -349,6 +350,7 @@ function V2PairMigration({
         setConfirmingMigration(false)
       })
   }, [
+    chainId,
     isNotUniswap,
     migrator,
     noLiquidity,

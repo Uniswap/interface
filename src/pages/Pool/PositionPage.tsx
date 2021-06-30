@@ -391,7 +391,7 @@ export function PositionPage({
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(estimate),
+          gasLimit: calculateGasMargin(chainId, estimate),
         }
 
         return library

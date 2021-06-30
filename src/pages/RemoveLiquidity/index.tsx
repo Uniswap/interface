@@ -240,7 +240,7 @@ export default function RemoveLiquidity({
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map((methodName) =>
         router.estimateGas[methodName](...args)
-          .then(calculateGasMargin)
+          .then((estimateGas) => calculateGasMargin(chainId, estimateGas))
           .catch((error) => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
