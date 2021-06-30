@@ -15,7 +15,7 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ONE_BIPS, ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESSES } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -28,7 +28,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -57,10 +57,7 @@ const DashedLine = styled.div`
 const RowFlat2 = (props: { children: React.ReactNode }) => {
   return (
     <div style={{ marginTop: '1rem' }}>
-      <RowFlat>
-        {props.children}
-        <DashedLine />
-      </RowFlat>
+      <RowFlat>{props.children}</RowFlat>
     </div>
   )
 }
@@ -69,12 +66,20 @@ const OutlineCard2 = styled(OutlineCard)`
   padding: 0.75rem;
   border: 2px solid ${({ theme }) => theme.bg3};
   border-style: dashed;
+  border-radius: 8px;
 `
 
 const NumericalInput2 = styled(NumericalInput)`
   width: 100%;
   height: 60px;
 `
+
+const TokenPercent = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.primaryText2};
+`
+
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
@@ -443,8 +448,8 @@ export default function AddLiquidity({
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  const percentToken0 = realPercentToken0.toSignificant(4)
+  const percentToken1 = realPercentToken1.toSignificant(4)
 
   return (
     <>
@@ -540,13 +545,16 @@ export default function AddLiquidity({
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" borderRadius={'20px'}>
-                  <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
+                <OutlineCard2 padding="0px" borderRadius={'20px'}>
+                  <Row padding="4px 0 1rem 0" style={{ justifyContent: 'space-around' }}>
+                    <TYPE.subHeader fontWeight={500} fontSize={12} color={'primaryText2'}>
+                      {noLiquidity ? 'Initial ratio' : 'Ratio'} and Pool share
                     </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
+                    <TokenPercent>
+                      {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
+                    </TokenPercent>
+                  </Row>{' '}
+                  <div>
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}
@@ -554,8 +562,8 @@ export default function AddLiquidity({
                       price={price}
                       pair={pair}
                     />
-                  </LightCard>
-                </LightCard>
+                  </div>
+                </OutlineCard2>
               </>
             )}
 
