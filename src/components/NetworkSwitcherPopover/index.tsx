@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useRef } from 'react'
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
@@ -101,6 +101,12 @@ export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopov
     closeModals()
     toggleEthereumOptionPopover()
   }
+
+  useEffect(() => {
+    if (chainId === ChainId.MAINNET) {
+      closeModals()
+    }
+  }, [chainId])
   
   return (
     <div ref={popoverRef}>
