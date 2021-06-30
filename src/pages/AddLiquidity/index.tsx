@@ -651,6 +651,26 @@ export default function AddLiquidity({
                       price={
                         price ? (invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)) : undefined
                       }
+                      priceLabel={
+                        price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
+                          <AutoRow gap="4px" justify="center">
+                            <TYPE.body color="text2" fontSize={12}>
+                              <Trans>Current Price:</Trans>
+                            </TYPE.body>
+                            <TYPE.body fontWeight={500} color="text2" fontSize={12}>
+                              <HoverInlineText
+                                maxCharacters={20}
+                                text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                              />{' '}
+                            </TYPE.body>
+                            <TYPE.body color="text2" fontSize={12}>
+                              <Trans>
+                                {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                              </Trans>
+                            </TYPE.body>
+                          </AutoRow>
+                        ) : undefined
+                      }
                       currencyA={baseCurrency ?? undefined}
                       currencyB={quoteCurrency ?? undefined}
                       feeAmount={feeAmount}
@@ -678,27 +698,6 @@ export default function AddLiquidity({
                       currencyB={quoteCurrency}
                       feeAmount={feeAmount}
                     />
-                  )}
-
-                  {price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity && (
-                    <OutlineCard style={{ padding: '12px' }}>
-                      <AutoRow gap="4px" justify="center">
-                        <TYPE.body color="text2" fontSize={12}>
-                          <Trans>Current Price:</Trans>
-                        </TYPE.body>
-                        <TYPE.body fontWeight={500} color="text2" fontSize={12}>
-                          <HoverInlineText
-                            maxCharacters={20}
-                            text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                          />{' '}
-                        </TYPE.body>
-                        <TYPE.body color="text2" fontSize={12}>
-                          <Trans>
-                            {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                          </Trans>
-                        </TYPE.body>
-                      </AutoRow>
-                    </OutlineCard>
                   )}
 
                   {outOfRange ? (

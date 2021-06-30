@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DarkBlueCard } from 'components/Card'
 import DensityChart from './DensityChart'
-import { RowBetween } from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { ChartContext } from './hooks'
@@ -15,6 +15,7 @@ const ZOOM_INCREMENT = 20
 
 export default function LiquidityDepth({
   price,
+  priceLabel,
   currencyA,
   currencyB,
   feeAmount,
@@ -25,6 +26,7 @@ export default function LiquidityDepth({
   interactive,
 }: {
   price: string | undefined
+  priceLabel: ReactNode | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount: FeeAmount | undefined
@@ -50,10 +52,11 @@ export default function LiquidityDepth({
     <ChartContext.Provider value={{ zoom, canZoomIn, canZoomOut, zoomIn, zoomOut }}>
       <DarkBlueCard>
         <AutoColumn>
-          {/* <RowBetween>
+          <RowBetween>
             <Trans>Liquidity Distribution</Trans>
             <ZoomButtons />
-          </RowBetween> */}
+          </RowBetween>
+          <Row justifyItems="center">{priceLabel}</Row>
           <DensityChart
             price={price}
             currencyA={currencyA}

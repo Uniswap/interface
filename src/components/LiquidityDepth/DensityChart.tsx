@@ -105,7 +105,7 @@ export default function DensityChart({
           ) : (
             <LiquidityChartRangeInput
               data={{ series: filteredData, current: parseFloat(price) }}
-              dimensions={{ width: 350, height: 225 }}
+              dimensions={{ width: 350, height: 200 }}
               margins={{ top: 0, right: 0, bottom: 0, left: 0 }}
               styles={{
                 area: {
