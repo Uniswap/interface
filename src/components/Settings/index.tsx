@@ -72,7 +72,7 @@ const StyledMenu = styled.button`
 
 const MenuModal = styled(Modal)`
   position: absolute;
-  top: 80px;
+  top: 95px;
   right: 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
