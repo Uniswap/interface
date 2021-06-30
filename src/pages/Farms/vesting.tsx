@@ -338,11 +338,13 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const startTimestamp = useTimestampFromBlock(BigNumber.from(schedule[0]).toNumber())
   const endTimestamp =
     useTimestampFromBlock(BigNumber.from(schedule[1]).toNumber()) ||
-    (!!startTimestamp &&
+    (chainId &&
+      !!startTimestamp &&
       startTimestamp +
         BigNumber.from(schedule[1])
           .sub(BigNumber.from(schedule[0]))
-          .mul(13)
+          .mul(100 * AVERAGE_BLOCK_TIME_IN_SECSS[chainId])
+          .div(100)
           .toNumber())
   const currentBlockNumber = useBlockNumber() || schedule[0]
   const endIn =
