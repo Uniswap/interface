@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
@@ -13,6 +13,7 @@ import Card from 'components/Card'
 import Loader from 'components/Loader'
 import usePrevious from 'hooks/usePrevious'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
+import ReactGA from 'react-ga'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -80,9 +81,22 @@ export default function FeeSelector({
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(token0, token1)
 
   const [showOptions, setShowOptions] = useState(false)
-
   const [pulsing, setPulsing] = useState(false)
+
   const previousFeeAmount = usePrevious(feeAmount)
+
+  const recommended = useRef(false)
+
+  const handleFeePoolSelectWithEvent = useCallback(
+    (fee) => {
+      ReactGA.event({
+        category: 'FeePoolSelect',
+        action: 'Manual',
+      })
+      handleFeePoolSelect(fee)
+    },
+    [handleFeePoolSelect]
+  )
 
   useEffect(() => {
     if (feeAmount || isLoading || isError) {
@@ -93,6 +107,12 @@ export default function FeeSelector({
       // cannot recommend, open options
       setShowOptions(true)
     } else {
+      recommended.current = true
+      ReactGA.event({
+        category: 'FeePoolSelect',
+        action: ' Recommended',
+      })
+
       handleFeePoolSelect(largestUsageFeeTier)
     }
   }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
@@ -148,10 +168,10 @@ export default function FeeSelector({
             <ButtonRadioChecked
               width="32%"
               active={feeAmount === FeeAmount.LOW}
-              onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
+              onClick={() => handleFeePoolSelectWithEvent(FeeAmount.LOW)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start">
+                <AutoColumn justify="flex-start" gap="4px">
                   <ResponsiveText>
                     <Trans>0.05% fee</Trans>
                   </ResponsiveText>
@@ -166,10 +186,10 @@ export default function FeeSelector({
             <ButtonRadioChecked
               width="32%"
               active={feeAmount === FeeAmount.MEDIUM}
-              onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
+              onClick={() => handleFeePoolSelectWithEvent(FeeAmount.MEDIUM)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start">
+                <AutoColumn justify="flex-start" gap="4px">
                   <ResponsiveText>
                     <Trans>0.3% fee</Trans>
                   </ResponsiveText>
@@ -184,10 +204,10 @@ export default function FeeSelector({
             <ButtonRadioChecked
               width="32%"
               active={feeAmount === FeeAmount.HIGH}
-              onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
+              onClick={() => handleFeePoolSelectWithEvent(FeeAmount.HIGH)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start">
+                <AutoColumn justify="flex-start" gap="4px">
                   <ResponsiveText>
                     <Trans>1% fee</Trans>
                   </ResponsiveText>
