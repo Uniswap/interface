@@ -1,20 +1,21 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { GOVERNANCE_ADDRESSES } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { BigNumber, ethers, utils } from 'ethers'
-import { isAddress } from 'ethers/lib/utils'
+import { BigNumber, Contract } from 'ethers'
+import { defaultAbiCoder, formatUnits, Interface, isAddress } from 'ethers/lib/utils'
 import { useGovernanceContracts, useUniContract } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
+import { useLogs } from '../logs/hooks'
 import { useMultipleContractMultipleData, useSingleCallResult } from '../multicall/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
-import { t } from '@lingui/macro'
 
 interface ProposalDetail {
   target: string
@@ -56,34 +57,27 @@ export enum ProposalState {
   Executed,
 }
 
-const GovernanceInterface = new ethers.utils.Interface(GOV_ABI)
+const GovernanceInterface = new Interface(GOV_ABI)
+
 // get count of all proposals made in the latest governor contract
 function useLatestProposalCount(): number | undefined {
   const govContracts = useGovernanceContracts()
 
-  const res = useSingleCallResult(govContracts[0], 'proposalCount')
+  const { result } = useSingleCallResult(govContracts[0], 'proposalCount')
 
-  if (res?.result?.[0]) {
-    return (res.result[0] as BigNumber).toNumber()
-  }
-
-  return undefined
+  return result?.[0]?.toNumber()
 }
 
 /**
  * Need proposal events to get description data emitted from
  * new proposal event.
  */
-function useDataFromEventLogs():
+function useFormattedProposalCreatedLogs():
   | {
       description: string
       details: { target: string; functionSig: string; callData: string }[]
     }[][]
   | undefined {
-  const { library, chainId } = useActiveWeb3React()
-  const [formattedEvents, setFormattedEvents] =
-    useState<{ description: string; details: { target: string; functionSig: string; callData: string }[] }[][]>()
-
   const govContracts = useGovernanceContracts()
 
   // create filters for ProposalCreated events
@@ -91,70 +85,38 @@ function useDataFromEventLogs():
     () =>
       govContracts?.filter((govContract) => !!govContract)?.length > 0
         ? govContracts
-            .filter((govContract): govContract is ethers.Contract => !!govContract)
-            .map((contract) => ({
-              ...contract.filters.ProposalCreated(),
-              fromBlock: 10861678, // TODO could optimize this on a per-contract basis, this is the safe value
-              toBlock: 'latest',
-            }))
+            .filter((govContract): govContract is Contract => !!govContract)
+            .map((contract) => contract.filters.ProposalCreated())
         : undefined,
     [govContracts]
   )
 
-  // clear logs on chainId change
-  useEffect(() => {
-    return () => {
-      setFormattedEvents(undefined)
-    }
-  }, [chainId])
+  const logs0 = useLogs(filters?.[0])
+  const logs1 = useLogs(filters?.[1])
 
-  useEffect(() => {
-    if (!filters || !library) return
-    let stale = false
-
-    if (!formattedEvents) {
-      Promise.all(filters.map((filter) => library.getLogs(filter)))
-        .then((governanceContractsProposalEvents) => {
-          if (stale) return
-
-          const formattedEventData = governanceContractsProposalEvents.map((proposalEvents) => {
-            return proposalEvents.map((event) => {
-              const eventParsed = GovernanceInterface.parseLog(event).args
+  return useMemo(() => {
+    return [logs0.logs, logs1.logs].map((proposalLogs) => {
+      return (
+        proposalLogs?.map((log) => {
+          const parsed = GovernanceInterface.parseLog(log).args
+          return {
+            description: parsed.description,
+            details: parsed.targets.map((target: string, i: number) => {
+              const signature = parsed.signatures[i]
+              const [name, types] = signature.substr(0, signature.length - 1).split('(')
+              const calldata = parsed.calldatas[i]
+              const decoded = defaultAbiCoder.decode(types.split(','), calldata)
               return {
-                description: eventParsed.description,
-                details: eventParsed.targets.map((target: string, i: number) => {
-                  const signature = eventParsed.signatures[i]
-                  const [name, types] = signature.substr(0, signature.length - 1).split('(')
-                  const calldata = eventParsed.calldatas[i]
-                  const decoded = utils.defaultAbiCoder.decode(types.split(','), calldata)
-                  return {
-                    target,
-                    functionSig: name,
-                    callData: decoded.join(', '),
-                  }
-                }),
+                target,
+                functionSig: name,
+                callData: decoded.join(', '),
               }
-            })
-          })
-
-          setFormattedEvents(formattedEventData)
-        })
-        .catch((error) => {
-          if (stale) return
-
-          console.error('Failed to fetch proposals', error)
-          setFormattedEvents(undefined)
-        })
-
-      return () => {
-        stale = true
-      }
-    }
-
-    return
-  }, [filters, library, formattedEvents, chainId])
-
-  return formattedEvents
+            }),
+          }
+        }) ?? []
+      )
+    })
+  }, [logs0.logs, logs1.logs])
 }
 
 // get data for all past and active proposals
@@ -192,10 +154,10 @@ export function useAllProposalData(): ProposalData[] {
   )
 
   // get metadata from past events
-  const allFormattedEvents = useDataFromEventLogs()
+  const formattedLogs = useFormattedProposalCreatedLogs()
 
   // early return until events are fetched
-  if (!allFormattedEvents) return []
+  if (!formattedLogs) return []
 
   const results: ProposalData[][] = []
 
@@ -206,7 +168,7 @@ export function useAllProposalData(): ProposalData[] {
   ) {
     const proposalsCallData = allProposalsCallData[governanceContractIndex]
     const proposalStatesCallData = allProposalStatesCallData[governanceContractIndex]
-    const formattedEvents = allFormattedEvents[governanceContractIndex]
+    const formattedEvents = formattedLogs[governanceContractIndex]
 
     if (
       !proposalsCallData?.every((p) => Boolean(p.result)) ||
@@ -219,7 +181,7 @@ export function useAllProposalData(): ProposalData[] {
 
     results.push(
       proposalsCallData.map((proposal, i) => {
-        let description = formattedEvents[i].description
+        let description = formattedEvents[i]?.description
         const startBlock = parseInt(proposal?.result?.startBlock?.toString())
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
           description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
@@ -230,11 +192,11 @@ export function useAllProposalData(): ProposalData[] {
           description: description ?? 'No description.',
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
-          forCount: parseFloat(ethers.utils.formatUnits(proposal?.result?.forVotes.toString(), 18)),
-          againstCount: parseFloat(ethers.utils.formatUnits(proposal?.result?.againstVotes.toString(), 18)),
+          forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
+          againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          details: formattedEvents[i].details,
+          details: formattedEvents[i]?.details,
           governorIndex: governanceContractIndex,
         }
       })
@@ -344,7 +306,7 @@ export function useCreateProposalCallback(): (
   const latestGovernanceContract = govContracts ? govContracts[0] : null
   const addTransaction = useTransactionAdder()
 
-  const createProposalCallback = useCallback(
+  return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
       if (!account || !latestGovernanceContract || !createProposalData) return undefined
 
@@ -369,8 +331,6 @@ export function useCreateProposalCallback(): (
     },
     [account, addTransaction, latestGovernanceContract]
   )
-
-  return createProposalCallback
 }
 
 export function useLatestProposalId(address: string): string | undefined {
