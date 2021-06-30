@@ -266,7 +266,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
-  [ChainId.MATIC]: 'Matic',
+  [ChainId.MATIC]: 'Polygon',
   [ChainId.MUMBAI]: 'Mumbai'
 }
 
