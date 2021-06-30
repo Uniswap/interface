@@ -75,11 +75,22 @@ const Farms = () => {
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
 
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
+  const isFarmStarted = farm && blockNumber && farm.startBlock < blockNumber
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
-  const remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
-  const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
-  const formattedEstimatedRemainingTime =
-    estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+
+  let remainingBlocks: number | false | undefined
+  let estimatedRemainingSeconds: number | false | undefined
+  let formattedEstimatedRemainingTime: string | false | 0 | undefined
+
+  if (!isFarmStarted) {
+    remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
+    estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+    formattedEstimatedRemainingTime = estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+  } else {
+    remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
+    estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+    formattedEstimatedRemainingTime = estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+  }
 
   const stakedOnlyFarms = farms.filter(
     farm => farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
@@ -224,7 +235,7 @@ const Farms = () => {
             </HeadingContainer>
 
             <RemainingTimeContainer>
-              <EndInTitle>END IN:</EndInTitle>
+              <EndInTitle>{!isFarmStarted ? 'START IN' : 'END IN'}:</EndInTitle>
               <div>
                 {!blockNumber ? (
                   <Loader />
