@@ -38,6 +38,7 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_ONE]: EthereumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: EthereumLogo,
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
   [ChainId.XDAI]: XDAILogo

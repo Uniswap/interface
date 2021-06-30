@@ -88,7 +88,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MAINNET]
   ],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [
     WXDAI[ChainId.XDAI],
     WETH[ChainId.XDAI],
@@ -108,7 +109,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.MAINNET]: [DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
 }
 
@@ -116,7 +118,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [WXDAI[ChainId.XDAI], DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI], STAKE]
 }
 
@@ -202,7 +205,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmahAEYtGzDKQs6WpDfFMvyWhH5kCtnnTd3zPQ4KexAdcm'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmRYaeveehcmBJA7WN4X1A5UNz6NQHJCCuWGLrLdYbQqH4'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 

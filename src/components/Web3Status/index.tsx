@@ -24,17 +24,19 @@ import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import { ChainId } from 'dxswap-sdk'
 import { useActiveWeb3React } from '../../hooks'
 
-const ChainLogo: any = {
+const ChainLogo: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
   [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
-const ChainLabel: any = {
+const ChainLabel: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_ONE]: 'Arbitrum',
+  [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
+  [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum RInkeby',
   [ChainId.XDAI]: 'xDai'
 }
 

@@ -19,7 +19,8 @@ export function useNativeCurrencyUSDPrice(): { loading: boolean; nativeCurrencyU
 
   return useMemo(() => {
     if (loading) return { loading: true, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
-    if (!data || error) return { loading: false, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
+    if (!data || error || !data.bundle)
+      return { loading: false, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
     return {
       loading: false,
       nativeCurrencyUSDPrice: new Price(
