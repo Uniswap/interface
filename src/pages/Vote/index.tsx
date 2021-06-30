@@ -11,13 +11,7 @@ import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
 import { darken } from 'polished'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import {
-  ProposalData,
-  ProposalState,
-  useAllProposalData,
-  useUserDelegatee,
-  useUserVotes,
-} from '../../state/governance/hooks'
+import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from '../../state/governance/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -266,7 +260,7 @@ export default function Vote() {
                   {maxGovernorIndex - p.governorIndex}.{p.id}
                 </ProposalNumber>
                 <ProposalTitle>{p.title}</ProposalTitle>
-                <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
+                <ProposalStatus status={p.status} />
               </Proposal>
             )
           })}

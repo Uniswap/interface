@@ -14,6 +14,7 @@ import {
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { SupportedChainId } from '../../constants/chains'
 import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
@@ -49,24 +50,22 @@ export interface CreateProposalData {
 }
 
 export enum ProposalState {
-  Undetermined = -1,
-  Pending,
-  Active,
-  Canceled,
-  Defeated,
-  Succeeded,
-  Queued,
-  Expired,
-  Executed,
+  UNDETERMINED = -1,
+  PENDING,
+  ACTIVE,
+  CANCELED,
+  DEFEATED,
+  SUCCEEDED,
+  QUEUED,
+  EXPIRED,
+  EXECUTED,
 }
 
 const GovernanceInterface = new Interface(GOV_ABI)
 
 // get count of all proposals made in the latest governor contract
-function useLatestProposalCount(): number | undefined {
-  const latestGovernanceContract = useLatestGovernanceContract()
-
-  const { result } = useSingleCallResult(latestGovernanceContract, 'proposalCount')
+function useProposalCount(contract: Contract | null): number | undefined {
+  const { result } = useSingleCallResult(contract, 'proposalCount')
 
   return result?.[0]?.toNumber()
 }
@@ -111,23 +110,32 @@ function useFormattedProposalCreatedLogs(contract: Contract | null):
 
 const V0_PROPOSAL_IDS = [[1], [2], [3], [4]]
 
+function countToIndices(count: number | undefined) {
+  return typeof count === 'number' ? new Array(count).fill(0).map((_, i) => [i + 1]) : []
+}
+
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const proposalCount = useLatestProposalCount()
-
+  const { chainId } = useActiveWeb3React()
   const gov0 = useGovernanceV0Contract()
   const gov1 = useGovernanceV1Contract()
 
-  const latestGovernorProposalIndexes = useMemo(() => {
-    return typeof proposalCount === 'number' ? new Array(proposalCount).fill(0).map((_, i) => [i + 1]) : []
-  }, [proposalCount])
+  const proposalCount0 = useProposalCount(gov0)
+  const proposalCount1 = useProposalCount(gov1)
 
-  const proposalsV0 = useSingleContractMultipleData(gov0, 'proposals', V0_PROPOSAL_IDS)
-  const proposalsV1 = useSingleContractMultipleData(gov1, 'proposals', latestGovernorProposalIndexes)
+  const gov0ProposalIndexes = useMemo(() => {
+    return chainId === SupportedChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
+  }, [chainId, proposalCount0])
+  const gov1ProposalIndexes = useMemo(() => {
+    return countToIndices(proposalCount1)
+  }, [proposalCount1])
+
+  const proposalsV0 = useSingleContractMultipleData(gov0, 'proposals', gov0ProposalIndexes)
+  const proposalsV1 = useSingleContractMultipleData(gov1, 'proposals', gov1ProposalIndexes)
 
   // get all proposal states
-  const proposalStatesV0 = useSingleContractMultipleData(gov0, 'state', V0_PROPOSAL_IDS)
-  const proposalStatesV1 = useSingleContractMultipleData(gov1, 'state', latestGovernorProposalIndexes)
+  const proposalStatesV0 = useSingleContractMultipleData(gov0, 'state', gov0ProposalIndexes)
+  const proposalStatesV1 = useSingleContractMultipleData(gov1, 'state', gov1ProposalIndexes)
 
   // get metadata from past events
   const formattedLogsV0 = useFormattedProposalCreatedLogs(gov0)
@@ -135,23 +143,22 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
   // early return until events are fetched
   return useMemo(() => {
-    if (!formattedLogsV0 || !formattedLogsV1) return { data: [], loading: Boolean(gov0 && gov1) }
     const proposalsCallData = proposalsV0.concat(proposalsV1)
     const proposalStatesCallData = proposalStatesV0.concat(proposalStatesV1)
-    const formattedEvents = formattedLogsV0.concat(formattedLogsV1)
+    const formattedLogs = (formattedLogsV0 ?? []).concat(formattedLogsV1 ?? [])
 
     if (
       proposalsCallData.some((p) => p.loading) ||
       proposalStatesCallData.some((p) => p.loading) ||
-      !formattedLogsV0 ||
-      !formattedLogsV1
+      (gov0 && !formattedLogsV0) ||
+      (gov1 && !formattedLogsV1)
     ) {
       return { data: [], loading: true }
     }
 
     return {
       data: proposalsCallData.map((proposal, i) => {
-        let description = formattedEvents[i]?.description
+        let description = formattedLogs[i]?.description
         const startBlock = parseInt(proposal?.result?.startBlock?.toString())
         if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
           description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
@@ -161,12 +168,12 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           title: description?.split(/# |\n/g)[1] ?? t`Untitled`,
           description: description ?? t`No description.`,
           proposer: proposal?.result?.proposer,
-          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
+          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
           againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-          details: formattedEvents[i]?.details,
+          details: formattedLogs[i]?.details,
           governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
         }
       }),

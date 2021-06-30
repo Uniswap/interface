@@ -261,7 +261,7 @@ ${bodyValue}
         <CreateProposalButton
           proposalThreshold={proposalThreshold}
           hasActiveOrPendingProposal={
-            latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
+            latestProposalData?.status === ProposalState.ACTIVE || latestProposalData?.status === ProposalState.PENDING
           }
           hasEnoughVote={hasEnoughVote}
           isFormInvalid={isFormInvalid}

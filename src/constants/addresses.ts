@@ -17,9 +17,9 @@ export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d56
 /**
  * The older V0 governance account
  */
-export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = {
-  [SupportedChainId.MAINNET]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
-}
+export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = constructSameAddressMap(
+  '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F'
+)
 /**
  * The latest governor alpha that is currently admin of timelock
  */
