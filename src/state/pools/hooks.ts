@@ -80,14 +80,17 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any):
     data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
   }
   if (data?.token0?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-    data.token0 = { ...data.token0, name: 'Ether (Wrapped)' }
-    // data.token0.name = 'Ether (Wrapped)'
-    data.token0.symbol = 'ETH'
+    data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
   }
   if (data?.token1?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-    data.token1 = { ...data.token1, name: 'Ether (Wrapped)' }
-    // data.token1.name = 'Ether (Wrapped)'
-    data.token1.symbol = 'ETH'
+    data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
+  }
+
+  if (data?.token0?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+    data.token0 = { ...data.token0, name: 'Matic (Wrapped)', symbol: 'MATIC' }
+  }
+  if (data?.token1?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+    data.token1 = { ...data.token1, name: 'Matic (Wrapped)', symbol: 'MATIC' }
   }
 
   return data

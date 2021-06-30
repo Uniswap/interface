@@ -30,6 +30,7 @@ import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 import { RewardToken } from 'pages/Farms/styleds'
+import { currencyIdFromAddress } from 'utils/currencyId'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -515,7 +516,13 @@ const ListItem = ({ farm }: ListItemProps) => {
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
                 <LPInfo>{shortenAddress(farm.id)}</LPInfo>
               </ExternalLink>
-              <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
+              <Link
+                to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
+                  farm.token1?.id,
+                  chainId
+                )}/${farm.id}`}
+                style={{ textDecoration: 'none' }}
+              >
                 <GetLP>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
                 </GetLP>
@@ -652,7 +659,13 @@ const ListItem = ({ farm }: ListItemProps) => {
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
                 <LPInfo>{shortenAddress(farm.id)}</LPInfo>
               </ExternalLink>
-              <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
+              <Link
+                to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
+                  farm.token1?.id,
+                  chainId
+                )}/${farm.id}`}
+                style={{ textDecoration: 'none' }}
+              >
                 <GetLP>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
                 </GetLP>
