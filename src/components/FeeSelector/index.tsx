@@ -107,6 +107,8 @@ export default function FeeSelector({
       // cannot recommend, open options
       setShowOptions(true)
     } else {
+      setShowOptions(false)
+
       recommended.current = true
       ReactGA.event({
         category: 'FeePoolSelect',
@@ -116,10 +118,6 @@ export default function FeeSelector({
       handleFeePoolSelect(largestUsageFeeTier)
     }
   }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
-
-  useEffect(() => {
-    setShowOptions(false)
-  }, [token0, token1])
 
   useEffect(() => {
     setShowOptions(isError)
