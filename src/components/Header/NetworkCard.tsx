@@ -3,18 +3,26 @@ import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
-import { transparentize } from 'polished'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
-import { ExternalLink } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
 
+const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) and (max-width: ${
+  MEDIA_WIDTHS.upToMedium + 400
+}px)`
+
 const BaseWrapper = css`
   position: relative;
+  ${StopOverflowQuery} {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
   `};
@@ -31,7 +39,7 @@ const ArbitrumWrapper = styled.div`
 `
 const BaseMenuItem = css`
   align-items: center;
-  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
+  background-color: transparent;
   border-radius: 12px;
   color: ${({ theme }) => theme.text2};
   cursor: pointer;
@@ -41,7 +49,6 @@ const BaseMenuItem = css`
   font-size: 14px;
   font-weight: 400;
   justify-content: space-between;
-  padding: 12px;
   :hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
@@ -64,6 +71,7 @@ const DisabledMenuItem = styled.div`
 `
 const FallbackWrapper = styled(YellowCard)`
   ${BaseWrapper}
+  width: auto;
   border-radius: 12px;
   padding: 8px 12px;
 `
@@ -87,7 +95,7 @@ const MenuFlyout = styled.span`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
-  padding: 8px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -97,16 +105,20 @@ const MenuFlyout = styled.span`
   z-index: 100;
   width: 237px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -14.25rem;
+    top: -10.25rem;
   `};
   > {
     padding: 12px;
   }
   > :not(:first-child) {
-    margin-top: 4px;
+    margin-top: 8px;
   }
   > :not(:last-child) {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+  }
+  ${StopOverflowQuery} {
+    left: unset;
+    right: 0rem;
   }
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
