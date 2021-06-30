@@ -63,7 +63,7 @@ const RowFlat2 = (props: { children: React.ReactNode }) => {
 }
 
 const OutlineCard2 = styled(OutlineCard)`
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   border: 2px solid ${({ theme }) => theme.bg3};
   border-style: dashed;
   border-radius: 8px;
@@ -72,12 +72,6 @@ const OutlineCard2 = styled(OutlineCard)`
 const NumericalInput2 = styled(NumericalInput)`
   width: 100%;
   height: 60px;
-`
-
-const TokenPercent = styled.div`
-  font-size: 12px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.primaryText2};
 `
 
 export default function AddLiquidity({
@@ -546,23 +540,28 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
                 <OutlineCard2 padding="0px" borderRadius={'20px'}>
-                  <Row padding="4px 0 1.5rem 0" style={{ justifyContent: 'space-around' }}>
-                    <TYPE.subHeader fontWeight={500} fontSize={12} color={'primaryText2'}>
+                  <Row padding="4px 0 1rem 0" style={{ justifyContent: 'center' }}>
+                    <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
                       {noLiquidity ? 'Initial ratio' : 'Ratio'} and Pool share
                     </TYPE.subHeader>
-                    <TokenPercent>
-                      {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
-                    </TokenPercent>
                   </Row>
-                  <div>
-                    <PoolPriceBar
-                      currencies={currencies}
-                      poolTokenPercentage={poolTokenPercentage}
-                      noLiquidity={noLiquidity}
-                      price={price}
-                      pair={pair}
-                    />
-                  </div>
+
+                  <Row padding="4px 0 0.5rem 0" style={{ justifyContent: 'space-between' }}>
+                    <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                      Inventory ratio:
+                    </TYPE.subHeader>
+                    <TYPE.black fontWeight={500} fontSize={14}>
+                      {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
+                    </TYPE.black>
+                  </Row>
+
+                  <PoolPriceBar
+                    currencies={currencies}
+                    poolTokenPercentage={poolTokenPercentage}
+                    noLiquidity={noLiquidity}
+                    price={price}
+                    pair={pair}
+                  />
                 </OutlineCard2>
               </>
             )}
