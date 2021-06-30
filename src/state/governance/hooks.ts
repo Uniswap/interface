@@ -112,7 +112,7 @@ function useFormattedProposalCreatedLogs(contract: Contract | null):
 const V0_PROPOSAL_IDS = [[1], [2], [3], [4]]
 
 // get data for all past and active proposals
-export function useAllProposalData(): ProposalData[] {
+export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const proposalCount = useLatestProposalCount()
 
   const gov0 = useGovernanceV0Contract()
@@ -135,46 +135,49 @@ export function useAllProposalData(): ProposalData[] {
 
   // early return until events are fetched
   return useMemo(() => {
-    if (!formattedLogsV0 || !formattedLogsV1) return []
-
+    if (!formattedLogsV0 || !formattedLogsV1) return { data: [], loading: Boolean(gov0 && gov1) }
     const proposalsCallData = proposalsV0.concat(proposalsV1)
     const proposalStatesCallData = proposalStatesV0.concat(proposalStatesV1)
     const formattedEvents = formattedLogsV0.concat(formattedLogsV1)
 
     if (
-      !proposalsCallData?.every((p) => Boolean(p.result)) ||
-      !proposalStatesCallData?.every((p) => Boolean(p.result)) ||
-      !formattedEvents?.every((p) => Boolean(p))
+      proposalsCallData.some((p) => p.loading) ||
+      proposalStatesCallData.some((p) => p.loading) ||
+      !formattedLogsV0 ||
+      !formattedLogsV1
     ) {
-      return []
+      return { data: [], loading: true }
     }
 
-    return proposalsCallData.map((proposal, i) => {
-      let description = formattedEvents[i]?.description
-      const startBlock = parseInt(proposal?.result?.startBlock?.toString())
-      if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
-        description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
-      }
-      return {
-        id: proposal?.result?.id.toString(),
-        title: description?.split(/# |\n/g)[1] ?? 'Untitled',
-        description: description ?? 'No description.',
-        proposer: proposal?.result?.proposer,
-        status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
-        forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
-        againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
-        startBlock,
-        endBlock: parseInt(proposal?.result?.endBlock?.toString()),
-        details: formattedEvents[i]?.details,
-        governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
-      }
-    })
-  }, [formattedLogsV0, formattedLogsV1, proposalStatesV0, proposalStatesV1, proposalsV0, proposalsV1])
+    return {
+      data: proposalsCallData.map((proposal, i) => {
+        let description = formattedEvents[i]?.description
+        const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+        if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
+          description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
+        }
+        return {
+          id: proposal?.result?.id.toString(),
+          title: description?.split(/# |\n/g)[1] ?? t`Untitled`,
+          description: description ?? t`No description.`,
+          proposer: proposal?.result?.proposer,
+          status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
+          forCount: parseFloat(formatUnits(proposal?.result?.forVotes.toString(), 18)),
+          againstCount: parseFloat(formatUnits(proposal?.result?.againstVotes.toString(), 18)),
+          startBlock,
+          endBlock: parseInt(proposal?.result?.endBlock?.toString()),
+          details: formattedEvents[i]?.details,
+          governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
+        }
+      }),
+      loading: false,
+    }
+  }, [formattedLogsV0, formattedLogsV1, gov0, gov1, proposalStatesV0, proposalStatesV1, proposalsV0, proposalsV1])
 }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
-  const allProposalData = useAllProposalData()
-  return allProposalData?.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
+  const { data } = useAllProposalData()
+  return data.filter((p) => p.governorIndex === governorIndex)?.find((p) => p.id === id)
 }
 
 // get the users delegatee if it exists

@@ -119,7 +119,7 @@ export default function Vote() {
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
-  const allProposals: ProposalData[] = useAllProposalData()
+  const { data: allProposals, loading: loadingProposals } = useAllProposalData()
 
   // user data
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
@@ -184,7 +184,7 @@ export default function Vote() {
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
             <AutoRow gap="6px" justify="flex-end">
-              {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+              {loadingProposals && !availableVotes && <Loader />}
               {showUnlockVoting ? (
                 <ButtonPrimary
                   style={{ width: 'fit-content' }}
