@@ -2,9 +2,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { BigNumber, Contract } from 'ethers'
+import { Contract } from 'ethers'
 import { defaultAbiCoder, formatUnits, Interface, isAddress } from 'ethers/lib/utils'
 import {
   useGovernanceV0Contract,
@@ -15,7 +14,6 @@ import {
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ALPHA_V1_ADDRESSES } from '../../constants/addresses'
 import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
