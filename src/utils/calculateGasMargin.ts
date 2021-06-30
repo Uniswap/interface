@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SupportedChainId } from 'constants/chains'
 
-// add 20%
+// add 20% (except on optimism)
 export function calculateGasMargin(chainId: number, value: BigNumber): BigNumber {
   return chainId === SupportedChainId.OPTIMISTIC_KOVAN
     ? value
