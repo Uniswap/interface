@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
+import optimismLogoUrl from 'assets/images/optimism-icon.png'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { transparentize } from 'polished'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -26,7 +27,7 @@ const BaseWrapper = css`
     flex-shrink: 1;
   `};
 `
-const ArbitrumWrapper = styled.div`
+const L2Wrapper = styled.div`
   ${BaseWrapper}
 `
 const BaseMenuItem = css`
@@ -145,6 +146,21 @@ const NetworkInfo = styled.button`
     background-color: ${({ theme }) => theme.bg3};
   }
 `
+
+const l2Info: Record<number, { bridge: string; docs: string; explorer: string; logoUrl: string }> = {
+  [SupportedChainId.OPTIMISM]: {
+    bridge: 'https://gateway.optimism.io/',
+    docs: 'https://optimism.io/',
+    explorer: 'https://optimistic.etherscan.io/',
+    logoUrl: optimismLogoUrl,
+  },
+  [SupportedChainId.ARBITRUM_ONE]: {
+    bridge: 'https://bridge.arbitrum.io/',
+    explorer: 'https://explorer.arbitrum.io/',
+    docs: 'https://offchainlabs.com/',
+    logoUrl: arbitrumLogoUrl,
+  },
+}
 export default function NetworkCard() {
   const { chainId, library } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>(null)
@@ -169,29 +185,32 @@ export default function NetworkCard() {
     return null
   }
 
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  const layer2ChainIds = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.OPTIMISM]
+
+  if (layer2ChainIds.includes(chainId)) {
+    const info = l2Info[chainId]
     return (
-      <ArbitrumWrapper ref={node}>
+      <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
-          <Icon src={arbitrumLogoUrl} />
-          <span>Arbitrum</span>
+          <Icon src={info.logoUrl} />
+          <span>{NETWORK_LABELS[chainId]}</span>
           <L2Tag>L2 Alpha</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
-            <MenuItem href="https://bridge.arbitrum.io/">
+            <MenuItem href={info.bridge}>
               <div>
-                <Trans>Arbitrum Token Bridge</Trans>
+                <Trans>{NETWORK_LABELS[chainId]} Token Bridge</Trans>
               </div>
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://explorer.arbitrum.io/">
+            <MenuItem href={info.explorer}>
               <div>
-                <Trans>Arbitrum Explorer</Trans>
+                <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
               </div>
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://offchainlabs.com/">
+            <MenuItem href={info.docs}>
               <div>
                 <Trans>Learn more</Trans>
               </div>
@@ -211,7 +230,7 @@ export default function NetworkCard() {
             )}
           </MenuFlyout>
         )}
-      </ArbitrumWrapper>
+      </L2Wrapper>
     )
   }
 
