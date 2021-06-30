@@ -1,6 +1,5 @@
 import { ButtonEmpty } from 'components/Button'
 import { OutlineCard } from 'components/Card'
-import { FlyoutPriceRange } from 'components/Menu'
 import { FixedHeightRow } from 'components/PositionCard'
 import QuestionHelper from 'components/QuestionHelper'
 import { useActiveWeb3React } from 'hooks'
@@ -56,29 +55,10 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
-  const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
-  const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
   return (
     <AutoColumn gap="md">
       <AutoRow justify="space-around" gap="4px">
-        <AutoColumn justify="center">
-          <TYPE.black fontWeight={500} fontSize={14}>
-            {price?.toSignificant(6) ?? '-'}
-          </TYPE.black>
-          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
-            {nativeB?.symbol}/{nativeA?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <TYPE.black fontWeight={500} fontSize={14}>
-            {price?.invert()?.toSignificant(6) ?? '-'}
-          </TYPE.black>
-          <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
-            {nativeA?.symbol}/{nativeB?.symbol}
-          </Text>
-        </AutoColumn>
         <AutoColumn justify="center">
           <TYPE.black fontWeight={500} fontSize={14}>
             {noLiquidity && price

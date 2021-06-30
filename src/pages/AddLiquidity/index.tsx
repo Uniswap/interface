@@ -546,14 +546,14 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
                 <OutlineCard2 padding="0px" borderRadius={'20px'}>
-                  <Row padding="4px 0 1rem 0" style={{ justifyContent: 'space-around' }}>
+                  <Row padding="4px 0 1.5rem 0" style={{ justifyContent: 'space-around' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={12} color={'primaryText2'}>
                       {noLiquidity ? 'Initial ratio' : 'Ratio'} and Pool share
                     </TYPE.subHeader>
                     <TokenPercent>
                       {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
                     </TokenPercent>
-                  </Row>{' '}
+                  </Row>
                   <div>
                     <PoolPriceBar
                       currencies={currencies}
