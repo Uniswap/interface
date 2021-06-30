@@ -171,12 +171,22 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
           details: formattedLogs[i]?.details,
-          governorIndex: i >= V0_PROPOSAL_IDS.length ? 1 : 0,
+          governorIndex: i >= gov0ProposalIndexes.length ? 1 : 0,
         }
       }),
       loading: false,
     }
-  }, [formattedLogsV0, formattedLogsV1, gov0, gov1, proposalStatesV0, proposalStatesV1, proposalsV0, proposalsV1])
+  }, [
+    formattedLogsV0,
+    formattedLogsV1,
+    gov0,
+    gov0ProposalIndexes.length,
+    gov1,
+    proposalStatesV0,
+    proposalStatesV1,
+    proposalsV0,
+    proposalsV1,
+  ])
 }
 
 export function useProposalData(governorIndex: number, id: string): ProposalData | undefined {
