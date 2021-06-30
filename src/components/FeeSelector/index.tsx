@@ -30,8 +30,11 @@ const pulse = (color: string) => keyframes`
 `
 
 const ResponsiveText = styled(TYPE.label)`
+  line-height: 16px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 12px;
+    line-height: 12px;
   `};
 `
 

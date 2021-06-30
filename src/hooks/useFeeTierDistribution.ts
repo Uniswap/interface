@@ -65,7 +65,6 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { isLoading, isFetching, isUninitialized, isError, data } = usePoolsQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken,
     {
-      // TODO(judo): invalidate via block number
       pollingInterval: 60000, // 1 minute
     }
   )
