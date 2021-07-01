@@ -46,13 +46,14 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  border: 1px solid ${({ theme }) => theme.bg4};
+  background: ${({ theme }) => theme.bg0};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
   max-width: 640px;
   width: 100%;
 `
+
 const ArrowWrapper = styled(StyledInternalLink)`
   display: flex;
   align-items: center;
