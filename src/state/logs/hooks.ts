@@ -1,7 +1,9 @@
 import { useBlockNumber } from '../application/hooks'
-import { EventFilter } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { addListener, removeListener } from './slice'
+import { EventFilter, filterToKey, Log } from './utils'
 
 enum LogsState {
   // The filter is invalid
@@ -10,13 +12,10 @@ enum LogsState {
   LOADING,
   // Logs are from a previous block number
   SYNCING,
+  // Tried to fetch logs but received an error
+  ERROR,
   // Logs have been fetched as of the latest block number
   SYNCED,
-}
-
-interface Log {
-  topics: Array<string>
-  data: string
 }
 
 export interface UseLogsResult {
@@ -28,68 +27,50 @@ export interface UseLogsResult {
  * Returns the logs for the given filter as of the latest block, re-fetching from the library every block.
  * @param filter The logs filter, without `blockHash`, `fromBlock` or `toBlock` defined.
  */
-export function useLogs(
-  filter: (EventFilter & { blockHash?: undefined; fromBlock?: undefined; toBlock?: undefined }) | undefined
-): UseLogsResult {
-  // TODO: starting off with just a hook before integrating into the store for a common layer of caching
-  const { library, chainId } = useActiveWeb3React()
+export function useLogs(filter: EventFilter | undefined): UseLogsResult {
+  const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
 
-  const [state, setState] = useState<{ blockNumber: number; chainId: number; logs: Log[] } | undefined>()
+  const logs = useAppSelector((state) => state.logs)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    // we do not have all the information necessary to fetch, skip
-    if (!filter || !library || typeof blockNumber !== 'number' || typeof chainId !== 'number') return
+    if (!filter || !chainId) return
 
-    // we are already synced, skip
-    if (state && state.chainId === chainId && state.blockNumber >= blockNumber) return
-
-    let stale = false
-
-    library
-      .getLogs({ ...filter, fromBlock: 0, toBlock: blockNumber })
-      .then((logs) => {
-        if (stale) return
-        setState((prev) => {
-          if (prev && prev.chainId === chainId && prev.blockNumber > blockNumber) return prev
-
-          return {
-            blockNumber,
-            chainId,
-            logs,
-          }
-        })
-      })
-      .catch((error) => {
-        if (stale) return
-
-        console.error('Failed to fetch logs', error)
-        setState(undefined)
-      })
-
+    dispatch(addListener({ chainId, filter }))
     return () => {
-      stale = true
+      dispatch(removeListener({ chainId, filter }))
     }
-  }, [library, chainId, filter, blockNumber, state])
+  }, [chainId, dispatch, filter])
+
+  const filterKey = useMemo(() => (filter ? filterToKey(filter) : undefined), [filter])
 
   return useMemo(() => {
-    if (!filter || !library || typeof chainId !== 'number' || typeof blockNumber !== 'number') {
+    if (!chainId || !filterKey || !blockNumber)
       return {
-        state: LogsState.INVALID,
         logs: undefined,
+        state: LogsState.INVALID,
       }
-    }
 
-    if (!state || state.chainId !== chainId) {
+    const state = logs[chainId]?.[filterKey]
+    const result = state?.results
+    if (!result) {
       return {
         state: LogsState.LOADING,
         logs: undefined,
       }
     }
 
-    return {
-      state: state.blockNumber >= blockNumber ? LogsState.SYNCED : LogsState.SYNCING,
-      logs: state.logs,
+    if (result.error) {
+      return {
+        state: LogsState.ERROR,
+        logs: undefined,
+      }
     }
-  }, [blockNumber, chainId, filter, library, state])
+
+    return {
+      state: result.blockNumber >= blockNumber ? LogsState.SYNCED : LogsState.SYNCING,
+      logs: result.logs,
+    }
+  }, [blockNumber, chainId, filterKey, logs])
 }
