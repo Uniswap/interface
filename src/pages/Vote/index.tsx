@@ -116,7 +116,7 @@ export default function Vote() {
   const { data: allProposals, loading: loadingProposals } = useAllProposalData()
 
   // user data
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     chainId ? UNI[chainId] : undefined
@@ -176,7 +176,7 @@ export default function Vote() {
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
             <AutoRow gap="6px" justify="flex-end">
-              {loadingProposals || !availableVotes ? <Loader /> : null}
+              {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
                 <ButtonPrimary
                   style={{ width: 'fit-content' }}
