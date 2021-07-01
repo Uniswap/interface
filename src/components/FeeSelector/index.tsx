@@ -164,7 +164,7 @@ export default function FeeSelector({
               <Loader size="20px" />
             ) : (
               <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
-                {showOptions ? <Trans>Hide</Trans> : <Trans>Explore</Trans>}
+                {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
               </ButtonGray>
             )}
           </RowBetween>
