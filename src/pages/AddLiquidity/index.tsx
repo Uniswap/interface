@@ -63,8 +63,8 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
-import LiquidityDepth from 'components/LiquidityDepth'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -647,7 +647,7 @@ export default function AddLiquidity({
                   </TYPE.main>
 
                   {!noLiquidity && (
-                    <LiquidityDepth
+                    <LiquidityChartRangeInput
                       price={
                         price ? (invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)) : undefined
                       }

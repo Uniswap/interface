@@ -1,18 +1,20 @@
-import React, { useCallback, useContext } from 'react'
-import useTheme from 'hooks/useTheme'
-import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { useColor } from 'hooks/useColor'
-import Loader from 'components/Loader'
-import styled from 'styled-components'
-import { Box } from 'rebass'
+import React, { ReactNode, useCallback } from 'react'
 import { Trans } from '@lingui/macro'
-import { XCircle } from 'react-feather'
-import { TYPE } from '../../theme'
-import { ColumnCenter } from 'components/Column'
-import { useDensityChartData, ChartContext } from './hooks'
-import { Chart } from './Chart'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { DarkBlueCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import Loader from 'components/Loader'
+import { useColor } from 'hooks/useColor'
+import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
+import { XCircle } from 'react-feather'
 import { batch } from 'react-redux'
+import { Box } from 'rebass'
+import styled from 'styled-components'
+import { TYPE } from '../../theme'
+import { Chart } from './Chart'
+import { useDensityChartData } from './hooks'
+import Row, { RowBetween } from 'components/Row'
 
 const Wrapper = styled(Box)`
   position: relative;
@@ -25,6 +27,7 @@ const Wrapper = styled(Box)`
 
 export default function LiquidityChartRangeInput({
   price,
+  priceLabel,
   currencyA,
   currencyB,
   feeAmount,
@@ -35,6 +38,7 @@ export default function LiquidityChartRangeInput({
   interactive,
 }: {
   price: string | undefined
+  priceLabel: ReactNode | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: number
@@ -44,8 +48,6 @@ export default function LiquidityChartRangeInput({
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
 }) {
-  const { zoom } = useContext(ChartContext)
-
   const theme = useTheme()
 
   const tokenAColor = useColor(currencyA?.wrapped)
@@ -87,43 +89,57 @@ export default function LiquidityChartRangeInput({
   interactive = interactive && Boolean(formattedData?.length)
 
   return (
-    <Wrapper>
-      {formattedData === [] ? (
-        <ColumnCenter>
-          <XCircle stroke={theme.text4} />
-          <TYPE.darkGray padding={10}>
-            <Trans>No data</Trans>
-          </TYPE.darkGray>
-        </ColumnCenter>
-      ) : (
-        <>
-          {!formattedData || !price ? (
-            <div>Loading</div>
+    <DarkBlueCard>
+      <AutoColumn>
+        <RowBetween>
+          <TYPE.label>
+            <Trans>Liquidity Distribution</Trans>
+          </TYPE.label>
+        </RowBetween>
+
+        <Row justifyItems="center">{priceLabel}</Row>
+
+        <Wrapper>
+          {formattedData === [] ? (
+            <ColumnCenter>
+              <XCircle stroke={theme.text4} />
+              <TYPE.darkGray padding={10}>
+                <Trans>No data</Trans>
+              </TYPE.darkGray>
+            </ColumnCenter>
           ) : (
-            <Chart
-              data={{ series: formattedData, current: parseFloat(price) }}
-              dimensions={{ width: 350, height: 250 }}
-              margins={{ top: 20, right: 20, bottom: 20, left: 20 }}
-              styles={{
-                brush: {
-                  handle: {
-                    west: saturate(0.1, tokenAColor) ?? theme.red1,
-                    east: saturate(0.1, tokenBColor) ?? theme.blue1,
-                  },
-                },
-              }}
-              interactive={interactive}
-              brushDomain={
-                leftPrice && rightPrice
-                  ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                  : undefined
-              }
-              brushLabels={(x: number) => (price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined)}
-              onBrushDomainChange={onBrushDomainChangeEnded}
-            />
+            <>
+              {!formattedData || !price ? (
+                <div>Loading</div>
+              ) : (
+                <Chart
+                  data={{ series: formattedData, current: parseFloat(price) }}
+                  dimensions={{ width: 350, height: 250 }}
+                  margins={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  styles={{
+                    brush: {
+                      handle: {
+                        west: saturate(0.1, tokenAColor) ?? theme.red1,
+                        east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                      },
+                    },
+                  }}
+                  interactive={interactive}
+                  brushDomain={
+                    leftPrice && rightPrice
+                      ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                      : undefined
+                  }
+                  brushLabels={(x: number) =>
+                    price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined
+                  }
+                  onBrushDomainChange={onBrushDomainChangeEnded}
+                />
+              )}
+            </>
           )}
-        </>
-      )}
-    </Wrapper>
+        </Wrapper>
+      </AutoColumn>
+    </DarkBlueCard>
   )
 }
