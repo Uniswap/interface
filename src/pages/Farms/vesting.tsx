@@ -423,7 +423,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
-        Vesting stared: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}
+        Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}
       </TYPE.body>
 
       {above1400 ? (
