@@ -41,6 +41,13 @@ const ChevronUp2 = styled(ChevronUp)`
 const ChevronDown2 = styled(ChevronDown)`
   color: ${({ theme }) => theme.text1};
 `
+
+export const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.border};
+`
+
 export function PoolPriceBar({
   currencies,
   noLiquidity,
@@ -55,9 +62,35 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
+  const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
+  const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
   return (
     <AutoColumn gap="md">
+      {noLiquidity && (
+        <>
+          <AutoRow justify="space-between" gap="4px">
+            <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+              {nativeB?.symbol} per {nativeA?.symbol}
+            </Text>
+            <TYPE.black fontWeight={500} fontSize={14}>
+              {price?.toSignificant(6) ?? '-'}
+            </TYPE.black>
+          </AutoRow>
+
+          <AutoRow justify="space-between" gap="4px">
+            <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+              {nativeA?.symbol} per {nativeB?.symbol}
+            </Text>
+            <TYPE.black fontWeight={500} fontSize={14}>
+              {price?.invert()?.toSignificant(6) ?? '-'}
+            </TYPE.black>
+          </AutoRow>
+
+          <Separator />
+        </>
+      )}
+
       <AutoRow justify="space-between" gap="4px">
         <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
           Share of Pool:
