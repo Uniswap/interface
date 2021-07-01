@@ -1,4 +1,3 @@
-import { retry } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { EventFilter } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
