@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시�
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "획득한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "편집하다"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "퍼센트를 입력하세요."
@@ -757,10 +761,6 @@ msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋�
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "만료 됨"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "탐색"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."

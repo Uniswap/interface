@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "Sie sehen eine Ihrer v2-Positionen nicht? <0>Importiere sie.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Erhaltene UNI-Token stellen Stimmbeteiligungen an der Uniswap-Governance dar."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Bearbeiten"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Geben Sie einen Prozentwert ein"
@@ -757,10 +761,6 @@ msgstr "Der Expertenmodus schaltet die Transaktions-Bestätigung aus und ermögl
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Abgelaufen"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Erkunden"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."

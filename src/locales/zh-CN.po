@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "看不到您的一些 v2 流动资金吗？<0>将它手动导入。</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "已赚取的 UNI 代币代表了 Uniswap 治理中的投票份额。"
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "编辑"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "输入百分比"
@@ -757,10 +761,6 @@ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "已到期"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "探索"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."

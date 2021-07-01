@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "Etkö näe yhtä v2-positiostasi? <0>Tuo se.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Ansaitut UNI-rahakkeet edustavat äänioikeusosakkeita Uniswapin hallinnossa."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Muokata"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Syötä prosenttiosuus"
@@ -757,10 +761,6 @@ msgstr "Asiantuntijatila ottaa vahvistuskehotuksen pois käytöstä ja mahdollis
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Vanhentunut"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Tutkia"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
