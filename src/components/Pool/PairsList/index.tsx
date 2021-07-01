@@ -51,7 +51,7 @@ export default function PairsList({ aggregatedPairs, loading, userLpPairs, showM
   useEffect(() => {
     // reset page when connected chain or selected filter changes
     setPage(1)
-  }, [chainId, filter])
+  }, [chainId, filter, aggregatedPairs])
 
   return (
     <Flex flexDirection="column">
