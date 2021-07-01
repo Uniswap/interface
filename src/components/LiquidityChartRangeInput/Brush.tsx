@@ -87,7 +87,7 @@ export const Brush = ({
 
     brush(select(brushRef.current))
 
-    if (brushExtent !== previousBrushExtent) {
+    if (previousBrushExtent && brushExtent[0] !== previousBrushExtent[0] && brushExtent[1] !== previousBrushExtent[1]) {
       brush.move(
         // @ts-ignore
         select(brushRef.current),
