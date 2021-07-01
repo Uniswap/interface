@@ -20,7 +20,7 @@ const HandleAccent = styled.path`
 
 const TooltipBackground = styled.rect`
   fill: ${({ theme }) => theme.bg2}
-  opacity: 0.7
+  opacity: 1;
 `
 
 const Tooltip = styled.text`
@@ -33,18 +33,20 @@ const Tooltip = styled.text`
 export const Brush = ({
   id = 'liquidity-chart-range-input-brush',
   xScale,
+  brushLabelValue,
   brushExtent,
+  setBrushExtent,
   innerWidth,
   innerHeight,
-  setBrushExtent,
   colors,
 }: {
   id?: string
   xScale: ScaleLinear<number, number>
+  brushLabelValue: (x: number) => string
   brushExtent: [number, number]
+  setBrushExtent: (extent: [number, number]) => void
   innerWidth: number
   innerHeight: number
-  setBrushExtent: (extent: [number, number]) => void
   colors: {
     west: string
     east: string
@@ -60,16 +62,19 @@ export const Brush = ({
   const brushed = useCallback(
     ({ type, selection }: { type: 'brush' | 'end'; selection: [number, number] }) => {
       if (!selection) {
+        setLocalBrushExtent(null)
         return
       }
 
       const scaled = selection.map(xScale.invert) as [number, number]
 
-      if (type === 'end' && (scaled[0] !== brushExtent[0] || scaled[1] !== brushExtent[1])) {
-        setBrushExtent(scaled)
-      } else {
-        setLocalBrushExtent(scaled)
+      if (type === 'end') {
+        if (scaled[0] !== brushExtent[0] || scaled[1] !== brushExtent[1]) {
+          setBrushExtent(scaled)
+        }
       }
+
+      setLocalBrushExtent(scaled)
     },
     [xScale.invert, brushExtent, setBrushExtent]
   )
@@ -100,7 +105,7 @@ export const Brush = ({
       .selectAll('.selection')
       .attr('stroke', 'none')
       .attr('fill', `url(#${id}-gradient-selection)`)
-  }, [brushExtent, brushed, id, innerHeight, innerWidth, previousBrushExtent, xScale])
+  }, [brushExtent, brushed, id, innerHeight, innerWidth, previousBrushExtent, xScale, localBrushExtent])
 
   return useMemo(
     () => (
@@ -110,7 +115,8 @@ export const Brush = ({
           <stop stopColor={colors.east} offset="1" />
         </linearGradient>
 
-        <g ref={brushRef}>
+        <g ref={brushRef} />
+        <g>
           {localBrushExtent ? (
             <>
               {/* west handle */}
@@ -118,9 +124,9 @@ export const Brush = ({
                 <Handle color={colors.west} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
 
-                <TooltipBackground y={innerHeight - 20 / 2 - 1} x={0} height={20} width={'20px'} rx="8" />
+                <TooltipBackground y={innerHeight - 30 / 2} x="-30" height="30" width="60" rx="8" />
                 <Tooltip transform={`scale(-1, 1)`} y={innerHeight}>
-                  West
+                  {brushLabelValue(localBrushExtent[0])}
                 </Tooltip>
               </g>
 
@@ -129,14 +135,14 @@ export const Brush = ({
                 <Handle color={colors.east} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
 
-                <TooltipBackground y={innerHeight - 20 / 2 - 1} x={0} height={20} width={'20px'} rx="8" />
-                <Tooltip y={innerHeight}>East</Tooltip>
+                <TooltipBackground y={innerHeight - 30 / 2} x="-30" height="30" width="60" rx="8" />
+                <Tooltip y={innerHeight}>{brushLabelValue(localBrushExtent[1])}</Tooltip>
               </g>
             </>
           ) : null}
         </g>
       </>
     ),
-    [colors.east, colors.west, id, innerHeight, localBrushExtent, xScale]
+    [brushLabelValue, colors.east, colors.west, id, innerHeight, localBrushExtent, xScale]
   )
 }

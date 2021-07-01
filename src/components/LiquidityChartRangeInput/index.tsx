@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { select, brushX, zoom, scaleLinear, max, min } from 'd3'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { select, brushX, zoom, scaleLinear, max, min, format } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import { brushHandlePath, getTextWidth, brushHandleAccentPath } from '../LiquidityDepth/utils'
 import isEqual from 'lodash.isequal'
@@ -103,6 +103,13 @@ export function LiquidityChartRangeInput({
     yScale,
   ])
 
+  const brushLabelValue = useCallback(
+    (x: number) => {
+      return current ? format('0.02%')((x - current) / current) : ''
+    },
+    [current]
+  )
+
   return (
     <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
       <defs>
@@ -124,6 +131,7 @@ export function LiquidityChartRangeInput({
 
         <Brush
           xScale={xScale}
+          brushLabelValue={brushLabelValue}
           brushExtent={brushDomain ?? (xScale.range() as [number, number])}
           innerWidth={innerWidth}
           innerHeight={innerHeight}
