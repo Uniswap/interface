@@ -46,13 +46,14 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  border: 1px solid ${({ theme }) => theme.bg4};
+  background: ${({ theme }) => theme.bg0};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
   max-width: 640px;
   width: 100%;
 `
+
 const ArrowWrapper = styled(StyledInternalLink)`
   display: flex;
   align-items: center;
@@ -174,7 +175,7 @@ export default function VotePage({
     availableVotes &&
     JSBI.greaterThan(availableVotes.quotient, JSBI.BigInt(0)) &&
     proposalData &&
-    proposalData.status === ProposalState.Active
+    proposalData.status === ProposalState.ACTIVE
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
@@ -211,9 +212,7 @@ export default function VotePage({
                 <ArrowLeft size={20} /> All Proposals
               </Trans>
             </ArrowWrapper>
-            {proposalData && (
-              <ProposalStatus status={proposalData.status}>{ProposalState[proposalData.status]}</ProposalStatus>
-            )}
+            {proposalData && <ProposalStatus status={proposalData.status} />}
           </RowBetween>
           <AutoColumn gap="10px" style={{ width: '100%' }}>
             <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
@@ -228,7 +227,7 @@ export default function VotePage({
                 )}
               </TYPE.main>
             </RowBetween>
-            {proposalData && proposalData.status === ProposalState.Active && !showVotingButtons && (
+            {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
               <GreyCard>
                 <TYPE.black>
                   <Trans>

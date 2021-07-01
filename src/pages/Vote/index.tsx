@@ -11,13 +11,7 @@ import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
 import { darken } from 'polished'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import {
-  ProposalData,
-  ProposalState,
-  useAllProposalData,
-  useUserDelegatee,
-  useUserVotes,
-} from '../../state/governance/hooks'
+import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from '../../state/governance/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -119,10 +113,10 @@ export default function Vote() {
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
-  const allProposals: ProposalData[] = useAllProposalData()
+  const { data: allProposals, loading: loadingProposals } = useAllProposalData()
 
   // user data
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     chainId ? UNI[chainId] : undefined
@@ -133,8 +127,6 @@ export default function Vote() {
   const showUnlockVoting = Boolean(
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
-
-  const maxGovernorIndex = allProposals.reduce((max, p) => Math.max(p.governorIndex, max), 0)
 
   return (
     <>
@@ -184,7 +176,7 @@ export default function Vote() {
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
             <AutoRow gap="6px" justify="flex-end">
-              {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+              {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
               {showUnlockVoting ? (
                 <ButtonPrimary
                   style={{ width: 'fit-content' }}
@@ -263,10 +255,10 @@ export default function Vote() {
             return (
               <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
                 <ProposalNumber>
-                  {maxGovernorIndex - p.governorIndex}.{p.id}
+                  {p.governorIndex}.{p.id}
                 </ProposalNumber>
                 <ProposalTitle>{p.title}</ProposalTitle>
-                <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
+                <ProposalStatus status={p.status} />
               </Proposal>
             )
           })}

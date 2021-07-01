@@ -4,9 +4,9 @@ import {
   errorFetchingMulticallResults,
   fetchingMulticallResults,
   removeMulticallListeners,
-  toCallKey,
   updateMulticallResults,
 } from './actions'
+import { toCallKey } from './utils'
 
 export interface MulticallState {
   callListeners?: {
