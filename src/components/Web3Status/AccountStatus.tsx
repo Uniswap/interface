@@ -49,6 +49,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   font-size: 11px;
   line-height: 13px;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
 `;
 
