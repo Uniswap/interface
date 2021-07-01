@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-29 08:04\n"
+"PO-Revision-Date: 2021-07-01 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1615,7 +1615,7 @@ msgstr "Uniswap移行コントラクト↗"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "<0>アービトラムでのユニスワップ</0>"
+msgstr "<0>アービトラム</0>でのユニスワップ"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
