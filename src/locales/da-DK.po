@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Konto"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktiv"
 
@@ -340,6 +341,10 @@ msgstr "Ved at tilføje denne liste har du implicit tillid til, at dataene er ko
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Ved at forbinde en tegnebog accepterer du Uniswap Labs’ <0>Servicevilkår </0> og anerkender, at du har læst og forstået <1>Uniswap protokolansvarsfraskrivelsen</1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Annulleret"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Nuværende pris"
 msgid "Current {0} Price:"
 msgstr "Nuværende {0}-pris:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Besejret"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Uddelegér stemmer"
@@ -592,6 +601,10 @@ msgstr "Uddelegér stemmer"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegeret til:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Delegerede stemmer"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Der opstod en fejl. Prøv at opdatere siden."
 msgid "Error importing list"
 msgstr "Fejl ved import af liste"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Henrettet"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Ekspanderede resultater fra inaktive token-lister"
@@ -736,6 +753,10 @@ msgstr "Ekspanderede resultater fra inaktive token-lister"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Eksperttilstand slukker for bekræft transaktion-prompten og tillader høj slippage-handler, der ofte resulterer i dårlige satser og tabte midler."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Udløbet"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Ingen V2-likviditet fundet."
 msgid "No active pools"
 msgstr "Ingen aktive puljer"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Ingen beskrivelse."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Ingen likviditet fundet."
@@ -1113,6 +1138,10 @@ msgstr "Ejer"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Deltagende puljer"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Verserende"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Foreslået handling"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Forslagsstiller"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "I kø"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Indsender forslag"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Indsend Stemme"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Lykkedes"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Gebyrer, der ikke er gjort krav på"
 msgid "Unclaimed:"
 msgstr "Der ikke er gjort krav på:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Ubestemt"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap Governance"
@@ -1659,6 +1700,10 @@ msgstr "Ikke-understøttet aktiv"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Ikke-understøttede aktiver"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Unavngivet"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

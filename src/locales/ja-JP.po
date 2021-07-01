@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "アカウント"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "アクティブ"
 
@@ -340,6 +341,10 @@ msgstr "このリストを追加することで、データが正しいことを
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サービス利用規約</0>に同意し、Uniswapプロトコルの<1>免責事項</1>を読み、理解したことに同意します。"
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "キャンセル"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "現在価格"
 msgid "Current {0} Price:"
 msgstr "{0} の現在価格:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "敗北"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "投票を委任する"
@@ -592,6 +601,10 @@ msgstr "投票を委任する"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "委任先:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "委任された投票"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "接続中にエラーが発生しました。ページを更新してく
 msgid "Error importing list"
 msgstr "リストのインポートエラー"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "実行された"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "あなたが利用していないトークンリストからの検索結果"
@@ -736,6 +753,10 @@ msgstr "あなたが利用していないトークンリストからの検索結
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "エキスパートモードは取引確認画面をスキップし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "期限切れ"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "V2の流動性が見つかりません。"
 msgid "No active pools"
 msgstr "アクティブなプールがありません"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "説明はありません。"
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "流動性が見つかりません。"
@@ -1113,6 +1138,10 @@ msgstr "所有者"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "参加中のプール"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "保留中"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "提案するアクション"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "提案者"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "キューに入れられました"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "提案を提出中"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "投票を送信中"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "成功"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "未請求の報酬"
 msgid "Unclaimed:"
 msgstr "未請求："
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "未定"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswapのガバナンス"
@@ -1659,6 +1700,10 @@ msgstr "サポートされていないトークン"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "サポートされていないアセット"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "無題"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
