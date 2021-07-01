@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-28 16:04\n"
+"PO-Revision-Date: 2021-07-01 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(最大值)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
-msgstr "（在浏览器查看）"
+msgstr "(在以太坊资源浏览器上查看)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -328,7 +328,7 @@ msgstr "已屏蔽地址"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "通过注入流动资金，您将按您在流动池中所占份额赚取对应交易量的0.3%手续费。手续费将实时累计，添加到流动池中，您可以通过赎回您的流动资金将手续费也赎回。"
+msgstr "通过添加流动性，您将按您在流动池中所占比例赚取对应交易量的0.3%手续费。手续费将实时累加到流动池中，在您取回流动性时也将同时取回您赚取的手续费。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -463,7 +463,7 @@ msgstr "收取手续费的操作将为您提取您当前已累积的手续费。
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "共同基础"
+msgstr "常用代币"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -615,7 +615,7 @@ msgstr "充入流动资金"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "Deposit to Arbitrum"
-msgstr "存款到 Arbitrum"
+msgstr "充值到 Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -1231,7 +1231,7 @@ msgstr "最近的交易"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
-msgstr "接受者"
+msgstr "接收方"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1462,7 +1462,7 @@ msgstr "这些代币通常与其他代币配对。"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您需要先将 L1 资产桥接到 Arbitrum 网络才能使用。"
+msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您必须桥接 L1 资产才能进行兑换。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1574,7 +1574,7 @@ msgstr "UNI {0}/{1} 被摧毁"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "需要 UNI-V2 流动池代币。一旦您已注入流动资金到 {0}-{1} 池，您就可以在此页面上抵押您的流动池代币。"
+msgstr "需要 UNI-V2 LP 代币。在您注入流动性到 {0}-{1} 池后，您就可以在此页面上抵押您的流动性代币。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1615,7 +1615,7 @@ msgstr "Uniswap 迁移合约↗"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap on <0> Arbitrum</0>"
+msgstr "<0> Arbitrum</0> 网络上的 Uniswap"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1746,7 +1746,7 @@ msgstr "等待确认"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
-msgstr "钱包地址或 ENS 名称"
+msgstr "钱包地址或 ENS 名"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
