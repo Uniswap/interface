@@ -3240,13 +3240,6 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rtk-query/graphql-request-base-query@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@rtk-query/graphql-request-base-query/-/graphql-request-base-query-1.0.3.tgz#34f5cd65ac98187ade3044174228bde83d9eccb6"
-  integrity sha512-oL/cE4Nm3GXjpVpTaFD+THwY71Tpk2XjuwYDEL8xk8gkfsx3GWbKRgcBX7x8xnUNcKobHXejjxkw9n1k/RpAbA==
-  dependencies:
-    graphql-request "^3.4.0"
-
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://registry.npmjs.org/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz"
