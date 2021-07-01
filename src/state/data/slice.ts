@@ -1,8 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { ClientError, gql, GraphQLClient } from 'graphql-request'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { reduce } from 'lodash'
-import { FeeTierDistribution, PoolTVL } from './types'
 import { SupportedChainId } from 'constants/chains'
 import { AppState } from 'state'
 import { BaseQueryApi, BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
