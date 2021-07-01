@@ -19,6 +19,7 @@ import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
+import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -50,6 +51,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 function Updaters() {
   return (
     <>
+      <RadialGradientByChainUpdater />
       <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />
