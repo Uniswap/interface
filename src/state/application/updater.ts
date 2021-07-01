@@ -12,7 +12,6 @@ function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    console.log('chanid changed')
     dispatch(api.util.resetApiState())
   }, [chainId, dispatch])
 }
