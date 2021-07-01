@@ -208,6 +208,20 @@ const MobileSettingsWrapper = styled.div`
   `};
 `;
 
+const AmountDesktop = styled(Amount)`
+  display: block;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`;
+
+const AmountMobile = styled(Amount)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+  `};
+`;
+
 
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
@@ -276,9 +290,12 @@ function Header({ history }: { history: any }) {
           {account && userNativeCurrencyBalance ? (
             <>
               <Amount>1600 SWPR</Amount>
-              <Amount>
-                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
-              </Amount>
+              <AmountDesktop>
+                {userNativeCurrencyBalance?.toFixed(2)} {nativeCurrency.symbol}
+              </AmountDesktop>
+              <AmountMobile>
+                {userNativeCurrencyBalance?.toFixed(3)} {nativeCurrency.symbol}
+              </AmountMobile>
             </>
           ) : null}
         </HeaderSubRow>

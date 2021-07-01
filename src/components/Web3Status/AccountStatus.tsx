@@ -95,6 +95,21 @@ const NetworkName = styled.div`
   `};
 `;
 
+const AddressDesktop = styled.span`
+  display: block;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`;
+
+const AddressMobile = styled.span`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+  `};
+`;
+
+
 interface AccountStatusProps {
   pendingTransactions: string[];
   ENSName?: string;
@@ -115,7 +130,12 @@ export function AccountStatus({pendingTransactions, ENSName, account, networkCon
             <Text fontSize={13}>{pendingTransactions?.length} Pending</Text> <Loader />
           </RowBetween>
         ) : (
-          ENSName || shortenAddress(account)
+          ENSName || (
+            <>
+              <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
+              <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
+            </>
+          )
         )}
       </Web3StatusConnected>
       <NetworkSwitcherPopover>
