@@ -7,6 +7,7 @@ import { TrezorConnector } from '@web3-react/trezor-connector'
 import { LedgerConnector } from '@web3-react/ledger-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
+import { ChainId } from 'libs/sdk/src'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -33,8 +34,22 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 80001, 137]
 })
 
+const SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.MATIC]
+const NETWORK_URLS: {
+  [chainId in ChainId]: string
+} = {
+  [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+  [ChainId.MUMBAI]: `https://peaceful-austin:boned-fruit-crave-feast-heat-boots@nd-526-681-843.p2pify.com/`,
+  [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`
+}
+
 export const walletconnect = new WalletConnectConnector({
-  rpc: { [NETWORK_CHAIN_ID]: NETWORK_URL },
+  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  rpc: NETWORK_URLS,
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 15000
