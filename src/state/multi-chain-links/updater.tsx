@@ -32,6 +32,7 @@ export default function Updater(): null {
       connector.supportedChainIds &&
       connector.supportedChainIds.indexOf(parseInt(requiredChainId)) >= 0
 
+    if (!requiredChainId) updateSwitchingToCorrectChain(false)
     if (requiredChainId && requiredChainIdSupported && switchingToCorrectChain) {
       if (requiredChainId !== stringChainId) return
       else updateSwitchingToCorrectChain(false)
