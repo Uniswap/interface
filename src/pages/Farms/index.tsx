@@ -235,7 +235,7 @@ const Farms = () => {
             </HeadingContainer>
 
             <RemainingTimeContainer>
-              <EndInTitle>{!isFarmStarted ? 'START IN' : 'END IN'}:</EndInTitle>
+              <EndInTitle>{!isFarmStarted ? 'START IN' : 'ENDING IN'}:</EndInTitle>
               <div>
                 {!blockNumber ? (
                   <Loader />
