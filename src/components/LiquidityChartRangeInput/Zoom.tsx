@@ -31,41 +31,33 @@ export default function Zoom({
   innerWidth: number
   innerHeight: number
 }) {
-  const zoomRef = useRef<ZoomBehavior<Element, unknown>>()
+  const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
   const [zoomIn, zoomOut] = useMemo(
     () => [
       () =>
         svg &&
-        zoomRef.current &&
+        zoomBehavior.current &&
         select(svg)
           //.transition()
           // @ts-ignore
-          .call(zoomRef.current.scaleBy, 2),
+          .call(zoomBehavior.current.scaleBy, 2),
       () =>
         svg &&
-        zoomRef.current &&
+        zoomBehavior.current &&
         //.transition()
         select(svg)
           // @ts-ignore
-          .call(zoomRef.current.scaleBy, 0.5),
+          .call(zoomBehavior.current.scaleBy, 0.5),
     ],
-    [svg, zoomRef]
+    [svg, zoomBehavior]
   )
-
-  useEffect(() => {
-    console.log(xScale.domain())
-  }, [xScale])
 
   useEffect(() => {
     if (!svg) return
 
-    function zoomed({ transform }: { transform: ZoomTransform }) {
-      setZoom(transform)
-    }
-
     // zoom
-    zoomRef.current = zoom()
+    zoomBehavior.current = zoom()
       .scaleExtent([0.5, 100])
       .translateExtent([
         [0, 0],
@@ -75,15 +67,14 @@ export default function Zoom({
         [0, 0],
         [innerWidth, innerHeight],
       ])
-      //.filter(() => false)
-      .on('zoom', zoomed)
+      .on('zoom', ({ transform }: { transform: ZoomTransform }) => setZoom(transform))
 
     select(svg)
       // @ts-ignore
-      .call(zoomRef.current)
+      .call(zoomBehavior.current)
       // disables dragging/panning
       .on('mousedown.zoom', null)
-  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomRef])
+  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior])
 
   return (
     <Wrapper>

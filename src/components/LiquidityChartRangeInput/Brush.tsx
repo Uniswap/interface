@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { brushX, ScaleLinear, select } from 'd3'
+import { BrushBehavior, brushX, ScaleLinear, select, ZoomBehavior } from 'd3'
 import styled from 'styled-components'
 import { brushHandleAccentPath, brushHandlePath } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;
+  pointer-events: none;
+
   stroke-width: 3;
   stroke: ${({ color }) => color};
   fill: ${({ color }) => color};
@@ -13,6 +15,8 @@ const Handle = styled.path<{ color: string }>`
 
 const HandleAccent = styled.path`
   cursor: ew-resize;
+  pointer-events: none;
+
   stroke-width: 1.3;
   stroke: ${({ theme }) => theme.white};
   opacity: 0.6;
@@ -55,6 +59,7 @@ export const Brush = ({
   }
 }) => {
   const brushRef = useRef<SVGGElement>(null)
+  const brushBehavior = useRef<BrushBehavior<unknown> | null>(null)
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent)
@@ -85,18 +90,19 @@ export const Brush = ({
   useEffect(() => {
     if (!brushRef.current) return
 
-    const brush = brushX()
+    brushBehavior.current = brushX()
       .extent([
         [0, 0],
         [innerWidth, innerHeight],
       ])
-      .filter(() => !interactive)
+      .handleSize(30)
+      .filter(() => interactive)
       .on('brush end', brushed)
 
-    brush(select(brushRef.current))
+    brushBehavior.current(select(brushRef.current))
 
     if (previousBrushExtent && brushExtent[0] !== previousBrushExtent[0] && brushExtent[1] !== previousBrushExtent[1]) {
-      brush.move(
+      brushBehavior.current.move(
         // @ts-ignore
         select(brushRef.current),
         brushExtent.map(xScale)
@@ -109,6 +115,17 @@ export const Brush = ({
       .attr('stroke', 'none')
       .attr('fill', `url(#${id}-gradient-selection)`)
   }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale])
+
+  // respond to xScale changes only
+  useEffect(() => {
+    if (!brushRef.current || !brushBehavior.current) return
+
+    brushBehavior.current
+      // @ts-ignore
+      .move(select(brushRef.current), brushExtent.map(xScale))
+    // dependency on brushExtent would start an update loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [xScale])
 
   return useMemo(
     () => (

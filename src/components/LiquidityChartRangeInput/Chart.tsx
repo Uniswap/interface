@@ -73,7 +73,7 @@ export function Chart({
           </clipPath>
         </defs>
 
-        <g transform={`translate(${margins.left},${margins.top})`}>
+        <g transform={`translate(${margins.left},${margins.top})`} clipPath={`url(#${id}-brush-clip)`}>
           <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
           <Line value={current} xScale={xScale} innerHeight={innerHeight} />
