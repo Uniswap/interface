@@ -69,7 +69,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     }
   )
 
-  const { asToken0, asToken1, _meta } = data ?? { distributions: undefined, block: undefined }
+  const { asToken0, asToken1, _meta } = data ?? {}
 
   return useMemo(() => {
     if (!latestBlock || !_meta || !asToken0 || !asToken1) {

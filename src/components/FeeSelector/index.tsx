@@ -14,6 +14,7 @@ import Loader from 'components/Loader'
 import usePrevious from 'hooks/usePrevious'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import ReactGA from 'react-ga'
+import { Box } from 'rebass'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -148,9 +149,14 @@ export default function FeeSelector({
                   </TYPE.main>
                 </>
               ) : (
-                <TYPE.label>
-                  <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
-                </TYPE.label>
+                <>
+                  <TYPE.label>
+                    <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
+                  </TYPE.label>
+                  <Box style={{ width: 'fit-content', marginTop: '8px' }}>
+                    {distributions && feeAmount && <FeeTierPercentageBadge percentage={distributions[feeAmount]} />}
+                  </Box>
+                </>
               )}
             </AutoColumn>
 
@@ -158,7 +164,7 @@ export default function FeeSelector({
               <Loader size="20px" />
             ) : (
               <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
-                {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
+                {showOptions ? <Trans>Hide</Trans> : <Trans>Explore</Trans>}
               </ButtonGray>
             )}
           </RowBetween>
