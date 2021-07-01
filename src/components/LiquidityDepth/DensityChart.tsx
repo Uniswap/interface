@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { VictoryArea, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
@@ -12,8 +12,9 @@ import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
 import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
-import { LiquidityChartRangeInput } from './LiquidityChartRangeInput'
+import { LiquidityChartRangeInput } from '../LiquidityChartRangeInput'
 import { lighten, linearGradient, saturate } from 'polished'
+import { batch } from 'react-redux'
 
 const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
@@ -68,6 +69,20 @@ export default function DensityChart({
     feeAmount,
   })
 
+  const onBrushDomainChangeEnded = useCallback(
+    (domain) => {
+      const leftRangeValue = Number(domain[0])
+      const rightRangeValue = Number(domain[1])
+
+      batch(() => {
+        // simulate user input for auto-formatting and other validations
+        leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+        rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+      })
+    },
+    [onLeftRangeInput, onRightRangeInput]
+  )
+
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
 
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()
@@ -83,15 +98,9 @@ export default function DensityChart({
 
   interactive = interactive && Boolean(formattedData?.length)
 
-  const filteredData =
-    activeChartEntry && zoom
-      ? formattedData?.slice(Math.max(0, activeChartEntry.index - zoom), activeChartEntry.index + zoom)
-      : undefined
-
   return (
     <Wrapper>
-      {/* filteredData === undefined will show sample data */}
-      {filteredData === [] ? (
+      {formattedData === [] ? (
         <ColumnCenter>
           <XCircle stroke={theme.text4} />
           <TYPE.darkGray padding={10}>
@@ -100,11 +109,11 @@ export default function DensityChart({
         </ColumnCenter>
       ) : (
         <>
-          {!filteredData || !price ? (
+          {!formattedData || !price ? (
             <div>Loading</div>
           ) : (
             <LiquidityChartRangeInput
-              data={{ series: filteredData, current: parseFloat(price) }}
+              data={{ series: formattedData, current: parseFloat(price) }}
               dimensions={{ width: 350, height: 250 }}
               margins={{ top: 20, right: 20, bottom: 20, left: 20 }}
               styles={{
@@ -142,14 +151,7 @@ export default function DensityChart({
                   : undefined
               }
               brushLabels={(x: number) => (price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined)}
-              onBrushDomainChange={(domain) => {
-                const leftRangeValue = Number(domain[0])
-                const rightRangeValue = Number(domain[1])
-
-                // simulate user input for auto-formatting and other validations
-                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
-              }}
+              onBrushDomainChange={onBrushDomainChangeEnded}
             />
           )}
         </>
