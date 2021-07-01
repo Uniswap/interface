@@ -140,7 +140,7 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const { addChain, isSupported } = useAddChain()
+  const { addChain, isAddChainEnabled } = useAddChain()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -301,7 +301,7 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Switch Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              isSupported ? (
+              isAddChainEnabled ? (
                 <h5>
                   Switch to{' '}
                   <StyledLink

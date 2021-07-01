@@ -14,6 +14,7 @@ interface Window {
     request?: (...args: any[]) => any
     chainId?: string
     _state?: { isConnected?: boolean; isUnlocked?: boolean }
+    selectedAddress: string | null
   }
   web3?: {}
 }

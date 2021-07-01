@@ -64,7 +64,7 @@ import { FUSE_CHAIN } from '../../constants/chains'
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const tokens = useAllSwapTokens()
-  const { addChain, isSupported, isUnlocked } = useAddChain()
+  const { addChain, isAddChainEnabled } = useAddChain()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -498,7 +498,7 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              isSupported && isUnlocked ? (
+              isAddChainEnabled ? (
                 <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
               ) : (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>

@@ -55,8 +55,10 @@ export const getChainNetworkLibrary = (chainId: number) => {
   }
 }
 
+export const injectedSupportedChainIds = [ETHEREUM_CHAIN_ID, 122, BINANCE_CHAIN_ID]
+
 export const injected = new InjectedConnector({
-  supportedChainIds: [ETHEREUM_CHAIN_ID, 122, BINANCE_CHAIN_ID]
+  supportedChainIds: injectedSupportedChainIds
 })
 
 // mainnet only

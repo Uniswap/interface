@@ -65,7 +65,7 @@ export default function Bridge() {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
-  const { addChain, isSupported, isUnlocked } = useAddChain()
+  const { addChain, isAddChainEnabled } = useAddChain()
 
   const {
     inputCurrencyId: defaultInputCurrencyId,
@@ -320,7 +320,7 @@ export default function Bridge() {
           )}
           <BottomGrouping>
             {!account ? (
-              isSupported && isUnlocked ? (
+              isAddChainEnabled ? (
                 <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
               ) : (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>

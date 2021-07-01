@@ -166,7 +166,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 function Web3StatusInner() {
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
-  const { addChain, isSupported, isUnlocked } = useAddChain()
+  const { addChain, isAddChainEnabled } = useAddChain()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -200,7 +200,7 @@ function Web3StatusInner() {
       </Web3StatusConnected>
     )
   } else if (error) {
-    return error instanceof UnsupportedChainIdError && isSupported ? (
+    return error instanceof UnsupportedChainIdError && isAddChainEnabled ? (
       <Web3StatusConnect onClick={() => addChain(FUSE_CHAIN)}>
         <Text>Switch to Fuse</Text>
       </Web3StatusConnect>
@@ -211,7 +211,7 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else {
-    if (isSupported && isUnlocked) {
+    if (isAddChainEnabled) {
       return (
         <Web3StatusConnect onClick={() => addChain(FUSE_CHAIN)}>
           <Text>Switch to Fuse</Text>
