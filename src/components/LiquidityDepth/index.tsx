@@ -2,12 +2,12 @@ import React, { ReactNode, useMemo, useState } from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DarkBlueCard } from 'components/Card'
-import DensityChart from './DensityChart'
+import DensityChart from '../LiquidityChartRangeInput/Chart'
 import Row, { RowBetween } from 'components/Row'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
-import { ChartContext } from './hooks'
-import ZoomButtons from './ZoomButtons'
+import { ChartContext } from '../LiquidityChartRangeInput/hooks'
+import ZoomButtons from '../LiquidityChartRangeInput/ZoomButtons'
 
 const MIN_ZOOM = 10
 const MAX_ZOOM = 200

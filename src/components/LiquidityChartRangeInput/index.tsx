@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { select, brushX, zoom, scaleLinear, max, min, format } from 'd3'
 import usePrevious from 'hooks/usePrevious'
-import { brushHandlePath, getTextWidth, brushHandleAccentPath } from '../LiquidityDepth/utils'
+import { brushHandlePath, getTextWidth, brushHandleAccentPath } from './svg'
 import isEqual from 'lodash.isequal'
 import { AxisBottom } from './AxisBottom'
 import { Line } from './Line'
 import { Area } from './Area'
 import { Brush } from './Brush'
 import { LiquidityChartRangeInputProps } from './types'
-import { ChartEntry } from 'components/LiquidityDepth/hooks'
+import { ChartEntry } from 'components/LiquidityChartRangeInput/hooks'
 
 /*
  * TODO
@@ -35,8 +35,9 @@ export function LiquidityChartRangeInput({
   styles,
   dimensions: { width, height },
   margins,
-  brushDomain,
+  interactive = true,
   brushLabels,
+  brushDomain,
   onBrushDomainChange,
 }: LiquidityChartRangeInputProps) {
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -131,6 +132,7 @@ export function LiquidityChartRangeInput({
 
         <Brush
           xScale={xScale}
+          interactive={interactive}
           brushLabelValue={brushLabelValue}
           brushExtent={brushDomain ?? (xScale.range() as [number, number])}
           innerWidth={innerWidth}

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BrushBehavior, brushX, ScaleLinear, select } from 'd3'
+import { brushX, filter, ScaleLinear, select } from 'd3'
 import styled from 'styled-components'
-import { brushHandleAccentPath, brushHandlePath } from 'components/LiquidityDepth/utils'
+import { brushHandleAccentPath, brushHandlePath } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
 
 const Handle = styled.path<{ color: string }>`
@@ -33,6 +33,7 @@ const Tooltip = styled.text`
 export const Brush = ({
   id = 'liquidity-chart-range-input-brush',
   xScale,
+  interactive,
   brushLabelValue,
   brushExtent,
   setBrushExtent,
@@ -42,6 +43,7 @@ export const Brush = ({
 }: {
   id?: string
   xScale: ScaleLinear<number, number>
+  interactive: boolean
   brushLabelValue: (x: number) => string
   brushExtent: [number, number]
   setBrushExtent: (extent: [number, number]) => void
@@ -88,6 +90,7 @@ export const Brush = ({
         [0, 0],
         [innerWidth, innerHeight],
       ])
+      .filter(() => !interactive)
       .on('brush end', brushed)
 
     brush(select(brushRef.current))
@@ -105,7 +108,7 @@ export const Brush = ({
       .selectAll('.selection')
       .attr('stroke', 'none')
       .attr('fill', `url(#${id}-gradient-selection)`)
-  }, [brushExtent, brushed, id, innerHeight, innerWidth, previousBrushExtent, xScale, localBrushExtent])
+  }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale])
 
   return useMemo(
     () => (
