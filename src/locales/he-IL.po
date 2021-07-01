@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "חֶשְׁבּוֹן"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "פָּעִיל"
 
@@ -340,6 +341,10 @@ msgstr "על ידי הוספת רשימה זו אתה סומך באופן מרו
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "על ידי חיבור ארנק אתה מסכים <0>לתנאי השירות</0> של Uniswap Labs ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול <1>Uniswap</1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "מבוטל"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "מחיר נוכחי"
 msgid "Current {0} Price:"
 msgstr "מחיר {0} נוכחי:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "מוּבָס"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "האצל הצבעות"
@@ -592,6 +601,10 @@ msgstr "האצל הצבעות"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "הואצל ל:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "קולות מאושרים"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "שגיאה בהתחברות. נסה לרענן את הדף."
 msgid "Error importing list"
 msgstr "שגיאה בייבוא הרשימה"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "יצא לפועל"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "תוצאות מורחבות מרשימות אסימון לא פעילות"
@@ -736,6 +753,10 @@ msgstr "תוצאות מורחבות מרשימות אסימון לא פעילו�
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "מצב מומחה מכבה את בקשת האישור לעסקה ומאפשר עסקאות החלקה גבוהות שלעתים קרובות גורמות לשיעורים גרועים ולאובדן כספים."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "לא בתוקף"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "לא נמצאה נזילות V2."
 msgid "No active pools"
 msgstr "אין בריכות פעילות"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "אין תיאור."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "לא נמצאה נזילות."
@@ -1113,6 +1138,10 @@ msgstr "בעלים"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "בריכות המשתתפות"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "ממתין ל"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "הצעה לפעולה"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "מציע"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "בתור"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "הגשת הצעה"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "הגשת הצבעה"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "הצליח"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "עמלות שלא נדרשו"
 msgid "Unclaimed:"
 msgstr "ללא דרישה:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "לא נקבע"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "ממשל לא מוחלף"
@@ -1659,6 +1700,10 @@ msgstr "נכס לא נתמך"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "נכסים שאינם נתמכים"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "ללא כותרת"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

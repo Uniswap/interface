@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "帳戶"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "啟用"
 
@@ -340,6 +341,10 @@ msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "通過連接錢包，您同意接受 Uniswap 實驗室的<0>服務條款</0>，並確認您已閱讀和理解<1>Uniswap協議免責聲明</1>。"
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "取消"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "當前兌換率"
 msgid "Current {0} Price:"
 msgstr "當前 {0} 兌換率："
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "被擊敗"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "委托投票"
@@ -592,6 +601,10 @@ msgstr "委托投票"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "委托給："
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "委託投票"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "連接錯誤。請嘗試刷新頁面。"
 msgid "Error importing list"
 msgstr "導入列表時出錯"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "已執行"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "從待用代幣列表中擴展出的結果"
@@ -736,6 +753,10 @@ msgstr "從待用代幣列表中擴展出的結果"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高滑點的交易，從而可能導致較不利的兌換率和資金損失。"
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "已到期"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "找不到V2流動資金。"
 msgid "No active pools"
 msgstr "無運行中的流動池"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "沒有說明。"
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "未找到流動資金。"
@@ -1113,6 +1138,10 @@ msgstr "擁有者"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "參與的流動池"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "待辦的"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "提議操作"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "提案人"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "排隊"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "正提交提案"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "提交投票"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "成功"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "未領取的手續費"
 msgid "Unclaimed:"
 msgstr "未領取："
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "未定"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
@@ -1659,6 +1700,10 @@ msgstr "不支持的資產"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "不支持的資產"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "無標題"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Akun"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktif"
 
@@ -340,6 +341,10 @@ msgstr "Dengan menambahkan daftar ini, Anda secara implisit mempercayai bahwa da
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Dengan menghubungkan dompet, Anda menyetujui <0>Ketentuan Layanan</0> Uniswap Labs dan mengakui bahwa Anda telah membaca dan memahami <1>Penafian protokol Uniswap</1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Dibatalkan"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Harga saat ini"
 msgid "Current {0} Price:"
 msgstr "Harga {0} saat ini:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Dikalahkan"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Delegasikan Suara"
@@ -592,6 +601,10 @@ msgstr "Delegasikan Suara"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Didelegasikan ke:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Suara terdelegasi"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Terjadi kesalahan saat menyambungkan. Coba muat ulang halaman."
 msgid "Error importing list"
 msgstr "Terjadi kesalahan saat mengimpor daftar"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Dieksekusi"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
@@ -736,6 +753,10 @@ msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan perdagangan dengan slippage tinggi yang sering kali menimbulkan suku bunga yang buruk dan hilangnya dana."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "kadaluarsa"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Tidak ditemukan Likuiditas V2."
 msgid "No active pools"
 msgstr "Tidak ada pangkalan aktif"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Tidak ada deskripsi."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Likuiditas tidak ditemukan."
@@ -1113,6 +1138,10 @@ msgstr "Pemilik"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Kolam yang berpartisipasi"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Tertunda"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Tindakan yang Diusulkan"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Pengusul"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "antri"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Mengajukan Proposal"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Mengirim Suara"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Berhasil"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Biaya yang tidak diklaim"
 msgid "Unclaimed:"
 msgstr "Tidak diklaim:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Yg tak dpt ditentukan"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Tata Kelola Uniswap"
@@ -1659,6 +1700,10 @@ msgstr "Aset Tidak Didukung"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Aset Tidak Didukung"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Tanpa Judul"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

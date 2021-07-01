@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Hesap"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktif"
 
@@ -340,6 +341,10 @@ msgstr "Bu listeyi ekleyerek, verilerin doğru olduğuna dolaylı olarak güveni
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Bir cüzdan bağlayarak Uniswap Labs'ın <0>Hizmet Şartları'nı</0> kabul etmiş ve <1>Uniswap protokolü sorumluluk reddini</1> okuduğunuzu ve anladığınızı onaylamış olursunuz."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "İptal edildi"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Güncel fiyat"
 msgid "Current {0} Price:"
 msgstr "Güncel {0} Fiyatı:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "mağlup"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Oylar Devret"
@@ -592,6 +601,10 @@ msgstr "Oylar Devret"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Yetki verildi:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "devredilen oylar"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Bağlanırken hata oluştu. Sayfayı yenilemeyi deneyin."
 msgid "Error importing list"
 msgstr "Liste içe aktarılırken hata oluştu"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "yürütüldü"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Aktif olmayan Jeton Listelerinden genişletilmiş sonuçlar"
@@ -736,6 +753,10 @@ msgstr "Aktif olmayan Jeton Listelerinden genişletilmiş sonuçlar"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Uzman modu, işlem onayı istemini kapatır ve genellikle düşük oranlar ve kayıp fonlar veren yüksek kayma işlemlerine izin verir."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Süresi doldu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "V2 Likiditesi bulunamadı."
 msgid "No active pools"
 msgstr "Aktif havuz yok"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Açıklama yok."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Likidite bulunamadı."
@@ -1113,6 +1138,10 @@ msgstr "Sahip"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Katılımcı havuzlar"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Bekliyor"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Önerilen hareket"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Teklif veren"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "sıraya alındı"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Teklif Gönderme"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Oy Gönderme"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "başarılı"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Talep edilmemiş ücretler"
 msgid "Unclaimed:"
 msgstr "Talep edilmeyen:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "belirsiz"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap Yönetimi"
@@ -1659,6 +1700,10 @@ msgstr "Desteklenmeyen Varlık"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Desteklenmeyen Varlıklar"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "başlıksız"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

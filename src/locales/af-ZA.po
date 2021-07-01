@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Afrikaans\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Rekening"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktief"
 
@@ -340,6 +341,10 @@ msgstr "Deur hierdie lys by te voeg, vertrou u implisiet dat die data korrek is.
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Deur 'n beursie aan te sluit, stem u in tot die <0> diensvoorwaardes van Uniswap Labs</0> en erken dat u die <1> vrywaring van Uniswap-protokol gelees en verstaan het</1> ."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Gekanselleer"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Huidige prys"
 msgid "Current {0} Price:"
 msgstr "Huidige {0} prys:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Verslaan"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Delegeer Stemme"
@@ -592,6 +601,10 @@ msgstr "Delegeer Stemme"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Afgevaardig na:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Afgevaardigde stemme"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Kon nie koppel nie. Probeer om die bladsy te verfris."
 msgid "Error importing list"
 msgstr "Kon nie lys invoer nie"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Uitgevoer"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Uitgebreide resultate van onaktiewe tekenlyste"
@@ -736,6 +753,10 @@ msgstr "Uitgebreide resultate van onaktiewe tekenlyste"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Die kundige modus skakel die bevestiging van die transaksie uit en laat transaksies met 'n hoë glip toe wat dikwels slegte tariewe en verlore fondse tot gevolg het."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Verstreke"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Geen V2-likiditeit gevind nie."
 msgid "No active pools"
 msgstr "Geen aktiewe poele nie"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Geen beskrywing."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Geen likiditeit gevind nie."
@@ -1113,6 +1138,10 @@ msgstr "Eienaar"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Deelnemende poele"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "In afwagting"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Voorgestelde aksie"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Voorsteller"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "In die ry staan"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Voorlegging indien"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Stemming indien"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Geslaag"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Onopgeëiste fooie"
 msgid "Unclaimed:"
 msgstr "Onopgeëiste:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Onbepaald"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Onttrek bestuur"
@@ -1659,6 +1700,10 @@ msgstr "Nie-ondersteunde bate"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Nie-ondersteunde bates"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Naamloos"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

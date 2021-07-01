@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Cont"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Activ"
 
@@ -340,6 +341,10 @@ msgstr "Prin adăugarea acestei liste ești încrezător implicit că datele sun
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Prin conectarea unui portofel, ești de acord cu <0>Termenii de Utilizare</0> ai Uniswap Lab și accepți că ai citit și înțeles <1>Protocolul de Renunțare al Uniswap </1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Anulat"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Prețul actual"
 msgid "Current {0} Price:"
 msgstr "Prețul actual {0}:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Învins"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Voturi delegate"
@@ -592,6 +601,10 @@ msgstr "Voturi delegate"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegat către:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Voturi delegate"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Eroare la conectare. Încearcă să reîncarci pagina."
 msgid "Error importing list"
 msgstr "Eroare la importarea listei"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Executat"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
@@ -736,6 +753,10 @@ msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite tranzacțiile cu derapaj ridicat, care duc adesea la rate nefavorabile și la pierderi de fonduri."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Expirat"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Nu s-a găsit nicio Lichiditate V2."
 msgid "No active pools"
 msgstr "Nu există grupuri active"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Fără descriere."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Nu a fost găsită nicio lichiditate."
@@ -1113,6 +1138,10 @@ msgstr "Proprietar"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Grupuri participante"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "In asteptarea"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Acțiunea propusă"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Propunător"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "În așteptare"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Trimiterea propunerii"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Se trimite votul"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Reușit"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Taxe nesolicitate"
 msgid "Unclaimed:"
 msgstr "Nererevendicat:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Nedeterminat"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Guvernare Uniswap"
@@ -1659,6 +1700,10 @@ msgstr "Activ Nesusținut"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Active Nesusținute"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Fără titlu"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

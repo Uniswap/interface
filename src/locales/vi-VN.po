@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Tài khoản"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Hoạt động"
 
@@ -340,6 +341,10 @@ msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằn
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Bằng cách kết nối ví, bạn đồng ý với Điều khoản dịch vụ <0> của Uniswap Labs</0> và xác nhận rằng bạn đã đọc và hiểu <1> tuyên bố từ chối trách nhiệm của giao thức Uniswap</1> ."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Đã hủy"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Giá hiện tại"
 msgid "Current {0} Price:"
 msgstr "Giá {0} hiện tại:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Bị đánh bại"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Phiếu bầu ủy quyền"
@@ -592,6 +601,10 @@ msgstr "Phiếu bầu ủy quyền"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Giao cho:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Phiếu bầu được ủy quyền"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Lỗi kết nối. Hãy thử làm mới trang."
 msgid "Error importing list"
 msgstr "Lỗi khi nhập danh sách"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Thực thi"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
@@ -736,6 +753,10 @@ msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và cho phép thực hiện các giao dịch trượt giá cao thường dẫn đến tỷ giá xấu và mất tiền."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Đã hết hạn"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Không tìm thấy Thanh khoản V2."
 msgid "No active pools"
 msgstr "Không có pool hoạt động"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Không có mô tả."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Không tìm thấy thanh khoản."
@@ -1113,6 +1138,10 @@ msgstr "Chủ sở hữu"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Pool tham gia"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "Đang chờ xử lý"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Đề xuất hành động"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Người đề xuất"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "Đã xếp hàng"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Gửi đề xuất"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Gửi phiếu bầu"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Thành công"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Phí chưa nhận"
 msgid "Unclaimed:"
 msgstr "Chưa nhận:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Không xác định"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Quản trị Uniswap"
@@ -1659,6 +1700,10 @@ msgstr "Tài sản không được hỗ trợ"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Tài sản không được hỗ trợ"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Không có tiêu đề"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"

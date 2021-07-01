@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 17:57+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Polish\n"
-"PO-Revision-Date: 2021-07-01 18:04\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -152,6 +152,7 @@ msgid "Account"
 msgstr "Konto"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktywne"
 
@@ -340,6 +341,10 @@ msgstr "Dodając tę listę domyślnie ufasz że dane są poprawne. Każdy może
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Łącząc portfel, akceptujesz <0>Warunki korzystania z Uniswap Labs’ </0> i potwierdzasz, że przeczytałeś i zrozumiałeś <1>Uniswap Protocol disclaimer</1>."
+
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Anulowany"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -585,6 +590,10 @@ msgstr "Aktualna cena"
 msgid "Current {0} Price:"
 msgstr "Aktualna cena {0}:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Pokonany"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Deleguj głosy"
@@ -592,6 +601,10 @@ msgstr "Deleguj głosy"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegowane do:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Głosy delegowane"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -729,6 +742,10 @@ msgstr "Błąd połączenia. Spróbuj odświeżyć stronę."
 msgid "Error importing list"
 msgstr "Błąd importowania listy"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Wykonany"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rozszerzone wyniki z nieaktywnych list tokenów"
@@ -736,6 +753,10 @@ msgstr "Rozszerzone wyniki z nieaktywnych list tokenów"
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Tryb ekspercki wyłącza monit potwierdzania transakcji i umożliwia transakcje o wysokim poślizgu, które często skutkują złymi stawkami i straconymi środkami."
+
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Przedawniony"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Explore"
@@ -1037,6 +1058,10 @@ msgstr "Nie znaleziono płynności V2."
 msgid "No active pools"
 msgstr "Brak aktywnych pul"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Bez opisu."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Nie znaleziono płynności."
@@ -1113,6 +1138,10 @@ msgstr "Właściciel"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Uczestniczące grupy"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "W oczekiwaniu"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1220,6 +1249,10 @@ msgstr "Proponowane działanie"
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
 msgstr "Wniosek"
+
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "W kolejce"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1394,6 +1427,10 @@ msgstr "Składanie propozycji"
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
 msgstr "Wysyłanie głosu"
+
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Udało się"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1605,6 +1642,10 @@ msgstr "Nieodebrane opłaty"
 msgid "Unclaimed:"
 msgstr "Niezgłoszony:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Nieokreślony"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Zarządzanie Uniswap"
@@ -1659,6 +1700,10 @@ msgstr "Nieobsługiwany zasób"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Nieobsługiwane zasoby"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Nieuprawny"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
