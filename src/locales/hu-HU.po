@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-27 05:00+0000\n"
+"POT-Creation-Date: 2021-07-01 17:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-27 05:04\n"
+"PO-Revision-Date: 2021-07-01 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -311,13 +311,16 @@ msgid "Balance: {0} {1}"
 msgstr "Egyenleg: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Legjobb egzotikus párok számára."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Legjobb a legtöbb pár számára."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Legjobb stabil párokhoz."
@@ -735,12 +738,20 @@ msgid "Expert mode turns off the confirm transaction prompt and allows high slip
 msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehetővé teszi a nagy csúszásmentes kereskedéseket, amelyek gyakran rossz arányokat és elvesztett forrásokat eredményeznek.\n"
 "A szakértői mód kikapcsolja a tranzakció megerősítésére vonatkozó felszólítást, és lehetővé tesz nagy csúszású kereskedést, amely gyakran rossz árfolyamokat és elveszett pénzeszközöket eredményez."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Fedezd fel"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Fedezze fel az Uniswap Analytics népszerű pooljait."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
+msgstr "Díjszint"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
 msgstr "Díjszint"
 
 #: src/pages/Vote/VotePage.tsx
@@ -764,6 +775,7 @@ msgstr "Feladó (legfeljebb)"
 msgid "Get support on Discord"
 msgstr "Kérjen támogatást a Discordon"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Elrejt"
@@ -1042,6 +1054,10 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Nincs létrehozva"
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "KI"
@@ -1290,14 +1306,6 @@ msgstr "Útvonal"
 msgid "Search name or paste address"
 msgstr "Név keresése vagy cím beillesztése"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Pool választása"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Válassza ki a pool típusát a preferált likviditásszolgáltató díja alapján."
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1420,6 +1428,10 @@ msgstr "Váltson Ethereumra"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Köszönjük, hogy az Uniswap közösség tagja <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "A díjakban keresett%."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2086,6 +2098,14 @@ msgstr "{0} • felhasználó hozzáadta"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}% -os díjszint"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% választ"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
