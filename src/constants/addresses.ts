@@ -14,16 +14,19 @@ export const MULTICALL2_ADDRESSES: AddressMap = {
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
 
-// most current governance contract address should always be the 0 index
-// only support governance on mainnet
-export const GOVERNANCE_ADDRESSES: AddressMap[] = [
-  {
-    [SupportedChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
-  },
-  {
-    [SupportedChainId.MAINNET]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
-  },
-]
+/**
+ * The older V0 governance account
+ */
+export const GOVERNANCE_ALPHA_V0_ADDRESSES: AddressMap = constructSameAddressMap(
+  '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F'
+)
+/**
+ * The latest governor alpha that is currently admin of timelock
+ */
+export const GOVERNANCE_ALPHA_V1_ADDRESSES: AddressMap = {
+  [SupportedChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
+}
+
 export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC')
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {

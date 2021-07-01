@@ -13,7 +13,6 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { ExternalLink } from '../../theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -50,7 +49,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
   }: {
     voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
   } = useVoteCallback()
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const { votes: availableVotes } = useUserVotes()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
