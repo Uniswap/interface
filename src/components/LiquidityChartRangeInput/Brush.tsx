@@ -130,13 +130,28 @@ export const Brush = ({
   return useMemo(
     () => (
       <>
-        <linearGradient id={`${id}-gradient-selection`} x1="0%" y1="100%" x2="100%" y2="100%">
-          <stop stopColor={colors.west} />
-          <stop stopColor={colors.east} offset="1" />
-        </linearGradient>
+        <defs>
+          <linearGradient id={`${id}-gradient-selection`} x1="0%" y1="100%" x2="100%" y2="100%">
+            <stop stopColor={colors.west} />
+            <stop stopColor={colors.east} offset="1" />
+          </linearGradient>
 
-        <g ref={brushRef} />
-        <g>
+          {/* clips at exactly the svg area */}
+          <clipPath id={`${id}-brush-clip`}>
+            <rect x="0" y="0" width="100%" height="100%" />
+          </clipPath>
+
+          {/* leave some gap for the handles to show */}
+          <clipPath id={`${id}-handles-clip`}>
+            <rect x="-50" y="0" width="115%" height="100%" />
+          </clipPath>
+        </defs>
+
+        {/* will host the d3 brush */}
+        <g ref={brushRef} clipPath={`url(#${id}-brush-clip)`} />
+
+        {/* custom brush handles */}
+        <g clipPath={`url(#${id}-handles-clip)`}>
           {localBrushExtent ? (
             <>
               {/* west handle */}

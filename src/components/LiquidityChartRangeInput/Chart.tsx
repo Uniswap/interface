@@ -67,10 +67,6 @@ export function Chart({
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width="100%" height="100%" />
           </clipPath>
-
-          <clipPath id={`${id}-brush-clip`}>
-            <rect x="-50" y="0" width="115%" height="100%" />
-          </clipPath>
         </defs>
 
         <g transform={`translate(${margins.left},${margins.top})`}>
@@ -82,21 +78,19 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <g clipPath={`url(#${id}-brush-clip)`}>
-            <Brush
-              xScale={xScale}
-              interactive={interactive}
-              brushLabelValue={brushLabelValue}
-              brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
-              innerWidth={innerWidth}
-              innerHeight={innerHeight}
-              setBrushExtent={onBrushDomainChange}
-              colors={{
-                west: styles.brush.handle.west,
-                east: styles.brush.handle.east,
-              }}
-            />
-          </g>
+          <Brush
+            xScale={xScale}
+            interactive={interactive}
+            brushLabelValue={brushLabelValue}
+            brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
+            innerWidth={innerWidth}
+            innerHeight={innerHeight}
+            setBrushExtent={onBrushDomainChange}
+            colors={{
+              west: styles.brush.handle.west,
+              east: styles.brush.handle.east,
+            }}
+          />
         </g>
       </svg>
     </>

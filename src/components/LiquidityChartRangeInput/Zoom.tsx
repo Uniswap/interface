@@ -7,10 +7,9 @@ import { ZoomIn, ZoomOut } from 'react-feather'
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 4px;
 
   position: absolute;
-  top: -40px;
+  top: -55px;
   right: 0;
 `
 

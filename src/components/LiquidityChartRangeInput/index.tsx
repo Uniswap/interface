@@ -90,7 +90,7 @@ export default function LiquidityChartRangeInput({
 
   return (
     <DarkBlueCard>
-      <AutoColumn>
+      <AutoColumn gap="md">
         <RowBetween>
           <TYPE.label>
             <Trans>Liquidity Distribution</Trans>
@@ -115,7 +115,7 @@ export default function LiquidityChartRangeInput({
                 <Chart
                   data={{ series: formattedData, current: parseFloat(price) }}
                   dimensions={{ width: 350, height: 250 }}
-                  margins={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  margins={{ top: 0, right: 20, bottom: 20, left: 20 }}
                   styles={{
                     brush: {
                       handle: {

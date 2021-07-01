@@ -654,6 +654,9 @@ export default function AddLiquidity({
                       priceLabel={
                         price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
                           <AutoRow gap="4px" justify="center">
+                            <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
+                              <Trans>Current Price</Trans>
+                            </TYPE.main>
                             <TYPE.body fontWeight={500} color="text2" fontSize={12}>
                               <HoverInlineText
                                 maxCharacters={20}
