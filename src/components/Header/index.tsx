@@ -136,6 +136,18 @@ const HideSmall = styled.span`
   `};
 `
 
+const MigrateLiquidityWrapper = styled.span`
+  @media (max-width: 1240px) {
+    display: none;
+  }
+`
+
+const AboutWrapper = styled.span`
+  @media (max-width: 1320px) {
+    display: none;
+  }
+`
+
 const BridgeExternalLink = styled(ExternalLink)`
   border-radius: 12px;
   padding: 8px 12px;
@@ -314,7 +326,7 @@ export default function Header() {
           <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
-            <HideSmall>
+            <MigrateLiquidityWrapper>
               <StyledNavLink
                 id={`migrations-nav-link`}
                 to={'/migration'}
@@ -324,14 +336,14 @@ export default function Header() {
               >
                 Migrate Liquidity
               </StyledNavLink>
-            </HideSmall>
+            </MigrateLiquidityWrapper>
           )}
 
-          <HideSmall>
+          <AboutWrapper>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
               {t('About')}
             </StyledNavLink>
-          </HideSmall>
+          </AboutWrapper>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>

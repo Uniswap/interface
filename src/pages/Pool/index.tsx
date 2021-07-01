@@ -12,7 +12,7 @@ import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import Card from 'components/Card'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
 import { useActiveWeb3React } from 'hooks'
@@ -30,6 +30,14 @@ const PageWrapper = styled(AutoColumn)`
 const VoteCard = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
+`
+
+const InstructionText = styled.div`
+  padding: 16px 20px;
+  background-color: ${({ theme }) => theme.bg17};
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.5;
 `
 
 const TitleRow = styled(RowBetween)`
@@ -161,10 +169,16 @@ export default function Pool() {
 
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <AutoRow>
+              <InstructionText>
+                Here you can view all your liquidity position and remove/add more liquidity.
+              </InstructionText>
+            </AutoRow>
+
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  My Pools
+                  My Liquidity Pools
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>

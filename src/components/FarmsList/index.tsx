@@ -81,7 +81,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
 
         <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
           <ClickableText>APY</ClickableText>
-          <InfoHelper text={'Estimated total annualized yield from rewards.'} />
+          <InfoHelper text={'Estimated total annualized yield from fees + rewards'} />
         </Flex>
 
         <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
