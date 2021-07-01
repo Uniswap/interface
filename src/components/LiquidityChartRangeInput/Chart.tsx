@@ -69,30 +69,34 @@ export function Chart({
           </clipPath>
 
           <clipPath id={`${id}-brush-clip`}>
-            <rect x="0" y="0" width="100%" height="100%" />
+            <rect x="-50" y="0" width="115%" height="100%" />
           </clipPath>
         </defs>
 
-        <g transform={`translate(${margins.left},${margins.top})`} clipPath={`url(#${id}-brush-clip)`}>
-          <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
+        <g transform={`translate(${margins.left},${margins.top})`}>
+          <g clipPath={`url(#${id}-chart-clip)`}>
+            <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
-          <Line value={current} xScale={xScale} innerHeight={innerHeight} />
+            <Line value={current} xScale={xScale} innerHeight={innerHeight} />
 
-          <AxisBottom xScale={xScale} innerHeight={innerHeight} />
+            <AxisBottom xScale={xScale} innerHeight={innerHeight} />
+          </g>
 
-          <Brush
-            xScale={xScale}
-            interactive={interactive}
-            brushLabelValue={brushLabelValue}
-            brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
-            innerWidth={innerWidth}
-            innerHeight={innerHeight}
-            setBrushExtent={onBrushDomainChange}
-            colors={{
-              west: styles.brush.handle.west,
-              east: styles.brush.handle.east,
-            }}
-          />
+          <g clipPath={`url(#${id}-brush-clip)`}>
+            <Brush
+              xScale={xScale}
+              interactive={interactive}
+              brushLabelValue={brushLabelValue}
+              brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
+              innerWidth={innerWidth}
+              innerHeight={innerHeight}
+              setBrushExtent={onBrushDomainChange}
+              colors={{
+                west: styles.brush.handle.west,
+                east: styles.brush.handle.east,
+              }}
+            />
+          </g>
         </g>
       </svg>
     </>
