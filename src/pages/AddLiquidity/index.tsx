@@ -527,6 +527,8 @@ export default function AddLiquidity({
                     disabled={!currencyB || !currencyA}
                     feeAmount={feeAmount}
                     handleFeePoolSelect={handleFeePoolSelect}
+                    token0={currencyA?.wrapped}
+                    token1={currencyB?.wrapped}
                   />
                 )}
 
