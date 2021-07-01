@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { area, curveStep, ScaleLinear } from 'd3'
 import styled from 'styled-components'
-import { ChartEntry } from 'components/LiquidityChartRangeInput/hooks'
+import { ChartEntry } from './types'
 
 const Path = styled.path`
   opacity: 0.5;

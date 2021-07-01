@@ -1,149 +1,129 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { select, brushX, zoom, scaleLinear, max, min, format } from 'd3'
-import usePrevious from 'hooks/usePrevious'
-import { brushHandlePath, getTextWidth, brushHandleAccentPath } from './svg'
-import isEqual from 'lodash.isequal'
-import { AxisBottom } from './AxisBottom'
-import { Line } from './Line'
-import { Area } from './Area'
-import { Brush } from './Brush'
-import { LiquidityChartRangeInputProps } from './types'
-import { ChartEntry } from 'components/LiquidityChartRangeInput/hooks'
+import React, { useCallback, useContext } from 'react'
+import useTheme from 'hooks/useTheme'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { useColor } from 'hooks/useColor'
+import Loader from 'components/Loader'
+import styled from 'styled-components'
+import { Box } from 'rebass'
+import { Trans } from '@lingui/macro'
+import { XCircle } from 'react-feather'
+import { TYPE } from '../../theme'
+import { ColumnCenter } from 'components/Column'
+import { useDensityChartData, ChartContext } from './hooks'
+import { Chart } from './Chart'
+import { saturate } from 'polished'
+import { batch } from 'react-redux'
 
-/*
- * TODO
- * - move graph inside margins and clip path at 100%
- */
+const Wrapper = styled(Box)`
+  position: relative;
+  height: 250px;
 
-export const xAccessor = (d: ChartEntry) => d.price0
-export const yAccessor = (d: ChartEntry) => d.activeLiquidity
+  display: grid;
+  justify-content: center;
+  align-content: center;
+`
 
-export const getScales = (series: ChartEntry[], width: number, height: number) => {
-  return {
-    xScale: scaleLinear()
-      .domain([min(series, xAccessor), max(series, xAccessor)] as number[])
-      .range([0, width]),
-    yScale: scaleLinear()
-      .domain([0, max(series, yAccessor)] as number[])
-      .range([height, 0]),
-  }
-}
+export default function LiquidityChartRangeInput({
+  price,
+  currencyA,
+  currencyB,
+  feeAmount,
+  priceLower,
+  priceUpper,
+  onLeftRangeInput,
+  onRightRangeInput,
+  interactive,
+}: {
+  price: string | undefined
+  currencyA: Currency | undefined
+  currencyB: Currency | undefined
+  feeAmount?: number
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  onLeftRangeInput: (typedValue: string) => void
+  onRightRangeInput: (typedValue: string) => void
+  interactive: boolean
+}) {
+  const { zoom } = useContext(ChartContext)
 
-export function LiquidityChartRangeInput({
-  id = 'liquidityChartRangeInput',
-  data: { series, current },
-  styles,
-  dimensions: { width, height },
-  margins,
-  interactive = true,
-  brushLabels,
-  brushDomain,
-  onBrushDomainChange,
-}: LiquidityChartRangeInputProps) {
-  const svgRef = useRef<SVGSVGElement | null>(null)
+  const theme = useTheme()
 
-  const [currentZoomState, setCurrentZoomState] = useState()
+  const tokenAColor = useColor(currencyA?.wrapped)
+  const tokenBColor = useColor(currencyB?.wrapped)
 
-  const [innerHeight, innerWidth] = useMemo(
-    () => [height - margins.top - margins.bottom, width - margins.left - margins.right],
-    [width, height, margins]
-  )
+  const { loading, formattedData } = useDensityChartData({
+    currencyA,
+    currencyB,
+    feeAmount,
+  })
 
-  // scales + generators
-  const { xScale, yScale } = useMemo(
-    () => getScales(series, innerWidth, innerHeight),
-    [series, innerWidth, innerHeight]
-  )
+  const onBrushDomainChangeEnded = useCallback(
+    (domain) => {
+      const leftRangeValue = Number(domain[0])
+      const rightRangeValue = Number(domain[1])
 
-  // will be called initially, and on every data change
-  useEffect(() => {
-    if (!svgRef.current || series.length === 0) return
-
-    const svg = select(svgRef.current)
-
-    // @ts-ignore
-    function zoomed({ transform }) {
-      setCurrentZoomState(transform)
-    }
-
-    if (currentZoomState) {
-      // @ts-ignore
-      const newXscale = currentZoomState.rescaleX(xScale)
-      xScale.domain(newXscale.domain())
-    }
-
-    // zoom
-    const zoomBehavior = zoom()
-      .scaleExtent([0.5, 5])
-      .translateExtent([
-        [0, 0],
-        [innerWidth, innerHeight],
-      ])
-      // @ts-ignore
-      //.filter((key) => key.shiftKey)
-      .on('zoom', zoomed)
-
-    svg
-      // @ts-ignore
-      .call(zoomBehavior)
-      // disables mouse drag/panning
-      .on('mousedown.zoom', null)
-  }, [
-    brushDomain,
-    brushLabels,
-    current,
-    currentZoomState,
-    id,
-    margins,
-    onBrushDomainChange,
-    series,
-    styles,
-    innerHeight,
-    innerWidth,
-    xScale,
-    yScale,
-  ])
-
-  const brushLabelValue = useCallback(
-    (x: number) => {
-      return current ? format('0.02%')((x - current) / current) : ''
+      batch(() => {
+        // simulate user input for auto-formatting and other validations
+        leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+        rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+      })
     },
-    [current]
+    [onLeftRangeInput, onRightRangeInput]
   )
+
+  const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
+
+  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
+  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <Loader stroke={theme.text4} />
+      </Wrapper>
+    )
+  }
+
+  interactive = interactive && Boolean(formattedData?.length)
 
   return (
-    <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
-      <defs>
-        <clipPath id={`${id}-chart-clip`}>
-          <rect x="0" y="0" width="100%" height="100%" />
-        </clipPath>
-
-        <clipPath id={`${id}-brush-clip`}>
-          <rect x="0" y="0" width="100%" height="100%" />
-        </clipPath>
-      </defs>
-
-      <g transform={`translate(${margins.left},${margins.top})`}>
-        <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
-
-        <Line value={current} xScale={xScale} innerHeight={innerHeight} />
-
-        <AxisBottom xScale={xScale} innerHeight={innerHeight} />
-
-        <Brush
-          xScale={xScale}
-          interactive={interactive}
-          brushLabelValue={brushLabelValue}
-          brushExtent={brushDomain ?? (xScale.range() as [number, number])}
-          innerWidth={innerWidth}
-          innerHeight={innerHeight}
-          setBrushExtent={onBrushDomainChange}
-          colors={{
-            west: styles.brush.handle.west,
-            east: styles.brush.handle.east,
-          }}
-        />
-      </g>
-    </svg>
+    <Wrapper>
+      {formattedData === [] ? (
+        <ColumnCenter>
+          <XCircle stroke={theme.text4} />
+          <TYPE.darkGray padding={10}>
+            <Trans>No data</Trans>
+          </TYPE.darkGray>
+        </ColumnCenter>
+      ) : (
+        <>
+          {!formattedData || !price ? (
+            <div>Loading</div>
+          ) : (
+            <Chart
+              data={{ series: formattedData, current: parseFloat(price) }}
+              dimensions={{ width: 350, height: 250 }}
+              margins={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              styles={{
+                brush: {
+                  handle: {
+                    west: saturate(0.1, tokenAColor) ?? theme.red1,
+                    east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                  },
+                },
+              }}
+              interactive={interactive}
+              brushDomain={
+                leftPrice && rightPrice
+                  ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                  : undefined
+              }
+              brushLabels={(x: number) => (price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined)}
+              onBrushDomainChange={onBrushDomainChangeEnded}
+            />
+          )}
+        </>
+      )}
+    </Wrapper>
   )
 }

@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo, useState } from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DarkBlueCard } from 'components/Card'
-import DensityChart from '../LiquidityChartRangeInput/Chart'
+import LiquidityChartRangeInput from '../LiquidityChartRangeInput'
 import Row, { RowBetween } from 'components/Row'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
@@ -57,7 +57,7 @@ export default function LiquidityDepth({
             <ZoomButtons />
           </RowBetween>
           <Row justifyItems="center">{priceLabel}</Row>
-          <DensityChart
+          <LiquidityChartRangeInput
             price={price}
             currencyA={currencyA}
             currencyB={currencyB}
