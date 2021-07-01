@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "Не видите ниједну од ваших V2 позиција? <0
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Зарађени UNI токени представљају акције са правом гласа у управљању Uniswap-ом."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Уредити"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Унесите проценат"
@@ -757,10 +761,6 @@ msgstr "Експертни режим искључује упит за потв�
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Истекло"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Истражите"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
