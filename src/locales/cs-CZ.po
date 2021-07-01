@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-27 05:00+0000\n"
+"POT-Creation-Date: 2021-07-01 17:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-27 05:04\n"
+"PO-Revision-Date: 2021-07-01 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -311,13 +311,16 @@ msgid "Balance: {0} {1}"
 msgstr "Zůstatek: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Nejlepší pro exotické páry."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Nejlepší pro většinu párů."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Nejlepší pro stabilní páry."
@@ -734,12 +737,20 @@ msgstr "Rozšířené výsledky z neaktivních seznamů žetonů"
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Režim Expert vypne výzvu k potvrzení transakce a umožní obchody s velkým skluzem, které často vedou ke špatným kurzům a ztrátě finančních prostředků."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Prozkoumat"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Prozkoumejte populární fondy na Analýze Uniswap."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
+msgstr "Úroveň poplatku"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
 msgstr "Úroveň poplatku"
 
 #: src/pages/Vote/VotePage.tsx
@@ -763,6 +774,7 @@ msgstr "Od (nanejvýš)"
 msgid "Get support on Discord"
 msgstr "Získejte podporu o Discord"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Skrýt"
@@ -1041,6 +1053,10 @@ msgstr "Nebyly nalezeny žádné návrhy."
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Není vytvořeno"
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "VYPNUTO"
@@ -1289,14 +1305,6 @@ msgstr "Trasa"
 msgid "Search name or paste address"
 msgstr "Vyhledejte název nebo vložte adresu"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Vyberte fond"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Na základě preferovaného poplatku poskytovateli likvidity vyberte typ fondu."
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1419,6 +1427,10 @@ msgstr "Přepněte na Ethereum"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Děkujeme, že jste součástí komunity Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "Procento, které získáte na poplatcích."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2084,6 +2096,14 @@ msgstr "{0} • Přidáno uživatelem"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0} %"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "Úroveň poplatku {0}"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% vyberte"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

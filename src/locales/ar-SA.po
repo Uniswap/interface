@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-27 05:00+0000\n"
+"POT-Creation-Date: 2021-07-01 17:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Arabic\n"
-"PO-Revision-Date: 2021-06-27 05:04\n"
+"PO-Revision-Date: 2021-07-01 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -311,13 +311,16 @@ msgid "Balance: {0} {1}"
 msgstr "التوازن: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "الأفضل للأزواج الغريبة."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "الأفضل لمعظم الأزواج."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "الأفضل للأزواج مستقرة."
@@ -734,6 +737,10 @@ msgstr "النتائج الموسعة من قوائم الرموز غير الن
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "وضع الخبراء يلغي تأكيد سرعة المعاملات ويسمح بتداول صفحات الانزلاق المرتفع التي غالبًا ما تؤدي إلى معدلات رديئة وأموال مفقودة."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "يستكشف"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "استكشف المجموعات الشعبية على تحليلات Uniswap."
@@ -741,6 +748,10 @@ msgstr "استكشف المجموعات الشعبية على تحليلات Uni
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "مستوى الرسوم"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "فئة الرسوم"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -763,6 +774,7 @@ msgstr "من (على الأكثر)"
 msgid "Get support on Discord"
 msgstr "احصل على الدعم على Discord"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "يخفي"
@@ -1041,6 +1053,10 @@ msgstr "لا توجد مقترحات."
 msgid "No results found."
 msgstr "لا توجد نتائج."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "لم يتم إنشاؤه"
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "إيقاف"
@@ -1289,14 +1305,6 @@ msgstr "طريق"
 msgid "Search name or paste address"
 msgstr "البحث عن اسم أو لصق العنوان"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "حدد المجموعة"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "حدد نوع المجموعة استنادًا إلى رسوم موفر السيولة المفضل لديك."
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1419,6 +1427,10 @@ msgstr "قم بالتبديل إلى Ethereum"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "نشكرك على كونك جزءًا من مجتمع Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "النسبة التي ستكسبها في الرسوم."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2084,6 +2096,14 @@ msgstr "{0} • أضيفت من قبل المستخدم"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}٪ فئة الرسوم"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}٪ حدد"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

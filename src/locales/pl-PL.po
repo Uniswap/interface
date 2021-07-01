@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-27 05:00+0000\n"
+"POT-Creation-Date: 2021-07-01 17:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Polish\n"
-"PO-Revision-Date: 2021-06-27 05:04\n"
+"PO-Revision-Date: 2021-07-01 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -311,13 +311,16 @@ msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Najlepsze dla par egzotycznych."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Najlepsze dla większości par."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Najlepsze dla stabilnych par."
@@ -734,6 +737,10 @@ msgstr "Rozszerzone wyniki z nieaktywnych list tokenów"
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Tryb ekspercki wyłącza monit potwierdzania transakcji i umożliwia transakcje o wysokim poślizgu, które często skutkują złymi stawkami i straconymi środkami."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Badać"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Przeglądaj popularne pule w Uniswap Analytics."
@@ -741,6 +748,10 @@ msgstr "Przeglądaj popularne pule w Uniswap Analytics."
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Poziom prowizji"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Poziom opłat"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -763,6 +774,7 @@ msgstr "Od (maksymalnie)"
 msgid "Get support on Discord"
 msgstr "Uzyskaj wsparcie na Discordzie"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Ukryć"
@@ -1041,6 +1053,10 @@ msgstr "Nie znaleziono propozycji."
 msgid "No results found."
 msgstr "Nie znaleziono wyników."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Nie utworzono"
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "POZA"
@@ -1289,14 +1305,6 @@ msgstr "Trasa"
 msgid "Search name or paste address"
 msgstr "Szukaj nazwy lub wklej adres"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Wybierz Pulę"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Wybierz typ puli na podstawie preferowanej opłaty dostawcy płynności."
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1419,6 +1427,10 @@ msgstr "Przełącz się na Ethereum"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Dziękujemy za bycie częścią społeczności Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "%, który zarobisz na opłatach."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2084,6 +2096,14 @@ msgstr "{0} • Dodane przez użytkownika"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}% poziom opłat"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% wybierz"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

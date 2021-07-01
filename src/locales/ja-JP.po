@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-27 05:00+0000\n"
+"POT-Creation-Date: 2021-07-01 17:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-01 10:04\n"
+"PO-Revision-Date: 2021-07-01 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -311,13 +311,16 @@ msgid "Balance: {0} {1}"
 msgstr "残高： {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "マイナーなペアに最適"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "ほとんどのペアに最適"
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "安定的なペアに最適"
@@ -734,6 +737,10 @@ msgstr "あなたが利用していないトークンリストからの検索結
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "エキスパートモードは取引確認画面をスキップし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
 
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "見る"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Uniswap分析サイトで人気のあるプールを探しましょう。"
@@ -741,6 +748,10 @@ msgstr "Uniswap分析サイトで人気のあるプールを探しましょう�
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "設定手数料"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "料金階層"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -763,6 +774,7 @@ msgstr "（最大）売るトークン"
 msgid "Get support on Discord"
 msgstr "Discordでサポートを受ける"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "非表示"
@@ -1041,6 +1053,10 @@ msgstr "提案が見つかりません。"
 msgid "No results found."
 msgstr "結果が見つかりませんでした。"
 
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "作成されていません"
+
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
 msgstr "OFF"
@@ -1289,14 +1305,6 @@ msgstr "取引ルート"
 msgid "Search name or paste address"
 msgstr "トークン名またはアドレス"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "プールを選択"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "希望する手数料率のプールをお選びください。"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1419,6 +1427,10 @@ msgstr "イーサリアムに切り替えます"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Uniswapコミュニティにご参加いただきありがとうございます <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "手数料で稼ぐ％。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2084,6 +2096,14 @@ msgstr "{0} • ユーザーにより追加"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}％の料金階層"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}％選択"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
