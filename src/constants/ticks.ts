@@ -10,7 +10,6 @@ export interface TickData {
 export interface TickProcessed {
   tickIdx: number
   liquidityActive: JSBI
-  liquidityGross: JSBI
   liquidityNet: JSBI
   price0: string
 }

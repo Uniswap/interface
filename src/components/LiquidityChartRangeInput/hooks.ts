@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { usePoolTickData } from 'hooks/usePoolTickData'
+import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { TickProcessed } from 'constants/ticks'
 import { ChartEntry } from './types'
 
@@ -16,7 +16,11 @@ export function useDensityChartData({
 }) {
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
 
-  const { loading, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
+  const { isLoading, isUninitialized, isError, activeTick, data } = usePoolActiveLiquidity(
+    currencyA,
+    currencyB,
+    feeAmount
+  )
 
   // clear data when inputs are cleared
   useEffect(() => {
@@ -27,14 +31,14 @@ export function useDensityChartData({
 
   useEffect(() => {
     function formatData() {
-      if (!tickData?.length) {
+      if (!data?.length) {
         return
       }
 
       const newData: ChartEntry[] = []
 
-      for (let i = 0; i < tickData.length; i++) {
-        const t: TickProcessed = tickData[i]
+      for (let i = 0; i < data.length; i++) {
+        const t: TickProcessed = data[i]
         //const active = t.tickIdx === activeTick
 
         const chartEntry = {
@@ -52,14 +56,15 @@ export function useDensityChartData({
       }
     }
 
-    if (!loading) {
+    if (!isLoading) {
       formatData()
     }
-  }, [loading, activeTick, tickData])
+  }, [isLoading, activeTick, data])
 
   return {
-    loading,
-    error,
+    isLoading,
+    isUninitialized,
+    isError,
     formattedData,
   }
 }

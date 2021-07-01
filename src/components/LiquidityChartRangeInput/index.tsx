@@ -7,7 +7,7 @@ import Loader from 'components/Loader'
 import { useColor } from 'hooks/useColor'
 import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
-import { XCircle } from 'react-feather'
+import { Inbox, XCircle } from 'react-feather'
 import { batch } from 'react-redux'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -17,13 +17,29 @@ import { useDensityChartData } from './hooks'
 import Row, { RowBetween } from 'components/Row'
 
 const Wrapper = styled(Box)`
+  min-height: 200px;
+`
+
+const ChartWrapper = styled(Box)`
   position: relative;
-  height: 250px;
 
   display: grid;
   justify-content: center;
   align-content: center;
 `
+
+function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
+  return (
+    <ColumnCenter style={{ height: '100%', justifyContent: 'center' }}>
+      {icon}
+      {message && (
+        <TYPE.mediumHeader padding={10} marginTop="20px">
+          {message}
+        </TYPE.mediumHeader>
+      )}
+    </ColumnCenter>
+  )
+}
 
 export default function LiquidityChartRangeInput({
   price,
@@ -53,7 +69,7 @@ export default function LiquidityChartRangeInput({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, formattedData } = useDensityChartData({
+  const { isLoading, isUninitialized, isError, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -78,14 +94,6 @@ export default function LiquidityChartRangeInput({
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
-  if (loading) {
-    return (
-      <Wrapper>
-        <Loader stroke={theme.text4} />
-      </Wrapper>
-    )
-  }
-
   interactive = interactive && Boolean(formattedData?.length)
 
   return (
@@ -97,45 +105,57 @@ export default function LiquidityChartRangeInput({
           </TYPE.label>
         </RowBetween>
 
-        <Row justifyItems="center">{priceLabel}</Row>
-
         <Wrapper>
-          {formattedData === [] ? (
-            <ColumnCenter>
-              <XCircle stroke={theme.text4} />
-              <TYPE.darkGray padding={10}>
-                <Trans>No data</Trans>
-              </TYPE.darkGray>
-            </ColumnCenter>
+          {isUninitialized ? (
+            <InfoBox
+              message={<Trans>Your position will appear here.</Trans>}
+              icon={<Inbox size={56} stroke={theme.text1} />}
+            />
+          ) : isLoading || !price ? (
+            <InfoBox icon={<Loader size="30px" stroke={theme.text4} />} />
+          ) : isError ? (
+            <InfoBox
+              message={<Trans>Something went wrong...</Trans>}
+              icon={<XCircle size={56} stroke={theme.text4} />}
+            />
           ) : (
             <>
-              {!formattedData || !price ? (
-                <div>Loading</div>
-              ) : (
-                <Chart
-                  data={{ series: formattedData, current: parseFloat(price) }}
-                  dimensions={{ width: 350, height: 250 }}
-                  margins={{ top: 0, right: 20, bottom: 20, left: 20 }}
-                  styles={{
-                    brush: {
-                      handle: {
-                        west: saturate(0.1, tokenAColor) ?? theme.red1,
-                        east: saturate(0.1, tokenBColor) ?? theme.blue1,
+              <Row justifyItems="center">{priceLabel}</Row>
+
+              <ChartWrapper>
+                {!formattedData || formattedData === [] ? (
+                  <ColumnCenter>
+                    <XCircle stroke={theme.text4} />
+                    <TYPE.darkGray padding={10}>
+                      <Trans>Nothing to show</Trans>
+                    </TYPE.darkGray>
+                  </ColumnCenter>
+                ) : (
+                  <Chart
+                    data={{ series: formattedData, current: parseFloat(price) }}
+                    dimensions={{ width: 350, height: 250 }}
+                    margins={{ top: 0, right: 20, bottom: 20, left: 20 }}
+                    styles={{
+                      brush: {
+                        handle: {
+                          west: saturate(0.1, tokenAColor) ?? theme.red1,
+                          east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                        },
                       },
-                    },
-                  }}
-                  interactive={interactive}
-                  brushDomain={
-                    leftPrice && rightPrice
-                      ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                      : undefined
-                  }
-                  brushLabels={(x: number) =>
-                    price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined
-                  }
-                  onBrushDomainChange={onBrushDomainChangeEnded}
-                />
-              )}
+                    }}
+                    interactive={interactive}
+                    brushDomain={
+                      leftPrice && rightPrice
+                        ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                        : undefined
+                    }
+                    brushLabels={(x: number) =>
+                      price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined
+                    }
+                    onBrushDomainChange={onBrushDomainChangeEnded}
+                  />
+                )}
+              </ChartWrapper>
             </>
           )}
         </Wrapper>
