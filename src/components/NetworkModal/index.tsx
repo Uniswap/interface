@@ -11,7 +11,20 @@ import ModalHeader from '../ModalHeader'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
 
-const PARAMS: {
+const SWITCH_NETWORK_PARAMS: {
+  [chainId in ChainId]?: {
+    chainId: string
+  }
+} = {
+  [ChainId.MAINNET]: {
+    chainId: '0x1'
+  },
+  [ChainId.MATIC]: {
+    chainId: '0x89'
+  }
+}
+
+const ADD_NETWORK_PARAMS: {
   [chainId in ChainId]?: {
     chainId: string
     chainName: string
@@ -37,16 +50,13 @@ const PARAMS: {
   },
   [ChainId.MATIC]: {
     chainId: '0x89',
-    chainName: 'Matic',
+    chainName: 'Polygon',
     nativeCurrency: {
       name: 'Matic',
       symbol: 'MATIC',
       decimals: 18
     },
-    rpcUrls: [
-      //'https://matic-mainnet.chainstacklabs.com/'
-      'https://rpc-mainnet.maticvigil.com'
-    ],
+    rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
     blockExplorerUrls: ['https://polygonscan.com/']
   }
 }
@@ -121,6 +131,27 @@ export default function NetworkModal(): JSX.Element | null {
 
   if (!chainId) return null
 
+  const changeNetwork = async (key: ChainId) => {
+    const switchNetworkParams = SWITCH_NETWORK_PARAMS[key]
+    const addNetworkParams = ADD_NETWORK_PARAMS[key]
+
+    try {
+      library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          library?.send('wallet_addEthereumChain', [addNetworkParams, account])
+        } catch (addError) {
+          console.error(addError)
+        }
+      } else {
+        // handle other "switch" errors
+        console.error(switchError)
+      }
+    }
+  }
+
   return (
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
       <ModalContentWrapper>
@@ -147,8 +178,7 @@ export default function NetworkModal(): JSX.Element | null {
                 padding="0"
                 onClick={() => {
                   toggleNetworkModal()
-                  const params = PARAMS[key]
-                  library?.send('wallet_addEthereumChain', [params, account])
+                  changeNetwork(key)
                 }}
               >
                 <ListItem>
