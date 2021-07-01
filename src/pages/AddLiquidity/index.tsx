@@ -546,14 +546,14 @@ export default function AddLiquidity({
                     </TYPE.subHeader>
                   </Row>
 
-                  <Row padding="4px 0 0.5rem 0" style={{ justifyContent: 'space-between' }}>
+                  <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
                       Inventory ratio:
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={500} fontSize={14}>
                       {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
                     </TYPE.black>
-                  </Row>
+                  </AutoRow>
 
                   <PoolPriceBar
                     currencies={currencies}
