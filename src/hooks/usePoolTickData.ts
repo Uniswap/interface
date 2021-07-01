@@ -2,11 +2,12 @@ import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { useAllV3TicksQuery } from 'state/data/generated'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
+import cloneDeep from 'lodash/cloneDeep'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -62,7 +63,7 @@ export function usePoolActiveLiquidity(
   const { isLoading, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   // Find nearest valid tick for pool in case tick is not initialized.
-  const activeTick = getActiveTick(pool[1]?.tickCurrent, feeAmount)
+  const activeTick = useMemo(() => getActiveTick(pool[1]?.tickCurrent, feeAmount), [pool, feeAmount])
 
   useEffect(() => {
     if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
@@ -73,7 +74,8 @@ export function usePoolActiveLiquidity(
     const token0 = currencyA?.wrapped
     const token1 = currencyB?.wrapped
 
-    const sortedTickData = [...ticks].sort((a, b) => a.tickIdx - b.tickIdx)
+    const sortedTickData = cloneDeep(ticks)
+    sortedTickData.sort((a, b) => a.tickIdx - b.tickIdx)
 
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
@@ -81,6 +83,7 @@ export function usePoolActiveLiquidity(
     const pivot = sortedTickData.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
 
     if (pivot < 0) {
+      // consider setting a local error
       console.error('TickData pivot not found')
       return
     }
