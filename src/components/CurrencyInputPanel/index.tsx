@@ -1,6 +1,6 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import React, { useState, useCallback, ReactNode } from 'react'
+import { useState, useCallback, ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -160,6 +160,8 @@ interface CurrencyInputPanelProps {
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
+  showCurrencyAmount?: boolean
+  disableNonToken?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
 }
@@ -174,6 +176,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
+  showCurrencyAmount,
+  disableNonToken,
   renderBalance,
   fiatValue,
   priceImpact,
@@ -298,6 +302,8 @@ export default function CurrencyInputPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          showCurrencyAmount={showCurrencyAmount}
+          disableNonToken={disableNonToken}
         />
       )}
     </InputPanel>

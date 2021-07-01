@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { Percent } from '@uniswap/sdk-core'
 import styled, { ThemeContext } from 'styled-components'
 

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import JSBI from 'jsbi'
 import { Link } from 'react-router-dom'

@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import Circle from '../../assets/images/blue-loader.svg'

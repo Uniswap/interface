@@ -1,4 +1,3 @@
-import React from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'

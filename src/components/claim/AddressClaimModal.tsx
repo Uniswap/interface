@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'

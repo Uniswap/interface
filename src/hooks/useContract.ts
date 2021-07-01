@@ -28,13 +28,13 @@ import {
   V3_CORE_FACTORY_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  GOVERNANCE_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL2_ADDRESSES,
   V2_ROUTER_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
   SOCKS_CONTROLLER_ADDRESSES,
-  TICK_LENS_ADDRESSES,
+  GOVERNANCE_ALPHA_V0_ADDRESSES,
+  GOVERNANCE_ALPHA_V1_ADDRESSES,
 } from 'constants/addresses'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useMemo } from 'react'
@@ -48,34 +48,19 @@ import { useActiveWeb3React } from './web3'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | { [chainId: number]: string } | { [chainId: number]: string }[] | undefined,
+  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any,
   withSignerIfPossible = true
 ): T | null {
   const { library, account, chainId } = useActiveWeb3React()
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !library || !chainId) {
-      return null
-    }
+    if (!addressOrAddressMap || !ABI || !library || !chainId) return null
     let address: string | undefined
-    if (typeof addressOrAddressMap === 'string') {
-      address = addressOrAddressMap
-    } else if (!Array.isArray(addressOrAddressMap)) {
-      address = addressOrAddressMap[chainId]
-    }
-    if (!address && !Array.isArray(addressOrAddressMap)) {
-      return null
-    }
+    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
+    else address = addressOrAddressMap[chainId]
+    if (!address) return null
     try {
-      if (Array.isArray(addressOrAddressMap)) {
-        return addressOrAddressMap.map((addressMap) =>
-          getContract(addressMap[chainId], ABI, library, withSignerIfPossible && account ? account : undefined)
-        )
-      }
-      if (!address) {
-        return null
-      }
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
@@ -133,23 +118,15 @@ export function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
-export function useGovernanceContracts(): Contract[] | null {
-  const { library, account, chainId } = useActiveWeb3React()
-
-  return useMemo(() => {
-    if (!library || !chainId) {
-      return null
-    }
-    try {
-      return GOVERNANCE_ADDRESSES.filter((addressMap) => Boolean(addressMap[chainId])).map((addressMap) =>
-        getContract(addressMap[chainId], GOVERNANCE_ABI, library, account ? account : undefined)
-      )
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
-    }
-  }, [library, chainId, account])
+export function useGovernanceV0Contract(): Contract | null {
+  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GOVERNANCE_ABI, true)
 }
+
+export function useGovernanceV1Contract(): Contract | null {
+  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GOVERNANCE_ABI, true)
+}
+
+export const useLatestGovernanceContract = useGovernanceV1Contract
 
 export function useUniContract() {
   const { chainId } = useActiveWeb3React()
@@ -182,10 +159,4 @@ export function useV3Pool(address: string | undefined) {
 
 export function useV3Quoter() {
   return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
-}
-
-export function useTickLens(): TickLens | null {
-  const { chainId } = useActiveWeb3React()
-  const address = chainId ? TICK_LENS_ADDRESSES[chainId] : undefined
-  return useContract(address, TickLensABI) as TickLens | null
 }

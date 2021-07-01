@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 
@@ -114,9 +113,7 @@ export const ButtonGray = styled(Base)`
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
   font-weight: 500;
-  &:focus {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
-  }
+
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
   }
