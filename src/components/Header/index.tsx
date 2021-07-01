@@ -33,10 +33,6 @@ const HeaderFrame = styled.div`
     width: calc(100%);
     position: relative;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
 
 const HeaderControls = styled.div`
