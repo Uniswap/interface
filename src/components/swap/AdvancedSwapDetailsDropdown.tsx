@@ -5,9 +5,8 @@ import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapPlatformSelector } from './SwapPlatformSelector'
 import { AutoColumn } from '../Column'
-import { Settings } from 'react-feather'
 import { Box, Flex } from 'rebass'
-import { useMainnetGasPrices, useToggleSettingsMenu } from '../../state/application/hooks'
+import { useMainnetGasPrices } from '../../state/application/hooks'
 import { GreenGasPriceOption, OrangeGasPriceOption, PurpleGasPriceOption } from '../GasBadges'
 import { formatUnits } from 'ethers/lib/utils'
 import { MainnetGasPrice } from '../../state/application/actions'
@@ -84,7 +83,6 @@ export default function AdvancedSwapDetailsDropdown({
   const { chainId } = useActiveWeb3React()
   const [userPreferredMainnetGasPrice, setUserPreferredMainnetGasPrice] = useUserPreferredGasPrice()
   const [multihopEnabled, toggleMultihop] = useMultihopManager()
-  const toggleSettingsMenu = useToggleSettingsMenu()
   const mainnetGasPrices = useMainnetGasPrices()
   const lastTrade = useLastTruthy(trade)
 
@@ -151,11 +149,6 @@ export default function AdvancedSwapDetailsDropdown({
                   </MultihopSwitch>
                 </Box>
               </Flex>
-            </AdvancedDetailsFooter>
-          </Box>
-          <Box ml="8px">
-            <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} height="33px">
-              <Settings size="16px" />
             </AdvancedDetailsFooter>
           </Box>
         </SettingsFlex>
