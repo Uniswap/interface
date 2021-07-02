@@ -42,7 +42,6 @@ import { getContract } from 'utils'
 import { Erc20, ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Weth } from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
-import { SupportedChainId } from 'constants/chains'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
