@@ -650,8 +650,13 @@ export default function AddLiquidity({
 
                   {!noLiquidity && (
                     <LiquidityChartRangeInput
+                      currencyA={baseCurrency ?? undefined}
+                      currencyB={quoteCurrency ?? undefined}
+                      feeAmount={feeAmount}
                       price={
-                        price ? (invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)) : undefined
+                        price
+                          ? parseFloat(invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6))
+                          : undefined
                       }
                       priceLabel={
                         price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
@@ -673,9 +678,6 @@ export default function AddLiquidity({
                           </AutoRow>
                         ) : undefined
                       }
-                      currencyA={baseCurrency ?? undefined}
-                      currencyB={quoteCurrency ?? undefined}
-                      feeAmount={feeAmount}
                       priceLower={priceLower}
                       priceUpper={priceUpper}
                       onLeftRangeInput={onLeftRangeInput}

@@ -15,6 +15,7 @@ import { TYPE } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import Row, { RowBetween } from 'components/Row'
+import { format } from 'd3'
 
 const Wrapper = styled(Box)`
   min-height: 200px;
@@ -42,22 +43,22 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
 }
 
 export default function LiquidityChartRangeInput({
-  price,
-  priceLabel,
   currencyA,
   currencyB,
   feeAmount,
+  price,
+  priceLabel,
   priceLower,
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
 }: {
-  price: string | undefined
-  priceLabel: ReactNode | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: number
+  price: number | undefined
+  priceLabel: ReactNode | undefined
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
@@ -127,7 +128,7 @@ export default function LiquidityChartRangeInput({
                   <InfoBox message={<Trans>Nothing to show</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
                 ) : (
                   <Chart
-                    data={{ series: formattedData, current: parseFloat(price) }}
+                    data={{ series: formattedData, current: price }}
                     dimensions={{ width: 350, height: 250 }}
                     margins={{ top: 0, right: 20, bottom: 20, left: 20 }}
                     styles={{
@@ -144,9 +145,7 @@ export default function LiquidityChartRangeInput({
                         ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
                         : undefined
                     }
-                    brushLabels={(x: number) =>
-                      price ? `${((x / parseFloat(price) - 1) * 100).toFixed(2)}%` : undefined
-                    }
+                    brushLabels={(x: number) => (price ? format('.0f%')(((x - price) / price) * 100) : undefined)}
                     onBrushDomainChange={onBrushDomainChangeEnded}
                   />
                 )}
