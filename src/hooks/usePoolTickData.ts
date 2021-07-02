@@ -56,10 +56,10 @@ export function usePoolActiveLiquidity(
 
   const pool = usePool(currencyA, currencyB, feeAmount)
 
-  const { isLoading, isUninitialized, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
-
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(pool[1]?.tickCurrent, feeAmount), [pool, feeAmount])
+
+  const { isLoading, isUninitialized, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   useEffect(() => {
     if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
@@ -88,7 +88,9 @@ export function usePoolActiveLiquidity(
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tickIdx: activeTick,
       liquidityNet:
-        sortedTickData[pivot].tickIdx === activeTick ? JSBI.BigInt(sortedTickData[pivot].liquidityNet) : JSBI.BigInt(0),
+        Number(sortedTickData[pivot].tickIdx) === activeTick
+          ? JSBI.BigInt(sortedTickData[pivot].liquidityNet)
+          : JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     }
 

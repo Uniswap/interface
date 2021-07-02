@@ -124,12 +124,7 @@ export default function LiquidityChartRangeInput({
 
               <ChartWrapper>
                 {!formattedData || formattedData === [] ? (
-                  <ColumnCenter>
-                    <XCircle stroke={theme.text4} />
-                    <TYPE.darkGray padding={10}>
-                      <Trans>Nothing to show</Trans>
-                    </TYPE.darkGray>
-                  </ColumnCenter>
+                  <InfoBox message={<Trans>Nothing to show</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
                 ) : (
                   <Chart
                     data={{ series: formattedData, current: parseFloat(price) }}

@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { scaleLinear, max, min, format, ZoomTransform } from 'd3'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { scaleLinear, max, format, ZoomTransform } from 'd3'
 import { AxisBottom } from './AxisBottom'
 import { Line } from './Line'
 import { Area } from './Area'
@@ -37,7 +37,7 @@ export function Chart({
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
-        .domain([min(series, xAccessor), max(series, xAccessor)] as number[])
+        .domain([0.97 * current, 1.03 * current] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
@@ -50,7 +50,7 @@ export function Chart({
     }
 
     return scales
-  }, [series, innerWidth, innerHeight, zoom])
+  }, [current, innerWidth, series, innerHeight, zoom])
 
   const brushLabelValue = useCallback(
     (x: number) => {
