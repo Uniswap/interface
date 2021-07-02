@@ -58,8 +58,8 @@ export const Brush = ({
     east: string
   }
 }) => {
-  const brushRef = useRef<SVGGElement>(null)
-  const brushBehavior = useRef<BrushBehavior<unknown> | null>(null)
+  const brushRef = useRef<SVGGElement | null>(null)
+  const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null)
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent)
@@ -90,7 +90,7 @@ export const Brush = ({
   useEffect(() => {
     if (!brushRef.current) return
 
-    brushBehavior.current = brushX()
+    brushBehavior.current = brushX<SVGGElement>()
       .extent([
         [0, 0],
         [innerWidth, innerHeight],
@@ -102,11 +102,7 @@ export const Brush = ({
     brushBehavior.current(select(brushRef.current))
 
     if (previousBrushExtent && brushExtent[0] !== previousBrushExtent[0] && brushExtent[1] !== previousBrushExtent[1]) {
-      brushBehavior.current.move(
-        // @ts-ignore
-        select(brushRef.current),
-        brushExtent.map(xScale)
-      )
+      brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
     }
 
     // brush linear gradient
@@ -120,9 +116,7 @@ export const Brush = ({
   useEffect(() => {
     if (!brushRef.current || !brushBehavior.current) return
 
-    brushBehavior.current
-      // @ts-ignore
-      .move(select(brushRef.current), brushExtent.map(xScale))
+    brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
     // dependency on brushExtent would start an update loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xScale])

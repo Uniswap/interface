@@ -8,11 +8,6 @@ import { Brush } from './Brush'
 import { LiquidityChartRangeInputProps, ChartEntry } from './types'
 import Zoom from './Zoom'
 
-/*
- * TODO
- * - move graph inside margins and clip path at 100%
- */
-
 export const xAccessor = (d: ChartEntry) => d.price0
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity
 

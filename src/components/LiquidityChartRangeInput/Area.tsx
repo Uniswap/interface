@@ -25,14 +25,13 @@ export const Area = ({
   useMemo(
     () => (
       <Path
-        d={area()
-          .curve(curveStep)
-          .x((d: unknown) => xScale(xValue(d as ChartEntry)))
-          .y1((d: unknown) => yScale(yValue(d as ChartEntry)))
-          .y0(yScale(0))(
-          // @ts-ignore
-          series
-        )}
+        d={
+          area()
+            .curve(curveStep)
+            .x((d: unknown) => xScale(xValue(d as ChartEntry)))
+            .y1((d: unknown) => yScale(yValue(d as ChartEntry)))
+            .y0(yScale(0))(series as Iterable<[number, number]>) ?? undefined
+        }
       />
     ),
     [series, xScale, xValue, yScale, yValue]
