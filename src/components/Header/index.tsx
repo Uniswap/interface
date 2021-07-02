@@ -289,7 +289,6 @@ function Header({ history }: { history: any }) {
         <HeaderSubRow>
           {account && userNativeCurrencyBalance ? (
             <>
-              <Amount>1600 SWPR</Amount>
               <AmountDesktop>
                 {userNativeCurrencyBalance?.toFixed(2)} {nativeCurrency.symbol}
               </AmountDesktop>
