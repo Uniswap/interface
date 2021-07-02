@@ -1,3 +1,4 @@
+overrideExisting: true
 schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 documents: 'src/**/!(*.d).{ts,tsx}'
 generates:

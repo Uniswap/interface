@@ -8,14 +8,9 @@ import { retry, RetryableError } from '../../utils/retry'
 import { updateBlockNumber } from '../application/actions'
 import { useBlockNumber } from '../application/hooks'
 import { AppState } from '../index'
-import {
-  Call,
-  errorFetchingMulticallResults,
-  fetchingMulticallResults,
-  parseCallKey,
-  updateMulticallResults,
-} from './actions'
+import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { Call, parseCallKey } from './utils'
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint

@@ -470,6 +470,14 @@ export default function AddLiquidity({
                         showCommonBases
                       />
                     </RowBetween>
+
+                    <FeeSelector
+                      disabled={!currencyB || !currencyA}
+                      feeAmount={feeAmount}
+                      handleFeePoolSelect={handleFeePoolSelect}
+                      token0={currencyA?.wrapped}
+                      token1={currencyB?.wrapped}
+                    />
                   </AutoColumn>{' '}
                 </>
               )}
@@ -482,12 +490,6 @@ export default function AddLiquidity({
                 />
               ) : (
                 <>
-                  <FeeSelector
-                    disabled={!currencyB || !currencyA}
-                    feeAmount={feeAmount}
-                    handleFeePoolSelect={handleFeePoolSelect}
-                  />
-
                   {noLiquidity && (
                     <DynamicSection disabled={!currencyA || !currencyB}>
                       <AutoColumn gap="md">
