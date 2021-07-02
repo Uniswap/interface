@@ -6,12 +6,10 @@ import { SupportedChainId } from './chains'
 type AddressMap = { [chainId: number]: string }
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
-export const MULTICALL_ADDRESS: AddressMap = {
-  [SupportedChainId.GOERLI]: '0x415111A3eB93a840415bdD866DE569849A7BCe7A',
-  [SupportedChainId.KOVAN]: '0xC62B9b27207ac749f72d65A98FF177cF5eF54099',
-  [SupportedChainId.RINKEBY]: '0x7Eb94FaA912B77b23AC03bbB4860c1eb455E0693',
-  [SupportedChainId.ROPSTEN]: '0x697Ccc6465B5A14Ee5e5fb690c9a946c79fB1dfC',
-}
+export const MULTICALL_ADDRESS: AddressMap = constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
+])
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D')
 
