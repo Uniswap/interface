@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { useIsIframe } from 'hooks/useIsIframe'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
@@ -302,44 +303,51 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
+  // hide nav bar on iframe
+  const isIframe = useIsIframe()
+
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
-      </HeaderRow>
-      <HeaderLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Swap</Trans>
-        </StyledNavLink>
-        <StyledNavLink
-          id={`pool-nav-link`}
-          to={'/pool'}
-          isActive={(match, { pathname }) =>
-            Boolean(match) ||
-            pathname.startsWith('/add') ||
-            pathname.startsWith('/remove') ||
-            pathname.startsWith('/increase') ||
-            pathname.startsWith('/find')
-          }
-        >
-          <Trans>Pool</Trans>
-        </StyledNavLink>
-        <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-          <Trans>Vote</Trans>
-        </StyledNavLink>
-        <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          <Trans>Charts</Trans>
-          <sup>↗</sup>
-        </StyledExternalLink>
-      </HeaderLinks>
+      {!isIframe && (
+        <HeaderRow>
+          <Title href=".">
+            <UniIcon>
+              <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+            </UniIcon>
+          </Title>
+        </HeaderRow>
+      )}
+      {!isIframe && (
+        <HeaderLinks>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            <Trans>Swap</Trans>
+          </StyledNavLink>
+          <StyledNavLink
+            id={`pool-nav-link`}
+            to={'/pool'}
+            isActive={(match, { pathname }) =>
+              Boolean(match) ||
+              pathname.startsWith('/add') ||
+              pathname.startsWith('/remove') ||
+              pathname.startsWith('/increase') ||
+              pathname.startsWith('/find')
+            }
+          >
+            <Trans>Pool</Trans>
+          </StyledNavLink>
+          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            <Trans>Vote</Trans>
+          </StyledNavLink>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
+            <Trans>Charts</Trans>
+            <sup>↗</sup>
+          </StyledExternalLink>
+        </HeaderLinks>
+      )}
       <HeaderControls>
         <HeaderElement>
           <HideSmall>

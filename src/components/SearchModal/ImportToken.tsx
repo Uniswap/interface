@@ -18,6 +18,8 @@ import ListLogo from 'components/ListLogo'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn } from './styleds'
 import { Plural, Trans } from '@lingui/macro'
+import { shortenAddress } from 'utils'
+import { useIsIframe } from 'hooks/useIsIframe'
 
 const Wrapper = styled.div`
   position: relative;
@@ -53,6 +55,8 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
   const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
+
+  const isIframe = useIsIframe()
 
   return (
     <Wrapper>
@@ -97,7 +101,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                 </AutoColumn>
                 {chainId && (
                   <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-                    <AddressText fontSize={12}>{token.address}</AddressText>
+                    <AddressText fontSize={12}>{isIframe ? shortenAddress(token.address) : token.address}</AddressText>
                   </ExternalLink>
                 )}
                 {list !== undefined ? (
