@@ -16,6 +16,7 @@ import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import Row, { RowBetween } from 'components/Row'
 import { format } from 'd3'
+import { Bound } from 'state/mint/v3/actions'
 
 const Wrapper = styled(Box)`
   min-height: 200px;
@@ -46,6 +47,7 @@ export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
   feeAmount,
+  ticksAtLimit,
   price,
   priceLabel,
   priceLower,
@@ -57,6 +59,7 @@ export default function LiquidityChartRangeInput({
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: number
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price: number | undefined
   priceLabel: ReactNode | undefined
   priceLower?: Price<Token, Token>
@@ -145,7 +148,15 @@ export default function LiquidityChartRangeInput({
                         ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
                         : undefined
                     }
-                    brushLabels={(x: number) => (price ? format('.0f%')(((x - price) / price) * 100) : undefined)}
+                    brushLabels={(x: number) =>
+                      x < 0 && ticksAtLimit[Bound.LOWER]
+                        ? '0'
+                        : ticksAtLimit[Bound.UPPER]
+                        ? '∞'
+                        : price
+                        ? format('.0f%')(((x - price) / price) * 100)
+                        : undefined
+                    }
                     onBrushDomainChange={onBrushDomainChangeEnded}
                   />
                 )}

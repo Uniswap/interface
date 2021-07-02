@@ -743,7 +743,27 @@ export default function AddLiquidity({
                         currencyB={quoteCurrency ?? undefined}
                         feeAmount={feeAmount}
                         ticksAtLimit={ticksAtLimit}
-                        price={price ? parseFloat(invertPrice ? price.invert() : price) : undefined}
+                        price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
+                        priceLabel={
+                          price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
+                            <AutoRow gap="4px" justify="center">
+                              <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
+                                <Trans>Current Price</Trans>
+                              </TYPE.main>
+                              <TYPE.body fontWeight={500} color="text2" fontSize={12}>
+                                <HoverInlineText
+                                  maxCharacters={20}
+                                  text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                                />{' '}
+                              </TYPE.body>
+                              <TYPE.body color="text2" fontSize={12}>
+                                <Trans>
+                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                                </Trans>
+                              </TYPE.body>
+                            </AutoRow>
+                          ) : undefined
+                        }
                         priceLower={priceLower}
                         priceUpper={priceUpper}
                         onLeftRangeInput={onLeftRangeInput}
