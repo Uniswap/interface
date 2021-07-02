@@ -57,7 +57,7 @@ export default function Zoom({
 
     // zoom
     zoomBehavior.current = zoom()
-      .scaleExtent([0.1, 50])
+      .scaleExtent([0.01, 10])
       .translateExtent([
         [0, 0],
         [innerWidth, innerHeight],

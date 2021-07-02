@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { scaleLinear, max, format, ZoomTransform } from 'd3'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { scaleLinear, max, format, ZoomTransform, brushSelection } from 'd3'
 import { AxisBottom } from './AxisBottom'
 import { Line } from './Line'
 import { Area } from './Area'
+import { Bars } from './Bars'
 import { Brush } from './Brush'
 import { LiquidityChartRangeInputProps, ChartEntry } from './types'
 import Zoom from './Zoom'
@@ -59,6 +60,12 @@ export function Chart({
     [current]
   )
 
+  useEffect(() => {
+    if (!brushDomain) {
+      onBrushDomainChange(xScale.domain() as [number, number])
+    }
+  }, [brushDomain, onBrushDomainChange, xScale])
+
   return (
     <>
       <Zoom svg={svgRef.current} xScale={xScale} setZoom={setZoom} innerWidth={innerWidth} innerHeight={innerHeight} />
@@ -71,7 +78,15 @@ export function Chart({
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
-            <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
+            {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />}
+            {/* <Bars
+              series={series}
+              xScale={xScale}
+              yScale={yScale}
+              xValue={xAccessor}
+              yValue={yAccessor}
+              innerHeight={innerHeight}
+            /> */}
 
             <Line value={current} xScale={xScale} innerHeight={innerHeight} />
 
