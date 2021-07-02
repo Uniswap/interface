@@ -16,7 +16,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'KNCL',
       name: 'Kyber Network Crystal Legacy',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/1cDH5dy.png'
+      logoURI: 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
     },
     {
       chainId: 1,

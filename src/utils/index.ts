@@ -15,7 +15,8 @@ import {
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
-  KNCL_ADDRESS_ROPSTEN
+  KNCL_ADDRESS_ROPSTEN,
+  KNC
 } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
@@ -337,7 +338,7 @@ export const get24hValue = (valueNow: any, value24HoursAgo: any) => {
 
 export const getRopstenTokenLogoURL = (address: string) => {
   if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
+    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
   if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
@@ -350,8 +351,12 @@ export const getRopstenTokenLogoURL = (address: string) => {
 }
 
 export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
+  if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
+    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNC.svg'
+  }
+
   if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
+    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
   let imageURL
