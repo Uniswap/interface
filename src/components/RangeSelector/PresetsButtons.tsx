@@ -7,7 +7,7 @@ import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@uniswap/v3-sdk'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
-  padding: '8px',
+  padding: '4px',
   borderRadius: '8px',
 }))`
   color: ${({ theme }) => theme.text1};

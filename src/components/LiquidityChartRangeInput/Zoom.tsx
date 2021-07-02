@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
-import { ButtonEmpty } from 'components/Button'
+import { ButtonGray } from 'components/Button'
 import styled from 'styled-components'
 import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
 import { ZoomIn, ZoomOut } from 'react-feather'
@@ -7,14 +7,22 @@ import { ZoomIn, ZoomOut } from 'react-feather'
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-gap: 6px;
 
   position: absolute;
-  top: -55px;
+  top: -75px;
   right: 0;
 `
 
-const Button = styled(ButtonEmpty)`
-  color: ${({ theme }) => theme.text1};
+const Button = styled(ButtonGray)`
+  &:hover {
+    background-color: ${({ theme }) => theme.bg2};
+    color: ${({ theme }) => theme.text1};
+  }
+
+  width: 32px;
+  height: 32px;
+  padding: 4px;
 `
 
 export default function Zoom({
@@ -75,11 +83,11 @@ export default function Zoom({
 
   return (
     <Wrapper>
-      <Button onClick={zoomOut} disabled={false} width="40px" padding="4px">
-        <ZoomOut size={18} />
+      <Button onClick={zoomIn} disabled={false}>
+        <ZoomIn size={16} />
       </Button>
-      <Button onClick={zoomIn} disabled={false} width="40px" padding="4px">
-        <ZoomIn size={18} />
+      <Button onClick={zoomOut} disabled={false}>
+        <ZoomOut size={16} />
       </Button>
     </Wrapper>
   )

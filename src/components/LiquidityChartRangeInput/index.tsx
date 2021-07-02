@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback } from 'react'
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { DarkBlueCard } from 'components/Card'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { useColor } from 'hooks/useColor'
@@ -14,13 +13,9 @@ import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
-import Row, { RowBetween } from 'components/Row'
+import Row from 'components/Row'
 import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
-
-const Wrapper = styled(Box)`
-  min-height: 200px;
-`
 
 const ChartWrapper = styled(Box)`
   position: relative;
@@ -101,70 +96,57 @@ export default function LiquidityChartRangeInput({
   interactive = interactive && Boolean(formattedData?.length)
 
   return (
-    <DarkBlueCard>
-      <AutoColumn gap="md">
-        <RowBetween>
-          <TYPE.label>
-            <Trans>Liquidity Distribution</Trans>
-          </TYPE.label>
-        </RowBetween>
+    <AutoColumn gap="md" style={{ minHeight: '250px', marginTop: '30px' }}>
+      {isUninitialized ? (
+        <InfoBox
+          message={<Trans>Your position will appear here.</Trans>}
+          icon={<Inbox size={56} stroke={theme.text1} />}
+        />
+      ) : isLoading || !price ? (
+        <InfoBox icon={<Loader size="30px" stroke={theme.text4} />} />
+      ) : isError ? (
+        <InfoBox message={<Trans>Something went wrong...</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
+      ) : (
+        <>
+          <Row justifyItems="center">{priceLabel}</Row>
 
-        <Wrapper>
-          {isUninitialized ? (
-            <InfoBox
-              message={<Trans>Your position will appear here.</Trans>}
-              icon={<Inbox size={56} stroke={theme.text1} />}
-            />
-          ) : isLoading || !price ? (
-            <InfoBox icon={<Loader size="30px" stroke={theme.text4} />} />
-          ) : isError ? (
-            <InfoBox
-              message={<Trans>Something went wrong...</Trans>}
-              icon={<XCircle size={56} stroke={theme.text4} />}
-            />
-          ) : (
-            <>
-              <Row justifyItems="center">{priceLabel}</Row>
-
-              <ChartWrapper>
-                {!formattedData || formattedData === [] ? (
-                  <InfoBox message={<Trans>Nothing to show</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
-                ) : (
-                  <Chart
-                    data={{ series: formattedData, current: price }}
-                    dimensions={{ width: 350, height: 250 }}
-                    margins={{ top: 0, right: 20, bottom: 20, left: 20 }}
-                    styles={{
-                      brush: {
-                        handle: {
-                          west: saturate(0.1, tokenAColor) ?? theme.red1,
-                          east: saturate(0.1, tokenBColor) ?? theme.blue1,
-                        },
-                      },
-                    }}
-                    interactive={interactive}
-                    brushDomain={
-                      leftPrice && rightPrice
-                        ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                        : undefined
-                    }
-                    brushLabels={(x: number) =>
-                      x < 0 && ticksAtLimit[Bound.LOWER]
-                        ? '0'
-                        : ticksAtLimit[Bound.UPPER]
-                        ? '∞'
-                        : price
-                        ? format('.0f%')(((x - price) / price) * 100)
-                        : undefined
-                    }
-                    onBrushDomainChange={onBrushDomainChangeEnded}
-                  />
-                )}
-              </ChartWrapper>
-            </>
-          )}
-        </Wrapper>
-      </AutoColumn>
-    </DarkBlueCard>
+          <ChartWrapper>
+            {!formattedData || formattedData === [] ? (
+              <InfoBox message={<Trans>Nothing to show</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
+            ) : (
+              <Chart
+                data={{ series: formattedData, current: price }}
+                dimensions={{ width: 400, height: 250 }}
+                margins={{ top: 10, right: 20, bottom: 30, left: 20 }}
+                styles={{
+                  brush: {
+                    handle: {
+                      west: saturate(0.1, tokenAColor) ?? theme.red1,
+                      east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                    },
+                  },
+                }}
+                interactive={interactive}
+                brushDomain={
+                  leftPrice && rightPrice
+                    ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                    : undefined
+                }
+                brushLabels={(x: number) =>
+                  x < 0 && ticksAtLimit[Bound.LOWER]
+                    ? '0'
+                    : ticksAtLimit[Bound.UPPER]
+                    ? '∞'
+                    : price
+                    ? format('.0f%')(((x - price) / price) * 100)
+                    : undefined
+                }
+                onBrushDomainChange={onBrushDomainChangeEnded}
+              />
+            )}
+          </ChartWrapper>
+        </>
+      )}
+    </AutoColumn>
   )
 }

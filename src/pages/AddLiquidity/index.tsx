@@ -558,24 +558,24 @@ export default function AddLiquidity({
                           showCommonBases
                         />
                       </RowBetween>
+
+                      <FeeSelector
+                        disabled={!currencyB || !currencyA}
+                        feeAmount={feeAmount}
+                        handleFeePoolSelect={handleFeePoolSelect}
+                        token0={currencyA?.wrapped}
+                        token1={currencyB?.wrapped}
+                      />
                     </AutoColumn>{' '}
                   </>
                 )}
 
-                {hasExistingPosition && existingPosition ? (
+                {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
                     title={<Trans>Selected Range</Trans>}
                     inRange={!outOfRange}
                     ticksAtLimit={ticksAtLimit}
-                  />
-                ) : (
-                  <FeeSelector
-                    disabled={!currencyB || !currencyA}
-                    feeAmount={feeAmount}
-                    handleFeePoolSelect={handleFeePoolSelect}
-                    token0={currencyA?.wrapped}
-                    token1={currencyB?.wrapped}
                   />
                 )}
 
@@ -706,7 +706,7 @@ export default function AddLiquidity({
                   >
                     <RowBetween>
                       <TYPE.label>
-                        <Trans>Your Position</Trans>
+                        <Trans>Set your Price Range</Trans>
                       </TYPE.label>
 
                       {baseCurrency && quoteCurrency ? (
@@ -727,7 +727,8 @@ export default function AddLiquidity({
                     </RowBetween>
                     <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
                       <Trans>
-                        Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
+                        The range and details of your position are surfaced on the liquidity distribution graph below
+                        based on your inputs.{' '}
                         <ExternalLink
                           href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
                           style={{ fontSize: '14px' }}
