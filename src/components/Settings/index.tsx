@@ -21,6 +21,7 @@ import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
+import { transparentize } from 'polished'
 
 const StyledMenuIcon = styled(Settings)`
   height: 15px;
@@ -66,7 +67,7 @@ const StyledMenu = styled.button`
   position: relative;
   border: none;
   text-align: left;
-  background: ${({ theme }) => theme.bg1};
+  background: ${({ theme }) => transparentize(1, theme.bg1)};
   cursor: pointer;
 `
 
