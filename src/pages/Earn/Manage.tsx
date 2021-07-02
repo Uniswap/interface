@@ -183,7 +183,7 @@ export default function Manage({
               <Trans>Pool Rate</Trans>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo.active ? (
+              {stakingInfo?.active ? (
                 <Trans>
                   {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
                   UNI / week
@@ -317,7 +317,7 @@ export default function Manage({
                     ⚡
                   </span>
 
-                  {stakingInfo.active ? (
+                  {stakingInfo?.active ? (
                     <Trans>
                       {stakingInfo.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
                       UNI / week
