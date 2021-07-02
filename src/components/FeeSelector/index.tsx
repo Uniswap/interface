@@ -10,7 +10,6 @@ import { ButtonGray, ButtonRadioChecked } from 'components/Button'
 import styled, { keyframes } from 'styled-components/macro'
 import Badge from 'components/Badge'
 import Card from 'components/Card'
-import Loader from 'components/Loader'
 import usePrevious from 'hooks/usePrevious'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import ReactGA from 'react-ga'
@@ -139,7 +138,7 @@ export default function FeeSelector({
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
             <AutoColumn>
-              {!feeAmount || isLoading ? (
+              {!feeAmount ? (
                 <>
                   <TYPE.label>
                     <Trans>Fee tier</Trans>
@@ -160,13 +159,9 @@ export default function FeeSelector({
               )}
             </AutoColumn>
 
-            {isLoading ? (
-              <Loader size="20px" />
-            ) : (
-              <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
-                {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
-              </ButtonGray>
-            )}
+            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
+              {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
+            </ButtonGray>
           </RowBetween>
         </FocusedOutlineCard>
 
