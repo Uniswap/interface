@@ -127,6 +127,17 @@ const Divider = styled.div<{ horizontal?: boolean }>`
   height: ${props => (props.horizontal ? '100%' : 'auto')};
 `
 
+const MenuModalContent = styled.div`
+  overflow-y: auto;
+  max-height: 60vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+`;
+
 const CODE_LINK = 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
@@ -212,6 +223,22 @@ export default function SettingsTab() {
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
                 Interface settings
               </Text>
+              <CloseIcon onClick={toggle} />
+            </RowBetween>
+            <MenuModalContent>  
+              <TransactionSettings
+                rawSlippage={userSlippageTolerance}
+                setRawSlippage={setUserslippageTolerance}
+                rawPreferredGasPrice={userPreferredGasPrice}
+                setRawPreferredGasPrice={setUserPreferredGasPrice}
+                deadline={ttl}
+                setDeadline={setTtl}
+                multihop={multihop}
+                onMultihopChange={toggleMultihop}
+              />
+              <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+                Interface settings
+              </Text>
               <RowBetween>
                 <RowFixed>
                   <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
@@ -257,10 +284,10 @@ export default function SettingsTab() {
                   A DXDAO PRODUCT
                 </TYPE.body>
               </RowBetween>
-            </AutoColumn>
-          </MenuModalContentWrapper>
-        </MenuModal>
-      </StyledMenu>
-    </>
+            </MenuModalContent>
+          </AutoColumn>
+        </MenuModalContentWrapper>
+      </MenuModal>
+    </StyledMenu>
   )
 }
