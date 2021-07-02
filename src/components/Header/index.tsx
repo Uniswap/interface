@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import { useIsIframe } from 'hooks/useIsIframe'
+import { IS_WITHIN_IFRAME } from 'constants/misc'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
@@ -303,16 +303,13 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
-  // hide nav bar on iframe
-  const isIframe = useIsIframe()
-
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
-      {!isIframe && (
+      {!IS_WITHIN_IFRAME && (
         <HeaderRow>
           <Title href=".">
             <UniIcon>
@@ -321,7 +318,7 @@ export default function Header() {
           </Title>
         </HeaderRow>
       )}
-      {!isIframe && (
+      {!IS_WITHIN_IFRAME && (
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>

@@ -30,7 +30,7 @@ import AddLiquidity from './AddLiquidity'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import CreateProposal from './CreateProposal'
 import { IframeBodyWrapper } from './styled'
-import { useIsIframe } from 'hooks/useIsIframe'
+import { IS_WITHIN_IFRAME } from 'constants/misc'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -107,14 +107,13 @@ const Routes = () => {
 }
 
 export default function App() {
-  const isIframe = useIsIframe()
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
-        {isIframe ? (
+        {IS_WITHIN_IFRAME ? (
           <IframeBodyWrapper>
             <Popups />
             <Polling />

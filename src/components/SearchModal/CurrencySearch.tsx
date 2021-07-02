@@ -24,7 +24,7 @@ import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
 import useDebounce from 'hooks/useDebounce'
-import { useIsIframe } from 'hooks/useIsIframe'
+import { IS_WITHIN_IFRAME } from 'constants/misc'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -71,9 +71,6 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
-
-  // hide certain components if iframe
-  const isIframe = useIsIframe()
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
@@ -196,7 +193,7 @@ export function CurrencySearch({
             onKeyDown={handleEnter}
           />
         </Row>
-        {showCommonBases && !isIframe && (
+        {showCommonBases && !IS_WITHIN_IFRAME && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
       </PaddedColumn>
