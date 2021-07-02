@@ -23,7 +23,8 @@ export const injected = new InjectedConnector({
 // mainnet only
 export const walletConnect = new WalletConnectConnector({
   rpc: {
-    1: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`
+    1: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+    100: 'https://rpc.xdaichain.com/'
   },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
