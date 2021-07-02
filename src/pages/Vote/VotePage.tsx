@@ -38,6 +38,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { MainnetOnly } from './MainnetOnly'
 import { ProposalStatus } from './styled'
 import { t, Trans } from '@lingui/macro'
 
@@ -355,5 +356,13 @@ export default function VotePage({
       </PageWrapper>
       <SwitchLocaleLink />
     </>
+  )
+}
+
+export function VotePageMainnetOnly(props: RouteComponentProps<{ governorIndex: string; id: string }>) {
+  return (
+    <MainnetOnly>
+      <VotePage {...props} />
+    </MainnetOnly>
   )
 }

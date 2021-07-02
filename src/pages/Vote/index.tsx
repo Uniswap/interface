@@ -6,6 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
+import { MainnetOnly } from './MainnetOnly'
 import { ProposalStatus } from './styled'
 import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
@@ -105,7 +106,7 @@ const EmptyProposals = styled.div`
   align-items: center;
 `
 
-export default function Vote() {
+function Vote() {
   const { account, chainId } = useActiveWeb3React()
 
   // toggle for showing delegation modal
@@ -269,5 +270,13 @@ export default function Vote() {
       </PageWrapper>
       <SwitchLocaleLink />
     </>
+  )
+}
+
+export function VoteMainnetOnly() {
+  return (
+    <MainnetOnly>
+      <Vote />
+    </MainnetOnly>
   )
 }

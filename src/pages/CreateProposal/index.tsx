@@ -11,6 +11,7 @@ import { ButtonError } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
 import { Wrapper } from 'pages/Pool/styleds'
+import { MainnetOnly } from '../Vote/MainnetOnly'
 import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalActionDetail } from './ProposalActionDetail'
@@ -281,5 +282,13 @@ ${bodyValue}
       />
       <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
     </AppBody>
+  )
+}
+
+export function CreateProposalMainnetOnly() {
+  return (
+    <MainnetOnly>
+      <CreateProposal />
+    </MainnetOnly>
   )
 }
