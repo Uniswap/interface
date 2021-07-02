@@ -50,7 +50,11 @@ export function Chart({
 
   const brushLabelValue = useCallback(
     (x: number) => {
-      return current ? format('0.02%')((x - current) / current) : ''
+      return current
+        ? format('0.02%')(
+            ((x < current ? -1 : 1) * (Math.max(x, current) - Math.min(x, current))) / Math.min(x, current)
+          )
+        : ''
     },
     [current]
   )
