@@ -1,33 +1,37 @@
 import React, { useMemo } from 'react'
-import { ScaleLinear } from 'd3'
-import styled from 'styled-components'
+import { Axis as d3Axis, axisBottom, NumberValue, ScaleLinear, select } from 'd3'
+import styled from 'styled-components/macro'
 
-const Tick = styled.text`
-  font-size: 10px;
-  opacity: 0.6;
-  fill: ${({ theme }) => theme.text1};
+const StyledGroup = styled.g`
+  /* will apply to <text> and <line> */
+  color: ${({ theme }) => theme.text2};
 `
+
+const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
+  const axisRef = (axis: SVGGElement) => {
+    axis &&
+      select(axis)
+        .call(axisGenerator)
+        .call((g) => g.select('.domain').remove())
+  }
+
+  return <g ref={axisRef} />
+}
 
 export const AxisBottom = ({
   xScale,
   innerHeight,
-  tickOffset = 15,
+  offset = 5,
 }: {
   xScale: ScaleLinear<number, number>
   innerHeight: number
-  tickOffset?: number
+  offset?: number
 }) =>
   useMemo(
     () => (
-      <g>
-        {xScale.ticks(6).map((tickValue) => (
-          <g key={tickValue} transform={`translate(${xScale(tickValue)}, 0)`}>
-            <Tick style={{ textAnchor: 'middle' }} dy=".71em" y={innerHeight + tickOffset}>
-              {tickValue}
-            </Tick>
-          </g>
-        ))}
-      </g>
+      <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
+        <Axis axisGenerator={axisBottom(xScale).ticks(6)} />
+      </StyledGroup>
     ),
-    [innerHeight, tickOffset, xScale]
+    [innerHeight, offset, xScale]
   )
