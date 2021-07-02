@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Multicall2 } from '../../abis/types'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
@@ -11,15 +10,16 @@ import { AppState } from '../index'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Call, parseCallKey } from './utils'
+import { UniswapInterfaceMulticall } from 'types/v3'
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
- * @param multicall2Contract multicall contract to fetch against
+ * @param multicall multicall contract to fetch against
  * @param chunk chunk of calls to make
  * @param minBlockNumber minimum block number of the result set
  */
 async function fetchChunk(
-  multicall2Contract: Multicall2,
+  multicall: UniswapInterfaceMulticall,
   chunk: Call[],
   minBlockNumber: number
 ): Promise<{
@@ -30,9 +30,8 @@ async function fetchChunk(
   let resultsBlockNumber: number
   let results: { success: boolean; returnData: string }[]
   try {
-    const { blockNumber, returnData } = await multicall2Contract.callStatic.tryBlockAndAggregate(
-      false,
-      chunk.map((obj) => ({ target: obj.address, callData: obj.callData })),
+    const { blockNumber, returnData } = await multicall.callStatic.multicall(
+      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 })),
       { blockTag: minBlockNumber }
     )
     resultsBlockNumber = blockNumber.toNumber()
