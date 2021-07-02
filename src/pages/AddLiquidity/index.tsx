@@ -56,6 +56,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { SupportedChainId } from 'constants/chains'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -186,6 +187,63 @@ export default function AddLiquidity({
   const allowedSlippage = useUserSlippageToleranceWithDefault(
     outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
   )
+
+  // only called on optimism, atm
+  async function onCreate() {
+    if (!chainId || !library) return
+
+    if (!positionManager || !currencyA || !currencyB) {
+      return
+    }
+
+    if (position && account && deadline) {
+      const { calldata, value } = NonfungiblePositionManager.createCallParameters(position.pool)
+
+      const txn: { to: string; data: string; value: string } = {
+        to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
+        data: calldata,
+        value,
+      }
+
+      setAttemptingTxn(true)
+
+      library
+        .getSigner()
+        .estimateGas(txn)
+        .then((estimate) => {
+          const newTxn = {
+            ...txn,
+            gasLimit: calculateGasMargin(chainId, estimate),
+          }
+
+          return library
+            .getSigner()
+            .sendTransaction(newTxn)
+            .then((response: TransactionResponse) => {
+              setAttemptingTxn(false)
+              addTransaction(response, {
+                summary: t`Create ${currencyA?.symbol}/${currencyB?.symbol} V3 pool`,
+              })
+              setTxHash(response.hash)
+              ReactGA.event({
+                category: 'Liquidity',
+                action: 'Create',
+                label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+              })
+            })
+        })
+        .catch((error) => {
+          console.error('Failed to send transaction', error)
+          setAttemptingTxn(false)
+          // we only care if the error is something _other_ than the user rejected the tx
+          if (error?.code !== 4001) {
+            console.error(error)
+          }
+        })
+    } else {
+      return
+    }
+  }
 
   async function onAdd() {
     if (!chainId || !library || !account) return
@@ -384,6 +442,9 @@ export default function AddLiquidity({
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+
+  // flag for whether pool creation must be a separate tx
+  const mustCreateSeparately = noLiquidity && chainId === SupportedChainId.OPTIMISTIC_KOVAN
 
   return (
     <>
@@ -752,11 +813,19 @@ export default function AddLiquidity({
                           )}
                         </RowBetween>
                       )}
+                    {mustCreateSeparately && (
+                      <ButtonError onClick={onCreate}>
+                        <Text fontWeight={500}>
+                          <Trans>Create</Trans>
+                        </Text>
+                      </ButtonError>
+                    )}
                     <ButtonError
                       onClick={() => {
                         expertMode ? onAdd() : setShowConfirm(true)
                       }}
                       disabled={
+                        mustCreateSeparately ||
                         !isValid ||
                         (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
                         (!argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled)
