@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
+import { SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
@@ -17,11 +18,13 @@ import { UniswapInterfaceMulticall } from 'types/v3'
  * @param multicall multicall contract to fetch against
  * @param chunk chunk of calls to make
  * @param minBlockNumber minimum block number of the result set
+ * @param useBlockTag whether to use the block tag option in the request
  */
 async function fetchChunk(
   multicall: UniswapInterfaceMulticall,
   chunk: Call[],
-  minBlockNumber: number
+  minBlockNumber: number,
+  useBlockTag: boolean
 ): Promise<{
   results: { success: boolean; returnData: string }[]
   blockNumber: number
@@ -31,9 +34,8 @@ async function fetchChunk(
   let results: { success: boolean; returnData: string }[]
   try {
     const { blockNumber, returnData } = await multicall.callStatic.multicall(
-      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 }))
-      // todo: this breaks against optimism's node
-      // { blockTag: minBlockNumber }
+      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 })),
+      useBlockTag ? { blockTag: minBlockNumber } : {}
     )
     resultsBlockNumber = blockNumber.toNumber()
     results = returnData
@@ -161,11 +163,21 @@ export default function Updater(): null {
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
-        const { cancel, promise } = retry(() => fetchChunk(multicall2Contract, chunk, latestBlockNumber), {
-          n: Infinity,
-          minWait: 1000,
-          maxWait: 2500,
-        })
+        const { cancel, promise } = retry(
+          () =>
+            fetchChunk(
+              multicall2Contract,
+              chunk,
+              latestBlockNumber,
+              /* TODO: we do not use the block tag on optimism since it errors */ chainId !==
+                SupportedChainId.OPTIMISTIC_KOVAN
+            ),
+          {
+            n: Infinity,
+            minWait: 1000,
+            maxWait: 2500,
+          }
+        )
         promise
           .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
             // accumulates the length of all previous indices
