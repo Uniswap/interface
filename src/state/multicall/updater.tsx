@@ -5,16 +5,12 @@ import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
 import chunkArray from '../../utils/chunkArray'
 import { retry, RetryableError } from '../../utils/retry'
+import { updateBlockNumber } from '../application/actions'
 import { useBlockNumber } from '../application/hooks'
 import { AppState } from '../index'
-import {
-  Call,
-  errorFetchingMulticallResults,
-  fetchingMulticallResults,
-  parseCallKey,
-  updateMulticallResults,
-} from './actions'
+import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { Call, parseCallKey } from './utils'
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
@@ -149,8 +145,8 @@ export default function Updater(): null {
 
     const chunkedCalls = chunkArray(calls)
 
-    if (cancellations.current?.blockNumber !== latestBlockNumber) {
-      cancellations.current?.cancellations?.forEach((c) => c())
+    if (cancellations.current && cancellations.current.blockNumber !== latestBlockNumber) {
+      cancellations.current.cancellations.forEach((c) => c())
     }
 
     dispatch(
@@ -171,8 +167,6 @@ export default function Updater(): null {
         })
         promise
           .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
-            cancellations.current = { cancellations: [], blockNumber: latestBlockNumber }
-
             // accumulates the length of all previous indices
             const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
             const lastCallKeyIndex = firstCallKeyIndex + returnData.length
@@ -216,10 +210,14 @@ export default function Updater(): null {
                 })
               )
             }
+
+            if (fetchBlockNumber > latestBlockNumber) {
+              dispatch(updateBlockNumber({ chainId, blockNumber: fetchBlockNumber }))
+            }
           })
           .catch((error: any) => {
             if (error.isCancelledError) {
-              console.debug('Cancelled fetch for blockNumber', latestBlockNumber)
+              console.debug('Cancelled fetch for blockNumber', latestBlockNumber, chunk, chainId)
               return
             }
             console.error('Failed to fetch multicall chunk', chunk, chainId, error)

@@ -86,9 +86,9 @@ const AutonomousProposalCTA = styled.div`
 export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
 
-  const latestProposalId = useLatestProposalId(account ?? '0x0000000000000000000000000000000000000000') ?? '0'
+  const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
   const latestProposalData = useProposalData(0, latestProposalId)
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -261,7 +261,7 @@ ${bodyValue}
         <CreateProposalButton
           proposalThreshold={proposalThreshold}
           hasActiveOrPendingProposal={
-            latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
+            latestProposalData?.status === ProposalState.ACTIVE || latestProposalData?.status === ProposalState.PENDING
           }
           hasEnoughVote={hasEnoughVote}
           isFormInvalid={isFormInvalid}

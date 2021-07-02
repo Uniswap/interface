@@ -1,4 +1,3 @@
-import React from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import styled from 'styled-components/macro'

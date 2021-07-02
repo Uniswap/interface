@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Italian\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ETH"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Massimo)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Visualizza su Explorer)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -148,6 +152,7 @@ msgid "Account"
 msgstr "Account"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Attivo"
 
@@ -266,6 +271,14 @@ msgstr "Approvazione"
 msgid "Approving {0}"
 msgstr "Approvazione di {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum Token Bridge"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
@@ -299,13 +312,16 @@ msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Ideale per coppie esotiche."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Ideale per la maggior parte delle coppie."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Ideale per coppie stabili."
@@ -326,9 +342,17 @@ msgstr "Aggiungendo questa lista si suppone implicitamente che i dati siano corr
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Collegando un portafoglio, accetti i <0>Termini di servizio di Uniswap Labs</0> e riconosci di aver letto e compreso il <1>La dichiarazione di non responsabilità del protocollo Uniswap</1>."
 
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Annullato"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Cambia"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Cambia la tua rete per tornare a L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -566,6 +590,10 @@ msgstr "Prezzo corrente"
 msgid "Current {0} Price:"
 msgstr "Prezzo {0} corrente:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "sconfitto"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Voti Delegati"
@@ -573,6 +601,10 @@ msgstr "Voti Delegati"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegato a:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Voti delegati"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -596,6 +628,10 @@ msgstr "Token del deposito UNI-V2 LP"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Liquidità dei depositi"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Deposito ad Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -706,6 +742,10 @@ msgstr "Errore di connessione. Prova ad aggiornare la pagina."
 msgid "Error importing list"
 msgstr "Errore nell'importazione della lista"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Eseguito"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Risultati espansi dalle liste Token inattive"
@@ -714,6 +754,14 @@ msgstr "Risultati espansi dalle liste Token inattive"
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "La modalità Esperto disattiva il prompt delle transazioni di conferma e permette operazioni ad alto slittamento che spesso si traducono in cattive tariffe e fondi persi."
 
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Scaduto"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Esplorare"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Esplora i pool popolari su Uniswap Analytics."
@@ -721,6 +769,10 @@ msgstr "Esplora i pool popolari su Uniswap Analytics."
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Livello Di Tariffa"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Livello tariffario"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -743,6 +795,7 @@ msgstr "Da (al massimo)"
 msgid "Get support on Discord"
 msgstr "Ottieni supporto su Discord"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Nascondere"
@@ -851,6 +904,10 @@ msgstr "Destinatario non valido"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Impara"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Per saperne di più"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1001,6 +1058,10 @@ msgstr "Nessuna liquidità V2 trovata."
 msgid "No active pools"
 msgstr "Nessun pool attivo"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Nessuna descrizione."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Nessuna liquidità trovata."
@@ -1016,6 +1077,10 @@ msgstr "Nessuna proposta trovata."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Nessun risultato trovato."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Non creato"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1073,6 +1138,10 @@ msgstr "Proprietario"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Pool partecipanti"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "in attesa di"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1181,6 +1250,10 @@ msgstr "Azione proposta"
 msgid "Proposer"
 msgstr "Proponente"
 
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "In coda"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tariffe"
@@ -1204,6 +1277,10 @@ msgstr "Per saperne di più sugli asset non supportati"
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "Transazioni Recenti"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Destinatario"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1260,14 +1337,6 @@ msgstr "Itinerario"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Cerca nome o incolla indirizzo"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Seleziona il pool"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Seleziona un tipo di pool in base alla commissione preferita del provider di liquidità."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1359,6 +1428,10 @@ msgstr "Invio della proposta"
 msgid "Submitting Vote"
 msgstr "Invio del voto"
 
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Successo"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
 msgstr "Fornitura"
@@ -1384,9 +1457,17 @@ msgstr "Scambia Comunque"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Scambio di {0} {1} per {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Passa a Ethereum"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Grazie per far parte della community di Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "La % che guadagnerai in commissioni."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1428,6 +1509,10 @@ msgstr "Impossibile inviare la transazione perché il termine è scaduto. Si pre
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Questi gettoni sono comunemente accoppiati con altri gettoni."
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Questa è una versione alpha di Uniswap sulla rete Arbitrum. È necessario collegare le risorse L1 alla rete per scambiarle."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Questo token non viene visualizzato negli elenchi di token attivi. Assicurati che questo sia il token che vuoi scambiare."
@@ -1449,6 +1534,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Suggerimento: i token personalizzati sono memorizzati localmente nel tuo browser"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "A"
@@ -1555,6 +1642,10 @@ msgstr "Commissioni non richieste"
 msgid "Unclaimed:"
 msgstr "Non Richiesto:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Indeterminato"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap Governance"
@@ -1574,6 +1665,10 @@ msgstr "Uniswap attività minerarie di liquidità"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Contratto di migrazione Uniswap↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Uniswap su <0>Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1605,6 +1700,10 @@ msgstr "Asset Non Supportato"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Asset Non Supportato"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Senza titolo"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1701,6 +1800,10 @@ msgstr "La votazione termina approssimativamente {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "In Attesa Di Conferma"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Indirizzo portafoglio o nome ENS"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -2038,6 +2141,14 @@ msgstr "{0} • Aggiunto dall'utente"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "{0}commissione 0%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% seleziona"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

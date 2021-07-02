@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'

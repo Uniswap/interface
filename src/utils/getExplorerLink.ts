@@ -27,6 +27,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       case ExplorerDataType.TRANSACTION:
         return `https://explorer.arbitrum.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
         return `https://explorer.arbitrum.io/address/${data}`
       case ExplorerDataType.BLOCK:
         return `https://explorer.arbitrum.io/block/${data}`
@@ -40,6 +41,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       case ExplorerDataType.TRANSACTION:
         return `https://rinkeby-explorer.arbitrum.io/tx/${data}`
       case ExplorerDataType.ADDRESS:
+      case ExplorerDataType.TOKEN:
         return `https://rinkeby-explorer.arbitrum.io/address/${data}`
       case ExplorerDataType.BLOCK:
         return `https://rinkeby-explorer.arbitrum.io/block/${data}`

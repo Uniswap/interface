@@ -1,5 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Modal from '../Modal'

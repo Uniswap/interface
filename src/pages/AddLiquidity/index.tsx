@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
@@ -73,9 +73,9 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
-import LiquidityDepth from 'components/LiquidityDepth'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import PresetsButtons from 'components/RangeSelector/PresetsButtons'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -574,6 +574,8 @@ export default function AddLiquidity({
                     disabled={!currencyB || !currencyA}
                     feeAmount={feeAmount}
                     handleFeePoolSelect={handleFeePoolSelect}
+                    token0={currencyA?.wrapped}
+                    token1={currencyB?.wrapped}
                   />
                 )}
 
@@ -736,12 +738,12 @@ export default function AddLiquidity({
                     </TYPE.main>
 
                     {!noLiquidity && (
-                      <LiquidityDepth
+                      <LiquidityChartRangeInput
                         currencyA={baseCurrency ?? undefined}
                         currencyB={quoteCurrency ?? undefined}
                         feeAmount={feeAmount}
                         ticksAtLimit={ticksAtLimit}
-                        price={price ? (invertPrice ? price.invert() : price) : undefined}
+                        price={price ? parseFloat(invertPrice ? price.invert() : price) : undefined}
                         priceLower={priceLower}
                         priceUpper={priceUpper}
                         onLeftRangeInput={onLeftRangeInput}

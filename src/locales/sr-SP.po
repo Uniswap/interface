@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ЕТХ"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Макс)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Поглед у Екплореру)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -148,6 +152,7 @@ msgid "Account"
 msgstr "Рачун"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Активно"
 
@@ -266,6 +271,14 @@ msgstr "Одобравање"
 msgid "Approving {0}"
 msgstr "Одобравање {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Арбитрум Екплорер"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Арбитрум Токен Бридге"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Јеси ли сигуран?"
@@ -299,13 +312,16 @@ msgid "Balance: {0} {1}"
 msgstr "Стање: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Најбоље за егзотичне парове."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Најбоље за већину парова."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Најбоље за стабилне парове."
@@ -326,9 +342,17 @@ msgstr "Додавањем ове листе имплицитно сте саг�
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Повезивањем новчаника прихватате Uniswap Labs <0>Услове коришћења услуге</0> и потврђујете да сте прочитали и разумели <1>Изјаву о одрицању одговорности Uniswap протокола</1>."
 
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Отказано"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Промена"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Промените мрежу да бисте се вратили на Л1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -566,6 +590,10 @@ msgstr "Тренутна цена"
 msgid "Current {0} Price:"
 msgstr "Тренутна {0} цена:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Поражени"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Делегирајте гласове"
@@ -573,6 +601,10 @@ msgstr "Делегирајте гласове"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Делегирано за:"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Делегирани гласови"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -596,6 +628,10 @@ msgstr "Положите UNI-V2 LP токене"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Депозит на Арбитрум"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -706,6 +742,10 @@ msgstr "Грешка при повезивању. Покушајте да осв
 msgid "Error importing list"
 msgstr "Грешка при увозу листе"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Погубљен"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Проширени резултати са неактивних листа токена"
@@ -714,6 +754,14 @@ msgstr "Проширени резултати са неактивних лист
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Експертни режим искључује упит за потврду трансакције и омогућава велике клизне трансакције које често резултирају лошим стопама и изгубљеним новчаним средствима."
 
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Истекло"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Истражите"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Истражите популарне фондове на Uniswap Аналитици."
@@ -721,6 +769,10 @@ msgstr "Истражите популарне фондове на Uniswap Ана
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Ниво накнаде"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Ниво накнада"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -743,6 +795,7 @@ msgstr "Од (највише)"
 msgid "Get support on Discord"
 msgstr "Затражите подршку на Discord-у"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Сакрити"
@@ -851,6 +904,10 @@ msgstr "Неважећи прималац"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Научи"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Сазнајте више"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1001,6 +1058,10 @@ msgstr "Није пронађена ликвидност V2."
 msgid "No active pools"
 msgstr "Нема активних фондова"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Нема описа."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Није пронађена ликвидност."
@@ -1016,6 +1077,10 @@ msgstr "Није пронађен ниједан предлог."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Нема резултата."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Није створено"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1073,6 +1138,10 @@ msgstr "Власник"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Фондови који учествују"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "нерешен"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1181,6 +1250,10 @@ msgstr "Предложена акција"
 msgid "Proposer"
 msgstr "Предлагач"
 
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "У реду"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Стопе"
@@ -1204,6 +1277,10 @@ msgstr "Прочитајте више о неподржаним материја
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "Недавне трансакције"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Прималац"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1260,14 +1337,6 @@ msgstr "Рута"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Претражите име или налепите адресу"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Изаберите Фонд"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Изаберите врсту базена на основу жељене накнаде за провајдера ликвидности."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1359,6 +1428,10 @@ msgstr "Подношење предлога"
 msgid "Submitting Vote"
 msgstr "Слање гласа"
 
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Успео"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
 msgstr "Снабдевање"
@@ -1384,9 +1457,17 @@ msgstr "Замени свеједно"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Замена {0} {1} за {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Пребаците се на Етхереум"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Хвала вам што сте део заједнице Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "% Који ћете зарадити на накнадама."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1428,6 +1509,10 @@ msgstr "Трансакција није могла бити послата је�
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ови токени су обично упарени са другим токенима."
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Ово је алфа издање Унисвап-а на мрежи Арбитрум. Морате повезати средства Л1 на мрежу да бисте их заменили."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Овај токен се не појављује на листи активних токена. Уверите се да је ово жетон којим желите да тргујете."
@@ -1449,6 +1534,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Савет: Прилагођени токени се чувају локално у вашем прегледачу"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "До"
@@ -1555,6 +1642,10 @@ msgstr "Ненаплаћене накнаде"
 msgid "Unclaimed:"
 msgstr "Непотраживано:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Неодређено"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap управљање"
@@ -1574,6 +1665,10 @@ msgstr "Uniswap рударење ликвидности"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap уговор о миграцији↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Откажите на <0> Арбитруму</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1605,6 +1700,10 @@ msgstr "Неподржано средство"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Неподржана средства"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Без наслова"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1701,6 +1800,10 @@ msgstr "Гласање се завршава приближно {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Чека се потврда"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Адреса новчаника или ЕНС име"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -2038,6 +2141,14 @@ msgstr "{0} • Додао корисник"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "Накнада од {0}"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% изабрано"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

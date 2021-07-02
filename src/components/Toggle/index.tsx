@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`

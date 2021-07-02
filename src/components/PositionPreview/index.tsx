@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, ReactNode } from 'react'
+import { useState, useCallback, useContext, ReactNode } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'

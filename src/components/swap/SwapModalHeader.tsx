@@ -1,7 +1,7 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'

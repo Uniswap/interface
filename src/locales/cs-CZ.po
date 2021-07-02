@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-22 19:52+0000\n"
+"POT-Creation-Date: 2021-07-01 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-22 20:05\n"
+"PO-Revision-Date: 2021-07-01 20:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -34,6 +34,10 @@ msgstr "${0} ETH"
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Max)"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "(View on Explorer)"
+msgstr "(Zobrazit v Průzkumníkovi)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -148,6 +152,7 @@ msgid "Account"
 msgstr "Účet"
 
 #: src/components/SearchModal/ImportRow.tsx
+#: src/pages/Vote/styled.tsx
 msgid "Active"
 msgstr "Aktivní"
 
@@ -266,6 +271,14 @@ msgstr "Schvalování"
 msgid "Approving {0}"
 msgstr "Schvalování {0}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Explorer"
+msgstr "Arbitrum Explorer"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Arbitrum Token Bridge"
+msgstr "Arbitrum Token Bridge"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Jste si jisti?"
@@ -299,13 +312,16 @@ msgid "Balance: {0} {1}"
 msgstr "Zůstatek: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
 msgstr "Nejlepší pro exotické páry."
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
 msgstr "Nejlepší pro většinu párů."
 
+#: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
 msgstr "Nejlepší pro stabilní páry."
@@ -326,9 +342,17 @@ msgstr "Přidáním tohoto seznamu implicitně vyjadřujete důvěru v to, že d
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
 msgstr "Připojením peněženky souhlasíte s <0>Podmínkami služeb</0> společnosti Uniswap Labs a potvrzujete, že jste si přečetli <1>Odřeknutí odpovědnosti za protokol Uniswap</1> a porozuměli jste mu."
 
+#: src/pages/Vote/styled.tsx
+msgid "Canceled"
+msgstr "Zrušeno"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Změnit"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Change your network to go back to L1"
+msgstr "Změňte síť a vraťte se zpět na L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -566,6 +590,10 @@ msgstr "Aktuální cena"
 msgid "Current {0} Price:"
 msgstr "Aktuální {0} cena:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Defeated"
+msgstr "Poražený"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
 msgstr "Delegovat hlasy"
@@ -573,6 +601,10 @@ msgstr "Delegovat hlasy"
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegováno (komu):"
+
+#: src/state/governance/hooks.ts
+msgid "Delegated votes"
+msgstr "Delegované hlasy"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -596,6 +628,10 @@ msgstr "Uložit žetony UNI-V2 LP"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Uložit likviditu"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Deposit to Arbitrum"
+msgstr "Vklad na arbitráž"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -706,6 +742,10 @@ msgstr "Chyba připojení. Zkuste obnovit stránku."
 msgid "Error importing list"
 msgstr "Chyba importu seznamu"
 
+#: src/pages/Vote/styled.tsx
+msgid "Executed"
+msgstr "Popraven"
+
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Rozšířené výsledky z neaktivních seznamů žetonů"
@@ -714,12 +754,24 @@ msgstr "Rozšířené výsledky z neaktivních seznamů žetonů"
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Režim Expert vypne výzvu k potvrzení transakce a umožní obchody s velkým skluzem, které často vedou ke špatným kurzům a ztrátě finančních prostředků."
 
+#: src/pages/Vote/styled.tsx
+msgid "Expired"
+msgstr "Vypršela"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Explore"
+msgstr "Prozkoumat"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Prozkoumejte populární fondy na Analýze Uniswap."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
+msgstr "Úroveň poplatku"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
 msgstr "Úroveň poplatku"
 
 #: src/pages/Vote/VotePage.tsx
@@ -743,6 +795,7 @@ msgstr "Od (nanejvýš)"
 msgid "Get support on Discord"
 msgstr "Získejte podporu o Discord"
 
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Skrýt"
@@ -851,6 +904,10 @@ msgstr "Neplatný příjemce"
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Učit se"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Learn more"
+msgstr "Zjistit více"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1001,6 +1058,10 @@ msgstr "Nebyla nalezena likvidita V2."
 msgid "No active pools"
 msgstr "Žádné aktivní fondy"
 
+#: src/state/governance/hooks.ts
+msgid "No description."
+msgstr "Bez popisu."
+
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
 msgstr "Nebyla nalezena žádná likvidita."
@@ -1016,6 +1077,10 @@ msgstr "Nebyly nalezeny žádné návrhy."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Není vytvořeno"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1073,6 +1138,10 @@ msgstr "Vlastník"
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
 msgstr "Zúčastněné fondy"
+
+#: src/pages/Vote/styled.tsx
+msgid "Pending"
+msgstr "čekající"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1181,6 +1250,10 @@ msgstr "Navrhovaná akce"
 msgid "Proposer"
 msgstr "Navrhovatel"
 
+#: src/pages/Vote/styled.tsx
+msgid "Queued"
+msgstr "Ve frontě"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Sazby"
@@ -1204,6 +1277,10 @@ msgstr "Přečtěte si více o nepodporovaných aktivech"
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "Nedávné transakce"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "Příjemce"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1260,14 +1337,6 @@ msgstr "Trasa"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Vyhledejte název nebo vložte adresu"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select Pool"
-msgstr "Vyberte fond"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Na základě preferovaného poplatku poskytovateli likvidity vyberte typ fondu."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1359,6 +1428,10 @@ msgstr "Podání návrhu"
 msgid "Submitting Vote"
 msgstr "Odesílání hlasů"
 
+#: src/pages/Vote/styled.tsx
+msgid "Succeeded"
+msgstr "Uspěl"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
 msgstr "Zásoba"
@@ -1384,9 +1457,17 @@ msgstr "Přesto prohodit"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Výměna {0} {1} za {2} {3}"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "Switch to Ethereum"
+msgstr "Přepněte na Ethereum"
+
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Děkujeme, že jste součástí komunity Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "Procento, které získáte na poplatcích."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1428,6 +1509,10 @@ msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte,
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Tyto žetony bývají spárovány s jinými žetony."
 
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
+msgstr "Toto je alfa vydání Uniswap v síti Arbitrum. Musíte přemostit aktiva L1 do sítě, abyste je mohli vyměnit."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tento žeton není na seznamech aktivních žetonů. Ujistěte se, že toto je ten žeton, který chcete obchodovat."
@@ -1449,6 +1534,8 @@ msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Tip: Vlastní žetony jsou uloženy lokálně ve Vašem prohlížeči"
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
+#: src/pages/CreateProposal/ProposalActionDetail.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
 msgstr "Do"
@@ -1555,6 +1642,10 @@ msgstr "Nenárokované poplatky"
 msgid "Unclaimed:"
 msgstr "Nenárokované:"
 
+#: src/pages/Vote/styled.tsx
+msgid "Undetermined"
+msgstr "Neurčeno"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Správa Uniswap"
@@ -1574,6 +1665,10 @@ msgstr "Těžba likvidity Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Migrační kontrakt Uniswap↗"
+
+#: src/components/swap/SwapNetworkAlert.tsx
+msgid "Uniswap on <0>Arbitrum</0>"
+msgstr "Uniswap na <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1605,6 +1700,10 @@ msgstr "Nepodporované aktivum"
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
 msgstr "Nepodporovaná aktiva"
+
+#: src/state/governance/hooks.ts
+msgid "Untitled"
+msgstr "Nepojmenovaná"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1701,6 +1800,10 @@ msgstr "Hlasování končí přibližně v {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Čeká se na potvrzení"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "Adresa peněženky nebo název ENS"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -2038,6 +2141,14 @@ msgstr "{0} • Přidáno uživatelem"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0} %"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "Úroveň poplatku {0}"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% vyberte"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
