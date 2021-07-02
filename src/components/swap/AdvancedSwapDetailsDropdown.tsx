@@ -121,7 +121,6 @@ export default function AdvancedSwapDetailsDropdown({
                     >
                       INSTANT{' '}
                       {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.INSTANT], 'gwei')).toFixed(0)}{' '}
-                      gwei
                     </PurpleGasPriceOption>
                     <OrangeGasPriceOption
                       compact
@@ -130,7 +129,6 @@ export default function AdvancedSwapDetailsDropdown({
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.FAST}
                     >
                       FAST {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.FAST], 'gwei')).toFixed(0)}{' '}
-                      gwei
                     </OrangeGasPriceOption>
                     <GreenGasPriceOption
                       compact
@@ -139,7 +137,7 @@ export default function AdvancedSwapDetailsDropdown({
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.NORMAL}
                     >
                       NORMAL{' '}
-                      {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)} gwei
+                      {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)}
                     </GreenGasPriceOption>
                   </RowFixed>
                 </Box>
