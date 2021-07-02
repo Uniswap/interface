@@ -32,7 +32,8 @@ async function fetchChunk(
   try {
     const { blockNumber, returnData } = await multicall2Contract.callStatic.tryBlockAndAggregate(
       false,
-      chunk.map((obj) => ({ target: obj.address, callData: obj.callData }))
+      chunk.map((obj) => ({ target: obj.address, callData: obj.callData })),
+      { blockTag: minBlockNumber }
     )
     resultsBlockNumber = blockNumber.toNumber()
     results = returnData
