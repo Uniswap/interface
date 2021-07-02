@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -10,7 +9,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
+import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
 
 const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) and (max-width: ${
   MEDIA_WIDTHS.upToMedium + 400
@@ -34,7 +33,7 @@ const BaseWrapper = css`
     flex-shrink: 1;
   `};
 `
-const ArbitrumWrapper = styled.div`
+const L2Wrapper = styled.div`
   ${BaseWrapper}
 `
 const BaseMenuItem = css`
@@ -82,8 +81,8 @@ const L1Tag = styled.div`
   color: #c4d9f8;
   opacity: 40%;
 `
-const L2Tag = styled.div`
-  background-color: ${({ theme }) => theme.primary1};
+const L2Tag = styled.div<{ chainId: SupportedChainId }>`
+  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
   color: white;
   font-size: 12px;
@@ -157,6 +156,7 @@ const NetworkInfo = styled.button`
     background-color: ${({ theme }) => theme.bg3};
   }
 `
+
 export default function NetworkCard() {
   const { chainId, library } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>(null)
@@ -181,29 +181,30 @@ export default function NetworkCard() {
     return null
   }
 
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  if (L2_CHAIN_IDS.includes(chainId)) {
+    const info = L2_INFO[chainId]
     return (
-      <ArbitrumWrapper ref={node}>
+      <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
-          <Icon src={arbitrumLogoUrl} />
-          <span>Arbitrum</span>
-          <L2Tag>L2 Alpha</L2Tag>
+          <Icon src={info.logoUrl} />
+          <span>{NETWORK_LABELS[chainId]}</span>
+          <L2Tag chainId={chainId}>L2 Alpha</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
-            <MenuItem href="https://bridge.arbitrum.io/">
+            <MenuItem href={info.bridge}>
               <div>
-                <Trans>Arbitrum Token Bridge</Trans>
+                <Trans>{NETWORK_LABELS[chainId]} Bridge</Trans>
               </div>
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://explorer.arbitrum.io/">
+            <MenuItem href={info.explorer}>
               <div>
-                <Trans>Arbitrum Explorer</Trans>
+                <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
               </div>
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://offchainlabs.com/">
+            <MenuItem href={info.docs}>
               <div>
                 <Trans>Learn more</Trans>
               </div>
@@ -223,7 +224,7 @@ export default function NetworkCard() {
             )}
           </MenuFlyout>
         )}
-      </ArbitrumWrapper>
+      </L2Wrapper>
     )
   }
 

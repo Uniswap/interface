@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
-import arbitrumIconUrl from 'assets/svg/arbitrum_logo.svg'
-import { SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
@@ -8,8 +7,9 @@ import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { MEDIA_WIDTHS, TYPE } from 'theme'
+import { L2_INFO } from '../../constants/chains'
 
-const ArbitrumIcon = styled.img`
+const L2Icon = styled.img`
   width: 42px;
   height: 42px;
   justify-self: center;
@@ -40,8 +40,23 @@ export const ArbitrumWrapperBackgroundLightMode = css`
   background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
     radial-gradient(circle at top left, hsla(206, 50%, 75%, 0.01), hsla(215, 79%, 51%, 0.12)), hsla(0, 0%, 100%, 0.1);
 `
-const RootWrapper = styled.div<{ darkMode: boolean }>`
-  ${({ darkMode }) => (darkMode ? ArbitrumWrapperBackgroundDarkMode : ArbitrumWrapperBackgroundLightMode)};
+export const OptimismWrapperBackgroundDarkMode = css`
+  background: radial-gradient(948% 292% at 42% 0%, rgba(255, 58, 212, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%),
+    radial-gradient(98% 96% at 2% 0%, rgba(255, 39, 39, 0.5) 0%, rgba(235, 0, 255, 0.345) 96%);
+`
+export const OptimismWrapperBackgroundLightMode = css`
+  background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
+    radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
+`
+const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+  ${({ chainId, darkMode }) =>
+    chainId === SupportedChainId.OPTIMISM
+      ? darkMode
+        ? OptimismWrapperBackgroundDarkMode
+        : OptimismWrapperBackgroundLightMode
+      : darkMode
+      ? ArbitrumWrapperBackgroundDarkMode
+      : ArbitrumWrapperBackgroundLightMode};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -52,13 +67,14 @@ const RootWrapper = styled.div<{ darkMode: boolean }>`
   width: 100%;
 
   :before {
-    background-image: url(${arbitrumIconUrl});
+    background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
+    background-size: 300px;
     content: '';
     height: 300px;
     opacity: 0.1;
     position: absolute;
-    transform: rotate(25deg) translate(-90px, -8px);
+    transform: rotate(25deg) translate(-90px, -40px);
     width: 300px;
     z-index: -1;
   }
@@ -110,26 +126,27 @@ export function NetworkAlert() {
       setLocallyDimissed(true)
     }
   }, [setArbitrumAlphaAcknowledged, userEthBalance])
-  if (chainId !== SupportedChainId.ARBITRUM_ONE || arbitrumAlphaAcknowledged || locallyDismissed) {
+  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged || locallyDismissed) {
     return null
   }
+  const info = L2_INFO[chainId]
   return (
-    <RootWrapper darkMode={darkMode}>
+    <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
       <ContentWrapper>
-        <ArbitrumIcon src={arbitrumIconUrl} />
+        <L2Icon src={info.logoUrl} />
         <Header>
-          <Trans>Uniswap on Arbitrum</Trans>
+          <Trans>Uniswap on {NETWORK_LABELS[chainId]}</Trans>
         </Header>
         <Body>
           <Trans>
-            This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to
-            swap them.
+            This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network. You must bridge L1 assets to
+            the network to swap them.
           </Trans>
         </Body>
       </ContentWrapper>
-      <LinkOutToBridge href="https://bridge.arbitrum.io/" target="_blank" rel="noopener noreferrer">
-        <Trans>Deposit to Arbitrum</Trans>
+      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+        <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
     </RootWrapper>

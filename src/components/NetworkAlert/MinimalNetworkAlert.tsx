@@ -1,17 +1,18 @@
 import { Trans } from '@lingui/macro'
-import arbitrumIconUrl from 'assets/svg/arbitrum_logo.svg'
 import {
   ArbitrumWrapperBackgroundDarkMode,
   ArbitrumWrapperBackgroundLightMode,
+  OptimismWrapperBackgroundDarkMode,
+  OptimismWrapperBackgroundLightMode,
 } from 'components/NetworkAlert/NetworkAlert'
-import { SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 
-const ArbitrumIcon = styled.img`
+const L2Icon = styled.img`
   display: none;
   height: 42px;
   margin: auto 20px auto 5px;
@@ -26,8 +27,15 @@ const DesktopTextBreak = styled.div`
     display: block;
   }
 `
-const Wrapper = styled.div<{ darkMode: boolean }>`
-  ${({ darkMode }) => (darkMode ? ArbitrumWrapperBackgroundDarkMode : ArbitrumWrapperBackgroundLightMode)};
+const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+  ${({ chainId, darkMode }) =>
+    chainId === SupportedChainId.OPTIMISM
+      ? darkMode
+        ? OptimismWrapperBackgroundDarkMode
+        : OptimismWrapperBackgroundLightMode
+      : darkMode
+      ? ArbitrumWrapperBackgroundDarkMode
+      : ArbitrumWrapperBackgroundLightMode};
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -37,13 +45,14 @@ const Wrapper = styled.div<{ darkMode: boolean }>`
   width: 100%;
 
   :before {
-    background-image: url(${arbitrumIconUrl});
+    background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
+    background-size: 300px;
     content: '';
     height: 300px;
     opacity: 0.1;
     position: absolute;
-    transform: rotate(25deg) translate(-90px, -8px);
+    transform: rotate(25deg) translate(-90px, -40px);
     width: 300px;
     z-index: -1;
   }
@@ -94,18 +103,19 @@ export function MinimalNetworkAlert() {
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
 
-  if (chainId !== SupportedChainId.ARBITRUM_ONE || arbitrumAlphaAcknowledged) {
+  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged) {
     return null
   }
+  const info = L2_INFO[chainId]
   return (
-    <Wrapper darkMode={darkMode}>
-      <ArbitrumIcon src={arbitrumIconUrl} />
+    <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
+      <L2Icon src={info.logoUrl} />
       <Body>
-        <Trans>This is an alpha release of Uniswap on the Arbitrum network.</Trans>
+        <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
         <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to swap them.</Trans>
       </Body>
-      <LinkOutToBridge href="https://bridge.arbitrum.io/" target="_blank" rel="noopener noreferrer">
-        <Trans>Deposit to Arbitrum</Trans>
+      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+        <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
     </Wrapper>

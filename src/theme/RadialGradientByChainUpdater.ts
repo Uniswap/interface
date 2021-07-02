@@ -21,17 +21,29 @@ export default function RadialGradientByChainUpdater(): null {
       return
     }
 
-    if (chainId === SupportedChainId.ARBITRUM_ONE) {
-      reset(backgroundRadialGradientElement.style)
-      const arbitrumLightGradient =
-        'radial-gradient(153.32% 100% at 47.26% 0%, rgba(40, 160, 240, 0.24) 0%, rgba(255, 0, 122, 0) 100%, rgba(255, 0, 122, 0.036) 100%), #FFFFFF'
-      const arbitrumDarkGradient =
-        'radial-gradient(147.96% 96.5% at 48.06% 0%, #28A0F0 0%, rgba(251, 59, 152, 0) 100%), #1F2128'
-      backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
-      // @ts-ignore
-      backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay, normal' : 'multiply, normal'
-    } else {
-      backgroundRadialGradientElement.style.background = ''
+    switch (chainId) {
+      case SupportedChainId.ARBITRUM_ONE:
+        reset(backgroundRadialGradientElement.style)
+        const arbitrumLightGradient =
+          'radial-gradient(150% 100% at 50% 0%, rgba(40, 160, 240, 0.25) 0%, rgba(255, 0, 122, 0) 100%, rgba(255, 0, 122, 0.03) 100%), #FFFFFF'
+        const arbitrumDarkGradient =
+          'radial-gradient(150% 96% at 50% 0%, #28A0F0 0%, rgba(251, 59, 152, 0) 100%), #1F2128'
+        backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
+        // @ts-ignore
+        backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay, normal' : 'multiply, normal'
+        break
+      case SupportedChainId.OPTIMISM:
+        reset(backgroundRadialGradientElement.style)
+        const optimismLightGradient =
+          'radial-gradient(150% 100% at 50% 0%, rgba(255, 180, 180, 0.25) 0%, rgba(255, 0, 122, 0) 100%, rgba(255, 0, 122, 0.03) 100%), #FFFFFF'
+        const optimismDarkGradient =
+          'radial-gradient(150% 95% at 50% 0%, #FFB4B4 0%, rgba(251, 59, 152, 0) 100%), #1F2128'
+        backgroundRadialGradientElement.style.background = darkMode ? optimismDarkGradient : optimismLightGradient
+        // @ts-ignore
+        backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay, normal' : 'multiply, normal'
+        break
+      default:
+        backgroundRadialGradientElement.style.background = ''
     }
   }, [darkMode, chainId])
   return null
