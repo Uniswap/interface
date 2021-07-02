@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, ReactNode } from 'react'
 import { OutlineCard } from 'components/Card'
-import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes } from 'styled-components'
 import { TYPE } from 'theme'
@@ -139,7 +138,7 @@ const StepCounter = ({
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <AutoColumn gap="6px" style={{ marginBottom: '12px' }}>
+      <AutoColumn gap="6px">
         <InputTitle fontSize={12} textAlign="center">
           {title}
         </InputTitle>
