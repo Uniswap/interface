@@ -5,10 +5,11 @@ import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes } from 'styled-components'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonGray } from 'components/Button'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { formattedFeeAmount } from 'utils'
 import { Trans } from '@lingui/macro'
+import { Plus, Minus } from 'react-feather'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -24,10 +25,15 @@ const pulse = (color: string) => keyframes`
   }
 `
 
-const SmallButton = styled(ButtonPrimary)`
+const InputRow = styled.div`
+  display: grid;
+
+  grid-template-columns: 30px 1fr 30px;
+`
+
+const SmallButton = styled(ButtonGray)`
   border-radius: 8px;
-  padding: 4px 6px;
-  width: 48%;
+  padding: 4px;
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
@@ -39,9 +45,9 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
   text-align: center;
-  margin-right: 12px;
   width: 100%;
   font-weight: 500;
+  padding: 0 10px;
 `
 
 const InputTitle = styled(TYPE.small)`
@@ -137,35 +143,41 @@ const StepCounter = ({
         <InputTitle fontSize={12} textAlign="center">
           {title}
         </InputTitle>
-        <StyledInput
-          className="rate-input-0"
-          value={localValue}
-          fontSize="20px"
-          disabled={locked}
-          onUserInput={(val) => {
-            setLocalValue(val)
-          }}
-        />
+
+        <InputRow>
+          {!locked && (
+            <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
+              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
+                <Minus size={18} />
+              </ButtonLabel>
+            </SmallButton>
+          )}
+
+          <StyledInput
+            className="rate-input-0"
+            value={localValue}
+            fontSize="20px"
+            disabled={locked}
+            onUserInput={(val) => {
+              setLocalValue(val)
+            }}
+          />
+
+          {!locked && (
+            <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
+              <ButtonLabel disabled={incrementDisabled} fontSize="12px">
+                <Plus size={18} />
+              </ButtonLabel>
+            </SmallButton>
+          )}
+        </InputRow>
+
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
             {tokenB} per {tokenA}
           </Trans>
         </InputTitle>
       </AutoColumn>
-      {!locked ? (
-        <RowBetween>
-          <SmallButton onClick={handleDecrement} disabled={decrementDisabled}>
-            <ButtonLabel disabled={decrementDisabled} fontSize="12px">
-              <Trans>-{feeAmountFormatted}%</Trans>
-            </ButtonLabel>
-          </SmallButton>
-          <SmallButton onClick={handleIncrement} disabled={incrementDisabled}>
-            <ButtonLabel disabled={incrementDisabled} fontSize="12px">
-              <Trans>+{feeAmountFormatted}%</Trans>
-            </ButtonLabel>
-          </SmallButton>
-        </RowBetween>
-      ) : null}
     </FocusedOutlineCard>
   )
 }
