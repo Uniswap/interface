@@ -6,7 +6,6 @@ import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
 import { ButtonGray } from 'components/Button'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { formattedFeeAmount } from 'utils'
 import { Trans } from '@lingui/macro'
 import { Plus, Minus } from 'react-feather'
 
@@ -81,7 +80,6 @@ const StepCounter = ({
   increment,
   decrementDisabled = false,
   incrementDisabled = false,
-  feeAmount,
   width,
   locked,
   onUserInput,
@@ -98,9 +96,6 @@ const StepCounter = ({
 
   // animation if parent value updates local value
   const [pulsing, setPulsing] = useState<boolean>(false)
-
-  // format fee amount
-  const feeAmountFormatted = feeAmount ? formattedFeeAmount(feeAmount * 2) : ''
 
   const handleOnFocus = () => {
     setUseLocalValue(true)
