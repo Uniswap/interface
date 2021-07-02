@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-02 06:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -344,7 +344,7 @@ msgstr "通过连接钱包，您同意接受 Uniswap 实验室的<0>服务条款
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "取消"
+msgstr "已取消"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -592,7 +592,7 @@ msgstr "当前 {0} 兑换率："
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
-msgstr "被击败"
+msgstr "未通过"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -760,7 +760,7 @@ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
-msgstr "已到期"
+msgstr "已过期"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -1141,7 +1141,7 @@ msgstr "参与的流动池"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "待办的"
+msgstr "等待中"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1252,7 +1252,7 @@ msgstr "提案者"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
-msgstr "排队"
+msgstr "待执行"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1430,7 +1430,7 @@ msgstr "提交投票"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr "成功"
+msgstr "投票通过"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
