@@ -31,8 +31,9 @@ async function fetchChunk(
   let results: { success: boolean; returnData: string }[]
   try {
     const { blockNumber, returnData } = await multicall.callStatic.multicall(
-      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 })),
-      { blockTag: minBlockNumber }
+      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 }))
+      // todo: this breaks against optimism's node
+      // { blockTag: minBlockNumber }
     )
     resultsBlockNumber = blockNumber.toNumber()
     results = returnData
