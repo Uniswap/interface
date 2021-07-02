@@ -338,7 +338,7 @@ export const get24hValue = (valueNow: any, value24HoursAgo: any) => {
 
 export const getRopstenTokenLogoURL = (address: string) => {
   if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
+    return 'https://raw.githubusercontent.com/dynamic-amm/dmm-interface/develop/src/assets/images/KNCL.png'
   }
 
   if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
