@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "Bạn không thấy một trong các vị trí v2 của mình? <0> Nhậ
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Token UNI kiếm được đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Biên tập"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Nhập một phần trăm"
@@ -757,10 +761,6 @@ msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và c
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Đã hết hạn"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Khám phá"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."

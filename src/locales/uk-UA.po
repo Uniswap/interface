@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "Не бачите жодної з ваших позицій v2? <0>Ім�
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Зароблені токени UNI представляють акції з правом голосу в управлінні Uniswap."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Редагувати"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Введіть відсоток"
@@ -757,10 +761,6 @@ msgstr "Експертний режим вимикає підказку про �
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Термін дії закінчився"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Досліджуйте"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."

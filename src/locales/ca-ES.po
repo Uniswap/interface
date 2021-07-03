@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 19:45+0000\n"
+"POT-Creation-Date: 2021-07-01 22:14+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-07-01 20:09\n"
+"PO-Revision-Date: 2021-07-01 23:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -689,6 +689,10 @@ msgstr "No veieu cap de les vostres posicions v2? <0> Importeu-la.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Les fitxes UNI obtingudes representen accions de vot en la governança Uniswap."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Edita"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Introduïu un percentatge"
@@ -757,10 +761,6 @@ msgstr "El mode expert desactiva la sol·licitud de confirmació de la transacci
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Caducat"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Explore"
-msgstr "Explorar"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
