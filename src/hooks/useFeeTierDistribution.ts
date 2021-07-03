@@ -1,11 +1,13 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
-import { usePoolsQuery } from 'state/data/generated'
+import { useFeeTierDistributionQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { reduce } from 'lodash'
 import { useBlockNumber } from 'state/application/hooks'
 import ReactGA from 'react-ga'
 import { useMemo } from 'react'
+import { FeeTierDistributionQuery } from 'state/data/generated'
+import ms from 'ms.macro'
 
 // maximum number of blocks past which we consider the data stale
 const MAX_DATA_BLOCK_AGE = 10
@@ -62,14 +64,14 @@ export function useFeeTierDistribution(token0: Token | undefined, token1: Token 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const latestBlock = useBlockNumber()
 
-  const { isLoading, isFetching, isUninitialized, isError, data } = usePoolsQuery(
+  const { isLoading, isFetching, isUninitialized, isError, data } = useFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken,
     {
-      pollingInterval: 60000, // 1 minute
+      pollingInterval: ms`1m`,
     }
   )
 
-  const { asToken0, asToken1, _meta } = data ?? {}
+  const { asToken0, asToken1, _meta } = (data as FeeTierDistributionQuery) ?? {}
 
   return useMemo(() => {
     if (!latestBlock || !_meta || !asToken0 || !asToken1) {

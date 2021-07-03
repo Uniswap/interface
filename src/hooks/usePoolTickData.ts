@@ -4,10 +4,11 @@ import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-import { useAllV3TicksQuery } from 'state/data/generated'
+import { useAllV3TicksQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
 import cloneDeep from 'lodash/cloneDeep'
+import { AllV3TicksQuery } from 'state/data/generated'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -74,7 +75,7 @@ export function usePoolActiveLiquidity(
     const token0 = currencyA?.wrapped
     const token1 = currencyB?.wrapped
 
-    const sortedTickData = cloneDeep(ticks)
+    const sortedTickData = cloneDeep(ticks as AllV3TicksQuery['ticks'])
     sortedTickData.sort((a, b) => a.tickIdx - b.tickIdx)
 
     // find where the active tick would be to partition the array
