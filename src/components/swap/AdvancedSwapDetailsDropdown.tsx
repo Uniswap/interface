@@ -20,6 +20,8 @@ const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
   transform: ${({ show }) => (show ? 'translateY(8px)' : 'translateY(-100%)')};
   transition: transform 300ms ease;
   z-index: -1;
+  max-width: 420px;
+  width: 100%;
 `
 
 const AdvancedDetailsFooter = styled.div<{
@@ -28,11 +30,6 @@ const AdvancedDetailsFooter = styled.div<{
   padding: string
   height?: string
 }>`
-  width: ${props => (props.fullWidth ? '418px' : 'auto')};
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    width: calc(100% - 8px);
-    `}
-  max-width: 418px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};
@@ -45,7 +42,6 @@ const AdvancedDetailsFooter = styled.div<{
 `
 
 const SettingsFlex = styled(Flex)`
-  width: 418px;
   ${props => props.theme.mediaWidth.upToExtraSmall`
     width: calc(100% - 8px);
   `}
@@ -67,6 +63,12 @@ export const MultihopSwitch = styled.div<{ active: boolean }>`
   border: solid 1px ${props => (props.active ? props.theme.green1 : props.theme.red1)};
   transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   cursor: pointer;
+`
+
+const SettingsWrapper = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 interface AdvancedSwapDetailsDropdownProps {
@@ -109,7 +111,7 @@ export default function AdvancedSwapDetailsDropdown({
         <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
       </AdvancedDetailsFooter>
       {chainId === ChainId.MAINNET && !!mainnetGasPrices && (
-        <SettingsFlex>
+        <SettingsFlex width="100%">
           <Box flex="1">
             <AdvancedDetailsFooter padding="8px" height="33px">
               <Flex justifyContent="space-between">
@@ -123,7 +125,6 @@ export default function AdvancedSwapDetailsDropdown({
                     >
                       INSTANT{' '}
                       {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.INSTANT], 'gwei')).toFixed(0)}{' '}
-                      gwei
                     </PurpleGasPriceOption>
                     <OrangeGasPriceOption
                       compact
@@ -132,7 +133,6 @@ export default function AdvancedSwapDetailsDropdown({
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.FAST}
                     >
                       FAST {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.FAST], 'gwei')).toFixed(0)}{' '}
-                      gwei
                     </OrangeGasPriceOption>
                     <GreenGasPriceOption
                       compact
@@ -141,7 +141,7 @@ export default function AdvancedSwapDetailsDropdown({
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.NORMAL}
                     >
                       NORMAL{' '}
-                      {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)} gwei
+                      {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)}
                     </GreenGasPriceOption>
                   </RowFixed>
                 </Box>
@@ -153,11 +153,11 @@ export default function AdvancedSwapDetailsDropdown({
               </Flex>
             </AdvancedDetailsFooter>
           </Box>
-          <Box ml="8px">
+          <SettingsWrapper ml="8px">
             <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} height="33px">
               <Settings size="16px" />
             </AdvancedDetailsFooter>
-          </Box>
+          </SettingsWrapper>
         </SettingsFlex>
       )}
     </HideableAutoColumn>

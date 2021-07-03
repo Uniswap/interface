@@ -1,6 +1,6 @@
 {
   "name": "dxswap-dapp",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.3.13",
@@ -35,7 +35,7 @@
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",
-    "@web3-react/walletconnect-connector": "^6.1.9",
+    "@web3-react/walletconnect-connector": "^6.2.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
@@ -44,7 +44,7 @@
     "decimal.js-light": "^2.5.1",
     "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.7",
     "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.8",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.8.4",
+    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.8.5",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -94,7 +94,7 @@
     "wcag-contrast": "^3.0.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "^1.3.6"
+    "@walletconnect/web3-provider": "1.4.2-rc.2"
   },
   "scripts": {
     "start": "react-scripts start",

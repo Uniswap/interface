@@ -11,6 +11,7 @@ import { usePage } from '../../../hooks/usePage'
 import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
 import MyPairs from './MyPairs'
 import { useActiveWeb3React } from '../../../hooks'
+import { PairsFilterType } from '../ListFilter'
 
 const ListLayout = styled.div`
   display: grid;
@@ -37,19 +38,20 @@ interface PairsListProps {
     maximumApy: Percent
   }[]
   showMyPairs?: boolean
+  filter?: PairsFilterType
   loading?: boolean
 }
 
-export default function PairsList({ aggregatedPairs, loading, userLpPairs, showMyPairs }: PairsListProps) {
+export default function PairsList({ aggregatedPairs, loading, userLpPairs, showMyPairs, filter }: PairsListProps) {
   const { chainId } = useActiveWeb3React()
   const [page, setPage] = useState(1)
   const responsiveItemsPerPgae = useResponsiveItemsPerPage()
   const itemsPage = usePage(aggregatedPairs, responsiveItemsPerPgae, page, 1)
 
   useEffect(() => {
-    // reset page when connected chain changes
+    // reset page when connected chain or selected filter changes
     setPage(1)
-  }, [chainId])
+  }, [chainId, filter, aggregatedPairs])
 
   return (
     <Flex flexDirection="column">

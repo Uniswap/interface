@@ -16,6 +16,7 @@ export default function Pagination({ page, totalItems, itemsPerPage, onPageChang
       current={page}
       total={totalItems}
       pageSize={itemsPerPage}
+      simple
       showTitle={false}
       onChange={onPageChange}
       prevIcon={<ChevronLeft size={14} />}
