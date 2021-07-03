@@ -76,13 +76,14 @@ export function Chart({
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
-            {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />}
+            {/* {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />} */}
             <Bars
               series={series}
               xScale={xScale}
               yScale={yScale}
               xValue={xAccessor}
               yValue={yAccessor}
+              innerWidth={innerWidth}
               innerHeight={innerHeight}
             />
 
