@@ -3,7 +3,7 @@ import { scaleLinear, max, format, ZoomTransform } from 'd3'
 import { AxisBottom } from './AxisBottom'
 import { Line } from './Line'
 import { Area } from './Area'
-// import { Bars } from './Bars'
+import { Bars } from './Bars'
 import { Brush } from './Brush'
 import { LiquidityChartRangeInputProps, ChartEntry } from './types'
 import Zoom from './Zoom'
@@ -77,14 +77,14 @@ export function Chart({
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
             {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />}
-            {/* <Bars
+            <Bars
               series={series}
               xScale={xScale}
               yScale={yScale}
               xValue={xAccessor}
               yValue={yAccessor}
               innerHeight={innerHeight}
-            /> */}
+            />
 
             <Line value={current} xScale={xScale} innerHeight={innerHeight} />
 
