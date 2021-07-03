@@ -200,6 +200,18 @@ export const Brush = ({
         )}
       </>
     ),
-    [brushLabelValue, colors.east, colors.west, flipWestHandle, id, innerHeight, localBrushExtent, showLabels, xScale]
+    [
+      brushLabelValue,
+      colors.east,
+      colors.west,
+      flipEastHandle,
+      flipWestHandle,
+      id,
+      innerHeight,
+      innerWidth,
+      localBrushExtent,
+      showLabels,
+      xScale,
+    ]
   )
 }

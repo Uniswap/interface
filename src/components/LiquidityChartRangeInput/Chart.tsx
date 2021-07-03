@@ -33,7 +33,7 @@ export function Chart({
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
-        .domain([0.9 * current, 1.1 * current] as number[])
+        .domain([0.7 * current, 1.3 * current] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
@@ -70,7 +70,7 @@ export function Chart({
       <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
-            <rect x="0" y="0" width={innerWidth} height={innerHeight} />
+            <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
         </defs>
 

@@ -117,7 +117,7 @@ export default function LiquidityChartRangeInput({
               <Chart
                 data={{ series: formattedData, current: price }}
                 dimensions={{ width: 400, height: 250 }}
-                margins={{ top: 10, right: 20, bottom: 30, left: 20 }}
+                margins={{ top: 10, right: 20, bottom: 40, left: 20 }}
                 styles={{
                   brush: {
                     handle: {

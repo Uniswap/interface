@@ -748,20 +748,20 @@ export default function AddLiquidity({
                         priceLabel={
                           price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
                             <AutoRow gap="4px" justify="center">
-                              <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
-                                <Trans>Current Price</Trans>
-                              </TYPE.main>
-                              <TYPE.body fontWeight={500} color="text2" fontSize={12}>
-                                <HoverInlineText
-                                  maxCharacters={20}
-                                  text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                                />{' '}
-                              </TYPE.body>
-                              <TYPE.body color="text2" fontSize={12}>
-                                <Trans>
+                              <Trans>
+                                <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                  Current Price:
+                                </TYPE.main>
+                                <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                  <HoverInlineText
+                                    maxCharacters={20}
+                                    text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                                  />
+                                </TYPE.body>
+                                <TYPE.body color="text2" fontSize={12}>
                                   {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                                </Trans>
-                              </TYPE.body>
+                                </TYPE.body>
+                              </Trans>
                             </AutoRow>
                           ) : undefined
                         }
