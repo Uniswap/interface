@@ -65,6 +65,8 @@ export const Brush = ({
 
   const previousBrushExtent = usePrevious(brushExtent)
 
+  xScale.clamp(true)
+
   const brushed = useCallback(
     ({ type, selection }: { type: 'brush' | 'end'; selection: [number, number] }) => {
       if (!selection) {
@@ -157,11 +159,7 @@ export const Brush = ({
         {localBrushExtent && (
           <>
             {/* west handle */}
-            <g
-              transform={`translate(${Math.max(0, xScale(localBrushExtent[0]))}, 0), scale(${
-                flipWestHandle ? '-1' : '1'
-              }, 1)`}
-            >
+            <g transform={`translate(${xScale(localBrushExtent[0])}, 0), scale(${flipWestHandle ? '-1' : '1'}, 1)`}>
               <g clipPath={`url(#${id}-handles-clip)`}>
                 <Handle color={colors.west} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
@@ -178,11 +176,7 @@ export const Brush = ({
             </g>
 
             {/* east handle */}
-            <g
-              transform={`translate(${Math.min(innerWidth, xScale(localBrushExtent[1]))}, 0), scale(${
-                flipEastHandle ? '-1' : '1'
-              }, 1)`}
-            >
+            <g transform={`translate(${xScale(localBrushExtent[1])}, 0), scale(${flipEastHandle ? '-1' : '1'}, 1)`}>
               <g clipPath={`url(#${id}-handles-clip)`}>
                 <Handle color={colors.east} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
