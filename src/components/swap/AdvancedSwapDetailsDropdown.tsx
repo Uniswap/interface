@@ -20,6 +20,8 @@ const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
   transform: ${({ show }) => (show ? 'translateY(8px)' : 'translateY(-100%)')};
   transition: transform 300ms ease;
   z-index: -1;
+  max-width: 420px;
+  width: 100%;
 `
 
 const AdvancedDetailsFooter = styled.div<{
@@ -28,11 +30,6 @@ const AdvancedDetailsFooter = styled.div<{
   padding: string
   height?: string
 }>`
-  width: ${props => (props.fullWidth ? '418px' : 'auto')};
-  ${props => props.theme.mediaWidth.upToExtraSmall`
-    width: calc(100% - 8px);
-    `}
-  max-width: 418px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};
@@ -45,7 +42,6 @@ const AdvancedDetailsFooter = styled.div<{
 `
 
 const SettingsFlex = styled(Flex)`
-  width: 418px;
   ${props => props.theme.mediaWidth.upToExtraSmall`
     width: calc(100% - 8px);
   `}
@@ -73,8 +69,7 @@ const SettingsWrapper = styled(Box)`
   ${props => props.theme.mediaWidth.upToExtraSmall`
     display: none;
   `}
-`;
-
+`
 
 interface AdvancedSwapDetailsDropdownProps {
   trade?: Trade
@@ -116,7 +111,7 @@ export default function AdvancedSwapDetailsDropdown({
         <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
       </AdvancedDetailsFooter>
       {chainId === ChainId.MAINNET && !!mainnetGasPrices && (
-        <SettingsFlex>
+        <SettingsFlex width="100%">
           <Box flex="1">
             <AdvancedDetailsFooter padding="8px" height="33px">
               <Flex justifyContent="space-between">
