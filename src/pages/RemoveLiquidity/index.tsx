@@ -21,7 +21,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS, GAS_PRICE } from '../../constants'
+import { ROUTER_ADDRESS, GAS_PRICE, BLACKLIST_TOKENS } from '../../constants'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -444,6 +444,10 @@ export default function RemoveLiquidity({
 
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
+      if (currency.symbol && BLACKLIST_TOKENS.includes(currency.symbol)) {
+        return
+      }
+
       if (currencyIdB && currencyId(currency) === currencyIdB) {
         history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
       } else {
@@ -454,6 +458,10 @@ export default function RemoveLiquidity({
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
+      if (currency.symbol && BLACKLIST_TOKENS.includes(currency.symbol)) {
+        return
+      }
+
       if (currencyIdA && currencyId(currency) === currencyIdA) {
         history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
       } else {
