@@ -23,19 +23,17 @@ const HandleAccent = styled.path`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.bg2}
-  opacity: 1;
+  fill: ${({ theme }) => theme.black};
 `
 
 const Tooltip = styled.text`
   text-anchor: middle;
-  dominant-baseline: middle;
   font-size: 13px;
   fill: ${({ theme }) => theme.text1};
 `
 
 export const Brush = ({
-  id = 'liquidity-chart-range-input-brush',
+  id,
   xScale,
   interactive,
   brushLabelValue,
@@ -45,7 +43,7 @@ export const Brush = ({
   innerHeight,
   colors,
 }: {
-  id?: string
+  id: string
   xScale: ScaleLinear<number, number>
   interactive: boolean
   brushLabelValue: (x: number) => string
@@ -63,6 +61,7 @@ export const Brush = ({
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent)
+  const [showLabels, setShowLabels] = useState(false)
 
   const previousBrushExtent = usePrevious(brushExtent)
 
@@ -109,6 +108,7 @@ export const Brush = ({
     select(brushRef.current)
       .selectAll('.selection')
       .attr('stroke', 'none')
+      .attr('fill-opacity', '0.1')
       .attr('fill', `url(#${id}-gradient-selection)`)
   }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale])
 
@@ -121,6 +121,15 @@ export const Brush = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xScale])
 
+  useEffect(() => {
+    setShowLabels(true)
+    const timeout = setTimeout(() => setShowLabels(true), 500)
+    return () => clearTimeout(timeout)
+  }, [localBrushExtent])
+
+  const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > 15
+  const flipEastHandle = localBrushExtent && xScale(localBrushExtent[1]) > innerWidth - 15
+
   return useMemo(
     () => (
       <>
@@ -132,12 +141,12 @@ export const Brush = ({
 
           {/* clips at exactly the svg area */}
           <clipPath id={`${id}-brush-clip`}>
-            <rect x="0" y="0" width="100%" height="100%" />
+            <rect x="0" y="0" width={innerWidth} height="100%" />
           </clipPath>
 
           {/* leave some gap for the handles to show */}
           <clipPath id={`${id}-handles-clip`}>
-            <rect x="-50" y="0" width="115%" height="100%" />
+            <rect x="0" y="0" width="100%" height="100%" />
           </clipPath>
         </defs>
 
@@ -145,33 +154,53 @@ export const Brush = ({
         <g ref={brushRef} clipPath={`url(#${id}-brush-clip)`} />
 
         {/* custom brush handles */}
-        <g clipPath={`url(#${id}-handles-clip)`}>
-          {localBrushExtent ? (
-            <>
-              {/* west handle */}
-              <g transform={`translate(${xScale(localBrushExtent[0])}, 0), scale(-1, 1)`}>
+        {localBrushExtent && (
+          <>
+            {/* west handle */}
+            <g
+              transform={`translate(${Math.max(0, xScale(localBrushExtent[0]))}, 0), scale(${
+                flipWestHandle ? '-1' : '1'
+              }, 1)`}
+            >
+              <g clipPath={`url(#${id}-handles-clip)`}>
                 <Handle color={colors.west} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
-
-                <TooltipBackground y={innerHeight - 30 / 2} x="-30" height="30" width="60" rx="8" />
-                <Tooltip transform={`scale(-1, 1)`} y={innerHeight}>
-                  {brushLabelValue(localBrushExtent[0])}
-                </Tooltip>
               </g>
 
-              {/* east handle */}
-              <g transform={`translate(${xScale(localBrushExtent[1])}, 0)`}>
+              {showLabels && (
+                <g transform={`translate(50,0), scale(${flipWestHandle ? '1' : '-1'}, 1)`}>
+                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
+                  <Tooltip transform={`scale(-1, 1)`} y="15" dominantBaseline="middle">
+                    {brushLabelValue(localBrushExtent[0])}
+                  </Tooltip>
+                </g>
+              )}
+            </g>
+
+            {/* east handle */}
+            <g
+              transform={`translate(${Math.min(innerWidth, xScale(localBrushExtent[1]))}, 0), scale(${
+                flipEastHandle ? '-1' : '1'
+              }, 1)`}
+            >
+              <g clipPath={`url(#${id}-handles-clip)`}>
                 <Handle color={colors.east} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
-
-                <TooltipBackground y={innerHeight - 30 / 2} x="-30" height="30" width="60" rx="8" />
-                <Tooltip y={innerHeight}>{brushLabelValue(localBrushExtent[1])}</Tooltip>
               </g>
-            </>
-          ) : null}
-        </g>
+
+              {showLabels && (
+                <g transform={`translate(50,0), scale(${flipEastHandle ? '-1' : '1'}, 1)`}>
+                  <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
+                  <Tooltip y="15" dominantBaseline="middle">
+                    {brushLabelValue(localBrushExtent[1])}
+                  </Tooltip>
+                </g>
+              )}
+            </g>
+          </>
+        )}
       </>
     ),
-    [brushLabelValue, colors.east, colors.west, id, innerHeight, localBrushExtent, xScale]
+    [brushLabelValue, colors.east, colors.west, flipWestHandle, id, innerHeight, localBrushExtent, showLabels, xScale]
   )
 }

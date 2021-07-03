@@ -50,11 +50,10 @@ export function Chart({
 
   const brushLabelValue = useCallback(
     (x: number) => {
-      return current
-        ? format('0.02%')(
-            ((x < current ? -1 : 1) * (Math.max(x, current) - Math.min(x, current))) / Math.min(x, current)
-          )
-        : ''
+      const percent =
+        (((x < current ? -1 : 1) * (Math.max(x, current) - Math.min(x, current))) / Math.min(x, current)) * 100
+
+      return current ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
     },
     [current]
   )
@@ -71,7 +70,7 @@ export function Chart({
       <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
-            <rect x="0" y="0" width="100%" height="100%" />
+            <rect x="0" y="0" width={innerWidth} height={innerHeight} />
           </clipPath>
         </defs>
 
@@ -93,6 +92,7 @@ export function Chart({
           </g>
 
           <Brush
+            id={id}
             xScale={xScale}
             interactive={interactive}
             brushLabelValue={brushLabelValue}
