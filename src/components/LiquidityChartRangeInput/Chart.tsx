@@ -79,6 +79,8 @@ export function Chart({
             {/* {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />} */}
             <Bars
               series={series}
+              current={current}
+              brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
               xScale={xScale}
               yScale={yScale}
               xValue={xAccessor}

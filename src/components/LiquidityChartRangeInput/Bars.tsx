@@ -4,15 +4,15 @@ import styled from 'styled-components'
 import { ChartEntry } from './types'
 import { inRange } from 'lodash'
 
-const Rect = styled.rect`
-  /* stroke-width: 2; */
-  /* stroke: ${({ theme }) => theme.text1}; */
+const Rect = styled.rect<{ selected: boolean; current: boolean }>`
   fill: ${({ theme }) => theme.blue1};
-  opacity: 0.5;
+  opacity: ${({ selected, current }) => (current ? '.6' : selected ? '0.6' : '0.4')};
 `
 
 export const Bars = ({
   series,
+  current,
+  brushExtent,
   xScale,
   yScale,
   xValue,
@@ -21,29 +21,41 @@ export const Bars = ({
   innerHeight,
 }: {
   series: ChartEntry[]
+  current: number
+  brushExtent: [number, number]
   xScale: ScaleLinear<number, number>
   yScale: ScaleLinear<number, number>
   xValue: (d: ChartEntry) => number
   yValue: (d: ChartEntry) => number
   innerWidth: number
   innerHeight: number
-}) =>
-  useMemo(
+}) => {
+  const filtered = useMemo(
+    () =>
+      series
+        // filter points that are in view to calculate width
+        .filter((d) => inRange(xScale(xValue(d)), 0, innerWidth)),
+    [innerWidth, series, xScale, xValue]
+  )
+
+  const barWdith = useMemo(() => innerWidth / filtered.length, [filtered, innerWidth])
+
+  return useMemo(
     () => (
       <g>
-        {series
-          // filter points that are in view to calculate width
-          .filter((d) => inRange(xScale(xValue(d)), 0, innerWidth))
-          .map((d: ChartEntry, i: number, filtered) => (
-            <Rect
-              key={i}
-              x={xScale(xValue(d))}
-              y={yScale(yValue(d))}
-              width={Math.floor(innerWidth / filtered.length)}
-              height={innerHeight - yScale(yValue(d))}
-            />
-          ))}
+        {filtered.map((d: ChartEntry, i: number) => (
+          <Rect
+            key={i}
+            x={xScale(xValue(d))}
+            y={yScale(yValue(d))}
+            width={barWdith}
+            height={innerHeight - yScale(yValue(d))}
+            selected={inRange(xScale(xValue(d)) + barWdith, xScale(brushExtent[0]), xScale(brushExtent[1]) + barWdith)}
+            current={inRange(xScale(current), xScale(xValue(d)), xScale(xValue(d)) + barWdith)}
+          />
+        ))}
       </g>
     ),
-    [series, xScale, xValue, innerWidth, yScale, yValue, innerHeight]
+    [filtered, xScale, xValue, yScale, yValue, barWdith, innerHeight, brushExtent, current]
   )
+}

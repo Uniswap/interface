@@ -18,12 +18,12 @@ const HandleAccent = styled.path`
   pointer-events: none;
 
   stroke-width: 1.3;
-  stroke: ${({ theme }) => theme.white};
+  stroke: ${({ theme }) => theme.text1};
   opacity: 0.6;
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.black};
+  fill: ${({ theme }) => theme.bg1};
 `
 
 const Tooltip = styled.text`
