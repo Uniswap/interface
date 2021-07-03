@@ -104,7 +104,10 @@ export const Brush = ({
 
     brushBehavior.current(select(brushRef.current))
 
-    if (previousBrushExtent && brushExtent[0] !== previousBrushExtent[0] && brushExtent[1] !== previousBrushExtent[1]) {
+    if (
+      previousBrushExtent &&
+      (brushExtent[0] !== previousBrushExtent[0] || brushExtent[1] !== previousBrushExtent[1])
+    ) {
       brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
     }
 
