@@ -3,8 +3,15 @@ import { Axis as d3Axis, axisBottom, NumberValue, ScaleLinear, select } from 'd3
 import styled from 'styled-components/macro'
 
 const StyledGroup = styled.g`
-  /* will apply to <text> and <line> */
-  color: ${({ theme }) => theme.text2};
+  line {
+    color: ${({ theme }) => theme.text1};
+    opacity: 0.3;
+  }
+
+  text {
+    color: ${({ theme }) => theme.text2};
+    transform: translateY(7px);
+  }
 `
 
 const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
@@ -21,7 +28,7 @@ const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
 export const AxisBottom = ({
   xScale,
   innerHeight,
-  offset = 5,
+  offset = -8,
 }: {
   xScale: ScaleLinear<number, number>
   innerHeight: number
@@ -30,7 +37,7 @@ export const AxisBottom = ({
   useMemo(
     () => (
       <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
-        <Axis axisGenerator={axisBottom(xScale).ticks(6)} />
+        <Axis axisGenerator={axisBottom(xScale).ticks(8).tickSize(8)} />
       </StyledGroup>
     ),
     [innerHeight, offset, xScale]
