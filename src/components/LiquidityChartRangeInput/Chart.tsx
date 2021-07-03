@@ -33,7 +33,7 @@ export function Chart({
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
-        .domain([0.97 * current, 1.03 * current] as number[])
+        .domain([0.9 * current, 1.1 * current] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
