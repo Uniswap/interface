@@ -1,9 +1,9 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { ClientError, gql, GraphQLClient } from 'graphql-request'
-import { SupportedChainId } from 'constants/chains'
-import { AppState } from 'state'
 import { BaseQueryApi, BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { SupportedChainId } from 'constants/chains'
 import { DocumentNode } from 'graphql'
+import { ClientError, gql, GraphQLClient } from 'graphql-request'
+import { AppState } from 'state'
 
 const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 

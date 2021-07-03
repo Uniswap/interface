@@ -1,5 +1,6 @@
 import { api as generatedApi } from './generated'
 
+// tag that should be applied to queries that need to be invalidated when the chain changes
 export const CHAIN_TAG = 'Chain'
 
 // enhanced api to provide/invalidate tags
