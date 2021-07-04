@@ -26,8 +26,7 @@ import {
   INITIAL_ALLOWED_SLIPPAGE,
   UNDER_MAINTENANCE,
   PEG_SWAP_ADDRESS,
-  ROUTER_ADDRESS,
-  BLACKLIST_TOKENS
+  ROUTER_ADDRESS
 } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React, useChain } from '../../hooks'
@@ -332,10 +331,6 @@ export default function Swap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
-      if (inputCurrency.symbol && BLACKLIST_TOKENS.includes(inputCurrency.symbol)) {
-        return
-      }
-
       const wrappedToken = inputCurrency as WrappedTokenInfo
       if (wrappedToken.isDeprecated) {
         setMigrationCurrency(inputCurrency)
@@ -355,10 +350,6 @@ export default function Swap() {
 
   const handleOutputSelect = useCallback(
     outputCurrency => {
-      if (outputCurrency.symbol && BLACKLIST_TOKENS.includes(outputCurrency.symbol)) {
-        return
-      }
-
       const wrappedToken = outputCurrency as WrappedTokenInfo
       if (wrappedToken.isDeprecated) {
         setMigrationCurrency(outputCurrency)

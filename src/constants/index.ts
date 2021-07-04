@@ -262,6 +262,4 @@ export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.Big
 
 export const UNSUPPORTED_BRIDGE_TOKENS = ['WFUSE']
 
-export const BLACKLIST_TOKENS = ['DEXT']
-
 export const GAS_PRICE = process.env.REACT_APP_GAS_PRICE ?? '1000000000'
