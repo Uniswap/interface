@@ -41,7 +41,7 @@ import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
 import { useActiveWeb3React, useChain } from '../../hooks'
-import { BLACKLIST_TOKENS, UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
+import { UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
 import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
 import { useUserActionHandlers } from '../../state/user/hooks'
@@ -203,10 +203,6 @@ export default function Bridge() {
 
   const handleInputCurrencySelect = useCallback(
     (inputCurrency: Currency) => {
-      if (inputCurrency.symbol && BLACKLIST_TOKENS.includes(inputCurrency.symbol)) {
-        return
-      }
-
       if (inputCurrency.symbol && UNSUPPORTED_BRIDGE_TOKENS.includes(inputCurrency.symbol)) {
         setModalOpen(true)
         return

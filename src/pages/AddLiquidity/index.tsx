@@ -18,7 +18,7 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS, GAS_PRICE, BLACKLIST_TOKENS } from '../../constants'
+import { ROUTER_ADDRESS, GAS_PRICE } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -289,10 +289,6 @@ export default function AddLiquidity({
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      if (currencyA.symbol && BLACKLIST_TOKENS.includes(currencyA.symbol)) {
-        return
-      }
-
       const wrappedToken = currencyA as WrappedTokenInfo
       if (wrappedToken.isDeprecated) {
         setMigrationCurrency(currencyA)
@@ -311,10 +307,6 @@ export default function AddLiquidity({
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      if (currencyB.symbol && BLACKLIST_TOKENS.includes(currencyB.symbol)) {
-        return
-      }
-
       const wrappedToken = currencyB as WrappedTokenInfo
       if (wrappedToken.isDeprecated) {
         setMigrationCurrency(currencyB)
