@@ -19,6 +19,7 @@ export function Chart({
   margins,
   interactive = true,
   brushDomain,
+  brushLabels,
   onBrushDomainChange,
 }: LiquidityChartRangeInputProps) {
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -47,16 +48,6 @@ export function Chart({
 
     return scales
   }, [current, innerWidth, series, innerHeight, zoom])
-
-  const brushLabelValue = useCallback(
-    (x: number) => {
-      const percent =
-        (((x < current ? -1 : 1) * (Math.max(x, current) - Math.min(x, current))) / Math.min(x, current)) * 100
-
-      return current ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
-    },
-    [current]
-  )
 
   useEffect(() => {
     if (!brushDomain) {
@@ -98,7 +89,7 @@ export function Chart({
             id={id}
             xScale={xScale}
             interactive={interactive}
-            brushLabelValue={brushLabelValue}
+            brushLabelValue={brushLabels}
             brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
             innerWidth={innerWidth}
             innerHeight={innerHeight}

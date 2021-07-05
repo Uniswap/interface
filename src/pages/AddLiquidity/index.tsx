@@ -154,8 +154,7 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-  const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] =
-    useState<'initial' | 'prompting' | 'accepted' | 'denied'>('initial')
+  const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] = useState(false)
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -774,7 +773,7 @@ export default function AddLiquidity({
                     )}
 
                     <StackedContainer>
-                      <StackedItem style={{ opacity: showCapitalEfficiencyWarning === 'prompting' ? '0.05' : 1 }}>
+                      <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
                         <AutoColumn gap="md">
                           <PresetsButtons
                             feeAmount={feeAmount}
@@ -784,10 +783,7 @@ export default function AddLiquidity({
                               onRightRangeInput(invertPrice ? range1 : range2)
                             }}
                             setFullRange={() => {
-                              if (showCapitalEfficiencyWarning !== 'accepted') {
-                                setShowCapitalEfficiencyWarning('prompting')
-                              }
-                              return getSetFullRange()
+                              setShowCapitalEfficiencyWarning(true)
                             }}
                           />
 
@@ -808,7 +804,7 @@ export default function AddLiquidity({
                         </AutoColumn>
                       </StackedItem>
 
-                      {showCapitalEfficiencyWarning === 'prompting' && (
+                      {showCapitalEfficiencyWarning && (
                         <StackedItem zIndex={1}>
                           <YellowCard
                             padding="15px"
@@ -848,30 +844,15 @@ export default function AddLiquidity({
                                   borderRadius="8px"
                                   width="auto"
                                   onClick={() => {
-                                    setShowCapitalEfficiencyWarning('accepted')
+                                    setShowCapitalEfficiencyWarning(false)
+
+                                    getSetFullRange()
                                   }}
                                 >
                                   <TYPE.black fontSize={13} color="black">
                                     <Trans>I Understand</Trans>
                                   </TYPE.black>
                                 </ButtonYellow>
-                                <ButtonOutlined
-                                  padding="8px"
-                                  borderRadius="8px"
-                                  width="auto"
-                                  borderColor={theme.yellow3}
-                                  onClick={() => {
-                                    setShowCapitalEfficiencyWarning('denied')
-
-                                    // reset inputs
-                                    onLeftRangeInput('')
-                                    onRightRangeInput('')
-                                  }}
-                                >
-                                  <TYPE.yellow fontSize={13}>
-                                    <Trans>Decline</Trans>
-                                  </TYPE.yellow>
-                                </ButtonOutlined>
                               </Row>
                             </AutoColumn>
                           </YellowCard>

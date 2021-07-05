@@ -40,7 +40,7 @@ export interface LiquidityChartRangeInputProps {
 
   interactive?: boolean
 
-  brushLabels: (x: number) => string | undefined
+  brushLabels: (x: number) => string
   brushDomain: [number, number] | undefined
   onBrushDomainChange: (domain: [number, number]) => void
 }

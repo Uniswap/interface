@@ -95,6 +95,20 @@ export default function LiquidityChartRangeInput({
 
   interactive = interactive && Boolean(formattedData?.length)
 
+  const brushLabelValue = useCallback(
+    (x: number) => {
+      if (!price) return ''
+
+      if (x < 1 && ticksAtLimit[Bound.LOWER]) return '0'
+      if (ticksAtLimit[Bound.UPPER]) return '∞'
+
+      const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
+
+      return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
+    },
+    [price, ticksAtLimit]
+  )
+
   return (
     <AutoColumn gap="md" style={{ minHeight: '250px', marginTop: '30px' }}>
       {isUninitialized ? (
@@ -127,18 +141,10 @@ export default function LiquidityChartRangeInput({
                   },
                 }}
                 interactive={interactive}
+                brushLabels={brushLabelValue}
                 brushDomain={
                   leftPrice && rightPrice
                     ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                    : undefined
-                }
-                brushLabels={(x: number) =>
-                  x < 0 && ticksAtLimit[Bound.LOWER]
-                    ? '0'
-                    : ticksAtLimit[Bound.UPPER]
-                    ? '∞'
-                    : price
-                    ? format('.0f%')(((x - price) / price) * 100)
                     : undefined
                 }
                 onBrushDomainChange={onBrushDomainChangeEnded}
