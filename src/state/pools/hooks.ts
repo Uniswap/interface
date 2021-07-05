@@ -48,7 +48,7 @@ export function useUserLiquidityPositions(user: string | null | undefined) {
   return { loading, error, data }
 }
 
-function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any): SubgraphPoolData {
+function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, chainId?: ChainId): SubgraphPoolData {
   // get volume changes
   const oneDayVolumeUSD = get24hValue(data?.volumeUSD, oneDayData?.volumeUSD ? oneDayData.volumeUSD : 0)
 
@@ -79,18 +79,33 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any):
   if (!oneDayData && data) {
     data.oneDayVolumeUSD = parseFloat(data.volumeUSD)
   }
-  if (data?.token0?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-    data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
-  }
-  if (data?.token1?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
-    data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
+
+  if (chainId === ChainId.MAINNET) {
+    if (data?.token0?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
+      data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
+    }
+
+    if (data?.token1?.id === '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') {
+      data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
+    }
   }
 
-  if (data?.token0?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    data.token0 = { ...data.token0, name: 'Matic (Wrapped)', symbol: 'MATIC' }
-  }
-  if (data?.token1?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    data.token1 = { ...data.token1, name: 'Matic (Wrapped)', symbol: 'MATIC' }
+  if (chainId === ChainId.MATIC) {
+    if (data?.token0?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+      data.token0 = { ...data.token0, name: 'Matic (Wrapped)', symbol: 'MATIC' }
+    }
+
+    if (data?.token1?.id === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
+      data.token1 = { ...data.token1, name: 'Matic (Wrapped)', symbol: 'MATIC' }
+    }
+
+    if (data?.token0?.id === '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619') {
+      data.token0 = { ...data.token0, name: 'Ether (Wrapped)', symbol: 'ETH' }
+    }
+
+    if (data?.token1?.id === '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619') {
+      data.token1 = { ...data.token1, name: 'Ether (Wrapped)', symbol: 'ETH' }
+    }
   }
 
   return data
@@ -136,7 +151,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
             oneDayHistory = newData.data.pools[0]
           }
 
-          data = parseData(data, oneDayHistory, ethPrice, b1)
+          data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
 
           return data
         })

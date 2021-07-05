@@ -18,6 +18,7 @@ import {
   updateKNCPrice
 } from './actions'
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
+import { useDeepCompareEffect } from 'react-use'
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
@@ -238,22 +239,39 @@ const getTokenPriceByETH = async (tokenAddress: string, chainId?: ChainId) => {
   return tokenPriceByETH
 }
 
-export function useTokensPrice(tokens: Token[]) {
+export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
   const ethPrice = useETHPrice()
   const { chainId } = useActiveWeb3React()
-  const [prices, setPrices] = useState([])
-  useEffect(() => {
+  const [prices, setPrices] = useState<number[]>([])
+
+  useDeepCompareEffect(() => {
     async function checkForTokenPrice() {
       const tokensPrice = tokens.map(async token => {
-        if (token.address == ZERO_ADDRESS.toLowerCase() || token.equals(WETH[chainId as ChainId])) {
-          return ethPrice
+        if (!token) {
+          return 0
         }
-        const tokenPriceByETH = await getTokenPriceByETH(token.address, chainId)
-        const tokenPrice = ethPrice.currentPrice && tokenPriceByETH * parseFloat(ethPrice.currentPrice)
+
+        if (!ethPrice?.currentPrice) {
+          return 0
+        }
+
+        if (token?.address == ZERO_ADDRESS.toLowerCase() || token?.address === WETH[chainId as ChainId].address) {
+          return parseFloat(ethPrice.currentPrice)
+        }
+
+        const tokenPriceByETH = await getTokenPriceByETH(token?.address, chainId)
+        const tokenPrice = tokenPriceByETH * parseFloat(ethPrice.currentPrice)
+
         return tokenPrice
       })
-      Promise.all(tokensPrice).then(res => {})
+
+      Promise.all(tokensPrice).then(result => {
+        setPrices(result)
+      })
     }
+
     checkForTokenPrice()
-  }, [ethPrice.currentPrice, chainId])
+  }, [ethPrice.currentPrice, chainId, tokens])
+
+  return prices
 }
