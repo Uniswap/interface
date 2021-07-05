@@ -70,6 +70,7 @@ const MoreLinksIcon = styled(HeaderElement)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
+    justify-content: flex-start;
   `};
 `
 
