@@ -36,7 +36,7 @@ describe('Lists', () => {
       cy.get('#swap-currency-output .open-currency-select-button').click()
       cy.get('#currency-search-change-list-button').click()
       cy.get('#list-add-input').type(customListUrl)
-      cy.get('#list-add-button').click()
+      cy.get('#list-add-button').click({ force: true })
       cy.get('.sc-dxgOiQ').should('contain', 'FuseSwap Beta List')
     })
   })
