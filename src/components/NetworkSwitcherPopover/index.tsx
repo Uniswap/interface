@@ -51,6 +51,9 @@ const ChangeWalletButton = styled.button`
   background-color: ${({ theme }) => theme.bg1And2};
   border: none;
   cursor: pointer;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 10px;
+  `};
 `;
 
 interface NetworkSwitcherPopoverProps {

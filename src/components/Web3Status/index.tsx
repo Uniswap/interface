@@ -28,6 +28,9 @@ const Web3StatusError = styled.div`
   letter-spacing: 0.08em;
   background-color: ${({ theme }) => theme.red1};
   border-radius: 12px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 9px;
+  `};
 `
 
 const SwitchNetworkButton = styled.button`
@@ -49,6 +52,7 @@ const SwitchNetworkButton = styled.button`
 const Button = styled.button`
   height: 32px;
   padding: 10.5px 14px;
+  margin: 0 auto;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
   border-radius: 12px;
