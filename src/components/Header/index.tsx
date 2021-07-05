@@ -28,7 +28,7 @@ const HeaderFrame = styled.div`
   justify-content: space-between;
   flex-direction: column;
   width: 100%;
-  top: 0;
+  top: 40;
   position: absolute;
   z-index: 3;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
