@@ -25,7 +25,7 @@ const AutoColumn2 = styled(AutoColumn)`
 `
 
 const OutlineCard2 = styled(OutlineCard)`
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   border: 2px solid ${({ theme }) => theme.bg3};
   border-style: dashed;
   border-radius: 8px;
