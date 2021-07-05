@@ -32,6 +32,7 @@ const ChainLabel: any = {
 const View = styled.div`
   display: flex;
   align-items: center;
+  margin-left: auto;
   background-color: ${({ theme }) => theme.dark1};
   border: solid 2px transparent;
   color: ${({ theme }) => theme.purple2};

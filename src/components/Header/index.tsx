@@ -59,8 +59,10 @@ const HeaderElement = styled.div`
   justify-content: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
+    flex-direction: row-reverse;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   `};
 `
 
@@ -188,6 +190,7 @@ const Amount = styled.p`
   color: ${({ theme }) => theme.text4};
   background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
+  white-space: nowrap;
 
   & + & {
     margin-left: 7px;

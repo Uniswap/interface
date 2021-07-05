@@ -12,6 +12,10 @@ import { useCloseModals, useModalOpen } from '../../state/application/hooks';
 import { ApplicationModal } from '../../state/application/actions';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
+const Wrapper = styled.div`
+ width: 100%;
+`;
+
 const List = styled.ul`
   padding: 0;
   margin: 0;
@@ -164,7 +168,7 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
   
     
   return (
-    <div ref={popoverRef}>
+    <Wrapper ref={popoverRef}>
       <StyledPopover
         content={<List>{getOptions()}</List>}
         show={walletSwitcherPopoverOpen}
@@ -172,7 +176,7 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
       >
        {children} 
       </StyledPopover>
-    </div>
+    </Wrapper>
   )
 }
 
