@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-05 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -344,7 +344,7 @@ msgstr "通過連接錢包，您同意接受 Uniswap 實驗室的<0>服務條款
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "取消"
+msgstr "已取消"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -592,7 +592,7 @@ msgstr "當前 {0} 兌換率："
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
-msgstr "被擊敗"
+msgstr "未通過"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -691,7 +691,7 @@ msgstr "已賺取的 UNI 代幣代表了 Uniswap 治理中的投票份額。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "編輯"
+msgstr "修改"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -760,7 +760,7 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
-msgstr "已到期"
+msgstr "已過期"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -772,7 +772,7 @@ msgstr "手續費級別"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "費用等級"
+msgstr "手續費級別"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -1141,7 +1141,7 @@ msgstr "參與的流動池"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "待辦的"
+msgstr "待辦"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1252,7 +1252,7 @@ msgstr "提案人"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
-msgstr "排隊"
+msgstr "待執行"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1430,7 +1430,7 @@ msgstr "提交投票"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr "成功"
+msgstr "投票通過"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1467,7 +1467,7 @@ msgstr "感謝您加入 Uniswap 社區 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "您將獲得的費用百分比。"
+msgstr "您將賺取的手續費百分比。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2144,11 +2144,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}% 費用等級"
+msgstr "{0}% 手續費級別"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}% 選擇"
+msgstr "選擇 {0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
