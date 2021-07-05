@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-02 06:09\n"
+"PO-Revision-Date: 2021-07-05 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -691,7 +691,7 @@ msgstr "已赚取的 UNI 代币代表了 Uniswap 治理中的投票份额。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "编辑"
+msgstr "修改"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -772,7 +772,7 @@ msgstr "手续费级别"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "费用等级"
+msgstr "手续费级别"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -1141,7 +1141,7 @@ msgstr "参与的流动池"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "等待中"
+msgstr "待办"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1467,7 +1467,7 @@ msgstr "感谢您加入 Uniswap 社区 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "您将获得的费用百分比。"
+msgstr "您将赚取的手续费百分比。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2144,11 +2144,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}% 费用等级"
+msgstr "{0}% 手续费级别"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}% 选择"
+msgstr "选择 {0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
