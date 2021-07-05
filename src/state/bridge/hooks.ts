@@ -111,7 +111,7 @@ export function useDerivedBridgeInfo(
 
   const { [Field.INPUT]: inputAmount } = parsedAmounts
 
-  const minMaxAmount = useAsyncMemo(async () => {
+  const minMaxAmount: { minAmount: string; maxAmount: string } | undefined = useAsyncMemo(async () => {
     if (!inputCurrencyId || !chainId || !library || !account || !bridgeDirection) return
     try {
       return await getMinMaxPerTxn(inputCurrencyId, bridgeDirection, inputCurrency?.decimals, isHome, library, account)
@@ -142,7 +142,12 @@ export function useDerivedBridgeInfo(
     inputError = inputError ?? 'Enter a valid address'
   }
 
-  if (minMaxAmount && Number(typedValue) < Number(minMaxAmount.minAmount)) {
+  if (
+    minMaxAmount &&
+    minMaxAmount.minAmount &&
+    minMaxAmount.maxAmount &&
+    Number(typedValue) < Number(minMaxAmount.minAmount)
+  ) {
     inputError = inputError ?? `Below minimum limit (${minMaxAmount.minAmount})`
   }
 
@@ -227,7 +232,10 @@ export function useBridgeActionHandlers(): {
   return { onFieldInput, onSelectBridgeDirection, onSelectCurrency, onSetRecipient }
 }
 
-export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: BridgeDirection | undefined) {
+export function useBridgeFee(
+  tokenAddress: string | undefined,
+  bridgeDirection: BridgeDirection | undefined
+): string | undefined {
   const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
 
@@ -258,7 +266,7 @@ export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: 
           args = [isHome, getBscFuseInverseLibrary(isHome), account]
           break
         default:
-          throw new Error(`Unsupported bridgeType for token: ${tokenAddress}`)
+          return
       }
 
       const fee = await method(...args)
@@ -275,7 +283,7 @@ export function useCalculatedBridgeFee(
   tokenAddress: string | undefined,
   currencyAmount: CurrencyAmount | undefined,
   bridgeDirection: BridgeDirection | undefined
-) {
+): string | undefined {
   const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
 
@@ -306,7 +314,7 @@ export function useCalculatedBridgeFee(
           args = [currencyAmount, isHome, getBscFuseInverseLibrary(isHome), account]
           break
         default:
-          throw new Error(`Unsupported bridgeType for token: ${tokenAddress}`)
+          return
       }
 
       const fee = await method(...args)
