@@ -209,24 +209,54 @@ export const useFarmHistories = (isModalOpen: boolean) => {
         })
 
         result.data.harvests.forEach(harvest => {
-          historiesData.push({
-            id: harvest.id,
-            timestamp: harvest.timestamp,
-            method: FarmHistoryMethod.HARVEST,
-            amount: harvest.amount,
-            stakeToken: harvest.stakeToken,
-            rewardToken: harvest.rewardToken
-          })
+          const txHash = harvest.id.split('-')?.[0]
+
+          const index = historiesData.findIndex(
+            history =>
+              history.method === FarmHistoryMethod.HARVEST &&
+              history.rewardToken === harvest.rewardToken &&
+              history.id.includes(txHash)
+          )
+
+          if (index < 0) {
+            historiesData.push({
+              id: harvest.id,
+              timestamp: harvest.timestamp,
+              method: FarmHistoryMethod.HARVEST,
+              amount: harvest.amount,
+              stakeToken: harvest.stakeToken,
+              rewardToken: harvest.rewardToken
+            })
+          } else {
+            historiesData[index].amount = BigNumber.from(historiesData[index].amount)
+              .add(BigNumber.from(harvest.amount))
+              .toString()
+          }
         })
 
         result.data.vests.forEach(vest => {
-          historiesData.push({
-            id: vest.id,
-            timestamp: vest.timestamp,
-            method: FarmHistoryMethod.CLAIM,
-            amount: vest.amount,
-            rewardToken: vest.rewardToken
-          })
+          const txHash = vest.id.split('-')?.[0]
+
+          const index = historiesData.findIndex(
+            history =>
+              history.method === FarmHistoryMethod.CLAIM &&
+              history.rewardToken === vest.rewardToken &&
+              history.id.includes(txHash)
+          )
+
+          if (index < 0) {
+            historiesData.push({
+              id: vest.id,
+              timestamp: vest.timestamp,
+              method: FarmHistoryMethod.CLAIM,
+              amount: vest.amount,
+              rewardToken: vest.rewardToken
+            })
+          } else {
+            historiesData[index].amount = BigNumber.from(historiesData[index].amount)
+              .add(BigNumber.from(vest.amount))
+              .toString()
+          }
         })
 
         historiesData.sort(function(a, b) {
