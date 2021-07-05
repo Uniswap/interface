@@ -6,7 +6,9 @@ import { inRange } from 'lodash'
 
 const Rect = styled.rect<{ selected: boolean; current: boolean }>`
   fill: ${({ theme }) => theme.blue1};
-  opacity: ${({ selected, current }) => (current ? '.6' : selected ? '0.6' : '0.4')};
+  opacity: ${({ selected, current }) => (current ? '.7' : selected ? '0.6' : '0.4')};
+
+  transition: opacity 150ms ease-in;
 `
 
 export const Bars = ({
@@ -43,14 +45,14 @@ export const Bars = ({
   return useMemo(
     () => (
       <g>
-        {filtered.map((d: ChartEntry, i: number) => (
+        {filtered.map((d: ChartEntry) => (
           <Rect
-            key={i}
+            key={xValue(d)}
             x={xScale(xValue(d))}
             y={yScale(yValue(d))}
             width={barWdith}
             height={innerHeight - yScale(yValue(d))}
-            selected={inRange(xScale(xValue(d)) + barWdith, xScale(brushExtent[0]), xScale(brushExtent[1]) + barWdith)}
+            selected={inRange(xScale(xValue(d)), xScale(brushExtent[0]), xScale(brushExtent[1]))}
             current={inRange(xScale(current), xScale(xValue(d)), xScale(xValue(d)) + barWdith)}
           />
         ))}
