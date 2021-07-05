@@ -5,13 +5,13 @@ import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-import { YellowCard } from '../Card'
 import Settings from '../Settings'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
@@ -134,6 +134,12 @@ const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
+`
+
+const HideText = styled.span`
+  @media (max-width: 1260px) {
+    display: none;
+  }
 `
 
 const MigrateLiquidityWrapper = styled.span`
@@ -349,11 +355,9 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
-            <HideSmall>
-              <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
-                Bridge&nbsp;Assets&nbsp;↗
-              </BridgeExternalLink>
-            </HideSmall>
+            <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+              <HideText>Bridge&nbsp;Assets&nbsp;</HideText>↗
+            </BridgeExternalLink>
           )}
           <HideSmall>
             {library && library.provider.isMetaMask && (

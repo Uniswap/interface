@@ -21,14 +21,14 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useTokensPrice, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, formattedNum, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -42,6 +42,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
 import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { useDerivedPairInfo } from 'state/pair/hooks'
+import Loader from 'components/Loader'
 
 const ActiveText = styled.div`
   font-weight: 500;
@@ -72,6 +73,20 @@ const OutlineCard2 = styled(OutlineCard)`
 const NumericalInput2 = styled(NumericalInput)`
   width: 100%;
   height: 60px;
+`
+
+const USDPrice = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  padding-left: 8px;
+  color: ${({ theme }) => theme.primaryText2};
 `
 
 export default function AddLiquidity({
@@ -445,6 +460,14 @@ export default function AddLiquidity({
   const percentToken0 = realPercentToken0.toSignificant(4)
   const percentToken1 = realPercentToken1.toSignificant(4)
 
+  const tokens = useMemo(
+    () =>
+      [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => wrappedCurrency(currency, chainId)),
+    [chainId, currencies]
+  )
+
+  const usdPrices = useTokensPrice(tokens)
+
   return (
     <>
       <AppBody>
@@ -495,12 +518,12 @@ export default function AddLiquidity({
                 <BlueCard>
                   <AutoColumn gap="10px">
                     {isPoolExisted && (
-                      <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
+                      <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
                         Note: There are existing pools for this token pair. Please check{' '}
                         <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
                       </TYPE.link>
                     )}
-                    <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
+                    <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
                       You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
                       supply below will set the initial price of this pool. Once you are satisfied with the rate,
                       proceed to supply liquidity.
@@ -509,33 +532,43 @@ export default function AddLiquidity({
                 </BlueCard>
               </ColumnCenter>
             )}
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.CURRENCY_A]}
-              onUserInput={onFieldAInput}
-              onMax={() => {
-                onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-              }}
-              onCurrencySelect={handleCurrencyASelect}
-              showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-              currency={currencies[Field.CURRENCY_A]}
-              id="add-liquidity-input-tokena"
-              showCommonBases
-            />
+            <div>
+              <CurrencyInputPanel
+                value={formattedAmounts[Field.CURRENCY_A]}
+                onUserInput={onFieldAInput}
+                onMax={() => {
+                  onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                }}
+                onCurrencySelect={handleCurrencyASelect}
+                showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                currency={currencies[Field.CURRENCY_A]}
+                id="add-liquidity-input-tokena"
+                showCommonBases
+              />
+              <USDPrice>
+                {usdPrices[0] ? `1 ${currencyA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
+              </USDPrice>
+            </div>
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.CURRENCY_B]}
-              onUserInput={onFieldBInput}
-              onCurrencySelect={handleCurrencyBSelect}
-              onMax={() => {
-                onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-              }}
-              showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-              currency={currencies[Field.CURRENCY_B]}
-              id="add-liquidity-input-tokenb"
-              showCommonBases
-            />
+            <div>
+              <CurrencyInputPanel
+                value={formattedAmounts[Field.CURRENCY_B]}
+                onUserInput={onFieldBInput}
+                onCurrencySelect={handleCurrencyBSelect}
+                onMax={() => {
+                  onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                }}
+                showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                currency={currencies[Field.CURRENCY_B]}
+                id="add-liquidity-input-tokenb"
+                showCommonBases
+              />
+              <USDPrice>
+                {usdPrices[1] ? `1 ${currencyB?.symbol} = ${formattedNum(usdPrices[1].toString(), true)}` : <Loader />}
+              </USDPrice>
+            </div>
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
