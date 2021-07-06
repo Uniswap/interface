@@ -50,6 +50,8 @@ export interface Colors {
   blue1: Color
   blue2: Color
 
+  blue4: Color
+
   error: Color
   success: Color
   warning: Color

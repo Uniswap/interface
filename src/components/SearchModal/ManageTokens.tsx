@@ -1,4 +1,4 @@
-import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
+import { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import Column from 'components/Column'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn, Separator, SearchInput } from './styleds'

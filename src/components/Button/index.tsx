@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 
@@ -72,14 +71,12 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.primary1 : theme.primary1) : theme.primary1};
-    color: white;
+      altDisabledStyle ? (disabled ? theme.primary1 : theme.bg2) : theme.bg2};
+    color: ${({ theme }) => theme.text2};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
-    opacity: 0.4;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '0.4')};
   }
 `
 
@@ -116,9 +113,7 @@ export const ButtonGray = styled(Base)`
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
   font-weight: 500;
-  &:focus {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
-  }
+
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
   }

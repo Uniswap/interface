@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import React from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 
@@ -26,7 +25,7 @@ export default function RateToggle({
           <Trans>{isSorted ? currencyA.symbol : currencyB.symbol} price</Trans>
         </ToggleElement>
         <ToggleElement isActive={!isSorted} fontSize="12px">
-          {isSorted ? currencyB.symbol : currencyA.symbol} price
+          <Trans>{isSorted ? currencyB.symbol : currencyA.symbol} price</Trans>
         </ToggleElement>
       </ToggleWrapper>
     </div>
