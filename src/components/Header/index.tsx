@@ -309,7 +309,7 @@ export default function Header() {
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
-      {!IS_WITHIN_IFRAME && (
+      {IS_WITHIN_IFRAME ? null : (
         <HeaderRow>
           <Title href=".">
             <UniIcon>
@@ -318,7 +318,7 @@ export default function Header() {
           </Title>
         </HeaderRow>
       )}
-      {!IS_WITHIN_IFRAME && (
+      {IS_WITHIN_IFRAME ? null : (
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>

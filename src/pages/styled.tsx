@@ -9,6 +9,7 @@ export const IframeBodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 1rem;
   align-items: center;
   flex: 1;
   z-index: 1;

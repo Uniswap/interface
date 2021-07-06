@@ -1,3 +1,4 @@
+import { IS_ON_APP_URL } from './../../constants/misc'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
@@ -107,10 +108,13 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return useMemo(
-    () => combineMaps(localUnsupportedListMap, loadedUnsupportedListMap),
-    [localUnsupportedListMap, loadedUnsupportedListMap]
-  )
+  return useMemo(() => {
+    if (!IS_ON_APP_URL) {
+      // this list will be loaded as emptyt list if not on app url
+      return loadedUnsupportedListMap
+    }
+    return combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)
+  }, [localUnsupportedListMap, loadedUnsupportedListMap])
 }
 
 export function useIsListActive(url: string): boolean {
