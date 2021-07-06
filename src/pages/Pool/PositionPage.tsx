@@ -82,13 +82,6 @@ const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: b
   align-items: center;
 `
 
-export const DarkBadge = styled.div`
-  width: fit-content;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 4px 6px;
-`
-
 const ExtentsText = styled.span`
   color: ${({ theme }) => theme.text2};
   font-size: 14px;

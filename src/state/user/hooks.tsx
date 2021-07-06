@@ -17,7 +17,6 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  toggleURLWarning,
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateUserDarkMode,
@@ -248,11 +247,6 @@ export function usePairAdder(): (pair: Pair) => void {
 
 export function useURLWarningVisible(): boolean {
   return useAppSelector((state: AppState) => state.user.URLWarningVisible)
-}
-
-export function useURLWarningToggle(): () => void {
-  const dispatch = useAppDispatch()
-  return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
 /**

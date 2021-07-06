@@ -22,7 +22,7 @@ import { LightCard } from '../Card'
 
 import TradePrice from '../swap/TradePrice'
 
-export const ArrowWrapper = styled.div`
+const ArrowWrapper = styled.div`
   padding: 4px;
   border-radius: 12px;
   height: 32px;
