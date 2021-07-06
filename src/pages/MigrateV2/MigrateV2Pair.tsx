@@ -544,7 +544,7 @@ function V2PairMigration({
           />
 
           {outOfRange ? (
-            <YellowCard padding="8px 12px" borderRadius="12px">
+            <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">
@@ -557,7 +557,7 @@ function V2PairMigration({
           ) : null}
 
           {invalidRange ? (
-            <YellowCard padding="8px 12px" borderRadius="12px">
+            <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">

@@ -12,16 +12,15 @@ const Base = styled(RebassButton)<
   {
     padding?: string
     width?: string
-    borderRadius?: string
+    $borderRadius?: string
     altDisabledStyle?: boolean
   } & ButtonProps
 >`
-  padding: ${({ padding }) => (padding ? padding : '16px')};
-  width: ${({ width }) => (width ? width : '100%')};
+  padding: ${({ padding }) => padding ?? '16px'};
+  width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
   text-align: center;
-  border-radius: 20px;
-  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -345,17 +344,6 @@ export function ButtonDropdown({ disabled = false, children, ...rest }: { disabl
   )
 }
 
-export function ButtonDropdownGrey({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
-  return (
-    <ButtonGray {...rest} disabled={disabled} style={{ borderRadius: '20px' }}>
-      <RowBetween>
-        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
-        <ChevronDown size={24} />
-      </RowBetween>
-    </ButtonGray>
-  )
-}
-
 export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
@@ -365,14 +353,6 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
       </RowBetween>
     </ButtonOutlined>
   )
-}
-
-export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonProps) {
-  if (!active) {
-    return <ButtonWhite {...rest} />
-  } else {
-    return <ButtonPrimary {...rest} />
-  }
 }
 
 const ActiveOutlined = styled(ButtonOutlined)`
@@ -407,13 +387,13 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
 
   if (!active) {
     return (
-      <ButtonOutlined borderRadius="12px" padding="12px 8px" {...rest}>
+      <ButtonOutlined $borderRadius="12px" padding="12px 8px" {...rest}>
         {<RowBetween>{children}</RowBetween>}
       </ButtonOutlined>
     )
   } else {
     return (
-      <ActiveOutlined {...rest} padding="12px 8px" borderRadius="12px">
+      <ActiveOutlined {...rest} padding="12px 8px" $borderRadius="12px">
         {
           <RowBetween>
             {children}

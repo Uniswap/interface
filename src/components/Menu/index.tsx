@@ -172,7 +172,7 @@ export default function Menu() {
             </div>
           </MenuItem>
           {account && (
-            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">
               <Trans>Claim UNI</Trans>
             </UNIbutton>
           )}

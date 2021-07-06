@@ -639,7 +639,7 @@ export default function AddLiquidity({
                     )}
 
                     {outOfRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
+                      <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.yellow3} size="16px" />
                           <TYPE.yellow ml="12px" fontSize="12px">
@@ -653,7 +653,7 @@ export default function AddLiquidity({
                     ) : null}
 
                     {invalidRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
+                      <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.yellow3} size="16px" />
                           <TYPE.yellow ml="12px" fontSize="12px">
@@ -703,13 +703,13 @@ export default function AddLiquidity({
               </DynamicSection>
               <div>
                 {addIsUnsupported ? (
-                  <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
+                  <ButtonPrimary disabled={true} $borderRadius="12px" padding={'12px'}>
                     <TYPE.main mb="4px">
                       <Trans>Unsupported Asset</Trans>
                     </TYPE.main>
                   </ButtonPrimary>
                 ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
+                  <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
                     <Trans>Connect wallet</Trans>
                   </ButtonLight>
                 ) : (
