@@ -12,6 +12,7 @@ import { useTotalUniEarned } from '../stake/hooks'
 import { Interface } from '@ethersproject/abi'
 import ERC20ABI from 'abis/erc20.json'
 import { Erc20Interface } from 'abis/types/Erc20'
+import { SupportedChainId } from 'constants/chains'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
@@ -64,14 +65,12 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
   const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
-  const balances = useMultipleContractSingleData(
-    validatedTokenAddresses,
-    ERC20Interface,
-    'balanceOf',
-    [address],
-    undefined,
-    100_000
-  )
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20Interface, 'balanceOf', [address], {
+    gasRequired: {
+      ...Object.values(SupportedChainId).reduce((acc, curr) => ({ ...acc, [curr]: 100_000 }), {}),
+      [SupportedChainId.OPTIMISTIC_KOVAN]: 250_000,
+    },
+  })
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
 

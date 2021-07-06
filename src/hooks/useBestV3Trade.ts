@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { encodeRouteToPath, Route, Trade } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
@@ -33,7 +34,9 @@ export function useBestV3TradeExactIn(
     ])
   }, [amountIn, routes])
 
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs)
+  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
+    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 5_000_000 },
+  })
 
   return useMemo(() => {
     if (!amountIn || !currencyOut) {
@@ -114,7 +117,9 @@ export function useBestV3TradeExactOut(
     ])
   }, [amountOut, routes])
 
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs)
+  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
+    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 5_000_000 },
+  })
 
   return useMemo(() => {
     if (!amountOut || !currencyIn || quotesResults.some(({ valid }) => !valid)) {
