@@ -35,7 +35,7 @@ export function useBestV3TradeExactIn(
   }, [amountIn, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
-    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 5_000_000 },
+    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000 },
   })
 
   return useMemo(() => {
@@ -118,7 +118,7 @@ export function useBestV3TradeExactOut(
   }, [amountOut, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
-    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 5_000_000 },
+    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000 },
   })
 
   return useMemo(() => {
