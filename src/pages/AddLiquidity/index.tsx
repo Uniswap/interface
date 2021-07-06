@@ -9,7 +9,7 @@ import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Box, Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import {
   ButtonError,
@@ -565,6 +565,32 @@ export default function AddLiquidity({
                         token0={currencyA?.wrapped}
                         token1={currencyB?.wrapped}
                       />
+
+                      {noLiquidity && (
+                        <BlueCard
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            padding: '1rem 1rem',
+                          }}
+                        >
+                          <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
+                            <AlertCircle color={theme.blue2} size={30} />
+                          </div>
+                          <TYPE.body
+                            fontSize={14}
+                            style={{ marginBottom: 8, fontWeight: 500 }}
+                            textAlign="center"
+                            color={theme.blue2}
+                          >
+                            <Trans>
+                              You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
+                              much higher as it includes the gas to create the pool.
+                            </Trans>
+                          </TYPE.body>
+                        </BlueCard>
+                      )}
                     </AutoColumn>{' '}
                   </>
                 )}
@@ -623,8 +649,79 @@ export default function AddLiquidity({
 
               {!hasExistingPosition && (
                 <RightContainer gap="lg">
-                  {noLiquidity && (
-                    <DynamicSection disabled={!currencyA || !currencyB}>
+                  <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
+                    <RowBetween>
+                      <TYPE.label>
+                        <Trans>Set your Price Range</Trans>
+                      </TYPE.label>
+
+                      {baseCurrency && quoteCurrency ? (
+                        <RateToggle
+                          currencyA={baseCurrency}
+                          currencyB={quoteCurrency}
+                          handleRateToggle={() => {
+                            onLeftRangeInput('')
+                            onRightRangeInput('')
+                            history.push(
+                              `/add/${currencyIdB as string}/${currencyIdA as string}${
+                                feeAmount ? '/' + feeAmount : ''
+                              }`
+                            )
+                          }}
+                        />
+                      ) : null}
+                    </RowBetween>
+                    {!noLiquidity && (
+                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
+                        <Trans>
+                          The range and details of your position are surfaced on the liquidity distribution graph below
+                          based on your inputs.{' '}
+                          <ExternalLink
+                            href={
+                              'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'
+                            }
+                            style={{ fontSize: '14px' }}
+                          >
+                            Need help picking a range?
+                          </ExternalLink>
+                        </Trans>
+                      </TYPE.main>
+                    )}
+
+                    <LiquidityChartRangeInput
+                      currencyA={baseCurrency ?? undefined}
+                      currencyB={quoteCurrency ?? undefined}
+                      feeAmount={feeAmount}
+                      ticksAtLimit={ticksAtLimit}
+                      price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
+                      priceLabel={
+                        price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
+                          <AutoRow gap="4px" justify="center">
+                            <Trans>
+                              <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                Current Price:
+                              </TYPE.main>
+                              <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                <HoverInlineText
+                                  maxCharacters={20}
+                                  text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                                />
+                              </TYPE.body>
+                              <TYPE.body color="text2" fontSize={12}>
+                                {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                              </TYPE.body>
+                            </Trans>
+                          </AutoRow>
+                        ) : undefined
+                      }
+                      priceLower={priceLower}
+                      priceUpper={priceUpper}
+                      onLeftRangeInput={onLeftRangeInput}
+                      onRightRangeInput={onRightRangeInput}
+                      interactive={!hasExistingPosition}
+                    />
+
+                    {noLiquidity && (
                       <AutoColumn gap="md">
                         <RowBetween>
                           <TYPE.label>
@@ -674,119 +771,30 @@ export default function AddLiquidity({
                             )}
                           </TYPE.main>
                         </RowBetween>
-                        <BlueCard
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            padding: ' 1.5rem 1.25rem',
-                          }}
-                        >
-                          <AlertCircle color={theme.text1} size={32} style={{ marginBottom: '12px', opacity: 0.8 }} />
-                          <TYPE.body
-                            fontSize={14}
-                            style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
-                            textAlign="center"
-                          >
-                            You are the first liquidity provider for this Uniswap V3 pool.
-                          </TYPE.body>
-
-                          <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ opacity: 0.8 }}>
-                            The transaction cost will be much higher as it includes the gas to create the pool.
-                          </TYPE.body>
-                        </BlueCard>
                       </AutoColumn>
-                    </DynamicSection>
-                  )}
+                    )}
+                  </DynamicSection>
 
                   <DynamicSection
                     gap="md"
                     disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
                   >
-                    <RowBetween>
-                      <TYPE.label>
-                        <Trans>Set your Price Range</Trans>
-                      </TYPE.label>
-
-                      {baseCurrency && quoteCurrency ? (
-                        <RateToggle
-                          currencyA={baseCurrency}
-                          currencyB={quoteCurrency}
-                          handleRateToggle={() => {
-                            onLeftRangeInput('')
-                            onRightRangeInput('')
-                            history.push(
-                              `/add/${currencyIdB as string}/${currencyIdA as string}${
-                                feeAmount ? '/' + feeAmount : ''
-                              }`
-                            )
-                          }}
-                        />
-                      ) : null}
-                    </RowBetween>
-                    <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                      <Trans>
-                        The range and details of your position are surfaced on the liquidity distribution graph below
-                        based on your inputs.{' '}
-                        <ExternalLink
-                          href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
-                          style={{ fontSize: '14px' }}
-                        >
-                          Need help picking a range?
-                        </ExternalLink>
-                      </Trans>
-                    </TYPE.main>
-
-                    {!noLiquidity && (
-                      <LiquidityChartRangeInput
-                        currencyA={baseCurrency ?? undefined}
-                        currencyB={quoteCurrency ?? undefined}
-                        feeAmount={feeAmount}
-                        ticksAtLimit={ticksAtLimit}
-                        price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
-                        priceLabel={
-                          price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
-                            <AutoRow gap="4px" justify="center">
-                              <Trans>
-                                <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                                  Current Price:
-                                </TYPE.main>
-                                <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                                  <HoverInlineText
-                                    maxCharacters={20}
-                                    text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                                  />
-                                </TYPE.body>
-                                <TYPE.body color="text2" fontSize={12}>
-                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                                </TYPE.body>
-                              </Trans>
-                            </AutoRow>
-                          ) : undefined
-                        }
-                        priceLower={priceLower}
-                        priceUpper={priceUpper}
-                        onLeftRangeInput={onLeftRangeInput}
-                        onRightRangeInput={onRightRangeInput}
-                        interactive={!hasExistingPosition}
-                      />
-                    )}
-
                     <StackedContainer>
                       <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
                         <AutoColumn gap="md">
-                          <PresetsButtons
-                            feeAmount={feeAmount}
-                            setRange={(numTicks: number) => {
-                              const [range1, range2] = getSetRange(numTicks)
-                              onLeftRangeInput(invertPrice ? range2 : range1)
-                              onRightRangeInput(invertPrice ? range1 : range2)
-                            }}
-                            setFullRange={() => {
-                              setShowCapitalEfficiencyWarning(true)
-                            }}
-                          />
-
+                          {!noLiquidity && (
+                            <PresetsButtons
+                              feeAmount={feeAmount}
+                              setRange={(numTicks: number) => {
+                                const [range1, range2] = getSetRange(numTicks)
+                                onLeftRangeInput(invertPrice ? range2 : range1)
+                                onRightRangeInput(invertPrice ? range1 : range2)
+                              }}
+                              setFullRange={() => {
+                                setShowCapitalEfficiencyWarning(true)
+                              }}
+                            />
+                          )}
                           <RangeSelector
                             priceLower={priceLower}
                             priceUpper={priceUpper}

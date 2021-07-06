@@ -6,9 +6,9 @@ import { inRange } from 'lodash'
 
 const Rect = styled.rect<{ selected: boolean; current: boolean }>`
   fill: ${({ theme }) => theme.blue1};
-  opacity: ${({ selected, current }) => (current ? '.7' : selected ? '0.6' : '0.4')};
+  filter: brightness(${({ selected, current }) => (current ? '1' : selected ? '1' : '0.8')});
 
-  transition: opacity 150ms ease-in;
+  transition: filter 150ms ease-in;
 `
 
 export const Bars = ({

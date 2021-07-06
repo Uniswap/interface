@@ -16,7 +16,7 @@ export function useDensityChartData({
 }) {
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
 
-  const { isLoading, isUninitialized, isError, activeTick, data } = usePoolActiveLiquidity(
+  const { isLoading, isUninitialized, isError, error, activeTick, data } = usePoolActiveLiquidity(
     currencyA,
     currencyB,
     feeAmount
@@ -65,6 +65,7 @@ export function useDensityChartData({
     isLoading,
     isUninitialized,
     isError,
+    error,
     formattedData,
   }
 }

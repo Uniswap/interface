@@ -6,7 +6,7 @@ import Loader from 'components/Loader'
 import { useColor } from 'hooks/useColor'
 import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
-import { Inbox, XCircle } from 'react-feather'
+import { BarChart2, Inbox, CloudOff } from 'react-feather'
 import { batch } from 'react-redux'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -17,10 +17,12 @@ import Row from 'components/Row'
 import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
 
-const ChartWrapper = styled(Box)`
+const ChartWrapper = styled.div`
+  display: grid;
   position: relative;
 
-  display: grid;
+  margin-top: 20px;
+
   justify-content: center;
   align-content: center;
 `
@@ -68,7 +70,7 @@ export default function LiquidityChartRangeInput({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { isLoading, isUninitialized, isError, formattedData } = useDensityChartData({
+  const { isLoading, isUninitialized, isError, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -109,49 +111,56 @@ export default function LiquidityChartRangeInput({
     [price, ticksAtLimit]
   )
 
+  if (isError && error?.name === 'UnsupportedChainId') {
+    // do not show the chart container when the chain is not supported
+    return null
+  }
+
   return (
-    <AutoColumn gap="md" style={{ minHeight: '250px', marginTop: '30px' }}>
+    <AutoColumn gap="md" style={{ minHeight: '250px' }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
           icon={<Inbox size={56} stroke={theme.text1} />}
         />
-      ) : isLoading || !price ? (
-        <InfoBox icon={<Loader size="30px" stroke={theme.text4} />} />
+      ) : isLoading ? (
+        <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
       ) : isError ? (
-        <InfoBox message={<Trans>Something went wrong...</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
+        <InfoBox
+          message={<Trans>Subgraph data not available</Trans>}
+          icon={<CloudOff size={56} stroke={theme.text4} />}
+        />
+      ) : !formattedData || formattedData === [] || !price ? (
+        <InfoBox
+          message={<Trans>There is no liquidity data</Trans>}
+          icon={<BarChart2 size={56} stroke={theme.text4} />}
+        />
       ) : (
-        <>
+        <ChartWrapper>
           <Row justifyItems="center">{priceLabel}</Row>
 
-          <ChartWrapper>
-            {!formattedData || formattedData === [] ? (
-              <InfoBox message={<Trans>Nothing to show</Trans>} icon={<XCircle size={56} stroke={theme.text4} />} />
-            ) : (
-              <Chart
-                data={{ series: formattedData, current: price }}
-                dimensions={{ width: 400, height: 250 }}
-                margins={{ top: 10, right: 20, bottom: 40, left: 20 }}
-                styles={{
-                  brush: {
-                    handle: {
-                      west: saturate(0.1, tokenAColor) ?? theme.red1,
-                      east: saturate(0.1, tokenBColor) ?? theme.blue1,
-                    },
-                  },
-                }}
-                interactive={interactive}
-                brushLabels={brushLabelValue}
-                brushDomain={
-                  leftPrice && rightPrice
-                    ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                    : undefined
-                }
-                onBrushDomainChange={onBrushDomainChangeEnded}
-              />
-            )}
-          </ChartWrapper>
-        </>
+          <Chart
+            data={{ series: formattedData, current: price }}
+            dimensions={{ width: 400, height: 250 }}
+            margins={{ top: 10, right: 20, bottom: 40, left: 20 }}
+            styles={{
+              brush: {
+                handle: {
+                  west: saturate(0.1, tokenAColor) ?? theme.red1,
+                  east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                },
+              },
+            }}
+            interactive={interactive}
+            brushLabels={brushLabelValue}
+            brushDomain={
+              leftPrice && rightPrice
+                ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+                : undefined
+            }
+            onBrushDomainChange={onBrushDomainChangeEnded}
+          />
+        </ChartWrapper>
       )}
     </AutoColumn>
   )

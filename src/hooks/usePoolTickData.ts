@@ -33,7 +33,7 @@ export function useAllV3Ticks(
     currencyA && currencyB && feeAmount ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount) : undefined
 
   //TODO(judo): determine if pagination is necessary for this query
-  const { isLoading, isError, isUninitialized, data } = useAllV3TicksQuery(
+  const { isLoading, isError, error, isUninitialized, data } = useAllV3TicksQuery(
     poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken,
     {
       pollingInterval: ms`2m`,
@@ -44,6 +44,7 @@ export function useAllV3Ticks(
     isLoading,
     isUninitialized,
     isError,
+    error,
     ticks: data?.ticks,
   }
 }
@@ -60,7 +61,7 @@ export function usePoolActiveLiquidity(
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(pool[1]?.tickCurrent, feeAmount), [pool, feeAmount])
 
-  const { isLoading, isUninitialized, isError, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
+  const { isLoading, isUninitialized, isError, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   useEffect(() => {
     if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
@@ -108,6 +109,7 @@ export function usePoolActiveLiquidity(
     isLoading: isLoading || pool[0] === PoolState.LOADING,
     isUninitialized,
     isError: isError,
+    error,
     activeTick,
     data: ticksProcessed,
   }

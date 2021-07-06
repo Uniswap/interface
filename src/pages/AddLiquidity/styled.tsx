@@ -100,6 +100,7 @@ export const DepositAmountsContainer = styled.div`
 export const RightContainer = styled(AutoColumn)`
   grid-row: 1 / 3;
   grid-column: 2;
+  height: fit-content;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
   grid-row: 2 / 3;

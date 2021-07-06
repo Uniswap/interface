@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { scaleLinear, max, format, ZoomTransform } from 'd3'
+import { max, scaleLinear, ZoomTransform } from 'd3'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AxisBottom } from './AxisBottom'
-import { Line } from './Line'
-import { Area } from './Area'
 import { Bars } from './Bars'
 import { Brush } from './Brush'
-import { LiquidityChartRangeInputProps, ChartEntry } from './types'
+import { Line } from './Line'
+import { ChartEntry, LiquidityChartRangeInputProps } from './types'
 import Zoom from './Zoom'
 
 export const xAccessor = (d: ChartEntry) => d.price0

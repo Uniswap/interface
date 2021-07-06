@@ -8,7 +8,7 @@ const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;
   pointer-events: none;
 
-  stroke-width: 3;
+  stroke-width: 4;
   stroke: ${({ color }) => color};
   fill: ${({ color }) => color};
 `
@@ -17,7 +17,7 @@ const HandleAccent = styled.path`
   cursor: ew-resize;
   pointer-events: none;
 
-  stroke-width: 1.3;
+  stroke-width: 1.5;
   stroke: ${({ theme }) => theme.white};
   opacity: 0.6;
 `
