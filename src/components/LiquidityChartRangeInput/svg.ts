@@ -17,23 +17,23 @@ export const brushHandlePath = (height: number) =>
   [
     // handle
     `M 0 ${height}`,
-    'L 0 1',
+    'L 0 2',
 
     // head
-    'h 7', // horizontal line
+    'h 8', // horizontal line
     'q 5 0, 5 5', // rounded corner
     'v 18', // vertical line
     'q 0 5 -5 5', // rounded corner
-    'h -7', // horizontal line
+    'h -8', // horizontal line
     `z`, // close path
   ].join(' ')
 
 export const brushHandleAccentPath = () =>
   [
-    'm 4 7', // move to first accent
+    'm 5 8', // move to first accent
     'v 15', // vertical line
     'M 0 0', // move to origin
-    'm 8 7', // move to second accent
+    'm 9 8', // move to second accent
     'v 15', // vertical line
     'z',
   ].join(' ')
