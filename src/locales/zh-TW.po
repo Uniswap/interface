@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-06 21:10+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-07-05 12:05\n"
+"PO-Revision-Date: 2021-07-06 22:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -69,18 +69,6 @@ msgstr "{feeAmountFormatted}%"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI 代幣 / 每周"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0.05% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0.3% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% 手續費"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -223,10 +211,6 @@ msgstr "允許 Uniswap 使用您的 {0}"
 msgid "Allowed"
 msgstr "已允許"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "務必確保網址為<0>app.uniswap.org</0> - 將其加入書簽，以確保安全。"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "數額"
@@ -311,21 +295,6 @@ msgstr "余額："
 msgid "Balance: {0} {1}"
 msgstr "余額：{0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
-msgid "Best for exotic pairs."
-msgstr "較適合低交易量的幣對。"
-
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
-msgid "Best for most pairs."
-msgstr "較適合大部分幣對。"
-
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
-msgid "Best for stable pairs."
-msgstr "較適合穩定代幣幣對。"
-
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "已屏蔽地址"
@@ -354,10 +323,6 @@ msgstr "更改"
 msgid "Change your network to go back to L1"
 msgstr "更改您的網絡以返回 L1"
 
-#: src/components/Header/index.tsx
-msgid "Charts"
-msgstr "圖表"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "查看我們的 v3 流動池介紹和遷移指南。"
@@ -368,7 +333,6 @@ msgstr "查看我們的 v3 流動池介紹和遷移指南。"
 msgid "Claim"
 msgstr "領取"
 
-#: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -405,10 +369,6 @@ msgstr "已領取 UNI 代幣！"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "領取中"
-
-#: src/components/Header/index.tsx
-msgid "Claiming UNI"
-msgstr "正在領取 UNI 代幣"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -469,10 +429,6 @@ msgstr "收取手續費"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "收取手續費的操作將為您提取您當前已累積的手續費。"
 
-#: src/components/SearchModal/CommonBases.tsx
-msgid "Common bases"
-msgstr "常用代幣"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "確認"
@@ -501,7 +457,6 @@ msgstr "在您的錢包中確認這筆交易"
 #: src/state/burn/v3/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
@@ -564,10 +519,6 @@ msgstr "創建幣對"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "創建流動池"
-
-#: src/components/ErrorBoundary/index.tsx
-msgid "Create an issue on GitHub"
-msgstr "在GitHub上創建問題"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -689,10 +640,6 @@ msgstr "看不到您的一些 v2 流動資金嗎？<0>將它手動導入。</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "已賺取的 UNI 代幣代表了 Uniswap 治理中的投票份額。"
 
-#: src/components/FeeSelector/index.tsx
-msgid "Edit"
-msgstr "修改"
-
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "輸入百分比"
@@ -714,7 +661,6 @@ msgstr "輸入地址來查看領取 UNI 代幣的資質。如果地址有任何�
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -750,10 +696,6 @@ msgstr "導入列表時出錯"
 msgid "Executed"
 msgstr "已執行"
 
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "從待用代幣列表中擴展出的結果"
-
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高滑點的交易，從而可能導致較不利的兌換率和資金損失。"
@@ -768,10 +710,6 @@ msgstr "在 Uniswap 數據分析中探索較受歡迎的流動池。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "手續費級別"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Fee tier"
 msgstr "手續費級別"
 
 #: src/pages/Vote/VotePage.tsx
@@ -791,11 +729,6 @@ msgstr "源自"
 msgid "From (at most)"
 msgstr "來源 (最多為)"
 
-#: src/components/ErrorBoundary/index.tsx
-msgid "Get support on Discord"
-msgstr "在 Discord 上尋求技術支持"
-
-#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "隱藏"
@@ -926,10 +859,6 @@ msgstr "流動資金提供者獎勵"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "流動資金提供者在所有交易中按其在流動池中的份額獲得0.3%的手續費。手續費按實時累計方式添加到流動池中，可與流動資金一起贖回。"
 
-#: src/components/SearchModal/Manage.tsx
-msgid "Lists"
-msgstr "列表"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "已加載"
@@ -945,15 +874,10 @@ msgstr "已加載"
 msgid "Loading"
 msgstr "載入中"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "請確認網頁連結為<0>app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "管理"
@@ -961,10 +885,6 @@ msgstr "管理"
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
 msgstr "在獎勵池中管理流動資金"
-
-#: src/components/SearchModal/CurrencySearch.tsx
-msgid "Manage Token Lists"
-msgstr "管理代幣列表"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
@@ -1074,33 +994,9 @@ msgstr "未找到流動池。"
 msgid "No proposals found."
 msgstr "未找到提案。"
 
-#: src/components/SearchModal/CurrencySearch.tsx
-msgid "No results found."
-msgstr "未找到任何結果。"
-
-#: src/components/FeeSelector/index.tsx
-msgid "Not created"
-msgstr "未創建"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "關閉"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "開啟"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "務必在詳細了解此模式應用後才使用此模式操作。"
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "關閉"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "開啟"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1151,7 +1047,6 @@ msgstr "請連接到適當的以太坊網絡。"
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "請輸入單詞“{confirmWord}”以啟用專家模式。"
 
-#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "流動池"
@@ -1209,7 +1104,6 @@ msgstr "兌換率影響太高"
 msgid "Price Updated"
 msgstr "兌換率已更新"
 
-#: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "兌換率範圍"
@@ -1334,12 +1228,7 @@ msgstr "返回"
 msgid "Route"
 msgstr "路線"
 
-#: src/components/SearchModal/CurrencySearch.tsx
-msgid "Search name or paste address"
-msgstr "搜索名稱或粘貼地址"
-
 #: src/components/CurrencyInputPanel/index.tsx
-#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
@@ -1408,10 +1297,6 @@ msgstr "滑點容差"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "有些代幣無法通過此界面使用，因為它們可能無法很好地調用智能合約，或者由於法律原因無法允許交易。"
 
-#: src/components/ErrorBoundary/index.tsx
-msgid "Something went wrong"
-msgstr "出問題了"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "第 1 步：獲取 UNI-V2 流動池代幣"
@@ -1440,9 +1325,7 @@ msgstr "供應"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "供應 {0} {1} 和 {2} {3}"
 
-#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
-#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1464,10 +1347,6 @@ msgstr "切換到以太坊"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "感謝您加入 Uniswap 社區 <0/>"
-
-#: src/components/FeeSelector/index.tsx
-msgid "The % you will earn in fees."
-msgstr "您將賺取的手續費百分比。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1504,10 +1383,6 @@ msgstr "您註入的代幣比率將決定此流動池的初始兌換率。"
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截止期限設置。"
-
-#: src/components/SearchModal/CommonBases.tsx
-msgid "These tokens are commonly paired with other tokens."
-msgstr "這些代幣通常與其他代幣配對。"
 
 #: src/components/swap/SwapNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
@@ -1547,14 +1422,6 @@ msgstr "到（至少）"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "切換專家模式"
-
-#: src/components/SearchModal/Manage.tsx
-msgid "Tokens"
-msgstr "代幣"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "待用代幣列表中的代幣。在下面導入特定代幣或單擊“管理”以激活更多代幣列表。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1653,10 +1520,6 @@ msgstr "Uniswap治理"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3 已發布！"
-
-#: src/components/SwitchLocaleLink/index.tsx
-msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap 可選語言：<0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1766,10 +1629,6 @@ msgstr "在以太坊資源瀏覽器上查看"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "在以太坊資源瀏覽器上查看"
-
-#: src/components/Header/index.tsx
-msgid "Vote"
-msgstr "投票"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -1962,11 +1821,6 @@ msgstr "在此兌換率，您的倉位將 100% 由 {0} 所組成。"
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
 msgstr "您的倉位在市場兌換率變化進入到您設置的範圍內之前不會賺取手續費或被用於進行兌換交易。"
 
-#: src/components/PositionList/index.tsx
-#: src/components/PositionList/index.tsx
-msgid "Your positions"
-msgstr "您的倉位"
-
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
 msgstr "您的費率"
@@ -2056,10 +1910,6 @@ msgstr "{0} 自定義代幣"
 msgid "{0} Deposited"
 msgstr "註入 {0}"
 
-#: src/components/Header/index.tsx
-msgid "{0} ETH"
-msgstr "{0} ETH"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2127,10 +1977,6 @@ msgstr "{0} 代幣"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} 兌換率："
 
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "{0} • Added by user"
-msgstr "{0} • 由用戶添加"
-
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2141,14 +1987,6 @@ msgstr "{0} • 由用戶添加"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "{0}% fee tier"
-msgstr "{0}% 手續費級別"
-
-#: src/components/FeeSelector/index.tsx
-msgid "{0}% select"
-msgstr "選擇 {0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
