@@ -66,7 +66,7 @@ export default function App() {
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
-          <Banner items={bannerData} />
+          <Banner link="https://app.ola.finance/networks" items={bannerData} />
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>

@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { ExternalLink } from '../../theme'
 
-const Wrapper = styled.div`
+const Link = styled(ExternalLink)`
+  display: inline-block;
   background-color: black;
   width: 100%;
   padding: 0.5rem;
   text-align: center;
   color: white;
   font-size: 1.25rem;
+  text-decoration: none !important;
 `
 
 interface BannerProps {
+  link: string
   items: Array<string>
 }
 
-export default function Banner({ items }: BannerProps) {
+export default function Banner({ items, link }: BannerProps) {
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
@@ -25,5 +29,5 @@ export default function Banner({ items }: BannerProps) {
     return () => clearInterval(intervalId)
   }, [items])
 
-  return <Wrapper>{items[index]}</Wrapper>
+  return <Link href={link}>{items[index]}</Link>
 }
