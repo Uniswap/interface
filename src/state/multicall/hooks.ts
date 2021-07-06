@@ -158,13 +158,12 @@ export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
   callInputs: OptionalMethodInputs[],
-  options: Partial<ListenerOptions> & { gasRequired?: { [chainId: number]: number } } = {}
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const blocksPerFetch = options?.blocksPerFetch
-  const { chainId } = useActiveWeb3React()
-  const gasRequired = chainId ? options?.gasRequired?.[chainId] : undefined
+  const gasRequired = options?.gasRequired
 
   const calls = useMemo(
     () =>
@@ -239,13 +238,12 @@ export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: { [chainId: number]: number } }
+  options?: Partial<ListenerOptions> & { gasRequired?: number }
 ): CallState {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const blocksPerFetch = options?.blocksPerFetch
-  const { chainId } = useActiveWeb3React()
-  const gasRequired = chainId ? options?.gasRequired?.[chainId] : undefined
+  const gasRequired = options?.gasRequired
 
   const calls = useMemo<Call[]>(() => {
     return contract && fragment && isValidMethodArgs(inputs)

@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 export enum V3TradeState {
   LOADING,
@@ -13,6 +14,10 @@ export enum V3TradeState {
   NO_ROUTE_FOUND,
   VALID,
   SYNCING,
+}
+
+const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
 }
 
 /**
@@ -24,6 +29,7 @@ export function useBestV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
+  const { chainId } = useActiveWeb3React()
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(amountIn?.currency, currencyOut)
 
@@ -35,7 +41,7 @@ export function useBestV3TradeExactIn(
   }, [amountIn, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
-    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000 },
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
   })
 
   return useMemo(() => {
@@ -107,6 +113,7 @@ export function useBestV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
+  const { chainId } = useActiveWeb3React()
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, amountOut?.currency)
 
@@ -118,7 +125,7 @@ export function useBestV3TradeExactOut(
   }, [amountOut, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
-    gasRequired: { [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000 },
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
   })
 
   return useMemo(() => {

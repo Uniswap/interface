@@ -1,4 +1,3 @@
-import { SupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -36,7 +35,7 @@ export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTo
   )
   const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
     ...NEVER_RELOAD,
-    gasRequired: 3_000_000
+    gasRequired: 3_000_000,
   })
 
   return useMemo(() => {
