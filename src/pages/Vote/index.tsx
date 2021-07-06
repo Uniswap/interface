@@ -251,17 +251,20 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.reverse()?.map((p: ProposalData) => {
-            return (
-              <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
-                <ProposalNumber>
-                  {p.governorIndex}.{p.id}
-                </ProposalNumber>
-                <ProposalTitle>{p.title}</ProposalTitle>
-                <ProposalStatus status={p.status} />
-              </Proposal>
-            )
-          })}
+          {allProposals
+            ?.slice(0)
+            ?.reverse()
+            ?.map((p: ProposalData) => {
+              return (
+                <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
+                  <ProposalNumber>
+                    {p.governorIndex}.{p.id}
+                  </ProposalNumber>
+                  <ProposalTitle>{p.title}</ProposalTitle>
+                  <ProposalStatus status={p.status} />
+                </Proposal>
+              )
+            })}
         </TopSection>
         <TYPE.subHeader color="text3">
           <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
