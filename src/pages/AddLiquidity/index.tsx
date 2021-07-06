@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
@@ -9,16 +9,9 @@ import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
-import { Box, Text } from 'rebass'
+import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import {
-  ButtonError,
-  ButtonLight,
-  ButtonOutlined,
-  ButtonPrimary,
-  ButtonText,
-  ButtonYellow,
-} from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -154,7 +147,11 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+
+  // capital efficiency warning
   const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] = useState(false)
+
+  useEffect(() => setShowCapitalEfficiencyWarning(false), [currencyA, currencyB, feeAmount])
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -688,32 +685,31 @@ export default function AddLiquidity({
                       </TYPE.main>
                     )}
 
+                    {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                      <AutoRow gap="4px" justify="center">
+                        <Trans>
+                          <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                            Current Price:
+                          </TYPE.main>
+                          <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                            <HoverInlineText
+                              maxCharacters={20}
+                              text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                            />
+                          </TYPE.body>
+                          <TYPE.body color="text2" fontSize={12}>
+                            {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                          </TYPE.body>
+                        </Trans>
+                      </AutoRow>
+                    )}
+
                     <LiquidityChartRangeInput
                       currencyA={baseCurrency ?? undefined}
                       currencyB={quoteCurrency ?? undefined}
                       feeAmount={feeAmount}
                       ticksAtLimit={ticksAtLimit}
                       price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
-                      priceLabel={
-                        price && baseCurrency && quoteCurrency && !hasExistingPosition && !noLiquidity ? (
-                          <AutoRow gap="4px" justify="center">
-                            <Trans>
-                              <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                                Current Price:
-                              </TYPE.main>
-                              <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                                <HoverInlineText
-                                  maxCharacters={20}
-                                  text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                                />
-                              </TYPE.body>
-                              <TYPE.body color="text2" fontSize={12}>
-                                {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                              </TYPE.body>
-                            </Trans>
-                          </AutoRow>
-                        ) : undefined
-                      }
                       priceLower={priceLower}
                       priceUpper={priceUpper}
                       onLeftRangeInput={onLeftRangeInput}
@@ -867,27 +863,6 @@ export default function AddLiquidity({
                         </StackedItem>
                       )}
                     </StackedContainer>
-
-                    {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                      <OutlineCard style={{ padding: '12px' }}>
-                        <AutoRow gap="4px" justify="center">
-                          <TYPE.body color="text2" fontSize={12}>
-                            <Trans>Current Price:</Trans>
-                          </TYPE.body>
-                          <TYPE.body fontWeight={500} color="text2" fontSize={12}>
-                            <HoverInlineText
-                              maxCharacters={20}
-                              text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                            />{' '}
-                          </TYPE.body>
-                          <TYPE.body color="text2" fontSize={12}>
-                            <Trans>
-                              {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                            </Trans>
-                          </TYPE.body>
-                        </AutoRow>
-                      </OutlineCard>
-                    )}
 
                     {outOfRange ? (
                       <YellowCard padding="8px 12px" borderRadius="12px">

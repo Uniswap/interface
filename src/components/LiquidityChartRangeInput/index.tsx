@@ -8,20 +8,17 @@ import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import { BarChart2, Inbox, CloudOff } from 'react-feather'
 import { batch } from 'react-redux'
-import { Box } from 'rebass'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
-import Row from 'components/Row'
 import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
+import { FeeAmount } from '@uniswap/v3-sdk'
 
 const ChartWrapper = styled.div`
   display: grid;
   position: relative;
-
-  margin-top: 20px;
 
   justify-content: center;
   align-content: center;
@@ -46,7 +43,6 @@ export default function LiquidityChartRangeInput({
   feeAmount,
   ticksAtLimit,
   price,
-  priceLabel,
   priceLower,
   priceUpper,
   onLeftRangeInput,
@@ -58,7 +54,6 @@ export default function LiquidityChartRangeInput({
   feeAmount?: number
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price: number | undefined
-  priceLabel: ReactNode | undefined
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
@@ -137,8 +132,6 @@ export default function LiquidityChartRangeInput({
         />
       ) : (
         <ChartWrapper>
-          <Row justifyItems="center">{priceLabel}</Row>
-
           <Chart
             data={{ series: formattedData, current: price }}
             dimensions={{ width: 400, height: 250 }}
@@ -159,6 +152,7 @@ export default function LiquidityChartRangeInput({
                 : undefined
             }
             onBrushDomainChange={onBrushDomainChangeEnded}
+            initialZoom={feeAmount === FeeAmount.LOW ? 0.02 : 0.3}
           />
         </ChartWrapper>
       )}

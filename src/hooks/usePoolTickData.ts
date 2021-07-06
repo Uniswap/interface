@@ -64,6 +64,11 @@ export function usePoolActiveLiquidity(
   const { isLoading, isUninitialized, isError, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   useEffect(() => {
+    // reset local ticks processed
+    setTicksProcessed([])
+  }, [currencyA, currencyB, feeAmount])
+
+  useEffect(() => {
     if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
       setTicksProcessed([])
       return

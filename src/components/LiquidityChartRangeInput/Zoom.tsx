@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   grid-gap: 6px;
 
   position: absolute;
-  top: -40px;
+  top: -50px;
   right: 0;
 `
 
