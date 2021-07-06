@@ -1,55 +1,17 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { ClientError, gql, GraphQLClient } from 'graphql-request'
-import { SupportedChainId } from 'constants/chains'
-import { AppState } from 'state'
 import { BaseQueryApi, BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { SupportedChainId } from 'constants/chains'
 import { DocumentNode } from 'graphql'
+import { ClientError, gql, GraphQLClient } from 'graphql-request'
+import { AppState } from 'state'
 
-export const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 
-export const graphqlRequestBaseQuery = (): BaseQueryFn<
-  { document: string | DocumentNode; variables?: any },
-  unknown,
-  Pick<ClientError, 'name' | 'message' | 'stack'>,
-  Partial<Pick<ClientError, 'request' | 'response'>>
-> => {
-  return async ({ document, variables }, { getState }: BaseQueryApi) => {
-    try {
-      const chainId = (getState() as AppState).application.chainId
-
-      let client: GraphQLClient | null = null
-
-      switch (chainId) {
-        case SupportedChainId.MAINNET:
-          client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
-          break
-        default:
-          return {
-            error: {
-              name: 'UnsupportedChainId',
-              message: `Subgraph queries again ChainId ${chainId} are not supported.`,
-              stack: '',
-            },
-          }
-      }
-
-      return { data: await client.request(document, variables), meta: {} }
-    } catch (error) {
-      if (error instanceof ClientError) {
-        const { name, message, stack, request, response } = error
-        return { error: { name, message, stack }, meta: { request, response } }
-      }
-      throw error
-    }
-  }
-}
-
-export const client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
 export const api = createApi({
   reducerPath: 'dataApi',
   baseQuery: graphqlRequestBaseQuery(),
   endpoints: (builder) => ({
-    getAllV3Ticks: builder.query({
+    allV3Ticks: builder.query({
       query: ({ poolAddress, skip = 0 }) => ({
         document: gql`
           query allV3Ticks($poolAddress: String!, $skip: Int!) {
@@ -67,10 +29,10 @@ export const api = createApi({
         },
       }),
     }),
-    getFeeTierDistribution: builder.query({
+    feeTierDistribution: builder.query({
       query: ({ token0, token1 }) => ({
         document: gql`
-          query pools($token0: String!, $token1: String!) {
+          query feeTierDistribution($token0: String!, $token1: String!) {
             _meta {
               block {
                 number
@@ -105,4 +67,40 @@ export const api = createApi({
   }),
 })
 
-export const { useGetFeeTierDistributionQuery } = api
+// Graphql query client wrapper that builds a dynamic url based on chain id
+function graphqlRequestBaseQuery(): BaseQueryFn<
+  { document: string | DocumentNode; variables?: any },
+  unknown,
+  Pick<ClientError, 'name' | 'message' | 'stack'>,
+  Partial<Pick<ClientError, 'request' | 'response'>>
+> {
+  return async ({ document, variables }, { getState }: BaseQueryApi) => {
+    try {
+      const chainId = (getState() as AppState).application.chainId
+
+      let client: GraphQLClient | null = null
+
+      switch (chainId) {
+        case SupportedChainId.MAINNET:
+          client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
+          break
+        default:
+          return {
+            error: {
+              name: 'UnsupportedChainId',
+              message: `Subgraph queries again ChainId ${chainId} are not supported.`,
+              stack: '',
+            },
+          }
+      }
+
+      return { data: await client.request(document, variables), meta: {} }
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const { name, message, stack, request, response } = error
+        return { error: { name, message, stack }, meta: { request, response } }
+      }
+      throw error
+    }
+  }
+}
