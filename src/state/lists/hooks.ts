@@ -107,9 +107,10 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return useMemo(() => {
-    return combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)
-  }, [localUnsupportedListMap, loadedUnsupportedListMap])
+  return useMemo(
+    () => combineMaps(localUnsupportedListMap, loadedUnsupportedListMap),
+    [localUnsupportedListMap, loadedUnsupportedListMap]
+  )
 }
 
 export function useIsListActive(url: string): boolean {
