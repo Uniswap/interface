@@ -24,7 +24,7 @@ import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -504,7 +504,7 @@ export default function Swap({ history }: RouteComponentProps) {
               </Row>
             )}
 
-            <BottomGrouping>
+            <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
                   <TYPE.main mb="4px">
@@ -655,7 +655,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            </BottomGrouping>
+            </div>
           </AutoColumn>
         </Wrapper>
       </AppBody>

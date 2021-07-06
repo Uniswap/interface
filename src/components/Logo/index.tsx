@@ -5,7 +5,7 @@ import useTheme from '../../hooks/useTheme'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
-export interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
+interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
   srcs: string[]
 }
 

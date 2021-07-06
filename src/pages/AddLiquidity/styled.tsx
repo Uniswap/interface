@@ -1,7 +1,6 @@
 import styled from 'styled-components/macro'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { DarkGreyCard } from 'components/Card'
 import Input from 'components/NumericalInput'
 
 export const Wrapper = styled.div`
@@ -24,20 +23,6 @@ export const ScrollablePage = styled.div`
   flex-direction: row;
 `
 
-export const FixedPreview = styled.div`
-  position: relative;
-  padding: 16px;
-  width: 260px;
-  height: fit-content;
-  margin-top: 42px;
-  background: ${({ theme }) => theme.bg0};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
-  position: sticky;
-  top: 64px;
-`
-
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? '0.3' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
@@ -45,16 +30,6 @@ export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
 
 export const CurrencyDropdown = styled(CurrencyInputPanel)`
   width: 48.5%;
-`
-
-export const PreviewCard = styled(DarkGreyCard)<{ disabled?: boolean }>`
-  padding: 8px;
-  border-radius: 12px;
-  min-height: 40px;
-  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const StyledInput = styled(Input)`

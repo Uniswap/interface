@@ -57,12 +57,6 @@ export interface Colors {
   warning: Color
 }
 
-export interface Grids {
-  sm: number
-  md: number
-  lg: number
-}
-
 declare module 'styled-components' {
   export interface DefaultTheme extends Colors {
     grids: Grids

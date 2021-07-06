@@ -15,7 +15,7 @@ export interface Result extends ReadonlyArray<any> {
 type MethodArg = string | number | BigNumber
 type MethodArgs = Array<MethodArg | MethodArg[]>
 
-export type OptionalMethodInputs = Array<MethodArg | MethodArg[] | undefined> | undefined
+type OptionalMethodInputs = Array<MethodArg | MethodArg[] | undefined> | undefined
 
 function isMethodArg(x: unknown): x is MethodArg {
   return BigNumber.isBigNumber(x) || ['string', 'number'].indexOf(typeof x) !== -1
@@ -102,7 +102,7 @@ function useCallsData(
   )
 }
 
-export interface CallState {
+interface CallState {
   readonly valid: boolean
   // the result, or undefined if loading or errored/no data
   readonly result: Result | undefined
