@@ -4225,10 +4225,10 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.1.2.tgz#24b3e0e67c79afe2d5e5db263ad0ca76ab7a11af"
-  integrity sha512-bV6k7GsVRTxPAKTeyy9Mkxtz5vLy81YQZ1zXeY1xXmr1ueo90n3KRcAPs82RJDwRP95D0IK1Qewd4SrYKJwTJQ==
+"@uniswap/v3-sdk@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.2.0.tgz#ef27691315eef40bc64ee8d57d265edbf78c1371"
+  integrity sha512-Im7xzF+xqa28CJydkKMQjxVYvC34V/SyIkwYrP6/lzgco8r/SWKSvw61DSdImV6QjI5VFxUqAwR0FLecOkpPuA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
