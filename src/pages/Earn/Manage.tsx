@@ -217,7 +217,7 @@ export default function Manage({
               </RowBetween>
               <ButtonPrimary
                 padding="8px"
-                borderRadius="8px"
+                $borderRadius="8px"
                 width={'fit-content'}
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
@@ -292,7 +292,7 @@ export default function Manage({
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
                   <ButtonEmpty
                     padding="8px"
-                    borderRadius="8px"
+                    $borderRadius="8px"
                     width="fit-content"
                     onClick={() => setShowClaimRewardModal(true)}
                   >
@@ -340,7 +340,7 @@ export default function Manage({
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
-              <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+              <ButtonPrimary padding="8px" $borderRadius="8px" width="160px" onClick={handleDepositClick}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? (
                   <Trans>Deposit</Trans>
                 ) : (
@@ -353,7 +353,7 @@ export default function Manage({
               <>
                 <ButtonPrimary
                   padding="8px"
-                  borderRadius="8px"
+                  $borderRadius="8px"
                   width="160px"
                   onClick={() => setShowUnstakingModal(true)}
                 >

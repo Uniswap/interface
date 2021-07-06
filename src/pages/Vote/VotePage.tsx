@@ -250,7 +250,7 @@ export default function VotePage({
             <RowFixed style={{ width: '100%', gap: '12px' }}>
               <ButtonPrimary
                 padding="8px"
-                borderRadius="8px"
+                $borderRadius="8px"
                 onClick={() => {
                   setSupport(true)
                   toggleVoteModal()
@@ -260,7 +260,7 @@ export default function VotePage({
               </ButtonPrimary>
               <ButtonPrimary
                 padding="8px"
-                borderRadius="8px"
+                $borderRadius="8px"
                 onClick={() => {
                   setSupport(false)
                   toggleVoteModal()

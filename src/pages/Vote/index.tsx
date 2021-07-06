@@ -181,7 +181,7 @@ export default function Vote() {
                 <ButtonPrimary
                   style={{ width: 'fit-content' }}
                   padding="8px"
-                  borderRadius="8px"
+                  $borderRadius="8px"
                   onClick={toggleDelegateModal}
                 >
                   <Trans>Unlock Voting</Trans>

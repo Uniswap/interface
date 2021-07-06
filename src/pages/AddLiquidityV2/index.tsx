@@ -215,7 +215,7 @@ export default function AddLiquidity({
   const modalHeader = () => {
     return noLiquidity ? (
       <AutoColumn gap="20px">
-        <LightCard mt="20px" borderRadius="20px">
+        <LightCard mt="20px" $borderRadius="20px">
           <RowFlat>
             <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
               {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
@@ -398,7 +398,7 @@ export default function AddLiquidity({
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" borderRadius={'20px'}>
+                <LightCard padding="0px" $borderRadius={'20px'}>
                   <RowBetween padding="1rem">
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
@@ -408,7 +408,7 @@ export default function AddLiquidity({
                       )}
                     </TYPE.subHeader>
                   </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
+                  <LightCard padding="1rem" $borderRadius={'20px'}>
                     <PoolPriceBar
                       currencies={currencies}
                       poolTokenPercentage={poolTokenPercentage}

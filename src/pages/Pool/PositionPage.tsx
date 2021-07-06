@@ -540,7 +540,7 @@ export function PositionPage({
                       to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                       style={{ marginRight: '8px' }}
                     >
                       <Trans>Increase Liquidity</Trans>
@@ -552,7 +552,7 @@ export function PositionPage({
                       to={`/remove/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                     >
                       <Trans>Remove Liquidity</Trans>
                     </ResponsiveButtonPrimary>
