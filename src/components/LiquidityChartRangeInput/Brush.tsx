@@ -18,7 +18,7 @@ const HandleAccent = styled.path`
   pointer-events: none;
 
   stroke-width: 1.3;
-  stroke: ${({ theme }) => theme.text1};
+  stroke: ${({ theme }) => theme.white};
   opacity: 0.6;
 `
 
@@ -28,7 +28,7 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.bg1};
+  fill: ${({ theme }) => theme.bg2};
 `
 
 const Tooltip = styled.text`
