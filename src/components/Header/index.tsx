@@ -255,7 +255,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `}
 `
 
-export const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button`
   position: relative;
   width: 100%;
   height: 100%;

@@ -39,7 +39,7 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
-export function ConfirmationPendingContent({
+function ConfirmationPendingContent({
   onDismiss,
   pendingText,
   inline,
@@ -78,7 +78,7 @@ export function ConfirmationPendingContent({
   )
 }
 
-export function TransactionSubmittedContent({
+function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
