@@ -21,6 +21,8 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { RightFlashIcon, LeftFlashIcon } from '../components/FlashIcon'
 import Bridge from './Bridge'
 import { RedirectToDefault } from './redirects'
+import Banner from '../components/Banner'
+import bannerData from '../static/banner.json'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -64,6 +66,7 @@ export default function App() {
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
+          <Banner link="https://app.ola.finance/networks" items={bannerData} />
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
