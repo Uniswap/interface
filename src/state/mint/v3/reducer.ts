@@ -8,7 +8,7 @@ import {
   typeRightRangeInput,
 } from './actions'
 
-export interface MintState {
+interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly startPriceTypedValue: string // for the case when there's no liquidity
@@ -16,7 +16,7 @@ export interface MintState {
   readonly rightRangeTypedValue: string
 }
 
-export const initialState: MintState = {
+const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
   startPriceTypedValue: '',

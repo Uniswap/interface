@@ -11,7 +11,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Interface } from '@ethersproject/abi'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 
-export const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
+const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
 
 export const STAKING_GENESIS = 1600387200
 
@@ -259,35 +259,6 @@ export function useDerivedStakeInfo(
     parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.quotient, userLiquidityUnstaked.quotient)
       ? parsedInput
       : undefined
-
-  let error: string | undefined
-  if (!account) {
-    error = t`Connect Wallet`
-  }
-  if (!parsedAmount) {
-    error = error ?? t`Enter an amount`
-  }
-
-  return {
-    parsedAmount,
-    error,
-  }
-}
-
-// based on typed value
-export function useDerivedUnstakeInfo(
-  typedValue: string,
-  stakingAmount: CurrencyAmount<Token>
-): {
-  parsedAmount?: CurrencyAmount<Token>
-  error?: string
-} {
-  const { account } = useActiveWeb3React()
-
-  const parsedInput: CurrencyAmount<Token> | undefined = tryParseAmount(typedValue, stakingAmount.currency)
-
-  const parsedAmount =
-    parsedInput && JSBI.lessThanOrEqual(parsedInput.quotient, stakingAmount.quotient) ? parsedInput : undefined
 
   let error: string | undefined
   if (!account) {

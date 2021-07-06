@@ -36,8 +36,6 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import Toggle from 'components/Toggle'
 import { t, Trans } from '@lingui/macro'
 
-export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
-
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds

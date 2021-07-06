@@ -7,7 +7,7 @@ import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import TransactionPopup from './TransactionPopup'
 
-export const StyledClose = styled(X)`
+const StyledClose = styled(X)`
   position: absolute;
   right: 10px;
   top: 10px;
@@ -16,7 +16,7 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
-export const Popup = styled.div`
+const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;

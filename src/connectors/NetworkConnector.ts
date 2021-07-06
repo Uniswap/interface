@@ -28,7 +28,7 @@ interface BatchItem {
   reject: (error: Error) => void
 }
 
-export class MiniRpcProvider implements AsyncSendable {
+class MiniRpcProvider implements AsyncSendable {
   public readonly isMetaMask: false = false
   public readonly chainId: number
   public readonly url: string

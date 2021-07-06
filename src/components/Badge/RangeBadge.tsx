@@ -24,13 +24,6 @@ const ActiveDot = styled.span`
   margin-right: 4px;
 `
 
-export const DarkBadge = styled.div`
-  width: fit-content;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 4px 6px;
-`
-
 export default function RangeBadge({
   removed,
   inRange,

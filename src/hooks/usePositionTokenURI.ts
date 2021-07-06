@@ -36,10 +36,7 @@ export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTo
   )
   const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
     ...NEVER_RELOAD,
-    gasRequired: {
-      ...Object.values(SupportedChainId).reduce((acc, curr) => ({ ...acc, [curr]: 1_500_000 }), {}),
-      [SupportedChainId.OPTIMISTIC_KOVAN]: 3_000_000,
-    },
+    gasRequired: 3_000_000
   })
 
   return useMemo(() => {

@@ -108,7 +108,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                     </TYPE.small>
                   </RowFixed>
                 ) : (
-                  <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
+                  <WarningWrapper $borderRadius="4px" padding="4px" highWarning={true}>
                     <RowFixed>
                       <AlertCircle stroke={theme.red1} size="10px" />
                       <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
@@ -124,7 +124,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
 
         <ButtonPrimary
           altDisabledStyle={true}
-          borderRadius="20px"
+          $borderRadius="20px"
           padding="10px 1rem"
           onClick={() => {
             tokens.map((token) => addToken(token))
