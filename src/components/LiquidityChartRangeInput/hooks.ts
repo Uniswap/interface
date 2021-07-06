@@ -37,11 +37,8 @@ export function useDensityChartData({
 
       for (let i = 0; i < data.length; i++) {
         const t: TickProcessed = data[i]
-        //const active = t.tickIdx === activeTick
 
         const chartEntry = {
-          //index: i,
-          //isCurrent: active,
           activeLiquidity: parseFloat(t.liquidityActive.toString()),
           price0: parseFloat(t.price0),
         }

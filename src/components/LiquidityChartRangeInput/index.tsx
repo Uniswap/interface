@@ -15,6 +15,7 @@ import { useDensityChartData } from './hooks'
 import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import ReactGA from 'react-ga'
 
 const ChartWrapper = styled.div`
   display: grid;
@@ -76,6 +77,11 @@ export default function LiquidityChartRangeInput({
       const leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 
+      ReactGA.event({
+        category: 'Liquidity',
+        action: 'Chart brushed',
+      })
+
       batch(() => {
         // simulate user input for auto-formatting and other validations
         leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
@@ -106,9 +112,17 @@ export default function LiquidityChartRangeInput({
     [price, ticksAtLimit]
   )
 
-  if (isError && error?.name === 'UnsupportedChainId') {
-    // do not show the chart container when the chain is not supported
-    return null
+  if (isError) {
+    ReactGA.exception({
+      ...error,
+      category: 'Liquidity',
+      fatal: false,
+    })
+
+    if (error?.name === 'UnsupportedChainId') {
+      // do not show the chart container when the chain is not supported
+      return null
+    }
   }
 
   return (

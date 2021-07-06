@@ -1,6 +1,4 @@
 export interface ChartEntry {
-  // index: number
-  // isCurrent: boolean
   activeLiquidity: number
   price0: number
 }

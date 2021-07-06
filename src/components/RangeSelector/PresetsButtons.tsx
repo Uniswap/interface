@@ -5,6 +5,7 @@ import { TYPE } from 'theme'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import ReactGA from 'react-ga'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '4px',
@@ -49,7 +50,16 @@ const PresetButton = ({
   }
   setRange: (numTicks: number) => void
 }) => (
-  <Button onClick={() => setRange(ticks)}>
+  <Button
+    onClick={() => {
+      setRange(ticks)
+      ReactGA.event({
+        category: 'Liquidity',
+        action: 'Preset clicked',
+        label: label,
+      })
+    }}
+  >
     <TYPE.body fontSize={12}>
       <Trans>+/- {label}%</Trans>
     </TYPE.body>

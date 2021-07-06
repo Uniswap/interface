@@ -47,7 +47,7 @@ export function Chart({
     }
 
     return scales
-  }, [current, innerWidth, series, innerHeight, zoom])
+  }, [initialZoom, current, innerWidth, series, innerHeight, zoom])
 
   useEffect(() => {
     if (!brushDomain) {
