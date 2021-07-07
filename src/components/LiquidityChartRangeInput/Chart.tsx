@@ -79,7 +79,7 @@ export function Chart({
                 fill="white"
                 x={xScale(brushDomain[0])}
                 y="0"
-                width={Math.abs(xScale(brushDomain[1]) - xScale(brushDomain[0]))}
+                width={xScale(brushDomain[1]) - xScale(brushDomain[0])}
                 height={innerHeight}
               />
             </mask>

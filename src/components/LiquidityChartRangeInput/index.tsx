@@ -111,9 +111,11 @@ export default function LiquidityChartRangeInput({
       if (d === 'w' && ticksAtLimit[Bound.LOWER]) return '0'
       if (d === 'e' && ticksAtLimit[Bound.UPPER]) return '∞'
 
-      const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
+      //      const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
+      //
+      //return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
 
-      return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
+      return price ? `${format(x > 1 ? '.2~s' : '.2~f')(x)}` : ''
     },
     [price, ticksAtLimit]
   )
