@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-07-07 03:04\n"
+"PO-Revision-Date: 2021-07-07 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1825,7 +1825,7 @@ msgstr "註入 {0}"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "{0} Explorer"
-msgstr "{0} 探險家"
+msgstr "{0} 瀏覽器"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
