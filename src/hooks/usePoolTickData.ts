@@ -7,7 +7,6 @@ import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { useAllV3TicksQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
-import cloneDeep from 'lodash/cloneDeep'
 import { AllV3TicksQuery } from 'state/data/generated'
 
 const PRICE_FIXED_DIGITS = 8
@@ -45,7 +44,7 @@ export function useAllV3Ticks(
     isUninitialized,
     isError,
     error,
-    ticks: data?.ticks,
+    ticks: data?.ticks as AllV3TicksQuery['ticks'],
   }
 }
 
@@ -77,13 +76,10 @@ export function usePoolActiveLiquidity(
     const token0 = currencyA?.wrapped
     const token1 = currencyB?.wrapped
 
-    const sortedTickData = cloneDeep(ticks as AllV3TicksQuery['ticks'])
-    sortedTickData.sort((a, b) => a.tickIdx - b.tickIdx)
-
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
     // if not, take the previous tick as pivot
-    const pivot = sortedTickData.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
+    const pivot = ticks.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
 
     if (pivot < 0) {
       // consider setting a local error
@@ -95,15 +91,13 @@ export function usePoolActiveLiquidity(
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tickIdx: activeTick,
       liquidityNet:
-        Number(sortedTickData[pivot].tickIdx) === activeTick
-          ? JSBI.BigInt(sortedTickData[pivot].liquidityNet)
-          : JSBI.BigInt(0),
+        Number(ticks[pivot].tickIdx) === activeTick ? JSBI.BigInt(ticks[pivot].liquidityNet) : JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     }
 
-    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, true)
+    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, true)
 
-    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, false)
+    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, false)
 
     const newTicksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
