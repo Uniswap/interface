@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
+import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount, WETH } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
@@ -56,10 +56,9 @@ export function useDerivedMintInfo(
   const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
   const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
-
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
-    (tokenA?.symbol != 'WETH' || tokenB?.symbol != 'WETH')
+    (tokenA?.symbol != WETH[chainId as ChainId].symbol || tokenB?.symbol != WETH[chainId as ChainId].symbol)
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -153,7 +152,7 @@ export function useDerivedMintInfo(
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   const cA = currencies[Field.CURRENCY_A]
-  const cB = currencies[Field.CURRENCY_A]
+  const cB = currencies[Field.CURRENCY_B]
   if (!!cA && currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
     error = 'Insufficient ' + convertToNativeTokenFromETH(cA, chainId).symbol + ' balance'
   }
