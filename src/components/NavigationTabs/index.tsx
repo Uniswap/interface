@@ -13,6 +13,7 @@ import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
+import { ReactNode } from 'react'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -91,11 +92,13 @@ export function AddRemoveTabs({
   creating,
   defaultSlippage,
   positionID,
+  children,
 }: {
   adding: boolean
   creating: boolean
   defaultSlippage: Percent
   positionID?: string | undefined
+  children?: ReactNode | undefined
 }) {
   const theme = useTheme()
   // reset states on back
@@ -119,10 +122,15 @@ export function AddRemoveTabs({
               dispatch(resetMintV3State())
             }
           }}
+          style={children ? { flex: '1' } : {}}
         >
           <StyledArrowLeft stroke={theme.text2} />
         </HistoryLink>
-        <TYPE.mediumHeader fontWeight={500} fontSize={20}>
+        <TYPE.mediumHeader
+          fontWeight={500}
+          fontSize={20}
+          style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
+        >
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
@@ -131,6 +139,7 @@ export function AddRemoveTabs({
             <Trans>Remove Liquidity</Trans>
           )}
         </TYPE.mediumHeader>
+        {children}
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
     </Tabs>

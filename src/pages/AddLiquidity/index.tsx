@@ -48,6 +48,8 @@ import {
   StackedItem,
   DepositAmountsContainer,
   RightContainer,
+  TwoColumnButtonContainer,
+  SingleColumnButtonContainer,
 } from './styled'
 import { Trans, t } from '@lingui/macro'
 import {
@@ -508,7 +510,20 @@ export default function AddLiquidity({
             adding={true}
             positionID={tokenId}
             defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
-          />
+          >
+            {!hasExistingPosition && (
+              <Row
+                justifyContent="flex-end"
+                style={{ width: 'fit-content', minWidth: 'fit-content', marginRight: '10px' }}
+              >
+                <ButtonText onClick={clearAll}>
+                  <TYPE.blue fontSize="12px">
+                    <Trans>Clear All</Trans>
+                  </TYPE.blue>
+                </ButtonText>
+              </Row>
+            )}
+          </AddRemoveTabs>
           <Wrapper>
             <ResponsiveTwoColumns wide={!hasExistingPosition}>
               <AutoColumn gap="lg">
@@ -519,11 +534,6 @@ export default function AddLiquidity({
                         <TYPE.label>
                           <Trans>Select Pair</Trans>
                         </TYPE.label>
-                        <ButtonText onClick={clearAll}>
-                          <TYPE.blue fontSize="12px">
-                            <Trans>Clear All</Trans>
-                          </TYPE.blue>
-                        </ButtonText>
                       </RowBetween>
                       <RowBetween>
                         <CurrencyDropdown
@@ -642,6 +652,10 @@ export default function AddLiquidity({
                       locked={depositBDisabled}
                     />
                   </AutoColumn>
+
+                  <SingleColumnButtonContainer>
+                    <Buttons />
+                  </SingleColumnButtonContainer>
                 </DynamicSection>
               </DepositAmountsContainer>
 
@@ -669,21 +683,6 @@ export default function AddLiquidity({
                         />
                       ) : null}
                     </RowBetween>
-                    {!noLiquidity && (
-                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                        <Trans>
-                          Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
-                          <ExternalLink
-                            href={
-                              'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'
-                            }
-                            style={{ fontSize: '14px' }}
-                          >
-                            Need help picking a range?
-                          </ExternalLink>
-                        </Trans>
-                      </TYPE.main>
-                    )}
 
                     {price && baseCurrency && quoteCurrency && !noLiquidity && (
                       <AutoRow gap="4px" justify="center" style={{ marginTop: '2.5rem' }}>
@@ -890,7 +889,9 @@ export default function AddLiquidity({
                     ) : null}
                   </DynamicSection>
 
-                  <Buttons />
+                  <TwoColumnButtonContainer>
+                    <Buttons />
+                  </TwoColumnButtonContainer>
                 </RightContainer>
               )}
             </ResponsiveTwoColumns>
