@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Text } from 'rebass'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
 import { t, Trans } from '@lingui/macro'

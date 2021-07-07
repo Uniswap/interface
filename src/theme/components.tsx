@@ -2,7 +2,7 @@ import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components/macro'
 import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`

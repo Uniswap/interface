@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useRef } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   font-size: ${({ fontSize }) => fontSize || '1.25rem'};
