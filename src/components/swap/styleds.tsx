@@ -2,7 +2,7 @@ import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
+import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Text } from 'rebass'
 import { CloseIcon } from 'theme'
 import { Trans } from '@lingui/macro'
@@ -34,7 +34,7 @@ const ActionSelectorHeader = styled.div`
 const ActionDropdown = styled(ButtonDropdown)`
   padding: 0px;
   background-color: transparent;
-  color: ${({ theme }) => theme.text1}
+  color: ${({ theme }) => theme.text1};
   font-size: 1.25rem;
 
   :hover,

@@ -5,7 +5,7 @@ import styled, {
   css,
   DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
-} from 'styled-components'
+} from 'styled-components/macro'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
