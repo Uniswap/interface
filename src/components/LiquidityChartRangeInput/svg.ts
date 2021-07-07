@@ -40,9 +40,3 @@ export const brushHandleAccentPath = () =>
     'v 14', // vertical line
     'z',
   ].join(' ')
-
-const LABEL_PADDING = 10
-const LABEL_CHAR_WIDTH = 6
-
-export const getTextWidth = (s: string | undefined) =>
-  s ? s.split('').length * LABEL_CHAR_WIDTH + LABEL_PADDING * 2 : 0
