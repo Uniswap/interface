@@ -4,17 +4,12 @@ import styled from 'styled-components/macro'
 
 const StyledGroup = styled.g`
   line {
-    color: ${({ theme }) => theme.text1};
-    opacity: 0.3;
+    display: none;
   }
 
   text {
     color: ${({ theme }) => theme.text2};
     transform: translateY(5px);
-  }
-
-  & > g > g:nth-child(2n) text {
-    display: none;
   }
 `
 
@@ -41,7 +36,7 @@ export const AxisBottom = ({
   useMemo(
     () => (
       <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
-        <Axis axisGenerator={axisBottom(xScale).ticks(16).tickSize(10)} />
+        <Axis axisGenerator={axisBottom(xScale).ticks(8)} />
       </StyledGroup>
     ),
     [innerHeight, offset, xScale]
