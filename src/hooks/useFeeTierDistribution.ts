@@ -33,6 +33,7 @@ export function useFeeTierDistribution(token0: Token | undefined, token1: Token 
       return {
         isLoading: isLoading || isFetching || !isUninitialized,
         isError,
+        distributions,
       }
     }
 
@@ -67,7 +68,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { isLoading, isFetching, isUninitialized, isError, data } = useFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken,
     {
-      pollingInterval: ms`1m`,
+      pollingInterval: ms`2m`,
     }
   )
 
