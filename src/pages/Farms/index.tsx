@@ -221,7 +221,7 @@ const Farms = () => {
                   </RewardNumberContainer>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
-                {shouldShowHarvestAllButton() && (
+                {shouldShowHarvestAllButton() ? (
                   <div>
                     <ButtonPrimary
                       width="fit-content"
@@ -232,6 +232,10 @@ const Farms = () => {
                       Harvest All
                     </ButtonPrimary>
                   </div>
+                ) : (
+                  <TotalRewardsTitle>
+                    Harvest your rewards by clicking your eligible pool/s in the list below.
+                  </TotalRewardsTitle>
                 )}
               </HarvestAllContainer>
             </HeadingContainer>

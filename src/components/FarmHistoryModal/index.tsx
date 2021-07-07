@@ -145,7 +145,7 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
     <Modal isOpen={farmHistoryModalOpen} onDismiss={toggleFarmHistoryModal} maxHeight="fit-content" maxWidth="570px">
       <Wrapper>
         <Box overflow="hidden" height="100%">
-          <Text className="title">Histories</Text>
+          <Text className="title">History</Text>
           {loading && (
             <Text textAlign="center" mt="3" fontSize="12px">
               <Loader />

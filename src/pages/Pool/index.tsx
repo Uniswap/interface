@@ -10,7 +10,7 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import FullPositionCard from 'components/PositionCard'
 import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import Card from 'components/Card'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from 'components/Button'
+import { ButtonOutlined } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
@@ -18,7 +18,7 @@ import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
 import { useActiveWeb3React } from 'hooks'
 import { usePairs, usePairsByAddress } from 'data/Reserves'
 import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
-import { useTrackedTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
+import { useToV2LiquidityTokens, useLiquidityPositionTokenPairs } from 'state/user/hooks'
 import { useStakingInfo } from 'state/stake/hooks'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 
@@ -58,20 +58,6 @@ const ButtonRow = styled(RowFixed)`
   `};
 `
 
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
-`
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
-`
-
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
   padding: 16px 12px;
@@ -86,11 +72,10 @@ export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
+  const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
 
   //trackedTokenPairs = [ [Token, Token],  [Token, Token] ]
-  const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(trackedTokenPairs)
+  const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(liquidityPositionTokenPairs)
 
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityTokens), [
     tokenPairsWithLiquidityTokens
@@ -171,7 +156,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <AutoRow>
               <InstructionText>
-                Here you can view all your liquidity position and remove/add more liquidity.
+                Here you can view all your liquidity positions and remove/add more liquidity.
               </InstructionText>
             </AutoRow>
 

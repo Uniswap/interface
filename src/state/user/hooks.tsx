@@ -23,6 +23,9 @@ import {
   toggleURLWarning
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
+import { useUserLiquidityPositions } from 'state/pools/hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import { isAddress } from 'utils'
 
 function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
   return {
@@ -296,6 +299,68 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return []
   }, [chainId])
+
+  // pairs saved by users
+  const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
+
+  const userPairs: [Token, Token][] = useMemo(() => {
+    if (!chainId || !savedSerializedPairs) return []
+    const forChain = savedSerializedPairs[chainId]
+    if (!forChain) return []
+
+    return Object.keys(forChain).map(pairId => {
+      return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
+    })
+  }, [savedSerializedPairs, chainId])
+
+  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
+    generatedPairs,
+    pinnedPairs,
+    userPairs
+  ])
+
+  return useMemo(() => {
+    // dedupes pairs of tokens in the combined list
+    const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
+      const sorted = tokenA.sortsBefore(tokenB)
+      const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
+      if (memo[key]) return memo
+      memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
+      return memo
+    }, {})
+
+    return Object.keys(keyed).map(key => keyed[key])
+  }, [combinedList])
+}
+
+export function useLiquidityPositionTokenPairs(): [Token, Token][] {
+  const { chainId, account } = useActiveWeb3React()
+  const allTokens = useAllTokens()
+
+  // pinned pairs
+  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
+
+  const { loading, error, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+
+  // get pairs that has liquidity
+  const generatedPairs: [Token, Token][] = useMemo(() => {
+    if (userLiquidityPositions?.liquidityPositions) {
+      const result: [Token, Token][] = []
+
+      userLiquidityPositions?.liquidityPositions.forEach(position => {
+        const token0Address = isAddress(position.pool.token0.id)
+        const token1Address = isAddress(position.pool.token1.id)
+
+        if (token0Address && token1Address && allTokens[token0Address] && allTokens[token1Address]) {
+          result.push([allTokens[token0Address], allTokens[token1Address]])
+        }
+      })
+
+      return result
+    }
+
+    return []
+  }, [JSON.stringify(userLiquidityPositions)])
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)

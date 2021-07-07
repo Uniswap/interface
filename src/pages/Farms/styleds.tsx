@@ -165,7 +165,7 @@ export const HarvestAllContainer = styled.div`
 `
 
 export const TotalRewardsContainer = styled.div`
-  margin-right: 16px;
+  margin-right: 32px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 32px;
