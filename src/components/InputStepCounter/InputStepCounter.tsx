@@ -55,7 +55,7 @@ const InputTitle = styled(TYPE.small)`
 `
 
 const ButtonLabel = styled(TYPE.white)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.white)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.text1)} !important;
 `
 
 interface StepCounterProps {
