@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-07 03:04\n"
+"PO-Revision-Date: 2021-07-07 07:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -483,7 +483,7 @@ msgstr "プール作成と流動性の追加"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "Create Proposal"
-msgstr "提案を作成する"
+msgstr "提案を作成"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -517,7 +517,7 @@ msgstr "{0} の現在価格:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
-msgstr "敗北"
+msgstr "否決"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -660,7 +660,7 @@ msgstr "リストのインポートエラー"
 
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
-msgstr "実行された"
+msgstr "実行済"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1284,7 +1284,7 @@ msgstr "{0} {1} を {2} {3} にスワップ中"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Switch to Ethereum"
-msgstr "イーサリアムに切り替えます"
+msgstr "イーサリアムに切り替え"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1781,7 +1781,7 @@ msgstr "靴下の絵文字があります"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https://、ipfs://またはENS"
+msgstr "https://、ipfs://またはENS名"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
