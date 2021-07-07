@@ -1,29 +1,30 @@
-import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components/macro'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { UNI } from '../../constants/tokens'
-import { ExternalLink, TYPE } from '../../theme'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { Link } from 'react-router-dom'
-import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
-import { ProposalStatus } from './styled'
-import { ButtonPrimary } from '../../components/Button'
-import { Button } from 'rebass/styled-components'
-import { darken } from 'polished'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from '../../state/governance/hooks'
-import DelegateModal from '../../components/vote/DelegateModal'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ZERO_ADDRESS } from '../../constants/misc'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
-import { shortenAddress } from '../../utils'
-import Loader from '../../components/Loader'
-import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
-import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/actions'
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import JSBI from 'jsbi'
+import { darken } from 'polished'
+import { Link } from 'react-router-dom'
+import { Button } from 'rebass/styled-components'
+import styled from 'styled-components/macro'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
+import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import Loader from 'components/Loader'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import DelegateModal from 'components/vote/DelegateModal'
+import { ZERO_ADDRESS } from '../../constants/misc'
+import { UNI } from '../../constants/tokens'
+import { useActiveWeb3React } from 'hooks/web3'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleDelegateModal } from 'state/application/hooks'
+import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
+import { useTokenBalance } from 'state/wallet/hooks'
+import { ExternalLink, TYPE } from 'theme'
+import { shortenAddress } from 'utils'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -93,16 +94,6 @@ const AddressButton = styled.div`
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text1};
-`
-
-const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
-  padding: 16px 12px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 `
 
 export default function Vote() {
@@ -239,18 +230,7 @@ export default function Vote() {
               )}
             </RowBetween>
           )}
-          {allProposals?.length === 0 && (
-            <EmptyProposals>
-              <TYPE.body style={{ marginBottom: '8px' }}>
-                <Trans>No proposals found.</Trans>
-              </TYPE.body>
-              <TYPE.subHeader>
-                <i>
-                  <Trans>Proposals submitted by community members will appear here.</Trans>
-                </i>
-              </TYPE.subHeader>
-            </EmptyProposals>
-          )}
+          {allProposals?.length === 0 && <ProposalEmptyState />}
           {allProposals
             ?.slice(0)
             ?.reverse()

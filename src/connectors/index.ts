@@ -29,6 +29,8 @@ const NETWORK_URLS: {
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arb1.arbitrum.io/rpc`,
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://rinkeby.arbitrum.io/rpc`,
+  [SupportedChainId.OPTIMISM]: `https://mainnet.optimism.io`,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: `https://kovan.optimism.io`,
 }
 
 const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
@@ -39,6 +41,8 @@ const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ROPSTEN,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
 ]
 
 export const network = new NetworkConnector({
