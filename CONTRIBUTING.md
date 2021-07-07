@@ -21,12 +21,12 @@ Consider these guidelines and use your best judgment when applying them.
 If code is in the critical path, will be frequently visited, or makes large architectural changes,
 consider following all the guidelines.
 
-- Have at least one product manager or designer approve of significant product or UX changes
 - Have at least one engineer approve of large code refactorings
 - Manually test small code changes
 - Thoroughly unit test when code is not obviously correct
 - Add integration tests for new pages or flows
 - Verify that all CI checks pass (or failed only due to flakiness) before merging
+- Have at least one product manager or designer approve of significant product or UX changes
 
 In addition, the following points should be emphasized when developing for the interface:
 
