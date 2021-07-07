@@ -128,8 +128,7 @@ export const useFarmsData = () => {
           }
         }
       })
-
-      return farms
+      return farms.filter(farm => !!farm.totalSupply)
     }
 
     async function checkForFarms() {
