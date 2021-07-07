@@ -31,7 +31,7 @@ consider following all the guidelines.
 In addition, the following points should be emphasized when developing for the interface:
 
 - Security: The interface crafts sensitive transaction data for users to sign, so avoid adding unnecessary dependencies due to [supply chain risk](https://github.com/LavaMoat/lavamoat#further-reading-on-software-supplychain-security)
-- Reproducibility: Users should be able to easily run the interface locally, so avoid adding steps to the development or build processes
+- Reproducibility: Users should be able to easily run the interface locally and reproduce each release, so avoid adding steps to the development/build processes (especially non-deterministic steps)
 - Decentralization: An Ethereum node should be the only hard dependency for the interface to function. All other dependencies should only enhance the UX
 
 ## Finding a first issue
