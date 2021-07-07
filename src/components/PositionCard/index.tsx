@@ -8,10 +8,10 @@ import styled from 'styled-components'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, HideExtraSmall, ExtraSmallOnly } from '../../theme'
+import { ExternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient, ButtonOutlined } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonOutlined } from '../Button'
 import { useColor } from '../../hooks/useColor'
 import Card, { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
@@ -50,22 +50,18 @@ const ButtonSecondary2 = styled(ButtonSecondary)`
   }
 `
 
+const PositionItem = styled.div`
+  width: 100%;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr 2fr 4fr 2fr 0.5fr;
+  justify-content: space-between;
+`
+
 const IconWrapper = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-`
-
-const RightColumn = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr 0 1fr;
-  grid-column-gap: 24px;
-  align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 1fr 1.5fr;
-    grid-column-gap: 4px;
-  `}
 `
 
 const USDValue = styled.div`
@@ -225,9 +221,6 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
-
-  const price = pair.priceOf(pair.token0)
   const amp = new Fraction(pair.amp).divide(JSBI.BigInt(10000))
 
   const percentToken0 = pair.reserve0
@@ -259,34 +252,32 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px" align="flex-start">
-            <DoubleCurrencyLogo currency0={native0} currency1={native1} size={20} />
-            <Text fontWeight={500} fontSize={14} style={{ flexGrow: 1 }}>
-              {!currency0 || !currency1 ? (
-                <Dots>Loading</Dots>
-              ) : (
-                <RightColumn>
-                  <div>{`${native0?.symbol}/${native1?.symbol}`}</div>
-                  <div>
-                    {!!token0Deposited && (
-                      <div>
-                        {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
-                      </div>
-                    )}
-                  </div>
-                  <div />
-                  {!!usdValue && <USDValue>{usdValue}</USDValue>}
-                </RightColumn>
-              )}
-            </Text>
-          </AutoRow>
-
-          <ButtonEmpty padding="0" width="32px" onClick={() => setShowMore(!showMore)}>
-            {showMore ? (
-              <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+            {!currency0 || !currency1 ? (
+              <Dots>Loading</Dots>
             ) : (
-              <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+              <PositionItem>
+                <DoubleCurrencyLogo currency0={native0} currency1={native1} size={20} />
+                <div>{`${native0?.symbol}/${native1?.symbol}`}</div>
+                <div>
+                  {!!token0Deposited && (
+                    <div>
+                      {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
+                    </div>
+                  )}
+                </div>
+
+                {!!usdValue && <USDValue>{usdValue}</USDValue>}
+
+                <ButtonEmpty padding="0" width="32px" onClick={() => setShowMore(!showMore)}>
+                  {showMore ? (
+                    <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+                  ) : (
+                    <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                  )}
+                </ButtonEmpty>
+              </PositionItem>
             )}
-          </ButtonEmpty>
+          </AutoRow>
         </FixedHeightRow>
 
         {showMore && (

@@ -23,7 +23,7 @@ import { useStakingInfo } from 'state/stake/hooks'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 510px;
+  max-width: 720px;
   width: 100%;
 `
 
@@ -33,6 +33,7 @@ const VoteCard = styled(DataCard)`
 `
 
 const InstructionText = styled.div`
+  width: 100%;
   padding: 16px 20px;
   background-color: ${({ theme }) => theme.bg17};
   border-radius: 5px;
@@ -198,14 +199,6 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                {/* <ButtonSecondary>
-                  <RowBetween>
-                    <ExternalLink href={`${DMM_INFO_URL}/account/` + account}>
-                      Account analytics and accrued fees
-                    </ExternalLink>
-                    <span> ↗</span>
-                  </RowBetween>
-                </ButtonSecondary> */}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard
                     key={v2Pair.liquidityToken.address}
