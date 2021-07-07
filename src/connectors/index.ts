@@ -38,9 +38,9 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.MAINNET, ChainId.ROPSTEN, ChainI
 const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
-  [ChainId.MAINNET]: `https://dev-ethereum.knstats.com/v1/mainnet/geth?appId=abcxyz`,
+  [ChainId.MAINNET]: `https://ethereum.kyber.network/v1/mainnet/geth?appId=prod-dmm-interface`,
   [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.ROPSTEN]: `https://dev-ethereum.knstats.com/v1/ropsten/node?appId=abcxyz`,
+  [ChainId.ROPSTEN]: `https://dev-ethereum.knstats.com/v1/mainnet/geth?appId=dev-dmm`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.MUMBAI]: `https://peaceful-austin:boned-fruit-crave-feast-heat-boots@nd-526-681-843.p2pify.com/`,
