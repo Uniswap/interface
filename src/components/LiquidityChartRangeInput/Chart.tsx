@@ -49,13 +49,14 @@ export function Chart({
     return scales
   }, [initialZoom, current, innerWidth, series, innerHeight, zoom])
 
-  xScale.clamp(true)
-
   useEffect(() => {
     if (!brushDomain) {
       onBrushDomainChange(xScale.domain() as [number, number])
     }
   }, [brushDomain, onBrushDomainChange, xScale])
+
+  // ensures the brush remains in view and adapts to zooms
+  xScale.clamp(true)
 
   return (
     <>
@@ -74,6 +75,7 @@ export function Chart({
           </clipPath>
 
           {brushDomain && (
+            // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
               <rect
                 fill="white"
@@ -91,7 +93,7 @@ export function Chart({
             <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
             {brushDomain && (
-              // overlay area chart for selection
+              // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <Area
                   series={series}

@@ -82,10 +82,8 @@ export default function Zoom({
       ])
       .on('zoom', ({ transform }: { transform: ZoomTransform }) => setZoom(transform))
 
-    select(svg)
-      // @ts-ignore
+    select(svg as Element)
       .call(zoomBehavior.current)
-      // disables dragging/panning
       .on('mousedown.zoom', null)
   }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior])
 

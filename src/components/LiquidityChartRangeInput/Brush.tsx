@@ -161,7 +161,6 @@ export const Brush = ({
             <rect x="0" y="0" width={innerWidth} height="100%" />
           </clipPath>
 
-          {/* leave some gap for the handles to show */}
           <clipPath id={`${id}-handles-clip`}>
             <rect x="0" y="0" width="100%" height="100%" />
           </clipPath>
