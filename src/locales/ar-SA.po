@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Arabic\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(مطالبة)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(مسح الكل)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(تعديل)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> جميع المقترحات"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> الأصوات"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>تحليلات الحساب والرسوم المتراكمة</0><1> ↗ </1>"
@@ -122,10 +113,6 @@ msgstr "<0>افتح التصويت </0> للتحضير للاقتراح التا
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>مرحبًا بكم في فريق:) <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "مطلوب حد أدنى قدره 0.25٪ من إجمالي إمداد UNI لتقديم العروض"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "الموافقة"
 msgid "Approving {0}"
 msgstr "الموافقة على {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "مستكشف Arbitrum"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "جسر Arbitrum Token"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "هل أنت متأكد؟"
@@ -322,10 +301,6 @@ msgstr "تغيير"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "قم بتغيير شبكتك للعودة إلى L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "تحقق من أدلة التجول والترحيل الخاصة بـ v3 LP."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "إنشاء مجموعة وإمدادات"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "إنشاء اقتراح"
 
@@ -549,10 +523,6 @@ msgstr "هزم"
 msgid "Delegate Votes"
 msgstr "أصوات التفويض"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "مفوض إلى:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "الأصوات المفوضة"
@@ -579,10 +549,6 @@ msgstr "إيداع رموز UNI-V2 LP"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "إيداع السيولة"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "الإيداع في Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "وضع الخبراء يلغي تأكيد سرعة المعاملات و
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "منتهي الصلاحية"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "استكشف المجموعات الشعبية على تحليلات Uniswap."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "لم يتم العثور على سيولة."
 msgid "No pool found."
 msgstr "لم يتم العثور على مجموعة."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "لا توجد مقترحات."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "فقط استخدم هذا الخيار مع ما تعلمونه من أمور."
@@ -1128,14 +1086,6 @@ msgstr "تم تقديم الاقتراح"
 msgid "Proposal Title"
 msgstr "عنوان الاقتراح"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "مقترحات"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "وسترد هنا المقترحات المقدمة من أعضاء المجتمع المحلي."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "الإجراء المقترح"
@@ -1155,10 +1105,6 @@ msgstr "الأسعار"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "اقرأ المزيد عن UNI"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "اقرأ المزيد عن إدارة Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "حدد زوجًا"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "نطاق محدد"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "نفسه"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "نسبة الرموز التي تضيفها سوف تحدد سعر هذ�
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "تعذر إرسال المعاملة لانتهاء الموعد المحدد. يرجى التحقق من أن الموعد النهائي لمعاملاتك ليس منخفضًا جدًا."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "هذا إصدار ألفا من Uniswap على شبكة Arbitrum. يجب ربط أصول L1 بالشبكة لتبديلها."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "لا يظهر هذا الرمز في قائمة (قوائم) الرموز النشطة. تأكد من أن هذا هو الرمز الذي تريد تداوله."
@@ -1422,10 +1360,6 @@ msgstr "إلى (على الأقل)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "تبديل وضع الخبير"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "أفضل المجموعات"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI المتداول:"
 msgid "UNI price:"
 msgstr "سعر UNI:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "تمثل رموز UNI حصص التصويت في حوكمة Uniswap. يمكنك التصويت على كل اقتراح بنفسك أو تفويض أصواتك لطرف ثالث."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} محروق"
@@ -1513,14 +1443,6 @@ msgstr "غير المطالب به:"
 msgid "Undetermined"
 msgstr "غير محدد"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "إدارة Uniswitp"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 هنا!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "تعدين سيولة Uniswap"
@@ -1528,10 +1450,6 @@ msgstr "تعدين سيولة Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "عقد ترحيل Uniswap ↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap على <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "خطأ غير معروف{0}. حاول زيادة تحملك للانزلاق. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "فتح الأصوات"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "فتح التصويت"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "بدون عنوان"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "تحديث التفويض"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> لكل <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} جسر"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} رموز مخصصة"
@@ -1909,6 +1822,10 @@ msgstr "{0} رموز مخصصة"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} مودعة"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} مستكشف"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

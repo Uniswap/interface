@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(תביעה)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(נקה הכל)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(עריכה)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> כל ההצעות"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> הצבעות"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> ניתוח חשבונות ועמלות שנצברו</0> <1> ↗</1>"
@@ -122,10 +113,6 @@ msgstr "<0> בטל את ההצבעה</0> להתכונן להצעה הבאה."
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> ברוך הבא לצוות חד קרן :) <1> 🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "הגשת הצעות נדרשת רף מינימלי של 0.25% מסך היצע ה- UNI"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "מאשר"
 msgid "Approving {0}"
 msgstr "מאשר {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "סייר ארביטרום"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "גשר אסימון ארביטרום"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "האם אתה בטוח?"
@@ -322,10 +301,6 @@ msgstr "שינוי"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "שנה את הרשת שלך כדי לחזור ל- L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "עיין במדריכי ההדרכה וההעברה של v3 LP שלנו."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "צור בריכה ואספקה"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "צור הצעה"
 
@@ -549,10 +523,6 @@ msgstr "מוּבָס"
 msgid "Delegate Votes"
 msgstr "האצל הצבעות"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "הואצל ל:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "קולות מאושרים"
@@ -579,10 +549,6 @@ msgstr "הפקדת אסימוני LP של UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "הפקדת נזילות"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "הפקדה לארביטרום"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "מצב מומחה מכבה את בקשת האישור לעסקה ומא�
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "לא בתוקף"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "גלה בריכות פופולריות ב- Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "לא נמצאה נזילות."
 msgid "No pool found."
 msgstr "לא נמצא מאגר."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "לא נמצאו הצעות."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "השתמש במצב זה בלבד אם אתה יודע מה אתה עושה."
@@ -1128,14 +1086,6 @@ msgstr "ההצעה הוגשה"
 msgid "Proposal Title"
 msgstr "כותרת ההצעה"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "הצעות"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "הצעות שהוגשו על ידי חברי הקהילה יופיעו כאן."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "הצעה לפעולה"
@@ -1155,10 +1105,6 @@ msgstr "תעריפים"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "קרא עוד על UNI"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "קרא עוד על ממשל Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "בחר זוג"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "טווח נבחר"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "עצמי"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "יחס האסימונים שתוסיף יקבע את מחיר הבריכ
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "לא ניתן היה לשלוח את העסקה מכיוון שהמועד האחרון חלף. אנא בדוק שמועד העסקה האחרון שלך אינו קרוב מדי."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "זהו שחרור אלפא של Uniswap ברשת Arbitrum. עליך לגשר על נכסי L1 לרשת כדי להחליף אותם."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "אסימון זה אינו מופיע ברשימות האסימונים הפעילות. ודא שזה האסימון שאתה רוצה לסחור בו."
@@ -1422,10 +1360,6 @@ msgstr "עבור (לפחות)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "החלף מצב מומחה"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "בריכות מובילות"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI במחזור:"
 msgid "UNI price:"
 msgstr "מחיר UNI:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "אסימונים של UNI מייצגים מניות הצבעה בממשל Uniswap. אתה יכול להצביע על כל הצעה בעצמך או להאציל את קולותיך לצד שלישי."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} שרופה"
@@ -1513,14 +1443,6 @@ msgstr "ללא דרישה:"
 msgid "Undetermined"
 msgstr "לא נקבע"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "ממשל לא מוחלף"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Un3wap V3 כבר כאן!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "כריית נזילות ללא החלפה"
@@ -1528,10 +1450,6 @@ msgstr "כריית נזילות ללא החלפה"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "חוזה הגירה מביטול החלפה↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap ב- <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "שגיאה לא ידועה{0}. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "בטל נעילת הצבעות"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "בטל את נעילת ההצבעה"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "ללא כותרת"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "לְגוֹלֵל"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "עדכן משלחת"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0 /> לכל <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} גשר"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} אסימונים בהתאמה אישית"
@@ -1909,6 +1822,10 @@ msgstr "{0} אסימונים בהתאמה אישית"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} מופקד"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} סייר"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

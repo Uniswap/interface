@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(востребовать)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(очистить всё)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(редактировать)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Все предложения"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Голоса"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Аналитика по аккаунту и начисленные комиссии</0><1> ↗ </1>"
@@ -122,10 +113,6 @@ msgstr "<0>Разблокируйте голосование</0>, чтобы п�
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Добро пожаловать в команду единорогов :) <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Для внесения предложений требуется минимальный порог в 0,25% от общего предложения UNI"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Идёт одобрение"
 msgid "Approving {0}"
 msgstr "Идёт одобрение {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Арбитрум Эксплорер"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token Bridge"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Вы уверены?"
@@ -322,10 +301,6 @@ msgstr "Изменить"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "Измените свою сеть, чтобы вернуться к L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Ознакомьтесь с нашими руководствами по предоставлению и переносу ликвидности в V3."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Создать пул и внести"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Создать предложение"
 
@@ -549,10 +523,6 @@ msgstr "Побежден"
 msgid "Delegate Votes"
 msgstr "Делегировать голоса"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Делегировано кому:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Делегированные голоса"
@@ -579,10 +549,6 @@ msgstr "Внести LP-токены UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Внести ликвидность"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Депозит в Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Экспертный режим отключает экран подтв
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Истекший"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Исследуйте популярные пулы в Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Ликвидность не найдена."
 msgid "No pool found."
 msgstr "Пулы не найдены."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Предложения не найдены."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ИСПОЛЬЗУЙТЕ ЭТОТ РЕЖИМ, ТОЛЬКО ЕСЛИ ЗНАЕТЕ, ЧТО ДЕЛАЕТЕ."
@@ -1128,14 +1086,6 @@ msgstr "Предложение отправлено"
 msgid "Proposal Title"
 msgstr "Название предложения"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Предложения"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Предложения, вносимые членами сообщества, будут появляться здесь."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Предлагаемое действие"
@@ -1155,10 +1105,6 @@ msgstr "Тарифы"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Подробнее о UNI"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Подробнее об управлении Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Выберите пару"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Выбранный диапазон"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Себе"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Соотношение добавляемых вами токенов у
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Транзакция не может быть отправлена, потому что срок её действия истек. Пожалуйста, убедитесь, что срок действия вашей транзакции не слишком короткий."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Это альфа-версия Uniswap в сети Arbitrum. Вы должны подключить ресурсы L1 к сети, чтобы поменять их местами."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Этот токен не входит в активные списки токенов. Убедитесь, что это действительно тот токен, которым вы хотите торговать."
@@ -1422,10 +1360,6 @@ msgstr "На токены (минимум)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Экспертный режим"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "Топ пулов"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI в обращении:"
 msgid "UNI price:"
 msgstr "Цена UNI:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Токены UNI представляют собой права голоса в управлении Uniswap. Вы можете проголосовать по каждому предложению самостоятельно или делегировать свои голоса третьей стороне."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} сожжено"
@@ -1513,14 +1443,6 @@ msgstr "Невостребовано:"
 msgid "Undetermined"
 msgstr "Неопределенный"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Управление Uniswap"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 запустился!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Майнинг ликвидности Uniswap"
@@ -1528,10 +1450,6 @@ msgstr "Майнинг ликвидности Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Контракт переноса Uniswap ↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap на <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Неизвестная ошибка{0}. Попробуйте увеличить допустимое проскальзывание. Обратите внимание: токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Разблокировать голоса"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Разблокировать голосование"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "Без названия"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Развернуть"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Обновить делегирование"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> за <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Мост"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} пользовательских токенов"
@@ -1909,6 +1822,10 @@ msgstr "{0} пользовательских токенов"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} внесено"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Исследователь"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(lấy)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(xóa tất cả)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(chỉnh sửa)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Tất cả các đề xuất"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Phiếu bầu"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Phân tích tài khoản và phí tích lũy</0><1> ↗ </1>"
@@ -122,10 +113,6 @@ msgstr "<0>Mở khóa biểu quyết</0> để chuẩn bị cho đề xuất ti�
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0> Chào mừng đến với đội Unicorn :) <1> 🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Yêu cầu ngưỡng tối thiểu 0,25% tổng nguồn cung cấp UNI để gửi đề xuất"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Đang phê duyệt"
 msgid "Approving {0}"
 msgstr "Đang phê duyệt {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Cầu mã thông báo Arbitrum"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Bạn có chắc không?"
@@ -322,10 +301,6 @@ msgstr "Thay đổi"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "Thay đổi mạng của bạn để quay lại L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Xem hướng dẫn di chuyển và hướng dẫn v3 LP của chúng tôi."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Tạo Nhóm & Nguồn cung"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Tạo đề xuất"
 
@@ -549,10 +523,6 @@ msgstr "Bị đánh bại"
 msgid "Delegate Votes"
 msgstr "Phiếu bầu ủy quyền"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Giao cho:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Phiếu bầu được ủy quyền"
@@ -579,10 +549,6 @@ msgstr "Gửi token UNI-V2 LP"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Thanh khoản tiền gửi"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Gửi tiền vào Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và c
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Đã hết hạn"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Khám phá các pool phổ biến trên Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Không tìm thấy thanh khoản."
 msgid "No pool found."
 msgstr "Không tìm thấy pool."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Không tìm thấy đề xuất nào."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN BIẾT BẠN ĐANG LÀM GÌ."
@@ -1128,14 +1086,6 @@ msgstr "Đề xuất đã được đệ trình"
 msgid "Proposal Title"
 msgstr "Tiêu đề đề xuất"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Đề xuất"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Các đề xuất do các thành viên cộng đồng gửi sẽ xuất hiện ở đây."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Đề xuất hành động"
@@ -1155,10 +1105,6 @@ msgstr "Tỷ giá"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Đọc thêm về UNI"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Đọc thêm về quản trị Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Chọn cặp"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Phạm vi đã chọn"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Bản thân"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Tỷ lệ mã token bạn thêm vào sẽ thiết lập giá của nhóm
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng kiểm tra xem thời hạn giao dịch của bạn không quá thấp."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Đây là bản phát hành alpha của Uniswap trên mạng Arbitrum. Bạn phải kết nối nội dung L1 với mạng để hoán đổi chúng."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đang hoạt động. Đảm bảo rằng đây là mã token mà bạn muốn giao dịch."
@@ -1422,10 +1360,6 @@ msgstr "Đến (Ít nhất)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Chuyển đổi Chế độ chuyên gia"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "Pool hàng đầu"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI đang lưu hành:"
 msgid "UNI price:"
 msgstr "Giá UNI:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Mã token UNI đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap. Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} đã đốt"
@@ -1513,14 +1443,6 @@ msgstr "Chưa nhận:"
 msgid "Undetermined"
 msgstr "Không xác định"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Quản trị Uniswap"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 ở đây!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Khai thác thanh khoản Uniswap"
@@ -1528,10 +1450,6 @@ msgstr "Khai thác thanh khoản Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Hợp đồng di chuyển Uniswap↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Hủy hoán đổi trên <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Mở khóa phiếu bầu"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Mở khóa biểu quyết"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "Không có tiêu đề"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Tháo"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Cập nhật ủy quyền"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> mỗi <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Cầu"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Token tùy chỉnh"
@@ -1909,6 +1822,10 @@ msgstr "{0} Token tùy chỉnh"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} Đã gửi"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} khám phá"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

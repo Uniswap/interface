@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(iste)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(tümünü temizle)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(düzenle)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "%75"
 msgid "<0/> All Proposals"
 msgstr "<0/> Tüm Teklifler"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Oylar"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Hesap analizi ve tahakkuk eden ücretler</0><1> ↗</1>"
@@ -122,10 +113,6 @@ msgstr "Bir sonraki teklife hazırlanmak için <0>Oylamanın kilidini açın</0>
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Unicorn takımına hoş geldiniz :) <1> 🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Teklifleri sunmak için toplam UNI arzının minimum %0,25'i gereklidir"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Onaylanıyor"
 msgid "Approving {0}"
 msgstr "Onaylanıyor {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Gezgini"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token Köprüsü"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Emin misiniz?"
@@ -322,10 +301,6 @@ msgstr "Değiştir"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "L1'e geri dönmek için ağınızı değiştirin"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "V3 LP adım adım açıklamalı kılavuzumuza ve geçiş kılavuzlarımıza göz atın."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Havuz ve Kaynak Oluştur"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Teklif Oluştur"
 
@@ -549,10 +523,6 @@ msgstr "mağlup"
 msgid "Delegate Votes"
 msgstr "Oylar Devret"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Yetki verildi:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "devredilen oylar"
@@ -579,10 +549,6 @@ msgstr "UNI-V2 LP Jetonlarını yatırın"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Mevduat likiditesi"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Arbitrum'a Para Yatırma"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Uzman modu, işlem onayı istemini kapatır ve genellikle düşük oranl
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Süresi doldu"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analytics'teki popüler havuzları keşfedin."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Likidite bulunamadı."
 msgid "No pool found."
 msgstr "Havuz bulunamadı."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Teklif bulunamadı."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "BU MODU YALNIZCA NE YAPTIĞINIZI BİLİYORSANIZ KULLANIN."
@@ -1128,14 +1086,6 @@ msgstr "Teklif Gönderildi"
 msgid "Proposal Title"
 msgstr "Teklif Başlığı"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Teklifler"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Topluluk üyeleri tarafından gönderilen teklifler burada görünecektir."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Önerilen hareket"
@@ -1155,10 +1105,6 @@ msgstr "Oranlar"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "UNI hakkında daha fazla bilgi edinin"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Uniswap yönetişimi hakkında daha fazla bilgi edinin"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Çift seçin"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Seçilen Aralık"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Kendisi"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Eklediğiniz jeton oranı, bu havuzun fiyatını belirleyecektir."
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem sürenizin çok kısa olmadığından emin olun."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Bu, Arbitrum ağındaki Uniswap'ın alfa sürümüdür. Bunları takas etmek için L1 varlıklarını ağa bağlamanız gerekir."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Bu jeton, aktif jeton listelerinde görünmüyor. Bunun takas etmek istediğiniz jeton olduğundan emin olun."
@@ -1422,10 +1360,6 @@ msgstr "Alıcı (en az)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Uzman Modunu Değiştir"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "En iyi havuzlar"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "Dolaşımdaki UNI:"
 msgid "UNI price:"
 msgstr "UNI fiyatı:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI jetonları, Uniswap yönetiminde oy hakkına sahip hisseleri temsil eder. Her bir teklife kendiniz oy verebilir veya oylarınızı üçüncü bir tarafa devredebilirsiniz."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Yandı"
@@ -1513,14 +1443,6 @@ msgstr "Talep edilmeyen:"
 msgid "Undetermined"
 msgstr "belirsiz"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap Yönetimi"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 burada!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap likidite madenciliği"
@@ -1528,10 +1450,6 @@ msgstr "Uniswap likidite madenciliği"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap geçiş sözleşmesi↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "<0>Arbitrum'da Değiştirmeyi Değiştir</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Bilinmeyen hata{0}. Kayma toleransınızı artırmayı deneyin. Not: Transfer ve rebase jetonlarındaki ücret, Uniswap V3 ile uyumlu değildir."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Oyların Kilidini Aç"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Oylamanın Kilidini Açın"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "başlıksız"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Paketi Aç"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Yetkilendirmeyi Güncelle"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "% {0}"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> / <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Köprü"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Özel Jeton"
@@ -1909,6 +1822,10 @@ msgstr "{0} Özel Jeton"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} Yatırıldı"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Gezgin"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

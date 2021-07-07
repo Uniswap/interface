@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(請求)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(すべてクリア)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(編集)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/>すべての提案"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/>投票"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
@@ -122,10 +113,6 @@ msgstr "次の提案に備えるため <0>投票のロックを解除</0>"
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNIが必要です。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "承認中"
 msgid "Approving {0}"
 msgstr "{0} を承認中"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrumエクスプローラー"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrumトークンブリッジ"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "本当によろしいですか？"
@@ -322,10 +301,6 @@ msgstr "変更"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "ネットワークを変更してL1に戻ります"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "V3の流動性と移行ガイドをご覧ください。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "プール作成と流動性の追加"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "提案を作成する"
 
@@ -549,10 +523,6 @@ msgstr "敗北"
 msgid "Delegate Votes"
 msgstr "投票を委任する"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "委任先:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "委任された投票"
@@ -579,10 +549,6 @@ msgstr "UNI-V2 LP トークンを預け入れる"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "流動性を預ける"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "アービトラムへの預金"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "エキスパートモードは取引確認画面をスキップし、不
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "期限切れ"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap分析サイトで人気のあるプールを探しましょう。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "流動性が見つかりません。"
 msgid "No pool found."
 msgstr "プールが見つかりません。"
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "提案が見つかりません。"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "このモードは、あなたが何をしているかを理解している場合にのみご使用ください。"
@@ -1128,14 +1086,6 @@ msgstr "提出された提案"
 msgid "Proposal Title"
 msgstr "提案のタイトル"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "提案"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "コミュニティメンバーが提出した提案はここに表示されます。"
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "提案するアクション"
@@ -1155,10 +1105,6 @@ msgstr "レート"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "UNIについてもっと見る"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Uniswapガバナンスについてもっと見る"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "ペアを選択"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "設定した価格範囲"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "自分"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "追加するトークンの比率によって、プールの価格が決
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短すぎないかご確認ください。"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "これは、Arbitrumネットワーク上のUniswapのアルファリリースです。それらを交換するには、L1アセットをネットワークにブリッジする必要があります。"
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "このトークンはご利用中のトークンリストに存在しません。取引したいトークンであることを確認してください。"
@@ -1422,10 +1360,6 @@ msgstr "買うトークン（少なくとも）"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "エキスパートモード"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "上位のプール"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "流通しているUNI:"
 msgid "UNI price:"
 msgstr "UNIの価格:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNIトークンはUniswapガバナンスにおける投票権を表します。各提案に対して自分で投票するか、もしくは第三者に投票を委任することができます。"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "削除される UNI {0}/{1}"
@@ -1513,14 +1443,6 @@ msgstr "未請求："
 msgid "Undetermined"
 msgstr "未定"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswapのガバナンス"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3登場！"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap流動性マイニング"
@@ -1528,10 +1450,6 @@ msgstr "Uniswap流動性マイニング"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap移行コントラクト↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "<0>アービトラム</0>でのユニスワップ"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,12 +1460,7 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "不明なエラー{0}。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "投票のロックを解除"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
 msgstr "投票のロックを解除"
 
 #: src/components/vote/DelegateModal.tsx
@@ -1571,10 +1484,6 @@ msgstr "無題"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "アンラップ"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "委任を更新"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> / <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} ブリッジ"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} カスタムトークン"
@@ -1909,6 +1822,10 @@ msgstr "{0} カスタムトークン"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "預け入れる {0}"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} エクスプローラー"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
