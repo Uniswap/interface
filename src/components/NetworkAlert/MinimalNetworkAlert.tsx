@@ -29,7 +29,7 @@ const DesktopTextBreak = styled.div`
 `
 const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
-    chainId === SupportedChainId.OPTIMISM
+    [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
         ? OptimismWrapperBackgroundDarkMode
         : OptimismWrapperBackgroundLightMode
@@ -62,18 +62,19 @@ const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoU
   }
 `
 const Body = styled.div`
+  font-size: 12px;
   line-height: 143%;
   margin: 12px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    margin: 16px 20px 31px;
     flex: 1 1 auto;
-    margin: 0;
+    margin: auto 0;
   }
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 20px;
   height: 20px;
+  margin-left: 12px;
 `
 const LinkOutToBridge = styled.a`
   align-items: center;
@@ -81,10 +82,11 @@ const LinkOutToBridge = styled.a`
   border-radius: 16px;
   color: white;
   display: flex;
+  font-size: 14px;
   justify-content: space-between;
   margin: 0;
   max-height: 47px;
-  padding: 14px;
+  padding: 16px 8px;
   text-decoration: none;
   width: auto;
   :hover,
@@ -112,7 +114,7 @@ export function MinimalNetworkAlert() {
       <L2Icon src={info.logoUrl} />
       <Body>
         <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to swap them.</Trans>
+        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
       </Body>
       <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>

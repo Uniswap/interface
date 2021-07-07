@@ -13,20 +13,49 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
-export const L2_CHAIN_IDS = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.OPTIMISM]
+export const L2_CHAIN_IDS = [
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+]
+interface ChainInfo {
+  bridge: string
+  docs: string
+  explorer: string
+  infoLink: string
+  logoUrl: string
+}
 
-export const L2_INFO: Record<number, { bridge: string; docs: string; explorer: string; logoUrl: string }> = {
+// todo: merge L2_INFO with NETWORK_LABELS below to access all chainInfo by chainId
+export const L2_INFO: { [chainId in SupportedChainId | number]: ChainInfo } = {
+  [SupportedChainId.ARBITRUM_ONE]: {
+    bridge: 'https://bridge.arbitrum.io/',
+    docs: 'https://offchainlabs.com/',
+    explorer: 'https://explorer.arbitrum.io/',
+    infoLink: 'https://info.uniswap.org/#/arbitrum',
+    logoUrl: arbitrumLogoUrl,
+  },
+  [SupportedChainId.ARBITRUM_RINKEBY]: {
+    bridge: 'https://bridge.arbitrum.io/',
+    docs: 'https://offchainlabs.com/',
+    explorer: 'https://explorer.arbitrum.io/',
+    infoLink: 'https://info.uniswap.org/#/arbitrum_rinkeby',
+    logoUrl: arbitrumLogoUrl,
+  },
   [SupportedChainId.OPTIMISM]: {
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
+    infoLink: 'https://info.uniswap.org/#/optimism',
     logoUrl: optimismLogoUrl,
   },
-  [SupportedChainId.ARBITRUM_ONE]: {
-    bridge: 'https://bridge.arbitrum.io/',
-    explorer: 'https://explorer.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    logoUrl: arbitrumLogoUrl,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: {
+    bridge: 'https://gateway.optimism.io/',
+    docs: 'https://optimism.io/',
+    explorer: 'https://optimistic.etherscan.io/',
+    infoLink: 'https://info.uniswap.org/#/optimistic_kovan',
+    logoUrl: optimismLogoUrl,
   },
 }
 
@@ -36,8 +65,8 @@ export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } 
   [SupportedChainId.ROPSTEN]: 'Ropsten',
   [SupportedChainId.GOERLI]: 'Görli',
   [SupportedChainId.KOVAN]: 'Kovan',
-  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Testnet',
-  [SupportedChainId.OPTIMISM]: 'Optimism',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimism Testnet',
+  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum One',
+  [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
+  [SupportedChainId.OPTIMISM]: 'Optimisic Ethereum',
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimistic Kovan',
 }

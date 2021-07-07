@@ -24,6 +24,7 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
+import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -285,7 +286,7 @@ const StyledMenuButton = styled.button`
 `
 
 export default function Header() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -301,6 +302,11 @@ export default function Header() {
   const showClaimPopup = useShowClaimPopup()
 
   const scrollY = useScrollPosition()
+
+  let infoLink = 'https://info.uniswap.org/#'
+  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
+    ;({ infoLink } = L2_INFO[chainId])
+  }
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
@@ -335,7 +341,7 @@ export default function Header() {
         <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
           <Trans>Vote</Trans>
         </StyledNavLink>
-        <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
+        <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
         </StyledExternalLink>

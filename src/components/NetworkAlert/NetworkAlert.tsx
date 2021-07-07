@@ -50,7 +50,7 @@ export const OptimismWrapperBackgroundLightMode = css`
 `
 const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
-    chainId === SupportedChainId.OPTIMISM
+    [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
         ? OptimismWrapperBackgroundDarkMode
         : OptimismWrapperBackgroundLightMode
@@ -61,7 +61,7 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
   display: flex;
   flex-direction: column;
   max-width: 480px;
-  min-height: 218px;
+  min-height: 174px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -80,10 +80,12 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
   }
 `
 const Header = styled(TYPE.largeHeader)`
+  font-size: 20px;
   margin: 0;
   padding-right: 30px;
 `
 const Body = styled.p`
+  font-size: 12px;
   grid-column: 1 / 3;
   line-height: 143%;
   margin: 0;
@@ -102,9 +104,11 @@ const LinkOutToBridge = styled.a`
   border-radius: 16px;
   color: white;
   display: flex;
+  font-size: 16px;
+  height: 44px;
   justify-content: space-between;
-  margin: 0 18px 18px 18px;
-  padding: 14px 24px;
+  margin: 0 20px 20px 20px;
+  padding: 12px 16px;
   text-decoration: none;
   width: auto;
   :hover,

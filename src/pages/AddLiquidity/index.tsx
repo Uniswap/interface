@@ -71,6 +71,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
+import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -541,6 +542,7 @@ export default function AddLiquidity({
     <>
       <ScrollablePage>
         <NetworkAlert />
+        <OptimismDowntimeWarning />
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}

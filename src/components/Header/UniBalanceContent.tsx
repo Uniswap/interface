@@ -17,6 +17,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import { Trans } from '@lingui/macro'
+import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -58,6 +59,11 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
       blockTimestamp && uni && chainId === 1 ? computeUniCirculation(uni, blockTimestamp, unclaimedUni) : totalSupply,
     [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
   )
+
+  let infoLink = 'https://info.uniswap.org/#'
+  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
+    ;({ infoLink } = L2_INFO[chainId])
+  }
 
   return (
     <ContentWrapper gap="lg">
@@ -128,7 +134,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             {uni && uni.chainId === 1 ? (
-              <ExternalLink href={`https://info.uniswap.org/token/${uni.address}`}>
+              <ExternalLink href={`${infoLink}/token/${uni.address}`}>
                 <Trans>View UNI Analytics</Trans>
               </ExternalLink>
             ) : null}

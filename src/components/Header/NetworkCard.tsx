@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -131,8 +131,9 @@ const MenuItem = styled(ExternalLink)`
 const ButtonMenuItem = styled.button`
   ${BaseMenuItem}
   border: none;
-  outline: none;
   box-shadow: none;
+  outline: none;
+  padding-left: 0;
 `
 const NetworkInfo = styled.button`
   align-items: center;
@@ -143,11 +144,12 @@ const NetworkInfo = styled.button`
   display: flex;
   flex-direction: row;
   font-weight: 500;
+  font-size: 12px;
   height: 100%;
   justify-content: space-between;
   margin: 0;
   padding: 8px;
-  width: 172px;
+  width: 200px;
 
   :hover,
   :focus {
@@ -155,6 +157,9 @@ const NetworkInfo = styled.button`
     outline: none;
     background-color: ${({ theme }) => theme.bg3};
   }
+`
+const NetworkLabel = styled.span`
+  flex: 1 1 auto;
 `
 
 export default function NetworkCard() {
@@ -183,25 +188,34 @@ export default function NetworkCard() {
 
   if (L2_CHAIN_IDS.includes(chainId)) {
     const info = L2_INFO[chainId]
+    let bridgeText, explorerText
+    switch (chainId) {
+      case SupportedChainId.ARBITRUM_ONE:
+      case SupportedChainId.ARBITRUM_RINKEBY:
+        bridgeText = t`${NETWORK_LABELS[chainId]} Bridge`
+        explorerText = t`${NETWORK_LABELS[chainId]} Explorer`
+        break
+      case SupportedChainId.OPTIMISM:
+      case SupportedChainId.OPTIMISTIC_KOVAN:
+        bridgeText = t`Gateway`
+        explorerText = t`Optimistic Etherscan`
+        break
+    }
     return (
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
           <Icon src={info.logoUrl} />
-          <span>{NETWORK_LABELS[chainId]}</span>
-          <L2Tag chainId={chainId}>L2 Alpha</L2Tag>
+          <NetworkLabel>{NETWORK_LABELS[chainId]}</NetworkLabel>
+          <L2Tag chainId={chainId}>L2</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>
-                <Trans>{NETWORK_LABELS[chainId]} Bridge</Trans>
-              </div>
+              <div>{bridgeText}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              <div>
-                <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
-              </div>
+              <div>{explorerText}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>
