@@ -12,7 +12,7 @@ import { Currency } from '@uniswap/sdk-core'
 import RateToggle from 'components/RateToggle'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components/macro'
 import JSBI from 'jsbi'
 
 export const PositionPreview = ({

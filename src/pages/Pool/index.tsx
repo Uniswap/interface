@@ -15,7 +15,7 @@ import { BookOpen, ChevronDown, ChevronsRight, Download, Inbox, Layers, PlusCirc
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
 import CTACards from './CTACards'
