@@ -9,10 +9,10 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) and (max-width: ${
-  MEDIA_WIDTHS.upToMedium + 400
+const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium + 1}px) and (max-width: ${
+  MEDIA_WIDTHS.upToMedium + 500
 }px)`
 
 const BaseWrapper = css`
@@ -81,7 +81,7 @@ const L1Tag = styled.div`
   color: #c4d9f8;
   opacity: 40%;
 `
-const L2Tag = styled.div<{ chainId: SupportedChainId }>`
+const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
   background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
   color: white;
@@ -131,8 +131,10 @@ const MenuItem = styled(ExternalLink)`
 const ButtonMenuItem = styled.button`
   ${BaseMenuItem}
   border: none;
-  outline: none;
   box-shadow: none;
+  color: ${({ theme }) => theme.text2};
+  outline: none;
+  padding-left: 0;
 `
 const NetworkInfo = styled.button`
   align-items: center;
@@ -143,11 +145,12 @@ const NetworkInfo = styled.button`
   display: flex;
   flex-direction: row;
   font-weight: 500;
+  font-size: 12px;
   height: 100%;
   justify-content: space-between;
   margin: 0;
   padding: 8px;
-  width: 172px;
+  width: 188px;
 
   :hover,
   :focus {
@@ -155,6 +158,9 @@ const NetworkInfo = styled.button`
     outline: none;
     background-color: ${({ theme }) => theme.bg3};
   }
+`
+const NetworkLabel = styled.span`
+  flex: 1 1 auto;
 `
 
 export default function NetworkCard() {
@@ -182,26 +188,23 @@ export default function NetworkCard() {
   }
 
   if (L2_CHAIN_IDS.includes(chainId)) {
-    const info = L2_INFO[chainId]
+    const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+    const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
           <Icon src={info.logoUrl} />
-          <span>{NETWORK_LABELS[chainId]}</span>
-          <L2Tag chainId={chainId}>L2 Alpha</L2Tag>
+          <NetworkLabel>{info.label}</NetworkLabel>
+          <L2Tag chainId={chainId}>L2</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>
-                <Trans>{NETWORK_LABELS[chainId]} Bridge</Trans>
-              </div>
+              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimism Gateway</Trans>}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              <div>
-                <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
-              </div>
+              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Etherscan</Trans>}
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>

@@ -5,7 +5,7 @@ import {
   OptimismWrapperBackgroundDarkMode,
   OptimismWrapperBackgroundLightMode,
 } from 'components/NetworkAlert/NetworkAlert'
-import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
@@ -27,9 +27,9 @@ const DesktopTextBreak = styled.div`
     display: block;
   }
 `
-const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
-    chainId === SupportedChainId.OPTIMISM
+    [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
         ? OptimismWrapperBackgroundDarkMode
         : OptimismWrapperBackgroundLightMode
@@ -62,18 +62,19 @@ const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoU
   }
 `
 const Body = styled.div`
+  font-size: 12px;
   line-height: 143%;
   margin: 12px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    margin: 16px 20px 31px;
     flex: 1 1 auto;
-    margin: 0;
+    margin: auto 0;
   }
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 20px;
   height: 20px;
+  margin-left: 12px;
 `
 const LinkOutToBridge = styled.a`
   align-items: center;
@@ -81,10 +82,11 @@ const LinkOutToBridge = styled.a`
   border-radius: 16px;
   color: white;
   display: flex;
+  font-size: 14px;
   justify-content: space-between;
   margin: 0;
   max-height: 47px;
-  padding: 14px;
+  padding: 16px 8px;
   text-decoration: none;
   width: auto;
   :hover,
@@ -106,15 +108,18 @@ export function MinimalNetworkAlert() {
   if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged) {
     return null
   }
-  const info = L2_INFO[chainId]
+  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+    ? `${info.bridge}?chainId=1`
+    : info.bridge
   return (
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
       <L2Icon src={info.logoUrl} />
       <Body>
         <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to swap them.</Trans>
+        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
       </Body>
-      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
