@@ -105,11 +105,11 @@ export default function LiquidityChartRangeInput({
   }, [currencyA, currencyB, priceLower, priceUpper])
 
   const brushLabelValue = useCallback(
-    (x: number) => {
+    (d: 'w' | 'e', x: number) => {
       if (!price) return ''
 
-      if (x < 1 && ticksAtLimit[Bound.LOWER]) return '0'
-      if (ticksAtLimit[Bound.UPPER]) return '∞'
+      if (d === 'w' && ticksAtLimit[Bound.LOWER]) return '0'
+      if (d === 'e' && ticksAtLimit[Bound.UPPER]) return '∞'
 
       const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
 

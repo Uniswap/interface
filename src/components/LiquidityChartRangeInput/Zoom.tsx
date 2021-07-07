@@ -2,15 +2,15 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
 import styled from 'styled-components/macro'
 import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
-import { ZoomIn, ZoomOut } from 'react-feather'
+import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ count: number }>`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(${({ count }) => count.toString()}, 1fr);
   grid-gap: 6px;
 
   position: absolute;
-  top: -60px;
+  top: -75px;
   right: 0;
 `
 
@@ -20,8 +20,8 @@ const Button = styled(ButtonGray)`
     color: ${({ theme }) => theme.text1};
   }
 
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   padding: 4px;
 `
 
@@ -31,16 +31,18 @@ export default function Zoom({
   setZoom,
   innerWidth,
   innerHeight,
+  showClear,
 }: {
   svg: SVGSVGElement | null
   xScale: ScaleLinear<number, number>
   setZoom: (transform: ZoomTransform) => void
   innerWidth: number
   innerHeight: number
+  showClear: boolean
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
-  const [zoomIn, zoomOut] = useMemo(
+  const [zoomIn, zoomOut, reset] = useMemo(
     () => [
       () =>
         svg &&
@@ -54,6 +56,12 @@ export default function Zoom({
         select(svg as Element)
           .transition()
           .call(zoomBehavior.current.scaleBy, 0.5),
+      () =>
+        svg &&
+        zoomBehavior.current &&
+        select(svg as Element)
+          .transition()
+          .call(zoomBehavior.current.scaleTo, 1),
     ],
     [svg, zoomBehavior]
   )
@@ -63,7 +71,7 @@ export default function Zoom({
 
     // zoom
     zoomBehavior.current = zoom()
-      .scaleExtent([0.2, 25])
+      .scaleExtent([0.3, 25])
       .translateExtent([
         [0, 0],
         [innerWidth, innerHeight],
@@ -82,12 +90,17 @@ export default function Zoom({
   }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior])
 
   return (
-    <Wrapper>
+    <Wrapper count={showClear ? 3 : 2}>
+      {showClear && (
+        <Button onClick={reset} disabled={false}>
+          <RefreshCcw size={14} />
+        </Button>
+      )}
       <Button onClick={zoomIn} disabled={false}>
-        <ZoomIn size={16} />
+        <ZoomIn size={14} />
       </Button>
       <Button onClick={zoomOut} disabled={false}>
-        <ZoomOut size={16} />
+        <ZoomOut size={14} />
       </Button>
     </Wrapper>
   )

@@ -670,10 +670,9 @@ export default function AddLiquidity({
                       ) : null}
                     </RowBetween>
                     {!noLiquidity && (
-                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '1.5rem', lineHeight: '125%' }}>
+                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
                         <Trans>
-                          The range and details of your position are surfaced on the liquidity distribution graph below
-                          based on your inputs.{' '}
+                          Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
                           <ExternalLink
                             href={
                               'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'
@@ -687,7 +686,7 @@ export default function AddLiquidity({
                     )}
 
                     {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                      <AutoRow gap="4px" justify="center">
+                      <AutoRow gap="4px" justify="center" style={{ marginTop: '2.5rem' }}>
                         <Trans>
                           <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
                             Current Price:

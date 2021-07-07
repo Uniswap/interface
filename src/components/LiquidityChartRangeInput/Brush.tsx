@@ -51,7 +51,7 @@ export const Brush = ({
   id: string
   xScale: ScaleLinear<number, number>
   interactive: boolean
-  brushLabelValue: (x: number) => string
+  brushLabelValue: (d: 'w' | 'e', x: number) => string
   brushExtent: [number, number]
   setBrushExtent: (extent: [number, number]) => void
   innerWidth: number
@@ -70,10 +70,6 @@ export const Brush = ({
   const [hovering, setHovering] = useState(false)
 
   const previousBrushExtent = usePrevious(brushExtent)
-
-  // ensure the brush remains in view
-  // will also adjust the brush range on zoom oin
-  //xScale.clamp(true)
 
   const brushed = useCallback(
     ({ mode, type, selection }: D3BrushEvent<unknown>) => {
@@ -199,7 +195,7 @@ export const Brush = ({
               >
                 <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
                 <Tooltip transform={`scale(-1, 1)`} y="15" dominantBaseline="middle">
-                  {brushLabelValue(localBrushExtent[0])}
+                  {brushLabelValue('w', localBrushExtent[0])}
                 </Tooltip>
               </LabelGroup>
             </g>
@@ -221,7 +217,7 @@ export const Brush = ({
               >
                 <TooltipBackground y="0" x="-30" height="30" width="60" rx="8" />
                 <Tooltip y="15" dominantBaseline="middle">
-                  {brushLabelValue(localBrushExtent[1])}
+                  {brushLabelValue('e', localBrushExtent[1])}
                 </Tooltip>
               </LabelGroup>
             </g>

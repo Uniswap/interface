@@ -49,6 +49,8 @@ export function Chart({
     return scales
   }, [initialZoom, current, innerWidth, series, innerHeight, zoom])
 
+  xScale.clamp(true)
+
   useEffect(() => {
     if (!brushDomain) {
       onBrushDomainChange(xScale.domain() as [number, number])
@@ -57,7 +59,14 @@ export function Chart({
 
   return (
     <>
-      <Zoom svg={svgRef.current} xScale={xScale} setZoom={setZoom} innerWidth={innerWidth} innerHeight={innerHeight} />
+      <Zoom
+        svg={svgRef.current}
+        xScale={xScale}
+        setZoom={setZoom}
+        innerWidth={innerWidth}
+        innerHeight={innerHeight}
+        showClear={Boolean(zoom && zoom.k !== 1)}
+      />
       <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
