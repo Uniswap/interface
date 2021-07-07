@@ -14,25 +14,31 @@ Thank you for your interest in contributing to the Uniswap interface! 🦄
 1. `yarn install`
 1. `yarn build`
 
-## Standards
+## Engineering standards
 
 Code merged into the `main` branch of this repository should adhere to high standards of correctness and maintainability. 
-Consider these guidelines and use your best judgment when applying them. 
-If code is in the critical path, will be frequently visited, or makes large architectural changes,
-consider following all the guidelines.
+Use your best judgment when applying these standards.  If code is in the critical path, will be frequently visited, or 
+makes large architectural changes, consider following all the standards.
 
 - Have at least one engineer approve of large code refactorings
-- Manually test small code changes
+- At least manually test small code changes
 - Thoroughly unit test when code is not obviously correct
 - Add integration tests for new pages or flows
 - Verify that all CI checks pass (or failed only due to flakiness) before merging
 - Have at least one product manager or designer approve of significant product or UX changes
 
-In addition, the following points should be emphasized when developing for the interface:
+## Guidelines
 
-- Security: The interface crafts sensitive transaction data for users to sign, so avoid adding unnecessary dependencies due to [supply chain risk](https://github.com/LavaMoat/lavamoat#further-reading-on-software-supplychain-security)
-- Reproducibility: Users should be able to easily run the interface locally and reproduce each release, so avoid adding steps to the development/build processes (especially non-deterministic steps)
-- Decentralization: An Ethereum node should be the only hard dependency for the interface to function. All other dependencies should only enhance the UX
+The following points should help guide your development:
+
+- Security: the interface is safe to use
+  - Avoid adding unnecessary dependencies due to [supply chain risk](https://github.com/LavaMoat/lavamoat#further-reading-on-software-supplychain-security)
+- Reproducibility: anyone can build the interface
+  - Avoid adding steps to the development/build processes
+  - The build must be deterministic, i.e. a particular commit hash always produces the same build
+- Decentralization: anyone can run the interface
+  - An Ethereum node should be the only critical dependency 
+  - All other dependencies should only enhance the UX and [gracefully degrade](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation)
 
 ## Finding a first issue
 
