@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(потраживање)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(обриши све)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(уреди)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Сви предлози"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Гласови"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> Аналитика рачуна и обрачунате накнаде</0> <1> ↗</1>"
@@ -122,10 +113,6 @@ msgstr "<0> Откључајте гласање</0> да се припреми �
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Добродошли у тим Unicorn :) <1> 🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "За подношење предлога потребан је минимални праг од 0,25% укупне УНИ понуде"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Одобравање"
 msgid "Approving {0}"
 msgstr "Одобравање {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Арбитрум Екплорер"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Арбитрум Токен Бридге"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Јеси ли сигуран?"
@@ -322,10 +301,6 @@ msgstr "Промена"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "Промените мрежу да бисте се вратили на Л1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Погледајте наше водиче за v3 LP и водиче за миграцију."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Направите Фонд & Снабдевање"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Направите предлог"
 
@@ -549,10 +523,6 @@ msgstr "Поражени"
 msgid "Delegate Votes"
 msgstr "Делегирајте гласове"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Делегирано за:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Делегирани гласови"
@@ -579,10 +549,6 @@ msgstr "Положите UNI-V2 LP токене"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Депозит на Арбитрум"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Експертни режим искључује упит за потв�
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Истекло"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Истражите популарне фондове на Uniswap Аналитици."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Није пронађена ликвидност."
 msgid "No pool found."
 msgstr "Није пронађен ниједан фонд."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Није пронађен ниједан предлог."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ОВАЈ РЕЖИМ КОРИСТИТЕ САМО АКО ЗНАТЕ ШТА РАДИТЕ."
@@ -1128,14 +1086,6 @@ msgstr "Предлог поднет"
 msgid "Proposal Title"
 msgstr "Наслов предлога"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Предлози"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Овде ће се појавити предлози које су поднели чланови заједнице."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Предложена акција"
@@ -1155,10 +1105,6 @@ msgstr "Стопе"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Прочитајте више о UNI-ју"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Прочитајте више о управљању Uniswap-ом"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Изаберите пар"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Изабрани опсег"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Сопствени"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Однос жетона које додате ће одредити це
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Трансакција није могла бити послата јер је рок истекао. Молимо вас да проверите да ваш рок за трансакцију није пренизак."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Ово је алфа издање Унисвап-а на мрежи Арбитрум. Морате повезати средства Л1 на мрежу да бисте их заменили."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Овај токен се не појављује на листи активних токена. Уверите се да је ово жетон којим желите да тргујете."
@@ -1422,10 +1360,6 @@ msgstr "До (најмање)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Укључивање експертног режима"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "Врхунски фондови"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI у оптицају:"
 msgid "UNI price:"
 msgstr "UNI цена:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI токени представљају акције са правом гласа у управљању Uniswap-ом. Можете сами гласати за сваки предлог или пренети своје гласове трећој страни."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} спаљен"
@@ -1513,14 +1443,6 @@ msgstr "Непотраживано:"
 msgid "Undetermined"
 msgstr "Неодређено"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap управљање"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 је стигао!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap рударење ликвидности"
@@ -1528,10 +1450,6 @@ msgstr "Uniswap рударење ликвидности"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap уговор о миграцији↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Откажите на <0> Арбитруму</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Непозната грешка{0}. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Откључај гласове"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Откључај гласање"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "Без наслова"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Одмотај"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Ажурирање делегације"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> по <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Мост"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Прилагођени токени"
@@ -1909,6 +1822,10 @@ msgstr "{0} Прилагођени токени"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} Депоновано"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Екплорер"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

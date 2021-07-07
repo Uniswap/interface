@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Norwegian\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(hent)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(fjern alle)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(rediger)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75 %"
 msgid "<0/> All Proposals"
 msgstr "<0/> Alle forslag"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Stemmer"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Konto-analyser og påløpte avgifter</0><1> :up-″: </1>"
@@ -122,10 +113,6 @@ msgstr "<0>Lås opp stemme</0> for å forberede neste forslag."
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Velkommen til team Unicorn :) <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "En minimumsterskel på 0,25% av den totale UNI-forsyningen kreves for å sende inn forslag"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Godkjenner"
 msgid "Approving {0}"
 msgstr "Godkjenner {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token Bridge"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Er du sikker?"
@@ -322,10 +301,6 @@ msgstr "Endre"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "Bytt nettverk for å gå tilbake til L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Sjekk ut våre v3 LP-gjennomgangs- og migrasjonsguider."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Opprett samling & forsyning"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Lag et forslag"
 
@@ -549,10 +523,6 @@ msgstr "Nedkjempet"
 msgid "Delegate Votes"
 msgstr "Delegere stemmer"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Delegert til:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Delegerte stemmer"
@@ -579,10 +549,6 @@ msgstr "Sett inn UNI-V2 LP-polletter"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Innskuddslikviditet"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Innskudd til Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Ekspertmodus deaktiverer ledeteksten for transaksjonen og gir mulighet f
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Utløpt"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Utforsk populære samlinger hos Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Ingen likviditet funnet."
 msgid "No pool found."
 msgstr "Ingen potter funnet."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Ingen forslag funnet."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "BARE BRUK DENNE MODUSEN DERSOM DU VET HVA DU GJØR."
@@ -1128,14 +1086,6 @@ msgstr "Forslaget ble sendt inn"
 msgid "Proposal Title"
 msgstr "Forslagets tittel"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Forslag"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Forslag som sendes inn av medlemmer i fellesskapet vil vises her."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Foreslått handling"
@@ -1155,10 +1105,6 @@ msgstr "Priser"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Les mer om UNI"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Les mer om Uniswap-styring"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Velg par"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Valgt område"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Selv"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Forholdet mellom symboler du legger til vil angi prisen på denne potten
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Transaksjonen kunne ikke sendes fordi fristen er passert. Kontroller at transaksjonsfristen ikke er for lav."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Dette er en alfa-utgivelse av Uniswap på Arbitrum-nettverket. Du må bygge bro på L1-eiendeler til nettverket for å bytte dem."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Denne polletten vises ikke på den / de aktive pollettlistene. Forsikre deg om at dette er polletten du vil handle."
@@ -1422,10 +1360,6 @@ msgstr "Til (minst)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Bytte ekspertmodus"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "Ledende potter"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "UNI i sirkulasjon:"
 msgid "UNI price:"
 msgstr "UNI-pris:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI-polleter representerer stemmeaksjer i Uniswap-styring. Du kan stemme på hvert forslag selv eller delegere dine stemmer til en tredjepart."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} brent"
@@ -1513,14 +1443,6 @@ msgstr "Ikke angitt:"
 msgid "Undetermined"
 msgstr "Ubestemt"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap-styring"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uiswap V3 er her!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Ikke-velfungerende likviditetsmining"
@@ -1528,10 +1450,6 @@ msgstr "Ikke-velfungerende likviditetsmining"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap-migrasjonskontrakt↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap på <0> Arbitrum</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Ukjent feil{0}. Prøv å øke glidetoleransen. Merk: gebyr ved overføring og rebase-tokens er inkompatibelt med Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Lås opp stemmer"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Lås opp stemmegivning"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "Uten navn"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Pakk opp"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Oppdater delegasjon"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} bro"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Egendefinerte poletter"
@@ -1909,6 +1822,10 @@ msgstr "{0} Egendefinerte poletter"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} Innskutt"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Utforsker"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

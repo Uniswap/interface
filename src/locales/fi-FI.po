@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(claim)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(clear all)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(edit)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Kaikki ehdotukset"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> Äänet"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Tilin analytiikka ja kertyneet maksut</0><1> ↗ </1>"
@@ -122,10 +113,6 @@ msgstr "<0>Vapauta äänestys</0> valmistautuaksesi seuraavaan ehdotukseen."
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Tervetuloa Team Unicorniin :) <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Ehdotusten jättämiseen vaaditaan vähintään 0,25 prosentin kynnysarvo UNI: n kokonaismäärästä"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "Hyväksytään"
 msgid "Approving {0}"
 msgstr "Hyväksytään {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token -silta"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Oletko varma?"
@@ -322,10 +301,6 @@ msgstr "Muuta"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "Vaihda verkko palataksesi kohtaan L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Tutustu v3 LP -läpikävelyymme ja siirto-oppaisiimme."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "Luo pooli ja tarjonta"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Luo ehdotus"
 
@@ -549,10 +523,6 @@ msgstr "Voitettu"
 msgid "Delegate Votes"
 msgstr "Delegoi äänet"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "Delegoitu henkilölle:"
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Delegoidut äänet"
@@ -579,10 +549,6 @@ msgstr "Talleta UNI-V2 LP -rahakkeita"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Talleta likviditeettiä"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Talletus Arbitrumille"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "Asiantuntijatila ottaa vahvistuskehotuksen pois käytöstä ja mahdollis
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Vanhentunut"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Tutki suosittuja pooleja Uniswap Analyticsissä."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "Likviditeettiä ei löytynyt."
 msgid "No pool found."
 msgstr "Poolia ei löytynyt."
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "Ehdotuksia ei löytynyt."
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "KÄYTÄ TÄTÄ TILAA VAIN, JOS TIEDÄT MITÄ TEET."
@@ -1128,14 +1086,6 @@ msgstr "Ehdotus lähetetty"
 msgid "Proposal Title"
 msgstr "Ehdotuksen otsikko"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "Ehdotukset"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "Yhteisön jäsenten tekemät ehdotukset näkyvät täällä."
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Ehdotettu toimi"
@@ -1155,10 +1105,6 @@ msgstr "Kurssit"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Lue lisää UNIsta"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "Lue lisää Uniswapin hallinnosta"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "Valitse pari"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Valittu vaihteluväli"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "Itse"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "Lisäämiesi rahakkeiden suhde määrittää tämän poolin hinnan."
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, että tapahtumasi määräaika ei ole liian lyhyt."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Tämä on Uniswapin alfa-julkaisu Arbitrum-verkossa. Vaihda L1-varat verkkoon."
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tätä rahaketta ei näy aktiivisissa rahakeluetteloissa. Varmista, että tämä on rahake, jonka haluat vaihtaa."
@@ -1422,10 +1360,6 @@ msgstr "Mihin (ainakin)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Hallitse asiantuntijatilaa"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "Parhaat poolit"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "Liikkeessä oleva UNI:"
 msgid "UNI price:"
 msgstr "UNI:n hinta:"
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI-rahakkeet edustavat Uniswapin hallinnon äänestysosakkeita. Voit äänestää jokaisesta ehdotuksesta itse tai delegoida äänesi kolmannelle osapuolelle."
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Poltettu"
@@ -1513,14 +1443,6 @@ msgstr "Lunastamaton:"
 msgid "Undetermined"
 msgstr "Ei määritelty"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswapin hallinto"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 on täällä!"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswapin likviditeetin louhinta"
@@ -1528,10 +1450,6 @@ msgstr "Uniswapin likviditeetin louhinta"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswapin siirtosopimus ↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Poista <0> Arbitrumin vaihto</0>"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,13 +1460,8 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Tuntematon virhe{0}. Yritä lisätä liukastumistoleranssia. Huomautus: siirto- ja uudelleentase-tunnusten maksu ei ole yhteensopiva Uniswap V3: n kanssa."
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Vapauta äänet"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
-msgstr "Vapauta äänestys"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1571,10 +1484,6 @@ msgstr "Nimetön"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "Päivitä delegointi"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Silta"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} mukautettua rahaketta"
@@ -1909,6 +1822,10 @@ msgstr "{0} mukautettua rahaketta"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "{0} talletettu"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Tutki"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

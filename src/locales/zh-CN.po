@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-06 21:10+0000\n"
+"POT-Creation-Date: 2021-07-07 02:39+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-06 22:04\n"
+"PO-Revision-Date: 2021-07-07 03:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(领取)"
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
 msgstr "(全部清除)"
-
-#: src/pages/Vote/index.tsx
-msgid "(edit)"
-msgstr "(编辑)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -86,11 +82,6 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> 所有提案"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
-msgid "<0/> Votes"
-msgstr "<0/> 投票"
-
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>账户分析和已累积的手续费</0><1> ↗ </1>"
@@ -122,10 +113,6 @@ msgstr "<0>解锁投票</0>，以准备下一个提案。"
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
-
-#: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -255,14 +242,6 @@ msgstr "批准中"
 msgid "Approving {0}"
 msgstr "正在批准 {0}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum 浏览器"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum 代币桥"
-
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "您确定吗？"
@@ -322,10 +301,6 @@ msgstr "更改"
 #: src/components/Header/NetworkCard.tsx
 msgid "Change your network to go back to L1"
 msgstr "更改您的网络以返回 L1"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "查看我们的 v3 流动池介绍和迁移指南。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -507,7 +482,6 @@ msgid "Create Pool & Supply"
 msgstr "创建流动池和供应流动资金"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "创建提案"
 
@@ -549,10 +523,6 @@ msgstr "未通过"
 msgid "Delegate Votes"
 msgstr "委托投票"
 
-#: src/pages/Vote/index.tsx
-msgid "Delegated to:"
-msgstr "委托给："
-
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "委托投票"
@@ -579,10 +549,6 @@ msgstr "充入 UNI-V2 流动池代币"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "充入流动资金"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "充值到 Arbitrum"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -703,10 +669,6 @@ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "已过期"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Explore popular pools on Uniswap Analytics."
-msgstr "在 Uniswap 数据分析中探索较受欢迎的流动池。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -990,10 +952,6 @@ msgstr "未找到流动资金。"
 msgid "No pool found."
 msgstr "未找到流动池。"
 
-#: src/pages/Vote/index.tsx
-msgid "No proposals found."
-msgstr "未找到提案。"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "务必在详细了解此模式应用后才使用此模式操作。"
@@ -1128,14 +1086,6 @@ msgstr "已提交提案"
 msgid "Proposal Title"
 msgstr "提案标题"
 
-#: src/pages/Vote/index.tsx
-msgid "Proposals"
-msgstr "提案"
-
-#: src/pages/Vote/index.tsx
-msgid "Proposals submitted by community members will appear here."
-msgstr "社区成员提交的提案将在此显示。"
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "提议操作"
@@ -1155,10 +1105,6 @@ msgstr "费率"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "阅读更多关于 UNI 代币的信息"
-
-#: src/pages/Vote/index.tsx
-msgid "Read more about Uniswap governance"
-msgstr "阅读有关 Uniswap 治理的更多信息"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1250,10 +1196,6 @@ msgstr "选择币对"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "选定范围"
-
-#: src/pages/Vote/index.tsx
-msgid "Self"
-msgstr "自身"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1384,10 +1326,6 @@ msgstr "您注入的代币比率将决定此流动池的初始兑换率。"
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "由于期限已过，因此无法发送交易。请检查您的交易截止期限设置。"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "这是 Arbitrum 网络上 Uniswap 的 alpha 版本。您必须桥接 L1 资产才能进行兑换。"
-
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "此代币未出现在激活的代币列表中。请确保这是您想要交易的代币。"
@@ -1422,10 +1360,6 @@ msgstr "兑换到(至少数额)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "切换专家模式"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Top pools"
-msgstr "较活跃的流动池"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1480,10 +1414,6 @@ msgstr "流通中的 UNI 代币："
 msgid "UNI price:"
 msgstr "UNI 代币兑换率："
 
-#: src/pages/Vote/index.tsx
-msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNI 代币代表了 Uniswap 治理中的投票份额。您可以自行为提案进行投票，或将您的投票权委托给第三方。"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} 被摧毁"
@@ -1513,14 +1443,6 @@ msgstr "未领取："
 msgid "Undetermined"
 msgstr "未定"
 
-#: src/pages/Vote/index.tsx
-msgid "Uniswap Governance"
-msgstr "Uniswap 治理"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 已发布！"
-
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap 流动资金挖矿："
@@ -1528,10 +1450,6 @@ msgstr "Uniswap 流动资金挖矿："
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 迁移合约↗"
-
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "<0> Arbitrum</0> 网络上的 Uniswap"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1542,12 +1460,7 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "未知错误{0}。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "解锁投票"
-
-#: src/pages/Vote/index.tsx
-msgid "Unlock Voting"
 msgstr "解锁投票"
 
 #: src/components/vote/DelegateModal.tsx
@@ -1571,10 +1484,6 @@ msgstr "无标题"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "展开"
-
-#: src/pages/Vote/index.tsx
-msgid "Update Delegation"
-msgstr "更新投票权委托"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1901,6 +1810,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> 每 <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} 桥"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} 自定义代币"
@@ -1909,6 +1822,10 @@ msgstr "{0} 自定义代币"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
 msgstr "注入 {0}"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} 探险家"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
