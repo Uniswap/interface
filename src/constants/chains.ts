@@ -13,7 +13,12 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
-export const L2_CHAIN_IDS = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.OPTIMISM]
+export const L2_CHAIN_IDS = [
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+]
 
 export const L2_INFO: Record<number, { bridge: string; docs: string; explorer: string; logoUrl: string }> = {
   [SupportedChainId.OPTIMISM]: {
