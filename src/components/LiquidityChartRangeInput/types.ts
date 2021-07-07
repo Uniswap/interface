@@ -25,6 +25,11 @@ export interface LiquidityChartRangeInputProps {
   }
 
   styles: {
+    area: {
+      // color of the ticks in range
+      selection: string
+    }
+
     brush: {
       handle: {
         west: string

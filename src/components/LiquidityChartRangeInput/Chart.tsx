@@ -72,11 +72,38 @@ export function Chart({
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
+
+          {brushDomain && (
+            <mask id={`${id}-chart-area-mask`}>
+              <rect
+                fill="white"
+                x={xScale(brushDomain[0])}
+                y="0"
+                width={Math.abs(xScale(brushDomain[1]) - xScale(brushDomain[0]))}
+                height={innerHeight}
+              />
+            </mask>
+          )}
         </defs>
 
         <g transform={`translate(${margins.left},${margins.top})`}>
           <g clipPath={`url(#${id}-chart-clip)`}>
-            {<Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />}
+            <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
+
+            {brushDomain && (
+              // overlay area chart for selection
+              <g mask={`url(#${id}-chart-area-mask)`}>
+                <Area
+                  series={series}
+                  xScale={xScale}
+                  yScale={yScale}
+                  xValue={xAccessor}
+                  yValue={yAccessor}
+                  fill={styles.area.selection}
+                />
+              </g>
+            )}
+
             {/* <Bars
               series={series}
               current={current}

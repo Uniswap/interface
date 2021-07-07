@@ -4,10 +4,10 @@ import styled from 'styled-components/macro'
 import { ChartEntry } from './types'
 import inRange from 'lodash/inRange'
 
-const Path = styled.path`
+const Path = styled.path<{ fill: string | undefined }>`
   opacity: 0.5;
-  stroke: ${({ theme }) => theme.blue2};
-  fill: ${({ theme }) => theme.blue2};
+  stroke: ${({ fill, theme }) => fill ?? theme.blue2};
+  fill: ${({ fill, theme }) => fill ?? theme.blue2};
 `
 
 export const Area = ({
@@ -16,16 +16,19 @@ export const Area = ({
   yScale,
   xValue,
   yValue,
+  fill,
 }: {
   series: ChartEntry[]
   xScale: ScaleLinear<number, number>
   yScale: ScaleLinear<number, number>
   xValue: (d: ChartEntry) => number
   yValue: (d: ChartEntry) => number
+  fill?: string | undefined
 }) =>
   useMemo(
     () => (
       <Path
+        fill={fill}
         d={
           area()
             .curve(curveStepAfter)
@@ -37,5 +40,5 @@ export const Area = ({
         }
       />
     ),
-    [series, xScale, xValue, yScale, yValue]
+    [fill, series, xScale, xValue, yScale, yValue]
   )
