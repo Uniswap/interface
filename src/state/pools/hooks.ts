@@ -27,8 +27,22 @@ export interface UserLiquidityPosition {
   liquidityTokenBalance: string
   pool: {
     id: string
+    token0: {
+      id: string
+    }
+    token1: {
+      id: string
+    }
     reserveUSD: string
     totalSupply: string
+  }
+}
+
+export interface UserLiquidityPositionResult {
+  loading: boolean
+  error: any
+  data: {
+    liquidityPositions: UserLiquidityPosition[]
   }
 }
 
@@ -37,7 +51,7 @@ export interface UserLiquidityPosition {
  *
  * @param user string
  */
-export function useUserLiquidityPositions(user: string | null | undefined) {
+export function useUserLiquidityPositions(user: string | null | undefined): UserLiquidityPositionResult {
   const { loading, error, data } = useQuery(USER_POSITIONS, {
     variables: {
       user: user?.toLowerCase()
