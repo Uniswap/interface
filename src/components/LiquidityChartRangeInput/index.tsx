@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback } from 'react'
+import React, { ReactNode, useCallback, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { AutoColumn, ColumnCenter } from 'components/Column'
@@ -91,12 +91,18 @@ export default function LiquidityChartRangeInput({
     [onLeftRangeInput, onRightRangeInput]
   )
 
-  const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
-
-  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
-  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
-
   interactive = interactive && Boolean(formattedData?.length)
+
+  const brushDomain: [number, number] | undefined = useMemo(() => {
+    const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
+
+    const leftPrice = isSorted ? priceLower : priceUpper?.invert()
+    const rightPrice = isSorted ? priceUpper : priceLower?.invert()
+
+    return leftPrice && rightPrice
+      ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+      : undefined
+  }, [currencyA, currencyB, priceLower, priceUpper])
 
   const brushLabelValue = useCallback(
     (x: number) => {
@@ -160,11 +166,7 @@ export default function LiquidityChartRangeInput({
             }}
             interactive={interactive}
             brushLabels={brushLabelValue}
-            brushDomain={
-              leftPrice && rightPrice
-                ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
-                : undefined
-            }
+            brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             initialZoom={feeAmount === FeeAmount.LOW ? 0.02 : 0.3}
           />
