@@ -9,7 +9,7 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from '../utils'
+import { getDragoContract, isAddress, shortenAddress } from '../utils'
 import { ROUTER_ADDRESS } from '../constants'
 import { AUniswap_INTERFACE } from '../constants/abis/auniswap'
 import isZero from '../utils/isZero'
@@ -90,10 +90,10 @@ function useSwapCallArguments(
 
       if (trade.tradeType === TradeType.EXACT_INPUT) {
 
-        const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
+        const fragment = AUniswap_INTERFACE.getFunction(uniswapMethodName)
         const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-              : undefined
               ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+              : undefined
 
         swapMethods.push(
           {
@@ -110,6 +110,7 @@ function useSwapCallArguments(
             ttl: deadline
           })*/
         )
+      }
       return swapMethods.map(({ methodName, args, value }) => {
         if (argentWalletContract && trade.inputAmount.currency.isToken) {
           return {
@@ -142,51 +143,6 @@ function useSwapCallArguments(
       const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
       if (!swapRouterAddress) return []
 
-        if (trade.tradeType === TradeType.EXACT_INPUT) {
-          const swapParameters = Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            ttl: deadline
-          })
-          const uniswapMethodName = swapParameters.methodName
-          const argsWithEth = swapParameters.args
-
-          if (!isZero(swapParameters.value)) {
-            argsWithEth.unshift(swapParameters.value)
-          }
-
-          const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
-          const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-                ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
-                : undefined
-
-          swapMethods.push(
-            {
-              methodName: 'operateOnExchange',
-              args: [ROUTER_ADDRESS, [callData]],
-              value : '0x0'
-            }
-            /*Router.swapCallParameters(trade, {
-              feeOnTransfer: true,
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              ttl: deadline
-            })*/
-          )
-        }
-        break
-/*
-      case Version.v1:
-        swapMethods.push(
-          v1SwapArguments(trade, {
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            ttl: deadline
-          })
-        )
-        break
-*/
       const { value, calldata } = SwapRouter.swapCallParameters(trade, {
         recipient,
         slippageTolerance: allowedSlippage,
@@ -212,6 +168,28 @@ function useSwapCallArguments(
             }
           : {}),
       })
+
+      const uniswapMethodName = calldata.methodName
+      const argsWithEth = calldata.args
+
+      if (!isZero(value)) {
+        argsWithEth.unshift(value)
+      }
+
+      // TODO: use v3 AUniswap interface
+      const fragment = AUniswap_INTERFACE.getFunction(uniswapMethodName)
+      const encodedCallData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+            ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+            : undefined
+
+      swapMethods.push(
+        {
+          methodName: 'operateOnExchange',
+          args: [SWAP_ROUTER_ADDRESSES, [encodedCallData]],
+          value : '0x0'
+        }
+      )
+
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
@@ -232,9 +210,9 @@ function useSwapCallArguments(
       }
       return [
         {
-          address: swapRouterAddress,
-          calldata,
-          value,
+          address: dragoContract,
+          encodedCallData,
+          value: '0x0',
         },
       ]
     }
