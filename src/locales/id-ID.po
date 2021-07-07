@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 15:00+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-07-07 15:04\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -47,6 +47,10 @@ msgstr "(klaim)"
 msgid "(clear all)"
 msgstr "(Hapus semua)"
 
+#: src/pages/Vote/index.tsx
+msgid "(edit)"
+msgstr "(edit)"
+
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
 msgstr "+{feeAmountFormatted}%"
@@ -66,6 +70,18 @@ msgstr "-{feeAmountFormatted}%"
 msgid "0 UNI / week"
 msgstr "0 UNI / minggu"
 
+#: src/components/FeeSelector/index.tsx
+msgid "0.05% fee"
+msgstr "Biaya 0,05%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "0.3% fee"
+msgstr "Biaya 0,3%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "1% fee"
+msgstr "Biaya 1%"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25%"
@@ -81,6 +97,11 @@ msgstr "75%"
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
 msgstr "<0/> Semua Proposal"
+
+#: src/pages/Vote/index.tsx
+#: src/pages/Vote/index.tsx
+msgid "<0/> Votes"
+msgstr "<0/> Suara"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -113,6 +134,10 @@ msgstr "<0>Buka voting</0> untuk mempersiapkan usulan berikutnya."
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉</0>Selamat datang di tim Unicorn :) <1>🎉</1>"
+
+#: src/pages/Vote/index.tsx
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "Ambang batas minimum 0,25% dari total pasokan UNI diperlukan untuk mengirimkan proposal"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -274,6 +299,21 @@ msgstr "Saldo:"
 msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
+#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
+msgid "Best for exotic pairs."
+msgstr "Terbaik untuk pasangan eksotis."
+
+#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
+msgid "Best for most pairs."
+msgstr "Terbaik untuk sebagian besar pasangan."
+
+#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/index.tsx
+msgid "Best for stable pairs."
+msgstr "Terbaik untuk pasangan stabil."
+
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Alamat diblokir"
@@ -302,12 +342,21 @@ msgstr "Perubahan"
 msgid "Change your network to go back to L1"
 msgstr "Ubah jaringan Anda untuk kembali ke L1"
 
+#: src/components/Header/index.tsx
+msgid "Charts"
+msgstr "Grafik"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Check out our v3 LP walkthrough and migration guides."
+msgstr "Lihat panduan migrasi dan tutorial LP v3 kami."
+
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
 msgstr "Klaim"
 
+#: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -344,6 +393,10 @@ msgstr "UNI diklaim!"
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
 msgstr "Mengklaim"
+
+#: src/components/Header/index.tsx
+msgid "Claiming UNI"
+msgstr "Mengklaim UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -403,6 +456,10 @@ msgstr "Menagih biaya"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Biaya pengumpulan akan menarik biaya yang tersedia saat ini untuk Anda."
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Basis umum"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -482,6 +539,7 @@ msgid "Create Pool & Supply"
 msgstr "Buat Pool & Pasokan"
 
 #: src/pages/CreateProposal/index.tsx
+#: src/pages/Vote/index.tsx
 msgid "Create Proposal"
 msgstr "Buat Proposal"
 
@@ -493,6 +551,10 @@ msgstr "Buat pasangan"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "Buat pool"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "Buat masalah di GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -523,6 +585,10 @@ msgstr "Dikalahkan"
 msgid "Delegate Votes"
 msgstr "Delegasikan Suara"
 
+#: src/pages/Vote/index.tsx
+msgid "Delegated to:"
+msgstr "Didelegasikan ke:"
+
 #: src/state/governance/hooks.ts
 msgid "Delegated votes"
 msgstr "Suara terdelegasi"
@@ -549,6 +615,11 @@ msgstr "Setor Token LP UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Setor likuiditas"
+
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Setor ke {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -606,6 +677,10 @@ msgstr "Tidak melihat salah satu posisi v2 Anda? <0> Impor.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Token UNI yang diperoleh mewakili hak suara dalam pengaturan Uniswap."
 
+#: src/components/FeeSelector/index.tsx
+msgid "Edit"
+msgstr "Sunting"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Masukkan persen"
@@ -662,6 +737,10 @@ msgstr "Terjadi kesalahan saat mengimpor daftar"
 msgid "Executed"
 msgstr "Dieksekusi"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
+
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan perdagangan dengan slippage tinggi yang sering kali menimbulkan suku bunga yang buruk dan hilangnya dana."
@@ -670,9 +749,17 @@ msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan per
 msgid "Expired"
 msgstr "kadaluarsa"
 
+#: src/pages/Pool/CTACards.tsx
+msgid "Explore popular pools on Uniswap Analytics."
+msgstr "Jelajahi pool populer di Uniswap Analytics."
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Jenjang Biaya"
+
+#: src/components/FeeSelector/index.tsx
+msgid "Fee tier"
+msgstr "Tingkat biaya"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -691,6 +778,11 @@ msgstr "Dari"
 msgid "From (at most)"
 msgstr "Dari (paling banyak)"
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Dapatkan dukungan di Discord"
+
+#: src/components/FeeSelector/index.tsx
 #: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Menyembunyikan"
@@ -821,6 +913,10 @@ msgstr "Imbalan penyedia likuiditas"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Penyedia likuiditas mendapatkan biaya 0,3% pada semua perdagangan yang sebanding dengan bagian pool mereka. Biaya ditambahkan ke kumpulan, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Daftar"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Sarat"
@@ -840,6 +936,7 @@ msgstr "Memuat"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Mengelola"
@@ -847,6 +944,10 @@ msgstr "Mengelola"
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
 msgstr "Kelola Likuiditas di Pool Hadiah"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr "Kelola Daftar Token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
@@ -952,9 +1053,37 @@ msgstr "Likuiditas tidak ditemukan."
 msgid "No pool found."
 msgstr "Tidak ada kolam yang ditemukan."
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "No proposals found."
+msgstr "Usulan tidak ditemukan."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "Hasil tidak ditemukan."
+
+#: src/components/FeeSelector/index.tsx
+msgid "Not created"
+msgstr "Tidak dibuat"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "MATI"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "HIDUP"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "GUNAKAN MODE INI HANYA JIKA ANDA TAHU APA YANG ANDA LAKUKAN."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Mati"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Hidup"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -997,6 +1126,10 @@ msgstr "Kolam yang berpartisipasi"
 msgid "Pending"
 msgstr "Tertunda"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Silakan terhubung ke Layer 1 Ethereum"
+
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Harap hubungkan ke jaringan Ethereum yang sesuai."
@@ -1005,6 +1138,7 @@ msgstr "Harap hubungkan ke jaringan Ethereum yang sesuai."
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Ketik kata \"{confirmWord}\" untuk mengaktifkan mode ahli."
 
+#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "Kolam"
@@ -1062,6 +1196,7 @@ msgstr "Dampak Harga Terlalu Tinggi"
 msgid "Price Updated"
 msgstr "Harga Diperbarui"
 
+#: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Rentang harga"
@@ -1086,6 +1221,14 @@ msgstr "Proposal Terkirim"
 msgid "Proposal Title"
 msgstr "Judul Proposal"
 
+#: src/pages/Vote/index.tsx
+msgid "Proposals"
+msgstr "Usulan"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Proposals submitted by community members will appear here."
+msgstr "Usulan yang diajukan oleh anggota komunitas akan muncul di sini."
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
 msgstr "Tindakan yang Diusulkan"
@@ -1105,6 +1248,10 @@ msgstr "Tarif"
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Baca selengkapnya tentang UNI"
+
+#: src/pages/Vote/index.tsx
+msgid "Read more about Uniswap governance"
+msgstr "Baca selengkapnya tentang pengaturan Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1174,7 +1321,12 @@ msgstr "Kembali"
 msgid "Route"
 msgstr "Rute"
 
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "Cari nama atau tempel alamat"
+
 #: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
@@ -1196,6 +1348,10 @@ msgstr "Pilih pasangan"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Rentang yang Dipilih"
+
+#: src/pages/Vote/index.tsx
+msgid "Self"
+msgstr "Sendiri"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1239,6 +1395,10 @@ msgstr "Toleransi slip"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Sejumlah aset tidak tersedia melalui antarmuka ini karena mereka mungkin tidak sesuai dengan smart contract atau kami tidak dapat mengizinkan perdagangan karena alasan hukum."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Ada yang salah"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Langkah 1. Dapatkan token Likuiditas UNI-V2"
@@ -1267,7 +1427,9 @@ msgstr "Pasokan"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Memasok {0} {1} dan {2} {3}"
 
+#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1289,6 +1451,10 @@ msgstr "Beralih ke Ethereum"
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Terima kasih telah menjadi bagian dari komunitas Uniswap <0/>"
+
+#: src/components/FeeSelector/index.tsx
+msgid "The % you will earn in fees."
+msgstr "% yang akan Anda peroleh dalam biaya."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1326,6 +1492,18 @@ msgstr "Rasio token yang Anda tambahkan akan menetapkan harga pool ini."
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap periksa bahwa tenggat waktu transaksi Anda tidak terlalu rendah."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Token ini biasanya dipasangkan dengan token lain."
+
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Ini adalah rilis alfa Uniswap di jaringan {0}"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Ini adalah rilis alfa Uniswap di jaringan {0} Anda harus menjembatani aset L1 ke jaringan untuk menukarnya."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Token ini tidak muncul di daftar token yang aktif. Pastikan ini adalah token yang ingin Anda perdagangkan."
@@ -1360,6 +1538,18 @@ msgstr "Untuk (setidaknya)"
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
 msgstr "Beralih Mode Pakar"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Token"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Token dari daftar tidak aktif. Impor token tertentu di bawah atau klik Kelola untuk mengaktifkan lebih banyak daftar."
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Top pools"
+msgstr "Kolam atas"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1414,6 +1604,10 @@ msgstr "UNI yang beredar:"
 msgid "UNI price:"
 msgstr "Harga UNI:"
 
+#: src/pages/Vote/index.tsx
+msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
+msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat memberikan suara secara langsung pada tiap usulan atau mendelegasikannya kepada pihak ketiga."
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
 msgstr "UNI {0}/{1} Terbakar"
@@ -1443,6 +1637,22 @@ msgstr "Tidak diklaim:"
 msgid "Undetermined"
 msgstr "Yg tak dpt ditentukan"
 
+#: src/pages/Vote/index.tsx
+msgid "Uniswap Governance"
+msgstr "Tata Kelola Uniswap"
+
+#: src/pages/Pool/CTACards.tsx
+msgid "Uniswap V3 is here!"
+msgstr "Uniswap V3 ada di sini!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap tersedia dalam: <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Tata kelola Uniswap hanya tersedia di Layer 1. Alihkan jaringan Anda ke Ethereum Mainnet untuk melihat Proposal dan Vote."
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Penambangan likuiditas Uniswap"
@@ -1450,6 +1660,10 @@ msgstr "Penambangan likuiditas Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Kontrak migrasi Uniswap↗"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Uniswap pada {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1460,8 +1674,13 @@ msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on tr
 msgstr "Kesalahan tidak diketahui{0}. Coba tingkatkan toleransi selip Anda. Catatan: biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
+#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Buka Suara"
+
+#: src/pages/Vote/index.tsx
+msgid "Unlock Voting"
+msgstr "Buka Kunci Voting"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
@@ -1484,6 +1703,10 @@ msgstr "Tanpa Judul"
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Membuka"
+
+#: src/pages/Vote/index.tsx
+msgid "Update Delegation"
+msgstr "Perbarui Delegasi"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1542,6 +1765,10 @@ msgstr "Lihat di Explorer"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Lihat transaksi di Explorer"
+
+#: src/components/Header/index.tsx
+msgid "Vote"
+msgstr "Beri Suara"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -1660,6 +1887,10 @@ msgstr "Anda tidak memiliki cukup suara untuk mengirimkan proposal"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Anda belum memiliki likuiditas di pool ini."
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "Anda harus menjembatani aset L1 ke jaringan untuk menukarnya."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Anda harus menghubungkan akun."
@@ -1733,6 +1964,11 @@ msgstr "Posisi Anda akan 100% {0} pada harga ini."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
 msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagangan sampai harga pasar bergerak ke rentang Anda."
+
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
+msgid "Your positions"
+msgstr "Posisi Anda"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
@@ -1827,6 +2063,10 @@ msgstr "{0} Token Kustom"
 msgid "{0} Deposited"
 msgstr "{0} Disetor"
 
+#: src/components/Header/index.tsx
+msgid "{0} ETH"
+msgstr "{0} ETH"
+
 #: src/components/Header/NetworkCard.tsx
 msgid "{0} Explorer"
 msgstr "{0} Penjelajah"
@@ -1898,6 +2138,10 @@ msgstr "{0} token"
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Harga:"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Ditambahkan oleh pengguna"
+
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1908,6 +2152,14 @@ msgstr "{0} {1} Harga:"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
 msgstr "{0}%"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% fee tier"
+msgstr "tingkat biaya {0}"
+
+#: src/components/FeeSelector/index.tsx
+msgid "{0}% select"
+msgstr "{0}% pilih"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
