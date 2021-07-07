@@ -51,6 +51,10 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   )
 }
 
+const TOKEN_BALANCE_GAS_OVERRIDE: { [chainId: number]: number } = {
+  [SupportedChainId.OPTIMISTIC_KOVAN]: 250_000,
+}
+
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
@@ -63,13 +67,12 @@ export function useTokenBalancesWithLoadingIndicator(
     [tokens]
   )
 
+  const { chainId } = useActiveWeb3React()
+
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
   const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20Interface, 'balanceOf', [address], {
-    gasRequired: {
-      ...Object.values(SupportedChainId).reduce((acc, curr) => ({ ...acc, [curr]: 100_000 }), {}),
-      [SupportedChainId.OPTIMISTIC_KOVAN]: 250_000,
-    },
+    gasRequired: (chainId && TOKEN_BALANCE_GAS_OVERRIDE[chainId]) ?? 100_000,
   })
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])

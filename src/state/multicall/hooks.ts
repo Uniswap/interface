@@ -193,13 +193,12 @@ export function useMultipleContractSingleData(
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: { [chainId: number]: number } }
+  options?: Partial<ListenerOptions> & { gasRequired?: number }
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
   const blocksPerFetch = options?.blocksPerFetch
-  const { chainId } = useActiveWeb3React()
-  const gasRequired = chainId ? options?.gasRequired?.[chainId] : undefined
+  const gasRequired = options?.gasRequired
 
   const callData: string | undefined = useMemo(
     () =>
