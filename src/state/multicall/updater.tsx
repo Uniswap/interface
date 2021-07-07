@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Call, parseCallKey } from './utils'
 import { UniswapInterfaceMulticall } from 'types/v3'
 
+const DEFAULT_GAS_REQUIRED = 1_000_000
+
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multicall multicall contract to fetch against
@@ -31,11 +33,32 @@ async function fetchChunk(
   let results: { success: boolean; returnData: string }[]
   try {
     const { blockNumber, returnData } = await multicall.callStatic.multicall(
-      chunk.map((obj) => ({ target: obj.address, callData: obj.callData, gasLimit: obj.gasRequired ?? 1_000_000 })),
+      chunk.map((obj) => ({
+        target: obj.address,
+        callData: obj.callData,
+        gasLimit: obj.gasRequired ?? DEFAULT_GAS_REQUIRED,
+      })),
       { blockTag: minBlockNumber }
     )
     resultsBlockNumber = blockNumber.toNumber()
     results = returnData
+
+    if (process.env.NODE_ENV === 'development') {
+      returnData.forEach(({ gasUsed, returnData, success }, i) => {
+        if (
+          !success &&
+          returnData.length === 2 &&
+          gasUsed.gte(Math.floor((chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED) * 0.95))
+        ) {
+          console.warn(
+            `A call failed due to requiring ${gasUsed.toString()} vs. allowed ${
+              chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED
+            }`,
+            chunk[i]
+          )
+        }
+      })
+    }
   } catch (error) {
     console.debug('Failed to fetch chunk', error)
     throw error

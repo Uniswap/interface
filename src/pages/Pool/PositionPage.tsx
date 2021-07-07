@@ -85,13 +85,6 @@ const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: b
   align-items: center;
 `
 
-export const DarkBadge = styled.div`
-  width: fit-content;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 4px 6px;
-`
-
 const ExtentsText = styled.span`
   color: ${({ theme }) => theme.text2};
   font-size: 14px;
@@ -511,6 +504,15 @@ export function PositionPage({
     )
   }
 
+  const showCollectAsWeth = Boolean(
+    ownsNFT &&
+      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+      currency0 &&
+      currency1 &&
+      (currency0.isNative || currency1.isNative) &&
+      !collectMigrationHash
+  )
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
       <div />
@@ -571,7 +573,7 @@ export function PositionPage({
                       to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                       style={{ marginRight: '8px' }}
                     >
                       <Trans>Increase Liquidity</Trans>
@@ -583,7 +585,7 @@ export function PositionPage({
                       to={`/remove/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                     >
                       <Trans>Remove Liquidity</Trans>
                     </ResponsiveButtonPrimary>
@@ -759,12 +761,7 @@ export function PositionPage({
                       </RowBetween>
                     </AutoColumn>
                   </LightCard>
-                  {ownsNFT &&
-                  (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-                  currency0 &&
-                  currency1 &&
-                  (currency0.isNative || currency1.isNative) &&
-                  !collectMigrationHash ? (
+                  {showCollectAsWeth && (
                     <AutoColumn gap="md">
                       <RowBetween>
                         <TYPE.main>
@@ -777,7 +774,7 @@ export function PositionPage({
                         />
                       </RowBetween>
                     </AutoColumn>
-                  ) : null}
+                  )}
                 </AutoColumn>
               </DarkCard>
             </AutoColumn>

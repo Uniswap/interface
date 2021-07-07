@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -223,10 +223,6 @@ msgstr "Povolit protokolu Uniswap používat váš {0}"
 msgid "Allowed"
 msgstr "Povoleno"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Vždy zajistěte, aby URL bylo <0>app.uniswap.org</0> - dejte si jej do záložek jako bezpečné."
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Částka"
@@ -270,14 +266,6 @@ msgstr "Schvalování"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "Schvalování {0}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token Bridge"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -502,7 +490,6 @@ msgstr "Potvrďte tuto transakci ve své peněžence"
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Připojit peněženku"
@@ -629,9 +616,10 @@ msgstr "Uložit žetony UNI-V2 LP"
 msgid "Deposit liquidity"
 msgstr "Uložit likviditu"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Vklad na arbitráž"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Vložit na {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -714,7 +702,6 @@ msgstr "Chcete-li spustit nárokování UNI, zadejte adresu. Jestliže bude mít
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -945,10 +932,6 @@ msgstr "Načteno"
 msgid "Loading"
 msgstr "Načítání"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Zajistěte, aby URL bylo <0>app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1070,7 +1053,7 @@ msgstr "Nebyla nalezena žádná likvidita."
 msgid "No pool found."
 msgstr "Nebyl nalezen žádný fond."
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "Nebyly nalezeny žádné návrhy."
 
@@ -1142,6 +1125,10 @@ msgstr "Zúčastněné fondy"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "čekající"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Připojte se k Ethereu vrstvy 1"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1238,7 +1225,7 @@ msgstr "Název návrhu"
 msgid "Proposals"
 msgstr "Návrhy"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Zde se budou zobrazovat návrhy předkládané členy komunity."
 
@@ -1509,9 +1496,13 @@ msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte,
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Tyto žetony bývají spárovány s jinými žetony."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Toto je alfa vydání Uniswap v síti Arbitrum. Musíte přemostit aktiva L1 do sítě, abyste je mohli vyměnit."
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Toto je alfa verze Uniswap v síti {0}"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Toto je alfa verze Uniswap v síti {0} Musíte přemostit aktiva L1 do sítě a vyměnit je."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1658,6 +1649,10 @@ msgstr "Uniswap V3 je tady!"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap k dispozici za: <0>{0}</0>"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Uniswap governance je k dispozici pouze na vrstvě 1. Přepněte svou síť na síť Ethereum Mainnet a zobrazte návrhy a hlasování."
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Těžba likvidity Uniswap"
@@ -1666,9 +1661,9 @@ msgstr "Těžba likvidity Uniswap"
 msgid "Uniswap migration contract↗"
 msgstr "Migrační kontrakt Uniswap↗"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap na <0> Arbitrum</0>"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Uniswap na {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1720,6 +1715,10 @@ msgstr "Aktualizovat seznam"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Uživatel"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 není k dispozici na vrstvě 2. Přepněte na vrstvu 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1888,6 +1887,10 @@ msgstr "Nemáte dostatek hlasů k odeslání návrhu"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "V tomto fondu zatím nemáte likviditu."
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "Musíte přemostit aktiva L1 do sítě a vyměnit je."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Musíte připojit nějaký účet."
@@ -2047,6 +2050,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> za <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Most"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} vlastních žetonů"
@@ -2059,6 +2066,10 @@ msgstr "{0} uloženo"
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Průzkumník"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

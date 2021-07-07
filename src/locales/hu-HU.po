@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -223,10 +223,6 @@ msgstr "Engedélyezze az Uniswap protokollnak a(z) {0} használatát"
 msgid "Allowed"
 msgstr "Engedélyezve"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Mindig győződjön meg róla, hogy az URL címe<0>app.uniswap.org</0> - a biztonság kedvéért tegyen könyvjelzőt."
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Összeg"
@@ -270,14 +266,6 @@ msgstr "Jóváhagyás"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "{0} jóváhagyása"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token Bridge"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -502,7 +490,6 @@ msgstr "Tranzakció megerősítése a pénztárcájában"
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Pénztárca csatlakoztatása"
@@ -629,9 +616,10 @@ msgstr "UNI-V2 LP tokenek letétbe helyezése"
 msgid "Deposit liquidity"
 msgstr "Likviditás letétbe helyezése"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Betét az Arbitrumba"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Betét {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -714,7 +702,6 @@ msgstr "Adjon meg egy címet az UNI-követelés kiváltásához. Ha a címnek va
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -946,10 +933,6 @@ msgstr "Feltöltve"
 msgid "Loading"
 msgstr "Feltöltés"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Győződjön meg arról, hogy az URL-cím <0> app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1071,7 +1054,7 @@ msgstr "Likviditás nem található."
 msgid "No pool found."
 msgstr "Pool nem található."
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "Nem található javaslat."
 
@@ -1143,6 +1126,10 @@ msgstr "Résztvevő poolok"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Függőben levő"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1239,7 +1226,7 @@ msgstr "A javaslat címe"
 msgid "Proposals"
 msgstr "Javaslatok"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "A közösség tagjai által benyújtott javaslatok itt jelennek meg."
 
@@ -1510,9 +1497,13 @@ msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kér
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ezeket a tokeneket általában más tokenekkel párosítják."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Ez az Uniswap alfa kiadása az Arbitrum hálózaton. Az L1 eszközöket át kell kapcsolnia a hálózatra, hogy felcserélje őket."
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Ez az Uniswap alfa kiadása a {0} hálózaton."
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Ez az Uniswap alfa kiadása a {0} hálózaton. Az L1 eszközöket át kell kapcsolnia a hálózatra, hogy felcserélje őket."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1659,6 +1650,10 @@ msgstr "Itt van az Uniswap V3!"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Az Uniswap itt érhető el: <0>{0}</0>"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Az uniswap irányítás csak az 1. rétegben érhető el. A javaslatok és a szavazatok megtekintéséhez kapcsolja hálózatát Ethereum Mainnet-re."
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap likviditásbányászat"
@@ -1667,9 +1662,9 @@ msgstr "Uniswap likviditásbányászat"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migrációs szerződés↗"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Lecserélés az <0> Arbitrumról</0>"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Lecserélés a {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1721,6 +1716,10 @@ msgstr "Lista frissítése"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Felhasználó"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "A V2 nem érhető el a 2. rétegben. Váltás az 1. réteg Ethereumra."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1889,6 +1888,10 @@ msgstr "Nincs elég szavazata a javaslat benyújtásához"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Ebben a poolban még nincs likviditása."
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "Az L1 eszközöket át kell kapcsolnia a hálózatra, hogy felcserélje őket."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Csatlakoznia kell egy fiókhoz."
@@ -2048,6 +2051,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Híd"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} egyedi token"
@@ -2060,6 +2067,10 @@ msgstr "{0} letétbe helyezve"
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Explorer"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

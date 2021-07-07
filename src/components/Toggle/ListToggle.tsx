@@ -30,7 +30,7 @@ const StatusText = styled(TYPE.main)<{ isActive?: boolean }>`
   color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
 `
 
-export interface ToggleProps {
+interface ToggleProps {
   id?: string
   isActive: boolean
   bgColor: string

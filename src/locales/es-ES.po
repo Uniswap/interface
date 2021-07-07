@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -223,10 +223,6 @@ msgstr "Permitir que el protocolo Uniswap utilice su {0}"
 msgid "Allowed"
 msgstr "Permitido"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Siempre asegúrese de que la URL es<0>app.uniswap.org</0> - agréguelo a los marcadores para estar seguro."
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Cantidad"
@@ -270,14 +266,6 @@ msgstr "Aprobando"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "Aprobando {0}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Explorador de Arbitrum"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Puente de token de Arbitrum"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -502,7 +490,6 @@ msgstr "Confirmar esta transacción en su cartera"
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Conectar cartera"
@@ -629,9 +616,10 @@ msgstr "Depositar Tokens LP UNI-V2"
 msgid "Deposit liquidity"
 msgstr "Depositar liquidez"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Depósito en Arbitrum"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Depositar a {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -714,7 +702,6 @@ msgstr "Introduzca una dirección para activar una reclamación de UNI. Si la di
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -945,10 +932,6 @@ msgstr "Cargado"
 msgid "Loading"
 msgstr "Cargando"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Asegúrese de que la URL es<0>app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1070,7 +1053,7 @@ msgstr "No se encontró liquidez."
 msgid "No pool found."
 msgstr "Fondo común no encontrado."
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "No se encontraron propuestas."
 
@@ -1142,6 +1125,10 @@ msgstr "Fondos comunes que participan"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Pendiente"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Conéctese a la capa 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1238,7 +1225,7 @@ msgstr "Título de la propuesta"
 msgid "Proposals"
 msgstr "Propuestas"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Las propuestas enviadas por los miembros de la comunidad aparecerán aquí."
 
@@ -1509,9 +1496,13 @@ msgstr "No se pudo enviar la transacción porque la fecha límite ha pasado. Ver
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Estos tokens son comúnmente emparejados con otros tokens."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Esta es una versión alfa de Uniswap en la red Arbitrum. Debe conectar los activos L1 a la red para intercambiarlos."
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Esta es una versión alfa de Uniswap en la red {0}"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Esta es una versión alfa de Uniswap en la red {0} Debe conectar los activos L1 a la red para intercambiarlos."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1658,6 +1649,10 @@ msgstr "¡Uniswap V3 está aquí!"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap disponible en: <0>{0}</0>"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "La gobernanza de Uniswap solo está disponible en la Capa 1. Cambie su red a Ethereum Mainnet para ver Propuestas y Votar."
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Minería de liquidez Uniswap"
@@ -1666,9 +1661,9 @@ msgstr "Minería de liquidez Uniswap"
 msgid "Uniswap migration contract↗"
 msgstr "Contrato de migración Uniswap"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Uniswap en <0> Arbitrum</0>"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Uniswap en {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1720,6 +1715,10 @@ msgstr "Actualizar lista"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Usuario"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 no está disponible en la capa 2. Cambie a la capa 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1888,6 +1887,10 @@ msgstr "No tienes suficientes votos para enviar una propuesta."
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Todavía no tiene liquidez en este fondo común."
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "Debe conectar los activos L1 a la red para intercambiarlos."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Debe conectar una cuenta."
@@ -2047,6 +2050,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> por <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Puente"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} tokens personalizados"
@@ -2059,6 +2066,10 @@ msgstr "{0} depositado"
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} explorador"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

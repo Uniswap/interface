@@ -1,7 +1,7 @@
 import { ReactNode, useContext, useMemo } from 'react'
 import { Pair } from '@uniswap/v2-sdk'
 import { Token } from '@uniswap/sdk-core'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components/macro'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { Text } from 'rebass'

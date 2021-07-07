@@ -10,9 +10,9 @@ import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
+import { ThemeContext } from 'styled-components/macro'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
+import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -21,14 +21,14 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import Review from './Review'
+import { Review } from './Review'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
-
+import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -402,13 +402,13 @@ export default function AddLiquidity({
 
   const Buttons = () =>
     addIsUnsupported ? (
-      <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
+      <ButtonPrimary disabled={true} $borderRadius="12px" padding={'12px'}>
         <TYPE.main mb="4px">
           <Trans>Unsupported Asset</Trans>
         </TYPE.main>
       </ButtonPrimary>
     ) : !account ? (
-      <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
+      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
         <Trans>Connect wallet</Trans>
       </ButtonLight>
     ) : (
@@ -470,6 +470,7 @@ export default function AddLiquidity({
   return (
     <>
       <ScrollablePage>
+        <NetworkAlert />
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}
@@ -812,7 +813,7 @@ export default function AddLiquidity({
                         <StackedItem zIndex={1}>
                           <YellowCard
                             padding="15px"
-                            borderRadius="12px"
+                            $borderRadius="12px"
                             height="100%"
                             style={{
                               borderColor: theme.yellow3,
@@ -845,7 +846,7 @@ export default function AddLiquidity({
                                 <ButtonYellow
                                   padding="8px"
                                   marginRight="8px"
-                                  borderRadius="8px"
+                                  $borderRadius="8px"
                                   width="auto"
                                   onClick={() => {
                                     setShowCapitalEfficiencyWarning(false)
@@ -865,7 +866,7 @@ export default function AddLiquidity({
                     </StackedContainer>
 
                     {outOfRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
+                      <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.yellow3} size="16px" />
                           <TYPE.yellow ml="12px" fontSize="12px">
@@ -879,7 +880,7 @@ export default function AddLiquidity({
                     ) : null}
 
                     {invalidRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
+                      <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.yellow3} size="16px" />
                           <TYPE.yellow ml="12px" fontSize="12px">

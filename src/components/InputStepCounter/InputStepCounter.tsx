@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, ReactNode } from 'react'
 import { OutlineCard } from 'components/Card'
 import { Input as NumericalInput } from '../NumericalInput'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
 import { ButtonGray } from 'components/Button'

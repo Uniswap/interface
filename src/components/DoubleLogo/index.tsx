@@ -9,7 +9,7 @@ const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   margin-left: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
 `
 
-export interface DoubleCurrencyLogoProps {
+interface DoubleCurrencyLogoProps {
   margin?: boolean
   size?: number
   currency0?: Currency

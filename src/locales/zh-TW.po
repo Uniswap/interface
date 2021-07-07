@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -223,10 +223,6 @@ msgstr "允許 Uniswap 使用您的 {0}"
 msgid "Allowed"
 msgstr "已允許"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "務必確保網址為<0>app.uniswap.org</0> - 將其加入書簽，以確保安全。"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "數額"
@@ -270,14 +266,6 @@ msgstr "批準中"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "批準 {0}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum 瀏覽器"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum 代幣橋"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -344,7 +332,7 @@ msgstr "通過連接錢包，您同意接受 Uniswap 實驗室的<0>服務條款
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "取消"
+msgstr "已取消"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -502,7 +490,6 @@ msgstr "在您的錢包中確認這筆交易"
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "連接錢包"
@@ -592,7 +579,7 @@ msgstr "當前 {0} 兌換率："
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
-msgstr "被擊敗"
+msgstr "未通過"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -629,9 +616,10 @@ msgstr "存入 UNI-V2 流動池代幣"
 msgid "Deposit liquidity"
 msgstr "存入流動資金"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "充值到 Arbitrum"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "存款到 {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -691,7 +679,7 @@ msgstr "已賺取的 UNI 代幣代表了 Uniswap 治理中的投票份額。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "編輯"
+msgstr "修改"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -714,7 +702,6 @@ msgstr "輸入地址來查看領取 UNI 代幣的資質。如果地址有任何�
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -760,7 +747,7 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
-msgstr "已到期"
+msgstr "已過期"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -772,7 +759,7 @@ msgstr "手續費級別"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "費用等級"
+msgstr "手續費級別"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -945,10 +932,6 @@ msgstr "已加載"
 msgid "Loading"
 msgstr "載入中"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "請確認網頁連結為<0>app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1070,7 +1053,7 @@ msgstr "未找到流動資金。"
 msgid "No pool found."
 msgstr "未找到流動池。"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "未找到提案。"
 
@@ -1141,7 +1124,11 @@ msgstr "參與的流動池"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "待辦的"
+msgstr "待辦"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "請連接到第 1 層以太坊"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1238,7 +1225,7 @@ msgstr "提案標題"
 msgid "Proposals"
 msgstr "提案"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "社區成員提交的提案將在此顯示。"
 
@@ -1252,7 +1239,7 @@ msgstr "提案人"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
-msgstr "排隊"
+msgstr "待執行"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1430,7 +1417,7 @@ msgstr "提交投票"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr "成功"
+msgstr "投票通過"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1467,7 +1454,7 @@ msgstr "感謝您加入 Uniswap 社區 <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "您將獲得的費用百分比。"
+msgstr "您將賺取的手續費百分比。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1509,9 +1496,13 @@ msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截
 msgid "These tokens are commonly paired with other tokens."
 msgstr "這些代幣通常與其他代幣配對。"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "這是 Arbitrum 網絡上 Uniswap 的 alpha 版本。您必須橋接 L1 資產才能進行兌換。"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "這是 Uniswap 在 {0} 網絡上的 alpha 版本。"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "這是 Uniswap 在 {0} 網絡上的 alpha 版本。您必須將 L1 資產橋接到網絡才能交換它們。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1658,6 +1649,10 @@ msgstr "Uniswap V3 已發布！"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap 可選語言：<0>{0}</0>"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Uniswap 治理僅在第 1 層可用。將您的網絡切換到以太坊主網以查看提案和投票。"
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Uniswap 流動資金挖礦"
@@ -1666,9 +1661,9 @@ msgstr "Uniswap 流動資金挖礦"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap 遷移合約↗"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "<0> Arbitrum</0> 網絡上的 Uniswap"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Uniswap 在 {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1720,6 +1715,10 @@ msgstr "更新代幣列表"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "用戶"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 在第 2 層不可用。切換到第 1 層以太坊。"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1888,6 +1887,10 @@ msgstr "您沒有足夠的票數來提交提案"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "您在此流動池中還未有流動資金。"
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "您必須將 L1 資產橋接到網絡才能交換它們。"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "您必須連接帳戶。"
@@ -2047,6 +2050,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> 每 <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} 橋"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} 自定義代幣"
@@ -2059,6 +2066,10 @@ msgstr "註入 {0}"
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} 瀏覽器"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2144,11 +2155,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}% 費用等級"
+msgstr "{0}% 手續費級別"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}% 選擇"
+msgstr "選擇 {0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-07 15:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-07 16:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -223,10 +223,6 @@ msgstr "Επιτρέψτε στο πρωτόκολλο Uniswap να χρησιμ
 msgid "Allowed"
 msgstr "Επιτρέπεται"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Βεβαιωθείτε ότι η διεύθυνση URL είναι <0> app.uniswap.org</0> - για να είστε ασφαλείς προσθέστε τη στους σελιδοδείκτες."
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Ποσό"
@@ -270,14 +266,6 @@ msgstr "Έγκριση"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "Έγκριση {0}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Γέφυρα Arbitrum Token"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -502,7 +490,6 @@ msgstr "Επιβεβαιώστε αυτή τη συναλλαγή στο πορ�
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Σύνδεση Πορτοφολιού"
@@ -629,9 +616,10 @@ msgstr "Κατάθεση μάρκας UNI-V2 LP"
 msgid "Deposit liquidity"
 msgstr "Κατάθεση ρευστότητας"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Κατάθεση στο Arbitrum"
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Κατάθεση σε {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -714,7 +702,6 @@ msgstr "Εισάγετε μια διεύθυνση για να εκκινήσε�
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -945,10 +932,6 @@ msgstr "Φορτώθηκε"
 msgid "Loading"
 msgstr "Φόρτωση"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Βεβαιωθείτε ότι το URL είναι<0>app.uniswap.org</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1070,7 +1053,7 @@ msgstr "Δεν βρέθηκε ρευστότητα."
 msgid "No pool found."
 msgstr "Δεν βρέθηκε δεξαμενή."
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "Δεν βρέθηκαν προτάσεις."
 
@@ -1142,6 +1125,10 @@ msgstr "Συμμετέχουσες δεξαμενές"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "εκκρεμής"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Συνδεθείτε στο Layer 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1238,7 +1225,7 @@ msgstr "Τίτλος πρότασης"
 msgid "Proposals"
 msgstr "Προτάσεις"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Προτάσεις που υποβάλλονται από τα μέλη της κοινότητας θα εμφανίζονται εδώ."
 
@@ -1509,9 +1496,13 @@ msgstr "Δεν ήταν δυνατή η αποστολή της συναλλαγ
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Αυτές οι μάρκες δεν συνδυάζονται συνήθως με αλλά μάρκες."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο Arbitrum. Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα ανταλλάξετε."
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο {0}"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο {0} Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα ανταλλάξετε."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1658,6 +1649,10 @@ msgstr "Uniswap V3 είναι εδώ!"
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Το Uniswap διατίθεται σε: <0>{0}</0>"
 
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Η διαχείριση Uniswap είναι διαθέσιμη μόνο στο Layer 1. Αλλάξτε το δίκτυό σας στο Ethereum Mainnet για να δείτε Προτάσεις και Ψηφοφορία."
+
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
 msgstr "Εξόρυξη ρευστότητας Uniswap"
@@ -1666,9 +1661,9 @@ msgstr "Εξόρυξη ρευστότητας Uniswap"
 msgid "Uniswap migration contract↗"
 msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Απεμπλοκή στο <0> Arbitrum</0>"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Απεμπλοκή στο {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1720,6 +1715,10 @@ msgstr "Ενημέρωση λίστας"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Χρήστης"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "Το V2 δεν είναι διαθέσιμο στο Layer 2. Μετάβαση στο Layer 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1888,6 +1887,10 @@ msgstr "Δεν έχετε αρκετές ψήφους για να υποβάλε
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την δεξαμενή."
 
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to swap them."
+msgstr "Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα ανταλλάξετε."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Πρέπει να συνδέσετε ένα λογαριασμό."
@@ -2047,6 +2050,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> ανά <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Γέφυρα"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Προσαρμοσμένες Μάρκες"
@@ -2059,6 +2066,10 @@ msgstr "{0} Κατατέθηκε"
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Εξερεύνηση"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
