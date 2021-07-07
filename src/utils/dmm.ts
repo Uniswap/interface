@@ -355,7 +355,7 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
   }
 
   const rewardUSD = rewards.reduce((total, reward) => {
-    if (!reward || !reward.amount) {
+    if (!reward || !reward.amount || !reward.token) {
       return total
     }
 
