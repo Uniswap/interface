@@ -473,6 +473,15 @@ export function PositionPage({
     )
   }
 
+  const showCollectAsWeth = Boolean(
+    ownsNFT &&
+      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+      currency0 &&
+      currency1 &&
+      (currency0.isNative || currency1.isNative) &&
+      !collectMigrationHash
+  )
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
       <div />
@@ -721,12 +730,7 @@ export function PositionPage({
                       </RowBetween>
                     </AutoColumn>
                   </LightCard>
-                  {ownsNFT &&
-                  (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-                  currency0 &&
-                  currency1 &&
-                  (currency0.isNative || currency1.isNative) &&
-                  !collectMigrationHash ? (
+                  {showCollectAsWeth && (
                     <AutoColumn gap="md">
                       <RowBetween>
                         <TYPE.main>
@@ -739,7 +743,7 @@ export function PositionPage({
                         />
                       </RowBetween>
                     </AutoColumn>
-                  ) : null}
+                  )}
                 </AutoColumn>
               </DarkCard>
             </AutoColumn>

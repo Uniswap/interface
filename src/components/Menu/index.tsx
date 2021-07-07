@@ -8,9 +8,9 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
-
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+import { L2_CHAIN_IDS } from 'constants/chains'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -86,7 +86,8 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
           left: 0rem;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
+    top: unset;
+    bottom: 3em
   `};
 `
 
@@ -124,13 +125,14 @@ const InternalMenuItem = styled(Link)`
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
@@ -171,7 +173,7 @@ export default function Menu() {
               <Trans>Analytics</Trans>
             </div>
           </MenuItem>
-          {account && (
+          {showUNIClaimOption && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">
               <Trans>Claim UNI</Trans>
             </UNIbutton>

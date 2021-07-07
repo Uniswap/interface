@@ -1,25 +1,25 @@
-import { useContext } from 'react'
+import { Trans } from '@lingui/macro'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
-import { useActiveWeb3React } from 'hooks/web3'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Toggle from 'components/Toggle'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
-import { Trans } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useContext } from 'react'
+import { BookOpen, ChevronDown, ChevronsRight, Download, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
+import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { LoadingRows } from './styleds'
-import Toggle from 'components/Toggle'
-import { useUserHideClosedPositions } from 'state/user/hooks'
-
-import CTACards from './CTACards'
 import { PositionDetails } from 'types/position'
+import CTACards from './CTACards'
+import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
@@ -107,7 +107,7 @@ const ShowInactiveToggle = styled.div`
 `
 
 export default function Pool() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
   const theme = useContext(ThemeContext)
@@ -124,6 +124,8 @@ export default function Pool() {
   ) ?? [[], []]
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
+  const showConnectAWallet = Boolean(!account)
+  const showV2Features = !!chainId && !L2_CHAIN_IDS.includes(chainId)
 
   const menuItems = [
     {
@@ -149,16 +151,6 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Layers size={16} style={{ marginRight: '12px' }} />
-          <Trans>V2 liquidity</Trans>
-        </MenuItem>
-      ),
-      link: '/pool/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
           <BookOpen size={16} style={{ marginRight: '12px' }} />
           <Trans>Learn</Trans>
         </MenuItem>
@@ -167,6 +159,19 @@ export default function Pool() {
       external: true,
     },
   ]
+
+  if (showV2Features) {
+    menuItems.splice(2, 0, {
+      content: (
+        <MenuItem>
+          <Layers size={16} style={{ marginRight: '12px' }} />
+          <Trans>V2 liquidity</Trans>
+        </MenuItem>
+      ),
+      link: '/pool/v2',
+      external: false,
+    })
+  }
 
   return (
     <>
@@ -241,11 +246,12 @@ export default function Pool() {
                       <Trans>Your V3 liquidity positions will appear here.</Trans>
                     </div>
                   </TYPE.mediumHeader>
-                  {!account ? (
+                  {showConnectAWallet && (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       <Trans>Connect a wallet</Trans>
                     </ButtonPrimary>
-                  ) : (
+                  )}
+                  {showV2Features && (
                     <ButtonGray
                       as={Link}
                       to="/migrate/v2"
@@ -259,27 +265,11 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
-            <RowFixed justify="center" style={{ width: '100%' }}>
-              <ButtonOutlined
-                as={Link}
-                to="/pool/v2"
-                id="import-pool-link"
-                style={{
-                  padding: '8px 16px',
-                  margin: '0 4px',
-                  borderRadius: '12px',
-                  width: 'fit-content',
-                  fontSize: '14px',
-                }}
-              >
-                <Layers size={14} style={{ marginRight: '8px' }} />
-
-                <Trans>View V2 Liquidity</Trans>
-              </ButtonOutlined>
-              {positions && positions.length > 0 && (
+            {showV2Features && (
+              <RowFixed justify="center" style={{ width: '100%' }}>
                 <ButtonOutlined
                   as={Link}
-                  to="/migrate/v2"
+                  to="/pool/v2"
                   id="import-pool-link"
                   style={{
                     padding: '8px 16px',
@@ -289,12 +279,30 @@ export default function Pool() {
                     fontSize: '14px',
                   }}
                 >
-                  <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+                  <Layers size={14} style={{ marginRight: '8px' }} />
 
-                  <Trans>Migrate Liquidity</Trans>
+                  <Trans>View V2 Liquidity</Trans>
                 </ButtonOutlined>
-              )}
-            </RowFixed>
+                {positions && positions.length > 0 && (
+                  <ButtonOutlined
+                    as={Link}
+                    to="/migrate/v2"
+                    id="import-pool-link"
+                    style={{
+                      padding: '8px 16px',
+                      margin: '0 4px',
+                      borderRadius: '12px',
+                      width: 'fit-content',
+                      fontSize: '14px',
+                    }}
+                  >
+                    <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+
+                    <Trans>Migrate Liquidity</Trans>
+                  </ButtonOutlined>
+                )}
+              </RowFixed>
+            )}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
