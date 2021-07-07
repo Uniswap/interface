@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 02:39+0000\n"
+"POT-Creation-Date: 2021-07-07 15:00+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-07-07 03:04\n"
+"PO-Revision-Date: 2021-07-07 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1492,6 +1492,10 @@ msgstr "Оновити список"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Користувач"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 недоступний на рівні 2. Перейдіть на рівень 1 Ефіріум."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
