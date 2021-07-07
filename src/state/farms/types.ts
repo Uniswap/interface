@@ -17,6 +17,8 @@ export interface Farm {
   token0?: any
   token1?: any
   amp: number
+  reserve0: string
+  reserve1: string
   reserveUSD: string
   totalSupply: string
   oneDayFeeUSD?: string
