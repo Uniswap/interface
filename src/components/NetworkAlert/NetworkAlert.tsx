@@ -10,15 +10,15 @@ import { MEDIA_WIDTHS, TYPE } from 'theme'
 import { L2_INFO } from '../../constants/chains'
 
 const L2Icon = styled.img`
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   justify-self: center;
 `
 const CloseIcon = styled(X)`
   cursor: pointer;
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
 `
 const ContentWrapper = styled.div`
   align-items: center;
@@ -26,10 +26,10 @@ const ContentWrapper = styled.div`
   grid-gap: 4px;
   grid-template-columns: 40px 4fr;
   grid-template-rows: auto auto;
-  margin: 21px 15px;
+  margin: 20px 16px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-template-columns: 58px 4fr;
-    grid-gap: 6px;
+    grid-template-columns: 42px 4fr;
+    grid-gap: 8px;
   }
 `
 export const ArbitrumWrapperBackgroundDarkMode = css`
@@ -81,6 +81,7 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
 `
 const Header = styled(TYPE.largeHeader)`
   margin: 0;
+  padding-right: 30px;
 `
 const Body = styled.p`
   grid-column: 1 / 3;

@@ -14,9 +14,9 @@ import { MEDIA_WIDTHS } from 'theme'
 
 const L2Icon = styled.img`
   display: none;
-  height: 42px;
-  margin: auto 20px auto 5px;
-  width: 42px;
+  height: 40px;
+  margin: auto 20px auto 4px;
+  width: 40px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: block;
   }
@@ -61,7 +61,7 @@ const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoU
     padding: 16px 20px;
   }
 `
-const Body = styled.p`
+const Body = styled.div`
   line-height: 143%;
   margin: 12px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {

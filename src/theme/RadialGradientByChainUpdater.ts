@@ -1,17 +1,28 @@
+import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 import { SupportedChainId } from '../constants/chains'
-import { useActiveWeb3React } from '../hooks/web3'
 
+const initialStyles = {
+  width: '200vw',
+  height: '200vh',
+  transform: 'translate(-50vw, -100vh)',
+}
 const backgroundResetStyles = {
   width: '100vw',
   height: '100vh',
   transform: 'unset',
 }
-const reset = (target: Record<string, any>) =>
-  Object.entries(backgroundResetStyles).forEach(([key, value]) => (target[key] = value))
+
+type TargetBackgroundStyles = typeof initialStyles | typeof backgroundResetStyles
 
 const backgroundRadialGradientElement = document.getElementById('background-radial-gradient')
+const setBackground = (newValues: TargetBackgroundStyles) =>
+  Object.entries(newValues).forEach(([key, value]) => {
+    if (backgroundRadialGradientElement) {
+      backgroundRadialGradientElement.style[key as keyof typeof backgroundResetStyles] = value
+    }
+  })
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
@@ -23,26 +34,19 @@ export default function RadialGradientByChainUpdater(): null {
 
     switch (chainId) {
       case SupportedChainId.ARBITRUM_ONE:
-        reset(backgroundRadialGradientElement.style)
-        const arbitrumLightGradient =
-          'radial-gradient(150% 100% at 50% 0%, rgba(40, 160, 240, 0.25) 0%, rgba(255, 0, 122, 0) 100%, rgba(255, 0, 122, 0.03) 100%), #FFFFFF'
-        const arbitrumDarkGradient =
-          'radial-gradient(150% 96% at 50% 0%, #28A0F0 0%, rgba(251, 59, 152, 0) 100%), #1F2128'
+        setBackground(backgroundResetStyles)
+        const arbitrumLightGradient = 'radial-gradient(150% 100% at 50% 0%, #CDE8FB 0%, #FCF3F9 50%, #FFFFFF 100%)'
+        const arbitrumDarkGradient = 'radial-gradient(150% 100% at 50% 0%, #0A294B 0%, #221E30 50%, #1F2128 100%)'
         backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
-        // @ts-ignore
-        backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay, normal' : 'multiply, normal'
         break
       case SupportedChainId.OPTIMISM:
-        reset(backgroundRadialGradientElement.style)
-        const optimismLightGradient =
-          'radial-gradient(150% 100% at 50% 0%, rgba(255, 180, 180, 0.25) 0%, rgba(255, 0, 122, 0) 100%, rgba(255, 0, 122, 0.03) 100%), #FFFFFF'
-        const optimismDarkGradient =
-          'radial-gradient(150% 95% at 50% 0%, #FFB4B4 0%, rgba(251, 59, 152, 0) 100%), #1F2128'
+        setBackground(backgroundResetStyles)
+        const optimismLightGradient = 'radial-gradient(150% 100% at 50% 0%, #FFFBF2 2%, #FFF4F9 53%, #FFFFFF 100%)'
+        const optimismDarkGradient = 'radial-gradient(150% 100% at 50% 0%, #3E2E38 2%, #2C1F2D 53%, #1F2128 100%)'
         backgroundRadialGradientElement.style.background = darkMode ? optimismDarkGradient : optimismLightGradient
-        // @ts-ignore
-        backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay, normal' : 'multiply, normal'
         break
       default:
+        setBackground(initialStyles)
         backgroundRadialGradientElement.style.background = ''
     }
   }, [darkMode, chainId])
