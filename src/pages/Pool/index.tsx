@@ -171,7 +171,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <AutoRow>
               <InstructionText>
-                Here you can view all your liquidity position and remove/add more liquidity.
+                Here you can view all your liquidity positions and remove/add more liquidity.
               </InstructionText>
             </AutoRow>
 
