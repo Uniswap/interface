@@ -38,8 +38,8 @@ function BridgeDetails({
   const fee = useBridgeFee(inputCurrencyId, bridgeDirection)
   const calculatedFee = useCalculatedBridgeFee(inputCurrencyId, inputAmount, bridgeDirection)
 
-  const feePercentage = Number(fee) * 100
-  const parsedCalculatedFee = Number(calculatedFee)
+  const feePercentage = fee ? Number(fee) * 100 : 0
+  const parsedCalculatedFee = calculatedFee ? Number(calculatedFee) : 0
   const show = parsedCalculatedFee > 0
 
   return (

@@ -45,7 +45,7 @@ export async function getMinMaxPerTxn(
       args = [decimals, isHome, library, account]
       break
     default:
-      throw new Error(`Unsupported bridge type`)
+      return
   }
 
   const result = await getMinMax(...args)
