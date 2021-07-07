@@ -126,7 +126,7 @@ export default function LiquidityChartRangeInput({
   }
 
   return (
-    <AutoColumn gap="md" style={{ minHeight: '250px' }}>
+    <AutoColumn gap="md" style={{ minHeight: '200px' }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
@@ -148,8 +148,8 @@ export default function LiquidityChartRangeInput({
         <ChartWrapper>
           <Chart
             data={{ series: formattedData, current: price }}
-            dimensions={{ width: 400, height: 250 }}
-            margins={{ top: 10, right: 20, bottom: 40, left: 20 }}
+            dimensions={{ width: 400, height: 200 }}
+            margins={{ top: 10, right: 2, bottom: 30, left: 0 }}
             styles={{
               brush: {
                 handle: {

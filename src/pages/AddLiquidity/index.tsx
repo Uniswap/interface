@@ -669,7 +669,7 @@ export default function AddLiquidity({
                       ) : null}
                     </RowBetween>
                     {!noLiquidity && (
-                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
+                      <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '1.5rem', lineHeight: '125%' }}>
                         <Trans>
                           The range and details of your position are surfaced on the liquidity distribution graph below
                           based on your inputs.{' '}

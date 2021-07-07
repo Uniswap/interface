@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { area, curveStep, interpolateOranges, ScaleLinear } from 'd3'
+import { area, curveStep, ScaleLinear } from 'd3'
 import styled from 'styled-components'
 import { ChartEntry } from './types'
 import { inRange } from 'lodash'

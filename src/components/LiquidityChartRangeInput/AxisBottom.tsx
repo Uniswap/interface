@@ -12,6 +12,10 @@ const StyledGroup = styled.g`
     color: ${({ theme }) => theme.text2};
     transform: translateY(5px);
   }
+
+  & > g > g:nth-child(2n) text {
+    display: none;
+  }
 `
 
 const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
@@ -37,7 +41,7 @@ export const AxisBottom = ({
   useMemo(
     () => (
       <StyledGroup transform={`translate(0, ${innerHeight + offset})`}>
-        <Axis axisGenerator={axisBottom(xScale).ticks(8).tickSize(10)} />
+        <Axis axisGenerator={axisBottom(xScale).ticks(16).tickSize(10)} />
       </StyledGroup>
     ),
     [innerHeight, offset, xScale]
