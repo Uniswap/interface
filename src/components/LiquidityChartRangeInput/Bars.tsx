@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { ScaleLinear } from 'd3'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { ChartEntry } from './types'
 import { inRange } from 'lodash'
 

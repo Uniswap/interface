@@ -389,6 +389,31 @@ export function PositionPage({
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  // usdc prices always in terms of tokens
+  const price0 = useUSDCPrice(token0 ?? undefined)
+  const price1 = useUSDCPrice(token1 ?? undefined)
+
+  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
+    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
+
+    // we wrap because it doesn't matter, the quote returns a USDC amount
+    const feeValue0Wrapped = feeValue0?.wrapped
+    const feeValue1Wrapped = feeValue1?.wrapped
+
+    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
+
+    const amount0 = price0.quote(feeValue0Wrapped)
+    const amount1 = price1.quote(feeValue1Wrapped)
+    return amount0.add(amount1)
+  }, [price0, price1, feeValue0, feeValue1])
+
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
+    if (!price0 || !price1 || !position) return null
+    const amount0 = price0.quote(position.amount0)
+    const amount1 = price1.quote(position.amount1)
+    return amount0.add(amount1)
+  }, [price0, price1, position])
+
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const collect = useCallback(() => {
@@ -444,31 +469,6 @@ export function PositionPage({
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
-
-  // usdc prices always in terms of tokens
-  const price0 = useUSDCPrice(token0 ?? undefined)
-  const price1 = useUSDCPrice(token1 ?? undefined)
-
-  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
-
-    // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
-
-    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
-
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
-    return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1])
-
-  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
-    if (!price0 || !price1 || !position) return null
-    const amount0 = price0.quote(position.amount0)
-    const amount1 = price1.quote(position.amount1)
-    return amount0.add(amount1)
-  }, [price0, price1, position])
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0

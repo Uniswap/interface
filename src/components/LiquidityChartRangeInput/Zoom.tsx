@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
 import { ZoomIn, ZoomOut } from 'react-feather'
 

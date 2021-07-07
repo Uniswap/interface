@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { brushHandleAccentPath, brushHandlePath } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
 
