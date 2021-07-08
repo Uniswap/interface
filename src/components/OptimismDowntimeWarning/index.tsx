@@ -40,16 +40,16 @@ export default function OptimismDowntimeWarning() {
   if (!chainId || ![SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)) {
     return null
   }
-  const name = 'Optimism'
+
   return (
     <Root>
       <TitleRow>
         <WarningIcon />
-        <Trans>{name} Scheduled Downtimes</Trans>
+        <Trans>{'Optimism'} Scheduled Downtimes</Trans>
       </TitleRow>
       <Body>
         <Trans>
-          {name} expects some scheduled downtime in the near future.&nbsp;
+          {'Optimism'} expects some scheduled downtime in the near future.&nbsp;
           <LinkOutToNotion
             href={`https://www.notion.so/Optimism-Regenesis-Schedule-8d14a34902ca4f5a8910762b3ec4b8da`}
             target="_blank"
