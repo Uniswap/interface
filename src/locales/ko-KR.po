@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 15:47+0000\n"
+"POT-Creation-Date: 2021-07-07 23:41+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-07-07 16:06\n"
+"PO-Revision-Date: 2021-07-08 00:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1403,6 +1403,10 @@ msgstr "문제가 발생했습니다"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1 단계. UNI-V2 유동성 토큰 받기"
 
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Subgraph data not available"
+msgstr "하위 그래프 데이터를 사용할 수 없습니다."
+
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
 msgstr "새 제안 제출"
@@ -1491,6 +1495,10 @@ msgstr "추가하는 토큰의 요율이 이 풀의 가격을 설정합니다."
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 기한이 너무 낮지 않은지 확인하십시오."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data"
+msgstr "유동성 데이터가 없습니다"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1949,6 +1957,10 @@ msgstr "내 위치"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
 msgstr "귀하의 포지션에는 유동성이 없으며, 수수료를 벌지 않습니다."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "귀하의 위치가 여기에 표시됩니다."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

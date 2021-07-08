@@ -15,7 +15,7 @@ export const api = createApi({
       query: ({ poolAddress, skip = 0 }) => ({
         document: gql`
           query allV3Ticks($poolAddress: String!, $skip: Int!) {
-            ticks(first: 1000, skip: $skip, where: { poolAddress: $poolAddress }) {
+            ticks(first: 1000, skip: $skip, where: { poolAddress: $poolAddress }, orderBy: tickIdx) {
               tickIdx
               liquidityNet
               price0

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 15:47+0000\n"
+"POT-Creation-Date: 2021-07-07 23:41+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-07-07 16:06\n"
+"PO-Revision-Date: 2021-07-08 00:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1403,6 +1403,10 @@ msgstr "Ceva nu a funcţionat corect"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Pasul 1. Obține jetoane de Lichiditate UNI-V2"
 
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Subgraph data not available"
+msgstr "Datele despre subgraf nu sunt disponibile"
+
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
 msgstr "A fost trimisă o nouă propunere"
@@ -1491,6 +1495,10 @@ msgstr "Raportul dintre jetoanele adăugate va stabili prețul acestui grup."
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm să verifici dacă termenul limită al acestei tranzacției nu este prea mic."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data"
+msgstr "Nu există date privind lichiditatea"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1949,6 +1957,10 @@ msgstr "Poziţia ta"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
 msgstr "Poziţia ta are 0 lichidităţi şi nu dobândește onorarii."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Poziția dvs. va apărea aici."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 15:47+0000\n"
+"POT-Creation-Date: 2021-07-07 23:41+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-07 16:06\n"
+"PO-Revision-Date: 2021-07-08 00:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1403,6 +1403,10 @@ msgstr "出错了"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "第 1 步：获取 UNI-V2 流动池代币"
 
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Subgraph data not available"
+msgstr "子图数据不可用"
+
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
 msgstr "提交了新提案"
@@ -1491,6 +1495,10 @@ msgstr "您注入的代币比率将决定此流动池的初始兑换率。"
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "由于期限已过，因此无法发送交易。请检查您的交易截止期限设置。"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data"
+msgstr "没有流动性数据"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1949,6 +1957,10 @@ msgstr "您的流动资金仓位"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
 msgstr "您的仓位没有任何流动资金，没在赚取手续费。"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "您的位置将显示在此处。"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
