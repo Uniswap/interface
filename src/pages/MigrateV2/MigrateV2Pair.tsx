@@ -176,7 +176,7 @@ function V2PairMigration({
 
   // the following is a small hack to get access to price range data/input handlers
   const [baseToken, setBaseToken] = useState(token0)
-  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useV3DerivedMintInfo(
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange, ticksAtLimit } = useV3DerivedMintInfo(
     token0,
     token1,
     feeAmount,
@@ -543,6 +543,7 @@ function V2PairMigration({
             currencyA={invertPrice ? currency1 : currency0}
             currencyB={invertPrice ? currency0 : currency1}
             feeAmount={feeAmount}
+            ticksAtLimit={ticksAtLimit}
           />
 
           {outOfRange ? (

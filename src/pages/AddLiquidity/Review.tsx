@@ -1,4 +1,4 @@
-import { Field } from '../../state/mint/v3/actions'
+import { Bound, Field } from '../../state/mint/v3/actions'
 import { AutoColumn } from 'components/Column'
 import styled from 'styled-components/macro'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
@@ -12,6 +12,7 @@ const Wrapper = styled.div`
 export function Review({
   position,
   outOfRange,
+  ticksAtLimit,
 }: {
   position?: Position
   existingPosition?: Position
@@ -19,11 +20,19 @@ export function Review({
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   outOfRange: boolean
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 }) {
   return (
     <Wrapper>
       <AutoColumn gap="lg">
-        {position ? <PositionPreview position={position} inRange={!outOfRange} title={'Selected Range'} /> : null}
+        {position ? (
+          <PositionPreview
+            position={position}
+            inRange={!outOfRange}
+            ticksAtLimit={ticksAtLimit}
+            title={'Selected Range'}
+          />
+        ) : null}
       </AutoColumn>
     </Wrapper>
   )
