@@ -444,7 +444,8 @@ export default function AddLiquidity({
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
   // flag for whether pool creation must be a separate tx
-  const mustCreateSeparately = noLiquidity && chainId === SupportedChainId.OPTIMISTIC_KOVAN
+  const mustCreateSeparately =
+    noLiquidity && (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN)
 
   return (
     <>

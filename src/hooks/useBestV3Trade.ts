@@ -17,6 +17,7 @@ export enum V3TradeState {
 }
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
+  [SupportedChainId.OPTIMISM]: 6_000_000,
   [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
 }
 
