@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-08 14:05\n"
+"PO-Revision-Date: 2021-07-08 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -49,7 +49,7 @@ msgstr "(очистить всё)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(редактировать)"
+msgstr "(изменить)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -679,7 +679,7 @@ msgstr "Заработанные токены UNI представляют со�
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "Редактировать"
+msgstr "Изменить"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -894,7 +894,7 @@ msgstr "Узнать больше"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
-msgstr "Учить больше"
+msgstr "Узнать больше"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1124,7 +1124,7 @@ msgstr "Участвующие пулы"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
-msgstr "В ожидании"
+msgstr "Ожидает"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1331,7 +1331,7 @@ msgstr "Найдите по имени или вставьте адрес"
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Выбрать токен"
+msgstr "Выберите токен"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1421,7 +1421,7 @@ msgstr "Отправка голоса"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr "Удалось"
+msgstr "Успешно"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1450,7 +1450,7 @@ msgstr "Идет обмен {0} {1} на {2} {3}"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Switch to Ethereum"
-msgstr "Перейти на Ethereum"
+msgstr "Переключиться на Ethereum"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1510,7 +1510,7 @@ msgstr "Это альфа-версия Uniswap в сети {0}"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Это альфа-версия Uniswap в сети {0}. Вам нужно перенести активы 1-го уровня в эту сеть через мост, чтобы обменивать их."
+msgstr "Это альфа-версия Uniswap в сети {0}. Вам нужно перенести L1-активы в эту сеть через мост, чтобы обменивать их."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1643,7 +1643,7 @@ msgstr "Невостребовано:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
-msgstr "Неопределенный"
+msgstr "Не определено"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
@@ -1659,7 +1659,7 @@ msgstr "Uniswap доступен на языке <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Управление Uniswap доступно только на 1-м уровне. Переключите свою сеть на основную сеть Ethereum, чтобы просматривать предложения и голосовать."
+msgstr "Управление Uniswap доступно только на 1-м уровне. Переключитесь на основную сеть Ethereum, чтобы просматривать предложения и голосовать."
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1671,7 +1671,7 @@ msgstr "Контракт переноса Uniswap ↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Uniswap on {0}"
-msgstr "Uniswap на {0}"
+msgstr "Uniswap в {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1810,7 +1810,7 @@ msgstr "Ожидание подтверждения"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
-msgstr "Адрес кошелька или имя ENS"
+msgstr "Адрес кошелька или ENS-имя"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -1897,7 +1897,7 @@ msgstr "У вас пока нет ликвидности в этом пуле."
 
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to swap them."
-msgstr "Вы должны подключить ресурсы L1 к сети, чтобы поменять их местами."
+msgstr "Вам нужно перенести L1-активы в эту сеть через мост, чтобы обменивать их."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1909,7 +1909,7 @@ msgstr "Вы должны дать разрешение смарт-контра�
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr "У вас должно быть {formattedProposalThreshold} голосов, чтобы внести предложение"
+msgstr "У вас должно быть {formattedProposalThreshold} голосов, чтобы вносить предложения"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -2064,7 +2064,7 @@ msgstr "{0} <0/> за <1/>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "{0} Bridge"
-msgstr "{0} Мост"
+msgstr "Мост {0}"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -2081,7 +2081,7 @@ msgstr "{0} ETH"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "{0} Explorer"
-msgstr "{0} Исследователь"
+msgstr "Обозреватель {0}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2167,11 +2167,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}комиссии 0%"
+msgstr "Уровень комиссии {0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}% выбрать"
+msgstr "Выбирают {0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
