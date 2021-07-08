@@ -197,7 +197,12 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   // RigoBlock note: protocol handles approvals, approval is true
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const {
+    state: signatureState,
+    signatureData,
+    gatherPermitSignature,
+  } = useERC20PermitFromTrade(trade, allowedSlippage)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -225,7 +230,7 @@ export default function Swap({ history }: RouteComponentProps) {
     /*if (approval === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }*/
-  }, [approval, approvalSubmitted])
+  }, [approvalState, approvalSubmitted])
 
   // TODO: must check drago balances instead of user balances
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
