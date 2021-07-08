@@ -21,11 +21,11 @@ Use your best judgment when applying these standards.  If code is in the critica
 makes large architectural changes, consider following all the standards.
 
 - Have at least one engineer approve of large code refactorings
-- At least manually test small code changes
+- At least manually test small code changes, prefer automated tests
 - Thoroughly unit test when code is not obviously correct
 - Add integration tests for new pages or flows
-- Verify that all CI checks pass (or failed only due to flakiness) before merging
-- Have at least one product manager or designer approve of significant product or UX changes
+- Verify that all CI checks pass before merging
+- Have at least one product manager or designer approve of significant UX changes
 
 ## Guidelines
 
@@ -38,7 +38,9 @@ The following points should help guide your development:
   - The build must be deterministic, i.e. a particular commit hash always produces the same build
 - Decentralization: anyone can run the interface
   - An Ethereum node should be the only critical dependency 
-  - All other dependencies should only enhance the UX and [gracefully degrade](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation)
+  - All other external dependencies should only enhance the UX ([graceful degradation](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation))
+- Accessibility: anyone can use the interface
+  - The interface should be responsive and run well on low performance devices
 
 ## Finding a first issue
 
