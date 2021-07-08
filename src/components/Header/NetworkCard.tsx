@@ -189,17 +189,18 @@ export default function NetworkCard() {
 
   if (L2_CHAIN_IDS.includes(chainId)) {
     const info = L2_INFO[chainId]
-    let bridgeText, explorerText
+    let BridgeText, ExplorerText
     switch (chainId) {
       case SupportedChainId.ARBITRUM_ONE:
       case SupportedChainId.ARBITRUM_RINKEBY:
-        bridgeText = t`${NETWORK_LABELS[chainId]} Bridge`
-        explorerText = t`${NETWORK_LABELS[chainId]} Explorer`
+        BridgeText = () => <Trans>{NETWORK_LABELS[chainId]} Bridge</Trans>
+        ExplorerText = () => <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
         break
       case SupportedChainId.OPTIMISM:
       case SupportedChainId.OPTIMISTIC_KOVAN:
-        bridgeText = t`Gateway`
-        explorerText = t`Optimistic Etherscan`
+      default:
+        BridgeText = () => <Trans>Gateway</Trans>
+        ExplorerText = () => <Trans>Optimistic Etherscan</Trans>
         break
     }
     return (
@@ -212,11 +213,13 @@ export default function NetworkCard() {
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>{bridgeText}</div>
+              <div>
+                <BridgeText />
+              </div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              <div>{explorerText}</div>
+              <ExplorerText />
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>
