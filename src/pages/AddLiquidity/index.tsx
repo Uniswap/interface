@@ -596,13 +596,13 @@ export default function AddLiquidity({
                           }}
                         >
                           <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
-                            <AlertCircle color={theme.blue2} size={30} />
+                            <AlertCircle color={theme.primaryText1} size={30} />
                           </div>
                           <TYPE.body
                             fontSize={14}
                             style={{ marginBottom: 8, fontWeight: 500 }}
                             textAlign="center"
-                            color={theme.blue2}
+                            color={theme.primaryText1}
                           >
                             <Trans>
                               You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
