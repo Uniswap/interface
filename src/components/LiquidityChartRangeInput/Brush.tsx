@@ -37,6 +37,7 @@ const Tooltip = styled.text`
   fill: ${({ theme }) => theme.text1};
 `
 
+// flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20
 
 export const Brush = ({
