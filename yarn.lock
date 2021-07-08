@@ -3268,15 +3268,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@ledgerhq/devices@npm:6.0.2"
+"@ledgerhq/devices@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@ledgerhq/devices@npm:6.1.0"
   dependencies:
     "@ledgerhq/errors": ^6.0.2
     "@ledgerhq/logs": ^6.0.2
     rxjs: 6
     semver: ^7.3.5
-  checksum: c009f425e4b4b6bc10f5fb3a2623597530643516e5393f8acdfc83ddb4735204d6a76dd79a08e33b688d09f715695876bf782bbe56793c9b196e5f05ff15a71f
+  checksum: 76cff457cc9650e340c90cecad07beffbd8e54f8684da1418f8f26e2c9cb24400084c21665769880f5c0ef0aa095a2638d569e40514f06eac4d11d7b15479324
   languageName: node
   linkType: hard
 
@@ -3316,15 +3316,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport-webusb@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@ledgerhq/hw-transport-webusb@npm:6.0.2"
+"@ledgerhq/hw-transport-webusb@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@ledgerhq/hw-transport-webusb@npm:6.1.0"
   dependencies:
-    "@ledgerhq/devices": ^6.0.2
+    "@ledgerhq/devices": ^6.1.0
     "@ledgerhq/errors": ^6.0.2
-    "@ledgerhq/hw-transport": ^6.0.2
+    "@ledgerhq/hw-transport": ^6.1.0
     "@ledgerhq/logs": ^6.0.2
-  checksum: ee700857e660d2c35e7f9663a973e5aeb62507cd277aa9a4423a1a1d96957c6bb544b0f33a02c09e1f1fc2a482458e6b34a13e4c7b047472ebe538a35a997662
+  checksum: 648810ad06558c771b1ddb321098dd8dc19c04048551c2c968faa355bb50d75846dd5f8833f29b241da850d5efad73c81782c923ec1f12a710190c053a1e7208
   languageName: node
   linkType: hard
 
@@ -3339,14 +3339,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "@ledgerhq/hw-transport@npm:6.0.2"
+"@ledgerhq/hw-transport@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@ledgerhq/hw-transport@npm:6.1.0"
   dependencies:
-    "@ledgerhq/devices": ^6.0.2
+    "@ledgerhq/devices": ^6.1.0
     "@ledgerhq/errors": ^6.0.2
     events: ^3.3.0
-  checksum: cea207b2ba43f49bf2450ed2aa53862c269c64f293e6e522152e3276ec89b1c6018da64abde1293eec27f8076a98425318c80643d1d3732f089f35749c670f72
+  checksum: 3e92ed048f409a5a3935155f18a7b407aea7de4638335d9eac14f3d65bd9623a3054238cf861fa0eaf5d437b43684141a4892b9b6cb7392ca47f5aa8f98415cc
   languageName: node
   linkType: hard
 
@@ -5109,7 +5109,7 @@ __metadata:
     "@ethersproject/strings": ^5.3.0
     "@ethersproject/units": ^5.3.0
     "@ledgerhq/errors": ^6.0.2
-    "@ledgerhq/hw-transport-webusb": ^6.0.2
+    "@ledgerhq/hw-transport-webusb": ^6.1.0
     "@pedrouid/environment": ^1.0.1
     "@popperjs/core": ^2.9.2
     "@reach/dialog": ^0.15.0
