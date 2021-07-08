@@ -18,7 +18,6 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import ReactGA from 'react-ga'
 
 const ChartWrapper = styled.div`
-  display: grid;
   position: relative;
 
   justify-content: center;
