@@ -5170,6 +5170,7 @@ __metadata:
     i18next-browser-languagedetector: ^6.1.1
     i18next-xhr-backend: ^3.2.2
     jazzicon: ^1.5.0
+    jsbi: ^3.1.5
     lint-staged: ">=11"
     lodash: ^4.17.21
     lodash.flatmap: ^4.5.0
@@ -13755,6 +13756,13 @@ fsevents@~2.1.2:
   version: 3.1.4
   resolution: "jsbi@npm:3.1.4"
   checksum: 8e8e03bbdde1023f7580ce3b9afeafe1b25a294a0efd2519f829eb9b0e141eda5344e31de5aa204932fa758ad3ebd5cdfe16071ff68ad685523340056ed1a48e
+  languageName: node
+  linkType: hard
+
+"jsbi@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "jsbi@npm:3.1.5"
+  checksum: f7716254f7ce1adf643e5b920f76332e55421f0262642b43a087294cdf1bed2ad44d2793a79a5037385d73edc3eac6329720acf91dd5ef3f33e5d2e8b7e5cdbb
   languageName: node
   linkType: hard
 

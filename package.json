@@ -146,6 +146,7 @@
     "bignumber.js": "^9.0.1",
     "eventemitter3": "^4.0.7",
     "hash.js": "^1.1.7",
+    "jsbi": "^3.1.5",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "randombytes": "^2.1.0",

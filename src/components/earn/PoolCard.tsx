@@ -81,7 +81,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
   const apyFraction =
-    stakingInfo.active && valueOfTotalStakedAmountInCUSD
+    stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
       ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
@@ -89,9 +89,18 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const dpy = apy
     ? new Percent(Math.floor(parseFloat(apy.divide('365').toFixed(10)) * 1_000_000).toFixed(0), '1000000')
     : undefined
-  const weeklyAPY = apy
-    ? new Percent(Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000).toFixed(0), '1000000')
-    : undefined
+
+  let weeklyAPY: React.ReactNode | undefined = <>🤯</>
+  try {
+    weeklyAPY = apy
+      ? new Percent(
+          Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000).toFixed(0),
+          '1000000'
+        ).toFixed(0, { groupSeparator: ',' })
+      : undefined
+  } catch (e) {
+    console.error('Weekly apy overflow', e)
+  }
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -148,11 +157,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                 text={
                   <>
                     Yield/day: {dpy?.toSignificant(4)}%<br />
-                    Weekly APY:{' '}
-                    {weeklyAPY?.toFixed(0, {
-                      groupSeparator: ',',
-                    })}
-                    %
+                    APY (weekly compounded): {weeklyAPY}%
                   </>
                 }
               />

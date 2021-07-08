@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '@sentry/react'
 import { JSBI } from '@ubeswap/sdk'
 import { partition } from 'lodash'
 import React, { useMemo } from 'react'
@@ -101,7 +102,9 @@ export default function Earn() {
 
           <PoolSection>
             {stakedPools.map((pool) => (
-              <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />
+              <ErrorBoundary key={pool.stakingRewardAddress}>
+                <PoolCard stakingInfo={pool} />
+              </ErrorBoundary>
             ))}
           </PoolSection>
         </AutoColumn>
@@ -126,7 +129,11 @@ export default function Earn() {
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : (
-            activePools?.map((pool) => <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />)
+            activePools?.map((pool) => (
+              <ErrorBoundary key={pool.stakingRewardAddress}>
+                <PoolCard stakingInfo={pool} />
+              </ErrorBoundary>
+            ))
           )}
         </PoolSection>
       </AutoColumn>
@@ -140,7 +147,9 @@ export default function Earn() {
 
           <PoolSection>
             {inactivePools.map((pool) => (
-              <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />
+              <ErrorBoundary key={pool.stakingRewardAddress}>
+                <PoolCard stakingInfo={pool} />
+              </ErrorBoundary>
             ))}
           </PoolSection>
         </AutoColumn>
