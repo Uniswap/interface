@@ -68,7 +68,7 @@ export function Chart({
         innerHeight={innerHeight}
         showClear={Boolean(zoom && zoom.k !== 1)}
       />
-      <svg ref={svgRef} style={{ overflow: 'visible' }} width={width} height={height}>
+      <svg ref={svgRef} width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width={innerWidth} height={height} />
