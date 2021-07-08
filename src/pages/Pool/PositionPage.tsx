@@ -285,13 +285,19 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
   )
 }
 
-const useInverter = (
-  priceLower?: Price<Token, Token>,
-  priceUpper?: Price<Token, Token>,
-  quote?: Token,
-  base?: Token,
+const useInverter = ({
+  priceLower,
+  priceUpper,
+  quote,
+  base,
+  invert,
+}: {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
   invert?: boolean
-): {
+}): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token
@@ -354,13 +360,13 @@ export function PositionPage({
   const [manuallyInverted, setManuallyInverted] = useState(false)
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter(
-    pricesFromPosition.priceUpper,
-    pricesFromPosition.priceLower,
-    pricesFromPosition.quote,
-    pricesFromPosition.base,
-    manuallyInverted
-  )
+  const { priceLower, priceUpper, base } = useInverter({
+    priceLower: pricesFromPosition.priceLower,
+    priceUpper: pricesFromPosition.priceUpper,
+    quote: pricesFromPosition.quote,
+    base: pricesFromPosition.base,
+    invert: manuallyInverted,
+  })
 
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
