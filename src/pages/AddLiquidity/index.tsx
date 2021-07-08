@@ -47,8 +47,8 @@ import {
   StackedContainer,
   StackedItem,
   RightContainer,
-  TwoColumnButtonContainer,
-  SingleColumnButtonContainer,
+  MediumOnly,
+  HideMedium,
 } from './styled'
 import { Trans, t } from '@lingui/macro'
 import {
@@ -513,11 +513,13 @@ export default function AddLiquidity({
           >
             {!hasExistingPosition && (
               <Row justifyContent="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
-                <ButtonText onClick={clearAll} margin="0 10px">
-                  <TYPE.blue fontSize="12px">
-                    <Trans>Clear All</Trans>
-                  </TYPE.blue>
-                </ButtonText>
+                <MediumOnly>
+                  <ButtonText onClick={clearAll} margin="0 15px 0 0">
+                    <TYPE.blue fontSize="12px">
+                      <Trans>Clear All</Trans>
+                    </TYPE.blue>
+                  </ButtonText>
+                </MediumOnly>
                 {baseCurrency && quoteCurrency ? (
                   <RateToggle
                     currencyA={baseCurrency}
@@ -665,9 +667,9 @@ export default function AddLiquidity({
 
               {!hasExistingPosition ? (
                 <>
-                  <SingleColumnButtonContainer>
+                  <HideMedium>
                     <Buttons />
-                  </SingleColumnButtonContainer>
+                  </HideMedium>
                   <RightContainer gap="lg">
                     <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                       <RowBetween>
@@ -881,9 +883,9 @@ export default function AddLiquidity({
                       ) : null}
                     </DynamicSection>
 
-                    <TwoColumnButtonContainer>
+                    <MediumOnly>
                       <Buttons />
-                    </TwoColumnButtonContainer>
+                    </MediumOnly>
                   </RightContainer>
                 </>
               ) : (

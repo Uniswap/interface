@@ -14,6 +14,7 @@ import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 import { ReactNode } from 'react'
+import { Box } from 'rebass'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -149,7 +150,7 @@ export function AddRemoveTabs({
             <Trans>Remove Liquidity</Trans>
           )}
         </TYPE.mediumHeader>
-        {children}
+        <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
     </Tabs>

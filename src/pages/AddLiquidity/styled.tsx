@@ -93,14 +93,15 @@ export const StackedItem = styled.div<{ zIndex?: number }>`
   z-index: ${({ zIndex }) => zIndex};
 `
 
-export const TwoColumnButtonContainer = styled.div`
+export const MediumOnly = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
 `
 
-export const SingleColumnButtonContainer = styled.div`
+export const HideMedium = styled.div`
   display: none;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
