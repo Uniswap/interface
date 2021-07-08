@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 23:41+0000\n"
+"POT-Creation-Date: 2021-07-08 16:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-08 00:06\n"
+"PO-Revision-Date: 2021-07-08 17:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -534,6 +534,10 @@ msgstr "コピーしました"
 msgid "Copy Address"
 msgstr "アドレスをコピー"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create"
+msgstr "作成する"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "プール作成と流動性の追加"
@@ -563,6 +567,10 @@ msgstr "プールを作成し、 {0}/{1} のV3流動性を追加"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "プールを作成"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "作成 {0}/{1} V3プール"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
