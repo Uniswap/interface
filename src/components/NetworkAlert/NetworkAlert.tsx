@@ -6,7 +6,7 @@ import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
-import { MEDIA_WIDTHS, TYPE } from 'theme'
+import { MEDIA_WIDTHS } from 'theme'
 import { L2_INFO } from '../../constants/chains'
 
 const L2Icon = styled.img`
