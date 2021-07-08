@@ -25,6 +25,8 @@ async function fetchChunk(
   minBlockNumber: number
 ): Promise<{
   results: { success: boolean; returnData: string }[]
+  // note we are not using this returned block number because layer 2 multicalls do not consistently return the L2 block number
+  // instead we are relying on the blockTag parameter and assume the returned data is at least as new as that block number
   blockNumber: number
 }> {
   console.debug('Fetching chunk', chunk, minBlockNumber)
@@ -188,7 +190,7 @@ export default function Updater(): null {
           maxWait: 2500,
         })
         promise
-          .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
+          .then(({ results: returnData }) => {
             // accumulates the length of all previous indices
             const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
             const lastCallKeyIndex = firstCallKeyIndex + returnData.length
@@ -217,7 +219,7 @@ export default function Updater(): null {
                 updateMulticallResults({
                   chainId,
                   results,
-                  blockNumber: fetchBlockNumber,
+                  blockNumber: latestBlockNumber,
                 })
               )
 
@@ -228,7 +230,7 @@ export default function Updater(): null {
                 errorFetchingMulticallResults({
                   calls: erroredCalls,
                   chainId,
-                  fetchingBlockNumber: fetchBlockNumber,
+                  fetchingBlockNumber: latestBlockNumber,
                 })
               )
             }
