@@ -124,11 +124,6 @@ export default function LiquidityChartRangeInput({
       category: 'Liquidity',
       fatal: false,
     })
-
-    if (error?.name === 'UnsupportedChainId') {
-      // do not show the chart container when the chain is not supported
-      return null
-    }
   }
 
   return (
@@ -142,12 +137,12 @@ export default function LiquidityChartRangeInput({
         <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
       ) : isError ? (
         <InfoBox
-          message={<Trans>Subgraph data not available</Trans>}
+          message={<Trans>Liquidity data not available.</Trans>}
           icon={<CloudOff size={56} stroke={theme.text4} />}
         />
       ) : !formattedData || formattedData === [] || !price ? (
         <InfoBox
-          message={<Trans>There is no liquidity data</Trans>}
+          message={<Trans>There is no liquidity data.</Trans>}
           icon={<BarChart2 size={56} stroke={theme.text4} />}
         />
       ) : (
@@ -155,7 +150,7 @@ export default function LiquidityChartRangeInput({
           <Chart
             data={{ series: formattedData, current: price }}
             dimensions={{ width: 400, height: 200 }}
-            margins={{ top: 10, right: 2, bottom: 30, left: 0 }}
+            margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
                 selection: theme.blue1,

@@ -173,7 +173,7 @@ export default function FeeSelector({
               onClick={() => handleFeePoolSelectWithEvent(FeeAmount.LOW)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start" gap="4px">
+                <AutoColumn justify="flex-start" gap="6px">
                   <ResponsiveText>
                     <Trans>0.05% fee</Trans>
                   </ResponsiveText>

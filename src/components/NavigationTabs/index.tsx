@@ -50,6 +50,15 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
+const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
+  flex: ${({ flex }) => flex ?? 'none'};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex: none;
+    margin-right: 10px;
+  `};
+`
+
 const ActiveText = styled.div`
   font-weight: 500;
   font-size: 20px;
@@ -98,6 +107,7 @@ export function AddRemoveTabs({
   creating: boolean
   defaultSlippage: Percent
   positionID?: string | undefined
+  showBackLink?: boolean
   children?: ReactNode | undefined
 }) {
   const theme = useTheme()
@@ -113,7 +123,7 @@ export function AddRemoveTabs({
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink
+        <StyledHistoryLink
           to={poolLink}
           onClick={() => {
             if (adding) {
@@ -122,10 +132,10 @@ export function AddRemoveTabs({
               dispatch(resetMintV3State())
             }
           }}
-          style={children ? { flex: '1' } : {}}
+          flex={children ? '1' : undefined}
         >
           <StyledArrowLeft stroke={theme.text2} />
-        </HistoryLink>
+        </StyledHistoryLink>
         <TYPE.mediumHeader
           fontWeight={500}
           fontSize={20}

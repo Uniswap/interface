@@ -5,8 +5,10 @@ import Input from 'components/NumericalInput'
 import { BodyWrapper } from 'pages/AppBody'
 
 export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
-  max-width: ${({ wide }) => (wide ? '870px' : '480px')};
+  max-width: ${({ wide }) => (wide ? '880px' : '480px')};
   width: 100%;
+
+  padding: ${({ wide }) => (wide ? '10px' : '0')};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 480px;
@@ -52,23 +54,20 @@ export const StyledInput = styled(Input)`
 /* two-column layout where DepositAmount is moved at the very end on mobile. */
 export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   display: grid;
-  grid-gap: 50px;
+  grid-column-gap: 50px;
+  grid-row-gap: 15px;
   grid-template-columns: ${({ wide }) => (wide ? '1fr 1fr' : '1fr')};
   grid-template-rows: max-content;
   grid-auto-flow: row;
 
+  padding-top: 1rem;
+
+  border-top: 1px solid ${({ theme }) => theme.bg2};
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-  `};
-`
 
-export const DepositAmountsContainer = styled.div`
-  grid-column: 1;
-  grid-row: 2 / 3;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  grid-column: 1;
-  grid-row: 3 / 4;
+    margin-top: 0;
   `};
 `
 

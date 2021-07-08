@@ -20,8 +20,8 @@ const Button = styled(ButtonGray)`
     color: ${({ theme }) => theme.text1};
   }
 
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 4px;
 `
 
@@ -91,14 +91,14 @@ export default function Zoom({
     <Wrapper count={showClear ? 3 : 2}>
       {showClear && (
         <Button onClick={reset} disabled={false}>
-          <RefreshCcw size={14} />
+          <RefreshCcw size={16} />
         </Button>
       )}
       <Button onClick={zoomIn} disabled={false}>
-        <ZoomIn size={14} />
+        <ZoomIn size={16} />
       </Button>
       <Button onClick={zoomOut} disabled={false}>
-        <ZoomOut size={14} />
+        <ZoomOut size={16} />
       </Button>
     </Wrapper>
   )
