@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
 import { Price, Token, Percent } from '@uniswap/sdk-core'
-import { formatPrice } from 'utils/formatCurrencyAmount'
+import { formatTickPrice } from 'utils/formatTickPrice'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -17,6 +17,8 @@ import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
 import { DAI, USDC, USDT, WBTC, WETH9_EXTENDED } from '../../constants/tokens'
 import { Trans } from '@lingui/macro'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { Bound } from 'state/mint/v3/actions'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -201,6 +203,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
+  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+
   // prices
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
 
@@ -239,8 +243,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Min: </Trans>
             </ExtentsText>
             <Trans>
-              {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText text={currencyBase?.symbol ?? ''} />
+              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
+              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
           <HideSmall>
@@ -254,8 +258,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Max:</Trans>
             </ExtentsText>
             <Trans>
-              {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
+              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>
