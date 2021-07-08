@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 23:41+0000\n"
+"POT-Creation-Date: 2021-07-08 16:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-07-08 00:06\n"
+"PO-Revision-Date: 2021-07-08 17:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -534,6 +534,10 @@ msgstr "Kopieret"
 msgid "Copy Address"
 msgstr "Kopiér adresse"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create"
+msgstr "skab"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Opret pulje og forsyning"
@@ -563,6 +567,10 @@ msgstr "Opret pulje, og tilføj {0}/{1} V3-likviditet"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Opret pulje."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "Opret {0}/{1} V3 pool"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"

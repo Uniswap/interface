@@ -4,6 +4,8 @@ const EXPLORER_HOSTNAMES: { [hostname: string]: true } = {
   'rinkeby.etherscan.io': true,
   'kovan.etherscan.io': true,
   'goerli.etherscan.io': true,
+  'optimistic.etherscan.io': true,
+  'kovan-optimistic.etherscan.io': true,
   'rinkeby-explorer.arbitrum.io': true,
   'explorer.arbitrum.io': true,
 }
