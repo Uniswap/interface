@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 23:41+0000\n"
+"POT-Creation-Date: 2021-07-08 16:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-07-08 00:06\n"
+"PO-Revision-Date: 2021-07-08 17:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -534,6 +534,10 @@ msgstr "Copiado"
 msgid "Copy Address"
 msgstr "Copiar dirección"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create"
+msgstr "Crear"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Limpiar fondo común y suministro"
@@ -563,6 +567,10 @@ msgstr "Crear un fondo común y sumar {0}/{1} liquidez V3"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Crear fondo común."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create {0}/{1} V3 pool"
+msgstr "Crear {0}/{1} piscina V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
