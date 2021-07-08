@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-08 16:47+0000\n"
+"POT-Creation-Date: 2021-07-08 18:32+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-08 17:12\n"
+"PO-Revision-Date: 2021-07-08 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -51,17 +51,13 @@ msgstr "(すべてクリア)"
 msgid "(edit)"
 msgstr "(編集)"
 
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "+{feeAmountFormatted}%"
-msgstr "+{feeAmountFormatted}%"
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "+/- {label}%"
+msgstr "+/- {label}％"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
 msgstr "- 送信を削除"
-
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "-{feeAmountFormatted}%"
-msgstr "-{feeAmountFormatted}%"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -111,6 +107,10 @@ msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
 msgid "<0>Back to </0>V3"
 msgstr "V3に<0>戻る</0>"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0>現在の価格：</0> <1> <2 /></1> <3>{0} あたり {1}</3>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>ヒント:</0> 流動性トークンを削除すると、プールのシェアに比例して現在の価格で元のトークンに戻ります。発生した報酬は受け取るトークンに含まれます。"
@@ -158,7 +158,6 @@ msgstr "アクティブ"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "追加"
 
@@ -177,6 +176,10 @@ msgstr "V2の流動性を追加"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "流動性を追加"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "流動性を追加する"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -572,10 +575,6 @@ msgstr "プールを作成"
 msgid "Create {0}/{1} V3 pool"
 msgstr "作成 {0}/{1} V3プール"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Current Price"
-msgstr "現在価格"
-
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
@@ -689,6 +688,10 @@ msgstr "保有するUNIトークンは、Uniswapのガバナンスにおける�
 msgid "Edit"
 msgstr "編集"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "効率の比較"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "パーセントを入力してください"
@@ -786,6 +789,10 @@ msgstr "売るトークン"
 msgid "From (at most)"
 msgstr "（最大）売るトークン"
 
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "フルレンジ"
+
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Discordでサポートを受ける"
@@ -798,6 +805,10 @@ msgstr "非表示"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "I Understand"
+msgstr "わかります"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -912,6 +923,10 @@ msgstr "流動性"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
 msgstr "流動性プロバイダー手数料"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "流動性データはありません。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1093,6 +1108,10 @@ msgstr "OFF"
 msgid "On"
 msgstr "ON"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
+msgstr "Uniswap V3では、V2のようにすべての価格に範囲を設定することは、集中型よりも資本効率が低くなります。詳細はこちら<0></0> 。"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "価格に問題がなければ、「追加」をクリックして確認します。"
@@ -1182,6 +1201,10 @@ msgstr "プールしている {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "プールの概要"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "プレビュー"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1333,6 +1356,10 @@ msgstr "取引ルート"
 msgid "Search name or paste address"
 msgstr "トークン名またはアドレス"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "ペアを選択"
+
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1350,10 +1377,6 @@ msgid "Select an action"
 msgstr "アクションの選択"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Select pair"
-msgstr "ペアを選択"
-
-#: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "設定した価格範囲"
 
@@ -1365,7 +1388,6 @@ msgstr "自分"
 msgid "Self Delegate"
 msgstr "自己委任する"
 
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
 msgstr "価格範囲を設定"
@@ -1373,6 +1395,10 @@ msgstr "価格範囲を設定"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "開始価格を設定"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Set your Price Range"
+msgstr "価格帯を設定する"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1410,10 +1436,6 @@ msgstr "何らかの問題が発生しました"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "ステップ1. UNI-V2流動性トークンを入手"
-
-#: src/components/LiquidityChartRangeInput/index.tsx
-msgid "Subgraph data not available"
-msgstr "サブグラフデータは利用できません"
 
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
@@ -1505,8 +1527,8 @@ msgid "The transaction could not be sent because the deadline has passed. Please
 msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短すぎないかご確認ください。"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
-msgid "There is no liquidity data"
-msgstr "流動性データはありません"
+msgid "There is no liquidity data."
+msgstr "流動性データはありません。"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1883,6 +1905,10 @@ msgstr "プールを作成しています"
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "あなたはUniswap V3プールの最初の流動性提供者です。流動性は現在の {0} での価格で移行されます。"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "あなたはこのUniswapV3プールの最初の流動性プロバイダーです。プールを作成するためのガスが含まれているため、取引コストははるかに高くなります。"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
 msgstr "あなたは最初の流動性プロバイダーです。"
@@ -1947,10 +1973,6 @@ msgstr "V3の流動性ポジションはこちらに表示されます。"
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
 msgstr "預け入れた流動性"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "流動性は、設定する価格範囲にペアの市場価格が入っている場合のみ報酬を獲得します。 価格帯の設定ガイドは<0>こちら</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2059,6 +2081,11 @@ msgstr "{0} トークンリストから"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {トークンをインポート} other {トークンをインポート}}"
 
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2133,7 +2160,6 @@ msgstr "{0} の投票"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -2141,11 +2167,6 @@ msgstr "{0} の投票"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
 msgstr "{0} / {1}"
-
-#: src/components/RateToggle/index.tsx
-#: src/components/RateToggle/index.tsx
-msgid "{0} price"
-msgstr "{0} 価格"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-08 16:47+0000\n"
+"POT-Creation-Date: 2021-07-08 18:32+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-07-08 17:12\n"
+"PO-Revision-Date: 2021-07-08 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -51,17 +51,13 @@ msgstr "(alles wissen)"
 msgid "(edit)"
 msgstr "(bewerken)"
 
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "+{feeAmountFormatted}%"
-msgstr "+{feeAmountFormatted}%"
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "+/- {label}%"
+msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
 msgstr "- Verzenden verwijderen"
-
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "-{feeAmountFormatted}%"
-msgstr "-{feeAmountFormatted}%"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -111,6 +107,10 @@ msgstr "<0>Account analyse en opgebouwde vergoedingen </0><1>↗ </1>"
 msgid "<0>Back to </0>V3"
 msgstr "<0>Terug naar</0> V3"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0>Huidige prijs:</0> <1><2/></1> <3>{0} per {1}</3>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
 msgstr "<0>Tip:</0> Het verwijderen van pool tokens zet uw positie weer om in onderliggende tokens tegen de huidige koers, in verhouding tot uw aandeel in de pool. Opgebouwde kosten zijn inbegrepen in de bedragen die u ontvangt."
@@ -158,7 +158,6 @@ msgstr "Actief"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Toevoegen"
 
@@ -177,6 +176,10 @@ msgstr "V2 Liquiditeit toevoegen"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Voeg liquiditeit toe."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "Voeg meer liquiditeit toe"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -572,10 +575,6 @@ msgstr "Maak een pool aan."
 msgid "Create {0}/{1} V3 pool"
 msgstr "Maak {0}/{1} V3 pool"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Current Price"
-msgstr "Huidige prijs"
-
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
@@ -689,6 +688,10 @@ msgstr "Verdiende UNI-tokens vertegenwoordigen stemgerechtigde aandelen in Unisw
 msgid "Edit"
 msgstr "Bewerk"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "Efficiëntie vergelijking:"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Voer een percentage in"
@@ -786,6 +789,10 @@ msgstr "Vanaf"
 msgid "From (at most)"
 msgstr "Vanaf (ten hoogste)"
 
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "Volledig bereik"
+
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Ontvang ondersteuning op Discord"
@@ -798,6 +805,10 @@ msgstr "Zich verstoppen"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoge prijsimpact"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "I Understand"
+msgstr "Ik begrijp het"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -912,6 +923,10 @@ msgstr "Liquiditeit"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
 msgstr "Vergoeding voor liquiditeitsverschaffer"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "Liquiditeitsgegevens niet beschikbaar."
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1093,6 +1108,10 @@ msgstr "Uit"
 msgid "On"
 msgstr "Aan"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
+msgstr "Op Uniswap V3 is het instellen van een bereik voor alle prijzen zoals V2 minder kapitaalefficiënt dan een geconcentreerde. Lees <0>hier meer</0> ."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Zodra u tevreden bent met het tarief, klikt u op het aanbod om te beoordelen."
@@ -1182,6 +1201,10 @@ msgstr "Gepoold {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Pools overzicht"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "Voorbeeld"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1333,6 +1356,10 @@ msgstr "Route"
 msgid "Search name or paste address"
 msgstr "Zoek naam of plak adres"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "Selecteer Koppel"
+
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1350,10 +1377,6 @@ msgid "Select an action"
 msgstr "Selecteer een actie"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Select pair"
-msgstr "Selecteer paar"
-
-#: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Geselecteerd bereik"
 
@@ -1365,7 +1388,6 @@ msgstr "Eigen"
 msgid "Self Delegate"
 msgstr "Zelf gedelegeerd"
 
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
 msgstr "Stel prijsbereik in"
@@ -1373,6 +1395,10 @@ msgstr "Stel prijsbereik in"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "Stel startprijs in"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Set your Price Range"
+msgstr "Stel uw prijsklasse in"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1410,10 +1436,6 @@ msgstr "Er is iets fout gegaan"
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Stap 1. Verkrijg UNI-V2 liquiditeitstokens"
-
-#: src/components/LiquidityChartRangeInput/index.tsx
-msgid "Subgraph data not available"
-msgstr "Subgraafgegevens niet beschikbaar"
 
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
@@ -1505,8 +1527,8 @@ msgid "The transaction could not be sent because the deadline has passed. Please
 msgstr "De transactie kan niet worden verzonden omdat de deadline is verstreken. Controleer of uw transactiedeadline niet te laag is."
 
 #: src/components/LiquidityChartRangeInput/index.tsx
-msgid "There is no liquidity data"
-msgstr "Er zijn geen liquiditeitsgegevens"
+msgid "There is no liquidity data."
+msgstr "Er zijn geen liquiditeitsgegevens."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1883,6 +1905,10 @@ msgstr "U maakt een pool aan"
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "U bent de eerste liquiditeitsaanbieder voor deze Uniswap V3 pool. Uw liquiditeit zal migreren tegen de huidige {0} prijs."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
+msgstr "U bent de eerste liquiditeitsverschaffer voor deze Uniswap V3-pool. De transactiekosten zullen veel hoger zijn omdat het gas om de pool te creëren is inbegrepen."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
 msgstr "U bent de eerste liquiditeitsverschaffer."
@@ -1947,10 +1973,6 @@ msgstr "Uw V3-liquiditeitsposities zullen hier verschijnen."
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
 msgstr "Uw liquiditeitsstortingen"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Uw liquiditeit zal alleen vergoedingen opleveren als de marktprijs van het paar binnen uw bereik ligt. <0> Hulp nodig bij het kiezen van een bereik?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -2059,6 +2081,11 @@ msgstr "via {0} tokenlijst"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Import token} other {Import tokens}}"
 
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2133,7 +2160,6 @@ msgstr "{0} stemmen"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -2141,11 +2167,6 @@ msgstr "{0} stemmen"
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
 msgstr "{0} per {1}"
-
-#: src/components/RateToggle/index.tsx
-#: src/components/RateToggle/index.tsx
-msgid "{0} price"
-msgstr "{0} prijs"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
