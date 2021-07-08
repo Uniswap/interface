@@ -27,7 +27,7 @@ const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
 export const AxisBottom = ({
   xScale,
   innerHeight,
-  offset = 5,
+  offset = 0,
 }: {
   xScale: ScaleLinear<number, number>
   innerHeight: number

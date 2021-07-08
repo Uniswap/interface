@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { ChartEntry } from './types'
 import JSBI from 'jsbi'
 
-// Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {
-  tickIdx: number
   liquidityActive: JSBI
-  liquidityNet: JSBI
   price0: string
 }
 
@@ -22,53 +19,36 @@ export function useDensityChartData({
   currencyB: Currency | undefined
   feeAmount: FeeAmount | undefined
 }) {
-  const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
+  const { isLoading, isUninitialized, isError, error, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount)
 
-  const { isLoading, isUninitialized, isError, error, activeTick, data } = usePoolActiveLiquidity(
-    currencyA,
-    currencyB,
-    feeAmount
-  )
-
-  useEffect(() => {
-    // clear data when inputs are cleared
-    setFormattedData(undefined)
-  }, [currencyA, currencyB, feeAmount])
-
-  useEffect(() => {
-    function formatData() {
-      if (!data?.length) {
-        return
-      }
-
-      const newData: ChartEntry[] = []
-
-      for (let i = 0; i < data.length; i++) {
-        const t: TickProcessed = data[i]
-
-        const chartEntry = {
-          activeLiquidity: parseFloat(t.liquidityActive.toString()),
-          price0: parseFloat(t.price0),
-        }
-
-        newData.push(chartEntry)
-      }
-
-      if (newData) {
-        setFormattedData(newData)
-      }
+  const formatData = useCallback(() => {
+    if (!data?.length) {
+      return undefined
     }
 
-    if (!isLoading) {
-      formatData()
-    }
-  }, [isLoading, activeTick, data])
+    const newData: ChartEntry[] = []
 
-  return {
-    isLoading,
-    isUninitialized,
-    isError,
-    error,
-    formattedData,
-  }
+    for (let i = 0; i < data.length; i++) {
+      const t: TickProcessed = data[i]
+
+      const chartEntry = {
+        activeLiquidity: parseFloat(t.liquidityActive.toString()),
+        price0: parseFloat(t.price0),
+      }
+
+      newData.push(chartEntry)
+    }
+
+    return newData
+  }, [data])
+
+  return useMemo(() => {
+    return {
+      isLoading,
+      isUninitialized,
+      isError,
+      error,
+      formattedData: !isLoading && !isUninitialized ? formatData() : undefined,
+    }
+  }, [isLoading, isUninitialized, isError, error, formatData])
 }

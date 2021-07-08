@@ -37,6 +37,9 @@ const Tooltip = styled.text`
   fill: ${({ theme }) => theme.text1};
 `
 
+// flips the handles draggers when close to the container edges
+const FLIP_HANDLE_THRESHOLD_PX = 20
+
 export const Brush = ({
   id,
   xScale,
@@ -144,8 +147,8 @@ export const Brush = ({
     return () => clearTimeout(timeout)
   }, [localBrushExtent])
 
-  const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > 15
-  const flipEastHandle = localBrushExtent && xScale(localBrushExtent[1]) > innerWidth - 15
+  const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX
+  const flipEastHandle = localBrushExtent && xScale(localBrushExtent[1]) > innerWidth - FLIP_HANDLE_THRESHOLD_PX
 
   return useMemo(
     () => (
