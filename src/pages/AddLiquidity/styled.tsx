@@ -60,7 +60,7 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
   grid-template-rows: max-content;
   grid-auto-flow: row;
 
-  padding-top: 1rem;
+  padding-top: 20px;
 
   border-top: 1px solid ${({ theme }) => theme.bg2};
 

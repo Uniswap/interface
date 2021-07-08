@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 import { useAllV3TicksQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
@@ -52,9 +52,14 @@ export function usePoolActiveLiquidity(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined
-) {
-  const [ticksProcessed, setTicksProcessed] = useState<TickProcessed[]>([])
-
+): {
+  isLoading: boolean
+  isUninitialized: boolean
+  isError: boolean
+  error: any
+  activeTick: number | undefined
+  data: TickProcessed[] | undefined
+} {
   const pool = usePool(currencyA, currencyB, feeAmount)
 
   // Find nearest valid tick for pool in case tick is not initialized.
@@ -62,15 +67,25 @@ export function usePoolActiveLiquidity(
 
   const { isLoading, isUninitialized, isError, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
-  useEffect(() => {
-    // reset local ticks processed
-    setTicksProcessed([])
-  }, [currencyA, currencyB, feeAmount])
-
-  useEffect(() => {
-    if (!currencyA || !currencyB || !activeTick || pool[0] !== PoolState.EXISTS || !ticks || ticks.length === 0) {
-      setTicksProcessed([])
-      return
+  return useMemo(() => {
+    if (
+      !currencyA ||
+      !currencyB ||
+      !activeTick ||
+      pool[0] !== PoolState.EXISTS ||
+      !ticks ||
+      ticks.length === 0 ||
+      isLoading ||
+      isUninitialized
+    ) {
+      return {
+        isLoading: isLoading || pool[0] === PoolState.LOADING,
+        isUninitialized,
+        isError,
+        error,
+        activeTick,
+        data: undefined,
+      }
     }
 
     const token0 = currencyA?.wrapped
@@ -84,7 +99,14 @@ export function usePoolActiveLiquidity(
     if (pivot < 0) {
       // consider setting a local error
       console.error('TickData pivot not found')
-      return
+      return {
+        isLoading,
+        isUninitialized,
+        isError,
+        error,
+        activeTick,
+        data: undefined,
+      }
     }
 
     const activeTickProcessed: TickProcessed = {
@@ -99,17 +121,15 @@ export function usePoolActiveLiquidity(
 
     const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, false)
 
-    const newTicksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
+    const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
-    setTicksProcessed(newTicksProcessed)
-  }, [currencyA, currencyB, activeTick, pool, ticks])
-
-  return {
-    isLoading: isLoading || pool[0] === PoolState.LOADING,
-    isUninitialized,
-    isError: isError,
-    error,
-    activeTick,
-    data: ticksProcessed,
-  }
+    return {
+      isLoading,
+      isUninitialized,
+      isError: isError,
+      error,
+      activeTick,
+      data: ticksProcessed,
+    }
+  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, isUninitialized, isError, error])
 }
