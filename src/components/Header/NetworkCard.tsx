@@ -132,6 +132,7 @@ const ButtonMenuItem = styled.button`
   ${BaseMenuItem}
   border: none;
   box-shadow: none;
+  color: ${({ theme }) => theme.text2};
   outline: none;
   padding-left: 0;
 `

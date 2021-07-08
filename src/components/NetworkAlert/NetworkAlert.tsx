@@ -79,7 +79,8 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
     z-index: -1;
   }
 `
-const Header = styled(TYPE.largeHeader)`
+const Header = styled.h2`
+  font-weight: 600;
   font-size: 20px;
   margin: 0;
   padding-right: 30px;

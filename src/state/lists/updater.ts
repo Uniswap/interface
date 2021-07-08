@@ -6,13 +6,14 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { acceptListUpdate } from './actions'
+import { acceptListUpdate, enableList } from './actions'
 import { useActiveListUrls } from './hooks'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { OPTIMISM_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import { useAppDispatch } from 'state/hooks'
+import { SupportedChainId } from 'constants/chains'
 
 export default function Updater(): null {
-  const { library } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const isWindowVisible = useIsWindowVisible()
 
@@ -27,6 +28,12 @@ export default function Updater(): null {
       fetchList(url).catch((error) => console.debug('interval list fetching error', error))
     )
   }, [fetchList, isWindowVisible, lists])
+
+  useEffect(() => {
+    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)) {
+      dispatch(enableList(OPTIMISM_LIST))
+    }
+  }, [chainId, dispatch])
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
