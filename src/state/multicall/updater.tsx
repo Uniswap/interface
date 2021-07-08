@@ -17,32 +17,23 @@ const DEFAULT_GAS_REQUIRED = 1_000_000
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multicall multicall contract to fetch against
  * @param chunk chunk of calls to make
- * @param minBlockNumber minimum block number of the result set
+ * @param blockNumber block number passed as the block tag in the eth_call
  */
 async function fetchChunk(
   multicall: UniswapInterfaceMulticall,
   chunk: Call[],
-  minBlockNumber: number
-): Promise<{
-  results: { success: boolean; returnData: string }[]
-  // note we are not using this returned block number because layer 2 multicalls do not consistently return the L2 block number
-  // instead we are relying on the blockTag parameter and assume the returned data is at least as new as that block number
   blockNumber: number
-}> {
-  console.debug('Fetching chunk', chunk, minBlockNumber)
-  let resultsBlockNumber: number
-  let results: { success: boolean; returnData: string }[]
+): Promise<{ success: boolean; returnData: string }[]> {
+  console.debug('Fetching chunk', chunk, blockNumber)
   try {
-    const { blockNumber, returnData } = await multicall.callStatic.multicall(
+    const { returnData } = await multicall.callStatic.multicall(
       chunk.map((obj) => ({
         target: obj.address,
         callData: obj.callData,
         gasLimit: obj.gasRequired ?? DEFAULT_GAS_REQUIRED,
       })),
-      { blockTag: minBlockNumber }
+      { blockTag: blockNumber }
     )
-    resultsBlockNumber = blockNumber.toNumber()
-    results = returnData
 
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }, i) => {
@@ -60,16 +51,15 @@ async function fetchChunk(
         }
       })
     }
+
+    return returnData
   } catch (error) {
-    console.debug('Failed to fetch chunk', error)
+    if (error.code === -32000 || error.message?.indexOf('header not found') !== -1) {
+      throw new RetryableError(`header not found for block number ${blockNumber}`)
+    }
+    console.error('Failed to fetch chunk', error)
     throw error
   }
-  if (resultsBlockNumber < minBlockNumber) {
-    const retryMessage = `Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`
-    console.debug(retryMessage)
-    throw new RetryableError(retryMessage)
-  }
-  return { results, blockNumber: resultsBlockNumber }
 }
 
 /**
@@ -190,7 +180,7 @@ export default function Updater(): null {
           maxWait: 2500,
         })
         promise
-          .then(({ results: returnData }) => {
+          .then((returnData) => {
             // accumulates the length of all previous indices
             const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
             const lastCallKeyIndex = firstCallKeyIndex + returnData.length
