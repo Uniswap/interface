@@ -596,7 +596,9 @@ export default function AddLiquidity({
                       <Trans>
                         Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
                         <ExternalLink
-                          href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
+                          href={
+                            'https://docs.uniswap.org/protocol/concepts/introduction/liquidity-user-guide#4-set-price-range'
+                          }
                           style={{ fontSize: '14px' }}
                         >
                           Need help picking a range?
