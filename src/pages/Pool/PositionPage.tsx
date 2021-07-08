@@ -355,8 +355,8 @@ export function PositionPage({
 
   // handle manual inversion
   const { priceLower, priceUpper, base } = useInverter(
-    pricesFromPosition.priceUpper,
     pricesFromPosition.priceLower,
+    pricesFromPosition.priceUpper,
     pricesFromPosition.quote,
     pricesFromPosition.base,
     manuallyInverted
