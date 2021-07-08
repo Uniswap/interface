@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-07 15:47+0000\n"
+"POT-Creation-Date: 2021-07-07 23:41+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-07-07 16:06\n"
+"PO-Revision-Date: 2021-07-08 00:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1403,6 +1403,10 @@ msgstr "Bir şeyler yanlış gitti"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Adım 1. UNI-V2 Likidite jetonları alın"
 
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Subgraph data not available"
+msgstr "Altyazı verileri mevcut değil"
+
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
 msgstr "Yeni teklif gönderildi"
@@ -1491,6 +1495,10 @@ msgstr "Eklediğiniz jeton oranı, bu havuzun fiyatını belirleyecektir."
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem sürenizin çok kısa olmadığından emin olun."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data"
+msgstr "Likidite verisi yok"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1949,6 +1957,10 @@ msgstr "Pozisyonunuz"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
 msgstr "Pozisyonunuz 0 likiditeye sahip ve ücret kazanmıyor."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Pozisyonunuz burada görünecektir."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
