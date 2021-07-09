@@ -10,7 +10,7 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
+import { L2_CHAIN_IDS, CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -133,10 +133,7 @@ export default function Menu() {
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
-  let infoLink = 'https://info.uniswap.org/#'
-  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
-    ;({ infoLink } = L2_INFO[chainId])
-  }
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>

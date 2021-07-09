@@ -5,7 +5,7 @@ import {
   OptimismWrapperBackgroundDarkMode,
   OptimismWrapperBackgroundLightMode,
 } from 'components/NetworkAlert/NetworkAlert'
-import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
@@ -27,7 +27,7 @@ const DesktopTextBreak = styled.div`
     display: block;
   }
 `
-const Wrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -108,7 +108,7 @@ export function MinimalNetworkAlert() {
   if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged) {
     return null
   }
-  const info = L2_INFO[chainId]
+  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
   return (
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
       <L2Icon src={info.logoUrl} />

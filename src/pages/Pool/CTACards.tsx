@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { RowBetween } from 'components/Row'
-import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
+import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -122,10 +122,7 @@ const StyledImage = styled.img`
 
 export default function CTACards() {
   const { chainId } = useActiveWeb3React()
-  let infoLink = 'https://info.uniswap.org/#'
-  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
-    ;({ infoLink } = L2_INFO[chainId])
-  }
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
   return (
     <div>
       <MinimalNetworkAlert />

@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -9,7 +9,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { L2_CHAIN_IDS, L2_INFO, NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
 const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) and (max-width: ${
   MEDIA_WIDTHS.upToMedium + 400
@@ -81,8 +81,8 @@ const L1Tag = styled.div`
   color: #c4d9f8;
   opacity: 40%;
 `
-const L2Tag = styled.div<{ chainId: SupportedChainId }>`
-  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
+const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
+  background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
   color: white;
   font-size: 12px;
@@ -188,38 +188,23 @@ export default function NetworkCard() {
   }
 
   if (L2_CHAIN_IDS.includes(chainId)) {
-    const info = L2_INFO[chainId]
-    let BridgeText, ExplorerText
-    switch (chainId) {
-      case SupportedChainId.ARBITRUM_ONE:
-      case SupportedChainId.ARBITRUM_RINKEBY:
-        BridgeText = () => <Trans>{NETWORK_LABELS[chainId]} Bridge</Trans>
-        ExplorerText = () => <Trans>{NETWORK_LABELS[chainId]} Explorer</Trans>
-        break
-      case SupportedChainId.OPTIMISM:
-      case SupportedChainId.OPTIMISTIC_KOVAN:
-      default:
-        BridgeText = () => <Trans>Gateway</Trans>
-        ExplorerText = () => <Trans>Optimistic Etherscan</Trans>
-        break
-    }
+    const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+    const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
           <Icon src={info.logoUrl} />
-          <NetworkLabel>{NETWORK_LABELS[chainId]}</NetworkLabel>
+          <NetworkLabel>{info.label}</NetworkLabel>
           <L2Tag chainId={chainId}>L2</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>
-                <BridgeText />
-              </div>
+              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Gateway</Trans>}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              <ExplorerText />
+              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Optimistic Etherscan</Trans>}
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>

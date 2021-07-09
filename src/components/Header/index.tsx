@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
@@ -24,7 +25,6 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
-import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -303,11 +303,7 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
-  let infoLink = 'https://info.uniswap.org/#'
-  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
-    ;({ infoLink } = L2_INFO[chainId])
-  }
-
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />

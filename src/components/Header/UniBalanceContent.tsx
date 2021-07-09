@@ -1,23 +1,23 @@
+import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants/tokens'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
 import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import useUSDCPrice from '../../hooks/useUSDCPrice'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useTotalUniEarned } from '../../state/stake/hooks'
 import { useAggregateUniBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE, UniTokenAnimated } from '../../theme'
 import { computeUniCirculation } from '../../utils/computeUniCirculation'
-import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
-import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, L2_INFO } from 'constants/chains'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -60,10 +60,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
     [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
   )
 
-  let infoLink = 'https://info.uniswap.org/#'
-  if (chainId && L2_CHAIN_IDS.includes(chainId)) {
-    ;({ infoLink } = L2_INFO[chainId])
-  }
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
 
   return (
     <ContentWrapper gap="lg">
