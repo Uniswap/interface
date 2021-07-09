@@ -42,5 +42,13 @@ export const formatBigLiquidity = (num: string, decimals: number, usd = true): s
 }
 
 export const formatTokenBalance = (balance: number): string => {
-  return balance === 0 ? '0' : balance.toPrecision(4)
+  if (balance === 0) {
+    return '0'
+  }
+
+  if (0 < balance && balance < 1) {
+    return balance.toPrecision(3)
+  }
+
+  return balance.toFixed(3)
 }
