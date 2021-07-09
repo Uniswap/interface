@@ -183,7 +183,6 @@ export default function WalletModal({
       activate(connector, undefined, true).catch(error => {
         if (error instanceof UnsupportedChainIdError) {
           activate(connector)
-          ;(connector as any).close()
         } else {
           setPendingError(true)
         }
