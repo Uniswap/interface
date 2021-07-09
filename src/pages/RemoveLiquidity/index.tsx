@@ -20,7 +20,8 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '../../constants'
+// TODO: route to new uniswap liquidity adapter
+//import { ROUTER_ADDRESS } from '../../constants'
 import { AUniswap_INTERFACE } from '../../constants/abis/auniswap'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -33,7 +34,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
-import { calculateGasMargin, calculateSlippageAmount, getDragoContract } from '../../utils'
+import { getDragoContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import AppBody from '../AppBody'
@@ -111,7 +112,9 @@ export default function RemoveLiquidity({
     parsedAmounts[Field.LIQUIDITY],
     router?.address
   )
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
+  let approval: string | any
+  //approval = ApprovalState.NOT_APPROVED
+  const [, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
   // RigoBlock already handles approvals, never will have pending approvals unless user error
   if (account !== undefined) {
     approval = ApprovalState.APPROVED
@@ -165,7 +168,8 @@ export default function RemoveLiquidity({
   const addTransaction = useTransactionAdder()
 
   async function onRemove() {
-    if (!chainId || !library || !account || !recipientAddress || !deadline || !router) throw new Error('missing dependencies')
+    if (!chainId || !library || !account || !recipientAddress || !deadline || !router)
+      throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
@@ -258,20 +262,16 @@ export default function RemoveLiquidity({
     }
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-      methodNames.map(methodName => {
+      methodNames.map((methodName) => {
         const fragment = AUniswap_INTERFACE.getFunction(methodName)
-        const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-              ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
-              : undefined
-        args = [ROUTER_ADDRESS, [callData]]
-        return(
-          drago.estimateGas['operateOnExchange'](...args)
-            .then(calculateGasMargin)
-            .catch(error => {
-              console.error(`estimateGas failed`, methodName, args, error)
-              return undefined
-            })
-        )
+        const calldata: string = AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
+        args = [router?.address, [calldata]]
+        return drago.estimateGas['operateOnExchange'](...args)
+          .then(calculateGasMargin)
+          .catch((error) => {
+            console.error(`estimateGas failed`, methodName, args, error)
+            return undefined
+          })
       })
     )
 
@@ -287,16 +287,14 @@ export default function RemoveLiquidity({
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       const fragment = AUniswap_INTERFACE.getFunction(methodName)
-      const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-            ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
-            : undefined
-      args = [ROUTER_ADDRESS, [callData]]
+      const calldata: string = AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
+      args = [router?.address, [calldata]]
 
       setAttemptingTxn(true)
       // await router[methodName](...args, {
       const dragoMethod = 'operateOnExchange'
       await drago[dragoMethod](...args, {
-        gasLimit: safeGasEstimate
+        gasLimit: safeGasEstimate,
       })
         .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
@@ -532,7 +530,7 @@ export default function RemoveLiquidity({
             </LightCard>
             {!showDetailed && (
               <>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                <AddressInputPanel id="recipient" value={recipient!} onChange={onChangeRecipient} />
                 <ColumnCenter>
                   <ArrowDown size="16" color={theme.text2} />
                 </ColumnCenter>
@@ -588,7 +586,7 @@ export default function RemoveLiquidity({
 
             {showDetailed && (
               <>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                <AddressInputPanel id="recipient" value={recipient!} onChange={onChangeRecipient} />
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.LIQUIDITY]}
                   onUserInput={onLiquidityInput}
