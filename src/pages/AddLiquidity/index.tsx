@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
-import React, { useCallback, useContext, useState } from 'react'
 import ReactGA from 'react-ga'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
@@ -26,7 +25,10 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks/web3'
 
-import { ROUTER_ADDRESS } from '../../constants'
+// TODO: liquidity is managed through non fung liq manager
+// must create separate liquidity adapter (could also use 1 adapter
+// but prob easier for later updates)
+//import { ROUTER_ADDRESS } from '../../constants'
 import { AUniswap_INTERFACE } from '../../constants/abis/auniswap'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -39,6 +41,7 @@ import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
+import { getDragoContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
@@ -183,8 +186,16 @@ export default function AddLiquidity({
   const { address: recipientAddress } = useENSAddress(recipient)
   const argentWalletContract = useArgentWalletContract()
 
-  let [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  let [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  let approvalA
+  let approvalB
+  const [, approveACallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_A],
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  )
+  const [, approveBCallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_B],
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  )
   // RigoBlock already handles approvals, never will have pending approvals unless user error
   if (account !== undefined) {
     approvalA = ApprovalState.APPROVED
@@ -198,7 +209,7 @@ export default function AddLiquidity({
   async function onAdd() {
     if (!chainId || !library || !account) return
 
-    const drago = getDragoContract(chainId, library, account, recipientAddress)
+    const drago = getDragoContract(chainId, library, account, recipientAddress!)
 
     if (!positionManager || !currencyA || !currencyB) {
       return

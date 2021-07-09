@@ -68,7 +68,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   const { recipient } = useSwapState()
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const userPoolBalance = useTokenBalance(recipientAddress, pair.liquidityToken)
+  const userPoolBalance = useTokenBalance(recipientAddress ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const poolTokenPercentage =
@@ -184,7 +184,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const { recipient } = useSwapState()
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const userPoolBalance = useTokenBalance(recipientAddress, pair.liquidityToken)
+  const userDefaultPoolBalance = useTokenBalance(recipientAddress ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   // if staked balance balance provided, add to standard liquidity amount
@@ -319,7 +319,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://v2.info.uniswap.org/account/${account}`}
+                href={`https://v2.info.uniswap.org/account/${recipient}`}
               >
                 <Trans>
                   View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>

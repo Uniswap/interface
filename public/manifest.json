@@ -1,7 +1,7 @@
 {
   "background_color": "#fff",
   "display": "standalone",
-  "homepage_url": "https://app.uniswap.org",
+  "homepage_url": "https://pooliswap.rigo.network",
   "short_name": "Pooliswap",
   "name": "Pooliswap",
   "icons": [
@@ -19,8 +19,8 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Uniswap",
-  "short_name": "Uniswap",
+  "name": "Pooliswap",
+  "short_name": "Pooliswap",
   "start_url": ".",
   "theme_color": "#ff007a"
 }

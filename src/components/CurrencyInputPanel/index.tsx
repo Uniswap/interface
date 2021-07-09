@@ -187,13 +187,11 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const {
-    recipient
-  } = useSwapState()
+  const { recipient } = useSwapState()
   const mockEmptyAddress = '0x9999999999999999999999999999999999999998'
   const dragoAddress = isAddress(recipient) ? recipient : mockEmptyAddress
-  const selectedCurrencyBalance = useCurrencyBalance(dragoAddress, currency)
-  const theme = useContext(ThemeContext)
+  const selectedCurrencyBalance = useCurrencyBalance(dragoAddress ?? undefined, currency ?? undefined)
+  const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -258,9 +256,6 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-              {account && currency  && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-              )}
             </>
           )}
         </InputRow>
