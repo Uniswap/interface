@@ -10,7 +10,6 @@ import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { getDragoContract, isAddress, shortenAddress } from '../utils'
-import { ROUTER_ADDRESS } from '../constants'
 import { AUniswap_INTERFACE } from '../constants/abis/auniswap'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
@@ -29,7 +28,7 @@ export enum SwapCallbackState {
 
 interface SwapCall {
   address: string
-  calldata: string
+  calldata: string | undefined
   value: string
 }
 
@@ -69,14 +68,14 @@ function useSwapCallArguments(
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
 
-  // TODO: must define dragoContract and route encoded calls to drago
-  const dragoContract = getDragoContract(chainId, library, account, recipient)
-
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
+    // TODO: must define dragoContract and route encoded calls to drago
+    const dragoContract = getDragoContract(chainId, library, account, recipient)
+
     if (trade instanceof V2Trade) {
-      if (!dragoContract) return []
+      if (!routerContract) return []
       const swapMethods = []
 
       swapMethods.push(
@@ -87,19 +86,21 @@ function useSwapCallArguments(
           deadline: deadline.toNumber(),
         })
       )
+      // TODO: check if correct
+      const uniswapMethodName = swapMethods[0].methodName
+      const argsWithEth = swapMethods[0].args
 
       if (trade.tradeType === TradeType.EXACT_INPUT) {
-
         const fragment = AUniswap_INTERFACE.getFunction(uniswapMethodName)
-        const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-              ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
-              : undefined
+        const calldata: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+          ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+          : undefined
 
         swapMethods.push(
           {
             methodName: 'operateOnExchange',
-            args: [ROUTER_ADDRESS, [callData]],
-            value: '0x0'
+            args: [routerContract.address, [calldata]],
+            value: '0x0',
           }
           /*Router.swapCallParameters(trade, {
             feeOnTransfer: false,
@@ -140,6 +141,7 @@ function useSwapCallArguments(
       })
     } else {
       // trade is V3Trade
+      const swapMethods = []
       const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
       if (!swapRouterAddress) return []
 
@@ -168,28 +170,6 @@ function useSwapCallArguments(
             }
           : {}),
       })
-
-      const uniswapMethodName = calldata.methodName
-      const argsWithEth = calldata.args
-
-      if (!isZero(value)) {
-        argsWithEth.unshift(value)
-      }
-
-      // TODO: use v3 AUniswap interface
-      const fragment = AUniswap_INTERFACE.getFunction(uniswapMethodName)
-      const encodedCallData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
-            ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
-            : undefined
-
-      swapMethods.push(
-        {
-          methodName: 'operateOnExchange',
-          args: [SWAP_ROUTER_ADDRESSES, [encodedCallData]],
-          value : '0x0'
-        }
-      )
-
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [
           {
@@ -208,10 +188,27 @@ function useSwapCallArguments(
           },
         ]
       }
+      // TODO must handle eth swaps, which have different encoded pack,
+      // slice signature, append eth value and append adapter
+      // signature (which is different when eth is involved)
+
+      // add value to call parameters
+      /*
+      if (!isZero(value)) {
+        argsWithEth.unshift(value)
+      }
+      */
+
+      swapMethods.push({
+        methodName: 'operateOnExchange',
+        args: [swapRouterAddress, [calldata]],
+        value: '0x0',
+      })
+
       return [
         {
-          address: dragoContract,
-          encodedCallData,
+          address: dragoContract.address,
+          calldata: dragoContract.interface.encodeFunctionData('operateOnExchange', [swapRouterAddress, [calldata]]),
           value: '0x0',
         },
       ]
