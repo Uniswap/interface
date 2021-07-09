@@ -22,7 +22,6 @@ export const injected = new InjectedConnector({
 
 // mainnet only
 export const walletConnect = new CustomWalletConnectConnector({
-  targetedChainId: ChainId.MAINNET,
   rpc: {
     [ChainId.XDAI]: 'https://rpc.xdaichain.com/',
     [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`

@@ -1,16 +1,15 @@
 // largely taken from https://github.com/NoahZinsmeister/web3-react/blob/v6/packages/walletconnect-connector/src/index.ts
-// Implements a function to change targeted connection chain id. When no account is connected and the user switches
-// chains in the network switcher, the WalletConnect targeted chain changes too.
+// Updated to always be in sync with network connector's chain id
 
 import { ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { IWalletConnectProviderOptions } from '@walletconnect/types'
+import { network } from '.'
 
 export const URI_AVAILABLE = 'URI_AVAILABLE'
 
 export interface WalletConnectConnectorArguments extends IWalletConnectProviderOptions {
   supportedChainIds?: number[]
-  targetedChainId: number
 }
 
 export class UserRejectedRequestError extends Error {
@@ -36,8 +35,6 @@ export class CustomWalletConnectConnector extends AbstractConnector {
 
   constructor(config: WalletConnectConnectorArguments) {
     super({ supportedChainIds: getSupportedChains(config) })
-    if (this.supportedChainIds?.indexOf(config.targetedChainId) === -1)
-      throw new Error(`unsupported targeted chain id ${config.targetedChainId}`)
 
     this.config = config
 
@@ -68,14 +65,12 @@ export class CustomWalletConnectConnector extends AbstractConnector {
   }
 
   public async activate(): Promise<ConnectorUpdate> {
-    if (!this.walletConnectProvider) {
-      const WalletConnectProvider = await import('@walletconnect/web3-provider').then(m => m?.default ?? m)
-      this.walletConnectProvider = new WalletConnectProvider(this.config)
-    }
+    const WalletConnectProvider = await import('@walletconnect/web3-provider').then(m => m?.default ?? m)
+    this.walletConnectProvider = new WalletConnectProvider(this.config)
 
     // ensure that the uri is going to be available, and emit an event if there's a new uri
     if (!this.walletConnectProvider.wc.connected) {
-      await this.walletConnectProvider.wc.createSession({ chainId: this.config.targetedChainId })
+      await this.walletConnectProvider.wc.createSession({ chainId: await network.getChainId() })
       this.emit(URI_AVAILABLE, this.walletConnectProvider.wc.uri)
     }
 
@@ -121,15 +116,5 @@ export class CustomWalletConnectConnector extends AbstractConnector {
 
   public async close() {
     await this.walletConnectProvider?.close()
-  }
-
-  public set targetedChainId(newTargetedChainId: number) {
-    if (this.supportedChainIds?.indexOf(newTargetedChainId) === -1)
-      throw new Error(`unsupported targeted chain id ${newTargetedChainId}`)
-    this.config.targetedChainId = newTargetedChainId
-  }
-
-  public get targetedChainId(): number {
-    return this.config.targetedChainId
   }
 }
