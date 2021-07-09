@@ -109,6 +109,9 @@ export function MinimalNetworkAlert() {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const depositUrl = [SupportedL2ChainId.OPTIMISM, SupportedL2ChainId.OPTIMISTIC_KOVAN].includes(chainId)
+    ? `${info.bridge}?chainId=1`
+    : info.bridge
   return (
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
       <L2Icon src={info.logoUrl} />
@@ -116,7 +119,7 @@ export function MinimalNetworkAlert() {
         <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
         <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
       </Body>
-      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>

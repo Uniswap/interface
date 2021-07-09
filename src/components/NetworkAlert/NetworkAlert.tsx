@@ -136,6 +136,9 @@ export function NetworkAlert() {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const depositUrl = [SupportedL2ChainId.OPTIMISM, SupportedL2ChainId.OPTIMISTIC_KOVAN].includes(chainId)
+    ? `${info.bridge}?chainId=1`
+    : info.bridge
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
@@ -151,7 +154,7 @@ export function NetworkAlert() {
           </Trans>
         </Body>
       </ContentWrapper>
-      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
