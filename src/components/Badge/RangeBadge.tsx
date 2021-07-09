@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Badge, { BadgeVariant } from 'components/Badge'
 import styled from 'styled-components/macro'
 
@@ -24,13 +22,6 @@ const ActiveDot = styled.span`
   height: 8px;
   width: 8px;
   margin-right: 4px;
-`
-
-export const DarkBadge = styled.div`
-  width: fit-content;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 4px 6px;
 `
 
 export default function RangeBadge({

@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ReactNode, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ReactNode, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
@@ -39,7 +39,7 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
-export function ConfirmationPendingContent({
+function ConfirmationPendingContent({
   onDismiss,
   pendingText,
   inline,
@@ -78,7 +78,7 @@ export function ConfirmationPendingContent({
   )
 }
 
-export function TransactionSubmittedContent({
+function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,

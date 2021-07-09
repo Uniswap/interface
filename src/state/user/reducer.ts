@@ -13,16 +13,18 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning,
   updateUserSingleHopOnly,
   updateHideClosedPositions,
   updateUserLocale,
+  updateArbitrumAlphaAcknowledged,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
+  arbitrumAlphaAcknowledged: boolean
+
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
@@ -67,6 +69,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
+  arbitrumAlphaAcknowledged: false,
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
@@ -125,6 +128,9 @@ export default createReducer(initialState, (builder) =>
       state.matchesDarkMode = action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
     })
+    .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
+      state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
+    })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
       state.timestamp = currentTimestamp()
@@ -181,8 +187,5 @@ export default createReducer(initialState, (builder) =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
-    })
-    .addCase(toggleURLWarning, (state) => {
-      state.URLWarningVisible = !state.URLWarningVisible
     })
 )

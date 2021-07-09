@@ -1,12 +1,11 @@
-import React from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
 import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
-import { RowBetween } from '../Row'
+import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 import { useAppDispatch } from 'state/hooks'
@@ -14,6 +13,8 @@ import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
+import { ReactNode } from 'react'
+import { Box } from 'rebass'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -48,6 +49,15 @@ const StyledNavLink = styled(NavLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
+`
+
+const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
+  flex: ${({ flex }) => flex ?? 'none'};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex: none;
+    margin-right: 10px;
+  `};
 `
 
 const ActiveText = styled.div`
@@ -90,24 +100,32 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
-  positionID,
   defaultSlippage,
+  positionID,
+  children,
 }: {
   adding: boolean
   creating: boolean
-  positionID?: string | undefined
   defaultSlippage: Percent
+  positionID?: string | undefined
+  showBackLink?: boolean
+  children?: ReactNode | undefined
 }) {
   const theme = useTheme()
-
   // reset states on back
   const dispatch = useAppDispatch()
+  const location = useLocation()
+
+  // detect if back should redirect to v3 or v2 pool page
+  const poolLink = location.pathname.includes('add/v2')
+    ? '/pool/v2'
+    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
 
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink
-          to={'/pool' + (!!positionID ? `/${positionID.toString()}` : '')}
+        <StyledHistoryLink
+          to={poolLink}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
@@ -115,10 +133,15 @@ export function AddRemoveTabs({
               dispatch(resetMintV3State())
             }
           }}
+          flex={children ? '1' : undefined}
         >
           <StyledArrowLeft stroke={theme.text2} />
-        </HistoryLink>
-        <TYPE.mediumHeader fontWeight={500} fontSize={20}>
+        </StyledHistoryLink>
+        <TYPE.mediumHeader
+          fontWeight={500}
+          fontSize={20}
+          style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
+        >
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (
@@ -127,8 +150,22 @@ export function AddRemoveTabs({
             <Trans>Remove Liquidity</Trans>
           )}
         </TYPE.mediumHeader>
+        <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
+    </Tabs>
+  )
+}
+
+export function CreateProposalTabs() {
+  return (
+    <Tabs>
+      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
+        <HistoryLink to="/vote">
+          <StyledArrowLeft />
+        </HistoryLink>
+        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
+      </Row>
     </Tabs>
   )
 }

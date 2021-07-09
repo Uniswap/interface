@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -161,7 +161,7 @@ export default function ClaimModal() {
               disabled={!isAddress(account ?? '')}
               padding="16px 16px"
               width="100%"
-              borderRadius="12px"
+              $borderRadius="12px"
               mt="1rem"
               onClick={onClaim}
             >

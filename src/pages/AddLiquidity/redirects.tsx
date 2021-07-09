@@ -1,5 +1,4 @@
 import { useActiveWeb3React } from 'hooks/web3'
-import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import AddLiquidity from './index'

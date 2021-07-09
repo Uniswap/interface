@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, ReactNode } from 'react'
+import { useState, useCallback, useContext, ReactNode } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -12,19 +12,23 @@ import { Currency } from '@uniswap/sdk-core'
 import RateToggle from 'components/RateToggle'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components/macro'
 import JSBI from 'jsbi'
+import { Bound } from 'state/mint/v3/actions'
+import { formatTickPrice } from 'utils/formatTickPrice'
 
 export const PositionPreview = ({
   position,
   title,
   inRange,
   baseCurrencyDefault,
+  ticksAtLimit,
 }: {
   position: Position
   title?: ReactNode
   inRange: boolean
   baseCurrencyDefault?: Currency | undefined
+  ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
   const theme = useContext(ThemeContext)
 
@@ -121,7 +125,11 @@ export const PositionPreview = ({
               <TYPE.main fontSize="12px">
                 <Trans>Min Price</Trans>
               </TYPE.main>
-              <TYPE.mediumHeader textAlign="center">{`${priceLower.toSignificant(5)}`}</TYPE.mediumHeader>
+              <TYPE.mediumHeader textAlign="center">{`${formatTickPrice(
+                priceLower,
+                ticksAtLimit,
+                Bound.LOWER
+              )}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
                 <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
@@ -138,7 +146,11 @@ export const PositionPreview = ({
               <TYPE.main fontSize="12px">
                 <Trans>Max Price</Trans>
               </TYPE.main>
-              <TYPE.mediumHeader textAlign="center">{`${priceUpper.toSignificant(5)}`}</TYPE.mediumHeader>
+              <TYPE.mediumHeader textAlign="center">{`${formatTickPrice(
+                priceUpper,
+                ticksAtLimit,
+                Bound.UPPER
+              )}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
                 <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}

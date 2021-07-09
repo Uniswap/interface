@@ -1,23 +1,19 @@
 import { SupportedChainId } from '../constants/chains'
 
+const MAINNET_AND_TESTNETS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
+]
+
 export function constructSameAddressMap<T extends string>(
   address: T,
-  includeArbitrum: boolean
+  additionalNetworks: SupportedChainId[] = []
 ): { [chainId: number]: T } {
-  if (includeArbitrum)
-    return {
-      [SupportedChainId.MAINNET]: address,
-      [SupportedChainId.ROPSTEN]: address,
-      [SupportedChainId.RINKEBY]: address,
-      [SupportedChainId.GOERLI]: address,
-      [SupportedChainId.KOVAN]: address,
-      [SupportedChainId.ARBITRUM_ONE]: address,
-    }
-  return {
-    [SupportedChainId.MAINNET]: address,
-    [SupportedChainId.ROPSTEN]: address,
-    [SupportedChainId.RINKEBY]: address,
-    [SupportedChainId.GOERLI]: address,
-    [SupportedChainId.KOVAN]: address,
-  }
+  return MAINNET_AND_TESTNETS.concat(additionalNetworks).reduce<{ [chainId: number]: T }>((memo, chainId) => {
+    memo[chainId] = address
+    return memo
+  }, {})
 }

@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { Heart, X } from 'react-feather'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components/macro'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -117,7 +117,7 @@ export default function ClaimPopup() {
             </TYPE.subHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
-            <ButtonPrimary padding="8px" borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
+            <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
               <Trans>Claim your UNI tokens</Trans>
             </ButtonPrimary>
           </AutoColumn>

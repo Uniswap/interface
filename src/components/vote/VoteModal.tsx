@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components/macro'
 import { RowBetween } from '../Row'
 import { TYPE, CustomLightSpinner } from '../../theme'
 import { X, ArrowUpCircle } from 'react-feather'
@@ -13,7 +13,6 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { ExternalLink } from '../../theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -50,7 +49,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
   }: {
     voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
   } = useVoteCallback()
-  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const { votes: availableVotes } = useUserVotes()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()

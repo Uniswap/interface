@@ -12,6 +12,7 @@ import {
   tickToPrice,
   TICK_SPACINGS,
   encodeSqrtRatioX96,
+  nearestUsableTick,
 } from '@uniswap/v3-sdk/dist/'
 import { Currency, Token, CurrencyAmount, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
@@ -19,7 +20,15 @@ import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
-import { Field, Bound, typeInput, typeStartPriceInput, typeLeftRangeInput, typeRightRangeInput } from './actions'
+import {
+  Field,
+  Bound,
+  typeInput,
+  typeStartPriceInput,
+  typeLeftRangeInput,
+  typeRightRangeInput,
+  setFullRange,
+} from './actions'
 import { tryParseTick } from './utils'
 import { usePool } from 'hooks/usePools'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -109,6 +118,7 @@ export function useV3DerivedMintInfo(
   depositADisabled: boolean
   depositBDisabled: boolean
   invertPrice: boolean
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 } {
   const { account } = useActiveWeb3React()
 
@@ -207,6 +217,17 @@ export function useV3DerivedMintInfo(
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
+  // lower and upper limits in the tick space for `feeAmount`
+  const tickSpaceLimits: {
+    [bound in Bound]: number | undefined
+  } = useMemo(
+    () => ({
+      [Bound.LOWER]: feeAmount ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]) : undefined,
+      [Bound.UPPER]: feeAmount ? nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount]) : undefined,
+    }),
+    [feeAmount]
+  )
+
   // parse typed range values and determine closest ticks
   // lower should always be a smaller tick
   const ticks: {
@@ -216,19 +237,43 @@ export function useV3DerivedMintInfo(
       [Bound.LOWER]:
         typeof existingPosition?.tickLower === 'number'
           ? existingPosition.tickLower
+          : (invertPrice && typeof rightRangeTypedValue === 'boolean') ||
+            (!invertPrice && typeof leftRangeTypedValue === 'boolean')
+          ? tickSpaceLimits[Bound.LOWER]
           : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue)
-          : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue),
+          ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue.toString())
+          : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue.toString()),
       [Bound.UPPER]:
         typeof existingPosition?.tickUpper === 'number'
           ? existingPosition.tickUpper
+          : (!invertPrice && typeof rightRangeTypedValue === 'boolean') ||
+            (invertPrice && typeof leftRangeTypedValue === 'boolean')
+          ? tickSpaceLimits[Bound.UPPER]
           : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue)
-          : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue),
+          ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue.toString())
+          : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue.toString()),
     }
-  }, [existingPosition, feeAmount, invertPrice, leftRangeTypedValue, rightRangeTypedValue, token0, token1])
+  }, [
+    existingPosition,
+    feeAmount,
+    invertPrice,
+    leftRangeTypedValue,
+    rightRangeTypedValue,
+    token0,
+    token1,
+    tickSpaceLimits,
+  ])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
+
+  // specifies whether the lower and upper ticks is at the exteme bounds
+  const ticksAtLimit = useMemo(
+    () => ({
+      [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
+      [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
+    }),
+    [tickSpaceLimits, tickLower, tickUpper, feeAmount]
+  )
 
   // mark invalid range
   const invalidRange = Boolean(typeof tickLower === 'number' && typeof tickUpper === 'number' && tickLower >= tickUpper)
@@ -428,6 +473,7 @@ export function useV3DerivedMintInfo(
     depositADisabled,
     depositBDisabled,
     invertPrice,
+    ticksAtLimit,
   }
 }
 
@@ -439,6 +485,8 @@ export function useRangeHopCallbacks(
   tickUpper: number | undefined,
   pool?: Pool | undefined | null
 ) {
+  const dispatch = useAppDispatch()
+
   const baseToken = useMemo(() => baseCurrency?.wrapped, [baseCurrency])
   const quoteToken = useMemo(() => quoteCurrency?.wrapped, [quoteCurrency])
 
@@ -494,5 +542,34 @@ export function useRangeHopCallbacks(
     return ''
   }, [baseToken, quoteToken, tickUpper, feeAmount, pool])
 
-  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper }
+  const getSetRange = useCallback(
+    (numTicks: number) => {
+      if (baseToken && quoteToken && feeAmount && pool) {
+        // calculate range around current price given `numTicks`
+        const newPriceLower = tickToPrice(
+          baseToken,
+          quoteToken,
+          Math.max(TickMath.MIN_TICK, pool.tickCurrent - numTicks)
+        )
+        const newPriceUpper = tickToPrice(
+          baseToken,
+          quoteToken,
+          Math.min(TickMath.MAX_TICK, pool.tickCurrent + numTicks)
+        )
+
+        return [
+          newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),
+          newPriceUpper.toSignificant(5, undefined, Rounding.ROUND_UP),
+        ]
+      }
+      return ['', '']
+    },
+    [baseToken, quoteToken, feeAmount, pool]
+  )
+
+  const getSetFullRange = useCallback(() => {
+    dispatch(setFullRange())
+  }, [dispatch])
+
+  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange, getSetFullRange }
 }

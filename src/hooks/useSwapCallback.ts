@@ -20,7 +20,7 @@ import { useActiveWeb3React } from './web3'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
-export enum SwapCallbackState {
+enum SwapCallbackState {
   INVALID,
   LOADING,
   VALID,
@@ -232,7 +232,7 @@ function useSwapCallArguments(
  * This object seems to be undocumented by ethers.
  * @param error an error from the ethers provider
  */
-export function swapErrorToUserReadableMessage(error: any): string {
+function swapErrorToUserReadableMessage(error: any): string {
   let reason: string | undefined
   while (Boolean(error)) {
     reason = error.reason ?? error.message ?? reason
@@ -256,17 +256,17 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'Too little received':
     case 'Too much requested':
     case 'STF':
-      return t`This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     case 'TF':
-      return t`The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
         console.error(error, reason)
-        return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+        return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
       return t`Unknown error${
         reason ? `: "${reason}"` : ''
-      }. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }
 
@@ -369,7 +369,9 @@ export function useSwapCallback(
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
+            ...('gasEstimate' in bestCallOption
+              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
+              : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
