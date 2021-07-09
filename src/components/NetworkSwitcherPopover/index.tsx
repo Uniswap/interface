@@ -38,9 +38,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
-      if (!!!account && connector instanceof CustomNetworkConnector) {
-        connector.changeChainId(optionChainId)
-      }
+      if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
       if (
         window.ethereum &&
         window.ethereum.isMetaMask &&

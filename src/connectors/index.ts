@@ -1,7 +1,7 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { AuthereumConnector } from '@web3-react/authereum-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { CustomNetworkConnector } from './CustomNetworkConnector'
+import { CustomWalletConnectConnector } from './CustomWalletConnectConnector'
 import { ChainId } from 'dxswap-sdk'
 import { providers } from 'ethers'
 import getLibrary from '../utils/getLibrary'
@@ -21,10 +21,10 @@ export const injected = new InjectedConnector({
 })
 
 // mainnet only
-export const walletConnect = new WalletConnectConnector({
+export const walletConnect = new CustomWalletConnectConnector({
   rpc: {
-    1: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-    100: 'https://rpc.xdaichain.com/'
+    [ChainId.XDAI]: 'https://rpc.xdaichain.com/',
+    [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`
   },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
