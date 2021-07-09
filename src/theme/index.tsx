@@ -5,7 +5,7 @@ import styled, {
   css,
   DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
-} from 'styled-components'
+} from 'styled-components/macro'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
@@ -35,7 +35,7 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
 const white = '#FFFFFF'
 const black = '#000000'
 
-export function colors(darkMode: boolean): Colors {
+function colors(darkMode: boolean): Colors {
   return {
     // base
     white,
@@ -44,8 +44,8 @@ export function colors(darkMode: boolean): Colors {
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
     text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
+    text3: darkMode ? '#8F96AC' : '#6E727D',
+    text4: darkMode ? '#B2B9D2' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
@@ -77,27 +77,26 @@ export function colors(darkMode: boolean): Colors {
     secondary3: darkMode ? '#17000b26' : '#FFD000',
 
     // other
-    red1: '#FD4040',
-    red2: '#F82D3A',
+    red1: darkMode ? '#FF4343' : '#DA2D2B',
+    red2: darkMode ? '#F82D3A' : '#DF1F38',
     red3: '#D60000',
-    green1: '#27AE60',
-    yellow1: '#e3a507',
-    yellow2: '#ff8f00',
+    green1: darkMode ? '#27AE60' : '#007D35',
+    yellow1: '#E3A507',
+    yellow2: '#FF8F00',
     yellow3: '#F3B71E',
-    blue1: '#2172E5',
-    blue2: '#5199FF',
-
-    error: '#FD4040',
-    success: '#27AE60',
-    warning: '#ff8f00',
+    blue1: darkMode ? '#2172E5' : '#0068FC',
+    blue2: darkMode ? '#5199FF' : '#0068FC',
+    error: darkMode ? '#FD4040' : '#DF1F38',
+    success: darkMode ? '#27AE60' : '#007D35',
+    warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
   }
 }
 
-export function theme(darkMode: boolean): DefaultTheme {
+function theme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
 

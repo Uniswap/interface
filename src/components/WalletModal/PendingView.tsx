@@ -1,5 +1,4 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import React from 'react'
 import styled from 'styled-components/macro'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import Option from './Option'

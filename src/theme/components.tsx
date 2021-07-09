@@ -1,9 +1,9 @@
 import React, { HTMLProps } from 'react'
+import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components'
-import { darken } from 'polished'
-import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
+import styled, { keyframes } from 'styled-components/macro'
+import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`
   outline: none;
@@ -20,36 +20,6 @@ export const ButtonText = styled.button`
 
   :focus {
     text-decoration: underline;
-  }
-`
-
-export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
-  backgroundColor: warning ? theme.red1 : theme.primary1,
-}))`
-  padding: 1rem 2rem 1rem 2rem;
-  border-radius: 3rem;
-  cursor: pointer;
-  user-select: none;
-  font-size: 1rem;
-  border: none;
-  outline: none;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  color: ${({ theme }) => theme.white};
-  width: 100%;
-
-  :hover,
-  :focus {
-    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
-  }
-
-  :active {
-    background-color: ${({ backgroundColor }) => darken(0.1, backgroundColor)};
-  }
-
-  :disabled {
-    background-color: ${({ theme }) => theme.bg1};
-    color: ${({ theme }) => theme.text4};
-    cursor: auto;
   }
 `
 
@@ -158,7 +128,7 @@ const LinkIconWrapper = styled.a`
   }
 `
 
-export const LinkIcon = styled(LinkIconFeather)`
+const LinkIcon = styled(LinkIconFeather)`
   height: 16px;
   width: 18px;
   margin-left: 10px;
@@ -196,31 +166,6 @@ export const UniTokenAnimated = styled.img`
   padding: 2rem 0 0 0;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
 `
-
-const ETHERSCAN_HOSTNAMES: { [hostname: string]: true } = {
-  'etherscan.io': true,
-  'ropsten.etherscan.io': true,
-  'rinkeby.etherscan.io': true,
-  'kovan.etherscan.io': true,
-  'goerli.etherscan.io': true,
-}
-
-/**
- * Returns the anonymized version of the given href, i.e. one that does not leak user information
- * @param href the anonymized version of the given href
- */
-function anonymizeLink(href: string): string {
-  try {
-    const url = new URL(href)
-    if (ETHERSCAN_HOSTNAMES[url.hostname]) {
-      return `${url.hostname}/${url.pathname.split('/')[1]}/***`
-    }
-    return href
-  } catch (error) {
-    console.error('Failed to anonymize outbound link', error)
-    return href
-  }
-}
 
 function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   const { target, href } = event.currentTarget
@@ -275,7 +220,7 @@ const rotate = keyframes`
   }
 `
 
-export const Spinner = styled.img`
+const Spinner = styled.img`
   animation: 2s ${rotate} linear infinite;
   width: 16px;
   height: 16px;
@@ -312,13 +257,6 @@ export const HideExtraSmall = styled.span`
 export const SmallOnly = styled.span`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: block;
-  `};
-`
-
-export const ExtraSmallOnly = styled.span`
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: block;
   `};
 `

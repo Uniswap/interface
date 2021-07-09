@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
 import tokenLogo from '../../assets/images/token-logo.png'

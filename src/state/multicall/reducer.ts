@@ -4,9 +4,9 @@ import {
   errorFetchingMulticallResults,
   fetchingMulticallResults,
   removeMulticallListeners,
-  toCallKey,
   updateMulticallResults,
 } from './actions'
+import { toCallKey } from './utils'
 
 export interface MulticallState {
   callListeners?: {
@@ -37,20 +37,41 @@ const initialState: MulticallState = {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(addMulticallListeners, (state, { payload: { calls, chainId, options: { blocksPerFetch = 1 } = {} } }) => {
-      const listeners: MulticallState['callListeners'] = state.callListeners
-        ? state.callListeners
-        : (state.callListeners = {})
-      listeners[chainId] = listeners[chainId] ?? {}
-      calls.forEach((call) => {
-        const callKey = toCallKey(call)
-        listeners[chainId][callKey] = listeners[chainId][callKey] ?? {}
-        listeners[chainId][callKey][blocksPerFetch] = (listeners[chainId][callKey][blocksPerFetch] ?? 0) + 1
-      })
-    })
+    .addCase(
+      addMulticallListeners,
+      (
+        state,
+        {
+          payload: {
+            calls,
+            chainId,
+            options: { blocksPerFetch },
+          },
+        }
+      ) => {
+        const listeners: MulticallState['callListeners'] = state.callListeners
+          ? state.callListeners
+          : (state.callListeners = {})
+        listeners[chainId] = listeners[chainId] ?? {}
+        calls.forEach((call) => {
+          const callKey = toCallKey(call)
+          listeners[chainId][callKey] = listeners[chainId][callKey] ?? {}
+          listeners[chainId][callKey][blocksPerFetch] = (listeners[chainId][callKey][blocksPerFetch] ?? 0) + 1
+        })
+      }
+    )
     .addCase(
       removeMulticallListeners,
-      (state, { payload: { chainId, calls, options: { blocksPerFetch = 1 } = {} } }) => {
+      (
+        state,
+        {
+          payload: {
+            chainId,
+            calls,
+            options: { blocksPerFetch },
+          },
+        }
+      ) => {
         const listeners: MulticallState['callListeners'] = state.callListeners
           ? state.callListeners
           : (state.callListeners = {})

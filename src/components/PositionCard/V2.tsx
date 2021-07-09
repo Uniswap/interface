@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Percent, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -98,7 +98,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="6px 8px"
-              borderRadius="12px"
+              $borderRadius="12px"
               width="fit-content"
               onClick={() => setShowMore(!showMore)}
             >
@@ -188,7 +188,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               <RowBetween marginTop="10px">
                 <ButtonPrimary
                   padding="8px"
-                  borderRadius="8px"
+                  $borderRadius="8px"
                   as={Link}
                   to={`/migrate/v2/${pair.liquidityToken.address}`}
                   width="64%"
@@ -197,7 +197,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                 </ButtonPrimary>
                 <ButtonSecondary
                   padding="8px"
-                  borderRadius="8px"
+                  $borderRadius="8px"
                   as={Link}
                   width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}

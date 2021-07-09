@@ -1,5 +1,5 @@
 import { stringify } from 'qs'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
 import { TYPE, CloseIcon } from 'theme'
@@ -149,7 +149,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           <ButtonPrimary
             disabled={!confirmed}
             altDisabledStyle={true}
-            borderRadius="20px"
+            $borderRadius="20px"
             padding="10px 1rem"
             onClick={handleAddList}
           >

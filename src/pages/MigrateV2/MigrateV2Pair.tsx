@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import React, { useCallback, useMemo, useState, useEffect, ReactNode } from 'react'
+import { useCallback, useMemo, useState, useEffect, ReactNode } from 'react'
 import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -176,7 +176,7 @@ function V2PairMigration({
 
   // the following is a small hack to get access to price range data/input handlers
   const [baseToken, setBaseToken] = useState(token0)
-  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useV3DerivedMintInfo(
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange, ticksAtLimit } = useV3DerivedMintInfo(
     token0,
     token1,
     feeAmount,
@@ -209,33 +209,13 @@ function V2PairMigration({
           tickUpper,
           amount0: token0Value.quotient,
           amount1: token1Value.quotient,
-          useFullPrecision: false, // we don't want full precision as this is used to calculate slippage amounts
+          useFullPrecision: true, // we want full precision for the theoretical position
         })
       : undefined
 
-  const v3Amount0Min = useMemo(
-    () =>
-      position &&
-      CurrencyAmount.fromRawAmount(
-        token0,
-        JSBI.divide(
-          JSBI.multiply(position.amount0.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
-          JSBI.BigInt(10000)
-        )
-      ),
-    [token0, position, allowedSlippage]
-  )
-  const v3Amount1Min = useMemo(
-    () =>
-      position &&
-      CurrencyAmount.fromRawAmount(
-        token1,
-        JSBI.divide(
-          JSBI.multiply(position.amount1.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
-          JSBI.BigInt(10000)
-        )
-      ),
-    [token1, position, allowedSlippage]
+  const { amount0: v3Amount0Min, amount1: v3Amount1Min } = useMemo(
+    () => (position ? position.mintAmountsWithSlippage(allowedSlippage) : { amount0: undefined, amount1: undefined }),
+    [position, allowedSlippage]
   )
 
   const refund0 = useMemo(
@@ -290,7 +270,8 @@ function V2PairMigration({
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
-      !v3Amount1Min
+      !v3Amount1Min ||
+      !chainId
     )
       return
 
@@ -336,8 +317,8 @@ function V2PairMigration({
           fee: feeAmount,
           tickLower,
           tickUpper,
-          amount0Min: `0x${v3Amount0Min.quotient.toString(16)}`,
-          amount1Min: `0x${v3Amount1Min.quotient.toString(16)}`,
+          amount0Min: `0x${v3Amount0Min.toString(16)}`,
+          amount1Min: `0x${v3Amount1Min.toString(16)}`,
           recipient: account,
           deadline: deadlineToUse,
           refundAsETH: true, // hard-code this for now
@@ -351,7 +332,7 @@ function V2PairMigration({
       .multicall(data)
       .then((gasEstimate) => {
         return migrator
-          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
+          .multicall(data, { gasLimit: calculateGasMargin(chainId, gasEstimate) })
           .then((response: TransactionResponse) => {
             ReactGA.event({
               category: 'Migrate',
@@ -369,6 +350,7 @@ function V2PairMigration({
         setConfirmingMigration(false)
       })
   }, [
+    chainId,
     isNotUniswap,
     migrator,
     noLiquidity,
@@ -561,10 +543,11 @@ function V2PairMigration({
             currencyA={invertPrice ? currency1 : currency0}
             currencyB={invertPrice ? currency0 : currency1}
             feeAmount={feeAmount}
+            ticksAtLimit={ticksAtLimit}
           />
 
           {outOfRange ? (
-            <YellowCard padding="8px 12px" borderRadius="12px">
+            <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">
@@ -577,7 +560,7 @@ function V2PairMigration({
           ) : null}
 
           {invalidRange ? (
-            <YellowCard padding="8px 12px" borderRadius="12px">
+            <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -132,7 +132,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
               padding="16px 16px"
               width="100%"
-              borderRadius="12px"
+              $borderRadius="12px"
               mt="1rem"
               onClick={onClaim}
             >

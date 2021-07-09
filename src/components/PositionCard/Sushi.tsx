@@ -1,4 +1,3 @@
-import React from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -63,7 +62,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="0px 35px 0px 0px"
-              borderRadius="12px"
+              $borderRadius="12px"
               width="fit-content"
               as={Link}
               to={`/migrate/v2/${liquidityToken.address}`}

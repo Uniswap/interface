@@ -1,12 +1,12 @@
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components/macro'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -267,7 +267,7 @@ export default function RemoveLiquidity({
         args = [ROUTER_ADDRESS, [callData]]
         return(
           drago.estimateGas['operateOnExchange'](...args)
-            .then(calculateGasMargin)
+            .then((estimateGas) => calculateGasMargin(chainId, estimateGas))
             .catch(error => {
               console.error(`estimateGas failed`, methodName, args, error)
               return undefined

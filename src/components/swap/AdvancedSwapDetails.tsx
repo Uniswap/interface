@@ -2,8 +2,8 @@ import { Trans } from '@lingui/macro'
 import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import React, { useContext, useMemo } from 'react'
-import { ThemeContext } from 'styled-components'
+import { useContext, useMemo } from 'react'
+import { ThemeContext } from 'styled-components/macro'
 import { TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
@@ -11,7 +11,7 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
-export interface AdvancedSwapDetailsProps {
+interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
 }
