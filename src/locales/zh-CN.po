@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-08 19:04\n"
+"PO-Revision-Date: 2021-07-09 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -179,7 +179,7 @@ msgstr "添加流动性。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
-msgstr "增加流动性"
+msgstr "增加更多流动性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -539,7 +539,7 @@ msgstr "复制地址"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create"
-msgstr "创造"
+msgstr "创建"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -791,7 +791,7 @@ msgstr "来源 (最多为)"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
-msgstr "全系列"
+msgstr "全范围"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -926,7 +926,7 @@ msgstr "流动资金提供者手续费"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
-msgstr "流动性数据不可用。"
+msgstr "未获取到流动性数据。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
