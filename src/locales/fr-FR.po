@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-07-09 16:04\n"
+"PO-Revision-Date: 2021-07-09 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1238,7 +1238,7 @@ msgstr "Prix :"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Partage des prix et du pool"
+msgstr "Prix et parts dans la pool"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
