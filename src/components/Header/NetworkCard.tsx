@@ -11,8 +11,8 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) and (max-width: ${
-  MEDIA_WIDTHS.upToMedium + 400
+const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium + 1}px) and (max-width: ${
+  MEDIA_WIDTHS.upToMedium + 500
 }px)`
 
 const BaseWrapper = css`
@@ -150,7 +150,7 @@ const NetworkInfo = styled.button`
   justify-content: space-between;
   margin: 0;
   padding: 8px;
-  width: 200px;
+  width: 188px;
 
   :hover,
   :focus {
