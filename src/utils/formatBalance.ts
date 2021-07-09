@@ -40,3 +40,7 @@ export const formatBigLiquidity = (num: string, decimals: number, usd = true): s
 
   return usd ? `$${formattedValue}` : formattedValue
 }
+
+export const formatTokenBalance = (balance: number): string => {
+  return balance === 0 ? '0' : balance.toPrecision(4)
+}

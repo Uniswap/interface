@@ -26,7 +26,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
-import { getFullDisplayBalance } from 'utils/formatBalance'
+import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 import { RewardToken } from 'pages/Farms/styleds'
@@ -249,6 +249,9 @@ const ListItem = ({ farm }: ListItemProps) => {
     )
   )
 
+  const userToken0Balance = parseFloat(lpUserLPBalanceRatio.toSignificant(6)) * parseFloat(farm.reserve0)
+  const userToken1Balance = parseFloat(lpUserLPBalanceRatio.toSignificant(6)) * parseFloat(farm.reserve1)
+
   // Ratio in % of LP tokens that user staked, vs the total number in circulation
   const lpUserStakedTokenRatio = new Fraction(
     userStakedBalance.toString(),
@@ -259,6 +262,9 @@ const ListItem = ({ farm }: ListItemProps) => {
       JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
     )
   )
+
+  const userStakedToken0Balance = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserve0)
+  const userStakedToken1Balance = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserve1)
 
   const userLPBalanceUSD = parseFloat(lpUserLPBalanceRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
   const userStakedBalanceUSD = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
@@ -387,20 +393,32 @@ const ListItem = ({ farm }: ListItemProps) => {
         <ExpandedSection>
           <ExpandedContent>
             <StakeGroup style={{ marginBottom: '14px' }}>
-              <BalanceInfo grid-area="stake">
+              <div>
+                <BalanceInfo grid-area="stake">
+                  <GreyText>
+                    Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                    {farm.token1?.symbol} LP
+                  </GreyText>
+                  <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
+                </BalanceInfo>
                 <GreyText>
-                  Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                  {farm.token1?.symbol} LP
+                  {formatTokenBalance(userToken0Balance)} {farm.token0?.symbol} -{' '}
+                  {formatTokenBalance(userToken1Balance)} {farm.token1?.symbol}
                 </GreyText>
-                <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
-              </BalanceInfo>
-              <BalanceInfo grid-area="unstake">
+              </div>
+              <div>
+                <BalanceInfo grid-area="unstake">
+                  <GreyText>
+                    Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                    {farm.token1?.symbol} LP
+                  </GreyText>
+                  <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
+                </BalanceInfo>
                 <GreyText>
-                  Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                  {farm.token1?.symbol} LP
+                  {formatTokenBalance(userStakedToken0Balance)} {farm.token0?.symbol} -{' '}
+                  {formatTokenBalance(userStakedToken1Balance)} {farm.token1?.symbol}
                 </GreyText>
-                <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
-              </BalanceInfo>
+              </div>
               <div grid-area="harvest">
                 <GreyText>Reward</GreyText>
               </div>
@@ -602,13 +620,19 @@ const ListItem = ({ farm }: ListItemProps) => {
       {expand && (
         <ExpandedContent>
           <StakeGroup style={{ marginBottom: '14px' }}>
-            <BalanceInfo grid-area="stake">
+            <div>
+              <BalanceInfo grid-area="stake">
+                <GreyText>
+                  Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                  {farm.token1?.symbol} LP
+                </GreyText>
+                <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
+              </BalanceInfo>
               <GreyText>
-                Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                {farm.token1?.symbol} LP
+                {formatTokenBalance(userToken0Balance)} {farm.token0?.symbol} - {formatTokenBalance(userToken1Balance)}{' '}
+                {farm.token1?.symbol}
               </GreyText>
-              <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
-            </BalanceInfo>
+            </div>
 
             {approvalState === ApprovalState.UNKNOWN && <Dots></Dots>}
             {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
@@ -674,13 +698,19 @@ const ListItem = ({ farm }: ListItemProps) => {
 
             <Seperator />
 
-            <BalanceInfo grid-area="unstake">
+            <div>
+              <BalanceInfo grid-area="unstake">
+                <GreyText>
+                  Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                  {farm.token1?.symbol} LP
+                </GreyText>
+                <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
+              </BalanceInfo>
               <GreyText>
-                Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                {farm.token1?.symbol} LP
+                {formatTokenBalance(userStakedToken0Balance)} {farm.token0?.symbol} -{' '}
+                {formatTokenBalance(userStakedToken1Balance)} {farm.token1?.symbol}
               </GreyText>
-              <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
-            </BalanceInfo>
+            </div>
 
             {approvalState === ApprovalState.APPROVED && (
               <AutoRow justify="space-between">
