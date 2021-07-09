@@ -76,7 +76,7 @@ export default function PendingView({
             }
           }
           return (
-            <Flex mb="28px" justifyContent="center">
+            <Flex key={key} mb="28px" justifyContent="center">
               <Box mr="10px">
                 <img src={require('../../assets/images/' + option.iconName)} alt="logo" width="24px" height="24px" />
               </Box>

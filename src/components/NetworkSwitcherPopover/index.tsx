@@ -13,6 +13,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NETWORK_DETAIL } from '../../constants'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
+import { walletConnect } from '../../connectors'
 
 const OptionGrid = styled.div`
   display: grid;
@@ -38,8 +39,12 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
-      if (!!!account && connector instanceof CustomNetworkConnector) {
-        connector.changeChainId(optionChainId)
+      if (!!!account) {
+        if (connector instanceof CustomNetworkConnector) {
+          connector.changeChainId(optionChainId)
+        }
+        // change walletconnect's targeted chain to be in sync with what user expects
+        walletConnect.targetedChainId = optionChainId
       }
       if (
         window.ethereum &&
