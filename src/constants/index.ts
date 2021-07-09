@@ -246,7 +246,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC[ChainId.ROPSTEN],
     USDT[ChainId.ROPSTEN]
   ],
-  [ChainId.MATIC]: [...WETH_ONLY[ChainId.MATIC], DAI[ChainId.MATIC], USDC[ChainId.MATIC], USDT[ChainId.MATIC]],
+  [ChainId.MATIC]: [
+    ...WETH_ONLY[ChainId.MATIC],
+    DAI[ChainId.MATIC],
+    USDC[ChainId.MATIC],
+    USDT[ChainId.MATIC],
+    new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
+  ],
   [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], DAI[ChainId.MUMBAI], USDC[ChainId.MUMBAI], USDT[ChainId.MUMBAI]]
 }
 
