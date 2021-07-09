@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-09 06:04\n"
+"PO-Revision-Date: 2021-07-09 12:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0>返回</0>V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0>当前价格：</0> <1><2/></1> <3>{0} 每 {1}</3>"
+msgstr "<0>当前兑换率：</0> <1><2/></1> <3>{0} 每 {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -179,7 +179,7 @@ msgstr "添加流动性。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
-msgstr "增加更多流动性"
+msgstr "增加流动性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -626,7 +626,7 @@ msgstr "充入流动资金"
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit to {0}"
-msgstr "存款到 {0}"
+msgstr "充入到 {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -690,7 +690,7 @@ msgstr "修改"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
-msgstr "效率比较"
+msgstr "效率对比"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -808,7 +808,7 @@ msgstr "对兑换率有高度影响"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "I Understand"
-msgstr "我明白"
+msgstr "了解"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -926,7 +926,7 @@ msgstr "流动资金提供者手续费"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
-msgstr "未获取到流动性数据。"
+msgstr "没有流动性数据。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -1110,7 +1110,7 @@ msgstr "开启"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
-msgstr "在 Uniswap V3 上，像 V2 一样在所有价格范围内设置一个范围的资本效率低于集中价格。在此处<0>了解更多信息</0>."
+msgstr "在 Uniswap V3 上，像 V2 一样设置兑换率全范围的资本效率将比集中兑换率范围低。 <0>在此</0>了解更多信息。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1204,7 +1204,7 @@ msgstr "流动池概览"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
-msgstr "预习"
+msgstr "预览"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1358,7 +1358,7 @@ msgstr "搜索名称或粘贴地址"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
-msgstr "选择配对"
+msgstr "选择币对"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1398,7 +1398,7 @@ msgstr "设置起始兑换率"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set your Price Range"
-msgstr "设置您的价格范围"
+msgstr "设置兑换率范围"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1540,7 +1540,7 @@ msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。您必须将 L1 资产桥接到网络后才能交换它们。"
+msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。您必须将 L1 资产桥接到网络后才能进行兑换。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1701,7 +1701,7 @@ msgstr "Uniswap 迁移合约↗"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Uniswap on {0}"
-msgstr "Uniswap 在 {0}"
+msgstr "在 {0} 上的 Uniswap"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1907,7 +1907,7 @@ msgstr "您是此 Uniswap V3 流动池的第一个流动资金提供者。您的
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "你是这个 Uniswap V3 池的第一个流动性提供者。交易成本会高得多，因为它包括创建池的气体。"
+msgstr "您是这个 Uniswap V3 池的第一个流动性提供者。由于需包括创建池的 gas 费用，交易成本会高出许多。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1931,7 +1931,7 @@ msgstr "您在此流动池中还未有流动资金。"
 
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to swap them."
-msgstr "您必须将 L1 资产桥接到网络后才能交换它们。"
+msgstr "您必须将 L1 资产桥接到网络后才能进行兑换。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1990,7 +1990,7 @@ msgstr "您的仓位没有任何流动资金，没在赚取手续费。"
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
-msgstr "您的位置将显示在此处。"
+msgstr "您的仓位将在此显示。"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
