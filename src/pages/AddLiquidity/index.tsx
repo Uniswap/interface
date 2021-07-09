@@ -34,7 +34,9 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
-
+// TODO: create custom hook on mint hooks
+import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -205,8 +207,8 @@ export default function AddLiquidity({
   const { address: recipientAddress } = useENSAddress(recipient)
   const argentWalletContract = useArgentWalletContract()
 
-  let approvalA
-  let approvalB
+  let approvalA: string | undefined
+  let approvalB: string | undefined
   const [, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
