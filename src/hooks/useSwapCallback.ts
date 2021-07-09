@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
-import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
@@ -18,6 +18,7 @@ import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
+import { Router } from '../utils/ky0x'
 
 export enum SwapCallbackState {
   INVALID,
@@ -56,7 +57,9 @@ function useSwapCallArguments(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | null | undefined
+  signatureData: SignatureData | null | undefined,
+  hashWalletSig: string,
+  nonceSigKDs: string[]
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -74,22 +77,32 @@ function useSwapCallArguments(
       const swapMethods = []
 
       swapMethods.push(
-        Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
-          allowedSlippage,
-          recipient,
-          deadline: deadline.toNumber(),
-        })
+        Router.swapCallParameters(
+          trade,
+          {
+            feeOnTransfer: false,
+            allowedSlippage,
+            recipient,
+            deadline: deadline.toNumber(),
+          },
+          hashWalletSig,
+          nonceSigKDs
+        )
       )
 
       if (trade.tradeType === TradeType.EXACT_INPUT) {
         swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
-            recipient,
-            deadline: deadline.toNumber(),
-          })
+          Router.swapCallParameters(
+            trade,
+            {
+              feeOnTransfer: true,
+              allowedSlippage,
+              recipient,
+              deadline: deadline.toNumber(),
+            },
+            hashWalletSig,
+            nonceSigKDs
+          )
         )
       }
       return swapMethods.map(({ methodName, args, value }) => {
@@ -183,6 +196,8 @@ function useSwapCallArguments(
     routerContract,
     signatureData,
     trade,
+    hashWalletSig,
+    nonceSigKDs,
   ])
 }
 
@@ -235,17 +250,25 @@ export function useSwapCallback(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null
+  signatureData: SignatureData | undefined | null,
+  hashWalletSig: string,
+  nonceSigKDs: string[]
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
-
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
 
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
+  const swapCalls = useSwapCallArguments(
+    trade,
+    allowedSlippage,
+    recipientAddressOrName,
+    signatureData,
+    hashWalletSig,
+    nonceSigKDs
+  )
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
@@ -371,5 +394,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, addTransaction, swapCalls])
 }

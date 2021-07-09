@@ -1,3 +1,4 @@
+import { ethers } from 'ethers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -37,6 +38,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { useWalletSigCallback, useNonceSigCallback } from '../../hooks/useKy0xCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -69,7 +71,7 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -182,6 +184,18 @@ export default function Swap({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
+  const [{ hashWalletSig }, setHashWalletSig] = useState<{
+    hashWalletSig: string
+  }>({
+    hashWalletSig: ethers.constants.HashZero,
+  })
+
+  const [{ nonceSigKDs }, setNonceSigKDs] = useState<{
+    nonceSigKDs: string[]
+  }>({
+    nonceSigKDs: [],
+  })
+
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
@@ -236,8 +250,13 @@ export default function Swap({ history }: RouteComponentProps) {
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData,
+    hashWalletSig,
+    nonceSigKDs
   )
+
+  const { callback: walletSigCallback } = useWalletSigCallback()
+  const { callback: nonceSigCallback } = useNonceSigCallback()
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
@@ -248,26 +267,68 @@ export default function Swap({ history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
-    swapCallback()
-      .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+    if (!walletSigCallback || !nonceSigCallback) {
+      return
+    }
 
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade),
-            singleHopOnly ? 'SH' : 'MH',
-          ].join('/'),
-        })
+    setSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+    })
+    walletSigCallback()
+      .then((hws) => {
+        setHashWalletSig({ hashWalletSig: hws })
+        nonceSigCallback(hws)
+          .then((nskds) => {
+            setNonceSigKDs({ nonceSigKDs: nskds })
+            swapCallback()
+              .then((hash) => {
+                setSwapState({
+                  attemptingTxn: false,
+                  tradeToConfirm,
+                  showConfirm,
+                  swapErrorMessage: undefined,
+                  txHash: hash,
+                })
+
+                ReactGA.event({
+                  category: 'Swap',
+                  action:
+                    recipient === null
+                      ? 'Swap w/o Send'
+                      : (recipientAddress ?? recipient) === account
+                      ? 'Swap w/o Send + recipient'
+                      : 'Swap w/ Send',
+                  label: [
+                    trade?.inputAmount?.currency?.symbol,
+                    trade?.outputAmount?.currency?.symbol,
+                    getTradeVersion(trade),
+                    singleHopOnly ? 'SH' : 'MH',
+                  ].join('/'),
+                })
+              })
+              .catch((error) => {
+                setSwapState({
+                  attemptingTxn: false,
+                  tradeToConfirm,
+                  showConfirm,
+                  swapErrorMessage: error.message,
+                  txHash: undefined,
+                })
+              })
+          })
+          .catch((error) => {
+            setSwapState({
+              attemptingTxn: false,
+              tradeToConfirm,
+              showConfirm,
+              swapErrorMessage: error.message,
+              txHash: undefined,
+            })
+          })
       })
       .catch((error) => {
         setSwapState({
@@ -288,6 +349,9 @@ export default function Swap({ history }: RouteComponentProps) {
     account,
     trade,
     singleHopOnly,
+    hashWalletSig,
+    nonceSigCallback,
+    walletSigCallback,
   ])
 
   // errors
