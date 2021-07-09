@@ -3,7 +3,7 @@ name: Crowdin Download
 # hourly we sync translations from Crowdin
 on:
   schedule:
-    - cron: '0 * * *' # every day we download translations and update the pr from crowdin
+    - cron: '0 * * * *' # every hour we download translations and update the pr from crowdin
 
   # manual trigger
   workflow_dispatch:
