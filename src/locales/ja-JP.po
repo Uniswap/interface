@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-10 22:05\n"
+"PO-Revision-Date: 2021-07-10 23:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -573,7 +573,7 @@ msgstr "プールを作成"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create {0}/{1} V3 pool"
-msgstr "作成 {0}/{1} V3プール"
+msgstr "{0}/{1} V3プールを作成"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -690,7 +690,7 @@ msgstr "編集"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
-msgstr "効率の比較"
+msgstr "効率性の比較"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
