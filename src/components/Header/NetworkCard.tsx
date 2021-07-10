@@ -200,11 +200,11 @@ export default function NetworkCard() {
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Gateway</Trans>}</div>
+              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimism Gateway</Trans>}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Optimistic Etherscan</Trans>}
+              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Etherscan</Trans>}
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>
