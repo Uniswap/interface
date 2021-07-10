@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-08 19:04\n"
+"PO-Revision-Date: 2021-07-10 22:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -425,7 +425,7 @@ msgstr "終了済"
 
 #: src/pages/Pool/index.tsx
 msgid "Closed positions"
-msgstr "クローズドポジション"
+msgstr "決済したポジション"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -626,7 +626,7 @@ msgstr "流動性を預ける"
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit to {0}"
-msgstr "{0}デポジット"
+msgstr "{0} に預け入れる"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -770,7 +770,7 @@ msgstr "設定手数料"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "料金階層"
+msgstr "手数料レベル"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -791,7 +791,7 @@ msgstr "（最大）売るトークン"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
-msgstr "フルレンジ"
+msgstr "全範囲"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -808,7 +808,7 @@ msgstr "大きな価格への影響"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "I Understand"
-msgstr "わかります"
+msgstr "理解しました"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -1086,7 +1086,7 @@ msgstr "結果が見つかりませんでした。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Not created"
-msgstr "作成されていません"
+msgstr "未作成"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1155,7 +1155,7 @@ msgstr "保留中"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
-msgstr "レイヤー1イーサリアムに接続してください"
+msgstr "イーサリアムのレイヤー1に接続してください"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1488,7 +1488,7 @@ msgstr "Uniswapコミュニティにご参加いただきありがとうござ�
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "手数料で稼ぐ％。"
+msgstr "設定する手数料率"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -2196,11 +2196,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "{0}％の料金階層"
+msgstr "{0}%の手数料レベル"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}％選択"
+msgstr "{0}％が選択"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
