@@ -1,5 +1,6 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
+import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -47,13 +48,16 @@ export function useAllLists(): AppState['lists']['byUrl'] {
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return {
-    [1]: { ...map1[1], ...map2[1] },
-    [4]: { ...map1[4], ...map2[4] },
-    [3]: { ...map1[3], ...map2[3] },
-    [42]: { ...map1[42], ...map2[42] },
-    [5]: { ...map1[5], ...map2[5] },
-  }
+  return Object.values(SupportedChainId).reduce(
+    (acc, cur) => ({
+      ...acc,
+      [cur]: {
+        ...map1[cur as SupportedL1ChainId | SupportedL2ChainId],
+        ...map2[cur as SupportedL1ChainId | SupportedL2ChainId],
+      },
+    }),
+    {}
+  )
 }
 
 // merge tokens contained within lists from urls

@@ -1,6 +1,6 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from './chains'
+import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import {
   AMPL,
   DAI,
@@ -22,11 +22,11 @@ import {
 } from './tokens'
 
 type ChainTokenList = {
-  readonly [chainId: number]: Token[]
+  readonly [chainId in number | SupportedL1ChainId | SupportedL2ChainId]: Token[]
 }
 
 type ChainCurrencyList = {
-  readonly [chainId: number]: Currency[]
+  readonly [chainId in number | SupportedL1ChainId | SupportedL2ChainId]: Currency[]
 }
 
 // List of all mirror's assets addresses.
@@ -98,9 +98,15 @@ export const COMMON_BASES: ChainCurrencyList = {
   [4]: [ExtendedEther.onChain(4), WETH9_EXTENDED[4]],
   [5]: [ExtendedEther.onChain(5), WETH9_EXTENDED[5]],
   [42]: [ExtendedEther.onChain(42), WETH9_EXTENDED[42]],
-  [SupportedChainId.ARBITRUM_ONE]: [
-    ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
-    WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
+  [SupportedL2ChainId.OPTIMISM]: [],
+  [SupportedL2ChainId.OPTIMISTIC_KOVAN]: [],
+  [SupportedL2ChainId.ARBITRUM_ONE]: [
+    ExtendedEther.onChain(SupportedL2ChainId.ARBITRUM_ONE),
+    WETH9_EXTENDED[SupportedL2ChainId.ARBITRUM_ONE],
+  ],
+  [SupportedL2ChainId.ARBITRUM_RINKEBY]: [
+    ExtendedEther.onChain(SupportedL2ChainId.ARBITRUM_RINKEBY),
+    WETH9_EXTENDED[SupportedL2ChainId.ARBITRUM_RINKEBY],
   ],
 }
 
