@@ -546,7 +546,7 @@ export default function AddLiquidity({
                 showCommonBases
               />
               <USDPrice>
-                {usdPrices[0] ? `1 ${currencyA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
+                {usdPrices[0] ? `1 ${nativeA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
               </USDPrice>
             </div>
             <ColumnCenter>
@@ -566,7 +566,7 @@ export default function AddLiquidity({
                 showCommonBases
               />
               <USDPrice>
-                {usdPrices[1] ? `1 ${currencyB?.symbol} = ${formattedNum(usdPrices[1].toString(), true)}` : <Loader />}
+                {usdPrices[1] ? `1 ${nativeB?.symbol} = ${formattedNum(usdPrices[1].toString(), true)}` : <Loader />}
               </USDPrice>
             </div>
 
