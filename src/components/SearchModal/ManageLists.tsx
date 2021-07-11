@@ -28,6 +28,8 @@ import ListToggle from '../Toggle/ListToggle'
 import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { useActiveWeb3React } from 'hooks/web3'
+import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -80,8 +82,9 @@ const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
 `
 
-const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
+const RowWrapper = styled(Row)<{ bgColor: string; active: boolean; hasActiveTokens: boolean }>`
   background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
+  opacity: ${({ hasActiveTokens }) => (hasActiveTokens ? 1 : 0.4)};
   transition: 200ms;
   align-items: center;
   padding: 1rem;
@@ -93,9 +96,17 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+  const { chainId } = useActiveWeb3React()
   const listsByUrl = useAppSelector((state) => state.lists.byUrl)
   const dispatch = useAppDispatch()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
+
+  const activeTokensOnThisChain = useMemo(() => {
+    if (!list || !chainId) {
+      return 0
+    }
+    return (list as TokenList).tokens.reduce((acc, cur) => (cur.chainId === chainId ? acc + 1 : acc), 0)
+  }, [chainId, list])
 
   const theme = useTheme()
   const listColor = useListColor(list?.logoURI)
@@ -160,8 +171,19 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list) return null
 
+  const { label } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
+
+  const hoverText = t`This token list currently has ${activeTokensOnThisChain} ${label} tokens in it`
+
   return (
-    <RowWrapper active={isActive} bgColor={listColor} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
+    <RowWrapper
+      active={isActive}
+      hasActiveTokens={activeTokensOnThisChain > 0}
+      bgColor={listColor}
+      key={listUrl}
+      id={listUrlRowHTMLId(listUrl)}
+      title={hoverText}
+    >
       {list.logoURI ? (
         <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
       ) : (
