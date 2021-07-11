@@ -28,6 +28,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   CMC_ALL_LIST,
   CMC_STABLECOIN,
   KLEROS_LIST,
+  OPTIMISM_LIST,
   GEMINI_LIST,
   ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well
 ]
