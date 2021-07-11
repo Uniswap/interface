@@ -156,6 +156,7 @@ const getEthPrice = async (chainId?: ChainId) => {
 export function useETHPrice(): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
+  const blockNumber = useBlockNumber()
 
   const ethPrice = useSelector((state: AppState) => state.application.ethPrice)
 
@@ -171,7 +172,7 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
       )
     }
     checkForEthPrice()
-  }, [ethPrice, dispatch, chainId])
+  }, [ethPrice, dispatch, chainId, blockNumber])
 
   return ethPrice
 }
@@ -202,6 +203,7 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
   const dispatch = useDispatch()
   const ethPrice = useETHPrice()
   const { chainId } = useActiveWeb3React()
+  const blockNumber = useBlockNumber()
 
   const kncPrice = useSelector((state: AppState) => state.application.kncPrice)
 
@@ -212,7 +214,7 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
       dispatch(updateKNCPrice(kncPrice?.toString()))
     }
     checkForKNCPrice()
-  }, [kncPrice, dispatch, ethPrice.currentPrice, chainId])
+  }, [kncPrice, dispatch, ethPrice.currentPrice, chainId, blockNumber])
 
   return kncPrice
 }
