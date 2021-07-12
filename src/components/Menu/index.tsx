@@ -40,7 +40,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.bg2};
   }
 
   svg {
@@ -65,15 +65,15 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg2};
+  min-width: 156px;
+  background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
+  font-size: 14px;
   position: absolute;
   top: 3rem;
   z-index: 100;
@@ -97,15 +97,16 @@ const MenuItem = styled(ExternalLink)`
   flex-direction: row;
   align-items: center;
   padding: 0.5rem 0.5rem;
+  justify-content: space-between;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
   }
-  > svg {
+  /* > svg {
     margin-right: 8px;
-  }
+  } */
 `
 
 const InternalMenuItem = styled(Link)`
@@ -144,34 +145,34 @@ export default function Menu() {
       {open && (
         <MenuFlyout>
           <MenuItem href="https://uniswap.org/">
-            <Info size={14} />
             <div>
               <Trans>About</Trans>
             </div>
+            <Info opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href="https://docs.uniswap.org/">
-            <BookOpen size={14} />
             <div>
               <Trans>Docs</Trans>
             </div>
+            <BookOpen opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href={CODE_LINK}>
-            <Code size={14} />
             <div>
               <Trans>Code</Trans>
             </div>
+            <Code opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
-            <MessageCircle size={14} />
             <div>
               <Trans>Discord</Trans>
             </div>
+            <MessageCircle opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href={infoLink}>
-            <PieChart size={14} />
             <div>
               <Trans>Analytics</Trans>
             </div>
+            <PieChart opacity={0.6} size={16} />
           </MenuItem>
           {showUNIClaimOption && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">

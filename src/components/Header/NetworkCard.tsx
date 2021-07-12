@@ -3,7 +3,7 @@ import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowDownCircle } from 'react-feather'
+import { ArrowDownCircle, ChevronDown, ToggleLeft } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -11,20 +11,12 @@ import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium + 1}px) and (max-width: ${
-  MEDIA_WIDTHS.upToMedium + 500
-}px)`
-
 const BaseWrapper = css`
   position: relative;
-  ${StopOverflowQuery} {
-    position: absolute;
-    top: 80px;
-    right: 20px;
-  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
   `};
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0 0.5rem 0 0;
     width: initial;
@@ -46,7 +38,7 @@ const BaseMenuItem = css`
   flex: 1;
   flex-direction: row;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   justify-content: space-between;
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -78,23 +70,23 @@ const Icon = styled.img`
   width: 17px;
 `
 const L1Tag = styled.div`
-  color: #c4d9f8;
+  color: ${({ theme }) => theme.text1};
   opacity: 40%;
 `
 const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
-  background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
-  color: white;
-  font-size: 12px;
+  /* color: white; */
+
+  font-size: 14px;
   font-weight: 600;
-  padding: 2px 6px;
+  padding: 0 4px 0 6px;
 `
 const MenuFlyout = styled.span`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 20px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -115,15 +107,13 @@ const MenuFlyout = styled.span`
   > :not(:last-child) {
     margin-bottom: 8px;
   }
-  ${StopOverflowQuery} {
-    left: unset;
-    right: 0rem;
-  }
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
+  /* stroke-width: 1.5; */
+  opacity: 0.6;
 `
 const MenuItem = styled(ExternalLink)`
   ${BaseMenuItem}
@@ -134,29 +124,30 @@ const ButtonMenuItem = styled.button`
   box-shadow: none;
   color: ${({ theme }) => theme.text2};
   outline: none;
-  padding-left: 0;
+  padding: 0;
 `
-const NetworkInfo = styled.button`
+const NetworkInfo = styled.button<{ chainId: SupportedL2ChainId }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg2};
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   color: ${({ theme }) => theme.text1};
   display: flex;
   flex-direction: row;
   font-weight: 500;
-  font-size: 12px;
   height: 100%;
-  justify-content: space-between;
   margin: 0;
-  padding: 8px;
-  width: 188px;
+  min-height: 36px;
+  padding: 0.5rem;
+
+  background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')};
+  color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
   }
 `
 const NetworkLabel = styled.span`
@@ -192,19 +183,20 @@ export default function NetworkCard() {
     const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
       <L2Wrapper ref={node}>
-        <NetworkInfo onClick={toggle}>
+        <NetworkInfo onClick={toggle} chainId={chainId}>
           <Icon src={info.logoUrl} />
-          <NetworkLabel>{info.label}</NetworkLabel>
+          {/* <NetworkLabel>OE</NetworkLabel> */}
           <L2Tag chainId={chainId}>L2</L2Tag>
+          <ChevronDown size={16} style={{ marginTop: '2px' }} strokeWidth={2.5} />
         </NetworkInfo>
         {open && (
           <MenuFlyout>
             <MenuItem href={info.bridge}>
-              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimism Gateway</Trans>}</div>
+              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimistic L2 Gateway</Trans>}</div>
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.explorer}>
-              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Etherscan</Trans>}
+              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Optimistic Etherscan</Trans>}
               <LinkOutCircle />
             </MenuItem>
             <MenuItem href={info.docs}>
@@ -216,9 +208,9 @@ export default function NetworkCard() {
             {implements3085 ? (
               <ButtonMenuItem onClick={() => switchToNetwork({ library, chainId: SupportedChainId.MAINNET })}>
                 <div>
-                  <Trans>Switch to Ethereum</Trans>
+                  <Trans>Switch to Ethereum L1</Trans>
                 </div>
-                <L1Tag>L1</L1Tag>
+                <ToggleLeft opacity={0.6} size={16} />
               </ButtonMenuItem>
             ) : (
               <DisabledMenuItem>

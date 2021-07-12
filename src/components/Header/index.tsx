@@ -166,6 +166,12 @@ const HideSmall = styled.span`
   `};
 `
 
+const HideMedium = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: none;
+  `};
+`
+
 const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
@@ -334,9 +340,11 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
-        <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-          <Trans>Vote</Trans>
-        </StyledNavLink>
+        {(chainId && chainId === SupportedL1ChainId.MAINNET) ?? (
+          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            <Trans>Vote</Trans>
+          </StyledNavLink>
+        )}
         <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
@@ -344,9 +352,7 @@ export default function Header() {
       </HeaderLinks>
       <HeaderControls>
         <HeaderElement>
-          <HideSmall>
-            <NetworkCard />
-          </HideSmall>
+          <NetworkCard />
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -373,9 +379,9 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
+          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
+          </StyledMenuButton> */}
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>
