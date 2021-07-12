@@ -35,8 +35,11 @@ import {
   TotalRewardsContainer,
   TotalRewardsTitleWrapper,
   TotalRewardsTitle,
+  HarvestAllButtonContainer,
+  HarvestAllInstruction,
   RewardNumberContainer,
   RewardToken,
+  Plus,
   RewardUSD,
   RemainingTimeContainer,
   EndInTitle,
@@ -214,7 +217,7 @@ const Farms = () => {
                           <span>
                             {`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}
                           </span>
-                          {index + 1 < totalRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                          {index + 1 < totalRewards.length ? <Plus>+</Plus> : null}
                         </RewardToken>
                       )
                     })}
@@ -222,7 +225,7 @@ const Farms = () => {
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
                 {shouldShowHarvestAllButton() ? (
-                  <div>
+                  <HarvestAllButtonContainer>
                     <ButtonPrimary
                       width="fit-content"
                       disabled={!canHarvest(totalRewards) || pendingTx}
@@ -231,11 +234,11 @@ const Farms = () => {
                     >
                       Harvest All
                     </ButtonPrimary>
-                  </div>
+                  </HarvestAllButtonContainer>
                 ) : (
-                  <TotalRewardsTitle>
+                  <HarvestAllInstruction>
                     Harvest your rewards by clicking your eligible pool/s in the list below.
-                  </TotalRewardsTitle>
+                  </HarvestAllInstruction>
                 )}
               </HarvestAllContainer>
             </HeadingContainer>

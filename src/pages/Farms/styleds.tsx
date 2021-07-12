@@ -152,13 +152,18 @@ export const LearnMoreLinkContainer = styled.div`
 `
 
 export const HarvestAllContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
   justify-content: space-between;
+  align-items: center;
   padding-left: 36px;
 
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-row: 1;
-    flex-direction: column;
+    grid-template-columns: 1fr;
     padding-bottom: 24px;
     padding-left: 0;
   `}
@@ -183,6 +188,31 @@ export const TotalRewardsTitle = styled.div`
   margin-bottom: 4px;
 `
 
+export const HarvestAllButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    justify-content: flex-start;
+  `}
+`
+
+export const HarvestAllInstruction = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text7};
+  background-color: ${({ theme }) => theme.bg12};
+  padding: 20px;
+  border-radius: 8px;
+`
+
 export const RewardNumberContainer = styled.div`
   font-size: 24px;
   font-weight: 500;
@@ -191,10 +221,18 @@ export const RewardNumberContainer = styled.div`
 `
 
 export const RewardToken = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  @media (min-width: 1200px) {
     display: block;
     margin-bottom: 4px;
-  `}
+  }
+`
+
+export const Plus = styled.span`
+  margin: 0 4px;
+
+  @media (min-width: 1200px) {
+    display: none;
+  }
 `
 
 export const RewardUSD = styled.span`
