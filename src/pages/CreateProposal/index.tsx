@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import JSBI from 'jsbi'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { utils } from 'ethers'
 import { ExternalLink, TYPE } from 'theme'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'

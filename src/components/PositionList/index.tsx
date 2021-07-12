@@ -34,7 +34,7 @@ const MobileHeader = styled.div`
   }
 `
 
-export type PositionListProps = React.PropsWithChildren<{
+type PositionListProps = React.PropsWithChildren<{
   positions: PositionDetails[]
 }>
 

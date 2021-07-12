@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'

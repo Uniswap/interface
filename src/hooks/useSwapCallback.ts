@@ -19,7 +19,7 @@ import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
-export enum SwapCallbackState {
+enum SwapCallbackState {
   INVALID,
   LOADING,
   VALID,
@@ -191,7 +191,7 @@ function useSwapCallArguments(
  * This object seems to be undocumented by ethers.
  * @param error an error from the ethers provider
  */
-export function swapErrorToUserReadableMessage(error: any): string {
+function swapErrorToUserReadableMessage(error: any): string {
   let reason: string | undefined
   while (Boolean(error)) {
     reason = error.reason ?? error.message ?? reason
@@ -328,7 +328,9 @@ export function useSwapCallback(
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
+            ...('gasEstimate' in bestCallOption
+              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
+              : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {

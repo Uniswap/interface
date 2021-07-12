@@ -1,20 +1,27 @@
 import { Trans } from '@lingui/macro'
-import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
-import { transparentize } from 'polished'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import styled, { css } from 'styled-components'
-import { ExternalLink } from 'theme'
+import styled, { css } from 'styled-components/macro'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
+
+const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium + 1}px) and (max-width: ${
+  MEDIA_WIDTHS.upToMedium + 500
+}px)`
 
 const BaseWrapper = css`
   position: relative;
+  ${StopOverflowQuery} {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
   `};
@@ -26,12 +33,12 @@ const BaseWrapper = css`
     flex-shrink: 1;
   `};
 `
-const ArbitrumWrapper = styled.div`
+const L2Wrapper = styled.div`
   ${BaseWrapper}
 `
 const BaseMenuItem = css`
   align-items: center;
-  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
+  background-color: transparent;
   border-radius: 12px;
   color: ${({ theme }) => theme.text2};
   cursor: pointer;
@@ -41,7 +48,6 @@ const BaseMenuItem = css`
   font-size: 14px;
   font-weight: 400;
   justify-content: space-between;
-  padding: 12px;
   :hover {
     color: ${({ theme }) => theme.text1};
     text-decoration: none;
@@ -64,6 +70,7 @@ const DisabledMenuItem = styled.div`
 `
 const FallbackWrapper = styled(YellowCard)`
   ${BaseWrapper}
+  width: auto;
   border-radius: 12px;
   padding: 8px 12px;
 `
@@ -74,8 +81,8 @@ const L1Tag = styled.div`
   color: #c4d9f8;
   opacity: 40%;
 `
-const L2Tag = styled.div`
-  background-color: ${({ theme }) => theme.primary1};
+const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
+  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
   color: white;
   font-size: 12px;
@@ -87,7 +94,7 @@ const MenuFlyout = styled.span`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
-  padding: 8px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -97,16 +104,20 @@ const MenuFlyout = styled.span`
   z-index: 100;
   width: 237px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -14.25rem;
+    top: -10.25rem;
   `};
   > {
     padding: 12px;
   }
   > :not(:first-child) {
-    margin-top: 4px;
+    margin-top: 8px;
   }
   > :not(:last-child) {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+  }
+  ${StopOverflowQuery} {
+    left: unset;
+    right: 0rem;
   }
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
@@ -120,8 +131,10 @@ const MenuItem = styled(ExternalLink)`
 const ButtonMenuItem = styled.button`
   ${BaseMenuItem}
   border: none;
-  outline: none;
   box-shadow: none;
+  color: ${({ theme }) => theme.text2};
+  outline: none;
+  padding-left: 0;
 `
 const NetworkInfo = styled.button`
   align-items: center;
@@ -132,11 +145,12 @@ const NetworkInfo = styled.button`
   display: flex;
   flex-direction: row;
   font-weight: 500;
+  font-size: 12px;
   height: 100%;
   justify-content: space-between;
   margin: 0;
   padding: 8px;
-  width: 172px;
+  width: 188px;
 
   :hover,
   :focus {
@@ -145,6 +159,10 @@ const NetworkInfo = styled.button`
     background-color: ${({ theme }) => theme.bg3};
   }
 `
+const NetworkLabel = styled.span`
+  flex: 1 1 auto;
+`
+
 export default function NetworkCard() {
   const { chainId, library } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>(null)
@@ -169,29 +187,27 @@ export default function NetworkCard() {
     return null
   }
 
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
+  if (L2_CHAIN_IDS.includes(chainId)) {
+    const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+    const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
-      <ArbitrumWrapper ref={node}>
+      <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>
-          <Icon src={arbitrumLogoUrl} />
-          <span>Arbitrum</span>
-          <L2Tag>L2 Alpha</L2Tag>
+          <Icon src={info.logoUrl} />
+          <NetworkLabel>{info.label}</NetworkLabel>
+          <L2Tag chainId={chainId}>L2</L2Tag>
         </NetworkInfo>
         {open && (
           <MenuFlyout>
-            <MenuItem href="https://bridge.arbitrum.io/">
-              <div>
-                <Trans>Arbitrum Token Bridge</Trans>
-              </div>
+            <MenuItem href={info.bridge}>
+              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimism Gateway</Trans>}</div>
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://explorer.arbitrum.io/">
-              <div>
-                <Trans>Arbitrum Explorer</Trans>
-              </div>
+            <MenuItem href={info.explorer}>
+              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Etherscan</Trans>}
               <LinkOutCircle />
             </MenuItem>
-            <MenuItem href="https://offchainlabs.com/">
+            <MenuItem href={info.docs}>
               <div>
                 <Trans>Learn more</Trans>
               </div>
@@ -211,7 +227,7 @@ export default function NetworkCard() {
             )}
           </MenuFlyout>
         )}
-      </ArbitrumWrapper>
+      </L2Wrapper>
     )
   }
 

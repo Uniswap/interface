@@ -75,7 +75,7 @@ const plurals: LocalePlural = {
   'zh-TW': zh,
 }
 
-export async function dynamicActivate(locale: SupportedLocale) {
+async function dynamicActivate(locale: SupportedLocale) {
   const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   i18n.load(locale, messages)

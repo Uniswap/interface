@@ -240,7 +240,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
       if (!uniContract) throw new Error('No UNI Contract!')
       return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
         return uniContract
-          .delegate(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .delegate(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: t`Delegated votes`,
@@ -256,7 +256,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 export function useVoteCallback(): {
   voteCallback: (proposalId: string | undefined, support: boolean) => undefined | Promise<string>
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
 
@@ -264,11 +264,11 @@ export function useVoteCallback(): {
 
   const voteCallback = useCallback(
     (proposalId: string | undefined, support: boolean) => {
-      if (!account || !latestGovernanceContract || !proposalId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
       const args = [proposalId, support]
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
-          .castVote(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .castVote(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: `Voted ${support ? 'for ' : 'against'} proposal ${proposalId}`,
@@ -277,7 +277,7 @@ export function useVoteCallback(): {
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract]
+    [account, addTransaction, latestGovernanceContract, chainId]
   )
   return { voteCallback }
 }
@@ -285,14 +285,14 @@ export function useVoteCallback(): {
 export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
-      if (!account || !latestGovernanceContract || !createProposalData) return undefined
+      if (!account || !latestGovernanceContract || !createProposalData || !chainId) return undefined
 
       const args = [
         createProposalData.targets,
@@ -304,7 +304,7 @@ export function useCreateProposalCallback(): (
 
       return latestGovernanceContract.estimateGas.propose(...args).then((estimatedGasLimit) => {
         return latestGovernanceContract
-          .propose(...args, { gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .propose(...args, { gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: t`Submitted new proposal`,
@@ -313,7 +313,7 @@ export function useCreateProposalCallback(): (
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract]
+    [account, addTransaction, latestGovernanceContract, chainId]
   )
 }
 
