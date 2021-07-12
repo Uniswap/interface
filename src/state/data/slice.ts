@@ -5,7 +5,12 @@ import { DocumentNode } from 'graphql'
 import { ClientError, gql, GraphQLClient } from 'graphql-request'
 import { AppState } from 'state'
 
-const UNISWAP_V3_GRAPH_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
+// List of supported subgraphs. Note that the app currently only support one active subgraph at a time
+const CHAIN_SUBGRAPH_URL: Record<number, string> = {
+  [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  [SupportedChainId.ARBITRUM_ONE]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one',
+  [SupportedChainId.OPTIMISM]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism',
+}
 
 export const api = createApi({
   reducerPath: 'dataApi',
@@ -78,23 +83,19 @@ function graphqlRequestBaseQuery(): BaseQueryFn<
     try {
       const chainId = (getState() as AppState).application.chainId
 
-      let client: GraphQLClient | null = null
+      const subgraphUrl = chainId ? CHAIN_SUBGRAPH_URL[chainId] : undefined
 
-      switch (chainId) {
-        case SupportedChainId.MAINNET:
-          client = new GraphQLClient(UNISWAP_V3_GRAPH_URL)
-          break
-        default:
-          return {
-            error: {
-              name: 'UnsupportedChainId',
-              message: `Subgraph queries again ChainId ${chainId} are not supported.`,
-              stack: '',
-            },
-          }
+      if (!subgraphUrl) {
+        return {
+          error: {
+            name: 'UnsupportedChainId',
+            message: `Subgraph queries against ChainId ${chainId} are not supported.`,
+            stack: '',
+          },
+        }
       }
 
-      return { data: await client.request(document, variables), meta: {} }
+      return { data: await new GraphQLClient(subgraphUrl).request(document, variables), meta: {} }
     } catch (error) {
       if (error instanceof ClientError) {
         const { name, message, stack, request, response } = error
