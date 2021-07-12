@@ -1,11 +1,37 @@
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { LogsState, useLogs } from '../state/logs/hooks'
+import { Log } from '../state/logs/utils'
 import { useV3Staker } from './useContract'
 import { useActiveWeb3React } from './web3'
 
 const VALID_STATES: LogsState[] = [LogsState.SYNCING, LogsState.SYNCED]
 
-export function useDepositedTokenIds() {
+/**
+ * Sorts logs in chronological order from earliest to latest
+ * @param logA one of two logs to compare
+ * @param logB the other of the two logs to compare
+ */
+function compareLogs(logA: Log, logB: Log) {
+  return (
+    logA.blockNumber - logB.blockNumber ||
+    logA.transactionIndex - logB.transactionIndex ||
+    logA.logIndex - logB.logIndex
+  )
+}
+
+export enum DepositedTokenIdsState {
+  INVALID,
+  LOADING,
+  LOADED,
+}
+
+export interface DepositedTokenIdsResult {
+  state: DepositedTokenIdsState
+  tokenIds: JSBI[] | undefined
+}
+
+export function useDepositedTokenIds(): DepositedTokenIdsResult {
   const v3Staker = useV3Staker()
   const { account } = useActiveWeb3React()
   const filters = useMemo(() => {
@@ -19,15 +45,39 @@ export function useDepositedTokenIds() {
   const transferredFromLogs = useLogs(filters[0])
   const transferredToLogs = useLogs(filters[1])
 
-  const deposited = useMemo(() => {
+  const orderedDepositEvents = useMemo(() => {
     if (!VALID_STATES.includes(transferredFromLogs.state) || !VALID_STATES.includes(transferredToLogs.state))
       return undefined
 
-    // todo: sort this concatenated list by block number and then transaction index and then log index
-    return (transferredFromLogs.logs ?? []).concat(transferredToLogs.logs ?? [])
+    return (transferredFromLogs.logs ?? []).concat(transferredToLogs.logs ?? []).sort(compareLogs)
   }, [transferredFromLogs.logs, transferredFromLogs.state, transferredToLogs])
 
-  console.log(deposited)
+  return useMemo(() => {
+    if (!v3Staker)
+      return {
+        state: DepositedTokenIdsState.INVALID,
+        tokenIds: undefined,
+      }
 
-  throw new Error('todo')
+    if (!orderedDepositEvents)
+      return {
+        state: DepositedTokenIdsState.LOADING,
+        tokenIds: undefined,
+      }
+
+    const ownedTokenIdMap = orderedDepositEvents.reduce<{ [tokenId: string]: boolean }>((memo, log) => {
+      const parsed = v3Staker.interface.decodeEventLog('DepositTransferred', log.data)
+      memo[parsed.tokenId.toString()] = parsed.newOwner === account
+      return memo
+    }, {})
+
+    const tokenIds = Object.entries(ownedTokenIdMap)
+      .filter(([, owned]) => owned)
+      .map(([tokenId]) => tokenId)
+      .map(JSBI.BigInt)
+    return {
+      state: DepositedTokenIdsState.LOADED,
+      tokenIds,
+    }
+  }, [account, orderedDepositEvents, v3Staker])
 }
