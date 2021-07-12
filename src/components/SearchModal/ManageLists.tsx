@@ -1,35 +1,33 @@
-import { memo, useCallback, useMemo, useRef, useState, useEffect } from 'react'
-import { Settings, CheckCircle } from 'react-feather'
+import { t, Trans } from '@lingui/macro'
+import { TokenList } from '@uniswap/token-lists'
+import Card from 'components/Card'
+import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { useListColor } from 'hooks/useColor'
+import { useActiveWeb3React } from 'hooks/web3'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CheckCircle, Settings } from 'react-feather'
 import ReactGA from 'react-ga'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { usePopper } from 'react-popper'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { TokenList } from '@uniswap/token-lists'
-import { t, Trans } from '@lingui/macro'
-
+import useTheme from '../../hooks/useTheme'
 import useToggle from '../../hooks/useToggle'
-import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
-import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
-import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
+import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
+import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
+import { ExternalLink, IconWrapper, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonEmpty, ButtonPrimary } from '../Button'
-
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
-import Row, { RowFixed, RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
-import { useListColor } from 'hooks/useColor'
-import useTheme from '../../hooks/useTheme'
+import Row, { RowBetween, RowFixed } from '../Row'
 import ListToggle from '../Toggle/ListToggle'
-import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
-import { useActiveWeb3React } from 'hooks/web3'
-import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -248,11 +246,23 @@ export function ManageLists({
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
 }) {
+  const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const lists = useAllLists()
+
+  const tokenCountByListName = useMemo(() => {
+    const result: any = {}
+    Object.values(lists).forEach(({ current: list }) => {
+      if (!list) {
+        return
+      }
+      result[list.name] = list.tokens.filter((token) => token.chainId === chainId).length
+    })
+    return result
+  }, [chainId, lists])
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
@@ -293,6 +303,12 @@ export function ManageLists({
         }
 
         if (l1 && l2) {
+          if (tokenCountByListName[l1.name] > tokenCountByListName[l2.name]) {
+            return -1
+          }
+          if (tokenCountByListName[l1.name] < tokenCountByListName[l2.name]) {
+            return 1
+          }
           return l1.name.toLowerCase() < l2.name.toLowerCase()
             ? -1
             : l1.name.toLowerCase() === l2.name.toLowerCase()
@@ -303,7 +319,7 @@ export function ManageLists({
         if (l2) return 1
         return 0
       })
-  }, [lists, activeCopy])
+  }, [lists, activeCopy, tokenCountByListName])
 
   // temporary fetched list for import flow
   const [tempList, setTempList] = useState<TokenList>()
