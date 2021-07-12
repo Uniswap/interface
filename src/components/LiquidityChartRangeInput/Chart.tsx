@@ -34,7 +34,7 @@ export function Chart({
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
-        .domain([(1 - zoomLevels.initial) * current, (1 + zoomLevels.initial) * current] as number[])
+        .domain([current / (1 + zoomLevels.initialMin), current * (1 + zoomLevels.initialMax)] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
@@ -47,7 +47,7 @@ export function Chart({
     }
 
     return scales
-  }, [zoomLevels.initial, current, innerWidth, series, innerHeight, zoom])
+  }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
 
   useEffect(() => {
     if (!brushDomain) {
