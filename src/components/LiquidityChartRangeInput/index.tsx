@@ -98,11 +98,6 @@ export default function LiquidityChartRangeInput({
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 
-      ReactGA.event({
-        category: 'Liquidity',
-        action: 'Chart brushed',
-      })
-
       if (leftRangeValue <= 0) {
         leftRangeValue = 1 / 10 ** 6
       }
