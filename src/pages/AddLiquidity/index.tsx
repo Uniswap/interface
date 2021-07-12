@@ -653,32 +653,6 @@ export default function AddLiquidity({
                         token0={currencyA?.wrapped}
                         token1={currencyB?.wrapped}
                       />
-
-                      {noLiquidity && (
-                        <BlueCard
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            padding: '1rem 1rem',
-                          }}
-                        >
-                          <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
-                            <AlertCircle color={theme.primaryText1} size={30} />
-                          </div>
-                          <TYPE.body
-                            fontSize={14}
-                            style={{ marginBottom: 8, fontWeight: 500 }}
-                            textAlign="center"
-                            color={theme.primaryText1}
-                          >
-                            <Trans>
-                              You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
-                              much higher as it includes the gas to create the pool.
-                            </Trans>
-                          </TYPE.body>
-                        </BlueCard>
-                      )}
                     </AutoColumn>{' '}
                   </>
                 )}
@@ -740,65 +714,54 @@ export default function AddLiquidity({
                   </HideMedium>
                   <RightContainer gap="lg">
                     <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
-                      <RowBetween>
-                        <TYPE.label>
-                          <Trans>Set your Price Range</Trans>
-                        </TYPE.label>
-                      </RowBetween>
+                      {!noLiquidity ? (
+                        <>
+                          <RowBetween>
+                            <TYPE.label>
+                              <Trans>Set Price Range</Trans>
+                            </TYPE.label>
+                          </RowBetween>
 
-                      {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                        <AutoRow gap="4px" justify="center" style={{ marginTop: '0.5rem' }}>
-                          <Trans>
-                            <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                              Current Price:
-                            </TYPE.main>
-                            <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
-                              <HoverInlineText
-                                maxCharacters={20}
-                                text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
-                              />
-                            </TYPE.body>
-                            <TYPE.body color="text2" fontSize={12}>
-                              {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                            </TYPE.body>
-                          </Trans>
-                        </AutoRow>
-                      )}
+                          {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                            <AutoRow gap="4px" justify="center" style={{ marginTop: '0.5rem' }}>
+                              <Trans>
+                                <TYPE.main fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                  Current Price:
+                                </TYPE.main>
+                                <TYPE.body fontWeight={500} textAlign="center" fontSize={12} color="text1">
+                                  <HoverInlineText
+                                    maxCharacters={20}
+                                    text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
+                                  />
+                                </TYPE.body>
+                                <TYPE.body color="text2" fontSize={12}>
+                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                                </TYPE.body>
+                              </Trans>
+                            </AutoRow>
+                          )}
 
-                      <LiquidityChartRangeInput
-                        currencyA={baseCurrency ?? undefined}
-                        currencyB={quoteCurrency ?? undefined}
-                        feeAmount={feeAmount}
-                        ticksAtLimit={ticksAtLimit}
-                        price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
-                        priceLower={priceLower}
-                        priceUpper={priceUpper}
-                        onLeftRangeInput={onLeftRangeInput}
-                        onRightRangeInput={onRightRangeInput}
-                        interactive={!hasExistingPosition}
-                      />
-
-                      {noLiquidity && (
+                          <LiquidityChartRangeInput
+                            currencyA={baseCurrency ?? undefined}
+                            currencyB={quoteCurrency ?? undefined}
+                            feeAmount={feeAmount}
+                            ticksAtLimit={ticksAtLimit}
+                            price={
+                              price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined
+                            }
+                            priceLower={priceLower}
+                            priceUpper={priceUpper}
+                            onLeftRangeInput={onLeftRangeInput}
+                            onRightRangeInput={onRightRangeInput}
+                            interactive={!hasExistingPosition}
+                          />
+                        </>
+                      ) : (
                         <AutoColumn gap="md">
                           <RowBetween>
                             <TYPE.label>
                               <Trans>Set Starting Price</Trans>
                             </TYPE.label>
-                            {baseCurrency && quoteCurrency ? (
-                              <RateToggle
-                                currencyA={baseCurrency}
-                                currencyB={quoteCurrency}
-                                handleRateToggle={() => {
-                                  onLeftRangeInput('')
-                                  onRightRangeInput('')
-                                  history.push(
-                                    `/add/${currencyIdB as string}/${currencyIdA as string}${
-                                      feeAmount ? '/' + feeAmount : ''
-                                    }`
-                                  )
-                                }}
-                              />
-                            ) : null}
                           </RowBetween>
 
                           <OutlineCard padding="12px">
@@ -937,6 +900,32 @@ export default function AddLiquidity({
                         </YellowCard>
                       ) : null}
                     </DynamicSection>
+
+                    {noLiquidity && (
+                      <BlueCard
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          padding: '1rem 1rem',
+                        }}
+                      >
+                        <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
+                          <AlertCircle color={theme.primaryText1} size={30} />
+                        </div>
+                        <TYPE.body
+                          fontSize={14}
+                          style={{ marginBottom: 8, fontWeight: 500 }}
+                          textAlign="center"
+                          color={theme.primaryText1}
+                        >
+                          <Trans>
+                            You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
+                            much higher as it includes the gas to create the pool.
+                          </Trans>
+                        </TYPE.body>
+                      </BlueCard>
+                    )}
 
                     <MediumOnly>
                       <Buttons />
