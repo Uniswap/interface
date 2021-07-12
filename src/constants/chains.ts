@@ -37,7 +37,15 @@ export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } 
   [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
   [SupportedChainId.OPTIMISM]: 'Optimistic Ethereum',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimistic Kovan',
-}
+} as const
+
+export const L1_CHAIN_IDS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
+]
 
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,

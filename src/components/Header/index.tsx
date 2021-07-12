@@ -265,7 +265,6 @@ export default function Header() {
   const scrollY = useScrollPosition()
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />

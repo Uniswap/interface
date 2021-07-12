@@ -131,6 +131,7 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   display: flex;
   flex-direction: row;
   font-weight: 500;
+  font-size: 12px;
   height: 100%;
   margin: 0;
   min-height: 36px;
@@ -145,6 +146,9 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
     outline: none;
     background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
   }
+`
+const NetworkLabel = styled.span`
+  flex: 1 1 auto;
 `
 
 export default function NetworkCard() {
@@ -173,7 +177,6 @@ export default function NetworkCard() {
 
   if (L2_CHAIN_IDS.includes(chainId)) {
     const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-
     const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
       <L2Wrapper ref={node}>
