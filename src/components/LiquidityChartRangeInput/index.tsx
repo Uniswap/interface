@@ -16,6 +16,25 @@ import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import ReactGA from 'react-ga'
+import { ZoomLevels } from './types'
+
+const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
+  [FeeAmount.LOW]: {
+    initial: 0.002,
+    min: 0.001,
+    max: 2,
+  },
+  [FeeAmount.MEDIUM]: {
+    initial: 0.3,
+    min: 0.01,
+    max: 20,
+  },
+  [FeeAmount.HIGH]: {
+    initial: 0.3,
+    min: 0.01,
+    max: 20,
+  },
+}
 
 const ChartWrapper = styled.div`
   position: relative;
@@ -51,7 +70,7 @@ export default function LiquidityChartRangeInput({
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
-  feeAmount?: number
+  feeAmount?: FeeAmount
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price: number | undefined
   priceLower?: Price<Token, Token>
@@ -73,13 +92,17 @@ export default function LiquidityChartRangeInput({
 
   const onBrushDomainChangeEnded = useCallback(
     (domain) => {
-      const leftRangeValue = Number(domain[0])
+      let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 
       ReactGA.event({
         category: 'Liquidity',
         action: 'Chart brushed',
       })
+
+      if (leftRangeValue <= 0) {
+        leftRangeValue = 1 / 10 ** 6
+      }
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
@@ -165,7 +188,7 @@ export default function LiquidityChartRangeInput({
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
-            initialZoom={feeAmount === FeeAmount.LOW ? 0.02 : 0.3}
+            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
           />
         </ChartWrapper>
       )}

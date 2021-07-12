@@ -20,7 +20,7 @@ export function Chart({
   brushDomain,
   brushLabels,
   onBrushDomainChange,
-  initialZoom,
+  zoomLevels,
 }: LiquidityChartRangeInputProps) {
   const svgRef = useRef<SVGSVGElement | null>(null)
 
@@ -34,7 +34,7 @@ export function Chart({
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
-        .domain([(1 - initialZoom) * current, (1 + initialZoom) * current] as number[])
+        .domain([(1 - zoomLevels.initial) * current, (1 + zoomLevels.initial) * current] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
@@ -47,7 +47,7 @@ export function Chart({
     }
 
     return scales
-  }, [initialZoom, current, innerWidth, series, innerHeight, zoom])
+  }, [zoomLevels.initial, current, innerWidth, series, innerHeight, zoom])
 
   useEffect(() => {
     if (!brushDomain) {
@@ -67,6 +67,7 @@ export function Chart({
         innerWidth={innerWidth}
         innerHeight={innerHeight}
         showClear={Boolean(zoom && zoom.k !== 1)}
+        zoomLevels={zoomLevels}
       />
       <svg ref={svgRef} width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
         <defs>

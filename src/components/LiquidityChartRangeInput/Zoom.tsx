@@ -3,6 +3,7 @@ import { ButtonGray } from 'components/Button'
 import styled from 'styled-components/macro'
 import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
+import { ZoomLevels } from './types'
 
 const Wrapper = styled.div<{ count: number }>`
   display: grid;
@@ -32,6 +33,7 @@ export default function Zoom({
   innerWidth,
   innerHeight,
   showClear,
+  zoomLevels,
 }: {
   svg: SVGSVGElement | null
   xScale: ScaleLinear<number, number>
@@ -39,6 +41,7 @@ export default function Zoom({
   innerWidth: number
   innerHeight: number
   showClear: boolean
+  zoomLevels: ZoomLevels
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
@@ -71,7 +74,7 @@ export default function Zoom({
 
     // zoom
     zoomBehavior.current = zoom()
-      .scaleExtent([0.3, 10])
+      .scaleExtent([zoomLevels.min, zoomLevels.max])
       .translateExtent([
         [0, 0],
         [innerWidth, innerHeight],
@@ -85,7 +88,7 @@ export default function Zoom({
     select(svg as Element)
       .call(zoomBehavior.current)
       .on('mousedown.zoom', null)
-  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior])
+  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels.max, zoomLevels.min])
 
   return (
     <Wrapper count={showClear ? 3 : 2}>
