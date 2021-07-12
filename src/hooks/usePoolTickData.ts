@@ -71,7 +71,7 @@ export function usePoolActiveLiquidity(
     if (
       !currencyA ||
       !currencyB ||
-      !activeTick ||
+      activeTick === undefined ||
       pool[0] !== PoolState.EXISTS ||
       !ticks ||
       ticks.length === 0 ||
