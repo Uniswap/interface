@@ -20,7 +20,7 @@ const BaseWrapper = css`
   ${StopOverflowQuery} {
     position: absolute;
     top: 66px;
-    right: 20px;
+    right: 16px;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
