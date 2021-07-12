@@ -15,6 +15,12 @@ export interface Margins {
   left: number
 }
 
+export interface ZoomLevels {
+  initial: number
+  min: number
+  max: number
+}
+
 export interface LiquidityChartRangeInputProps {
   // to distringuish between multiple charts in the DOM
   id?: string
@@ -47,5 +53,5 @@ export interface LiquidityChartRangeInputProps {
   brushDomain: [number, number] | undefined
   onBrushDomainChange: (domain: [number, number]) => void
 
-  initialZoom: number
+  zoomLevels: ZoomLevels
 }
