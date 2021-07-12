@@ -45,7 +45,7 @@ export default function RangeSelector({
     <AutoColumn gap="md">
       <RowBetween>
         <StepCounter
-          value={formatTickPrice(leftPrice, ticksAtLimit, Bound.LOWER, '')}
+          value={ticksAtLimit[Bound.LOWER] ? '0' : leftPrice?.toSignificant(5) ?? ''}
           onUserInput={onLeftRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -59,7 +59,7 @@ export default function RangeSelector({
           tokenB={currencyB?.symbol}
         />
         <StepCounter
-          value={formatTickPrice(rightPrice, ticksAtLimit, Bound.UPPER, '')}
+          value={ticksAtLimit[Bound.UPPER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
           onUserInput={onRightRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementUpper : getIncrementLower}
