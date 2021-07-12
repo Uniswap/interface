@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
-import { useLogs, LogsState } from '../state/logs/hooks'
+import { LogsState, useLogs } from '../state/logs/hooks'
 import { useV3Staker } from './useContract'
 import { useActiveWeb3React } from './web3'
+
+const VALID_STATES: LogsState[] = [LogsState.SYNCING, LogsState.SYNCED]
 
 export function useDepositedTokenIds() {
   const v3Staker = useV3Staker()
@@ -18,7 +20,9 @@ export function useDepositedTokenIds() {
   const transferredToLogs = useLogs(filters[1])
 
   const deposited = useMemo(() => {
-    if (transferredFromLogs.state !== LogsState.SYNCED || transferredToLogs !== LogsState.SYNCED) return undefined
+    if (!VALID_STATES.includes(transferredFromLogs.state) || !VALID_STATES.includes(transferredToLogs.state))
+      return undefined
+
     // todo: sort this concatenated list by block number and then transaction index and then log index
     return (transferredFromLogs.logs ?? []).concat(transferredToLogs.logs ?? [])
   }, [transferredFromLogs.logs, transferredFromLogs.state, transferredToLogs])

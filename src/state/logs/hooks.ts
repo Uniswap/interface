@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
 import { EventFilter, filterToKey, Log } from './utils'
 
-enum LogsState {
+export enum LogsState {
   // The filter is invalid
   INVALID,
   // The logs are being loaded
