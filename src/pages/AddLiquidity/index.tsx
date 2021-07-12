@@ -68,7 +68,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
 
@@ -450,7 +449,7 @@ export default function AddLiquidity({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange, getSetFullRange } =
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
     useRangeHopCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool)
 
   // we need an existence check on parsed amounts for single-asset deposits
@@ -840,19 +839,6 @@ export default function AddLiquidity({
                       <StackedContainer>
                         <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
                           <AutoColumn gap="md">
-                            {!noLiquidity && (
-                              <PresetsButtons
-                                feeAmount={feeAmount}
-                                setRange={(numTicks: number) => {
-                                  const [range1, range2] = getSetRange(numTicks)
-                                  onLeftRangeInput(invertPrice ? range2 : range1)
-                                  onRightRangeInput(invertPrice ? range1 : range2)
-                                }}
-                                setFullRange={() => {
-                                  setShowCapitalEfficiencyWarning(true)
-                                }}
-                              />
-                            )}
                             <RangeSelector
                               priceLower={priceLower}
                               priceUpper={priceUpper}

@@ -17,6 +17,12 @@ import { Bound } from 'state/mint/v3/actions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import ReactGA from 'react-ga'
 
+const INITIAL_ZOOM = {
+  [FeeAmount.LOW]: 0.002,
+  [FeeAmount.MEDIUM]: 0.3,
+  [FeeAmount.HIGH]: 0.3,
+}
+
 const ChartWrapper = styled.div`
   position: relative;
 
@@ -51,7 +57,7 @@ export default function LiquidityChartRangeInput({
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
-  feeAmount?: number
+  feeAmount?: FeeAmount
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price: number | undefined
   priceLower?: Price<Token, Token>
@@ -165,7 +171,7 @@ export default function LiquidityChartRangeInput({
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
-            initialZoom={feeAmount === FeeAmount.LOW ? 0.02 : 0.3}
+            initialZoom={INITIAL_ZOOM[feeAmount ?? FeeAmount.MEDIUM]}
           />
         </ChartWrapper>
       )}
