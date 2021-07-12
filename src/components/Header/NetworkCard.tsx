@@ -7,7 +7,7 @@ import { ArrowDownCircle, ChevronDown, ToggleLeft } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
-import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { ExternalLink } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
@@ -15,12 +15,13 @@ const BaseWrapper = css`
   position: relative;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
+    justify-self: end;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0 0.5rem 0 0;
     width: initial;
-    overflow: hidden;
+    // overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
@@ -69,18 +70,13 @@ const FallbackWrapper = styled(YellowCard)`
 const Icon = styled.img`
   width: 17px;
 `
-const L1Tag = styled.div`
-  color: ${({ theme }) => theme.text1};
-  opacity: 40%;
-`
-const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
+const L2Tag = styled.div<{ chainId: SupportedChainId }>`
   border-radius: 6px;
-  /* color: white; */
-
   font-size: 14px;
-  font-weight: 600;
-  padding: 0 4px 0 6px;
+  font-weight: 500;
+  padding: 0 4px 0.5px 6px;
 `
+
 const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -96,7 +92,8 @@ const MenuFlyout = styled.span`
   z-index: 100;
   width: 237px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -10.25rem;
+    top: unset;
+    bottom: 4rem;
   `};
   > {
     padding: 12px;
@@ -112,7 +109,6 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 16px;
   height: 16px;
-  /* stroke-width: 1.5; */
   opacity: 0.6;
 `
 const MenuItem = styled(ExternalLink)`
@@ -126,7 +122,7 @@ const ButtonMenuItem = styled.button`
   outline: none;
   padding: 0;
 `
-const NetworkInfo = styled.button<{ chainId: SupportedL2ChainId }>`
+const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 12px;
@@ -140,18 +136,15 @@ const NetworkInfo = styled.button<{ chainId: SupportedL2ChainId }>`
   min-height: 36px;
   padding: 0.5rem;
 
-  background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')};
-  color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
+  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')};
+  /* color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')}; */
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
+    background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
   }
-`
-const NetworkLabel = styled.span`
-  flex: 1 1 auto;
 `
 
 export default function NetworkCard() {
@@ -180,6 +173,7 @@ export default function NetworkCard() {
 
   if (L2_CHAIN_IDS.includes(chainId)) {
     const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+
     const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
     return (
       <L2Wrapper ref={node}>

@@ -3,7 +3,6 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { darken } from 'polished'
 import { useState } from 'react'
-import { Moon, Sun } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -41,15 +40,15 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   position: relative;
 
   /* Background slide effect on scroll. */
-  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`}
+  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`};
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
   box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
-  transition: background-position .1s, box-shadow .1s;
+  transition: background-position 0.1s, box-shadow 0.1s;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 120px 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -67,6 +66,7 @@ const HeaderControls = styled.div`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
+
     width: 100%;
     max-width: 960px;
     padding: 1rem;
@@ -91,7 +91,7 @@ const HeaderElement = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row-reverse;
+    // flex-direction: row-reverse;
     align-items: center;
   `};
 `
@@ -99,6 +99,7 @@ const HeaderElement = styled.div`
 const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 8px;
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -158,18 +159,6 @@ const UNIWrapper = styled.span`
   :active {
     opacity: 0.9;
   }
-`
-
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
-const HideMedium = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    display: none;
-  `};
 `
 
 const BalanceText = styled(Text)`
@@ -256,47 +245,13 @@ const StyledExternalLink = styled(ExternalLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
     text-decoration: none;
   }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
-`
-
-const StyledMenuButton = styled.button`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg2};
-  margin-left: 8px;
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
 `
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  // const [isDark] = useDarkModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [darkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -310,6 +265,7 @@ export default function Header() {
   const scrollY = useScrollPosition()
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
@@ -340,7 +296,7 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
-        {(chainId && chainId === SupportedL1ChainId.MAINNET) ?? (
+        {chainId && chainId === SupportedChainId.MAINNET && (
           <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             <Trans>Vote</Trans>
           </StyledNavLink>
@@ -350,9 +306,12 @@ export default function Header() {
           <sup>↗</sup>
         </StyledExternalLink>
       </HeaderLinks>
+
       <HeaderControls>
-        <HeaderElement>
+        <HeaderElementWrap>
           <NetworkCard />
+        </HeaderElementWrap>
+        <HeaderElement>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -377,13 +336,9 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-        </HeaderElement>
-        <HeaderElementWrap>
-          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton> */}
+
           <Menu />
-        </HeaderElementWrap>
+        </HeaderElement>
       </HeaderControls>
     </HeaderFrame>
   )

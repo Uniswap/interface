@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -10,6 +10,8 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+import { useDarkModeManager } from 'state/user/hooks'
+
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 
 export enum FlyoutAlignment {
@@ -87,7 +89,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     top: unset;
-    bottom: 3em
+    bottom: 4.5em
   `};
 `
 
@@ -104,9 +106,6 @@ const MenuItem = styled(ExternalLink)`
     cursor: pointer;
     text-decoration: none;
   }
-  /* > svg {
-    margin-right: 8px;
-  } */
 `
 
 const InternalMenuItem = styled(Link)`
@@ -123,6 +122,26 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
+const ToggleMenuItem = styled.button`
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  justify-content: space-between;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
+
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
@@ -135,6 +154,9 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
+
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
@@ -174,6 +196,10 @@ export default function Menu() {
             </div>
             <PieChart opacity={0.6} size={16} />
           </MenuItem>
+          <ToggleMenuItem onClick={() => toggleDarkMode()}>
+            <div>{darkMode ? <Trans>Dark Theme</Trans> : <Trans>Light Theme</Trans>}</div>
+            {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+          </ToggleMenuItem>
           {showUNIClaimOption && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">
               <Trans>Claim UNI</Trans>
