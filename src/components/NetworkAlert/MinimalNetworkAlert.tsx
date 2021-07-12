@@ -109,7 +109,7 @@ export function MinimalNetworkAlert() {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-  const depositUrl = [SupportedL2ChainId.OPTIMISM, SupportedL2ChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
     ? `${info.bridge}?chainId=1`
     : info.bridge
   return (
