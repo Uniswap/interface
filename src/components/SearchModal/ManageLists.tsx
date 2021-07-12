@@ -253,16 +253,19 @@ export function ManageLists({
 
   const lists = useAllLists()
 
-  const tokenCountByListName = useMemo(() => {
-    const result: Record<string, number> = {}
-    Object.values(lists).forEach(({ current: list }) => {
-      if (!list) {
-        return
-      }
-      result[list.name] = list.tokens.filter((token) => token.chainId === chainId).length
-    })
-    return result
-  }, [chainId, lists])
+  const tokenCountByListName = useMemo<Record<string, number>>(
+    () =>
+      Object.values(lists).reduce((acc, { current: list }) => {
+        if (!list) {
+          return acc
+        }
+        return {
+          ...acc,
+          [list.name]: list.tokens.reduce((count: number, token) => (token.chainId === chainId ? count + 1 : count), 0),
+        }
+      }, {}),
+    [chainId, lists]
+  )
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
