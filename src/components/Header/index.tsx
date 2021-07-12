@@ -77,7 +77,7 @@ const HeaderControls = styled.div`
     z-index: 99;
     height: 72px;
     border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: ${({ theme }) => theme.bg0};
   `};
 `
 
@@ -127,7 +127,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg2)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg0)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;

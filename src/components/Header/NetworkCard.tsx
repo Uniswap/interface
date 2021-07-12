@@ -21,7 +21,6 @@ const BaseWrapper = css`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0 0.5rem 0 0;
     width: initial;
-    // overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
@@ -68,17 +67,21 @@ const FallbackWrapper = styled(YellowCard)`
   padding: 8px 12px;
 `
 const Icon = styled.img`
-  width: 17px;
+  width: 16px;
+  margin-right: 2px;
 `
 const L2Tag = styled.div<{ chainId: SupportedChainId }>`
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   padding: 0 4px 0.5px 6px;
+  white-space: pre;
 `
 
 const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.bg0};
+
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -138,7 +141,6 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   padding: 0.5rem;
 
   background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')};
-  /* color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')}; */
 
   :hover,
   :focus {
