@@ -842,8 +842,7 @@ export default function AddLiquidity({
                                 <RowFixed>
                                   <TYPE.yellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
                                     <Trans>
-                                      On Uniswap V3, setting a range across all prices like V2 is less capital efficient
-                                      than a concentrated one. Learn more{' '}
+                                      Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
                                         style={{ color: theme.yellow3, textDecoration: 'underline' }}
                                         href={''}
