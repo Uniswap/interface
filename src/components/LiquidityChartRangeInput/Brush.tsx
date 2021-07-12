@@ -75,7 +75,7 @@ export const Brush = ({
   const previousBrushExtent = usePrevious(brushExtent)
 
   const brushed = useCallback(
-    ({ mode, type, selection }: D3BrushEvent<unknown>) => {
+    ({ type, selection }: D3BrushEvent<unknown>) => {
       if (!selection) {
         setLocalBrushExtent(null)
         return
@@ -83,15 +83,14 @@ export const Brush = ({
 
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number]
 
-      // undefined `mode` means brush was programatically moved
-      // skip calling the handler to avoid a loop
-      if (type === 'end' && mode !== undefined) {
+      // avoid infinite render loop by checking for change
+      if (type === 'end' && (brushExtent[0] !== scaled[0] || brushExtent[1] !== scaled[1])) {
         setBrushExtent(scaled)
       }
 
       setLocalBrushExtent(scaled)
     },
-    [xScale.invert, setBrushExtent]
+    [xScale.invert, brushExtent, setBrushExtent]
   )
 
   // keep local and external brush extent in sync
