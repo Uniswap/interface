@@ -36,7 +36,9 @@ export function useDensityChartData({
         price0: parseFloat(t.price0),
       }
 
-      newData.push(chartEntry)
+      if (chartEntry.activeLiquidity > 0) {
+        newData.push(chartEntry)
+      }
     }
 
     return newData

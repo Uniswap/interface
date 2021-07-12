@@ -16,11 +16,24 @@ import { format } from 'd3'
 import { Bound } from 'state/mint/v3/actions'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import ReactGA from 'react-ga'
+import { ZoomLevels } from './types'
 
-const INITIAL_ZOOM = {
-  [FeeAmount.LOW]: 0.002,
-  [FeeAmount.MEDIUM]: 0.3,
-  [FeeAmount.HIGH]: 0.3,
+const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
+  [FeeAmount.LOW]: {
+    initial: 0.002,
+    min: 0.001,
+    max: 2,
+  },
+  [FeeAmount.MEDIUM]: {
+    initial: 0.3,
+    min: 0.01,
+    max: 20,
+  },
+  [FeeAmount.HIGH]: {
+    initial: 0.3,
+    min: 0.01,
+    max: 20,
+  },
 }
 
 const ChartWrapper = styled.div`
@@ -171,7 +184,7 @@ export default function LiquidityChartRangeInput({
             brushLabels={brushLabelValue}
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
-            initialZoom={INITIAL_ZOOM[feeAmount ?? FeeAmount.MEDIUM]}
+            zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
           />
         </ChartWrapper>
       )}
