@@ -15,6 +15,8 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { Trans } from '@lingui/macro'
+import { useIsTransactionConfirmed } from '../../state/transactions/hooks'
+import { L2_CHAIN_IDS } from 'constants/chains'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -227,7 +229,14 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
+  const confirmed = useIsTransactionConfirmed(hash)
+
   if (!chainId) return null
+
+  // if on L2 and txn is confirmed, close automatically (if open)
+  if (isOpen && confirmed && L2_CHAIN_IDS.includes(chainId)) {
+    onDismiss()
+  }
 
   // confirmation screen
   return (

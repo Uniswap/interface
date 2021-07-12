@@ -19,7 +19,7 @@ const BaseWrapper = css`
   position: relative;
   ${StopOverflowQuery} {
     position: absolute;
-    top: 80px;
+    top: 66px;
     right: 20px;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
