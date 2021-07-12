@@ -189,10 +189,7 @@ export default function NetworkCard() {
 
   if (L2_CHAIN_IDS.includes(chainId)) {
     const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-<<<<<<< HEAD
     const isArbitrum = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)
-=======
->>>>>>> 734126d5 (show tokens from active lists)
     return (
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle}>

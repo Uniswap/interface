@@ -52,8 +52,8 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     (acc, cur) => ({
       ...acc,
       [cur]: {
-        ...map1[cur as SupportedL1ChainId | SupportedL2ChainId],
-        ...map2[cur as SupportedL1ChainId | SupportedL2ChainId],
+        ...map1[cur as SupportedChainId],
+        ...map2[cur as SupportedChainId],
       },
     }),
     {}

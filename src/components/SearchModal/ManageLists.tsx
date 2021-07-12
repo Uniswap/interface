@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import Card from 'components/Card'
-import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import { useListColor } from 'hooks/useColor'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -169,7 +169,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list) return null
 
-  const { label } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
+  const { label } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   const hoverText = t`This token list currently has ${activeTokensOnThisChain} ${label} tokens in it`
 
