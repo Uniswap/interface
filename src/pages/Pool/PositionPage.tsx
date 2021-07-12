@@ -44,6 +44,7 @@ import Toggle from 'components/Toggle'
 import { Bound } from 'state/mint/v3/actions'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { formatTickPrice } from 'utils/formatTickPrice'
+import { SupportedChainId } from 'constants/chains'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -372,11 +373,6 @@ export function PositionPage({
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
 
-  // check if price is within range
-  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
-  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
-  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
-
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
       ? getRatio(
@@ -479,6 +475,11 @@ export function PositionPage({
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
 
+  // check if price is within range
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
+  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
+
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
@@ -510,13 +511,15 @@ export function PositionPage({
     )
   }
 
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
     ownsNFT &&
       (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash
+      !collectMigrationHash &&
+      !onOptimisticChain
   )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
