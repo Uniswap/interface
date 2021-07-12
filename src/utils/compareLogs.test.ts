@@ -37,4 +37,15 @@ describe('#compareLogs', () => {
       )
     ).toEqual(-3)
   })
+
+  it('can be used to sort logs', () => {
+    const logA = {
+      blockNumber: 2,
+      transactionIndex: 2,
+      logIndex: 5,
+    }
+    const logB = { blockNumber: 2, transactionIndex: 2, logIndex: 8 }
+    expect([logA, logB].sort(compareLogs)).toEqual([logA, logB])
+    expect([logB, logA].sort(compareLogs)).toEqual([logA, logB])
+  })
 })
