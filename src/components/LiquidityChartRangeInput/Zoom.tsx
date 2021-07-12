@@ -90,6 +90,10 @@ export default function Zoom({
       .on('mousedown.zoom', null)
   }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels.max, zoomLevels.min])
 
+  useEffect(() => {
+    zoomOut()
+  }, [zoomLevels, zoomOut])
+
   return (
     <Wrapper count={showClear ? 3 : 2}>
       {showClear && (
