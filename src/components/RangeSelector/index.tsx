@@ -4,7 +4,6 @@ import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import { Bound } from 'state/mint/v3/actions'
-import { formatTickPrice } from 'utils/formatTickPrice'
 
 // currencyA is the base token
 export default function RangeSelector({
