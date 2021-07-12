@@ -1,24 +1,11 @@
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { LogsState, useLogs } from '../state/logs/hooks'
-import { Log } from '../state/logs/utils'
+import compareLogs from '../utils/compareLogs'
 import { useV3Staker } from './useContract'
 import { useActiveWeb3React } from './web3'
 
 const VALID_STATES: LogsState[] = [LogsState.SYNCING, LogsState.SYNCED]
-
-/**
- * Sorts logs in chronological order from earliest to latest
- * @param logA one of two logs to compare
- * @param logB the other of the two logs to compare
- */
-function compareLogs(logA: Log, logB: Log) {
-  return (
-    logA.blockNumber - logB.blockNumber ||
-    logA.transactionIndex - logB.transactionIndex ||
-    logA.logIndex - logB.logIndex
-  )
-}
 
 export enum DepositedTokenIdsState {
   INVALID,
