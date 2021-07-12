@@ -30,6 +30,13 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+export const DAI_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  18,
+  'DAI',
+  'Dai stable coin'
+)
 export const USDT = new Token(
   SupportedChainId.MAINNET,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',
