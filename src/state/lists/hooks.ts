@@ -1,6 +1,6 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
-import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'

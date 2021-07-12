@@ -19,7 +19,6 @@ export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COMPOUND_LIST,
   AAVE_LIST,
-  OPTIMISM_LIST,
   UMA_LIST,
   WRAPPED_LIST,
   SET_LIST,

@@ -254,7 +254,7 @@ export function ManageLists({
   const lists = useAllLists()
 
   const tokenCountByListName = useMemo(() => {
-    const result: any = {}
+    const result: Record<string, number> = {}
     Object.values(lists).forEach(({ current: list }) => {
       if (!list) {
         return
