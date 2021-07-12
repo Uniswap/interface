@@ -73,7 +73,7 @@ const Icon = styled.img`
 const L2Tag = styled.div<{ chainId: SupportedChainId }>`
   border-radius: 6px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0 4px 0.5px 6px;
 `
 
@@ -147,9 +147,6 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
     background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
   }
 `
-const NetworkLabel = styled.span`
-  flex: 1 1 auto;
-`
 
 export default function NetworkCard() {
   const { chainId, library } = useActiveWeb3React()
@@ -182,7 +179,6 @@ export default function NetworkCard() {
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle} chainId={chainId}>
           <Icon src={info.logoUrl} />
-          {/* <NetworkLabel>OE</NetworkLabel> */}
           <L2Tag chainId={chainId}>L2</L2Tag>
           <ChevronDown size={16} style={{ marginTop: '2px' }} strokeWidth={2.5} />
         </NetworkInfo>
