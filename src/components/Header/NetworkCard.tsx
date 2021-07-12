@@ -82,7 +82,7 @@ const L1Tag = styled.div`
   opacity: 40%;
 `
 const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
-  background-color: ${({ chainId }) => (chainId === SupportedL2ChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
+  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
   color: white;
   font-size: 12px;

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -60,7 +60,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
     [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
   )
 
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   return (
     <ContentWrapper gap="lg">

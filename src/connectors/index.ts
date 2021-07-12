@@ -4,7 +4,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
-import { SupportedL1ChainId, SupportedL2ChainId } from '../constants/chains'
+import { SupportedChainId } from '../constants/chains'
 import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
@@ -19,27 +19,27 @@ if (typeof INFURA_KEY === 'undefined') {
 }
 
 const NETWORK_URLS = {
-  [SupportedL1ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL1ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL1ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL1ChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL1ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL2ChainId.OPTIMISM]: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL2ChainId.OPTIMISTIC_KOVAN]: `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedL2ChainId.ARBITRUM_ONE]: `https://arb1.arbitrum.io/rpc`,
-  [SupportedL2ChainId.ARBITRUM_RINKEBY]: `https://rinkeby.arbitrum.io/rpc`,
+  [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.OPTIMISM]: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.OPTIMISTIC_KOVAN]: `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.ARBITRUM_ONE]: `https://arb1.arbitrum.io/rpc`,
+  [SupportedChainId.ARBITRUM_RINKEBY]: `https://rinkeby.arbitrum.io/rpc`,
 }
 
 const SUPPORTED_CHAIN_IDS = [
-  SupportedL1ChainId.MAINNET,
-  SupportedL1ChainId.KOVAN,
-  SupportedL1ChainId.GOERLI,
-  SupportedL1ChainId.RINKEBY,
-  SupportedL1ChainId.ROPSTEN,
-  SupportedL2ChainId.OPTIMISM,
-  SupportedL2ChainId.OPTIMISTIC_KOVAN,
-  SupportedL2ChainId.ARBITRUM_ONE,
-  SupportedL2ChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.MAINNET,
+  SupportedChainId.KOVAN,
+  SupportedChainId.GOERLI,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
 ]
 
 export const network = new NetworkConnector({
@@ -78,7 +78,7 @@ export const portis = new PortisConnector({
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
-  url: NETWORK_URLS[SupportedL1ChainId.MAINNET],
+  url: NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'Uniswap',
   appLogoUrl: UNISWAP_LOGO_URL,
 })

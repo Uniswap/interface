@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { RowBetween } from 'components/Row'
-import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -122,7 +122,7 @@ const StyledImage = styled.img`
 
 export default function CTACards() {
   const { chainId } = useActiveWeb3React()
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
     <div>
       <MinimalNetworkAlert />

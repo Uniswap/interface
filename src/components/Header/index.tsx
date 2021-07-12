@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import { CHAIN_INFO, SupportedL1ChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
@@ -303,7 +303,7 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedL1ChainId.MAINNET]
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
