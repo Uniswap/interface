@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
-
 import { updateMatchesDarkMode } from './actions'
 
 export default function Updater(): null {

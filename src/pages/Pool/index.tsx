@@ -151,6 +151,16 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
+          <Layers size={16} style={{ marginRight: '12px' }} />
+          <Trans>V2 liquidity</Trans>
+        </MenuItem>
+      ),
+      link: '/pool/v2',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
           <BookOpen size={16} style={{ marginRight: '12px' }} />
           <Trans>Learn</Trans>
         </MenuItem>
@@ -159,19 +169,6 @@ export default function Pool() {
       external: true,
     },
   ]
-
-  if (showV2Features) {
-    menuItems.splice(2, 0, {
-      content: (
-        <MenuItem>
-          <Layers size={16} style={{ marginRight: '12px' }} />
-          <Trans>V2 liquidity</Trans>
-        </MenuItem>
-      ),
-      link: '/pool/v2',
-      external: false,
-    })
-  }
 
   return (
     <>
@@ -186,18 +183,20 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <Menu
-                  menuItems={menuItems}
-                  flyoutAlignment={FlyoutAlignment.LEFT}
-                  ToggleUI={(props: any) => (
-                    <MoreOptionsButton {...props}>
-                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                        <Trans>More</Trans>
-                        <ChevronDown size={15} />
-                      </TYPE.body>
-                    </MoreOptionsButton>
-                  )}
-                />
+                {showV2Features && (
+                  <Menu
+                    menuItems={menuItems}
+                    flyoutAlignment={FlyoutAlignment.LEFT}
+                    ToggleUI={(props: any) => (
+                      <MoreOptionsButton {...props}>
+                        <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                          <Trans>More</Trans>
+                          <ChevronDown size={15} />
+                        </TYPE.body>
+                      </MoreOptionsButton>
+                    )}
+                  />
+                )}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
                   + <Trans>New Position</Trans>
                 </ResponsiveButtonPrimary>
