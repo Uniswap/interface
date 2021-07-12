@@ -65,17 +65,11 @@ const FallbackWrapper = styled(YellowCard)`
   width: auto;
   border-radius: 12px;
   padding: 8px 12px;
+  width: 100%;
 `
 const Icon = styled.img`
   width: 16px;
   margin-right: 2px;
-`
-const L2Tag = styled.div<{ chainId: SupportedChainId }>`
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 0 4px 0.5px 6px;
-  white-space: pre;
 `
 
 const MenuFlyout = styled.span`
@@ -90,7 +84,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  left: 0rem;
+  right: 0rem;
   top: 3rem;
   z-index: 100;
   width: 237px;
@@ -127,9 +121,9 @@ const ButtonMenuItem = styled.button`
 `
 const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg0};
   border-radius: 12px;
-  border: none;
+  border: 1px solid ${({ theme }) => theme.bg0};
   color: ${({ theme }) => theme.text1};
   display: flex;
   flex-direction: row;
@@ -137,17 +131,37 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   font-size: 12px;
   height: 100%;
   margin: 0;
-  min-height: 36px;
-  padding: 0.5rem;
+  height: 38px;
+  padding: 0.7rem;
 
-  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')};
+  /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')}; */
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')};
+    /* background-color: ${({ theme }) => theme.bg1}; */
+    border: 1px solid ${({ theme }) => theme.bg3};
+
+    /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')}; */
   }
+`
+const NetworkName = styled.div<{ chainId: SupportedChainId }>`
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 2px 0.5px 4px;
+  margin: 0 2px;
+  /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')}; */
+`
+
+const L2Tag = styled.div<{ chainId: SupportedChainId }>`
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 4px;
+  margin: 0 0 0 2px;
+  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
 `
 
 export default function NetworkCard() {
@@ -181,7 +195,10 @@ export default function NetworkCard() {
       <L2Wrapper ref={node}>
         <NetworkInfo onClick={toggle} chainId={chainId}>
           <Icon src={info.logoUrl} />
-          <L2Tag chainId={chainId}>L2</L2Tag>
+          <NetworkName chainId={chainId}>{info.label}</NetworkName>
+          {/* <NetworkName chainId={chainId}>L2</NetworkName> */}
+
+          {/* <L2Tag chainId={chainId}>L2</L2Tag> */}
           <ChevronDown size={16} style={{ marginTop: '2px' }} strokeWidth={2.5} />
         </NetworkInfo>
         {open && (

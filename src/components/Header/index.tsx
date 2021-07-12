@@ -27,7 +27,7 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 36px 1fr 1fr;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -45,6 +45,10 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-size: 100% 200%;
   box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
   transition: background-position 0.1s, box-shadow 0.1s;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-template-columns: 48px 1fr 1fr;
+  `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
@@ -77,7 +81,7 @@ const HeaderControls = styled.div`
     z-index: 99;
     height: 72px;
     border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg0};
+    background-color: ${({ theme }) => theme.bg1};
   `};
 `
 
@@ -99,7 +103,6 @@ const HeaderElement = styled.div`
 const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 8px;
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -109,8 +112,8 @@ const HeaderRow = styled(RowFixed)`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-self: center;
-  background-color: ${({ theme }) => theme.bg0};
+  justify-self: start;
+  /* background-color: ${({ theme }) => theme.bg0}; */
   width: fit-content;
   padding: 4px;
   border-radius: 16px;
@@ -118,8 +121,10 @@ const HeaderLinks = styled(Row)`
   grid-auto-flow: column;
   grid-gap: 10px;
   overflow: auto;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+  justify-self: start;  `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-self: flex-end;
+    justify-self: end;
   `};
 `
 
@@ -127,7 +132,8 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg0)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
+  /* border: 1px solid ${({ theme }) => theme.bg0}; */
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -210,7 +216,7 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
+    /* background-color: ${({ theme }) => theme.bg0}; */
   }
 
   :hover,
@@ -307,9 +313,6 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
-        <HeaderElementWrap>
-          <NetworkCard />
-        </HeaderElementWrap>
         <HeaderElement>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
@@ -335,7 +338,7 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-
+          <NetworkCard />
           <Menu />
         </HeaderElement>
       </HeaderControls>
