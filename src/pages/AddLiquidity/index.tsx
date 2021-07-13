@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { AlertTriangle, AlertCircle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
@@ -776,7 +776,36 @@ export default function AddLiquidity({
                               <Trans>Set Starting Price</Trans>
                             </TYPE.label>
                           </RowBetween>
-
+                          {noLiquidity && (
+                            <BlueCard
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: '1rem 1rem',
+                              }}
+                            >
+                              <TYPE.body
+                                fontSize={14}
+                                style={{ fontWeight: 500 }}
+                                textAlign="left"
+                                color={theme.primaryText1}
+                              >
+                                {mustCreateSeparately ? (
+                                  <Trans>
+                                    {`This pool must be initialized on ${
+                                      chainId && CHAIN_INFO ? CHAIN_INFO[chainId].label : ''
+                                    } before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount.`}
+                                  </Trans>
+                                ) : (
+                                  <Trans>
+                                    You are the first liquidity provider for this Uniswap V3 pool.The transaction cost
+                                    will be much higher as it includes the gas to create the pool.
+                                  </Trans>
+                                )}
+                              </TYPE.body>
+                            </BlueCard>
+                          )}
                           <OutlineCard padding="12px">
                             <StyledInput
                               className="start-price-input"
@@ -911,41 +940,6 @@ export default function AddLiquidity({
                         </YellowCard>
                       ) : null}
                     </DynamicSection>
-
-                    {noLiquidity && (
-                      <BlueCard
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          padding: '1rem 1rem',
-                        }}
-                      >
-                        <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
-                          <AlertCircle color={theme.primaryText1} size={30} />
-                        </div>
-                        <TYPE.body
-                          fontSize={14}
-                          style={{ marginBottom: 8, fontWeight: 500 }}
-                          textAlign="left"
-                          color={theme.primaryText1}
-                        >
-                          {mustCreateSeparately ? (
-                            <Trans>
-                              {`This pool has not yet been initialized on ${
-                                chainId ? CHAIN_INFO[chainId].label : ''
-                              }. First submit a transaction to initialize the pool. Once the pool is initialized, the app will prompt you to submit a
-                              second transaction to add liquidity.`}
-                            </Trans>
-                          ) : (
-                            <Trans>
-                              You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
-                              much higher as it includes the gas to create the pool.
-                            </Trans>
-                          )}
-                        </TYPE.body>
-                      </BlueCard>
-                    )}
 
                     <MediumOnly>
                       <Buttons />
