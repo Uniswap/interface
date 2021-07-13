@@ -15,7 +15,6 @@ const BaseWrapper = css`
   position: relative;
   margin-right: 8px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-left: 12px;
     justify-self: end;
   `};
 
