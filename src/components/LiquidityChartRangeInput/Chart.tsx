@@ -24,7 +24,7 @@ export function Chart({
 }: LiquidityChartRangeInputProps) {
   const svgRef = useRef<SVGSVGElement | null>(null)
 
-  const [zoom, setZoom] = useState<ZoomTransform>()
+  const [zoom, setZoom] = useState<ZoomTransform | null>(null)
 
   const [innerHeight, innerWidth] = useMemo(
     () => [height - margins.top - margins.bottom, width - margins.left - margins.right],
@@ -48,6 +48,11 @@ export function Chart({
 
     return scales
   }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
+
+  useEffect(() => {
+    // reset zoom as necessary
+    setZoom(null)
+  }, [zoomLevels])
 
   useEffect(() => {
     if (!brushDomain) {
@@ -121,10 +126,8 @@ export function Chart({
             innerWidth={innerWidth}
             innerHeight={innerHeight}
             setBrushExtent={onBrushDomainChange}
-            colors={{
-              west: styles.brush.handle.west,
-              east: styles.brush.handle.east,
-            }}
+            westHandleColor={styles.brush.handle.west}
+            eastHandleColor={styles.brush.handle.east}
           />
         </g>
       </svg>
