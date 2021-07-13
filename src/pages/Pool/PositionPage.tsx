@@ -305,10 +305,10 @@ const useInverter = ({
   base?: Token
 } => {
   return {
-    priceUpper: invert ? priceUpper?.invert() : priceUpper,
-    priceLower: invert ? priceLower?.invert() : priceLower,
-    quote,
-    base,
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
   }
 }
 
