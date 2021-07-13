@@ -21,12 +21,7 @@ const L2Icon = styled.img`
     display: block;
   }
 `
-const DesktopTextBreak = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
+
 const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
@@ -82,7 +77,7 @@ const LinkOutToBridge = styled.a`
   border-radius: 16px;
   color: white;
   display: flex;
-  font-size: 14px;
+  font-size: 12px;
   justify-content: space-between;
   margin: 0;
   max-height: 47px;
@@ -96,8 +91,8 @@ const LinkOutToBridge = styled.a`
   }
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin: auto 0 auto auto;
-    padding: 14px 17px;
-    min-width: 226px;
+    padding: 14px 16px;
+    min-width: 252px;
   }
 `
 export function MinimalNetworkAlert() {
@@ -117,7 +112,7 @@ export function MinimalNetworkAlert() {
       <L2Icon src={info.logoUrl} />
       <Body>
         <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
+        <Trans>You must bridge L1 assets to the network to use them.</Trans>
       </Body>
       <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>

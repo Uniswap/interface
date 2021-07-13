@@ -3,7 +3,7 @@ import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } fr
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
-import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
+import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
@@ -122,17 +122,26 @@ export function NetworkAlert() {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
+  const [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged] = useOptimismAlphaAlert()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
+  const onOptimism = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+
   const dismiss = useCallback(() => {
     if (userEthBalance?.greaterThan(0)) {
-      setArbitrumAlphaAcknowledged(true)
+      if (onOptimism) {
+        setOptimismAlphaAcknowledged(true)
+      } else {
+        setArbitrumAlphaAcknowledged(true)
+      }
     } else {
       setLocallyDimissed(true)
     }
-  }, [setArbitrumAlphaAcknowledged, userEthBalance])
-  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged || locallyDismissed) {
+  }, [onOptimism, setOptimismAlphaAcknowledged, setArbitrumAlphaAcknowledged, userEthBalance])
+  const dismissedOnArbitrum = !onOptimism && arbitrumAlphaAcknowledged
+  const dismissedOnOptimism = onOptimism && optimismAlphaAcknowledged
+  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || locallyDismissed || dismissedOnOptimism || dismissedOnArbitrum) {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]

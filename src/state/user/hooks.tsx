@@ -18,6 +18,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateArbitrumAlphaAcknowledged,
+  updateOptimismAlphaAcknowledged,
   updateHideClosedPositions,
   updateUserDarkMode,
   updateUserDeadline,
@@ -343,4 +344,14 @@ export function useArbitrumAlphaAlert(): [boolean, (arbitrumAlphaAcknowledged: b
   }
 
   return [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged]
+}
+
+export function useOptimismAlphaAlert(): [boolean, (optimismAlphaAcknowledged: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const optimismAlphaAcknowledged = useAppSelector(({ user }) => user.optimismAlphaAcknowledged)
+  const setOptimismAlphaAcknowledged = (optimismAlphaAcknowledged: boolean) => {
+    dispatch(updateOptimismAlphaAcknowledged({ optimismAlphaAcknowledged }))
+  }
+
+  return [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged]
 }

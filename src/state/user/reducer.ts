@@ -17,6 +17,7 @@ import {
   updateHideClosedPositions,
   updateUserLocale,
   updateArbitrumAlphaAcknowledged,
+  updateOptimismAlphaAcknowledged,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 
@@ -24,6 +25,7 @@ const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
   arbitrumAlphaAcknowledged: boolean
+  optimismAlphaAcknowledged: boolean
 
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
@@ -70,6 +72,7 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   arbitrumAlphaAcknowledged: false,
+  optimismAlphaAcknowledged: false,
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
@@ -130,6 +133,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
       state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
+    })
+    .addCase(updateOptimismAlphaAcknowledged, (state, action) => {
+      state.optimismAlphaAcknowledged = action.payload.optimismAlphaAcknowledged
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode

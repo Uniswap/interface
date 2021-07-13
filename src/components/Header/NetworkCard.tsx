@@ -10,6 +10,7 @@ import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
+import L2LaunchAlert from './L2LaunchAlert'
 
 const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.upToMedium + 1}px) and (max-width: ${
   MEDIA_WIDTHS.upToMedium + 500
@@ -32,9 +33,6 @@ const BaseWrapper = css`
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
-`
-const L2Wrapper = styled.div`
-  ${BaseWrapper}
 `
 const BaseMenuItem = css`
   align-items: center;
@@ -81,6 +79,10 @@ const L1Tag = styled.div`
   color: #c4d9f8;
   opacity: 40%;
 `
+const L2Wrapper = styled.div`
+  ${BaseWrapper}
+`
+
 const L2Tag = styled.div<{ chainId: SupportedL2ChainId }>`
   background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
   border-radius: 6px;
@@ -183,8 +185,12 @@ export default function NetworkCard() {
       .catch(() => setImplements3085(false))
   }, [library, chainId])
 
-  if (!chainId || chainId === SupportedChainId.MAINNET || !NETWORK_LABELS[chainId] || !library) {
+  if (!chainId || !NETWORK_LABELS[chainId] || !library) {
     return null
+  }
+
+  if (chainId === SupportedChainId.MAINNET) {
+    return <L2LaunchAlert />
   }
 
   if (L2_CHAIN_IDS.includes(chainId)) {
