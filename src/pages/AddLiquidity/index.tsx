@@ -525,7 +525,9 @@ export default function AddLiquidity({
         {mustCreateSeparately && (
           <ButtonError onClick={onCreate} disabled={!isValid || attemptingTxn || !position}>
             {attemptingTxn ? (
-              <Dots>Confirm Create</Dots>
+              <Dots>
+                <Trans>Confirm Create</Trans>
+              </Dots>
             ) : (
               <Text fontWeight={500}>{errorMessage ? <Trans>{errorMessage}</Trans> : <Trans>Create</Trans>}</Text>
             )}
