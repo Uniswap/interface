@@ -60,6 +60,8 @@ export function Chart({
     }
   }, [brushDomain, onBrushDomainChange, xScale])
 
+  xScale.clamp(true)
+
   return (
     <>
       <Zoom
