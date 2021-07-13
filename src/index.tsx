@@ -16,6 +16,7 @@ import UserUpdater from './state/user/updater'
 import FarmUpdater from './state/farms/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import SEO from './components/SEO'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -38,6 +39,10 @@ function Updaters() {
 
 ReactDOM.render(
   <StrictMode>
+    <SEO
+      title="Kyber DMM - Powering decentralized token exchange and liquidity"
+      description="Kyber DMM is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. Kyber DMM is the first major protocol in Kyber’s liquidity hub."
+    />
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
