@@ -15,7 +15,6 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { Trans } from '@lingui/macro'
-import { useIsTransactionConfirmed } from '../../state/transactions/hooks'
 import { L2_CHAIN_IDS } from 'constants/chains'
 
 const Wrapper = styled.div`
@@ -229,19 +228,19 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
-  const confirmed = useIsTransactionConfirmed(hash)
-
   if (!chainId) return null
 
-  // if on L2 and txn is confirmed, close automatically (if open)
-  if (isOpen && confirmed && L2_CHAIN_IDS.includes(chainId)) {
+  // if on L2 and txn is submitted, close automatically (if open)
+  if (isOpen && L2_CHAIN_IDS.includes(chainId) && hash) {
     onDismiss()
   }
 
   // confirmation screen
+  // if on L2 and submitted dont render content, as should auto dismiss
+  // need this to skip submitted view during state update ^^
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {attemptingTxn ? (
+      {L2_CHAIN_IDS.includes(chainId) && hash ? null : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
         <TransactionSubmittedContent

@@ -69,7 +69,7 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -242,7 +242,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [singleHopOnly] = useUserSingleHopOnly()
 
   const handleSwap = useCallback(() => {
-    if (!swapCallback) {
+    if (!swapCallback || !chainId) {
       return
     }
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
@@ -251,7 +251,13 @@ export default function Swap({ history }: RouteComponentProps) {
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm: showConfirm,
+          swapErrorMessage: undefined,
+          txHash: hash,
+        })
 
         ReactGA.event({
           category: 'Swap',
@@ -279,8 +285,9 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [
-    priceImpact,
     swapCallback,
+    chainId,
+    priceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,
