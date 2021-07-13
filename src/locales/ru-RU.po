@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-08 19:04\n"
+"PO-Revision-Date: 2021-07-09 12:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0> Вернуться к</0> V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0> Текущая цена:</0> <1> <2 /></1> <3>{0} за {1}</3>"
+msgstr "<0> Текущая цена:</0> <1> <2/></1> <3>{0} за {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -179,7 +179,7 @@ msgstr "Добавить ликвидность."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
-msgstr "Добавьте больше ликвидности"
+msgstr "Добавить ещё ликвидность"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -539,7 +539,7 @@ msgstr "Копировать адрес"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create"
-msgstr "Создавать"
+msgstr "Создать"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -573,7 +573,7 @@ msgstr "Создать пул."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create {0}/{1} V3 pool"
-msgstr "Создать {0}/{1} V3 бассейн"
+msgstr "Создать пул {0}/{1} в V3"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1110,7 +1110,7 @@ msgstr "Вкл"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
-msgstr "В Uniswap V3 установка диапазона для всех цен, например V2, менее капиталоэффективна, чем концентрированная. Подробнее <0> здесь</0> ."
+msgstr "В Uniswap V3 установка диапазона, покрывающего все возможные цены, как в V2, ведёт к меньшей эффективности использования капитала, чем установка концентрированного. Подробнее <0>здесь</0>."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1204,7 +1204,7 @@ msgstr "Обзор пулов"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
-msgstr "Предварительный просмотр"
+msgstr "Предпросмотр"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1358,7 +1358,7 @@ msgstr "Найдите по имени или вставьте адрес"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
-msgstr "Выбрать пару"
+msgstr "Выберите пару"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1398,7 +1398,7 @@ msgstr "Установите начальную цену"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set your Price Range"
-msgstr "Установите свой ценовой диапазон"
+msgstr "Установите свой диапазон цен"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1907,7 +1907,7 @@ msgstr "Вы первый поставщик ликвидности в этом 
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Вы являетесь первым поставщиком ликвидности для этого пула Uniswap V3. Стоимость транзакции будет намного выше, поскольку она включает газ для создания пула."
+msgstr "Вы — первый поставщик ликвидности в этом пуле Uniswap V3. Стоимость транзакции будет намного выше, поскольку она включает газ для создания пула."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."

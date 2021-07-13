@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { RowBetween } from 'components/Row'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import Texture from '../../assets/images/sandtexture.webp'
@@ -119,6 +121,8 @@ const StyledImage = styled.img`
 `
 
 export default function CTACards() {
+  const { chainId } = useActiveWeb3React()
+  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
     <div>
       <MinimalNetworkAlert />
@@ -137,7 +141,7 @@ export default function CTACards() {
             </RowBetween>
           </ResponsiveColumn>
         </CTA1>
-        <CTA2 href={'https://info.uniswap.org/#/pools'}>
+        <CTA2 href={infoLink + '/pools'}>
           <ResponsiveColumn>
             <HeaderText style={{ alignSelf: 'flex-start' }}>
               <Trans>Top pools</Trans>

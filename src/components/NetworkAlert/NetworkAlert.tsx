@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
-import { MEDIA_WIDTHS, TYPE } from 'theme'
-import { L2_INFO } from '../../constants/chains'
+import { MEDIA_WIDTHS } from 'theme'
+import { CHAIN_INFO } from '../../constants/chains'
 
 const L2Icon = styled.img`
   width: 40px;
@@ -48,9 +48,9 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const RootWrapper = styled.div<{ chainId: number; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
-    chainId === SupportedChainId.OPTIMISM
+    [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
         ? OptimismWrapperBackgroundDarkMode
         : OptimismWrapperBackgroundLightMode
@@ -61,7 +61,7 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
   display: flex;
   flex-direction: column;
   max-width: 480px;
-  min-height: 218px;
+  min-height: 174px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -79,11 +79,14 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
     z-index: -1;
   }
 `
-const Header = styled(TYPE.largeHeader)`
+const Header = styled.h2`
+  font-weight: 600;
+  font-size: 20px;
   margin: 0;
   padding-right: 30px;
 `
 const Body = styled.p`
+  font-size: 12px;
   grid-column: 1 / 3;
   line-height: 143%;
   margin: 0;
@@ -102,9 +105,11 @@ const LinkOutToBridge = styled.a`
   border-radius: 16px;
   color: white;
   display: flex;
+  font-size: 16px;
+  height: 44px;
   justify-content: space-between;
-  margin: 0 18px 18px 18px;
-  padding: 14px 24px;
+  margin: 0 20px 20px 20px;
+  padding: 12px 16px;
   text-decoration: none;
   width: auto;
   :hover,
@@ -130,7 +135,10 @@ export function NetworkAlert() {
   if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged || locallyDismissed) {
     return null
   }
-  const info = L2_INFO[chainId]
+  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+    ? `${info.bridge}?chainId=1`
+    : info.bridge
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
@@ -146,7 +154,7 @@ export function NetworkAlert() {
           </Trans>
         </Body>
       </ContentWrapper>
-      <LinkOutToBridge href={info.bridge} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>

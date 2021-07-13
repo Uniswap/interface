@@ -44,6 +44,7 @@ import Toggle from 'components/Toggle'
 import { Bound } from 'state/mint/v3/actions'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { formatTickPrice } from 'utils/formatTickPrice'
+import { SupportedChainId } from 'constants/chains'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -285,23 +286,29 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
   )
 }
 
-const useInverter = (
-  priceLower?: Price<Token, Token>,
-  priceUpper?: Price<Token, Token>,
-  quote?: Token,
-  base?: Token,
+const useInverter = ({
+  priceLower,
+  priceUpper,
+  quote,
+  base,
+  invert,
+}: {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
   invert?: boolean
-): {
+}): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token
   base?: Token
 } => {
   return {
-    priceUpper: invert ? priceUpper?.invert() : priceUpper,
-    priceLower: invert ? priceLower?.invert() : priceLower,
-    quote,
-    base,
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
   }
 }
 
@@ -354,22 +361,17 @@ export function PositionPage({
   const [manuallyInverted, setManuallyInverted] = useState(false)
 
   // handle manual inversion
-  const { priceLower, priceUpper, base } = useInverter(
-    pricesFromPosition.priceUpper,
-    pricesFromPosition.priceLower,
-    pricesFromPosition.quote,
-    pricesFromPosition.base,
-    manuallyInverted
-  )
+  const { priceLower, priceUpper, base } = useInverter({
+    priceLower: pricesFromPosition.priceLower,
+    priceUpper: pricesFromPosition.priceUpper,
+    quote: pricesFromPosition.quote,
+    base: pricesFromPosition.base,
+    invert: manuallyInverted,
+  })
 
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
-
-  // check if price is within range
-  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
-  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
-  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
@@ -473,6 +475,11 @@ export function PositionPage({
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
 
+  // check if price is within range
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
+  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
+
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
@@ -504,13 +511,15 @@ export function PositionPage({
     )
   }
 
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
     ownsNFT &&
       (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash
+      !collectMigrationHash &&
+      !onOptimisticChain
   )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
