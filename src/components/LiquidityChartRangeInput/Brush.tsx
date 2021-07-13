@@ -40,6 +40,8 @@ const Tooltip = styled.text`
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20
 
+const compare = (a1: [number, number], a2: [number, number]): boolean => a1[0] !== a2[0] || a1[1] !== a2[1]
+
 export const Brush = ({
   id,
   xScale,
@@ -49,7 +51,8 @@ export const Brush = ({
   setBrushExtent,
   innerWidth,
   innerHeight,
-  colors,
+  westHandleColor,
+  eastHandleColor,
 }: {
   id: string
   xScale: ScaleLinear<number, number>
@@ -59,10 +62,8 @@ export const Brush = ({
   setBrushExtent: (extent: [number, number]) => void
   innerWidth: number
   innerHeight: number
-  colors: {
-    west: string
-    east: string
-  }
+  westHandleColor: string
+  eastHandleColor: string
 }) => {
   const brushRef = useRef<SVGGElement | null>(null)
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null)
@@ -84,13 +85,13 @@ export const Brush = ({
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number]
 
       // avoid infinite render loop by checking for change
-      if (type === 'end' && (brushExtent[0] !== scaled[0] || brushExtent[1] !== scaled[1])) {
+      if (type === 'end' && compare(brushExtent, scaled)) {
         setBrushExtent(scaled)
       }
 
       setLocalBrushExtent(scaled)
     },
-    [xScale.invert, brushExtent, setBrushExtent]
+    [xScale, brushExtent, setBrushExtent]
   )
 
   // keep local and external brush extent in sync
@@ -114,10 +115,7 @@ export const Brush = ({
 
     brushBehavior.current(select(brushRef.current))
 
-    if (
-      previousBrushExtent &&
-      (brushExtent[0] !== previousBrushExtent[0] || brushExtent[1] !== previousBrushExtent[1])
-    ) {
+    if (previousBrushExtent && compare(brushExtent, previousBrushExtent)) {
       select(brushRef.current)
         .transition()
         .call(brushBehavior.current.move as any, brushExtent.map(xScale))
@@ -136,9 +134,7 @@ export const Brush = ({
     if (!brushRef.current || !brushBehavior.current) return
 
     brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
-    // dependency on brushExtent would start an update loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xScale])
+  }, [brushExtent, xScale])
 
   useEffect(() => {
     setShowLabels(true)
@@ -154,8 +150,8 @@ export const Brush = ({
       <>
         <defs>
           <linearGradient id={`${id}-gradient-selection`} x1="0%" y1="100%" x2="100%" y2="100%">
-            <stop stopColor={colors.west} />
-            <stop stopColor={colors.east} offset="1" />
+            <stop stopColor={westHandleColor} />
+            <stop stopColor={eastHandleColor} offset="1" />
           </linearGradient>
 
           {/* clips at exactly the svg area */}
@@ -186,7 +182,7 @@ export const Brush = ({
               }, 1)`}
             >
               <g clipPath={`url(#${id}-handles-clip)`}>
-                <Handle color={colors.west} d={brushHandlePath(innerHeight)} />
+                <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
               </g>
 
@@ -208,7 +204,7 @@ export const Brush = ({
               }, 1)`}
             >
               <g clipPath={`url(#${id}-handles-clip)`}>
-                <Handle color={colors.east} d={brushHandlePath(innerHeight)} />
+                <Handle color={eastHandleColor} d={brushHandlePath(innerHeight)} />
                 <HandleAccent d={brushHandleAccentPath()} />
               </g>
 
@@ -228,8 +224,7 @@ export const Brush = ({
     ),
     [
       brushLabelValue,
-      colors.east,
-      colors.west,
+      eastHandleColor,
       flipEastHandle,
       flipWestHandle,
       hovering,
@@ -238,6 +233,7 @@ export const Brush = ({
       innerWidth,
       localBrushExtent,
       showLabels,
+      westHandleColor,
       xScale,
     ]
   )
