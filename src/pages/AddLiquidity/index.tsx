@@ -526,9 +526,7 @@ export default function AddLiquidity({
           )}
         {mustCreateSeparately && (
           <ButtonError onClick={() => setShowConfirm(true)} disabled={!price}>
-            <Text fontWeight={500}>
-              <Trans>{!price ? 'Enter Starting Price' : 'Create'}</Trans>
-            </Text>
+            <Text fontWeight={500}>{!price ? <Trans>Enter Starting Price</Trans> : <Trans>Create</Trans>}</Text>
           </ButtonError>
         )}
         <ButtonError
