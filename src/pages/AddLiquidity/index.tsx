@@ -528,7 +528,7 @@ export default function AddLiquidity({
                 <Trans>Confirm Create</Trans>
               </Dots>
             ) : (
-              <Text fontWeight={500}>{errorMessage ? { errorMessage } : <Trans>Create</Trans>}</Text>
+              <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Create</Trans>}</Text>
             )}
           </ButtonError>
         )}
