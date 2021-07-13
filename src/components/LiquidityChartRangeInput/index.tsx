@@ -51,7 +51,7 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
     <ColumnCenter style={{ height: '100%', justifyContent: 'center' }}>
       {icon}
       {message && (
-        <TYPE.mediumHeader padding={10} marginTop="20px">
+        <TYPE.mediumHeader padding={10} marginTop="20px" textAlign="center">
           {message}
         </TYPE.mediumHeader>
       )}
