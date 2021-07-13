@@ -45,7 +45,7 @@ export default function Zoom({
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
-  const [zoomIn, zoomOut, reset] = useMemo(
+  const [zoomIn, zoomOut, reset, initial] = useMemo(
     () => [
       () =>
         svg &&
@@ -65,6 +65,12 @@ export default function Zoom({
         select(svg as Element)
           .transition()
           .call(zoomBehavior.current.scaleTo, 1),
+      () =>
+        svg &&
+        zoomBehavior.current &&
+        select(svg as Element)
+          .transition()
+          .call(zoomBehavior.current.scaleTo, 0.5),
     ],
     [svg, zoomBehavior]
   )
@@ -72,7 +78,6 @@ export default function Zoom({
   useEffect(() => {
     if (!svg) return
 
-    // zoom
     zoomBehavior.current = zoom()
       .scaleExtent([zoomLevels.min, zoomLevels.max])
       .translateExtent([
@@ -88,7 +93,12 @@ export default function Zoom({
     select(svg as Element)
       .call(zoomBehavior.current)
       .on('mousedown.zoom', null)
-  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels.max, zoomLevels.min])
+  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
+
+  useEffect(() => {
+    // reset zoom to initial on zoomLevel chang
+    initial()
+  }, [initial, zoomLevels])
 
   return (
     <Wrapper count={showClear ? 3 : 2}>
