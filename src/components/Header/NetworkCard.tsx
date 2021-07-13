@@ -155,6 +155,7 @@ const NetworkName = styled.div<{ chainId: SupportedChainId }>`
   font-weight: 500;
   padding: 0 2px 0.5px 4px;
   margin: 0 2px;
+  white-space: pre;
   ${({ theme }) => theme.mediaWidth.upToSmall`
    display: none;
   `};
