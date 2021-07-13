@@ -41,10 +41,6 @@ const Base = styled(RebassButton)<
   transition: transform 450ms ease;
   transform: perspective(1px) translateZ(0);
 
-  &:hover {
-    transform: scale(0.99);
-  }
-
   > * {
     user-select: none;
   }

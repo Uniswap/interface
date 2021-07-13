@@ -35,7 +35,7 @@ export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } 
   [SupportedChainId.KOVAN]: 'Kovan',
   [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [SupportedChainId.OPTIMISM]: 'Optimistic Ethereum',
+  [SupportedChainId.OPTIMISM]: 'Optimism',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimistic Kovan',
 } as const
 
