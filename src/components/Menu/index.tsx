@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -10,6 +10,8 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+import { useDarkModeManager } from 'state/user/hooks'
+
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 
 export enum FlyoutAlignment {
@@ -30,17 +32,18 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg2};
+  height: 38px;
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg0};
 
   padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: 12px;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg3};
+    border: 1px solid ${({ theme }) => theme.bg3};
   }
 
   svg {
@@ -65,18 +68,20 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg2};
+  min-width: 196px;
+  background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
+  border: 1px solid ${({ theme }) => theme.bg0};
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
+  font-size: 16px;
   position: absolute;
   top: 3rem;
   z-index: 100;
+
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
@@ -86,8 +91,9 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
           left: 0rem;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: unset;
-    bottom: 3em
+    bottom: unset;
+    right: 0;
+    left: unset;
   `};
 `
 
@@ -97,14 +103,12 @@ const MenuItem = styled(ExternalLink)`
   flex-direction: row;
   align-items: center;
   padding: 0.5rem 0.5rem;
+  justify-content: space-between;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
-  }
-  > svg {
-    margin-right: 8px;
   }
 `
 
@@ -122,6 +126,27 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
+const ToggleMenuItem = styled.button`
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
+
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
@@ -134,6 +159,9 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
+
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
@@ -144,35 +172,39 @@ export default function Menu() {
       {open && (
         <MenuFlyout>
           <MenuItem href="https://uniswap.org/">
-            <Info size={14} />
             <div>
               <Trans>About</Trans>
             </div>
+            <Info opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href="https://docs.uniswap.org/">
-            <BookOpen size={14} />
             <div>
               <Trans>Docs</Trans>
             </div>
+            <BookOpen opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href={CODE_LINK}>
-            <Code size={14} />
             <div>
               <Trans>Code</Trans>
             </div>
+            <Code opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
-            <MessageCircle size={14} />
             <div>
               <Trans>Discord</Trans>
             </div>
+            <MessageCircle opacity={0.6} size={16} />
           </MenuItem>
           <MenuItem href={infoLink}>
-            <PieChart size={14} />
             <div>
               <Trans>Analytics</Trans>
             </div>
+            <PieChart opacity={0.6} size={16} />
           </MenuItem>
+          <ToggleMenuItem onClick={() => toggleDarkMode()}>
+            <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
+            {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+          </ToggleMenuItem>
           {showUNIClaimOption && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">
               <Trans>Claim UNI</Trans>
