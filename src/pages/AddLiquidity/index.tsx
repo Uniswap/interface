@@ -960,7 +960,7 @@ export default function AddLiquidity({
                         <TYPE.body
                           fontSize={14}
                           style={{ marginBottom: 8, fontWeight: 500 }}
-                          textAlign="center"
+                          textAlign="left"
                           color={theme.primaryText1}
                         >
                           <Trans>

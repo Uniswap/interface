@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
   padding: 26px 16px;
   min-width: 480px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 400px;
   `};
 
