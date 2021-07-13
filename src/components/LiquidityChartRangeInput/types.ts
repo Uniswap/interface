@@ -16,7 +16,8 @@ export interface Margins {
 }
 
 export interface ZoomLevels {
-  initial: number
+  initialMin: number
+  initialMax: number
   min: number
   max: number
 }

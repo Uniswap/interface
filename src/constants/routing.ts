@@ -112,7 +112,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
     WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
   ],
+  [SupportedChainId.ARBITRUM_RINKEBY]: [
+    ExtendedEther.onChain(SupportedChainId.ARBITRUM_RINKEBY),
+    WETH9_EXTENDED[SupportedChainId.ARBITRUM_RINKEBY],
+  ],
   [SupportedChainId.OPTIMISM]: [ExtendedEther.onChain(SupportedChainId.OPTIMISM)],
+  [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
