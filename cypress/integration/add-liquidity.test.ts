@@ -1,4 +1,13 @@
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
+
 describe('Add Liquidity', () => {
+  beforeEach(() => {
+    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
+      aliasQuery(req, 'feeTierDistribution')
+    })
+  })
+
   it('loads the two correct tokens', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
@@ -25,21 +34,30 @@ describe('Add Liquidity', () => {
   })
 
   it('loads fee tier distribution', () => {
-        cy.intercept('POST', 'http://localhost:3000/graphql', (req) => {
-          const { body } = req
-          if (hasOperationName(req, 'GetLaunchList')) {
-            // Declare the alias from the initial intercept in the beforeEach
-            req.alias = 'gqlGetLaunchListQuery'
+    cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
+      cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req: CyHttpMessages.IncomingHttpRequest) => {
+        if (hasQuery(req, 'feeTierDistribution')) {
+          req.alias = 'feeTierDistributionQuery'
 
-            // Set req.fixture or use req.reply to modify portions of the response
-            req.reply((res) => {
-              // Modify the response body directly
-              res.body.data.launches.hasMore = false
-              res.body.data.launches.launches = res.body.data.launches.launches.slice(5)
-            })
-          }
-        })
+          req.reply({
+            body: {
+              data: {
+                ...feeTierDistribution,
+              },
+            },
+            headers: {
+              'access-control-allow-origin': '*',
+            },
+          })
+        }
+      })
 
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
+      cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab')
+
+      cy.wait('@feeTierDistributionQuery')
+
+      cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.3% fee tier')
+      cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '70%')
+    })
   })
 })

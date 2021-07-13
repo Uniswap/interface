@@ -1,19 +1,12 @@
-// Utility to match GraphQL mutation based on the operation name
-export const hasOperationName = (req: any, operationName: string) => {
+// Utility to match GraphQL mutation based on the query name
+export const hasQuery = (req: any, queryName: string) => {
   const { body } = req
-  return body.hasOwnProperty('operationName') && body.operationName === operationName
+  return body.hasOwnProperty('query') && body.query.includes(queryName)
 }
 
-// Alias query if operationName matches
-export const aliasQuery = (req: any, operationName: string) => {
-  if (hasOperationName(req, operationName)) {
-    req.alias = `gql${operationName}Query`
-  }
-}
-
-// Alias mutation if operationName matches
-export const aliasMutation = (req: any, operationName: string) => {
-  if (hasOperationName(req, operationName)) {
-    req.alias = `gql${operationName}Mutation`
+// Alias query if queryName  matches
+export const aliasQuery = (req: any, queryName: string) => {
+  if (hasQuery(req, queryName)) {
+    req.alias = `${queryName}Query`
   }
 }
