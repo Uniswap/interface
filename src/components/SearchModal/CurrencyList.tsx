@@ -162,7 +162,7 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
   const theme = useTheme()
   return (
     <FixedContentRow style={style}>
-      <LightGreyCard padding="8px 12px" borderRadius="8px">
+      <LightGreyCard padding="8px 12px" $borderRadius="8px">
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
