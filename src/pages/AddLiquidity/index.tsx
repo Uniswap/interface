@@ -12,7 +12,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
+import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -71,6 +71,8 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
 import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { Break } from 'components/earn/styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -116,6 +118,7 @@ export default function AddLiquidity({
 
   const {
     pool,
+    mockPool,
     ticks,
     dependentField,
     price,
@@ -216,8 +219,8 @@ export default function AddLiquidity({
       return
     }
 
-    if (position && account && deadline) {
-      const { calldata, value } = NonfungiblePositionManager.createCallParameters(position.pool)
+    if (mockPool && account && deadline) {
+      const { calldata, value } = NonfungiblePositionManager.createCallParameters(mockPool)
 
       const txn: { to: string; data: string; value: string } = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
@@ -362,12 +365,6 @@ export default function AddLiquidity({
     }
   }
 
-  const pendingText = `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
-    !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
-  } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
-    !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
-  }`
-
   const handleCurrencySelect = useCallback(
     (currencyNew: Currency, currencyIdOther?: string): (string | undefined)[] => {
       const currencyIdNew = currencyId(currencyNew)
@@ -426,15 +423,22 @@ export default function AddLiquidity({
     [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
   )
 
+  // flag for whether pool creation must be a separate tx
+  const mustCreateSeparately =
+    noLiquidity && (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN)
+
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
-      history.push('/pool')
+      // dont jump to pool page if creating
+      if (!mustCreateSeparately) {
+        history.push('/pool')
+      }
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [history, mustCreateSeparately, onFieldAInput, txHash])
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
@@ -458,6 +462,16 @@ export default function AddLiquidity({
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+
+  const pendingText = mustCreateSeparately
+    ? `Creating ${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol} ${
+        feeAmount ? feeAmount / 10000 : ''
+      }% Pool`
+    : `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+        !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
+      } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
+        !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
+      }`
 
   const Buttons = () =>
     addIsUnsupported ? (
@@ -511,9 +525,9 @@ export default function AddLiquidity({
             </RowBetween>
           )}
         {mustCreateSeparately && (
-          <ButtonError onClick={onCreate}>
+          <ButtonError onClick={() => setShowConfirm(true)} disabled={!price}>
             <Text fontWeight={500}>
-              <Trans>Create</Trans>
+              <Trans>{!price ? 'Enter Starting Price' : 'Create'}</Trans>
             </Text>
           </ButtonError>
         )}
@@ -529,13 +543,38 @@ export default function AddLiquidity({
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={500}>
+            {mustCreateSeparately ? <Trans>Add</Trans> : errorMessage ? errorMessage : <Trans>Preview</Trans>}
+          </Text>
         </ButtonError>
       </AutoColumn>
     )
-  // flag for whether pool creation must be a separate tx
-  const mustCreateSeparately =
-    noLiquidity && (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN)
+
+  const CreatePreview = () => {
+    return (
+      <AutoColumn>
+        <LightCard mt="8px">
+          <AutoColumn gap="md">
+            <RowFixed>
+              <CurrencyLogo currency={mockPool?.token0} />
+              <TYPE.label ml="8px">{mockPool?.token0?.symbol}</TYPE.label>
+            </RowFixed>
+            <RowFixed>
+              <CurrencyLogo currency={mockPool?.token1} />
+              <TYPE.label ml="8px">{mockPool?.token1?.symbol}</TYPE.label>
+            </RowFixed>
+            <Break />
+            <RowBetween>
+              <TYPE.label>
+                <Trans>Fee Tier</Trans>
+              </TYPE.label>
+              <TYPE.label>{feeAmount && <Trans>{feeAmount / 10000}%</Trans>}</TYPE.label>
+            </RowBetween>
+          </AutoColumn>
+        </LightCard>
+      </AutoColumn>
+    )
+  }
 
   return (
     <>
@@ -549,23 +588,27 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={'Add Liquidity'}
+              title={mustCreateSeparately ? 'Create Pool' : 'Add Liquidity'}
               onDismiss={handleDismissConfirmation}
-              topContent={() => (
-                <Review
-                  parsedAmounts={parsedAmounts}
-                  position={position}
-                  existingPosition={existingPosition}
-                  priceLower={priceLower}
-                  priceUpper={priceUpper}
-                  outOfRange={outOfRange}
-                  ticksAtLimit={ticksAtLimit}
-                />
-              )}
+              topContent={() =>
+                mustCreateSeparately ? (
+                  <CreatePreview />
+                ) : (
+                  <Review
+                    parsedAmounts={parsedAmounts}
+                    position={position}
+                    existingPosition={existingPosition}
+                    priceLower={priceLower}
+                    priceUpper={priceUpper}
+                    outOfRange={outOfRange}
+                    ticksAtLimit={ticksAtLimit}
+                  />
+                )
+              }
               bottomContent={() => (
-                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
+                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={mustCreateSeparately ? onCreate : onAdd}>
                   <Text fontWeight={500} fontSize={20}>
-                    <Trans>Add</Trans>
+                    <Trans>{mustCreateSeparately ? 'Create' : 'Add'}</Trans>
                   </Text>
                 </ButtonPrimary>
               )}
@@ -658,7 +701,6 @@ export default function AddLiquidity({
                     </AutoColumn>{' '}
                   </>
                 )}
-
                 {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
@@ -668,7 +710,6 @@ export default function AddLiquidity({
                   />
                 )}
               </AutoColumn>
-
               <div>
                 <DynamicSection
                   disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
@@ -799,7 +840,9 @@ export default function AddLiquidity({
 
                     <DynamicSection
                       gap="md"
-                      disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
+                      disabled={
+                        !feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue) || mustCreateSeparately
+                      }
                     >
                       <StackedContainer>
                         <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
@@ -862,7 +905,6 @@ export default function AddLiquidity({
                                     width="auto"
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
-
                                       getSetFullRange()
                                     }}
                                   >
