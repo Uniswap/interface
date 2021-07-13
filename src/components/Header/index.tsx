@@ -61,23 +61,6 @@ const HeaderControls = styled.div`
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
-
-  /* ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
-    width: 100%;
-    max-width: 960px;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    z-index: 99;
-    height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg0};
-  `}; */
 `
 
 const HeaderElement = styled.div`
@@ -91,12 +74,6 @@ const HeaderElement = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: center;
-  `};
-`
-
-const HeaderRow = styled(RowFixed)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  //  width: 100%;
   `};
 `
 
@@ -137,7 +114,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg1)};
-  /* border: 1px solid ${({ theme }) => theme.bg0}; */
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -281,13 +257,11 @@ export default function Header() {
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
-      </HeaderRow>
+      <Title href=".">
+        <UniIcon>
+          <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+        </UniIcon>
+      </Title>
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
