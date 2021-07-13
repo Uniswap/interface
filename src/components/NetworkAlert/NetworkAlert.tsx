@@ -6,7 +6,7 @@ import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
 
 const L2Icon = styled.img`
@@ -99,7 +99,7 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled.a`
+const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
   border-radius: 16px;
@@ -154,7 +154,7 @@ export function NetworkAlert() {
           </Trans>
         </Body>
       </ContentWrapper>
-      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl}>
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>

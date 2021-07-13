@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 const L2Icon = styled.img`
   display: none;
@@ -76,7 +76,7 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   height: 20px;
   margin-left: 12px;
 `
-const LinkOutToBridge = styled.a`
+const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
   border-radius: 16px;
@@ -119,7 +119,7 @@ export function AddLiquidityNetworkAlert() {
         <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
         <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
       </Body>
-      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
+      <LinkOutToBridge href={depositUrl}>
         <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
