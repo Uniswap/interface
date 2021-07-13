@@ -1,10 +1,10 @@
-import { SupportedL1ChainId, SupportedL2ChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { BigNumber, utils } from 'ethers'
 import { Web3Provider } from '@ethersproject/providers'
 
 interface SwitchNetworkArguments {
   library: Web3Provider
-  chainId: SupportedL1ChainId | SupportedL2ChainId
+  chainId: SupportedChainId
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
