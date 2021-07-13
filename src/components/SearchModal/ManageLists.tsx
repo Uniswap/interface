@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { TokenList } from '@uniswap/token-lists'
 import Card from 'components/Card'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import { useListColor } from 'hooks/useColor'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -30,7 +29,6 @@ import { CurrencyModalView } from './CurrencySearchModal'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const Wrapper = styled(Column)`
-  width: 100%;
   height: 100%;
 `
 
@@ -169,9 +167,6 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   if (!list) return null
 
-  const { label } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-  const hoverText = t`This token list has ${activeTokensOnThisChain} ${label} tokens`
-
   return (
     <RowWrapper
       active={isActive}
@@ -179,7 +174,6 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       bgColor={listColor}
       key={listUrl}
       id={listUrlRowHTMLId(listUrl)}
-      title={hoverText}
     >
       {list.logoURI ? (
         <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
@@ -192,7 +186,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
         </Row>
         <RowFixed mt="4px">
           <StyledListUrlText active={isActive} mr="6px">
-            <Trans>{list.tokens.length} tokens</Trans>
+            <Trans>{activeTokensOnThisChain} tokens</Trans>
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
