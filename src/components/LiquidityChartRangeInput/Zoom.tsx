@@ -96,7 +96,6 @@ export default function Zoom({
   }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
 
   useEffect(() => {
-    console.log('judo initial')
     // reset zoom to initial on zoomLevel chang
     initial()
   }, [initial, zoomLevels])
