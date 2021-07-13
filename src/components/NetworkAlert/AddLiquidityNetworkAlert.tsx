@@ -17,7 +17,7 @@ const L2Icon = styled.img`
   height: 40px;
   margin: auto 20px auto 4px;
   width: 40px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     display: block;
   }
 `
@@ -56,7 +56,7 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
     width: 300px;
     z-index: -1;
   }
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     flex-direction: row;
     padding: 16px 20px;
   }
@@ -65,7 +65,7 @@ const Body = styled.div`
   font-size: 12px;
   line-height: 143%;
   margin: 12px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     flex: 1 1 auto;
     margin: auto 0;
   }
@@ -86,7 +86,7 @@ const LinkOutToBridge = styled(ExternalLink)`
   justify-content: space-between;
   margin: 0;
   max-height: 47px;
-  padding: 16px 8px;
+  padding: 16px 12px;
   text-decoration: none;
   width: auto;
   :hover,
@@ -94,13 +94,13 @@ const LinkOutToBridge = styled(ExternalLink)`
   :active {
     background-color: black;
   }
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     margin: auto 0 auto auto;
-    padding: 14px 17px;
+    padding: 14px 16px;
     min-width: 226px;
   }
 `
-export function MinimalNetworkAlert() {
+export function AddLiquidityNetworkAlert() {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
