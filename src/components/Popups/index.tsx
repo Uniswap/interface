@@ -62,11 +62,11 @@ export default function Popups() {
 
   // need extra padding if network is not L1 Ethereum
   const { chainId } = useActiveWeb3React()
-  const networkNameShown = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
+  const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={networkNameShown}>
+      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
         <ClaimPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
