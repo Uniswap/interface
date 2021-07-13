@@ -47,14 +47,12 @@ export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
 }
 
-function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return Object.values(SupportedChainId).reduce(
-    (acc, cur) => ({
+export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap, preference: 1 | 2 = 1): TokenAddressMap {
+  const chainIds = Object.keys({ ...map1, ...map2 }).map((id) => parseInt(id)) as SupportedChainId[]
+  return chainIds.reduce(
+    (acc, chainId) => ({
       ...acc,
-      [cur]: {
-        ...map1[cur as SupportedChainId],
-        ...map2[cur as SupportedChainId],
-      },
+      [chainId]: preference === 1 ? { ...map2[chainId], ...map1[chainId] } : { ...map1[chainId], ...map2[chainId] },
     }),
     {}
   )
