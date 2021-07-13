@@ -60,6 +60,9 @@ export function Chart({
     }
   }, [brushDomain, onBrushDomainChange, xScale])
 
+  // ensures the brush remains in view and adapts to zooms
+  xScale.clamp(true)
+
   return (
     <>
       <Zoom
