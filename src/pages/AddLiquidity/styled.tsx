@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
   padding: 26px 16px;
   min-width: 480px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 400px;
   `};
 
@@ -40,7 +40,7 @@ export const ScrollablePage = styled.div`
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-  opacity: ${({ disabled }) => (disabled ? '0.3' : '1')};
+  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 
