@@ -90,7 +90,10 @@ export default function L2LaunchAlert() {
         </Header>
         <Body>
           <Trans>
-            Be an early tester of Uniswap on L2 and get instant transactions. <Link href="">Read more here.</Link>
+            Be an early tester of Uniswap on L2 and get instant transactions.{' '}
+            <Link href="https://help.uniswap.org/en/articles/5391401-uniswap-on-optimistic-ethereum">
+              Read more here.
+            </Link>
           </Trans>
         </Body>
       </ContentWrapper>
