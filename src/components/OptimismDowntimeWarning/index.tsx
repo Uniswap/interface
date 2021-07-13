@@ -9,7 +9,7 @@ const Root = styled.div`
   border-radius: 18px;
   color: black;
   margin-top: 16px;
-  max-width: 480px;
+  width: 100%;
   padding: 16px;
   width: 100%;
 `
