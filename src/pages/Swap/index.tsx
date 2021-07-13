@@ -252,7 +252,6 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-
         ReactGA.event({
           category: 'Swap',
           action:
@@ -279,8 +278,8 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [
-    priceImpact,
     swapCallback,
+    priceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,

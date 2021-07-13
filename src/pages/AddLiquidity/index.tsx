@@ -236,7 +236,6 @@ export default function AddLiquidity({
             ...txn,
             gasLimit: calculateGasMargin(chainId, estimate),
           }
-
           return library
             .getSigner()
             .sendTransaction(newTxn)
