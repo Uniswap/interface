@@ -100,7 +100,6 @@ export function useV3DerivedMintInfo(
 ): {
   pool?: Pool | null
   poolState: PoolState
-  mockPool: Pool | undefined // used for create calldata if create is own txn
   ticks: { [bound in Bound]?: number | undefined }
   price?: Price<Token, Token>
   pricesAtTicks: {
@@ -460,7 +459,6 @@ export function useV3DerivedMintInfo(
     currencies,
     pool,
     poolState,
-    mockPool,
     currencyBalances,
     parsedAmounts,
     ticks,

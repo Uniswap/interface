@@ -12,7 +12,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/Card'
+import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -71,8 +71,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
 import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { Break } from 'components/earn/styled'
+import { CHAIN_INFO } from '../../constants/chains'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -118,7 +117,6 @@ export default function AddLiquidity({
 
   const {
     pool,
-    mockPool,
     ticks,
     dependentField,
     price,
@@ -219,8 +217,8 @@ export default function AddLiquidity({
       return
     }
 
-    if (mockPool && account && deadline) {
-      const { calldata, value } = NonfungiblePositionManager.createCallParameters(mockPool)
+    if (position && account && deadline) {
+      const { calldata, value } = NonfungiblePositionManager.createCallParameters(position.pool)
 
       const txn: { to: string; data: string; value: string } = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
@@ -247,7 +245,7 @@ export default function AddLiquidity({
               addTransaction(response, {
                 summary: t`Create ${currencyA?.symbol}/${currencyB?.symbol} V3 pool`,
               })
-              setTxHash(response.hash)
+              // dont set txn hash as we dont want submitted txn screen for create
               ReactGA.event({
                 category: 'Liquidity',
                 action: 'Create',
@@ -525,8 +523,12 @@ export default function AddLiquidity({
             </RowBetween>
           )}
         {mustCreateSeparately && (
-          <ButtonError onClick={() => setShowConfirm(true)} disabled={!price}>
-            <Text fontWeight={500}>{!price ? <Trans>Enter Starting Price</Trans> : <Trans>Create</Trans>}</Text>
+          <ButtonError onClick={onCreate} disabled={!isValid || attemptingTxn || !position}>
+            {attemptingTxn ? (
+              <Dots>Confirm Create</Dots>
+            ) : (
+              <Text fontWeight={500}>{errorMessage ? <Trans>{errorMessage}</Trans> : <Trans>Create</Trans>}</Text>
+            )}
           </ButtonError>
         )}
         <ButtonError
@@ -548,32 +550,6 @@ export default function AddLiquidity({
       </AutoColumn>
     )
 
-  const CreatePreview = () => {
-    return (
-      <AutoColumn>
-        <LightCard mt="8px">
-          <AutoColumn gap="md">
-            <RowFixed>
-              <CurrencyLogo currency={mockPool?.token0} />
-              <TYPE.label ml="8px">{mockPool?.token0?.symbol}</TYPE.label>
-            </RowFixed>
-            <RowFixed>
-              <CurrencyLogo currency={mockPool?.token1} />
-              <TYPE.label ml="8px">{mockPool?.token1?.symbol}</TYPE.label>
-            </RowFixed>
-            <Break />
-            <RowBetween>
-              <TYPE.label>
-                <Trans>Fee Tier</Trans>
-              </TYPE.label>
-              <TYPE.label>{feeAmount && <Trans>{feeAmount / 10000}%</Trans>}</TYPE.label>
-            </RowBetween>
-          </AutoColumn>
-        </LightCard>
-      </AutoColumn>
-    )
-  }
-
   return (
     <>
       <ScrollablePage>
@@ -586,27 +562,23 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={mustCreateSeparately ? 'Create Pool' : 'Add Liquidity'}
+              title={'Add Liquidity'}
               onDismiss={handleDismissConfirmation}
-              topContent={() =>
-                mustCreateSeparately ? (
-                  <CreatePreview />
-                ) : (
-                  <Review
-                    parsedAmounts={parsedAmounts}
-                    position={position}
-                    existingPosition={existingPosition}
-                    priceLower={priceLower}
-                    priceUpper={priceUpper}
-                    outOfRange={outOfRange}
-                    ticksAtLimit={ticksAtLimit}
-                  />
-                )
-              }
+              topContent={() => (
+                <Review
+                  parsedAmounts={parsedAmounts}
+                  position={position}
+                  existingPosition={existingPosition}
+                  priceLower={priceLower}
+                  priceUpper={priceUpper}
+                  outOfRange={outOfRange}
+                  ticksAtLimit={ticksAtLimit}
+                />
+              )}
               bottomContent={() => (
-                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={mustCreateSeparately ? onCreate : onAdd}>
+                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
                   <Text fontWeight={500} fontSize={20}>
-                    <Trans>{mustCreateSeparately ? 'Create' : 'Add'}</Trans>
+                    <Trans>{'Add'}</Trans>
                   </Text>
                 </ButtonPrimary>
               )}
@@ -838,9 +810,7 @@ export default function AddLiquidity({
 
                     <DynamicSection
                       gap="md"
-                      disabled={
-                        !feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue) || mustCreateSeparately
-                      }
+                      disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
                     >
                       <StackedContainer>
                         <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
@@ -961,10 +931,19 @@ export default function AddLiquidity({
                           textAlign="left"
                           color={theme.primaryText1}
                         >
-                          <Trans>
-                            You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
-                            much higher as it includes the gas to create the pool.
-                          </Trans>
+                          {mustCreateSeparately ? (
+                            <Trans>
+                              {`This pool has not yet been initialized on ${
+                                chainId ? CHAIN_INFO[chainId].label : ''
+                              }. First submit a transaction to initialize the pool. Once the pool is initialized, the app will prompt you to submit a
+                              second transaction to add liquidity.`}
+                            </Trans>
+                          ) : (
+                            <Trans>
+                              You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
+                              much higher as it includes the gas to create the pool.
+                            </Trans>
+                          )}
                         </TYPE.body>
                       </BlueCard>
                     )}
