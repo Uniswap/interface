@@ -799,8 +799,9 @@ export default function AddLiquidity({
                                   </Trans>
                                 ) : (
                                   <Trans>
-                                    You are the first liquidity provider for this Uniswap V3 pool.The transaction cost
-                                    will be much higher as it includes the gas to create the pool.
+                                    This pool must be initialized before you can add liquidity. To initialize, select a
+                                    starting price for the pool. Then, enter your liquidity price range and deposit
+                                    amount. Gas fees will be higher than usual due to the initialization transaction.
                                   </Trans>
                                 )}
                               </TYPE.body>
