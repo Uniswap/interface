@@ -170,8 +170,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   if (!list) return null
 
   const { label } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-  const plural = activeTokensOnThisChain === 1 ? '' : 's'
-  const hoverText = t`This token list has ${activeTokensOnThisChain} ${label} token${plural}`
+  const hoverText = t`This token list has ${activeTokensOnThisChain} ${label} tokens`
 
   return (
     <RowWrapper
