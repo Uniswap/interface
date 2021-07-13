@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ReactNode, useContext } from 'react'
+import { ReactNode, useContext, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
@@ -228,12 +228,14 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
-  if (!chainId) return null
-
   // if on L2 and txn is submitted, close automatically (if open)
-  if (isOpen && L2_CHAIN_IDS.includes(chainId) && hash) {
-    onDismiss()
-  }
+  useEffect(() => {
+    if (isOpen && chainId && L2_CHAIN_IDS.includes(chainId) && hash) {
+      onDismiss()
+    }
+  }, [chainId, hash, isOpen, onDismiss])
+
+  if (!chainId) return null
 
   // confirmation screen
   // if on L2 and submitted dont render content, as should auto dismiss
