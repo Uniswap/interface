@@ -137,7 +137,7 @@ export default function FeeSelector({
       <DynamicSection gap="md" disabled={disabled}>
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
-            <AutoColumn>
+            <AutoColumn id="add-liquidity-selected-fee">
               {!feeAmount ? (
                 <>
                   <TYPE.label>
@@ -149,10 +149,10 @@ export default function FeeSelector({
                 </>
               ) : (
                 <>
-                  <TYPE.label>
+                  <TYPE.label className="selected-fee-label">
                     <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
                   </TYPE.label>
-                  <Box style={{ width: 'fit-content', marginTop: '8px' }}>
+                  <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && feeAmount && <FeeTierPercentageBadge percentage={distributions[feeAmount]} />}
                   </Box>
                 </>
