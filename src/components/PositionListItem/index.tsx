@@ -13,7 +13,7 @@ import { formatTickPrice } from 'utils/formatTickPrice'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { RowFixed } from 'components/Row'
+import { RowBetween } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
 import { DAI, USDC, USDT, WBTC, WETH9_EXTENDED } from '../../constants/tokens'
 import { Trans } from '@lingui/macro'
@@ -26,6 +26,9 @@ const LinkRow = styled(Link)`
   display: flex;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+
   justify-content: space-between;
   color: ${({ theme }) => theme.text1};
   margin: 8px 0;
@@ -34,25 +37,23 @@ const LinkRow = styled(Link)`
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg1};
 
-  &:first-of-type {
-    margin: 0 0 8px 0;
-  }
   &:last-of-type {
     margin: 8px 0 0 0;
   }
   & > div:not(:first-child) {
-    text-align: right;
+    text-align: center;
   }
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }
+
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    flex-direction: row;
+    /* flex-direction: row; */
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-    row-gap: 24px;
+    row-gap: 12px;
   `};
 `
 
@@ -72,11 +73,14 @@ const RangeLineItem = styled(DataLineItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-self: flex-end;
+
+  margin-top: 4px;
+  width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  flex-direction: column;
-  row-gap: 4px;
+  background-color: ${({ theme }) => theme.bg2};
+    border-radius: 12px;
+    padding: 8px 0;
 `};
 `
 
@@ -99,6 +103,9 @@ const ExtentsText = styled.span`
   color: ${({ theme }) => theme.text3};
   font-size: 14px;
   margin-right: 4px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
 `
 
 const PrimaryPositionIdData = styled.div`
@@ -220,7 +227,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
 
   return (
     <LinkRow to={positionSummaryLink}>
-      <RowFixed>
+      <RowBetween>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
           <DataText>
@@ -234,7 +241,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </Badge>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
-      </RowFixed>
+      </RowBetween>
 
       {priceLower && priceUpper ? (
         <RangeLineItem>
@@ -251,7 +258,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             <DoubleArrow>⟷</DoubleArrow>{' '}
           </HideSmall>
           <SmallOnly>
-            <DoubleArrow>↕</DoubleArrow>{' '}
+            <DoubleArrow>⟷</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
             <ExtentsText>
