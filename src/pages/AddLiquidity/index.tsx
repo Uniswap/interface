@@ -528,7 +528,7 @@ export default function AddLiquidity({
                 <Trans>Confirm Create</Trans>
               </Dots>
             ) : (
-              <Text fontWeight={500}>{errorMessage ? <Trans>{errorMessage}</Trans> : <Trans>Create</Trans>}</Text>
+              <Text fontWeight={500}>{errorMessage ? { errorMessage } : <Trans>Create</Trans>}</Text>
             )}
           </ButtonError>
         )}
@@ -563,7 +563,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={'Add Liquidity'}
+              title={t`Add Liquidity`}
               onDismiss={handleDismissConfirmation}
               topContent={() => (
                 <Review
@@ -579,7 +579,7 @@ export default function AddLiquidity({
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
                   <Text fontWeight={500} fontSize={20}>
-                    <Trans>{'Add'}</Trans>
+                    <Trans>Add</Trans>
                   </Text>
                 </ButtonPrimary>
               )}
