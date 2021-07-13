@@ -19,6 +19,6 @@ export default function useSwapSlippageTolerance(
     if (!trade || onL2) return ONE_TENTHS_PERCENT
     if (trade instanceof V2Trade) return V2_SWAP_DEFAULT_SLIPPAGE
     return V3_SWAP_DEFAULT_SLIPPAGE
-  }, [trade])
+  }, [onL2, trade])
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
 }
