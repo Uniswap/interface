@@ -150,7 +150,6 @@ export const useFarmsData = () => {
 
         dispatch(setFarmsData({ farms }))
       } catch (error) {
-        dispatch(setFarmsData({ farms: [] }))
         dispatch(setError(error))
       }
 
