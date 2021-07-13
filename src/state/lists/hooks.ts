@@ -1,6 +1,5 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
-import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -47,12 +46,12 @@ export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
 }
 
-export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap, preference: 1 | 2 = 1): TokenAddressMap {
-  const chainIds = Object.keys({ ...map1, ...map2 }).map((id) => parseInt(id)) as SupportedChainId[]
+export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+  const chainIds = Object.keys({ ...map1, ...map2 }).map((id) => parseInt(id))
   return chainIds.reduce(
     (acc, chainId) => ({
       ...acc,
-      [chainId]: preference === 1 ? { ...map2[chainId], ...map1[chainId] } : { ...map1[chainId], ...map2[chainId] },
+      [chainId]: { ...map2[chainId], ...map1[chainId] },
     }),
     {}
   )

@@ -103,7 +103,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     if (!list || !chainId) {
       return 0
     }
-    return (list as TokenList).tokens.reduce((acc, cur) => (cur.chainId === chainId ? acc + 1 : acc), 0)
+    return list.tokens.reduce((acc, cur) => (cur.chainId === chainId ? acc + 1 : acc), 0)
   }, [chainId, list])
 
   const theme = useTheme()
@@ -139,7 +139,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       action: 'Start Remove List',
       label: listUrl,
     })
-    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
+    if (window.prompt(t`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
       ReactGA.event({
         category: 'Lists',
         action: 'Confirm Remove List',
@@ -268,12 +268,6 @@ export function ManageLists({
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
-  const [activeCopy, setActiveCopy] = useState<string[] | undefined>()
-  useEffect(() => {
-    if (!activeCopy && activeListUrls) {
-      setActiveCopy(activeListUrls)
-    }
-  }, [activeCopy, activeListUrls])
 
   const handleInput = useCallback((e) => {
     setListUrlInput(e.target.value)
@@ -292,36 +286,36 @@ export function ManageLists({
         // only show loaded lists, hide unsupported lists
         return Boolean(lists[listUrl].current) && !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
       })
-      .sort((u1, u2) => {
-        const { current: l1 } = lists[u1]
-        const { current: l2 } = lists[u2]
+      .sort((listUrlA, listUrlB) => {
+        const { current: listA } = lists[listUrlA]
+        const { current: listB } = lists[listUrlB]
 
         // first filter on active lists
-        if (activeCopy?.includes(u1) && !activeCopy?.includes(u2)) {
+        if (activeListUrls?.includes(listUrlA) && !activeListUrls?.includes(listUrlB)) {
           return -1
         }
-        if (!activeCopy?.includes(u1) && activeCopy?.includes(u2)) {
+        if (!activeListUrls?.includes(listUrlA) && activeListUrls?.includes(listUrlB)) {
           return 1
         }
 
-        if (l1 && l2) {
-          if (tokenCountByListName[l1.name] > tokenCountByListName[l2.name]) {
+        if (listA && listB) {
+          if (tokenCountByListName[listA.name] > tokenCountByListName[listB.name]) {
             return -1
           }
-          if (tokenCountByListName[l1.name] < tokenCountByListName[l2.name]) {
+          if (tokenCountByListName[listA.name] < tokenCountByListName[listB.name]) {
             return 1
           }
-          return l1.name.toLowerCase() < l2.name.toLowerCase()
+          return listA.name.toLowerCase() < listB.name.toLowerCase()
             ? -1
-            : l1.name.toLowerCase() === l2.name.toLowerCase()
+            : listA.name.toLowerCase() === listB.name.toLowerCase()
             ? 0
             : 1
         }
-        if (l1) return -1
-        if (l2) return 1
+        if (listA) return -1
+        if (listB) return 1
         return 0
       })
-  }, [lists, activeCopy, tokenCountByListName])
+  }, [lists, activeListUrls, tokenCountByListName])
 
   // temporary fetched list for import flow
   const [tempList, setTempList] = useState<TokenList>()
