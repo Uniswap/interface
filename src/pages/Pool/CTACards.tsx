@@ -45,7 +45,6 @@ const CTA1 = styled(ExternalLink)`
 
   :hover {
     border: 1px solid ${({ theme }) => theme.bg0};
-    /* background-color: ${({ theme }) => theme.bg2}; */
     text-decoration: none;
     * {
       text-decoration: none !important;
@@ -139,7 +138,6 @@ export default function CTACards() {
             <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
               <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
             </TYPE.body>
-            {/* <StyledImage src={Squiggle} /> */}
           </ResponsiveColumn>
         </CTA1>
         <CTA2 href={infoLink + 'pools'}>
@@ -150,7 +148,6 @@ export default function CTACards() {
             <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
               <Trans>Explore popular pools on Uniswap Analytics.</Trans>
             </TYPE.body>
-            {/* <HeaderText style={{ alignSelf: 'flex-end' }}>↗</HeaderText> */}
           </ResponsiveColumn>
         </CTA2>
       </CTASection>
