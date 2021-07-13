@@ -13,6 +13,7 @@ import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2
 
 const BaseWrapper = css`
   position: relative;
+  margin-right: 8px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-left: 12px;
     justify-self: end;
@@ -37,8 +38,8 @@ const BaseMenuItem = css`
   display: flex;
   flex: 1;
   flex-direction: row;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   justify-content: space-between;
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -70,6 +71,11 @@ const FallbackWrapper = styled(YellowCard)`
 const Icon = styled.img`
   width: 16px;
   margin-right: 2px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-right: 4px;
+
+  `};
 `
 
 const MenuFlyout = styled.span`
@@ -84,13 +90,16 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  right: 0rem;
+  left: 0rem;
   top: 3rem;
   z-index: 100;
   width: 237px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: unset;
-    bottom: 4rem;
+   
+    bottom: unset;
+    top: 4.5em
+    right: 0;
+
   `};
   > {
     padding: 12px;
@@ -134,34 +143,22 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   height: 38px;
   padding: 0.7rem;
 
-  /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F020' : '#FF042020')}; */
-
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    /* background-color: ${({ theme }) => theme.bg1}; */
     border: 1px solid ${({ theme }) => theme.bg3};
-
-    /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F030' : '#FF042030')}; */
   }
 `
 const NetworkName = styled.div<{ chainId: SupportedChainId }>`
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   padding: 0 2px 0.5px 4px;
   margin: 0 2px;
-  /* background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')}; */
-`
-
-const L2Tag = styled.div<{ chainId: SupportedChainId }>`
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 4px;
-  margin: 0 0 0 2px;
-  background-color: ${({ chainId }) => (chainId === SupportedChainId.ARBITRUM_ONE ? '#28A0F0' : '#FF0420')};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+   display: none;
+  `};
 `
 
 export default function NetworkCard() {
@@ -196,9 +193,6 @@ export default function NetworkCard() {
         <NetworkInfo onClick={toggle} chainId={chainId}>
           <Icon src={info.logoUrl} />
           <NetworkName chainId={chainId}>{info.label}</NetworkName>
-          {/* <NetworkName chainId={chainId}>L2</NetworkName> */}
-
-          {/* <L2Tag chainId={chainId}>L2</L2Tag> */}
           <ChevronDown size={16} style={{ marginTop: '2px' }} strokeWidth={2.5} />
         </NetworkInfo>
         {open && (
@@ -220,7 +214,7 @@ export default function NetworkCard() {
             {implements3085 ? (
               <ButtonMenuItem onClick={() => switchToNetwork({ library, chainId: SupportedChainId.MAINNET })}>
                 <div>
-                  <Trans>Switch to Ethereum L1</Trans>
+                  <Trans>Switch to L1 (Mainnet)</Trans>
                 </div>
                 <ToggleLeft opacity={0.6} size={16} />
               </ButtonMenuItem>

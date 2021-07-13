@@ -20,9 +20,9 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
 
 const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   border-radius: 12px;
-  border: 2px solid;
-  border-color: ${({ theme, isActive }) => (isActive ? theme.primary1 : theme.bg3)};
-  background: ${({ theme }) => theme.bg1};
+  border: none;
+  /* border-color: ${({ theme, isActive }) => (isActive ? theme.primary1 : theme.bg3)}; */
+  background: ${({ theme }) => theme.bg0};
   display: flex;
   width: fit-content;
   cursor: pointer;

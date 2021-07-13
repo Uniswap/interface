@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, HideSmall, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
@@ -27,7 +27,7 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 36px 1fr 1fr;
+  grid-template-columns: 120px 1fr 120px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -38,13 +38,13 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   padding: 1rem;
   z-index: 21;
   position: relative;
-
   /* Background slide effect on scroll. */
   background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`};
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
   box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
   transition: background-position 0.1s, box-shadow 0.1s;
+  background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 48px 1fr 1fr;
@@ -52,12 +52,8 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns:  1fr 1fr;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 1rem;
-  `}
 `
 
 const HeaderControls = styled.div`
@@ -66,11 +62,10 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  /* ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
-
     width: 100%;
     max-width: 960px;
     padding: 1rem;
@@ -81,8 +76,8 @@ const HeaderControls = styled.div`
     z-index: 99;
     height: 72px;
     border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
-  `};
+    background-color: ${({ theme }) => theme.bg0};
+  `}; */
 `
 
 const HeaderElement = styled.div`
@@ -95,7 +90,6 @@ const HeaderElement = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    // flex-direction: row-reverse;
     align-items: center;
   `};
 `
@@ -107,13 +101,13 @@ const HeaderElementWrap = styled.div`
 
 const HeaderRow = styled(RowFixed)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
+  //  width: 100%;
   `};
 `
 
 const HeaderLinks = styled(Row)`
-  justify-self: start;
-  /* background-color: ${({ theme }) => theme.bg0}; */
+  justify-self: center;
+  background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
   border-radius: 16px;
@@ -121,10 +115,25 @@ const HeaderLinks = styled(Row)`
   grid-auto-flow: column;
   grid-gap: 10px;
   overflow: auto;
+  align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-  justify-self: start;  `};
+    justify-self: start;  
+    `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-self: end;
+    justify-self: center;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: row;
+    justify-content: space-between;
+    justify-self: center;
+    z-index: 99;
+    position: fixed;
+    bottom: 0; right: 50%;
+    transform: translate(50%,-50%);
+    margin: 0 auto;
+    background-color: ${({ theme }) => theme.bg0};
+    border: 1px solid ${({ theme }) => theme.bg2};
+    box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
   `};
 `
 
@@ -187,6 +196,22 @@ const Title = styled.a`
   }
 `
 
+const InlineTitle = styled.a`
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+  justify-self: flex-start;
+  margin: 0 4px 0 8px;
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    justify-self: center;
+    display: inline;
+  `};
+  :hover {
+    cursor: pointer;
+  }
+`
+
 const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
@@ -216,7 +241,7 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
-    /* background-color: ${({ theme }) => theme.bg0}; */
+    background-color: ${({ theme }) => theme.bg2};
   }
 
   :hover,
@@ -313,6 +338,7 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
+        <NetworkCard />
         <HeaderElement>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
@@ -338,7 +364,6 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-          <NetworkCard />
           <Menu />
         </HeaderElement>
       </HeaderControls>

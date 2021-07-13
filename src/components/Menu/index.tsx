@@ -68,7 +68,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 156px;
+  min-width: 196px;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -77,10 +77,11 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: 16px;
   position: absolute;
   top: 3rem;
   z-index: 100;
+
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
@@ -90,8 +91,9 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
           left: 0rem;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: unset;
-    bottom: 4.5em
+    bottom: unset;
+    right: 0;
+    left: unset;
   `};
 `
 
@@ -135,6 +137,7 @@ const ToggleMenuItem = styled.button`
   align-items: center;
   padding: 0.5rem 0.5rem;
   justify-content: space-between;
+  font-size: 1rem;
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
   :hover {
@@ -199,7 +202,7 @@ export default function Menu() {
             <PieChart opacity={0.6} size={16} />
           </MenuItem>
           <ToggleMenuItem onClick={() => toggleDarkMode()}>
-            <div>{darkMode ? <Trans>Dark Theme</Trans> : <Trans>Light Theme</Trans>}</div>
+            <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
             {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
           </ToggleMenuItem>
           {showUNIClaimOption && (
