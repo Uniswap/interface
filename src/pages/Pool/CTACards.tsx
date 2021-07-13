@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
-import { RowBetween } from 'components/Row'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import Texture from '../../assets/images/sandtexture.webp'
-import Squiggle from '../../assets/images/squiggle.png'
 import { ExternalLink } from '../../theme'
 
 const CTASection = styled.section`
@@ -23,9 +21,6 @@ const CTASection = styled.section`
 `
 
 const CTA1 = styled(ExternalLink)`
-  /* background-size: 40px 40px; */
-  /* background-image: linear-gradient(to right, ${({ theme }) => theme.bg3} 1px, transparent 1px),
-    linear-gradient(to bottom, ${({ theme }) => theme.bg3} 1px, transparent 1px); */
   background-color: ${({ theme }) => theme.bg2};
   background: radial-gradient(
       92.78% 103.09% at 50.06% 7.22%,
@@ -127,17 +122,6 @@ const ResponsiveColumn = styled(AutoColumn)`
     gap: 8px;
   `};
   justify-content: space-between;
-`
-
-const StyledImage = styled.img`
-  height: 214px;
-  /* margin-top: -28px; */
-  position: fixed;
-  opacity: 0.2;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    height: 80px;
-    padding-right: 1rem;
-  `};
 `
 
 export default function CTACards() {

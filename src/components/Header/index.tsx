@@ -14,7 +14,7 @@ import styled from 'styled-components/macro'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink, HideSmall, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
@@ -92,11 +92,6 @@ const HeaderElement = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: center;
   `};
-`
-
-const HeaderElementWrap = styled.div`
-  display: flex;
-  align-items: center;
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -190,22 +185,6 @@ const Title = styled.a`
   margin-right: 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
-  `};
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const InlineTitle = styled.a`
-  display: flex;
-  align-items: center;
-  pointer-events: auto;
-  justify-self: flex-start;
-  margin: 0 4px 0 8px;
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-self: center;
-    display: inline;
   `};
   :hover {
     cursor: pointer;
