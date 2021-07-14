@@ -192,7 +192,7 @@ function TransactionSubmittedContent({
             <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
               <Trans>Transaction completed in </Trans>
               <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
-                <Trans>{secondsToConfirm}</Trans> seconds 🎉
+                {secondsToConfirm} seconds 🎉
               </span>
             </Text>
           )}
