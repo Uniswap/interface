@@ -322,6 +322,7 @@ body {
 
 .swapr-pagination {
   list-style: none;
+  padding: 0;
 }
 
 .swapr-pagination ul {
@@ -345,6 +346,10 @@ body {
   text-align: center;
   line-height: 20px;
   color: ${props => props.theme.text5};
+
+}
+.swapr-pagination li:last-child {
+  margin-right: 0;
 }
 
 .swapr-pagination li.rc-pagination-item-active {
