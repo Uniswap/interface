@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-07-13 22:04\n"
+"PO-Revision-Date: 2021-07-14 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -584,7 +584,7 @@ msgstr "Aktueller {0}-Preis:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "Dunkles Thema"
+msgstr "Dunkles Design"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -629,7 +629,7 @@ msgstr "Liquidität einzahlen"
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit to {0}"
-msgstr "Einzahlung auf {0}"
+msgstr "Auf {0} deponieren"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -697,7 +697,7 @@ msgstr "Effizienzvergleich"
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
-msgstr "Geben Sie einen Prozentwert ein"
+msgstr "Prozentsatz eingeben"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -741,7 +741,7 @@ msgstr "Verbindungsfehler"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
-msgstr "Fehler beim Verbinden. Versuchen Sie die Seite neu zu laden."
+msgstr "Verbindungsfehler. Versuchen Sie die Seite neu zu laden."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -761,7 +761,7 @@ msgstr "Der Expertenmodus schaltet die Transaktions-Bestätigung aus und ermögl
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
-msgstr "Abgelaufen"
+msgstr "Verfallen"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -794,11 +794,11 @@ msgstr "Von (höchstens)"
 
 #: src/components/RangeSelector/PresetsButtons.tsx
 msgid "Full Range"
-msgstr "Vollständige Palette"
+msgstr "Gesamter Bereich"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "Vollsortiment-Positionen können weniger Gebühren einbringen als konzentrierte Positionen. Erfahren Sie mehr <0>hier</0> ."
+msgstr "Positionen über den gesamten Bereich können weniger Gebühren einbringen als konzentrierte Positionen. Erfahren Sie mehr <0>hier</0>."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -927,7 +927,7 @@ msgstr "Mehr erfahren"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
-msgstr "Lichtthema"
+msgstr "Helles Design"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
