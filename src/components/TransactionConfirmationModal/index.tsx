@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ReactNode, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ReactNode, useContext, useEffect } from 'react'
+import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
@@ -15,6 +15,7 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { Trans } from '@lingui/macro'
+import { L2_CHAIN_IDS } from 'constants/chains'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,7 +40,7 @@ const StyledLogo = styled.img`
   margin-left: 6px;
 `
 
-export function ConfirmationPendingContent({
+function ConfirmationPendingContent({
   onDismiss,
   pendingText,
   inline,
@@ -78,7 +79,7 @@ export function ConfirmationPendingContent({
   )
 }
 
-export function TransactionSubmittedContent({
+function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
@@ -227,12 +228,21 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
+  // if on L2 and txn is submitted, close automatically (if open)
+  useEffect(() => {
+    if (isOpen && chainId && L2_CHAIN_IDS.includes(chainId) && hash) {
+      onDismiss()
+    }
+  }, [chainId, hash, isOpen, onDismiss])
+
   if (!chainId) return null
 
   // confirmation screen
+  // if on L2 and submitted dont render content, as should auto dismiss
+  // need this to skip submitted view during state update ^^
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {attemptingTxn ? (
+      {L2_CHAIN_IDS.includes(chainId) && hash ? null : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
         <TransactionSubmittedContent

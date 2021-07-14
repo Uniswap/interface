@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { useState, useContext } from 'react'
 import { Percent } from '@uniswap/sdk-core'
-import styled, { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components/macro'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -87,7 +87,7 @@ const SlippageEmojiContainer = styled.span`
   `}
 `
 
-export interface TransactionSettingsProps {
+interface TransactionSettingsProps {
   placeholderSlippage: Percent // varies according to the context in which the settings dialog is placed
 }
 

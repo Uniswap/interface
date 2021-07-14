@@ -30,6 +30,13 @@ export const USDC_ARBITRUM = new Token(
   'USDC',
   'USD//C'
 )
+export const DAI_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  18,
+  'DAI',
+  'Dai stable coin'
+)
 export const USDT = new Token(
   SupportedChainId.MAINNET,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',
@@ -118,6 +125,20 @@ export const UNI: { [chainId: number]: Token } = {
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
+  [SupportedChainId.OPTIMISM]: new Token(
+    SupportedChainId.OPTIMISM,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
+    SupportedChainId.OPTIMISTIC_KOVAN,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [SupportedChainId.ARBITRUM_ONE]: new Token(
     SupportedChainId.ARBITRUM_ONE,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',

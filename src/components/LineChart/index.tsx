@@ -10,7 +10,7 @@ const Wrapper = styled(Card)`
   width: 100%;
   padding: 1rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -19,7 +19,7 @@ const Wrapper = styled(Card)`
 
 const DEFAULT_HEIGHT = 300
 
-export type LineChartProps = {
+type LineChartProps = {
   data: any[]
   color?: string | undefined
   height?: number | undefined

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-01 22:14+0000\n"
+"POT-Creation-Date: 2021-07-13 19:19+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-07-01 23:07\n"
+"PO-Revision-Date: 2021-07-13 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -26,10 +26,6 @@ msgstr "$-"
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/earn/PoolCard.tsx
-msgid "${0} ETH"
-msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -51,17 +47,13 @@ msgstr "(clear all)"
 msgid "(edit)"
 msgstr "(edit)"
 
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "+{feeAmountFormatted}%"
-msgstr "+{feeAmountFormatted}%"
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "+/- {label}%"
+msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
 msgstr "- Poista lähetys"
-
-#: src/components/InputStepCounter/InputStepCounter.tsx
-msgid "-{feeAmountFormatted}%"
-msgstr "-{feeAmountFormatted}%"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -110,6 +102,10 @@ msgstr "<0>Tilin analytiikka ja kertyneet maksut</0><1> ↗ </1>"
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
 msgstr "<0> Takaisin kohtaan</0>V3"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
+msgstr "<0> Nykyinen hinta:</0> <1> <2 /></1> <3>{0} per {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -167,6 +163,7 @@ msgid "Add Delegate +"
 msgstr "Lisää delegaatti +"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add Liquidity"
 msgstr "Lisää likviditeettiä"
 
@@ -177,6 +174,10 @@ msgstr "Lisää V2-likviditeettiä"
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
 msgstr "Lisää likviditeettiä."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Add more liquidity"
+msgstr "Lisää lisää likviditeettiä"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -223,10 +224,6 @@ msgstr "Salli Uniswap-protokollan käyttää {0}"
 msgid "Allowed"
 msgstr "Sallittu"
 
-#: src/components/Header/URLWarning.tsx
-msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Varmista aina, että URL-osoite on <0>app.uniswap.org</0> - lisää se kirjanmerkkeihin varmuuden vuoksi."
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Määrä"
@@ -270,14 +267,6 @@ msgstr "Hyväksytään"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "Hyväksytään {0}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Explorer"
-msgstr "Arbitrum Explorer"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Arbitrum Token Bridge"
-msgstr "Arbitrum Token -silta"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -432,10 +421,6 @@ msgstr "Sulje"
 msgid "Closed"
 msgstr "Suljettu"
 
-#: src/pages/Pool/index.tsx
-msgid "Closed positions"
-msgstr "Suljetut asennot"
-
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Koodi"
@@ -477,6 +462,10 @@ msgstr "Yleiset baset"
 msgid "Confirm"
 msgstr "Vahvista"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Confirm Create"
+msgstr "Vahvista Luo"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Vahvista tarjonta"
@@ -501,7 +490,6 @@ msgstr "Vahvista lompakkosi tapahtuma"
 #: src/state/burn/v3/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
@@ -547,6 +535,10 @@ msgstr "Kopioitu"
 msgid "Copy Address"
 msgstr "Kopioi osoite"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Create"
+msgstr "Luoda"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Luo pooli ja tarjonta"
@@ -578,8 +570,8 @@ msgid "Create pool."
 msgstr "Luo pooli."
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Current Price"
-msgstr "Nykyinen hinta"
+msgid "Create {0}/{1} V3 pool"
+msgstr "Luo {0}/{1} V3 pool"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -589,6 +581,10 @@ msgstr "Nykyinen hinta"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
 msgstr "Nykyinen {0} hinta:"
+
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "Tumma teema"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -629,9 +625,11 @@ msgstr "Talleta UNI-V2 LP -rahakkeita"
 msgid "Deposit liquidity"
 msgstr "Talleta likviditeettiä"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Deposit to Arbitrum"
-msgstr "Talletus Arbitrumille"
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit to {0}"
+msgstr "Talleta {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -693,6 +691,10 @@ msgstr "Ansaitut UNI-rahakkeet edustavat äänioikeusosakkeita Uniswapin hallinn
 msgid "Edit"
 msgstr "Muokata"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Efficiency Comparison"
+msgstr "Tehokkuuden vertailu"
+
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
 msgstr "Syötä prosenttiosuus"
@@ -714,7 +716,6 @@ msgstr "Syötä osoite, joka käynnistää UNI-lunastuksen. Jos osoitteella on l
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
@@ -791,18 +792,29 @@ msgstr "Alkaen"
 msgid "From (at most)"
 msgstr "Alkaen (enintään)"
 
+#: src/components/RangeSelector/PresetsButtons.tsx
+msgid "Full Range"
+msgstr "Täysi valikoima"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "Täyden valikoiman positiot voivat ansaita vähemmän palkkioita kuin keskitetyt positiot. Lisätietoja <0> täältä</0> ."
+
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Hae apua Discordista"
 
 #: src/components/FeeSelector/index.tsx
-#: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Piilottaa"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Korkea hintavaikutus"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "I Understand"
+msgstr "Ymmärrän"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -905,9 +917,17 @@ msgstr "Virheellinen vastaanottaja"
 msgid "Learn"
 msgstr "Opi"
 
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "Lisätietoja likviditeetin tarjoamisesta"
+
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
 msgstr "Lisätietoja"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "Kevyt teema"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -917,6 +937,10 @@ msgstr "Likviditeetti"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
 msgstr "Likviditeetin tarjoajan palkkio"
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Liquidity data not available."
+msgstr "Likviditeettitietoja ei ole saatavilla."
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -944,10 +968,6 @@ msgstr "Ladattu"
 #: src/pages/Swap/index.tsx
 msgid "Loading"
 msgstr "Ladataan"
-
-#: src/components/Header/URLWarning.tsx
-msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Varmista, että URL-osoite on <0>app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1012,10 +1032,6 @@ msgstr "Siirrä likviditeetti V3:een"
 msgid "Migrate V2 Liquidity"
 msgstr "Siirrä V2-likviditeetti"
 
-#: src/pages/Pool/index.tsx
-msgid "Migrate V2 liquidity"
-msgstr "Siirrä V2-likviditeetti"
-
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Siirrä likviditeettirahakkeesi Uniswap V2:sta Uniswap V3:een."
@@ -1070,7 +1086,7 @@ msgstr "Likviditeettiä ei löytynyt."
 msgid "No pool found."
 msgstr "Poolia ei löytynyt."
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
 msgstr "Ehdotuksia ei löytynyt."
 
@@ -1114,6 +1130,22 @@ msgstr "Ainoastaan itsedelegoidut ja toiseen osoitteeseen ennen lohkoa {0} deleg
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hups! Tapahtui tuntematon virhe. Ole hyvä ja päivitä sivu tai vieraile sivulla toisella selaimella tai laitteella."
 
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism Scheduled Downtimes"
+msgstr "Optimismi suunnitellut seisokit"
+
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
+msgstr "Optimismi odottaa joitain suunniteltuja seisokkeja lähitulevaisuudessa. <0> Lue lisää.</0>"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic Etherscan"
+msgstr "Optimistinen eetteriskannaus"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic L2 Gateway"
+msgstr "Optimistinen L2-yhdyskäytävä"
+
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
 msgstr "Alueen ulkopuolella"
@@ -1142,6 +1174,14 @@ msgstr "Osallistuvat poolit"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Odottaa"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "Vahvista, että haluat poistaa tämän luettelon kirjoittamalla POISTA"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Please connect to Layer 1 Ethereum"
+msgstr "Muodosta yhteys kerrokseen 1 Ethereum"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1188,6 +1228,10 @@ msgstr "Poolattu {0}:"
 msgid "Pools Overview"
 msgstr "Poolien yleiskatsaus"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Preview"
+msgstr "Esikatselu"
+
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
@@ -1209,7 +1253,6 @@ msgstr "Liian suuri hintavaikutus"
 msgid "Price Updated"
 msgstr "Hinta päivitetty"
 
-#: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Hintaluokka"
@@ -1238,7 +1281,7 @@ msgstr "Ehdotuksen otsikko"
 msgid "Proposals"
 msgstr "Ehdotukset"
 
-#: src/pages/Vote/index.tsx
+#: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
 msgstr "Yhteisön jäsenten tekemät ehdotukset näkyvät täällä."
 
@@ -1338,6 +1381,10 @@ msgstr "Reitti"
 msgid "Search name or paste address"
 msgstr "Etsi nimeä tai liitä osoite"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Select Pair"
+msgstr "Valitse Pariliitos"
+
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1355,10 +1402,6 @@ msgid "Select an action"
 msgstr "Valitse toiminto"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "Select pair"
-msgstr "Valitse pari"
-
-#: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
 msgstr "Valittu vaihteluväli"
 
@@ -1370,6 +1413,7 @@ msgstr "Itse"
 msgid "Self Delegate"
 msgstr "Delegoi itse"
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
@@ -1387,13 +1431,13 @@ msgstr "Poolin osuus"
 msgid "Share of Pool:"
 msgstr "Poolin osuus:"
 
-#: src/pages/Pool/index.tsx
-msgid "Show"
-msgstr "Näytä"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Näytä Portis"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "Näytä suljetut sijainnit"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1411,6 +1455,10 @@ msgstr "Jotkut varat eivät ole käytettävissä tämän käyttöliittymän kaut
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Jotain meni pieleen"
+
+#: src/components/PositionList/index.tsx
+msgid "Status"
+msgstr "Tila"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1458,8 +1506,8 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Vaihdetaan {0} {1} kohteeseen {2} {3}"
 
 #: src/components/Header/NetworkCard.tsx
-msgid "Switch to Ethereum"
-msgstr "Vaihda Ethereumiin"
+msgid "Switch to L1 (Mainnet)"
+msgstr "Vaihda kohtaan L1 (Mainnet)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1505,13 +1553,30 @@ msgstr "Lisäämiesi rahakkeiden suhde määrittää tämän poolin hinnan."
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, että tapahtumasi määräaika ei ole liian lyhyt."
 
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "There is no liquidity data."
+msgstr "Likviditeettitietoja ei ole."
+
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Näitä rahakkeita liitetään usein muihin rahakkeisiin."
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the Arbitrum network. You must bridge L1 assets to the network to swap them."
-msgstr "Tämä on Uniswapin alfa-julkaisu Arbitrum-verkossa. Vaihda L1-varat verkkoon."
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network."
+msgstr "Tämä on Uniswapin alfa-julkaisu {0} verkossa."
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
+msgstr "Tämä on Uniswapin alfa-julkaisu {0} verkossa. Vaihda L1-varat verkkoon."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "Tämä pooli on alustettava, ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma. Kaasumaksut ovat tavallista korkeampia alustustapahtuman takia."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
+msgstr "Tämä pooli on alustettava arvoon {0} ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1650,13 +1715,13 @@ msgstr "Ei määritelty"
 msgid "Uniswap Governance"
 msgstr "Uniswapin hallinto"
 
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 on täällä!"
-
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap käytettävissä: <0>{0}</0>"
+
+#: src/components/vote/ProposalEmptyState.tsx
+msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
+msgstr "Uniswap-hallinta on käytettävissä vain kerroksessa 1. Vaihda verkko Ethereum Mainnet -palveluun nähdäksesi ehdotuksia ja äänestystä."
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1666,9 +1731,9 @@ msgstr "Uniswapin likviditeetin louhinta"
 msgid "Uniswap migration contract↗"
 msgstr "Uniswapin siirtosopimus ↗"
 
-#: src/components/swap/SwapNetworkAlert.tsx
-msgid "Uniswap on <0>Arbitrum</0>"
-msgstr "Poista <0> Arbitrumin vaihto</0>"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Uniswap on {0}"
+msgstr "Peruuta {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1720,6 +1785,10 @@ msgstr "Päivitä luettelo"
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Käyttäjä"
+
+#: src/pages/Pool/v2.tsx
+msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 ei ole käytettävissä kerroksessa 2. Vaihda kerrokseen 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1888,6 +1957,11 @@ msgstr "Sinulla ei ole tarpeeksi ääniä ehdotuksen lähettämiseen"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Sinulla ei ole vielä likviditeettiä tässä poolissa."
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+msgid "You must bridge L1 assets to the network to use them."
+msgstr "Sinun on yhdistettävä L1-resurssit verkkoon, jotta voit käyttää niitä."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
 msgstr "Sinun on yhdistettävä tili."
@@ -1929,10 +2003,6 @@ msgstr "V3-likviditeettipositiosi näkyvät täällä."
 msgid "Your liquidity deposits"
 msgstr "Sinun likviditeettitalletuksesi"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Likviditeettisi ansaitsee palkkioita vain, kun parin markkinahinta sopii hintaluokkaasi. <0> Tarvitsetko apua hintaluokan valitsemisessa?</0>"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1946,6 +2016,10 @@ msgstr "Oma positiosi"
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
 msgstr "Positiosi likviditeetti on 0, eikä se ansaitse palkkioita."
+
+#: src/components/LiquidityChartRangeInput/index.tsx
+msgid "Your position will appear here."
+msgstr "Sijaintisi näkyy täällä."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2036,6 +2110,11 @@ msgstr "rahakeluettelon {0} kautta"
 msgid "{0, plural, one {Import token} other {Import tokens}}"
 msgstr "{0, plural, one {Tuo rahake} other {Tuo rahakkeita}}"
 
+#: src/components/RateToggle/index.tsx
+#: src/components/RateToggle/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -2047,6 +2126,10 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Bridge"
+msgstr "{0} Silta"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} mukautettua rahaketta"
@@ -2057,8 +2140,13 @@ msgid "{0} Deposited"
 msgstr "{0} talletettu"
 
 #: src/components/Header/index.tsx
+#: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "{0} Explorer"
+msgstr "{0} Tutki"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2102,7 +2190,6 @@ msgstr "{0} ääntä"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -2111,13 +2198,7 @@ msgstr "{0} ääntä"
 msgid "{0} per {1}"
 msgstr "{0} per {1}"
 
-#: src/components/RateToggle/index.tsx
-#: src/components/RateToggle/index.tsx
-msgid "{0} price"
-msgstr "{0} hinta"
-
 #: src/components/SearchModal/ImportList.tsx
-#: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} rahaketta"
@@ -2169,6 +2250,10 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} rahaketta"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

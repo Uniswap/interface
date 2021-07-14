@@ -2,21 +2,24 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   Field,
   resetMintState,
+  setFullRange,
   typeInput,
   typeStartPriceInput,
   typeLeftRangeInput,
   typeRightRangeInput,
 } from './actions'
 
-export interface MintState {
+export type FullRange = true
+
+interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly startPriceTypedValue: string // for the case when there's no liquidity
-  readonly leftRangeTypedValue: string
-  readonly rightRangeTypedValue: string
+  readonly leftRangeTypedValue: string | FullRange
+  readonly rightRangeTypedValue: string | FullRange
 }
 
-export const initialState: MintState = {
+const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
   startPriceTypedValue: '',
@@ -27,6 +30,13 @@ export const initialState: MintState = {
 export default createReducer<MintState>(initialState, (builder) =>
   builder
     .addCase(resetMintState, () => initialState)
+    .addCase(setFullRange, (state) => {
+      return {
+        ...state,
+        leftRangeTypedValue: true,
+        rightRangeTypedValue: true,
+      }
+    })
     .addCase(typeStartPriceInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,

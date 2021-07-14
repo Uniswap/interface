@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
@@ -62,7 +62,7 @@ const FeeTierPercentageBadge = ({ percentage }: { percentage: number | undefined
   return (
     <Badge>
       <TYPE.label fontSize={12}>
-        {Boolean(percentage) ? <Trans>{percentage?.toFixed(0)}% select</Trans> : <Trans>Not created</Trans>}
+        {percentage !== undefined ? <Trans>{percentage?.toFixed(0)}% select</Trans> : <Trans>Not created</Trans>}
       </TYPE.label>
     </Badge>
   )
@@ -72,16 +72,16 @@ export default function FeeSelector({
   disabled = false,
   feeAmount,
   handleFeePoolSelect,
-  token0,
-  token1,
+  currencyA,
+  currencyB,
 }: {
   disabled?: boolean
   feeAmount?: FeeAmount
   handleFeePoolSelect: (feeAmount: FeeAmount) => void
-  token0?: Token | undefined
-  token1?: Token | undefined
+  currencyA?: Currency | undefined
+  currencyB?: Currency | undefined
 }) {
-  const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(token0, token1)
+  const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
   const [showOptions, setShowOptions] = useState(false)
   const [pulsing, setPulsing] = useState(false)
@@ -137,7 +137,7 @@ export default function FeeSelector({
       <DynamicSection gap="md" disabled={disabled}>
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
           <RowBetween>
-            <AutoColumn>
+            <AutoColumn id="add-liquidity-selected-fee">
               {!feeAmount ? (
                 <>
                   <TYPE.label>
@@ -149,17 +149,17 @@ export default function FeeSelector({
                 </>
               ) : (
                 <>
-                  <TYPE.label>
+                  <TYPE.label className="selected-fee-label">
                     <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
                   </TYPE.label>
-                  <Box style={{ width: 'fit-content', marginTop: '8px' }}>
+                  <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && feeAmount && <FeeTierPercentageBadge percentage={distributions[feeAmount]} />}
                   </Box>
                 </>
               )}
             </AutoColumn>
 
-            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
+            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
               {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
             </ButtonGray>
           </RowBetween>
@@ -173,7 +173,7 @@ export default function FeeSelector({
               onClick={() => handleFeePoolSelectWithEvent(FeeAmount.LOW)}
             >
               <AutoColumn gap="sm" justify="flex-start">
-                <AutoColumn justify="flex-start" gap="4px">
+                <AutoColumn justify="flex-start" gap="6px">
                   <ResponsiveText>
                     <Trans>0.05% fee</Trans>
                   </ResponsiveText>

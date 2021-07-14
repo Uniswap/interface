@@ -35,8 +35,7 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import RangeBadge from 'components/Badge/RangeBadge'
 import Toggle from 'components/Toggle'
 import { t, Trans } from '@lingui/macro'
-
-export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
+import { SupportedChainId } from 'constants/chains'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
@@ -138,7 +137,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(estimate),
+          gasLimit: calculateGasMargin(chainId, estimate),
         }
 
         return library
@@ -253,6 +252,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     )
   }
 
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const showCollectAsWeth = Boolean(
+    !onOptimisticChain &&
+      liquidityValue0?.currency &&
+      liquidityValue1?.currency &&
+      (liquidityValue0.currency.isNative ||
+        liquidityValue1.currency.isNative ||
+        liquidityValue0.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue0.currency.chainId]) ||
+        liquidityValue1.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue1.currency.chainId]))
+  )
   return (
     <AutoColumn>
       <TransactionConfirmationModal
@@ -375,12 +384,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </AutoColumn>
               </LightCard>
 
-              {liquidityValue0?.currency &&
-              liquidityValue1?.currency &&
-              (liquidityValue0.currency.isNative ||
-                liquidityValue1.currency.isNative ||
-                liquidityValue0.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue0.currency.chainId]) ||
-                liquidityValue1.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue1.currency.chainId])) ? (
+              {showCollectAsWeth && (
                 <RowBetween>
                   <TYPE.main>
                     <Trans>Collect as WETH</Trans>
@@ -391,7 +395,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
                   />
                 </RowBetween>
-              ) : null}
+              )}
 
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>

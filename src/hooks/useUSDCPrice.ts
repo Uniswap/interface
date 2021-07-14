@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SupportedChainId } from '../constants/chains'
-import { USDC, USDC_ARBITRUM } from '../constants/tokens'
+import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
 import { useBestV3TradeExactOut } from './useBestV3Trade'
 import { useActiveWeb3React } from './web3'
@@ -11,6 +11,7 @@ import { useActiveWeb3React } from './web3'
 const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
 }
 
 /**
