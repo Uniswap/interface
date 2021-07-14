@@ -7,7 +7,7 @@ import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween, RowFixed } from '../Row'
-import { AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { ButtonPrimary, ButtonLight } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -110,6 +110,7 @@ function TransactionSubmittedContent({
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // convert unix time difference to seconds
   const secondsToConfirm = transaction?.confirmedTime
@@ -138,7 +139,11 @@ function TransactionSubmittedContent({
         )}
         {confirmed ? (
           <ConfirmedIcon inline={inline}>
-            <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
+            {transactionSuccess ? (
+              <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
+            ) : (
+              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
+            )}
           </ConfirmedIcon>
         ) : (
           <ConfirmedIcon inline={inline}>
@@ -147,7 +152,13 @@ function TransactionSubmittedContent({
         )}
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={24} textAlign="center">
-            {confirmed ? <Trans>Success</Trans> : <Trans>Transaction Submitted</Trans>}
+            {transactionSuccess ? (
+              <Trans>Error</Trans>
+            ) : confirmed ? (
+              <Trans>Success</Trans>
+            ) : (
+              <Trans>Transaction Submitted</Trans>
+            )}
           </Text>
           {!transaction ? null : (
             <Text fontWeight={400} fontSize={16} textAlign="center">
