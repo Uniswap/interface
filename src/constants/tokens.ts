@@ -44,9 +44,23 @@ export const USDT = new Token(
   'USDT',
   'Tether USD'
 )
+export const USDT_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+  6,
+  'USDT',
+  'Tether USD'
+)
 export const WBTC = new Token(
   SupportedChainId.MAINNET,
   '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
+export const WBTC_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x68f180fcCe6836688e9084f035309E29Bf0A2095',
   8,
   'WBTC',
   'Wrapped BTC'
