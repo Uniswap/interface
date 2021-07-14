@@ -24,6 +24,87 @@ const View = styled(Flex)`
   & > *:nth-child(even) {
     width: 60%;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    && {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-areas:
+      "reward-program info-section"
+      "max-pool-size info-section"
+      "dates info-section"
+      "rewards rewards"
+      "pool-type pool-type";
+    }
+    && > * {
+      width: initial;  
+    }
+  `};
+`;
+
+const RewardProgramSection = styled(Box)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: reward-program;
+  `};
+`;
+
+const DatesSection = styled(Flex)`
+  justify-content: flex-end;
+  text-align: right;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: dates;
+    justify-content: flex-start;
+
+    & div {
+      text-align: left;
+    }
+  `};
+`;
+
+const RewardsSection = styled(Flex)`
+  justify-content: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: rewards;
+    justify-content: flex-start;
+
+    & div {
+      justify-content: flex-start;
+    }
+  `};
+`;
+
+const MaxPollSizeSection = styled(Box)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: max-pool-size;
+  `};
+`;
+
+const PoolTypeSection = styled(Box)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: pool-type;
+  `};
+`;
+
+
+const InfoRow = styled(Flex)`
+  text-align: right;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-area: info-section;
+    && {
+      flex-direction: column-reverse;
+      align-items: flex-end;
+    }
+    && > * {
+      margin: 0 0 24px;
+    }
+
+    & > *:first-child {
+      margin: 0;
+    }
+  `};
 `;
 
 
@@ -90,7 +171,7 @@ function Information({
 
   return (
     <View justifyContent="space-between">
-      <Box mb="24px">
+      <RewardProgramSection mb="24px">
         <DataDisplayer
           title="REWARD PROGRAM"
           data={
@@ -115,11 +196,10 @@ function Information({
             </Flex>
           }
         />
-      </Box>
-      <Flex mb="24px" alignItems="center" justifyContent="flex-end">
+      </RewardProgramSection>
+      <InfoRow mb="24px" alignItems="center" justifyContent="flex-end">
         <Box mr="24px">
           <DataDisplayer
-            alignTitleRight
             title="TVL"
             data={
               !staked || loadingNativeCurrencyUSDPrice || !nativeCurrencyUSDPrice ? (
@@ -147,7 +227,13 @@ function Information({
               {!endsAt || !startsAt ? (
                 <Skeleton width="136px" height="14px" />
               ) : (
-                <TYPE.body fontSize="14px" fontWeight="500" lineHeight="14px" color="text3">
+                <TYPE.body
+                  fontSize="14px"
+                  fontWeight="500"
+                  lineHeight="14px"
+                  color="text3"
+                  style={{ whiteSpace: 'nowrap' }}
+                >
                   <Countdown to={upcoming ? startsAt : endsAt} />
                 </TYPE.body>
               )}
@@ -156,7 +242,6 @@ function Information({
         </Flex>
         <Box>
           <DataDisplayer
-            alignTitleRight
             title="APY"
             data={!apy ? <Skeleton width="80px" height="22px" /> : `${apy.toFixed(2)}%`}
             dataTextSize={22}
@@ -164,8 +249,8 @@ function Information({
             color="white"
           />
         </Box>
-      </Flex>
-      <Box mb="24px">
+      </InfoRow>
+      <MaxPollSizeSection mb="24px">
         <DataDisplayer
           title="MAX POOL SIZE"
           data={
@@ -180,11 +265,10 @@ function Information({
             )
           }
         />
-      </Box>
-      <Flex mb="24px" alignItems="flex-start" justifyContent="flex-end">
+      </MaxPollSizeSection>
+      <RewardsSection mb="24px" alignItems="flex-start">
         <Box mr="24px">
           <DataDisplayer
-            alignTitleRight
             title="REWARDS"
             data={
               !rewards ? (
@@ -208,7 +292,6 @@ function Information({
         </Box>
         <Box>
           <DataDisplayer
-            alignTitleRight
             title="REMAINING"
             data={
               !remainingRewards ? (
@@ -230,8 +313,8 @@ function Information({
             }
           />
         </Box>
-      </Flex>
-      <Box>
+      </RewardsSection>
+      <PoolTypeSection>
         <DataDisplayer
           title="POOL TYPE"
           data={
@@ -258,11 +341,10 @@ function Information({
             </RowFixed>
           }
         />
-      </Box>
-      <Flex mb="24px" alignItems="flex-start" justifyContent="flex-end">
+      </PoolTypeSection>
+      <DatesSection mb="24px">
         <Box mr="24px">
           <DataDisplayer
-            alignTitleRight
             title="START"
             data={
               !startsAt ? (
@@ -276,7 +358,6 @@ function Information({
         </Box>
         <Box>
           <DataDisplayer
-            alignTitleRight
             title="END"
             data={
               !endsAt ? (
@@ -288,7 +369,7 @@ function Information({
             dataTextSize={10.5}
           />
         </Box>
-      </Flex>
+      </DatesSection>
     </View>
   )
 }

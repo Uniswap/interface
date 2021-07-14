@@ -32,7 +32,73 @@ const StyledPositionCard = styled(GreyCard)`
   overflow: hidden;
   background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
   background-blend-mode: overlay, normal;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 24px;
+  `}
 `
+
+const DataRow = styled(Flex)`
+  margin-bottom: 18px;
+  justify-content: space-between;
+  text-align: right;
+  margin-bottom: 28px;
+
+  & > *:first-child {
+    flex-grow: 1;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-wrap: wrap;
+
+    && > * {
+      width: 50%;
+      margin: 0 0 28px;
+      text-align: left;
+    }
+  `}
+`;
+
+const TokenAmountBlock = styled(TokenAmountDisplayer)`
+  && {
+    justify-content: flex-end;
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      justify-content: start;
+    `}
+  }
+`;
+
+const ButtonsRow = styled(RowBetween)`
+  & > button + button {
+    margin-left: 8px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+
+    & > button {
+      color: #fff;
+    }
+
+    & > button + button {
+      margin: 8px 0 0;
+    }
+  `}
+`;
+
+const StyledButtonDark = styled(ButtonDark)`
+  width: 100%;
+  padding: 9.5px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #C0BAF7;
+  border: 1px solid #2A2F42;
+  background: #191A24;
+`;
 
 interface FullPositionCardProps {
   campaign?: LiquidityMiningCampaign
@@ -264,7 +330,7 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                 My stake
               </TYPE.body>
             </Box>
-            <Flex mb="18px" justifyContent="space-between">
+            <DataRow mb="18px" justifyContent="space-between">
               <Box mr="20px">
                 <DataDisplayer
                   title={<Row>STAKED</Row>}
@@ -291,129 +357,105 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                   }
                 />
               </Box>
-              <Flex>
-                <Box mr="20px">
-                  <DataDisplayer
-                    alignTitleRight
-                    title="REWARDED"
-                    data={
-                      totalRewardedAmounts.length === 0 ? (
-                        <Row justifyContent="flex-end">
-                          <Skeleton width="40px" height="14px" />
-                          <CurrencyLogo loading marginLeft={4} size="14px" />
-                        </Row>
-                      ) : (
-                        totalRewardedAmounts.map(totalRewardedAmount => {
-                          return (
-                            <TokenAmountDisplayer
-                              key={totalRewardedAmount.token.address}
-                              amount={totalRewardedAmount}
-                              alignRight
-                              showUSDValue={showUSDValue}
-                            />
-                          )
-                        })
-                      )
-                    }
-                  />
-                </Box>
-                <Box mr="20px">
-                  <DataDisplayer
-                    alignTitleRight
-                    title="CLAIMABLE"
-                    data={
-                      claimableRewardAmounts.length === 0 ? (
-                        <Row justifyContent="flex-end">
-                          <Skeleton width="40px" height="14px" />
-                          <CurrencyLogo loading marginLeft={4} size="14px" />
-                        </Row>
-                      ) : (
-                        claimableRewardAmounts.map(claimableRewardAmount => {
-                          return (
-                            <TokenAmountDisplayer
-                              key={claimableRewardAmount.token.address}
-                              amount={claimableRewardAmount}
-                              alignRight
-                              showUSDValue={showUSDValue}
-                            />
-                          )
-                        })
-                      )
-                    }
-                  />
-                </Box>
-                <Box>
-                  <DataDisplayer
-                    title="CLAIMED"
-                    alignTitleRight
-                    data={
-                      claimedRewardAmounts.length === 0 ? (
-                        <Row justifyContent="flex-end">
-                          <Skeleton width="40px" height="14px" />
-                          <CurrencyLogo loading marginLeft={4} size="14px" />
-                        </Row>
-                      ) : (
-                        claimedRewardAmounts.map(claimedRewardAmount => {
-                          return (
-                            <TokenAmountDisplayer
-                              key={claimedRewardAmount.token.address}
-                              amount={claimedRewardAmount}
-                              alignRight
-                              showUSDValue={showUSDValue}
-                            />
-                          )
-                        })
-                      )
-                    }
-                  />
-                </Box>
-              </Flex>
-            </Flex>
+              <Box mr="20px">
+                <DataDisplayer
+                  title="REWARDED"
+                  data={
+                    totalRewardedAmounts.length === 0 ? (
+                      <Row justifyContent="flex-end">
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      totalRewardedAmounts.map(totalRewardedAmount => {
+                        return (
+                          <TokenAmountBlock
+                            key={totalRewardedAmount.token.address}
+                            amount={totalRewardedAmount}
+                            showUSDValue={showUSDValue}
+                          />
+                        )
+                      })
+                    )
+                  }
+                />
+              </Box>
+              <Box mr="20px">
+                <DataDisplayer
+                  title="CLAIMABLE"
+                  data={
+                    claimableRewardAmounts.length === 0 ? (
+                      <Row justifyContent="flex-end">
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      claimableRewardAmounts.map(claimableRewardAmount => {
+                        return (
+                          <TokenAmountBlock
+                            key={claimableRewardAmount.token.address}
+                            amount={claimableRewardAmount}
+                            showUSDValue={showUSDValue}
+                          />
+                        )
+                      })
+                    )
+                  }
+                />
+              </Box>
+              <Box>
+                <DataDisplayer
+                  title="CLAIMED"
+                  data={
+                    claimedRewardAmounts.length === 0 ? (
+                      <Row justifyContent="flex-end">
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      claimedRewardAmounts.map(claimedRewardAmount => {
+                        return (
+                          <TokenAmountBlock
+                            key={claimedRewardAmount.token.address}
+                            amount={claimedRewardAmount}
+                            showUSDValue={showUSDValue}
+                          />
+                        )
+                      })
+                    )
+                  }
+                />
+              </Box>
+            </DataRow>
           </Flex>
-          <RowBetween>
-            <ButtonDark
-              padding="8px"
-              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="100%"
-              marginRight="4px"
+          <ButtonsRow>
+            <StyledButtonDark
               disabled={disabledStaking}
               onClick={handleStakingRequest}
             >
               Deposit and stake
-            </ButtonDark>
-            <ButtonDark
-              padding="8px"
-              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="100%"
-              marginLeft="4px"
+            </StyledButtonDark>
+            <StyledButtonDark
               disabled={disabledClaim}
               onClick={handleClaimRequest}
             >
               Claim rewards
-            </ButtonDark>
-          </RowBetween>
-          <RowBetween>
-            <ButtonDark
-              padding="8px"
-              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="100%"
-              marginRight="4px"
+            </StyledButtonDark>
+          </ButtonsRow>
+          <ButtonsRow>
+            <StyledButtonDark
               disabled={disabledWithdrawing}
               onClick={handleWithdrawalRequest}
             >
               Withdraw
-            </ButtonDark>
-            <ButtonDark
-              padding="8px"
-              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="100%"
-              marginLeft="4px"
+            </StyledButtonDark>
+            <StyledButtonDark
               disabled={disabledExit}
               onClick={handleExitRequest}
             >
               Claim and withdraw
-            </ButtonDark>
-          </RowBetween>
+            </StyledButtonDark>
+          </ButtonsRow>
         </AutoColumn>
       </StyledPositionCard>
       {campaign && campaign.address && normalizedStakableTokenBalance && (

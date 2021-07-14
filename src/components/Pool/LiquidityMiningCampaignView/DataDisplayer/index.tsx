@@ -8,16 +8,14 @@ interface DataDisplayerProps {
   data: ReactNode
   dataTextSize?: number
   fontWeight?: number
-  alignTitleRight?: boolean
   color?: keyof Colors
 }
 
-function DataDisplayer({ title, dataTextSize, data, alignTitleRight, fontWeight, color }: DataDisplayerProps) {
+function DataDisplayer({ title, dataTextSize, data, fontWeight, color }: DataDisplayerProps) {
   return (
     <AutoColumn gap="4px">
       <TYPE.small
         fontWeight="600"
-        textAlign={alignTitleRight ? 'right' : 'left'}
         fontSize="11px"
         lineHeight="13px"
         letterSpacing="0.06em"

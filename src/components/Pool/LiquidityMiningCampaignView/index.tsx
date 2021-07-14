@@ -45,6 +45,12 @@ const StyledSwitch = styled(Repeat)`
   margin-left: 4px;
 `
 
+const StyledCard = styled(DarkCard)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 32px 18px;
+  `}
+`;
+
 interface PairViewProps {
   campaign?: LiquidityMiningCampaign | null
 }
@@ -81,7 +87,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
           <StyledSwitch />
         </USDValueSwitcherContainer>
       </RowBetween>
-      <DarkCard padding="32px">
+      <StyledCard padding="32px">
         <AutoColumn gap="36px">
           <Information
             targetedPair={campaign?.targetedPair}
@@ -97,7 +103,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
           />
           {account && <StakeCard campaign={campaign || undefined} showUSDValue={showUSDValue} />}
         </AutoColumn>
-      </DarkCard>
+      </StyledCard>
     </AutoColumn>
   )
 }
