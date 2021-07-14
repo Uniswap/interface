@@ -26,6 +26,7 @@ const OutOfViewIndicator = styled.path`
   stroke: ${({ theme }) => theme.primaryText1};
   stroke-width: 4;
   fill: transparent;
+  cursor: zoom-out;
 `
 
 const LabelGroup = styled.g<{ visible: boolean }>`
@@ -246,6 +247,7 @@ export const Brush = ({
       innerHeight,
       innerWidth,
       localBrushExtent,
+      resetZoom,
       showLabels,
       westHandleColor,
       xScale,
