@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-14 02:12\n"
+"PO-Revision-Date: 2021-07-14 07:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1140,11 +1140,11 @@ msgstr "Optimismは、近い将来、予定されたダウンタイムが発生�
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
-msgstr "楽観的なEtherscan"
+msgstr "Optimistic Etherscan"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic L2 Gateway"
-msgstr "楽観的なL2ゲートウェイ"
+msgstr "Optimistic L2 ゲートウェイ"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1788,7 +1788,7 @@ msgstr "ユーザー"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2はレイヤー2では使用できません。レイヤー1イーサリアムに切り替えます。"
+msgstr "V2はレイヤー2では使用できません。イーサリアムのレイヤー1に切り替えてください。"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
