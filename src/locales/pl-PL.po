@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-08 18:32+0000\n"
+"POT-Creation-Date: 2021-07-13 19:19+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Polish\n"
-"PO-Revision-Date: 2021-07-08 19:04\n"
+"PO-Revision-Date: 2021-07-13 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -26,10 +26,6 @@ msgstr "$-"
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/earn/PoolCard.tsx
-msgid "${0} ETH"
-msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -158,6 +154,7 @@ msgstr "Aktywne"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Dodaj"
 
@@ -166,6 +163,7 @@ msgid "Add Delegate +"
 msgstr "Dodaj Delegata +"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add Liquidity"
 msgstr "Dodaj płynność"
 
@@ -423,10 +421,6 @@ msgstr "Zamknij"
 msgid "Closed"
 msgstr "Zamknięte"
 
-#: src/pages/Pool/index.tsx
-msgid "Closed positions"
-msgstr "Pozycje zamknięte"
-
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Kod"
@@ -467,6 +461,10 @@ msgstr "Wspólne podstawy"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Potwierdź"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Confirm Create"
+msgstr "Potwierdź utworzenie"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -584,6 +582,10 @@ msgstr "Aktualna cena"
 msgid "Current {0} Price:"
 msgstr "Aktualna cena {0}:"
 
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "Ciemny schemat"
+
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
 msgstr "Pokonany"
@@ -623,6 +625,7 @@ msgstr "Depozyt UNI-V2 LP Tokens"
 msgid "Deposit liquidity"
 msgstr "Depozyt płynności"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit to {0}"
@@ -793,12 +796,15 @@ msgstr "Od (maksymalnie)"
 msgid "Full Range"
 msgstr "Pełny zasięg"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "Pozycje z pełnym zakresem mogą generować mniejsze opłaty niż pozycje skoncentrowane. . Dowiedz się więcej <0>tutaj</0> ."
+
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Uzyskaj wsparcie na Discord"
 
 #: src/components/FeeSelector/index.tsx
-#: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "Ukryć"
 
@@ -911,9 +917,17 @@ msgstr "Nieprawidłowy odbiorca"
 msgid "Learn"
 msgstr "Ucz się"
 
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "Dowiedz się, jak zapewnić płynność"
+
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
 msgstr "Ucz się więcej"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "Jasny motyw"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1018,10 +1032,6 @@ msgstr "Przenieś płynność do V3"
 msgid "Migrate V2 Liquidity"
 msgstr "Migracja płynności V2"
 
-#: src/pages/Pool/index.tsx
-msgid "Migrate V2 liquidity"
-msgstr "Migracja płynności V2"
-
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migracja tokenów płynności z Uniswap V2 do Uniswap V3."
@@ -1108,10 +1118,6 @@ msgstr "Poza"
 msgid "On"
 msgstr "Na"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
-msgstr "W przypadku Uniswap V3 ustawienie zakresu dla wszystkich cen, takich jak V2, jest mniej efektywne kapitałowo niż skoncentrowane. Dowiedz się więcej <0>tutaj</0> ."
-
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Gdy będziesz zadowolony z kursu, kliknij przycisk zaopatrzenia, aby przejrzeć."
@@ -1123,6 +1129,22 @@ msgstr "Do głosowania kwalifikują się tylko głosy UNI, które zostały samod
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Ups! Wystąpił nieznany błąd. Odśwież stronę lub odwiedź z innej przeglądarki lub urządzenia."
+
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism Scheduled Downtimes"
+msgstr "Zaplanowane przestoje"
+
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
+msgstr "Optymizm spodziewa się w najbliższej przyszłości zaplanowanego przestoju. <0>Czytaj więcej.</0>"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic Etherscan"
+msgstr "Optymistyczny Etherscan"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic L2 Gateway"
+msgstr "Optymistyczna bramka L2"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1152,6 +1174,10 @@ msgstr "Uczestniczące grupy"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "W oczekiwaniu"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "Potwierdź, że chcesz usunąć tę listę, wpisując USUŃ"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1227,7 +1253,6 @@ msgstr "Wpływ cenowy za wysoki"
 msgid "Price Updated"
 msgstr "Cena zaktualizowana"
 
-#: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "Zakres cen"
@@ -1388,6 +1413,8 @@ msgstr "Samego siebie"
 msgid "Self Delegate"
 msgstr "Własny Delegat"
 
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
 msgstr "Ustaw zakres cenowy"
@@ -1395,10 +1422,6 @@ msgstr "Ustaw zakres cenowy"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "Ustaw początkową cenę"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Set your Price Range"
-msgstr "Ustaw swój przedział cenowy"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1408,13 +1431,13 @@ msgstr "Udział puli"
 msgid "Share of Pool:"
 msgstr "Udział w puli:"
 
-#: src/pages/Pool/index.tsx
-msgid "Show"
-msgstr "Pokazać"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "Show Portis"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "Pokaż zamknięte pozycje"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1432,6 +1455,10 @@ msgstr "Niektóre aktywa nie są dostępne za pośrednictwem tego interfejsu, po
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Coś poszło nie tak"
+
+#: src/components/PositionList/index.tsx
+msgid "Status"
+msgstr "Status"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1479,8 +1506,8 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Zamiana {0} {1} na {2} {3}"
 
 #: src/components/Header/NetworkCard.tsx
-msgid "Switch to Ethereum"
-msgstr "Przełącz się na Ethereum"
+msgid "Switch to L1 (Mainnet)"
+msgstr "Przełącz na L1 (sieć główna)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1534,6 +1561,7 @@ msgstr "Brak danych o płynności."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Te żetony są zwykle sparowane z innymi żetonami."
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network."
 msgstr "Jest to wersja alfa Uniswap w sieci {0}"
@@ -1541,6 +1569,14 @@ msgstr "Jest to wersja alfa Uniswap w sieci {0}"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
 msgstr "Jest to wersja alfa Uniswap w sieci {0} Aby je zamienić, musisz połączyć zasoby L1 z siecią."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "Ta pula musi zostać zainicjowana, zanim będzie można dodać płynność. Aby zainicjować, wybierz cenę wywoławczą dla puli. Następnie wprowadź zakres cen płynności i kwotę depozytu. Opłaty za gaz będą wyższe niż zwykle ze względu na transakcję inicjalizacji."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
+msgstr "Ta pula musi zostać zainicjowana na {0} zanim będzie można dodać płynność. Aby zainicjować, wybierz cenę wywoławczą dla puli. Następnie wprowadź zakres cen płynności i kwotę depozytu."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1678,10 +1714,6 @@ msgstr "Nieokreślony"
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Zarządzanie uniswap"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 jest tutaj!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1905,10 +1937,6 @@ msgstr "Tworzysz pulę"
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "Jesteś pierwszym dostawcą płynności dla tej puli Uniswap V3. Twoja płynność zostanie zmigrowana po bieżącej cenie {0}."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Jesteś pierwszym dostawcą płynności dla tej puli Uniswap V3. Koszt transakcji będzie znacznie wyższy, ponieważ obejmuje gaz do utworzenia puli."
-
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
 msgstr "Jesteś pierwszym dostawcą płynności."
@@ -1929,9 +1957,10 @@ msgstr "Nie masz wystarczającej liczby głosów, aby przesłać propozycję"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Nie masz jeszcze płynności w tej puli."
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to swap them."
-msgstr "Aby je zamienić, musisz połączyć zasoby L1 z siecią."
+msgid "You must bridge L1 assets to the network to use them."
+msgstr "Aby z nich korzystać, musisz połączyć zasoby L1 z siecią."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2111,6 +2140,7 @@ msgid "{0} Deposited"
 msgstr "{0} zdeponowane"
 
 #: src/components/Header/index.tsx
+#: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
 
@@ -2170,7 +2200,6 @@ msgstr "{0} na {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
-#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} tokenów"
 
@@ -2221,6 +2250,10 @@ msgstr "{SOCKS_AMOUNT} UNI"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} tokenów"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
