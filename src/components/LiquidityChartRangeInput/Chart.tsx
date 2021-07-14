@@ -60,8 +60,9 @@ export function Chart({
     }
   }, [brushDomain, onBrushDomainChange, xScale])
 
-  // ensures the brush remains in view and adapts to zooms
-  xScale.clamp(true)
+  //todo
+  //make reset button actually recenter around current price + range
+  //make caret call reset
 
   return (
     <>
@@ -128,6 +129,7 @@ export function Chart({
             setBrushExtent={onBrushDomainChange}
             westHandleColor={styles.brush.handle.west}
             eastHandleColor={styles.brush.handle.east}
+            resetZoom={() => setZoom(null)}
           />
         </g>
       </svg>

@@ -40,3 +40,12 @@ export const brushHandleAccentPath = () =>
     'v 14', // vertical line
     'z',
   ].join(' ')
+
+export const caretPath = (height: number) => {
+  const length = 15
+  return [
+    `M ${length} ${height / 2 - length}`, // initial point
+    `l -${length} 15`, // move 5px to the right
+    `l ${length} 15`, // move 5px to the left
+  ].join(' ')
+}

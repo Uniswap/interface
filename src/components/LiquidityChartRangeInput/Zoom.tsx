@@ -96,7 +96,7 @@ export default function Zoom({
   }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
 
   useEffect(() => {
-    // reset zoom to initial on zoomLevel chang
+    // reset zoom to initial on zoomLevel change
     initial()
   }, [initial, zoomLevels])
 
