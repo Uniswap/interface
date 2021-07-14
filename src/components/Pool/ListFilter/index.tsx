@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
@@ -21,6 +22,8 @@ interface ListFilterProps {
 }
 
 export default function ListFilter({ disabled, filter, onFilterChange }: ListFilterProps) {
+  const { account } = useWeb3React()
+  
   const handleFilterRadioChange = useCallback(
     event => {
       onFilterChange(PairsFilterType[event.target.value as keyof typeof PairsFilterType])
@@ -39,14 +42,16 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
             value={PairsFilterType.ALL.toString()}
           />
         </Box>
-        <Box mr="24px">
-          <Radio
-            onChange={handleFilterRadioChange}
-            checked={filter === PairsFilterType.MY}
-            label="My pairs"
-            value={PairsFilterType.MY.toString()}
-          />
-        </Box>
+        {!!account && (
+          <Box mr="24px">
+            <Radio
+              onChange={handleFilterRadioChange}
+              checked={filter === PairsFilterType.MY}
+              label="My pairs"
+              value={PairsFilterType.MY.toString()}
+            />
+          </Box>
+        )}
         <Box mr="24px">
           <Radio
             onChange={handleFilterRadioChange}
