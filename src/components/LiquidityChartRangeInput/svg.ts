@@ -20,7 +20,7 @@ export const brushHandlePath = (height: number) =>
     `v ${height}`, // vertical line
     'm 1 0', // move 1px to the right
     `V 0`, // second vertical line
-    `M 0 2`, // move to origin
+    `M 0 1`, // move to origin
 
     // head
     'h 12', // horizontal line
@@ -33,10 +33,10 @@ export const brushHandlePath = (height: number) =>
 
 export const brushHandleAccentPath = () =>
   [
-    'm 6 8', // move to first accent
+    'm 5 7', // move to first accent
     'v 14', // vertical line
     'M 0 0', // move to origin
-    'm 10 8', // move to second accent
+    'm 9 7', // move to second accent
     'v 14', // vertical line
     'z',
   ].join(' ')

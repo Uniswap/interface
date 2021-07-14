@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BrushBehavior, brushX, D3BrushEvent, local, ScaleLinear, select } from 'd3'
+import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import styled from 'styled-components/macro'
 import { brushHandleAccentPath, brushHandlePath, caretPath } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
@@ -8,7 +8,7 @@ const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;
   pointer-events: none;
 
-  stroke-width: 4;
+  stroke-width: 3;
   stroke: ${({ color }) => color};
   fill: ${({ color }) => color};
 `
@@ -86,10 +86,7 @@ export const Brush = ({
 
   const brushed = useCallback(
     (event: D3BrushEvent<unknown>) => {
-      const { type, selection, sourceEvent } = event
-
-      console.log('judo', 'brush', sourceEvent)
-      sourceEvent && sourceEvent.stopPropagation() && sourceEvent.preventDefault()
+      const { type, selection } = event
 
       if (!selection) {
         setLocalBrushExtent(null)
@@ -159,6 +156,15 @@ export const Brush = ({
   const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX
   const flipEastHandle = localBrushExtent && xScale(localBrushExtent[1]) > innerWidth - FLIP_HANDLE_THRESHOLD_PX
 
+  const showWestArrow = localBrushExtent && (xScale(localBrushExtent[0]) < 0 || xScale(localBrushExtent[1]) < 0)
+  const showEastArrow =
+    localBrushExtent && (xScale(localBrushExtent[0]) > innerWidth || xScale(localBrushExtent[1]) > innerWidth)
+
+  const westHandleInView =
+    localBrushExtent && xScale(localBrushExtent[0]) >= 0 && xScale(localBrushExtent[0]) <= innerWidth
+  const eastHandleInView =
+    localBrushExtent && xScale(localBrushExtent[1]) >= 0 && xScale(localBrushExtent[1]) <= innerWidth
+
   return useMemo(
     () => (
       <>
@@ -171,10 +177,6 @@ export const Brush = ({
           {/* clips at exactly the svg area */}
           <clipPath id={`${id}-brush-clip`}>
             <rect x="0" y="0" width={innerWidth} height={innerHeight} />
-          </clipPath>
-
-          <clipPath id={`${id}-handles-clip`}>
-            <rect x="0" y="0" width="100%" height="100%" />
           </clipPath>
         </defs>
 
@@ -190,7 +192,7 @@ export const Brush = ({
         {localBrushExtent && (
           <>
             {/* west handle */}
-            {xScale(localBrushExtent[0]) >= 0 ? (
+            {westHandleInView ? (
               <g transform={`translate(${xScale(localBrushExtent[0])}, 0), scale(${flipWestHandle ? '-1' : '1'}, 1)`}>
                 <g>
                   <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
@@ -207,15 +209,12 @@ export const Brush = ({
                   </Tooltip>
                 </LabelGroup>
               </g>
-            ) : (
-              /* show out of view indicator */
-              <OutOfViewIndicator d={caretPath(innerHeight)} onClick={resetZoom} />
-            )}
+            ) : null}
 
             {/* east handle */}
-            {xScale(localBrushExtent[1]) <= innerWidth ? (
+            {eastHandleInView ? (
               <g transform={`translate(${xScale(localBrushExtent[1])}, 0), scale(${flipEastHandle ? '-1' : '1'}, 1)`}>
-                <g clipPath={`url(#${id}-handles-clip)`}>
+                <g>
                   <Handle color={eastHandleColor} d={brushHandlePath(innerHeight)} />
                   <HandleAccent d={brushHandleAccentPath()} />
                 </g>
@@ -230,8 +229,11 @@ export const Brush = ({
                   </Tooltip>
                 </LabelGroup>
               </g>
-            ) : (
-              /* show out of view indicator */
+            ) : null}
+
+            {showWestArrow && <OutOfViewIndicator d={caretPath(innerHeight)} onClick={resetZoom} />}
+
+            {showEastArrow && (
               <OutOfViewIndicator
                 d={caretPath(innerHeight)}
                 transform={`translate(${innerWidth}, 0) scale(-1, 1)`}
@@ -254,6 +256,8 @@ export const Brush = ({
       localBrushExtent,
       resetZoom,
       showLabels,
+      showWestArrow,
+      showEastArrow,
       westHandleColor,
       xScale,
     ]

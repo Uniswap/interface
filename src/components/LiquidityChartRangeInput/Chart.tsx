@@ -22,7 +22,6 @@ export function Chart({
   onBrushDomainChange,
   zoomLevels,
 }: LiquidityChartRangeInputProps) {
-  const svgRef = useRef<SVGSVGElement | null>(null)
   const zoomRef = useRef<SVGRectElement | null>(null)
 
   const [zoom, setZoom] = useState<ZoomTransform | null>(null)
@@ -76,7 +75,7 @@ export function Chart({
         showClear={Boolean(zoom && zoom.k !== 1)}
         zoomLevels={zoomLevels}
       />
-      <svg ref={svgRef} width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
+      <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
         <defs>
           <clipPath id={`${id}-chart-clip`}>
             <rect x="0" y="0" width={innerWidth} height={height} />
