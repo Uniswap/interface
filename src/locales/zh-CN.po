@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-13 20:04\n"
+"PO-Revision-Date: 2021-07-14 01:25\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -584,7 +584,7 @@ msgstr "当前 {0} 兑换率："
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "黑暗主题"
+msgstr "深色主题"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -919,7 +919,7 @@ msgstr "学习"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
-msgstr "了解提供流动性"
+msgstr "了解提供流动性的相关信息"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
@@ -927,7 +927,7 @@ msgstr "了解更多"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
-msgstr "轻主题"
+msgstr "浅色主题"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1140,11 +1140,11 @@ msgstr "Optimism 近期将有一些预定的下线时间段。<0>阅读更多。
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
-msgstr "乐观 Etherscan"
+msgstr "Optimistic Etherscan"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic L2 Gateway"
-msgstr "乐观 L2 网关"
+msgstr "Optimistic L2 网关"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1458,7 +1458,7 @@ msgstr "出错了"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
-msgstr "地位"
+msgstr "状态"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1572,11 +1572,11 @@ msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。您必须将 L1 资�
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "必须先初始化此池，然后才能添加流动性。要初始化，请选择池的起始价格。然后，输入您的流动性价格范围和存款金额。由于初始化交易，Gas 费用将比平时高。"
+msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "在您添加流动性之前，此池必须初始化为 {0} 要初始化，请选择池的起始价格。然后，输入您的流动性价格范围和存款金额。"
+msgstr "在您添加流动性之前， {0} 池需要先初始化。请先选择起始价格，然后输入您的流动性价格范围和存款金额。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
