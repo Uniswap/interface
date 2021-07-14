@@ -80,12 +80,8 @@ export default function Zoom({
 
     zoomBehavior.current = zoom()
       .scaleExtent([zoomLevels.min, zoomLevels.max])
-      //      .translateExtent([
-      //        [0, 0],
-      //        [width, height],
-      //      ])
       .extent([
-        [0, 180],
+        [0, 0],
         [width, height],
       ])
       .on('zoom', ({ transform }: { transform: ZoomTransform }) => setZoom(transform))

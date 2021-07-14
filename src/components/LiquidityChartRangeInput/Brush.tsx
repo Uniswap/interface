@@ -147,12 +147,14 @@ export const Brush = ({
     brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
   }, [brushExtent, xScale])
 
+  // show labels when local brush changes
   useEffect(() => {
     setShowLabels(true)
     const timeout = setTimeout(() => setShowLabels(false), 1500)
     return () => clearTimeout(timeout)
   }, [localBrushExtent])
 
+  // variables to help render the svgs
   const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX
   const flipEastHandle = localBrushExtent && xScale(localBrushExtent[1]) > innerWidth - FLIP_HANDLE_THRESHOLD_PX
 
