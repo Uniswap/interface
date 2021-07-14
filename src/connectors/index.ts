@@ -4,7 +4,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
-import { SupportedChainId } from '../constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from '../constants/chains'
 import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
@@ -18,7 +18,7 @@ if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 }
 
-const NETWORK_URLS = {
+const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
@@ -29,18 +29,6 @@ const NETWORK_URLS = {
   [SupportedChainId.ARBITRUM_ONE]: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
 }
-
-const SUPPORTED_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.KOVAN,
-  SupportedChainId.GOERLI,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
@@ -53,11 +41,11 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
 })
 
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: SUPPORTED_CHAIN_IDS,
+  supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
   rpc: NETWORK_URLS,
   bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,

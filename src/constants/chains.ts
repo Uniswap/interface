@@ -14,6 +14,8 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
+export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId) as SupportedChainId[]
+
 export type SupportedL2ChainId =
   | SupportedChainId.ARBITRUM_ONE
   | SupportedChainId.ARBITRUM_RINKEBY
@@ -26,18 +28,6 @@ export type SupportedL1ChainId =
   | SupportedChainId.RINKEBY
   | SupportedChainId.GOERLI
   | SupportedChainId.KOVAN
-
-export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } = {
-  [SupportedChainId.MAINNET]: 'Mainnet',
-  [SupportedChainId.RINKEBY]: 'Rinkeby',
-  [SupportedChainId.ROPSTEN]: 'Ropsten',
-  [SupportedChainId.GOERLI]: 'Görli',
-  [SupportedChainId.KOVAN]: 'Kovan',
-  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [SupportedChainId.OPTIMISM]: 'Optimism',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimistic Kovan',
-} as const
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
@@ -73,7 +63,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: NETWORK_LABELS[SupportedChainId.ARBITRUM_ONE],
+    label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
@@ -81,45 +71,45 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: NETWORK_LABELS[SupportedChainId.ARBITRUM_RINKEBY],
+    label: 'Arbitrum Rinkeby',
     logoUrl: arbitrumLogoUrl,
   },
   [SupportedChainId.MAINNET]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.MAINNET],
+    label: 'Mainnet',
   },
   [SupportedChainId.RINKEBY]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.RINKEBY],
+    label: 'Rinkeby',
   },
   [SupportedChainId.ROPSTEN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.ROPSTEN],
+    label: 'Ropsten',
   },
   [SupportedChainId.KOVAN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.KOVAN],
+    label: 'Kovan',
   },
   [SupportedChainId.GOERLI]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.GOERLI],
+    label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: NETWORK_LABELS[SupportedChainId.OPTIMISM],
+    label: 'Optimism',
     logoUrl: optimismLogoUrl,
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
@@ -127,7 +117,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
-    label: NETWORK_LABELS[SupportedChainId.OPTIMISTIC_KOVAN],
+    label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
   },
 }
