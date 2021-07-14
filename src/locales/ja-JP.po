@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
+"PO-Revision-Date: 2021-07-14 02:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -584,7 +584,7 @@ msgstr "{0} の現在価格:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "暗いテーマ"
+msgstr "ダークテーマ"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -2019,7 +2019,7 @@ msgstr "あなたのポジションには流動性がないため、報酬を得
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Your position will appear here."
-msgstr "あなたの位置がここに表示されます。"
+msgstr "あなたのポジションがここに表示されます。"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
