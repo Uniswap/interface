@@ -9,7 +9,7 @@ import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
 
 const BaseWrapper = css`
   position: relative;
@@ -181,7 +181,8 @@ export default function NetworkCard() {
       .catch(() => setImplements3085(false))
   }, [library, chainId])
 
-  if (!chainId || chainId === SupportedChainId.MAINNET || !NETWORK_LABELS[chainId] || !library) {
+  const info = chainId ? CHAIN_INFO[chainId] : undefined
+  if (!chainId || chainId === SupportedChainId.MAINNET || !info || !library) {
     return null
   }
 
@@ -229,5 +230,5 @@ export default function NetworkCard() {
     )
   }
 
-  return <FallbackWrapper title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</FallbackWrapper>
+  return <FallbackWrapper title={info.label}>{info.label}</FallbackWrapper>
 }
