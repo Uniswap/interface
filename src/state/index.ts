@@ -11,6 +11,7 @@ import mintV3 from './mint/v3/reducer'
 import lists from './lists/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
+import logs from './logs/slice'
 import multicall from './multicall/reducer'
 import { api } from './data/slice'
 
@@ -28,6 +29,7 @@ const store = configureStore({
     burnV3,
     multicall,
     lists,
+    logs,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

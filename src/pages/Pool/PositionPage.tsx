@@ -41,6 +41,10 @@ import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Loader from 'components/Loader'
 import Toggle from 'components/Toggle'
+import { Bound } from 'state/mint/v3/actions'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { formatTickPrice } from 'utils/formatTickPrice'
+import { SupportedChainId } from 'constants/chains'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -80,13 +84,6 @@ const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: b
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
   align-items: center;
-`
-
-export const DarkBadge = styled.div`
-  width: fit-content;
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg0};
-  padding: 4px 6px;
 `
 
 const ExtentsText = styled.span`
@@ -185,7 +182,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
 
   if (typeof chainId === 'number' && address) {
     return (
-      <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+      <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
         <RowFixed>
           <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
           <TYPE.main>{currency?.symbol} ↗</TYPE.main>
@@ -289,6 +286,32 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
   )
 }
 
+const useInverter = ({
+  priceLower,
+  priceUpper,
+  quote,
+  base,
+  invert,
+}: {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+  invert?: boolean
+}): {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+} => {
+  return {
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
+  }
+}
+
 export function PositionPage({
   match: {
     params: { tokenId: tokenIdFromUrl },
@@ -332,20 +355,23 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
+  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+
+  const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
+
   // handle manual inversion
-  if (manuallyInverted) {
-    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
-  }
+  const { priceLower, priceUpper, base } = useInverter({
+    priceLower: pricesFromPosition.priceLower,
+    priceUpper: pricesFromPosition.priceUpper,
+    quote: pricesFromPosition.quote,
+    base: pricesFromPosition.base,
+    invert: manuallyInverted,
+  })
+
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
-
-  // check if price is within range
-  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
-  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
-  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
@@ -364,6 +390,31 @@ export function PositionPage({
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
   const [showConfirm, setShowConfirm] = useState(false)
+
+  // usdc prices always in terms of tokens
+  const price0 = useUSDCPrice(token0 ?? undefined)
+  const price1 = useUSDCPrice(token1 ?? undefined)
+
+  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
+    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
+
+    // we wrap because it doesn't matter, the quote returns a USDC amount
+    const feeValue0Wrapped = feeValue0?.wrapped
+    const feeValue1Wrapped = feeValue1?.wrapped
+
+    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
+
+    const amount0 = price0.quote(feeValue0Wrapped)
+    const amount1 = price1.quote(feeValue1Wrapped)
+    return amount0.add(amount1)
+  }, [price0, price1, feeValue0, feeValue1])
+
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
+    if (!price0 || !price1 || !position) return null
+    const amount0 = price0.quote(position.amount0)
+    const amount1 = price1.quote(position.amount1)
+    return amount0.add(amount1)
+  }, [price0, price1, position])
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
@@ -391,7 +442,7 @@ export function PositionPage({
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(estimate),
+          gasLimit: calculateGasMargin(chainId, estimate),
         }
 
         return library
@@ -421,33 +472,13 @@ export function PositionPage({
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
-  // usdc prices always in terms of tokens
-  const price0 = useUSDCPrice(token0 ?? undefined)
-  const price1 = useUSDCPrice(token1 ?? undefined)
-
-  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
-
-    // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
-
-    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
-
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
-    return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1])
-
-  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
-    if (!price0 || !price1 || !position) return null
-    const amount0 = price0.quote(position.amount0)
-    const amount1 = price1.quote(position.amount1)
-    return amount0.add(amount1)
-  }, [price0, price1, position])
-
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
+
+  // check if price is within range
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
+  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   function modalHeader() {
     return (
@@ -479,6 +510,17 @@ export function PositionPage({
       </AutoColumn>
     )
   }
+
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const showCollectAsWeth = Boolean(
+    ownsNFT &&
+      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+      currency0 &&
+      currency1 &&
+      (currency0.isNative || currency1.isNative) &&
+      !collectMigrationHash &&
+      !onOptimisticChain
+  )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
@@ -540,7 +582,7 @@ export function PositionPage({
                       to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                       style={{ marginRight: '8px' }}
                     >
                       <Trans>Increase Liquidity</Trans>
@@ -552,7 +594,7 @@ export function PositionPage({
                       to={`/remove/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
-                      borderRadius="12px"
+                      $borderRadius="12px"
                     >
                       <Trans>Remove Liquidity</Trans>
                     </ResponsiveButtonPrimary>
@@ -728,12 +770,7 @@ export function PositionPage({
                       </RowBetween>
                     </AutoColumn>
                   </LightCard>
-                  {ownsNFT &&
-                  (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-                  currency0 &&
-                  currency1 &&
-                  (currency0.isNative || currency1.isNative) &&
-                  !collectMigrationHash ? (
+                  {showCollectAsWeth && (
                     <AutoColumn gap="md">
                       <RowBetween>
                         <TYPE.main>
@@ -746,7 +783,7 @@ export function PositionPage({
                         />
                       </RowBetween>
                     </AutoColumn>
-                  ) : null}
+                  )}
                 </AutoColumn>
               </DarkCard>
             </AutoColumn>
@@ -782,7 +819,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Min price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">
+                      {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                    </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
@@ -804,7 +843,9 @@ export function PositionPage({
                     <ExtentsText>
                       <Trans>Max price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(5)}</TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">
+                      {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+                    </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>

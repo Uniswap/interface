@@ -6,7 +6,7 @@ import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components/macro'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -240,7 +240,7 @@ export default function RemoveLiquidity({
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map((methodName) =>
         router.estimateGas[methodName](...args)
-          .then(calculateGasMargin)
+          .then((estimateGas) => calculateGasMargin(chainId, estimateGas))
           .catch((error) => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
