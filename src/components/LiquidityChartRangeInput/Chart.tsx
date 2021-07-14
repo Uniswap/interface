@@ -23,6 +23,7 @@ export function Chart({
   zoomLevels,
 }: LiquidityChartRangeInputProps) {
   const svgRef = useRef<SVGSVGElement | null>(null)
+  const zoomRef = useRef<SVGRectElement | null>(null)
 
   const [zoom, setZoom] = useState<ZoomTransform | null>(null)
 
@@ -67,11 +68,11 @@ export function Chart({
   return (
     <>
       <Zoom
-        svg={svgRef.current}
+        svg={zoomRef.current}
         xScale={xScale}
         setZoom={setZoom}
-        innerWidth={innerWidth}
-        innerHeight={innerHeight}
+        width={innerWidth}
+        height={height}
         showClear={Boolean(zoom && zoom.k !== 1)}
         zoomLevels={zoomLevels}
       />
@@ -117,6 +118,8 @@ export function Chart({
 
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
+
+          <rect width={width} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
 
           <Brush
             id={id}

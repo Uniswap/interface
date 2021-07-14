@@ -85,7 +85,12 @@ export const Brush = ({
   const previousBrushExtent = usePrevious(brushExtent)
 
   const brushed = useCallback(
-    ({ type, selection }: D3BrushEvent<unknown>) => {
+    (event: D3BrushEvent<unknown>) => {
+      const { type, selection, sourceEvent } = event
+
+      console.log('judo', 'brush', sourceEvent)
+      sourceEvent && sourceEvent.stopPropagation() && sourceEvent.preventDefault()
+
       if (!selection) {
         setLocalBrushExtent(null)
         return
@@ -165,7 +170,7 @@ export const Brush = ({
 
           {/* clips at exactly the svg area */}
           <clipPath id={`${id}-brush-clip`}>
-            <rect x="0" y="0" width={innerWidth} height="100%" />
+            <rect x="0" y="0" width={innerWidth} height={innerHeight} />
           </clipPath>
 
           <clipPath id={`${id}-handles-clip`}>

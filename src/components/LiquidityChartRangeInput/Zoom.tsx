@@ -30,16 +30,16 @@ export default function Zoom({
   svg,
   xScale,
   setZoom,
-  innerWidth,
-  innerHeight,
+  width,
+  height,
   showClear,
   zoomLevels,
 }: {
-  svg: SVGSVGElement | null
+  svg: SVGElement | null
   xScale: ScaleLinear<number, number>
   setZoom: (transform: ZoomTransform) => void
-  innerWidth: number
-  innerHeight: number
+  width: number
+  height: number
   showClear: boolean
   zoomLevels: ZoomLevels
 }) {
@@ -80,20 +80,18 @@ export default function Zoom({
 
     zoomBehavior.current = zoom()
       .scaleExtent([zoomLevels.min, zoomLevels.max])
-      .translateExtent([
-        [0, 0],
-        [innerWidth, innerHeight],
-      ])
+      //      .translateExtent([
+      //        [0, 0],
+      //        [width, height],
+      //      ])
       .extent([
-        [0, 0],
-        [innerWidth, innerHeight],
+        [0, 180],
+        [width, height],
       ])
       .on('zoom', ({ transform }: { transform: ZoomTransform }) => setZoom(transform))
 
-    select(svg as Element)
-      .call(zoomBehavior.current)
-      .on('mousedown.zoom', null)
-  }, [innerHeight, innerWidth, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
+    select(svg as Element).call(zoomBehavior.current)
+  }, [height, width, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
 
   useEffect(() => {
     // reset zoom to initial on zoomLevel change
