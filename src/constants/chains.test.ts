@@ -22,5 +22,9 @@ describe('chains', () => {
         expect(SupportedChainId[chainId]).toBeTruthy()
       })
     })
+
+    it('all values are numeric', () => {
+      expect(ALL_SUPPORTED_CHAIN_IDS.every((chainId) => typeof chainId === 'number')).toBeTruthy()
+    })
   })
 })
