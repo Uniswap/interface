@@ -1,9 +1,9 @@
-import { ChainId, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, ETHER } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -284,7 +284,6 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 
 export default function Header() {
   const { account, chainId, library } = useActiveWeb3React()
-  const { t } = useTranslation()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
@@ -300,16 +299,18 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
+            <Trans>Swap</Trans>
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
-            {t('pools')}
+            <Trans>Pools</Trans>
           </StyledNavLink>
 
           <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
             <YieldMenuWrapper>
-              {t('yield')}
-              <NewText>{t('new')}</NewText>
+              <Trans>Yield</Trans>
+              <NewText>
+                <Trans>New</Trans>
+              </NewText>
             </YieldMenuWrapper>
           </StyledNavLink>
 
@@ -325,11 +326,13 @@ export default function Header() {
                 (pathname.startsWith('/find') && pathname.endsWith('find'))
               }
             >
-              {t('My Dashboard')}
+              <Trans>My Dashboard</Trans>
             </StyledNavLink>
           </HideSmall>
 
-          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
+          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+            <Trans>Analytics</Trans>
+          </StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <MigrateLiquidityWrapper>
@@ -340,14 +343,14 @@ export default function Header() {
                   Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
                 }
               >
-                Migrate Liquidity
+                <Trans>Migrate Liquidity</Trans>
               </StyledNavLink>
             </MigrateLiquidityWrapper>
           )}
 
           <AboutWrapper>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
-              {t('About')}
+              <Trans>About</Trans>
             </StyledNavLink>
           </AboutWrapper>
         </HeaderLinks>
@@ -356,7 +359,10 @@ export default function Header() {
         <HeaderElement>
           {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
             <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
-              <HideText>Bridge&nbsp;Assets&nbsp;</HideText>↗
+              <HideText>
+                <Trans>Bridge&nbsp;Assets&nbsp;</Trans>
+              </HideText>
+              ↗
             </BridgeExternalLink>
           )}
           <HideSmall>

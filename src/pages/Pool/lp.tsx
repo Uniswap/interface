@@ -1,31 +1,22 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI, Token, Currency } from 'libs/sdk/src'
+import { t, Trans } from '@lingui/macro'
 import { Pair as PairUNI } from '@uniswap/sdk'
 import { Pair as PairSUSHI } from '@sushiswap/sdk'
-import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import FullPositionCardUNI from '../../components/PositionCard/PositionCardUNI'
 import FullPositionCardSUSHI from '../../components/PositionCard/PositionCardSUSHI'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
+import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
-import {
-  useTrackedTokenPairs,
-  toV2LiquidityToken,
-  useToV2LiquidityTokens,
-  toV2LiquidityTokenSushi
-} from '../../state/user/hooks'
+import { useTrackedTokenPairs, toV2LiquidityToken, toV2LiquidityTokenSushi } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO } from '../../constants'
-import { useTranslation } from 'react-i18next'
 import { usePairs } from 'data/ReservesUNI'
 import { usePairs as usePairsSUSHI } from 'data/ReservesSUSHI'
 
@@ -54,20 +45,6 @@ const ButtonRow = styled(RowFixed)`
     width: 100%;
     flex-direction: row-reverse;
     justify-content: space-between;
-  `};
-`
-
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
-`
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
   `};
 `
 
@@ -151,7 +128,7 @@ export default function Pool() {
     .map(([, pair]) => pair)
     .filter((v2Pair): v2Pair is PairSUSHI => Boolean(v2Pair))
   const v2PairsWithoutStakedAmountSUSHI = allV2PairsWithLiquiditySUSHI
-  const { t } = useTranslation()
+
   return (
     <>
       <PageWrapper>
@@ -168,37 +145,23 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  My Pools on External Platforms
+                  <Trans>My Pools on External Platforms</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
-              <ButtonRow>
-                {/* <ButtonOutlined
-                  width="148px"
-                  padding="12px 18px"
-                  as={Link}
-                  to={`/create/ETH`}
-                  style={{ float: 'right' }}
-                >
-                  {t('createNewPool')}
-                </ButtonOutlined> */}
-                {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
-                  <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
-                  </Text>
-                </ResponsiveButtonPrimary> */}
-              </ButtonRow>
             </TitleRow>
 
             {!account ? (
               <Card padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
+                  <Trans>Connect to a wallet to view your liquidity.</Trans>
                 </TYPE.body>
               </Card>
             ) : v2IsLoading ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
+                  <Dots>
+                    <Trans>Loading</Trans>
+                  </Dots>
                 </TYPE.body>
               </EmptyProposals>
             ) : allV2PairsWithLiquidityUNI?.length > 0 || allV2PairsWithLiquiditySUSHI?.length > 0 ? (
@@ -213,22 +176,23 @@ export default function Pool() {
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                  <Trans>No liquidity found.</Trans>
                 </TYPE.body>
               </EmptyProposals>
             )}
 
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {"Don't see a pool you joined?"}{' '}
+                {t`Don't see a pool you joined?`}{' '}
                 <StyledInternalLink id="import-pool-link" to={'/findExternal'}>
-                  Import it.
+                  <Trans>Import it.</Trans>
                 </StyledInternalLink>
               </Text>
             </AutoColumn>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
+      <SwitchLocaleLink />
     </>
   )
 }

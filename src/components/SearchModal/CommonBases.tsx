@@ -2,6 +2,7 @@ import React from 'react'
 import { Text } from 'rebass'
 import { ChainId, Currency, currencyEquals, ETHER, Token } from 'libs/sdk/src'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
@@ -39,9 +40,9 @@ export default function CommonBases({
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
-          Common bases
+          <Trans>Common bases</Trans>
         </Text>
-        <QuestionHelper text="These tokens are commonly paired with other tokens." />
+        <QuestionHelper text={t`These tokens are commonly paired with other tokens.`} />
       </AutoRow>
       <AutoRow gap="4px">
         <BaseWrapper

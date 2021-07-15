@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import { Trans } from '@lingui/macro'
 import { AlertTriangle, X } from 'react-feather'
 import { useURLWarningToggle, useURLWarningVisible } from '../../state/user/hooks'
 import { isMobile } from 'react-device-detect'
@@ -29,17 +29,23 @@ export default function URLWarning() {
   return isMobile ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code>
+        <AlertTriangle style={{ marginRight: 6 }} size={12} />{' '}
+        <Trans>
+          Make sure the URL is
+          <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code>
+        </Trans>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
   ) : window.location.hostname === 'dmm.exchange' ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code> - bookmark it
-        to be safe.
+        <AlertTriangle style={{ marginRight: 6 }} size={12} />{' '}
+        <Trans>
+          Always make sure the URL is
+          <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code> - bookmark it to
+          be safe.
+        </Trans>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>

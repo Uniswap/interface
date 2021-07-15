@@ -6,7 +6,6 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { StyledBalanceMaxMini } from './styleds'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { useActiveWeb3React } from 'hooks'
 
 interface TradePriceProps {
   price?: Price
@@ -16,7 +15,6 @@ interface TradePriceProps {
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 

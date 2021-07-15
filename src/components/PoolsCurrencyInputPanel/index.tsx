@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { darken } from 'polished'
+import { Trans } from '@lingui/macro'
 import { Currency, Pair } from 'libs/sdk/src'
 
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -118,7 +118,6 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -157,7 +156,7 @@ export default function CurrencyInputPanel({
                       ? nativeCurrency.symbol.slice(0, 4) +
                         '...' +
                         nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
-                      : nativeCurrency?.symbol) || t('selectToken')}
+                      : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
                   </StyledTokenName>
                 )}
               </LogoNameWrapper>

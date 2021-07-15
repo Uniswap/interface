@@ -1,6 +1,7 @@
 import React from 'react'
 import { Token, Currency } from 'libs/sdk/src'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import { TYPE, CloseIcon } from 'theme'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -61,7 +62,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div></div>}
-          <TYPE.mediumHeader>Import {tokens.length > 1 ? 'Tokens' : 'Token'}</TYPE.mediumHeader>
+          <TYPE.mediumHeader>{tokens.length > 1 ? t`Import Tokens` : t`Import Token`}</TYPE.mediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div></div>}
         </RowBetween>
       </PaddedColumn>
@@ -70,9 +71,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
-            {
-              "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-            }
+            {t`This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade.`}
           </TYPE.body>
         </AutoColumn>
         {tokens.map(token => {
@@ -104,7 +103,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                   <RowFixed>
                     {list.logoURI && <ListLogo logoURI={list.logoURI} size="16px" />}
                     <TYPE.small ml="6px" fontSize={14} color={theme.text3}>
-                      via {list.name} token list
+                      <Trans>via {list.name} token list</Trans>
                     </TYPE.small>
                   </RowFixed>
                 ) : (
@@ -112,7 +111,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                     <RowFixed>
                       <AlertCircle stroke={theme.red1} size="10px" />
                       <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
-                        Unknown Source
+                        <Trans>Unknown Source</Trans>
                       </TYPE.body>
                     </RowFixed>
                   </WarningWrapper>
@@ -132,7 +131,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           }}
           className=".token-dismiss-button"
         >
-          Import
+          <Trans>Import</Trans>
         </ButtonPrimary>
       </AutoColumn>
     </Wrapper>

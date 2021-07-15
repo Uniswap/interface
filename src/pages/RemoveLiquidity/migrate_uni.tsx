@@ -1,13 +1,14 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, Fraction, WETH, CurrencyAmount, JSBI, Token } from 'libs/sdk/src'
+import { ETHER, WETH, CurrencyAmount, JSBI, Token } from 'libs/sdk/src'
 import { currencyEquals, Pair, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -574,7 +575,7 @@ export default function MigrateLiquidity({
               style={{ width: '30px', marginBottom: '3px' }}
             />
             <Text fontSize={14} fontWeight={500}>
-              &nbsp; Pool
+              &nbsp; <Trans>Pool</Trans>
             </Text>
           </RowFixed>
         </AutoColumn>
@@ -596,7 +597,7 @@ export default function MigrateLiquidity({
         <AutoColumn gap="10px">
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
-              Poole share
+              <Trans>Pool share</Trans>
             </Text>
             <Text fontSize={14} fontWeight={500}>
               {poolShare}
@@ -616,7 +617,7 @@ export default function MigrateLiquidity({
         <AutoColumn gap="10px">
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
-              Pooled {currencyB?.symbol}
+              <Trans>Pooled {currencyB?.symbol}</Trans>
             </Text>
             <Text fontSize={14} fontWeight={500}>
               {currencyAmountBToAddPool?.toSignificant(6)}
@@ -626,7 +627,7 @@ export default function MigrateLiquidity({
         <AutoColumn gap="10px">
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
-              AMP
+              <Trans>AMP</Trans>
             </Text>
             <Text fontSize={14} fontWeight={500}>
               1
@@ -638,7 +639,7 @@ export default function MigrateLiquidity({
             <AutoColumn gap="10px">
               <RowBetween>
                 <Text fontSize={14} fontWeight={500}>
-                  Pool Address
+                  <Trans>Pool Address</Trans>
                 </Text>
                 <RowFixed>
                   <Text fontSize={14} fontWeight={500}>
@@ -651,7 +652,7 @@ export default function MigrateLiquidity({
             <AutoColumn gap="10px" style={{ marginTop: '20px' }}>
               <RowBetween>
                 <Text fontSize={14} fontWeight={500}>
-                  Estimated Refund
+                  <Trans>Estimated Refund</Trans>
                 </Text>
                 <Text fontSize={14} fontWeight={500}>
                   {estimatedRefund}
@@ -734,7 +735,7 @@ export default function MigrateLiquidity({
         )} */}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
           <Text fontWeight={500} fontSize={20}>
-            Confirm
+            <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
       </>
@@ -761,7 +762,7 @@ export default function MigrateLiquidity({
                 hash={txHash ? txHash : ''}
                 content={() => (
                   <ConfirmationModalContent
-                    title={'You will receive'}
+                    title={t`You will receive`}
                     onDismiss={handleDismissConfirmation}
                     topContent={modalHeader}
                     bottomContent={modalBottom}
@@ -790,7 +791,7 @@ export default function MigrateLiquidity({
                           75%
                         </MaxButton>
                         <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
-                          Max
+                          <Trans>Max</Trans>
                         </MaxButton>
                       </RowBetween>
                     </>
@@ -815,8 +816,10 @@ export default function MigrateLiquidity({
                             style={{ marginRight: '20px' }}
                           />
                           <Text fontSize={14} fontWeight={500}>
-                            There is no existing pool for this token pair. You will be creating a new pool with AMP=1
-                            and migrating tokens from Uniswap to DMM.{' '}
+                            <Trans>
+                              There is no existing pool for this token pair. You will be creating a new pool with AMP=1
+                              and migrating tokens from Uniswap to DMM.
+                            </Trans>{' '}
                           </Text>
                         </RowFixed>
                       </YellowCard>
@@ -843,7 +846,9 @@ export default function MigrateLiquidity({
                 )} */}
                 <div style={{ position: 'relative' }}>
                   {!account ? (
-                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                    <ButtonLight onClick={toggleWalletModal}>
+                      <Trans>Connect Wallet</Trans>
+                    </ButtonLight>
                   ) : (
                     <RowBetween>
                       <ButtonConfirmed
@@ -855,11 +860,13 @@ export default function MigrateLiquidity({
                         fontSize={16}
                       >
                         {approval === ApprovalState.PENDING ? (
-                          <Dots>Approving</Dots>
+                          <Dots>
+                            <Trans>Approving</Trans>
+                          </Dots>
                         ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                          'Approved'
+                          t`Approved`
                         ) : (
-                          'Approve'
+                          t`Approve`
                         )}
                       </ButtonConfirmed>
                       <ButtonError
@@ -870,7 +877,7 @@ export default function MigrateLiquidity({
                         error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                       >
                         <Text fontSize={16} fontWeight={500}>
-                          {error || 'Migrate'}
+                          {error || t`Migrate`}
                         </Text>
                       </ButtonError>
                     </RowBetween>

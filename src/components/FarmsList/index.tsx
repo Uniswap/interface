@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { useMedia } from 'react-use'
+import { t, Trans } from '@lingui/macro'
 
 import InfoHelper from 'components/InfoHelper'
 import ListItem from './ListItem'
@@ -67,29 +68,37 @@ const FarmsList = ({ farms }: FarmsListProps) => {
     return xxlBreakpoint ? (
       <TableHeader>
         <Flex grid-area="pools" alignItems="center" justifyContent="flex-start">
-          <ClickableText>Pools | AMP</ClickableText>
+          <ClickableText>
+            <Trans>Pools | AMP</Trans>
+          </ClickableText>
           <InfoHelper
-            text={
-              'AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.'
-            }
+            text={t`AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.`}
           />
         </Flex>
 
         <Flex grid-area="liq" alignItems="center" justifyContent="flex-end">
-          <ClickableText>Staked TVL</ClickableText>
+          <ClickableText>
+            <Trans>Staked TVL</Trans>
+          </ClickableText>
         </Flex>
 
         <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
-          <ClickableText>APY</ClickableText>
-          <InfoHelper text={'Estimated total annualized yield from fees + rewards'} />
+          <ClickableText>
+            <Trans>APY</Trans>
+          </ClickableText>
+          <InfoHelper text={t`Estimated total annualized yield from fees + rewards`} />
         </Flex>
 
         <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
-          <ClickableText>My Rewards</ClickableText>
+          <ClickableText>
+            <Trans>My Rewards</Trans>
+          </ClickableText>
         </Flex>
 
         <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-end">
-          <ClickableText>My Deposit</ClickableText>
+          <ClickableText>
+            <Trans>My Deposit</Trans>
+          </ClickableText>
         </Flex>
       </TableHeader>
     ) : null

@@ -1,7 +1,11 @@
 import React from 'react'
+import { useHistory, useLocation } from 'react-router'
 import styled from 'styled-components'
+import { Select } from '@rebass/forms'
+import { stringify } from 'qs'
 
-import GlobeIcon from 'components/Icons/GlobeIcon'
+import { LOCALE_LABEL } from 'constants/locales'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 
 const StyledLanguageSelector = styled.div`
   display: flex;
@@ -12,29 +16,41 @@ const StyledLanguageSelector = styled.div`
   background-color: ${({ theme }) => theme.bg13};
 `
 
-const StyledGlobeIcon = styled.div`
-  display: flex;
-  align-items: center;
-  padding-right: 6px;
-  border-right: ${({ theme }) => `solid 0.6px ${theme.border}`};
-`
-
-const StyledCurrentLanguage = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 6px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text9};
-`
-
 export default function LanguageSelector() {
+  const history = useHistory()
+  const location = useLocation()
+  const qs = useParsedQueryString()
+
+  const handleSelectLanguage = (event: any) => {
+    event.preventDefault()
+
+    const target = {
+      ...location,
+      search: stringify({ ...qs, lng: event.target.value })
+    }
+
+    history.push(target)
+  }
+
   return (
     <StyledLanguageSelector>
-      <StyledGlobeIcon>
-        <GlobeIcon />
-      </StyledGlobeIcon>
-      {/* TODO: Update this component when we have other languages */}
-      <StyledCurrentLanguage>EN</StyledCurrentLanguage>
+      <Select
+        id="language-selector"
+        name="language"
+        defaultValue={LOCALE_LABEL['en-US']}
+        sx={{
+          border: 'none',
+          width: 'fit-content',
+          padding: '2px 28px 2px 2px'
+        }}
+        onChange={handleSelectLanguage}
+      >
+        {Object.entries(LOCALE_LABEL).map(([locale, label]) => (
+          <option key={locale} value={locale}>
+            {label}
+          </option>
+        ))}
+      </Select>
     </StyledLanguageSelector>
   )
 }

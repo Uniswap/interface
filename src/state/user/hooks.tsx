@@ -7,9 +7,11 @@ import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { SupportedLocale } from 'constants/locales'
 
 import { useActiveWeb3React } from '../../hooks'
-import { AppDispatch, AppState } from '../index'
+import { AppDispatch, AppState } from 'state'
+import { useAppDispatch } from 'state/hooks'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -20,12 +22,14 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserLocale
 } from './actions'
 import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
+import { useAppSelector } from 'state/hooks'
 
 function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
   return {
@@ -80,6 +84,24 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useUserLocale(): SupportedLocale | null {
+  return useAppSelector(state => state.user.userLocale)
+}
+
+export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
+  const dispatch = useAppDispatch()
+  const locale = useUserLocale()
+
+  const setLocale = useCallback(
+    (newLocale: SupportedLocale) => {
+      dispatch(updateUserLocale({ userLocale: newLocale }))
+    },
+    [dispatch]
+  )
+
+  return [locale, setLocale]
 }
 
 export function useIsExpertMode(): boolean {

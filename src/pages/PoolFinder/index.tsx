@@ -2,6 +2,7 @@ import { Currency, ETHER, JSBI, Pair, TokenAmount } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
+import { t, Trans } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { ButtonDropdownLight } from '../../components/Button'
@@ -15,7 +16,7 @@ import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModa
 import { PairState, usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairAdderByTokens } from '../../state/user/hooks'
-import { useTokenBalance, useTokenBalances } from '../../state/wallet/hooks'
+import { useTokenBalances } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
@@ -93,7 +94,7 @@ export default function PoolFinder() {
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
       <Text textAlign="center">
-        {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your liquidity.'}
+        {!account ? t`Connect to a wallet to find pools` : t`Select a token to find your liquidity.`}
       </Text>
     </LightCard>
   )
@@ -152,13 +153,15 @@ export default function PoolFinder() {
             !!currency1 ? currencyId(currency1, chainId) : undefined
           }`}
         >
-          <Text textAlign="center">Add liquidity</Text>
+          <Text textAlign="center">
+            <Trans>Add liquidity</Trans>
+          </Text>
         </StyledInternalLink>
         {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
           <LightCard padding="45px 10px">
             <AutoColumn gap="sm" justify="center">
               <Text textAlign="center">
-                Loading
+                <Trans>Loading</Trans>
                 <Dots />
               </Text>
             </AutoColumn>
@@ -172,10 +175,12 @@ export default function PoolFinder() {
                   style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
                 >
                   <Text textAlign="center" fontWeight={500}>
-                    Pool Found!
+                    <Trans>Pool Found!</Trans>
                   </Text>
                   <StyledInternalLink to={`/myPools`}>
-                    <Text textAlign="center">Manage your pools.</Text>
+                    <Text textAlign="center">
+                      <Trans>Manage your pools.</Trans>
+                    </Text>
                   </StyledInternalLink>
                 </ColumnCenter>
                 {myPairs}

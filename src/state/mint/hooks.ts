@@ -1,6 +1,7 @@
 import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount, WETH } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { t } from '@lingui/macro'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -139,7 +140,7 @@ export function useDerivedMintInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect wallet`
   }
   if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol == 'WETH' && tokenB?.symbol == 'WETH')) {
     error = error ?? 'Invalid pair'

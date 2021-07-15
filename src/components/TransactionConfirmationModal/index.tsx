@@ -1,6 +1,7 @@
 import { ChainId, Currency, Token } from 'libs/sdk/src'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
@@ -51,7 +52,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
-            Waiting For Confirmation
+            <Trans>Waiting For Confirmation</Trans>
           </Text>
           <AutoColumn gap="12px" justify={'center'}>
             <Text fontWeight={600} fontSize={14} color="" textAlign="center">
@@ -59,7 +60,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
             </Text>
           </AutoColumn>
           <Text fontSize={12} color="#565A69" textAlign="center">
-            Confirm this transaction in your wallet
+            <Trans>Confirm this transaction in your wallet</Trans>
           </Text>
         </AutoColumn>
       </Section>
@@ -99,7 +100,7 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId
   return (
     <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToMetaMask}>
       <RowFixed>
-        Add {token.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+        <Trans>Add {token.symbol} to Metamask</Trans> <StyledLogo src={MetaMaskLogo} />
       </RowFixed>
     </ButtonLight>
   )
@@ -129,7 +130,7 @@ function TransactionSubmittedContent({
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
-            Transaction Submitted
+            <Trans>Transaction Submitted</Trans>
           </Text>
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
@@ -141,7 +142,7 @@ function TransactionSubmittedContent({
           {tokenAddtoMetaMask?.address && <AddTokenToMetaMask token={tokenAddtoMetaMask} chainId={chainId} />}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
-              Close
+              <Trans>Close</Trans>
             </Text>
           </ButtonPrimary>
         </AutoColumn>
@@ -191,7 +192,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
-            Error
+            <Trans>Error</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -203,7 +204,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss}>Dismiss</ButtonPrimary>
+        <ButtonPrimary onClick={onDismiss}>
+          <Trans>Dismiss</Trans>
+        </ButtonPrimary>
       </BottomSection>
     </Wrapper>
   )

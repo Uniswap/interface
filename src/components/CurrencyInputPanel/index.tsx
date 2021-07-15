@@ -2,6 +2,7 @@ import { Currency, Pair } from 'libs/sdk/src'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
+import { t, Trans } from '@lingui/macro'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
@@ -10,7 +11,6 @@ import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { useTranslation } from 'react-i18next'
 import { AutoColumn } from '../Column'
 import Card from '../Card'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
@@ -154,8 +154,6 @@ export default function CurrencyInputPanel({
   hideLogo = false,
   fontSize
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
-
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
@@ -180,7 +178,7 @@ export default function CurrencyInputPanel({
               style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
             >
               {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
-                `Balance: ${selectedCurrencyBalance?.toSignificant(6)}`}
+                t`Balance: ${selectedCurrencyBalance?.toSignificant(6)}`}
             </TYPE.body>
           </AutoColumn>
         </Card2>
@@ -198,7 +196,9 @@ export default function CurrencyInputPanel({
                   }}
                 />
                 {account && currency && showMaxButton && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
+                  <StyledBalanceMax onClick={onMax}>
+                    <Trans>MAX</Trans>
+                  </StyledBalanceMax>
                 )}
               </>
             )}
@@ -231,7 +231,7 @@ export default function CurrencyInputPanel({
                       ? nativeCurrency.symbol.slice(0, 4) +
                         '...' +
                         nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
-                      : nativeCurrency?.symbol) || t('selectToken')}
+                      : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}

@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -151,18 +152,20 @@ export default function SettingsTab() {
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={500} fontSize={20}>
-                Please Confirm
+                <Trans>Please Confirm</Trans>
               </Text>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
               <Text fontWeight={500} fontSize={20}>
-                In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that
-                often result in bad rates.
+                <Trans>
+                  In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades
+                  that often result in bad rates.
+                </Trans>
               </Text>
               <Text fontWeight={600} fontSize={20}>
-                ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS
+                <Trans>ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS</Trans>
               </Text>
               <ButtonError
                 error={true}
@@ -175,7 +178,7 @@ export default function SettingsTab() {
                 }}
               >
                 <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  Turn On Advanced Mode
+                  <Trans>Turn On Advanced Mode</Trans>
                 </Text>
               </ButtonError>
             </AutoColumn>
@@ -196,7 +199,7 @@ export default function SettingsTab() {
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14} color={theme.text11}>
-              Preferences
+              <Trans>Preferences</Trans>
             </Text>
             <TransactionSettings
               rawSlippage={userSlippageTolerance}
@@ -207,9 +210,9 @@ export default function SettingsTab() {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-                  Advanced Mode
+                  <Trans>Advanced Mode</Trans>
                 </TYPE.black>
-                <QuestionHelper text="Enables high slippage trades. Use at your own risk." />
+                <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"

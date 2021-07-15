@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -149,9 +150,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-            Slippage tolerance
+            <Trans>Slippage tolerance</Trans>
           </TYPE.black>
-          <QuestionHelper text="Transaction will revert if there is an adverse rate change that is higher than this %" />
+          <QuestionHelper
+            text={t`Transaction will revert if there is an adverse rate change that is higher than this %`}
+          />
         </RowFixed>
         <RowBetween>
           <Option
@@ -215,10 +218,10 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             }}
           >
             {slippageError === SlippageError.InvalidInput
-              ? 'Enter a valid slippage percentage'
+              ? t`Enter a valid slippage percentage`
               : slippageError === SlippageError.RiskyLow
-              ? 'Your transaction may fail'
-              : 'Your transaction may be frontrun'}
+              ? t`Your transaction may fail`
+              : t`Your transaction may be frontrun`}
           </RowBetween>
         )}
       </AutoColumn>
@@ -226,9 +229,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text11}>
-            Transaction time limit
+            <Trans>Transaction time limit</Trans>
           </TYPE.black>
-          <QuestionHelper text="Transaction will revert if it is pending for longer than the indicated time" />
+          <QuestionHelper text={t`Transaction will revert if it is pending for longer than the indicated time`} />
         </RowFixed>
         <RowFixed>
           <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
@@ -243,7 +246,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             />
           </OptionCustom>
           <TYPE.body style={{ paddingLeft: '8px' }} fontSize={12} color={theme.text11}>
-            minutes
+            <Trans>minutes</Trans>
           </TYPE.body>
         </RowFixed>
       </AutoColumn>

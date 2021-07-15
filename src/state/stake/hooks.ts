@@ -1,5 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from 'libs/sdk/src'
 import { useMemo } from 'react'
+import { t } from '@lingui/macro'
 import { DAI, UNI, USDC, USDT, WBTC } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -226,7 +227,7 @@ export function useDerivedStakeInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect wallet`
   }
   if (!parsedAmount) {
     error = error ?? 'Enter an amount'
@@ -254,7 +255,7 @@ export function useDerivedUnstakeInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect wallet`
   }
   if (!parsedAmount) {
     error = error ?? 'Enter an amount'

@@ -4,6 +4,7 @@ import style from './about.module.scss'
 
 import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
+import { t, Trans } from '@lingui/macro'
 
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import Loader from 'components/Loader'
@@ -48,25 +49,27 @@ export default function About() {
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
         <Text fontWeight={300} color={'#ffffff'}>
-          DeFi's First
+          <Trans>DeFi's First</Trans>
         </Text>
         <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
-            Dynamic&nbsp;
+            <Trans>Dynamic</Trans>&nbsp;
           </Text>
           <Text color={'#08a1e7'} display={'inline-block'}>
-            Market&nbsp;
+            <Trans>Market</Trans>&nbsp;
           </Text>
           <Text color={'#78d5ff'} display={'inline-block'}>
-            Maker&nbsp;
+            <Trans>Maker</Trans>&nbsp;
           </Text>
           <Text color={'#ffffff'} display={'inline-block'} fontWeight={300}>
-            Protocol&nbsp;
+            <Trans>Protocol</Trans>&nbsp;
           </Text>
         </Text>
       </Text>
       <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
-        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
+        <Trans>
+          Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
+        </Trans>
       </Text>
 
       <div className={style.section_number_container}>
@@ -76,7 +79,7 @@ export default function About() {
               {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
-              Total Trading Volume
+              <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
         </div>
@@ -87,7 +90,7 @@ export default function About() {
               {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
-              Total Value Locked
+              <Trans>Total Value Locked</Trans>
             </Text>
           </div>
           <div className={style.line}></div>
@@ -96,10 +99,10 @@ export default function About() {
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
-              Total AMP Liquidity
+              <Trans>Total AMP Liquidity</Trans>
             </Text>
             <Text fontSize={10} fontStyle="italic" mt={2}>
-              Equivalent TVL when compared to typical AMMs
+              <Trans>Equivalent TVL when compared to typical AMMs</Trans>
             </Text>
           </div>
         </div>
@@ -107,7 +110,7 @@ export default function About() {
 
       <div className={style.panel0}>
         <ButtonPrimary padding="12px 10px" as={Link} to={poolsMenuLink}>
-          Add Liquidity
+          <Trans>Add Liquidity</Trans>
         </ButtonPrimary>
         <ButtonOutlined
           padding="12px 10px"
@@ -116,63 +119,95 @@ export default function About() {
           target="_blank"
           style={{ fontSize: '16px' }}
         >
-          Documentation
+          <Trans>Documentation</Trans>
         </ButtonOutlined>
       </div>
       <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
-        <span>Amplified Liquidity Pools</span>
+        <span>
+          <Trans>Amplified Liquidity Pools</Trans>
+        </span>
       </Text>
       <div className={style.section_curve_details}>
         <i>
-          <Text mb={15}>Less tokens required for high liquidity</Text>
+          <Text mb={15}>
+            <Trans>Less tokens required for high liquidity</Trans>
+          </Text>
         </i>
         <div>
-          KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and
-          create amplified pools in advance, achieving&nbsp;
-          <b>much higher capital efficiency</b> for providers and <b>better slippage</b> for users compared to AMMs.
+          <Trans>
+            KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and
+            create amplified pools in advance, achieving
+          </Trans>
+          &nbsp;
+          <b>
+            <Trans>much higher capital efficiency</Trans>
+          </b>{' '}
+          <Trans>for providers and</Trans>{' '}
+          <b>
+            <Trans>better slippage</Trans>
+          </b>{' '}
+          <Trans>for users compared to AMMs.</Trans>
         </div>
       </div>
       <Text fontSize={[16, 24]} fontWeight={600} px={2}>
-        DMM can be up to 100x more capital efficient than typical AMMs
+        <Trans>DMM can be up to 100x more capital efficient than typical AMMs</Trans>
       </Text>
       <div className={style.section_amp}>
         <div className={[style.box, style.box_1].join(' ')}>
-          <div>Typical AMM</div>
+          <div>
+            <Trans>Typical AMM</Trans>
+          </div>
           <div>&nbsp;</div>
           <div>~11%</div>
-          <div>Slippage</div>
+          <div>
+            <Trans>Slippage</Trans>
+          </div>
         </div>
         <div className={[style.box, style.box_1].join(' ')}>
           <div>DMM</div>
-          <div>Capital Amp Factor = 5</div>
+          <div>
+            <Trans>Capital Amp Factor = 5</Trans>
+          </div>
           <div>~2%</div>
-          <div>Slippage</div>
+          <div>
+            <Trans>Slippage</Trans>
+          </div>
         </div>
         <div className={[style.box, style.box_1].join(' ')}>
           <div>DMM</div>
-          <div>Capital Amp Factor = 10</div>
+          <div>
+            <Trans>Capital Amp Factor = 10</Trans>
+          </div>
           <div>~0.1%</div>
-          <div>Slippage</div>
+          <div>
+            <Trans>Slippage</Trans>
+          </div>
         </div>
       </div>
       <i>
         <Text fontSize={[12, 14]} px={2} color="#859aa5">
-          *Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade
+          <Trans>*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade</Trans>
         </Text>
       </i>
 
       <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
-        <span>Dynamic Fees</span>
+        <span>
+          <Trans>Dynamic Fees</Trans>
+        </span>
       </Text>
 
       <div className={style.section_fee}>
         <i>
-          <Text mb={15}>Higher earnings potential for liquidity providers, reducing the impact of IL</Text>
+          <Text mb={15}>
+            <Trans>Higher earnings potential for liquidity providers, reducing the impact of IL</Trans>
+          </Text>
         </i>
         <div>
-          KyberDMM trading fees are <b>adjusted dynamically</b> according to on-chain market conditions. In a volatile
-          market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of
-          impermanent loss. In periods of low volatility, fees decrease to encourage more trading.
+          <Trans>
+            KyberDMM trading fees are <b>adjusted dynamically</b> according to on-chain market conditions. In a volatile
+            market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of
+            impermanent loss. In periods of low volatility, fees decrease to encourage more trading.
+          </Trans>
         </div>
       </div>
 
@@ -182,33 +217,37 @@ export default function About() {
           <div className={style.item}>
             <div className={[style.box, style.box_1].join(' ')}></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
-              Reduce the impact of IL
+              <Trans>Reduce the impact of IL</Trans>
             </Text>
           </div>
           <div className={style.item}>
             <div className={[style.box, style.box_2].join(' ')}></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
-              Increase LP Profit
+              <Trans>Increase LP Profit</Trans>
             </Text>
           </div>
           <div className={style.item}>
             <div className={[style.box, style.box_3].join(' ')}></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
-              Encourage trading
+              <Trans>Encourage trading</Trans>
             </Text>
           </div>
         </div>
       </div>
 
       <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[50, 135]} px={2}>
-        <span>Permissionless and Frictionless Liquidity for DeFi</span>
+        <span>
+          <Trans>Permissionless and Frictionless Liquidity for DeFi</Trans>
+        </span>
       </Text>
       <div style={{ padding: '0 24px' }}>
         <Box width={['100%', 780]} mx="auto">
           <img src={require('../../assets/svg/permissionless_frictionless.svg')} />
           <Text mt={[16, 20]} color="#c9d2d7" lineHeight="26px">
-            Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
-            aggregators, end users) can source liquidity from the DMM.
+            <Trans>
+              Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
+              aggregators, end users) can source liquidity from the DMM.
+            </Trans>
           </Text>
         </Box>
       </div>
@@ -220,7 +259,7 @@ export default function About() {
         to={poolsMenuLink}
         style={{ margin: '60px auto 100px auto', fontSize: '16px' }}
       >
-        Explore pools
+        <Trans>Explore pools</Trans>
       </ButtonOutlined>
 
       <div className={style.youtube_video}>
@@ -228,31 +267,39 @@ export default function About() {
       </div>
 
       <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
-        Access DMM Liquidity for your Blockchain Platform
+        <Trans>Access DMM Liquidity for your Blockchain Platform</Trans>
       </Text>
       <Text fontSize={[16, 20]} maxWidth="700px" mx="auto">
         <Flex justifyContent="space-between">
           <div>
             <img src={AccessLiquidity} alt="icon" />
             <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
-              Open Access to <br /> Liquidity
+              <Trans>
+                Open Access to <br /> Liquidity
+              </Trans>
             </Text>
           </div>
           <div>
             <img src={Straightforward} alt="icon" />
             <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
-              Fully On-chain; <br /> Straightforward Integration
+              <Trans>
+                Fully On-chain; <br /> Straightforward Integration
+              </Trans>
             </Text>
           </div>
           <div>
             <img src={NoRisk} alt="icon" />
             <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
-              No external and <br /> centralized oracle risk
+              <Trans>
+                No external and <br /> centralized oracle risk
+              </Trans>
             </Text>
           </div>
         </Flex>
-        All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to
-        perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing.
+        <Trans>
+          All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to
+          perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing.
+        </Trans>
       </Text>
       <div className={style.panel}>
         <ButtonOutlined
@@ -261,7 +308,7 @@ export default function About() {
           href={DMM_ANALYTICS_URL[chainId as ChainId]}
           style={{ width: 'auto', fontSize: '16px' }}
         >
-          Analytics
+          <Trans>Analytics</Trans>
         </ButtonOutlined>
         <ButtonOutlined
           padding="12px 28px"
@@ -269,7 +316,7 @@ export default function About() {
           href={`https://github.com/dynamic-amm`}
           style={{ width: 'auto', fontSize: '16px' }}
         >
-          Github
+          <Trans>Github</Trans>
         </ButtonOutlined>
         <ButtonOutlined
           padding="12px 28px"
@@ -277,7 +324,7 @@ export default function About() {
           href={`https://files.kyber.network/DMM-Feb21.pdf`}
           style={{ width: 'auto', fontSize: '16px' }}
         >
-          Litepaper
+          <Trans>Litepaper</Trans>
         </ButtonOutlined>
         <ButtonOutlined
           padding="12px 28px"
@@ -285,17 +332,17 @@ export default function About() {
           href={`https://discord.com/invite/HdXWUb2pQM`}
           style={{ width: 'auto', fontSize: '16px' }}
         >
-          Developer Support
+          <Trans>Developer Support</Trans>
         </ButtonOutlined>
       </div>
 
       <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} px={2}>
-        Committed to Security
+        <Trans>Committed to Security</Trans>
       </Text>
       <div className={style.security}>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
-            Code Audited
+            <Trans>Code Audited</Trans>
           </Text>
           <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
             <img src={require('../../assets/svg/chainsecurity.svg')} />
@@ -303,19 +350,19 @@ export default function About() {
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
-            On-chain and Open Source
+            <Trans>On-chain and Open Source</Trans>
           </Text>
           <img src={require('../../assets/svg/about_icon_github.jpg')} />
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
-            Bug Bounty
+            <Trans>Bug Bounty</Trans>
           </Text>
           <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
-            Insured by
+            <Trans>Insured by</Trans>
           </Text>
           <img src={require('../../assets/svg/unslashed.svg')} />
         </div>
@@ -323,7 +370,7 @@ export default function About() {
       <div className={style.powered}>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500} mb={4}>
-            Powered by
+            <Trans>Powered by</Trans>
           </Text>
           <img src={require('../../assets/svg/about_icon_kyber.svg')} />
         </div>
@@ -333,28 +380,40 @@ export default function About() {
         <div className={style.content}>
           <div className={style.left}>
             <Text>
-              <ExternalLink href={`https://docs.dmm.exchange`}>DevPortal</ExternalLink>
+              <ExternalLink href={`https://docs.dmm.exchange`}>
+                <Trans>DevPortal</Trans>
+              </ExternalLink>
             </Text>
             <Text>
-              <ExternalLink href={`https://github.com/dynamic-amm`}>Github</ExternalLink>
+              <ExternalLink href={`https://github.com/dynamic-amm`}>
+                <Trans>Github</Trans>
+              </ExternalLink>
             </Text>
             <Text>
               <ExternalLink href={`https://kyber.org`}>KyberDAO</ExternalLink>
             </Text>
             <Text>
-              <a>Forum</a>
+              <a>
+                <Trans>Forum</Trans>
+              </a>
             </Text>
             <Text>
-              <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>DMM Litepaper</ExternalLink>
+              <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>
+                <Trans>DMM Litepaper</Trans>
+              </ExternalLink>
             </Text>
             {/* <Text>
               <a>FAQ</a>
             </Text> */}
             <Text>
-              <ExternalLink href={`http://files.dmm.exchange/privacy.pdf`}>Privacy</ExternalLink>
+              <ExternalLink href={`http://files.dmm.exchange/privacy.pdf`}>
+                <Trans>Privacy</Trans>
+              </ExternalLink>
             </Text>
             <Text>
-              <ExternalLink href={`http://files.dmm.exchange/tac.pdf`}>Terms</ExternalLink>
+              <ExternalLink href={`http://files.dmm.exchange/tac.pdf`}>
+                <Trans>Terms</Trans>
+              </ExternalLink>
             </Text>
             <Text>
               <ExternalLink href={`https://kyber.network/`}>Kyber Network</ExternalLink>

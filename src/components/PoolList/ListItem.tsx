@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { MoreHorizontal } from 'react-feather'
 import { useDispatch } from 'react-redux'
+import { t, Trans } from '@lingui/macro'
 
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
@@ -171,7 +172,9 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
       <StyledItemCard>
         <GridItem>
-          <DataTitle>Pool</DataTitle>
+          <DataTitle>
+            <Trans>Pool</Trans>
+          </DataTitle>
           <DataText grid-area="pool">
             <PoolAddressContainer>
               {shortenPoolAddress}
@@ -181,7 +184,9 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
 
         <GridItem>
-          <DataTitle>My liquidity</DataTitle>
+          <DataTitle>
+            <Trans>My liquidity</Trans>
+          </DataTitle>
           <DataText>{getMyLiquidity(myLiquidity)}</DataText>
         </GridItem>
 
@@ -202,9 +207,11 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataTitle>
-            <span>AMP Liquidity</span>
+            <span>
+              <Trans>AMP Liquidity</Trans>
+            </span>
             <InfoHelper
-              text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+              text={t`AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.`}
               size={12}
             />
           </DataTitle>
@@ -213,16 +220,18 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           </DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>Volume (24h)</DataTitle>
+          <DataTitle>
+            <Trans>Volume (24h)</Trans>
+          </DataTitle>
           <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>
-            <span>Ratio</span>
+            <span>
+              <Trans>Ratio</Trans>
+            </span>
             <InfoHelper
-              text={
-                'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
-              }
+              text={t`Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.`}
               size={12}
             />
           </DataTitle>
@@ -233,28 +242,34 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
 
         <GridItem>
-          <DataTitle>Fee (24h)</DataTitle>
+          <DataTitle>
+            <Trans>Fee (24h)</Trans>
+          </DataTitle>
           <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>
-            <span>AMP</span>
+            <span>
+              <Trans>AMP</Trans>
+            </span>
             <InfoHelper
-              text={
-                'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
-              }
+              text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
               size={12}
             />
           </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>APY</DataTitle>
+          <DataTitle>
+            <Trans>APY</Trans>
+          </DataTitle>
           <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
-          <DataTitle>Price Range</DataTitle>
+          <DataTitle>
+            <Trans>Price Range</Trans>
+          </DataTitle>
           <DataText>
             {pool.token0.symbol}/{pool.token1.symbol}: {priceRangeCalcByPair(pool)[0][0]?.toSignificant(6) ?? '0'} -{' '}
             {priceRangeCalcByPair(pool)[0][1]?.toSignificant(6) ?? '♾️'}
@@ -265,7 +280,9 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           </DataText>
         </GridItem>
         <GridItem noBorder>
-          <DataTitle>Fee Range</DataTitle>
+          <DataTitle>
+            <Trans>Fee Range</Trans>
+          </DataTitle>
           <DataText>
             {feeRangeCalc(!!pool?.amp ? +new Fraction(pool.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp)}
           </DataText>
@@ -281,7 +298,9 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
             )}`}
             width="fit-content"
           >
-            <TradeButtonText>Trade</TradeButtonText>
+            <TradeButtonText>
+              <Trans>Trade</Trans>
+            </TradeButtonText>
           </ButtonPrimary>
         </TradeButtonWrapper>
       </StyledItemCard>
@@ -344,7 +363,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
     <TableRow oddRow={oddRow}>
       {isFarmingPool && (
         <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="Available for yield farming">
+          <MouseoverTooltip text={t`Available for yield farming`}>
             <DropIcon />
           </MouseoverTooltip>
         </div>
@@ -352,7 +371,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
       {isWarning && (
         <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
+          <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive.`}>
             <WarningLeftIcon />
           </MouseoverTooltip>
         </div>

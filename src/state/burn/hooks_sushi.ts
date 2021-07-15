@@ -4,6 +4,7 @@ import { useUnAmplifiedPair } from 'data/Reserves'
 import { useEffect } from 'react'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { t } from '@lingui/macro'
 import { tokenAmountDmmToSushi, tokenDmmToSushi, tokenSushiToDmm } from 'utils/dmm'
 import { usePair } from '../../data/ReservesSUSHI'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -135,7 +136,7 @@ export function useDerivedBurnInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect wallet`
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
