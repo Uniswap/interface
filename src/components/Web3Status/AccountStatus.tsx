@@ -52,6 +52,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
+  outline: none;
 `;
 
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean }>`
@@ -69,6 +70,7 @@ const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean }>`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.dark2};
   border: none;
+  outline: none;
 
   &:hover {
     cursor: pointer;

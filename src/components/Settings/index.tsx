@@ -69,6 +69,7 @@ const StyledMenu = styled.button`
   text-align: left;
   background: ${({ theme }) => transparentize(1, theme.bg1)};
   cursor: pointer;
+  outline: none;
 `
 
 const MenuModal = styled(Modal)`
