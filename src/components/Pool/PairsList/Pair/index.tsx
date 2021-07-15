@@ -54,6 +54,15 @@ const TextWrapper = styled.div`
   `}
 `;
 
+const BadgeWrapper = styled.div`
+  align-self: flex-start;
+  margin-left: auto;
+
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    align-self: center;
+  `}
+`;
+
 
 interface PairProps {
   token0?: Token
@@ -91,9 +100,9 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
             </Box>
           </TextWrapper>
           {apy.greaterThan('0') && (
-            <Box ml="auto">
+            <BadgeWrapper>
               <ApyBadge apy={apy} />
-            </Box>
+            </BadgeWrapper>
           )}
       </Flex>
     </SizedCard>
