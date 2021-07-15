@@ -31,6 +31,8 @@ export function Chart({
     [width, height, margins]
   )
 
+  console.log(zoom)
+
   const { xScale, yScale } = useMemo(() => {
     const scales = {
       xScale: scaleLinear()
@@ -49,11 +51,12 @@ export function Chart({
     return scales
   }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
 
+  // zoomLevel changing means token0, token1 or feeAmount changed
   useEffect(() => {
-    // reset zoom as necessary
     setZoom(null)
   }, [zoomLevels])
 
+  // send initial brush domain to handler
   useEffect(() => {
     if (!brushDomain) {
       onBrushDomainChange(xScale.domain() as [number, number])
@@ -69,6 +72,7 @@ export function Chart({
       <Zoom
         svg={zoomRef.current}
         xScale={xScale}
+        brushExtent={(brushDomain ?? xScale.domain()).map(xScale) as [number, number]}
         setZoom={setZoom}
         width={innerWidth}
         height={height}
@@ -120,19 +124,20 @@ export function Chart({
 
           <rect width={width} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
 
-          <Brush
-            id={id}
-            xScale={xScale}
-            interactive={interactive}
-            brushLabelValue={brushLabels}
-            brushExtent={brushDomain ?? (xScale.domain() as [number, number])}
-            innerWidth={innerWidth}
-            innerHeight={innerHeight}
-            setBrushExtent={onBrushDomainChange}
-            westHandleColor={styles.brush.handle.west}
-            eastHandleColor={styles.brush.handle.east}
-            resetZoom={() => setZoom(null)}
-          />
+          {brushDomain && (
+            <Brush
+              id={id}
+              xScale={xScale}
+              interactive={interactive}
+              brushLabelValue={brushLabels}
+              brushExtent={brushDomain}
+              innerWidth={innerWidth}
+              innerHeight={innerHeight}
+              setBrushExtent={onBrushDomainChange}
+              westHandleColor={styles.brush.handle.west}
+              eastHandleColor={styles.brush.handle.east}
+            />
+          )}
         </g>
       </svg>
     </>

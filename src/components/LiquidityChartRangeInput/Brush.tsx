@@ -60,7 +60,6 @@ export const Brush = ({
   innerHeight,
   westHandleColor,
   eastHandleColor,
-  resetZoom,
 }: {
   id: string
   xScale: ScaleLinear<number, number>
@@ -72,7 +71,6 @@ export const Brush = ({
   innerHeight: number
   westHandleColor: string
   eastHandleColor: string
-  resetZoom: () => void
 }) => {
   const brushRef = useRef<SVGGElement | null>(null)
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null)
@@ -88,10 +86,7 @@ export const Brush = ({
     (event: D3BrushEvent<unknown>) => {
       const { type, selection } = event
 
-      if (!selection) {
-        setLocalBrushExtent(null)
-        return
-      }
+      if (!selection) return
 
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number]
 
@@ -233,13 +228,13 @@ export const Brush = ({
               </g>
             ) : null}
 
-            {showWestArrow && <OutOfViewIndicator d={caretPath(innerHeight)} onClick={resetZoom} />}
+            {showWestArrow && <OutOfViewIndicator d={caretPath(innerHeight)} onClick={() => null} />}
 
             {showEastArrow && (
               <OutOfViewIndicator
                 d={caretPath(innerHeight)}
                 transform={`translate(${innerWidth}, 0) scale(-1, 1)`}
-                onClick={() => resetZoom()}
+                onClick={() => null}
               />
             )}
           </>
@@ -262,7 +257,6 @@ export const Brush = ({
       eastHandleInView,
       flipEastHandle,
       showWestArrow,
-      resetZoom,
       showEastArrow,
     ]
   )

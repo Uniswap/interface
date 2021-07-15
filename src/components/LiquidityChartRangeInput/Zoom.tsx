@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
 import styled from 'styled-components/macro'
-import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
+import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform, brush, zoomIdentity } from 'd3'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
 import { ZoomLevels } from './types'
 
@@ -29,6 +29,7 @@ const Button = styled(ButtonGray)`
 export default function Zoom({
   svg,
   xScale,
+  brushExtent, // rename to signify position
   setZoom,
   width,
   height,
@@ -37,6 +38,7 @@ export default function Zoom({
 }: {
   svg: SVGElement | null
   xScale: ScaleLinear<number, number>
+  brushExtent: [number, number]
   setZoom: (transform: ZoomTransform) => void
   width: number
   height: number
@@ -59,12 +61,22 @@ export default function Zoom({
         select(svg as Element)
           .transition()
           .call(zoomBehavior.current.scaleBy, 0.5),
-      () =>
+      () => {
         svg &&
-        zoomBehavior.current &&
-        select(svg as Element)
-          .transition()
-          .call(zoomBehavior.current.scaleTo, 1),
+          zoomBehavior.current &&
+          select(svg as Element)
+            .transition()
+            .call(
+              zoomBehavior.current.transform,
+              zoomIdentity
+                .translate(
+                  width / 2 - brushExtent[0],
+                  //+ (brushExtent[1] - brushExtent[0]) / 2
+                  0
+                )
+                .scale(1)
+            )
+      },
       () =>
         svg &&
         zoomBehavior.current &&
@@ -72,7 +84,7 @@ export default function Zoom({
           .transition()
           .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [svg, zoomBehavior]
+    [brushExtent, svg]
   )
 
   useEffect(() => {
@@ -91,7 +103,7 @@ export default function Zoom({
 
   useEffect(() => {
     // reset zoom to initial on zoomLevel change
-    initial()
+    //initial()
   }, [initial, zoomLevels])
 
   return (
