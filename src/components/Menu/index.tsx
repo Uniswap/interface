@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   BookOpen,
   Code,
@@ -178,6 +178,10 @@ export default function Menu() {
   const [currentLocale, setLocale] = useUserLocaleManager()
 
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
+
+  useEffect(() => {
+    if (!open) setMenu('main')
+  }, [open])
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
