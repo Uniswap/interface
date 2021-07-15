@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import ReactGA from 'react-ga'
 import {
   BookOpen,
   Code,
@@ -11,20 +12,23 @@ import {
   ChevronLeft,
   Check,
 } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useActiveLocale } from '../../hooks/useActiveLocale'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { useDarkModeManager, useUserLocaleManager } from 'state/user/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
 
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES } from 'constants/locales'
+import { stringify } from 'qs'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -140,6 +144,20 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
+const InternalLinkMenuItem = styled(InternalMenuItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  justify-content: space-between;
+  text-decoration: none;
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
+
 const ToggleMenuItem = styled.button`
   background-color: transparent;
   margin: 0;
@@ -163,6 +181,39 @@ const ToggleMenuItem = styled.button`
 
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
+function LanguageMenu({ close }: { close: () => void }) {
+  const activeLocale = useActiveLocale()
+  const location = useLocation()
+  const qs = useParsedQueryString()
+
+  return (
+    <MenuFlyout>
+      <ToggleMenuItem onClick={close}>
+        <ChevronLeft size={16} />
+      </ToggleMenuItem>
+      {SUPPORTED_LOCALES.map((locale) => (
+        <InternalLinkMenuItem
+          onClick={() => {
+            ReactGA.event({
+              category: 'Localization',
+              action: 'Switch Locale',
+              label: `${activeLocale} -> ${locale}`,
+            })
+          }}
+          key={locale}
+          to={{
+            ...location,
+            search: stringify({ ...qs, lng: locale }),
+          }}
+        >
+          <div>{LOCALE_LABEL[locale]}</div>
+          {activeLocale === locale && <Check opacity={0.6} size={16} />}
+        </InternalLinkMenuItem>
+      ))}
+    </MenuFlyout>
+  )
+}
+
 export default function Menu() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -175,7 +226,6 @@ export default function Menu() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-  const [currentLocale, setLocale] = useUserLocaleManager()
 
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
@@ -194,19 +244,7 @@ export default function Menu() {
         (() => {
           switch (menu) {
             case 'lang':
-              return (
-                <MenuFlyout>
-                  <ToggleMenuItem onClick={() => setMenu('main')}>
-                    <ChevronLeft size={16} />
-                  </ToggleMenuItem>
-                  {SUPPORTED_LOCALES.map((locale) => (
-                    <ToggleMenuItem onClick={() => setLocale(locale)} key={locale}>
-                      <div>{LOCALE_LABEL[locale]}</div>
-                      {currentLocale === locale && <Check opacity={0.6} size={16} />}
-                    </ToggleMenuItem>
-                  ))}
-                </MenuFlyout>
-              )
+              return <LanguageMenu close={() => setMenu('main')} />
             case 'main':
             default:
               return (
