@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import styled from 'styled-components/macro'
-import { brushHandleAccentPath, brushHandlePath, offScreenIndicatorPath } from 'components/LiquidityChartRangeInput/svg'
+import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
 
 const Handle = styled.path<{ color: string }>`
@@ -20,12 +20,6 @@ const HandleAccent = styled.path`
   stroke-width: 1.5;
   stroke: ${({ theme }) => theme.white};
   opacity: 0.6;
-`
-
-const OffScreenIndicator = styled.path`
-  stroke: ${({ theme }) => theme.primaryText1};
-  stroke-width: 4;
-  fill: transparent;
 `
 
 const LabelGroup = styled.g<{ visible: boolean }>`
@@ -235,13 +229,12 @@ export const Brush = ({
               </g>
             ) : null}
 
-            {showWestArrow && <OffScreenIndicator d={offScreenIndicatorPath(innerHeight)} />}
+            {showWestArrow && <OffScreenHandle color={westHandleColor} />}
 
             {showEastArrow && (
-              <OffScreenIndicator
-                d={offScreenIndicatorPath(innerHeight)}
-                transform={`translate(${innerWidth}, 0) scale(-1, 1)`}
-              />
+              <g transform={`translate(${innerWidth}, 0) scale(-1, 1)`}>
+                <OffScreenHandle color={eastHandleColor} />
+              </g>
             )}
           </>
         )}
