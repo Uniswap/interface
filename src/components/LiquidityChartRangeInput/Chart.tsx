@@ -71,7 +71,7 @@ export function Chart({
           // allow zooming inside the x-axis
           height
         }
-        showClear={Boolean(zoom && zoom.k !== 1)}
+        showClear={false}
         zoomLevels={zoomLevels}
       />
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
