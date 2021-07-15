@@ -1,4 +1,6 @@
 export const SUPPORTED_LOCALES = [
+  // order as they appear in the language dropdown
+  'en-US',
   'af-ZA',
   'ar-SA',
   'ca-ES',
@@ -6,7 +8,6 @@ export const SUPPORTED_LOCALES = [
   'da-DK',
   'de-DE',
   'el-GR',
-  'en-US',
   'es-ES',
   'fi-FI',
   'fr-FR',

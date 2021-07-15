@@ -846,11 +846,13 @@ export default function AddLiquidity({
                       <StackedContainer>
                         <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
                           <AutoColumn gap="md">
-                            <RowBetween>
-                              <TYPE.label>
-                                <Trans>Set Price Range</Trans>
-                              </TYPE.label>
-                            </RowBetween>
+                            {noLiquidity && (
+                              <RowBetween>
+                                <TYPE.label>
+                                  <Trans>Set Price Range</Trans>
+                                </TYPE.label>
+                              </RowBetween>
+                            )}
                             <RangeSelector
                               priceLower={priceLower}
                               priceUpper={priceUpper}

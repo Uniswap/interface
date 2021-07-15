@@ -19,6 +19,9 @@ import {
   WBTC,
   ETH2X_FLI,
   WETH9_EXTENDED,
+  DAI_OPTIMISM,
+  USDT_OPTIMISM,
+  WBTC_OPTIMISM,
 } from './tokens'
 
 type ChainTokenList = {
@@ -58,6 +61,7 @@ const WETH_ONLY: ChainTokenList = Object.fromEntries(
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [SupportedChainId.OPTIMISM]: [...WETH_ONLY[SupportedChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
