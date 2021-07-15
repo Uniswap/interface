@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
+"POT-Creation-Date: 2021-07-15 14:47+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
+"PO-Revision-Date: 2021-07-15 16:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -464,7 +464,7 @@ msgstr "Подтвердить"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Confirm Create"
-msgstr "Подтвердите создание"
+msgstr "Подтвердить создание"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -584,7 +584,7 @@ msgstr "Текущая цена {0}:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "Темная тема"
+msgstr "Тёмная тема"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -798,7 +798,7 @@ msgstr "Полный диапазон"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "Позиции полного диапазона могут приносить меньше комиссионных, чем позиции концентрированных. Подробнее <0> здесь</0> ."
+msgstr "Позиции полного диапазона могут зарабатывать меньше комиссий, чем концентрированные позиции. Узнайте подробнее <0> здесь</0>."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -913,13 +913,17 @@ msgstr "Выбран неверный диапазон. Минимальная �
 msgid "Invalid recipient"
 msgstr "Неверный получатель"
 
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Язык"
+
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Узнать больше"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
-msgstr "Узнайте о предоставлении ликвидности"
+msgstr "Узнать подробнее о предоставлении ликвидности"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
@@ -1177,7 +1181,7 @@ msgstr "Ожидает"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
-msgstr "Подтвердите, что вы хотите удалить этот список, набрав УДАЛИТЬ"
+msgstr "Чтобы подтвердить, что вы хотите удалить этот список, наберите УДАЛИТЬ"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1572,11 +1576,11 @@ msgstr "Это альфа-версия Uniswap в сети {0}. Вам нужн�
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "Этот пул необходимо инициализировать, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен ликвидности и сумму депозита. Плата за газ будет выше, чем обычно, из-за транзакции инициализации."
+msgstr "Этот пул необходимо инициализировать, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен для ликвидности и сумму депозита. Плата за газ будет выше, чем обычно, из-за инициализирующей транзакции."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Этот пул должен быть инициализирован на {0} прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен ликвидности и сумму депозита."
+msgstr "Этот пул необходимо инициализировать в {0}, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен для ликвидности и сумму депозита."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
