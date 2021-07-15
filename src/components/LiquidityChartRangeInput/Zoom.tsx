@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
 import styled from 'styled-components/macro'
 import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform, brush, zoomIdentity } from 'd3'
@@ -30,6 +30,7 @@ export default function Zoom({
   svg,
   xScale,
   brushExtent, // rename to signify position
+  zoomTransform,
   setZoom,
   width,
   height,
@@ -39,6 +40,7 @@ export default function Zoom({
   svg: SVGElement | null
   xScale: ScaleLinear<number, number>
   brushExtent: [number, number]
+  zoomTransform: ZoomTransform | null
   setZoom: (transform: ZoomTransform) => void
   width: number
   height: number
@@ -47,7 +49,7 @@ export default function Zoom({
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
-  const [zoomIn, zoomOut, reset, initial] = useMemo(
+  const [zoomIn, zoomOut, initial] = useMemo(
     () => [
       () =>
         svg &&
@@ -61,22 +63,6 @@ export default function Zoom({
         select(svg as Element)
           .transition()
           .call(zoomBehavior.current.scaleBy, 0.5),
-      () => {
-        svg &&
-          zoomBehavior.current &&
-          select(svg as Element)
-            .transition()
-            .call(
-              zoomBehavior.current.transform,
-              zoomIdentity
-                .translate(
-                  width / 2 - brushExtent[0],
-                  //+ (brushExtent[1] - brushExtent[0]) / 2
-                  0
-                )
-                .scale(1)
-            )
-      },
       () =>
         svg &&
         zoomBehavior.current &&
@@ -84,9 +70,26 @@ export default function Zoom({
           .transition()
           .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [brushExtent, svg]
+    [svg]
   )
 
+  const reset = useCallback(() => {
+    const scaled = brushExtent.map(xScale)
+    const brushWidth = scaled[1] - scaled[0]
+    svg &&
+      zoomBehavior.current &&
+      select(svg as Element)
+        .transition()
+        .call(
+          zoomBehavior.current.transform,
+          zoomIdentity
+            .translate(width / 2, height / 2)
+            .scale(0.5)
+            .translate(-(scaled[0] + brushWidth / 2), 0)
+        )
+  }, [brushExtent, xScale, svg, width, height])
+
+  // initialize zoom behavior
   useEffect(() => {
     if (!svg) return
 
@@ -101,9 +104,9 @@ export default function Zoom({
     select(svg as Element).call(zoomBehavior.current)
   }, [height, width, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min])
 
+  // reset zoom to initial on zoomLevel change
   useEffect(() => {
-    // reset zoom to initial on zoomLevel change
-    //initial()
+    initial()
   }, [initial, zoomLevels])
 
   return (

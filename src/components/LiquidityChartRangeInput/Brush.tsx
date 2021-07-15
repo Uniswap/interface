@@ -47,7 +47,9 @@ const Tooltip = styled.text`
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20
 
-const compare = (a1: [number, number], a2: [number, number]): boolean => a1[0] !== a2[0] || a1[1] !== a2[1]
+// returns true if a1 is similar to a2 based on scale
+const compare = (a1: [number, number], a2: [number, number], scale: (x: number) => number): boolean =>
+  scale(a1[0]) !== scale(a2[0]) || scale(a1[1]) !== scale(a2[1])
 
 export const Brush = ({
   id,
@@ -91,7 +93,8 @@ export const Brush = ({
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number]
 
       // avoid infinite render loop by checking for change
-      if (type === 'end' && compare(brushExtent, scaled)) {
+      if (type === 'end' && compare(brushExtent, scaled, xScale)) {
+        console.log('judo', 'setting brush extent from ', brushExtent.map(xScale), ' to', scaled.map(xScale))
         setBrushExtent(scaled)
       }
 
@@ -121,7 +124,7 @@ export const Brush = ({
 
     brushBehavior.current(select(brushRef.current))
 
-    if (previousBrushExtent && compare(brushExtent, previousBrushExtent)) {
+    if (previousBrushExtent && compare(brushExtent, previousBrushExtent, xScale)) {
       select(brushRef.current)
         .transition()
         .call(brushBehavior.current.move as any, brushExtent.map(xScale))
@@ -190,7 +193,11 @@ export const Brush = ({
           <>
             {/* west handle */}
             {westHandleInView ? (
-              <g transform={`translate(${xScale(localBrushExtent[0])}, 0), scale(${flipWestHandle ? '-1' : '1'}, 1)`}>
+              <g
+                transform={`translate(${Math.max(0, xScale(localBrushExtent[0]))}, 0), scale(${
+                  flipWestHandle ? '-1' : '1'
+                }, 1)`}
+              >
                 <g>
                   <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
                   <HandleAccent d={brushHandleAccentPath()} />

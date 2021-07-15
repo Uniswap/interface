@@ -44,6 +44,7 @@ export function Chart({
     }
 
     if (zoom) {
+      console.log('judo', 'rezooming', zoom, 'domain ', scales.xScale.domain())
       const newXscale = zoom.rescaleX(scales.xScale)
       scales.xScale.domain(newXscale.domain())
     }
@@ -72,11 +73,12 @@ export function Chart({
       <Zoom
         svg={zoomRef.current}
         xScale={xScale}
-        brushExtent={(brushDomain ?? xScale.domain()).map(xScale) as [number, number]}
+        brushExtent={(brushDomain ?? xScale.domain()) as [number, number]}
+        zoomTransform={zoom}
         setZoom={setZoom}
         width={innerWidth}
         height={height}
-        showClear={Boolean(zoom && zoom.k !== 1)}
+        showClear={true}
         zoomLevels={zoomLevels}
       />
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
@@ -122,7 +124,7 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <rect width={width} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
+          <rect width={innerWidth} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
 
           {brushDomain && (
             <Brush
