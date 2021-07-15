@@ -12,8 +12,8 @@ export const DisclaimerBar = () => {
 const Bar = styled.div`
   width: 100%;
   padding: 8px;
-  background: rgba(255, 199, 0, 0.12);
-  border-bottom: 1px solid rgba(255, 199, 0, 0.5);
+  background: rgba(242, 153, 74, 0.15);
+  border-bottom: 1px solid rgba(242, 153, 74, 0.5);
 `;
 
 const Disclaimer = styled.p`
@@ -22,7 +22,7 @@ const Disclaimer = styled.p`
   font-size: 12px;
   line-height: 15px;
   text-align: center;
-  color: #FFC700;
+  color: #F2994A;
 
   a {
     font-weight: 700;
