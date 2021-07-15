@@ -180,7 +180,7 @@ export default function Menu() {
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
   useEffect(() => {
-    if (!open) setMenu('main')
+    setMenu('main')
   }, [open])
 
   return (
