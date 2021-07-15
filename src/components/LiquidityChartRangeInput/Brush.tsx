@@ -46,6 +46,9 @@ const Tooltip = styled.text`
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20
 
+// margin to prevent tick snapping from putting the brush off screen
+const BRUSH_EXTENT_MARGIN_PX = 2
+
 const compare = (a1: [number, number], a2: [number, number]): boolean => a1[0] !== a2[0] || a1[1] !== a2[1]
 
 export const Brush = ({
@@ -112,8 +115,8 @@ export const Brush = ({
 
     brushBehavior.current = brushX<SVGGElement>()
       .extent([
-        [Math.max(0, xScale(0)), 0],
-        [innerWidth, innerHeight],
+        [Math.max(0 + BRUSH_EXTENT_MARGIN_PX, xScale(0)), 0],
+        [innerWidth - BRUSH_EXTENT_MARGIN_PX, innerHeight],
       ])
       .handleSize(30)
       .filter(() => interactive)
@@ -190,7 +193,11 @@ export const Brush = ({
           <>
             {/* west handle */}
             {westHandleInView ? (
-              <g transform={`translate(${xScale(localBrushExtent[0])}, 0), scale(${flipWestHandle ? '-1' : '1'}, 1)`}>
+              <g
+                transform={`translate(${Math.max(0, xScale(localBrushExtent[0]))}, 0), scale(${
+                  flipWestHandle ? '-1' : '1'
+                }, 1)`}
+              >
                 <g>
                   <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
                   <HandleAccent d={brushHandleAccentPath()} />
