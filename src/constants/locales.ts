@@ -50,7 +50,7 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'fr-FR': '🇫🇷 Français',
   'he-IL': '🇮🇱 עִברִית',
   'hu-HU': '🇭🇺 Magyar',
-  'id-ID': '🇮🇩 Bahasa Indonesia',
+  'id-ID': '🇮🇩 Bahasa-Indonesia',
   'it-IT': '🇮🇹 Italiano',
   'ja-JP': '🇯🇵 日本語',
   'ko-KR': '🇰🇷 한국어',

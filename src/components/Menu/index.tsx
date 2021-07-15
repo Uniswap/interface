@@ -203,7 +203,7 @@ export default function Menu() {
                   </ToggleMenuItem>
                   {SUPPORTED_LOCALES.map((locale) => (
                     <ToggleMenuItem onClick={() => setLocale(locale)} key={locale}>
-                      <div style={{ wordSpacing: '8px' }}>{LOCALE_LABEL[locale]}</div>
+                      <div style={{ wordSpacing: '8px', textAlign: 'left' }}>{LOCALE_LABEL[locale]}</div>
                       {currentLocale === locale && <Check opacity={0.6} size={16} />}
                     </ToggleMenuItem>
                   ))}
