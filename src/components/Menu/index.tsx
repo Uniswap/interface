@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import ReactGA from 'react-ga'
 import {
   BookOpen,
   Code,
@@ -12,11 +11,10 @@ import {
   ChevronLeft,
   Check,
 } from 'react-feather'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useActiveLocale } from '../../hooks/useActiveLocale'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
@@ -26,9 +24,9 @@ import { ButtonPrimary } from '../Button'
 import { useDarkModeManager } from 'state/user/hooks'
 
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { LOCALE_LABEL, SUPPORTED_LOCALES } from 'constants/locales'
-import { stringify } from 'qs'
-import useParsedQueryString from 'hooks/useParsedQueryString'
+import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
+import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -181,10 +179,21 @@ const ToggleMenuItem = styled.button`
 
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
+function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
+  const { to, onClick } = useLocationLinkProps(locale)
+
+  if (!to) return null
+
+  return (
+    <InternalLinkMenuItem onClick={onClick} key={key} to={to}>
+      <div>{LOCALE_LABEL[locale]}</div>
+      {active && <Check opacity={0.6} size={16} />}
+    </InternalLinkMenuItem>
+  )
+}
+
 function LanguageMenu({ close }: { close: () => void }) {
   const activeLocale = useActiveLocale()
-  const location = useLocation()
-  const qs = useParsedQueryString()
 
   return (
     <MenuFlyout>
@@ -192,23 +201,7 @@ function LanguageMenu({ close }: { close: () => void }) {
         <ChevronLeft size={16} />
       </ToggleMenuItem>
       {SUPPORTED_LOCALES.map((locale) => (
-        <InternalLinkMenuItem
-          onClick={() => {
-            ReactGA.event({
-              category: 'Localization',
-              action: 'Switch Locale',
-              label: `${activeLocale} -> ${locale}`,
-            })
-          }}
-          key={locale}
-          to={{
-            ...location,
-            search: stringify({ ...qs, lng: locale }),
-          }}
-        >
-          <div>{LOCALE_LABEL[locale]}</div>
-          {activeLocale === locale && <Check opacity={0.6} size={16} />}
-        </InternalLinkMenuItem>
+        <LanguageMenuItem locale={locale} active={activeLocale === locale} key={locale} />
       ))}
     </MenuFlyout>
   )
