@@ -11,12 +11,13 @@ import { formatCurrencyAmount } from '../../../../utils'
 const SizedCard = styled(DarkCard)`
   width: 210px;
   height: 120px;
-  padding: 22px 16px;
+  padding: 16px;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
   `}
   ${props => props.theme.mediaWidth.upToExtraSmall`
     height: initial;
+    padding: 22px 16px;
   `}
 `
 
