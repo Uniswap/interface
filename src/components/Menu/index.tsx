@@ -241,7 +241,7 @@ export default function Menu() {
                     <div>
                       <Trans>Language</Trans>
                     </div>
-                    <ChevronRight size={16} />
+                    <ChevronRight size={16} opacity={0.6} />
                   </ToggleMenuItem>
                   <ToggleMenuItem onClick={() => toggleDarkMode()}>
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
