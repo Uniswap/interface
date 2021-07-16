@@ -53,7 +53,7 @@ export function useDepositedTokenIds(): DepositedTokenIdsResult {
       }
 
     const ownedTokenIdMap = orderedDepositEvents.reduce<{ [tokenId: string]: boolean }>((memo, log) => {
-      const parsed = v3Staker.interface.decodeEventLog('DepositTransferred', log.data)
+      const parsed = v3Staker.interface.decodeEventLog('DepositTransferred', log.data, log.topics)
       memo[parsed.tokenId.toString()] = parsed.newOwner === account
       return memo
     }, {})

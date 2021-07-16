@@ -17,12 +17,13 @@ export function useAllIncentives(): {
   incentives?: Incentive[]
 } {
   const staker = useV3Staker()
-  const { logs, state } = useLogs(staker?.filters?.IncentiveCreated())
+  const filter = useMemo(() => staker?.filters?.IncentiveCreated(), [staker])
+  const { logs, state } = useLogs(filter)
 
   const parsedLogs = useMemo(() => {
     if (!staker) return undefined
     const fragment = staker.interface.events['IncentiveCreated(address,address,uint256,uint256,address,uint256)']
-    return logs?.map((logs) => staker.interface.decodeEventLog(fragment, logs.data))
+    return logs?.map((logs) => staker.interface.decodeEventLog(fragment, logs.data, logs.topics))
   }, [logs, staker])
 
   // returns all the token addresses for which there are incentives
@@ -44,6 +45,7 @@ export function useAllIncentives(): {
     return {
       state,
       incentives: parsedLogs
+        // todo: currently we filter any icnentives for tokens not on the active token lists
         ?.filter((result) => Boolean(allTokens[result.rewardToken]))
         ?.map((result) => ({
           pool: result.pool,
