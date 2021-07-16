@@ -136,10 +136,10 @@ export default function NetworkModal(): JSX.Element | null {
     const addNetworkParams = ADD_NETWORK_PARAMS[key]
 
     try {
-      library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])
+      await library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
+      if (switchError.code === 4902 || switchError.code === -32603) {
         try {
           library?.send('wallet_addEthereumChain', [addNetworkParams, account])
         } catch (addError) {
