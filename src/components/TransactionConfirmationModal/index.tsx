@@ -16,7 +16,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { Trans } from '@lingui/macro'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
-import { useIsTransactionConfirmed, useIsTransactionPending, useTransaction } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 
 const Wrapper = styled.div`
@@ -33,7 +33,7 @@ const BottomSection = styled(Section)`
 `
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
-  padding: ${({ inline }) => (inline ? '20px 0' : '60px 0;')};
+  padding: ${({ inline }) => (inline ? '20px 0' : '32px 0;')};
 `
 
 const StyledLogo = styled.img`
@@ -46,12 +46,10 @@ function ConfirmationPendingContent({
   onDismiss,
   pendingText,
   inline,
-  hideSubmittedView,
 }: {
   onDismiss: () => void
   pendingText: ReactNode
   inline?: boolean // not in modal
-  hideSubmittedView?: boolean // stay on loading screen - used for L2s
 }) {
   return (
     <Wrapper>
@@ -67,22 +65,14 @@ function ConfirmationPendingContent({
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            {hideSubmittedView ? <Trans>Transaction Submitted</Trans> : <Trans>Waiting For Confirmation</Trans>}
+            <Trans>Waiting For Confirmation</Trans>
           </Text>
-          <AutoColumn gap="12px" justify={'center'}>
-            <Text fontWeight={600} fontSize={14} color="" textAlign="center">
-              {pendingText}
-            </Text>
-          </AutoColumn>
-          {hideSubmittedView ? (
-            <Text fontSize={12} color="#565A69" textAlign="center" marginBottom={12}>
-              <Trans>Waiting for confirmation</Trans>
-            </Text>
-          ) : (
-            <Text fontSize={12} color="#565A69" textAlign="center" marginBottom={12}>
-              <Trans>Confirm this transaction in your wallet</Trans>
-            </Text>
-          )}
+          <Text fontWeight={400} fontSize={16} textAlign="center">
+            {pendingText}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
+            <Trans>Confirm this transaction in your wallet</Trans>
+          </Text>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
@@ -117,23 +107,12 @@ function TransactionSubmittedContent({
     ? (transaction.confirmedTime - transaction.addedTime) / 1000
     : undefined
 
-  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-
   return (
     <Wrapper>
       <Section inline={inline}>
         {!inline && (
           <RowBetween>
-            {L2_CHAIN_IDS.includes(chainId) ? (
-              <Badge>
-                <RowFixed>
-                  <StyledLogo src={info.logoUrl} style={{ margin: '0 8px 0 0' }} />
-                  {info.label}
-                </RowFixed>
-              </Badge>
-            ) : (
-              <div></div>
-            )}
+            <div></div>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
@@ -151,8 +130,8 @@ function TransactionSubmittedContent({
           </ConfirmedIcon>
         )}
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={24} textAlign="center">
-            {transactionSuccess ? (
+          <Text fontWeight={500} fontSize={20} textAlign="center">
+            {!transactionSuccess ? (
               <Trans>Error</Trans>
             ) : confirmed ? (
               <Trans>Success</Trans>
@@ -187,14 +166,6 @@ function TransactionSubmittedContent({
                 </RowFixed>
               )}
             </ButtonLight>
-          )}
-          {!secondsToConfirm ? null : (
-            <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
-              <Trans>Transaction completed in </Trans>
-              <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
-                {secondsToConfirm} seconds 🎉
-              </span>
-            </Text>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: secondsToConfirm ? '4px 0 0 0' : '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
@@ -266,6 +237,99 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
   )
 }
 
+function L2Content({
+  onDismiss,
+  chainId,
+  hash,
+  pendingText,
+  inline,
+}: {
+  onDismiss: () => void
+  hash: string | undefined
+  chainId: number
+  currencyToAdd?: Currency | undefined
+  pendingText: ReactNode
+  inline?: boolean // not in modal
+}) {
+  const theme = useContext(ThemeContext)
+
+  const transaction = useTransaction(hash)
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
+
+  // convert unix time difference to seconds
+  const secondsToConfirm = transaction?.confirmedTime
+    ? (transaction.confirmedTime - transaction.addedTime) / 1000
+    : undefined
+
+  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+
+  return (
+    <Wrapper>
+      <Section inline={inline}>
+        {!inline && (
+          <RowBetween mb="16px">
+            <Badge>
+              <RowFixed>
+                <StyledLogo src={info.logoUrl} style={{ margin: '0 8px 0 0' }} />
+                {info.label}
+              </RowFixed>
+            </Badge>
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        <ConfirmedIcon inline={inline}>
+          {confirmed ? (
+            transactionSuccess ? (
+              <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
+            ) : (
+              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
+            )
+          ) : (
+            <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+          )}
+        </ConfirmedIcon>
+        <AutoColumn gap="12px" justify={'center'}>
+          <Text fontWeight={500} fontSize={20} textAlign="center">
+            {!hash ? (
+              <Trans>Confirm transaction in wallet</Trans>
+            ) : !confirmed ? (
+              <Trans>Transaction Submitted</Trans>
+            ) : transactionSuccess ? (
+              <Trans>Success</Trans>
+            ) : (
+              <Trans>Error</Trans>
+            )}
+          </Text>
+          <Text fontWeight={400} fontSize={16} textAlign="center">
+            {transaction?.summary ?? pendingText ?? ''}
+          </Text>
+          {chainId && hash && (
+            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+                <Trans>View on Explorer</Trans>
+              </Text>
+            </ExternalLink>
+          )}
+          {!secondsToConfirm ? null : (
+            <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+              <Trans>Transaction completed in </Trans>
+              <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
+                {secondsToConfirm} seconds 🎉
+              </span>
+            </Text>
+          )}
+          <ButtonPrimary onClick={onDismiss} style={{ margin: secondsToConfirm ? '4px 0 0 0' : '20px 0 0 0' }}>
+            <Text fontWeight={500} fontSize={20}>
+              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+            </Text>
+          </ButtonPrimary>
+        </AutoColumn>
+      </Section>
+    </Wrapper>
+  )
+}
+
 interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -287,23 +351,17 @@ export default function TransactionConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
-  const pending = useIsTransactionPending(hash)
-
-  // on L2, keep loading state while txn confirms
-  // dont want to show the submitted view as txns confirm so quickly
-  const l2TxnWaitingToConfirm = Boolean(pending && chainId && L2_CHAIN_IDS.includes(chainId))
+  const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
 
   if (!chainId) return null
 
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {attemptingTxn || l2TxnWaitingToConfirm ? (
-        <ConfirmationPendingContent
-          onDismiss={onDismiss}
-          pendingText={pendingText}
-          hideSubmittedView={l2TxnWaitingToConfirm}
-        />
+      {isL2 && (hash || attemptingTxn) ? (
+        <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
+      ) : attemptingTxn ? (
+        <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
         <TransactionSubmittedContent
           chainId={chainId}
