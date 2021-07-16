@@ -1,8 +1,34 @@
 import { parse } from 'qs'
 import { Field } from './actions'
-import { queryParametersToSwapState } from './hooks'
+import { queryParametersToSwapState, tryParseAmount } from './hooks'
+import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 
 describe('hooks', () => {
+  describe('#tryParseAmount', () => {
+    it('should return undefined if amount is not a number or 0', () => {
+      expect(tryParseAmount(undefined, undefined)).toBeUndefined()
+      expect(tryParseAmount('', undefined)).toBeUndefined()
+      expect(tryParseAmount('abc', undefined)).toBeUndefined()
+      expect(tryParseAmount('0', undefined)).toBeUndefined()
+    })
+
+    it('should return a CurrencyAmount', () => {
+      const receivedCurrency = new Token(1000000000, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
+      const expectedCurency = new Token(1000000000, '0x6b175474e89094c44da98b954eedeac495271d0f', 6 + 9)
+
+      expect(tryParseAmount('20.05', receivedCurrency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('20050000000000000')).toSignificant()
+      )
+      expect(tryParseAmount('20.123456789', receivedCurrency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('20123400000000000')).toSignificant()
+      )
+      expect(tryParseAmount('0.123456789', receivedCurrency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('0123456000000000')).toSignificant()
+      )
+    })
+  })
+
   describe('#queryParametersToSwapState', () => {
     test('ETH to DAI', () => {
       expect(
