@@ -5,14 +5,15 @@ import { LogsState, useLogs } from '../../state/logs/hooks'
 import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
+import useCurrentBlockTimestamp from '../useCurrentBlockTimestamp'
 
 interface Incentive {
   pool: string
   startTime: number
   endTime: number
-  refundee: string
   initialRewardAmount: CurrencyAmount<Token>
   rewardAmountRemaining: CurrencyAmount<Token>
+  rewardRatePerSecond: CurrencyAmount<Token>
 }
 
 // TODO: check this encoding matches the abi encoding of the tuple
@@ -57,6 +58,7 @@ export function useAllIncentives(): {
 
   // todo: get the tokens not in the active token lists
   const allTokens = useAllTokens()
+  const currentTimestamp = useCurrentBlockTimestamp()
 
   return useMemo(() => {
     if (!parsedLogs) return { state }
@@ -68,18 +70,25 @@ export function useAllIncentives(): {
           const token = allTokens[result.rewardToken]
           const state = incentiveStates[ix]?.result
           // todo: currently we filter any icnentives for tokens not on the active token lists
-          if (!token || !state) return null
+          if (!token || !state || !currentTimestamp) return null
+
+          const initialRewardAmount = CurrencyAmount.fromRawAmount(token, result.reward.toString())
+          const rewardAmountRemaining = CurrencyAmount.fromRawAmount(token, state.totalRewardUnclaimed.toString())
+
+          const [startTime, endTime] = [result.startTime.toNumber(), result.endTime.toNumber()]
+
+          const rewardRatePerSecond = initialRewardAmount.divide(endTime - startTime)
 
           return {
             pool: result.pool,
-            startTime: result.startTime.toNumber(),
-            endTime: result.endTime.toNumber(),
-            refundee: result.refundee,
-            initialRewardAmount: CurrencyAmount.fromRawAmount(token, result.reward.toString()),
-            rewardAmountRemaining: CurrencyAmount.fromRawAmount(token, state.totalRewardUnclaimed.toString()),
+            startTime,
+            endTime,
+            initialRewardAmount,
+            rewardAmountRemaining,
+            rewardRatePerSecond,
           }
         })
         ?.filter((x): x is Incentive => x !== null),
     }
-  }, [allTokens, incentiveStates, parsedLogs, state])
+  }, [allTokens, currentTimestamp, incentiveStates, parsedLogs, state])
 }
