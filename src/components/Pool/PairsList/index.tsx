@@ -91,16 +91,18 @@ export default function PairsList({ aggregatedPairs, loading, filter }: PairsLis
           </Empty>
         )}
       </Box>
-      <PaginationRow>
-        <Box>
-          <Pagination
-            page={page}
-            totalItems={aggregatedPairs.length + 1}
-            itemsPerPage={responsiveItemsPerPage}
-            onPageChange={setPage}
-          />
-        </Box>
-      </PaginationRow>
+      {aggregatedPairs.length > responsiveItemsPerPage && (
+        <PaginationRow>
+          <Box>
+            <Pagination
+              page={page}
+              totalItems={aggregatedPairs.length + 1}
+              itemsPerPage={responsiveItemsPerPage}
+              onPageChange={setPage}
+            />
+          </Box>
+        </PaginationRow>
+      )}
     </Flex>
   )
 }
