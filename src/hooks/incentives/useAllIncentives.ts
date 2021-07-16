@@ -1,6 +1,8 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { defaultAbiCoder, Result, keccak256 } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { LogsState, useLogs } from '../../state/logs/hooks'
+import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
 
@@ -9,7 +11,18 @@ interface Incentive {
   startTime: number
   endTime: number
   refundee: string
-  rewardAmount: CurrencyAmount<Token>
+  initialRewardAmount: CurrencyAmount<Token>
+  rewardAmountRemaining: CurrencyAmount<Token>
+}
+
+// TODO: check this encoding matches the abi encoding of the tuple
+function incentiveKeyToIncentiveId(log: Result): string {
+  return keccak256(
+    defaultAbiCoder.encode(
+      ['address', 'address', 'uint256', 'uint256', 'address'],
+      [log.rewardToken, log.pool, log.startTime, log.endTime, log.refundee]
+    )
+  )
 }
 
 export function useAllIncentives(): {
@@ -25,6 +38,12 @@ export function useAllIncentives(): {
     const fragment = staker.interface.events['IncentiveCreated(address,address,uint256,uint256,address,uint256)']
     return logs?.map((logs) => staker.interface.decodeEventLog(fragment, logs.data, logs.topics))
   }, [logs, staker])
+
+  const incentiveIds = useMemo(() => {
+    return parsedLogs?.map((log) => [incentiveKeyToIncentiveId(log)]) ?? []
+  }, [parsedLogs])
+
+  const incentiveStates = useSingleContractMultipleData(staker, 'incentives', incentiveIds)
 
   // returns all the token addresses for which there are incentives
   // const tokenAddresses = useMemo(() => {
@@ -45,15 +64,22 @@ export function useAllIncentives(): {
     return {
       state,
       incentives: parsedLogs
-        // todo: currently we filter any icnentives for tokens not on the active token lists
-        ?.filter((result) => Boolean(allTokens[result.rewardToken]))
-        ?.map((result) => ({
-          pool: result.pool,
-          startTime: result.startTime.toNumber(),
-          endTime: result.endTime.toNumber(),
-          refundee: result.refundee,
-          rewardAmount: CurrencyAmount.fromRawAmount(allTokens[result.rewardToken], result.reward.toString()),
-        })),
+        ?.map((result, ix): Incentive | null => {
+          const token = allTokens[result.rewardToken]
+          const state = incentiveStates[ix]?.result
+          // todo: currently we filter any icnentives for tokens not on the active token lists
+          if (!token || !state) return null
+
+          return {
+            pool: result.pool,
+            startTime: result.startTime.toNumber(),
+            endTime: result.endTime.toNumber(),
+            refundee: result.refundee,
+            initialRewardAmount: CurrencyAmount.fromRawAmount(token, result.reward.toString()),
+            rewardAmountRemaining: CurrencyAmount.fromRawAmount(token, state.totalRewardUnclaimed.toString()),
+          }
+        })
+        ?.filter((x): x is Incentive => x !== null),
     }
-  }, [allTokens, parsedLogs, state])
+  }, [allTokens, incentiveStates, parsedLogs, state])
 }
