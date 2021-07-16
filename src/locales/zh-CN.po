@@ -1,4 +1,4 @@
-smsgid ""
+msgid ""
 msgstr ""
 "POT-Creation-Date: 2021-07-15 14:47+0000\n"
 "Mime-Version: 1.0\n"
