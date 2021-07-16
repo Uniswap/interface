@@ -5,7 +5,7 @@ import { AxisBottom } from './AxisBottom'
 import { Brush } from './Brush'
 import { Line } from './Line'
 import { ChartEntry, LiquidityChartRangeInputProps } from './types'
-import Zoom from './Zoom'
+import Zoom, { ZoomOverlay } from './Zoom'
 
 export const xAccessor = (d: ChartEntry) => d.price0
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity
@@ -117,7 +117,7 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <rect width={innerWidth} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
+          <ZoomOverlay width={innerWidth} height={height} ref={zoomRef} />
 
           <Brush
             id={id}
