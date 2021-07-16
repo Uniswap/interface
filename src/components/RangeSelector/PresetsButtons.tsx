@@ -18,19 +18,19 @@ const Button = styled(ButtonOutlined).attrs(() => ({
 
 const RANGES = {
   [FeeAmount.LOW]: [
-    { label: '0.05', ticks: 5 },
-    { label: '0.1', ticks: 10 },
-    { label: '0.2', ticks: 20 },
+    { label: '2000x', ticks: 5 },
+    { label: '1500x', ticks: 10 },
+    { label: '1000x', ticks: 20 },
   ],
   [FeeAmount.MEDIUM]: [
-    { label: '1', ticks: 100 },
-    { label: '10', ticks: 953 },
-    { label: '50', ticks: 4055 },
+    { label: '500x', ticks: 100 },
+    { label: '100x', ticks: 953 },
+    { label: '50x', ticks: 4055 },
   ],
   [FeeAmount.HIGH]: [
-    { label: '2', ticks: 198 },
-    { label: '10', ticks: 953 },
-    { label: '80', ticks: 5878 },
+    { label: '350x', ticks: 198 },
+    { label: '100x', ticks: 953 },
+    { label: '5x', ticks: 5878 },
   ],
 }
 
@@ -75,9 +75,7 @@ export default function PresetsButtons({ feeAmount, setRange, setFullRange }: Pr
       <PresetButton values={RANGES[feeAmount][1]} setRange={setRange} />
       <PresetButton values={RANGES[feeAmount][2]} setRange={setRange} />
       <Button onClick={() => setFullRange()}>
-        <TYPE.body fontSize={12}>
-          <Trans>Full Range</Trans>
-        </TYPE.body>
+        <TYPE.body fontSize={12}>1x</TYPE.body>
       </Button>
     </AutoRow>
   )
