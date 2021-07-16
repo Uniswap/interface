@@ -1,9 +1,9 @@
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { LogsState, useLogs } from '../state/logs/hooks'
-import compareLogs from '../utils/compareLogs'
-import { useV3Staker } from './useContract'
-import { useActiveWeb3React } from './web3'
+import { LogsState, useLogs } from '../../state/logs/hooks'
+import compareLogs from '../../utils/compareLogs'
+import { useV3Staker } from '../useContract'
+import { useActiveWeb3React } from '../web3'
 
 const VALID_STATES: LogsState[] = [LogsState.SYNCING, LogsState.SYNCED]
 
