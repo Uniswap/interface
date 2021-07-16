@@ -135,6 +135,8 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
+  const { incentives, loading: incentivesLoading } = useAllIncentives()
+
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
       acc[p.liquidity?.isZero() ? 1 : 0].push(p)

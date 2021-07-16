@@ -1,7 +1,7 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { defaultAbiCoder, Result, keccak256 } from 'ethers/lib/utils'
+import { defaultAbiCoder, keccak256, Result } from 'ethers/lib/utils'
 import { useMemo } from 'react'
-import { LogsState, useLogs } from '../../state/logs/hooks'
+import { useLogs } from '../../state/logs/hooks'
 import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
@@ -26,7 +26,7 @@ function incentiveKeyToIncentiveId(log: Result): string {
 }
 
 export function useAllIncentives(): {
-  state: LogsState
+  loading: boolean
   incentives?: Incentive[]
 } {
   const staker = useV3Staker()
@@ -59,12 +59,12 @@ export function useAllIncentives(): {
   const allTokens = useAllTokens()
 
   return useMemo(() => {
-    if (!parsedLogs) return { state }
+    if (!parsedLogs || incentiveStates.some((s) => s.loading)) return { loading: true }
 
     return {
-      state,
+      loading: false,
       incentives: parsedLogs
-        ?.map((result, ix): Incentive | null => {
+        .map((result, ix): Incentive | null => {
           const token = allTokens[result.rewardToken]
           const state = incentiveStates[ix]?.result
           // todo: currently we filter any icnentives for tokens not on the active token lists
@@ -86,7 +86,7 @@ export function useAllIncentives(): {
             rewardRatePerSecond,
           }
         })
-        ?.filter((x): x is Incentive => x !== null),
+        .filter((x): x is Incentive => x !== null),
     }
-  }, [allTokens, incentiveStates, parsedLogs, state])
+  }, [allTokens, incentiveStates, parsedLogs])
 }
