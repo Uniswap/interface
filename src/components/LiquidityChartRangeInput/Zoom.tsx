@@ -26,6 +26,15 @@ const Button = styled(ButtonGray)`
   padding: 4px;
 `
 
+export const ZoomOverlay = styled.rect`
+  fill: transparent;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+`
+
 export default function Zoom({
   svg,
   xScale,
