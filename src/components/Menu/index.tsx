@@ -21,10 +21,12 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { useDarkModeManager, useUserLocaleManager } from 'state/user/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
 
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { LOCALE_LABEL, SUPPORTED_LOCALES } from 'constants/locales'
+import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
+import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -140,6 +142,20 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
+const InternalLinkMenuItem = styled(InternalMenuItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  justify-content: space-between;
+  text-decoration: none;
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
+
 const ToggleMenuItem = styled.button`
   background-color: transparent;
   margin: 0;
@@ -163,6 +179,34 @@ const ToggleMenuItem = styled.button`
 
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
+function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
+  const { to, onClick } = useLocationLinkProps(locale)
+
+  if (!to) return null
+
+  return (
+    <InternalLinkMenuItem onClick={onClick} key={key} to={to}>
+      <div>{LOCALE_LABEL[locale]}</div>
+      {active && <Check opacity={0.6} size={16} />}
+    </InternalLinkMenuItem>
+  )
+}
+
+function LanguageMenu({ close }: { close: () => void }) {
+  const activeLocale = useActiveLocale()
+
+  return (
+    <MenuFlyout>
+      <ToggleMenuItem onClick={close}>
+        <ChevronLeft size={16} />
+      </ToggleMenuItem>
+      {SUPPORTED_LOCALES.map((locale) => (
+        <LanguageMenuItem locale={locale} active={activeLocale === locale} key={locale} />
+      ))}
+    </MenuFlyout>
+  )
+}
+
 export default function Menu() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -175,7 +219,6 @@ export default function Menu() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-  const [currentLocale, setLocale] = useUserLocaleManager()
 
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
 
@@ -194,19 +237,7 @@ export default function Menu() {
         (() => {
           switch (menu) {
             case 'lang':
-              return (
-                <MenuFlyout>
-                  <ToggleMenuItem onClick={() => setMenu('main')}>
-                    <ChevronLeft size={16} />
-                  </ToggleMenuItem>
-                  {SUPPORTED_LOCALES.map((locale) => (
-                    <ToggleMenuItem onClick={() => setLocale(locale)} key={locale}>
-                      <div>{LOCALE_LABEL[locale]}</div>
-                      {currentLocale === locale && <Check opacity={0.6} size={16} />}
-                    </ToggleMenuItem>
-                  ))}
-                </MenuFlyout>
-              )
+              return <LanguageMenu close={() => setMenu('main')} />
             case 'main':
             default:
               return (
