@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-07-16 18:22\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -915,7 +915,7 @@ msgstr "无效的接收方"
 
 #: src/components/Menu/index.tsx
 msgid "Language"
-msgstr "语"
+msgstr "语言"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
