@@ -5,7 +5,6 @@ import { LogsState, useLogs } from '../../state/logs/hooks'
 import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
-import useCurrentBlockTimestamp from '../useCurrentBlockTimestamp'
 
 interface Incentive {
   pool: string
@@ -58,7 +57,6 @@ export function useAllIncentives(): {
 
   // todo: get the tokens not in the active token lists
   const allTokens = useAllTokens()
-  const currentTimestamp = useCurrentBlockTimestamp()
 
   return useMemo(() => {
     if (!parsedLogs) return { state }
@@ -70,7 +68,7 @@ export function useAllIncentives(): {
           const token = allTokens[result.rewardToken]
           const state = incentiveStates[ix]?.result
           // todo: currently we filter any icnentives for tokens not on the active token lists
-          if (!token || !state || !currentTimestamp) return null
+          if (!token || !state) return null
 
           const initialRewardAmount = CurrencyAmount.fromRawAmount(token, result.reward.toString())
           const rewardAmountRemaining = CurrencyAmount.fromRawAmount(token, state.totalRewardUnclaimed.toString())
@@ -90,5 +88,5 @@ export function useAllIncentives(): {
         })
         ?.filter((x): x is Incentive => x !== null),
     }
-  }, [allTokens, currentTimestamp, incentiveStates, parsedLogs, state])
+  }, [allTokens, incentiveStates, parsedLogs, state])
 }
