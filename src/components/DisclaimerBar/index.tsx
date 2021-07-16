@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components';
 
 export const DisclaimerBar = () => {
+  if (window.location.host !== 'swapr.dev') return null 
+  
   return (
     <Bar>
       <Disclaimer>Swapr.dev is an unofficial build meant for development and testing purposes. <a href="https://swapr.eth.link/" target="_blank" rel="noopener noreferrer">Please visit Swapr.eth</a></Disclaimer>
