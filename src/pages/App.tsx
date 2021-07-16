@@ -46,7 +46,7 @@ const BodyWrapper = styled.div`
   z-index: 1;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  padding: 6rem 16px 16px 16px;
+    padding: 6rem 16px 16px 16px;
   `};
 `
 
@@ -75,15 +75,15 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
-      <AppWrapper>
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Popups />
-          <Polling />
-          <TopLevelModals />
-          <Web3ReactManager>
+      <Web3ReactManager>
+        <AppWrapper>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Popups />
+            <Polling />
+            <TopLevelModals />
             <Switch>
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
@@ -124,10 +124,10 @@ export default function App() {
               <Route exact strict path="/create-proposal" component={CreateProposal} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
-          </Web3ReactManager>
-          <Marginer />
-        </BodyWrapper>
-      </AppWrapper>
+            <Marginer />
+          </BodyWrapper>
+        </AppWrapper>
+      </Web3ReactManager>
     </ErrorBoundary>
   )
 }
