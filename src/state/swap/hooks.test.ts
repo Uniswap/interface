@@ -14,17 +14,16 @@ describe('hooks', () => {
     })
 
     it('should return a CurrencyAmount', () => {
-      const receivedCurrency = new Token(1000000000, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
-      const expectedCurency = new Token(1000000000, '0x6b175474e89094c44da98b954eedeac495271d0f', 6 + 9)
+      const currency = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
 
-      expect(tryParseAmount('20.05', receivedCurrency)?.toSignificant()).toEqual(
-        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('20050000000000000')).toSignificant()
+      expect(tryParseAmount('20.05', currency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20050000')).toSignificant()
       )
-      expect(tryParseAmount('20.123456789', receivedCurrency)?.toSignificant()).toEqual(
-        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('20123400000000000')).toSignificant()
+      expect(tryParseAmount('20.123456789', currency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20123400')).toSignificant()
       )
-      expect(tryParseAmount('0.123456789', receivedCurrency)?.toSignificant()).toEqual(
-        CurrencyAmount.fromRawAmount(expectedCurency, JSBI.BigInt('0123456000000000')).toSignificant()
+      expect(tryParseAmount('0.123456789', currency)?.toSignificant()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0123456')).toSignificant()
       )
     })
   })
