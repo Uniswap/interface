@@ -21,7 +21,6 @@ export const UNSUPPORTED_LIST_URLS: string[] = IS_ON_APP_URL ? [BA_LIST] : []
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COMPOUND_LIST,
   AAVE_LIST,
-  OPTIMISM_LIST,
   CMC_ALL_LIST,
   CMC_STABLECOIN,
   UMA_LIST,
@@ -30,6 +29,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   ROLL_LIST,
   COINGECKO_LIST,
   KLEROS_LIST,
+  OPTIMISM_LIST,
   GEMINI_LIST,
   ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well
 ]

@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
-import { MEDIA_WIDTHS } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
 
 const L2Icon = styled.img`
@@ -48,7 +48,7 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const RootWrapper = styled.div<{ chainId: number; darkMode: boolean; logoUrl: string }>`
+const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -99,7 +99,7 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled.a`
+const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
   border-radius: 16px;
@@ -139,23 +139,24 @@ export function NetworkAlert() {
   const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
     ? `${info.bridge}?chainId=1`
     : info.bridge
+
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
       <ContentWrapper>
         <L2Icon src={info.logoUrl} />
         <Header>
-          <Trans>Uniswap on {NETWORK_LABELS[chainId]}</Trans>
+          <Trans>Uniswap on {info.label}</Trans>
         </Header>
         <Body>
           <Trans>
-            This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network. You must bridge L1 assets to
-            the network to swap them.
+            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
+            swap them.
           </Trans>
         </Body>
       </ContentWrapper>
-      <LinkOutToBridge href={depositUrl} target="_blank" rel="noopener noreferrer">
-        <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
+      <LinkOutToBridge href={depositUrl}>
+        <Trans>Deposit to {info.label}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
     </RootWrapper>

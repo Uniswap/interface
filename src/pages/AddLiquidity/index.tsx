@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { AlertTriangle, AlertCircle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
@@ -28,7 +28,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { AddLiquidityNetworkAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -71,6 +71,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
 import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
+import { CHAIN_INFO } from '../../constants/chains'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -235,7 +236,6 @@ export default function AddLiquidity({
             ...txn,
             gasLimit: calculateGasMargin(chainId, estimate),
           }
-
           return library
             .getSigner()
             .sendTransaction(newTxn)
@@ -244,7 +244,7 @@ export default function AddLiquidity({
               addTransaction(response, {
                 summary: t`Create ${currencyA?.symbol}/${currencyB?.symbol} V3 pool`,
               })
-              setTxHash(response.hash)
+              // dont set txn hash as we dont want submitted txn screen for create
               ReactGA.event({
                 category: 'Liquidity',
                 action: 'Create',
@@ -362,12 +362,6 @@ export default function AddLiquidity({
     }
   }
 
-  const pendingText = `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
-    !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
-  } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
-    !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
-  }`
-
   const handleCurrencySelect = useCallback(
     (currencyNew: Currency, currencyIdOther?: string): (string | undefined)[] => {
       const currencyIdNew = currencyId(currencyNew)
@@ -426,15 +420,22 @@ export default function AddLiquidity({
     [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
   )
 
+  // flag for whether pool creation must be a separate tx
+  const mustCreateSeparately =
+    noLiquidity && (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN)
+
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
-      history.push('/pool')
+      // dont jump to pool page if creating
+      if (!mustCreateSeparately) {
+        history.push('/pool')
+      }
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [history, mustCreateSeparately, onFieldAInput, txHash])
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
@@ -458,6 +459,16 @@ export default function AddLiquidity({
     !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+
+  const pendingText = mustCreateSeparately
+    ? `Creating ${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol} ${
+        feeAmount ? feeAmount / 10000 : ''
+      }% Pool`
+    : `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
+        !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
+      } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
+        !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
+      }`
 
   const Buttons = () =>
     addIsUnsupported ? (
@@ -511,10 +522,14 @@ export default function AddLiquidity({
             </RowBetween>
           )}
         {mustCreateSeparately && (
-          <ButtonError onClick={onCreate}>
-            <Text fontWeight={500}>
-              <Trans>Create</Trans>
-            </Text>
+          <ButtonError onClick={onCreate} disabled={!isValid || attemptingTxn || !position}>
+            {attemptingTxn ? (
+              <Dots>
+                <Trans>Confirm Create</Trans>
+              </Dots>
+            ) : (
+              <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Create</Trans>}</Text>
+            )}
           </ButtonError>
         )}
         <ButtonError
@@ -529,18 +544,17 @@ export default function AddLiquidity({
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={500}>
+            {mustCreateSeparately ? <Trans>Add</Trans> : errorMessage ? errorMessage : <Trans>Preview</Trans>}
+          </Text>
         </ButtonError>
       </AutoColumn>
     )
-  // flag for whether pool creation must be a separate tx
-  const mustCreateSeparately =
-    noLiquidity && (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN)
 
   return (
     <>
       <ScrollablePage>
-        <NetworkAlert />
+        <AddLiquidityNetworkAlert />
         <OptimismDowntimeWarning />
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -549,7 +563,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={'Add Liquidity'}
+              title={t`Add Liquidity`}
               onDismiss={handleDismissConfirmation}
               topContent={() => (
                 <Review
@@ -652,13 +666,12 @@ export default function AddLiquidity({
                         disabled={!currencyB || !currencyA}
                         feeAmount={feeAmount}
                         handleFeePoolSelect={handleFeePoolSelect}
-                        token0={currencyA?.wrapped}
-                        token1={currencyB?.wrapped}
+                        currencyA={currencyA ?? undefined}
+                        currencyB={currencyB ?? undefined}
                       />
                     </AutoColumn>{' '}
                   </>
                 )}
-
                 {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
@@ -668,7 +681,6 @@ export default function AddLiquidity({
                   />
                 )}
               </AutoColumn>
-
               <div>
                 <DynamicSection
                   disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
@@ -765,7 +777,37 @@ export default function AddLiquidity({
                               <Trans>Set Starting Price</Trans>
                             </TYPE.label>
                           </RowBetween>
-
+                          {noLiquidity && (
+                            <BlueCard
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: '1rem 1rem',
+                              }}
+                            >
+                              <TYPE.body
+                                fontSize={14}
+                                style={{ fontWeight: 500 }}
+                                textAlign="left"
+                                color={theme.primaryText1}
+                              >
+                                {mustCreateSeparately ? (
+                                  <Trans>
+                                    {`This pool must be initialized on ${
+                                      chainId && CHAIN_INFO ? CHAIN_INFO[chainId].label : ''
+                                    } before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount.`}
+                                  </Trans>
+                                ) : (
+                                  <Trans>
+                                    This pool must be initialized before you can add liquidity. To initialize, select a
+                                    starting price for the pool. Then, enter your liquidity price range and deposit
+                                    amount. Gas fees will be higher than usual due to the initialization transaction.
+                                  </Trans>
+                                )}
+                              </TYPE.body>
+                            </BlueCard>
+                          )}
                           <OutlineCard padding="12px">
                             <StyledInput
                               className="start-price-input"
@@ -804,6 +846,13 @@ export default function AddLiquidity({
                       <StackedContainer>
                         <StackedItem style={{ opacity: showCapitalEfficiencyWarning ? '0.05' : 1 }}>
                           <AutoColumn gap="md">
+                            {noLiquidity && (
+                              <RowBetween>
+                                <TYPE.label>
+                                  <Trans>Set Price Range</Trans>
+                                </TYPE.label>
+                              </RowBetween>
+                            )}
                             <RangeSelector
                               priceLower={priceLower}
                               priceUpper={priceUpper}
@@ -842,8 +891,7 @@ export default function AddLiquidity({
                                 <RowFixed>
                                   <TYPE.yellow ml="12px" fontSize="13px" margin={0} fontWeight={400}>
                                     <Trans>
-                                      On Uniswap V3, setting a range across all prices like V2 is less capital efficient
-                                      than a concentrated one. Learn more{' '}
+                                      Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
                                         style={{ color: theme.yellow3, textDecoration: 'underline' }}
                                         href={''}
@@ -862,7 +910,6 @@ export default function AddLiquidity({
                                     width="auto"
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
-
                                       getSetFullRange()
                                     }}
                                   >
@@ -902,32 +949,6 @@ export default function AddLiquidity({
                         </YellowCard>
                       ) : null}
                     </DynamicSection>
-
-                    {noLiquidity && (
-                      <BlueCard
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          padding: '1rem 1rem',
-                        }}
-                      >
-                        <div style={{ marginRight: '12px', width: '30px', height: '30px' }}>
-                          <AlertCircle color={theme.primaryText1} size={30} />
-                        </div>
-                        <TYPE.body
-                          fontSize={14}
-                          style={{ marginBottom: 8, fontWeight: 500 }}
-                          textAlign="center"
-                          color={theme.primaryText1}
-                        >
-                          <Trans>
-                            You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be
-                            much higher as it includes the gas to create the pool.
-                          </Trans>
-                        </TYPE.body>
-                      </BlueCard>
-                    )}
 
                     <MediumOnly>
                       <Buttons />

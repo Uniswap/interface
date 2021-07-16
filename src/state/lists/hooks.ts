@@ -1,5 +1,6 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
+import { IS_ON_APP_URL } from 'constants/misc'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -46,14 +47,15 @@ export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
 }
 
-function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return {
-    [1]: { ...map1[1], ...map2[1] },
-    [4]: { ...map1[4], ...map2[4] },
-    [3]: { ...map1[3], ...map2[3] },
-    [42]: { ...map1[42], ...map2[42] },
-    [5]: { ...map1[5], ...map2[5] },
-  }
+export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+  const chainIds = Object.keys({ ...map1, ...map2 }).map((id) => parseInt(id))
+  return chainIds.reduce(
+    (acc, chainId) => ({
+      ...acc,
+      [chainId]: { ...map2[chainId], ...map1[chainId] },
+    }),
+    {}
+  )
 }
 
 // merge tokens contained within lists from urls
@@ -100,10 +102,10 @@ export function useCombinedActiveList(): TokenAddressMap {
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
 export function useUnsupportedTokenList(): TokenAddressMap {
-  // get hard coded unsupported tokens
-  const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
+  // get hard coded unsupported tokens, only block on app url
+  const localUnsupportedListMap = useMemo(() => (IS_ON_APP_URL ? listToTokenMap(UNSUPPORTED_TOKEN_LIST) : {}), [])
 
-  // get any loaded unsupported tokens
+  // get any loaded unsupported tokens, this will be empty if not on app URL
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
