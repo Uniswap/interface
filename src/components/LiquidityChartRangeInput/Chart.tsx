@@ -117,7 +117,7 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <rect width={innerWidth} height={height} fill="transparent" ref={zoomRef} cursor="grab" />
+          <rect width={innerWidth} height={height} fill="transparent" ref={zoomRef} cursor="col-resize" />
 
           <Brush
             id={id}
