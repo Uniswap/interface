@@ -61,7 +61,7 @@ const PresetButton = ({
     }}
   >
     <TYPE.body fontSize={12}>
-      <Trans>+/- {label}%</Trans>
+      <Trans>{label}</Trans>
     </TYPE.body>
   </Button>
 )

@@ -63,6 +63,7 @@ import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
 import { PositionPreview } from 'components/PositionPreview'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
+import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -451,7 +452,7 @@ export default function AddLiquidity({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange, getSetFullRange } =
     useRangeHopCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool)
 
   // we need an existence check on parsed amounts for single-asset deposits
@@ -852,6 +853,19 @@ export default function AddLiquidity({
                                   <Trans>Set Price Range</Trans>
                                 </TYPE.label>
                               </RowBetween>
+                            )}
+                            {!noLiquidity && (
+                              <PresetsButtons
+                                feeAmount={feeAmount}
+                                setRange={(numTicks: number) => {
+                                  const [range1, range2] = getSetRange(numTicks)
+                                  onLeftRangeInput(invertPrice ? range2 : range1)
+                                  onRightRangeInput(invertPrice ? range1 : range2)
+                                }}
+                                setFullRange={() => {
+                                  setShowCapitalEfficiencyWarning(true)
+                                }}
+                              />
                             )}
                             <RangeSelector
                               priceLower={priceLower}
