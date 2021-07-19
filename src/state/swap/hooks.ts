@@ -21,6 +21,8 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useGetQuoteQuery } from 'state/routing/slice'
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -158,6 +160,27 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+
+  const bestRoutingApiTradeIn = useGetQuoteQuery(
+    inputCurrency?.wrapped?.address &&
+      outputCurrency?.wrapped?.address &&
+      inputCurrency?.chainId &&
+      outputCurrency?.chainId &&
+      parsedAmount !== undefined
+      ? {
+          tokenIn: { address: inputCurrency?.wrapped.address, chainId: inputCurrency?.chainId },
+          tokenOut: {
+            address: outputCurrency?.wrapped.address,
+            chainId: outputCurrency?.chainId,
+          },
+          amount: parsedAmount?.toSignificant(6),
+          type: 'exactIn',
+          recipient: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
+          slippageTolerance: '5',
+          deadline: '360',
+        }
+      : skipToken
+  )
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
   const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
