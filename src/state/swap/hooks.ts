@@ -21,8 +21,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useGetQuoteQuery } from 'state/routing/slice'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { useRouterTradeExactIn } from 'hooks/useRouterTradeExactIn'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -123,6 +122,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
+  routerTrade: string | undefined
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
@@ -161,29 +161,12 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const bestRoutingApiTradeIn = useGetQuoteQuery(
-    inputCurrency?.wrapped?.address &&
-      outputCurrency?.wrapped?.address &&
-      inputCurrency?.chainId &&
-      outputCurrency?.chainId &&
-      parsedAmount !== undefined
-      ? {
-          tokenIn: { address: inputCurrency?.wrapped.address, chainId: inputCurrency?.chainId },
-          tokenOut: {
-            address: outputCurrency?.wrapped.address,
-            chainId: outputCurrency?.chainId,
-          },
-          amount: parsedAmount?.toSignificant(6),
-          type: 'exactIn',
-          recipient: '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B',
-          slippageTolerance: '5',
-          deadline: '360',
-        }
-      : skipToken
-  )
+  const routerTradeExactIn = useRouterTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
   const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
+
+  const routerTrade = isExactIn ? routerTradeExactIn : undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -238,6 +221,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     inputError,
     v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
+    routerTrade,
     toggledTrade,
     allowedSlippage,
   }

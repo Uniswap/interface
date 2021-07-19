@@ -14,7 +14,7 @@ import burnV3 from './burn/v3/reducer'
 import logs from './logs/slice'
 import multicall from './multicall/reducer'
 import { api as dataApi } from './data/slice'
-import { api as routingApi } from './routing/slice'
+import { routingApi as routingApi } from './routing/slice'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 

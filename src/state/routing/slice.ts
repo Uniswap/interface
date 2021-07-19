@@ -1,17 +1,38 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { SupportedChainId } from 'constants/chains'
 
-export interface Route {
-  amount: number
+export interface GetQuoteResult {
+  blockNumber: string
+  gasPriceWei: string
+  gasUseEstimate: string
+  gasUseEstimateQuote: string
+  gasUseEstimateQuoteDecimals: string
+  gasUseEstimateUSD: string
+  methodParameters: { calldata: string; value: string }
+  quote: string
+  quoteDecimals: string
+  quoteGasAdjusted: string
+  quoteGasAdjustedDecimals: string
+  quoteId: string
+  routeEdges: {
+    fee: string
+    id: string
+    inId: string
+    outId: string
+    percent: number
+    type: string
+  }[]
+  routeNodes: { chainId: number; id: string; symbol: string; type: string }[]
+  routeString: string
 }
 
-export const api = createApi({
+export const routingApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<
-      Route,
+      GetQuoteResult,
       {
         tokenIn: { address: string; chainId: SupportedChainId }
         tokenOut: { address: string; chainId: SupportedChainId }
@@ -31,4 +52,4 @@ export const api = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = api
+export const { useGetQuoteQuery } = routingApi
