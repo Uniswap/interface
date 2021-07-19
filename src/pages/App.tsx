@@ -16,6 +16,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import CreateProposal from './CreateProposal'
 import Earn from './Earn'
+import CreateIncentive from './Earn/CreateIncentive'
 import Manage from './Earn/Manage'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -91,6 +92,7 @@ export default function App() {
               <Route exact strict path="/uni" component={Earn} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
 
+              <Route exact strict path="/program" component={CreateIncentive} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/swap" component={Swap} />
