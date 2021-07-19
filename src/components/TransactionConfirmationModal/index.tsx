@@ -304,22 +304,28 @@ function L2Content({
           <Text fontWeight={400} fontSize={16} textAlign="center">
             {transaction?.summary ?? pendingText ?? ''}
           </Text>
-          {chainId && hash && (
+          {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
               </Text>
             </ExternalLink>
+          ) : (
+            <div style={{ height: '17px' }}></div>
           )}
-          {!secondsToConfirm ? null : (
-            <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
-              <Trans>Transaction completed in </Trans>
-              <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
-                {secondsToConfirm} seconds 🎉
-              </span>
-            </Text>
-          )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: secondsToConfirm ? '4px 0 0 0' : '20px 0 0 0' }}>
+          <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+            {!secondsToConfirm ? (
+              <div style={{ height: '24px' }}></div>
+            ) : (
+              <div>
+                <Trans>Transaction completed in </Trans>
+                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
+                  {secondsToConfirm} seconds 🎉
+                </span>
+              </div>
+            )}
+          </Text>
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </Text>
