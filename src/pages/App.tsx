@@ -88,7 +88,7 @@ export default function App() {
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-              <Route exact strict path="/uni" component={Earn} />
+              <Route exact strict path="/earn" component={Earn} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
 
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
