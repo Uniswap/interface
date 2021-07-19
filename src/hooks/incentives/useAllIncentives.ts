@@ -31,7 +31,7 @@ export function useAllIncentives(): {
 } {
   const staker = useV3Staker()
   const filter = useMemo(() => staker?.filters?.IncentiveCreated(), [staker])
-  const { logs, state } = useLogs(filter)
+  const { logs } = useLogs(filter)
 
   const parsedLogs = useMemo(() => {
     if (!staker) return undefined
