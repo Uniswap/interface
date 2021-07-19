@@ -1,5 +1,6 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
+import { IS_ON_APP_URL } from 'constants/misc'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -101,10 +102,10 @@ export function useCombinedActiveList(): TokenAddressMap {
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
 export function useUnsupportedTokenList(): TokenAddressMap {
-  // get hard coded unsupported tokens
-  const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
+  // get hard coded unsupported tokens, only block on app url
+  const localUnsupportedListMap = useMemo(() => (IS_ON_APP_URL ? listToTokenMap(UNSUPPORTED_TOKEN_LIST) : {}), [])
 
-  // get any loaded unsupported tokens
+  // get any loaded unsupported tokens, this will be empty if not on app URL
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
