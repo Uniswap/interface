@@ -104,11 +104,11 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-        rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+        !ticksAtLimit[Bound.LOWER] && leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+        !ticksAtLimit[Bound.UPPER] && rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
       })
     },
-    [onLeftRangeInput, onRightRangeInput]
+    [onLeftRangeInput, onRightRangeInput, ticksAtLimit]
   )
 
   interactive = interactive && Boolean(formattedData?.length)
@@ -120,7 +120,7 @@ export default function LiquidityChartRangeInput({
     const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
     return leftPrice && rightPrice
-      ? [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))]
+      ? [parseFloat(leftPrice?.toSignificant(6)), parseFloat(rightPrice?.toSignificant(6))]
       : undefined
   }, [currencyA, currencyB, priceLower, priceUpper])
 
