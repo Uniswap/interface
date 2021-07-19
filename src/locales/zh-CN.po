@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-16 18:22\n"
+"PO-Revision-Date: 2021-07-19 13:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -584,7 +584,7 @@ msgstr "当前 {0} 兑换率："
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "深色主题"
+msgstr "深色"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -798,7 +798,7 @@ msgstr "全范围"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "全范围头寸可能比集中头寸赚取的费用少。点击此处<0>了解更多信息</0>."
+msgstr "全范围仓位可能比集中仓位赚取更少的费用。在<0>此处</0>了解更多。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -931,7 +931,7 @@ msgstr "了解更多"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
-msgstr "浅色主题"
+msgstr "浅色"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1181,7 +1181,7 @@ msgstr "待办"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
-msgstr "请输入 REMOVE 确认您要删除此列表"
+msgstr "请输入 REMOVE 以确认您要删除此列表"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1441,7 +1441,7 @@ msgstr "显示 Portis"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
-msgstr "显示平仓"
+msgstr "显示已关闭的仓位"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1511,7 +1511,7 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Switch to L1 (Mainnet)"
-msgstr "切换到 L1（主网）"
+msgstr "切换到 L1 (主网)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
