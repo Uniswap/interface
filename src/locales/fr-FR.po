@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-07-19 10:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1896,7 +1896,7 @@ msgstr "Lorsque vous vous retirez, le contrat réclamera automatiquement UNI en 
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Lorsque vous retirez, votre UNI est réclamée et votre liquidité est retirée de la réserve minière."
+msgstr "Lorsque vous retirez, votre UNI est réclamée et votre liquidité est retirée de la pool de récompense."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
