@@ -49,10 +49,12 @@ The following points should help guide your development:
 Releases are cut automatically from the `main` branch Monday-Thursday in the morning according to the [release workflow](./.github/workflows/release.yaml).
 
 Fix pull requests should be merged whenever ready and tested. 
-If a fix is urgently needed in production, releases can be manually triggered on [GitHub](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml).
+If a fix is urgently needed in production, releases can be manually triggered on [GitHub](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml)
+after the fix is merged into `main`.
 
 Features should not be merged into `main` until they are ready for users.
 When building larger features or collaborating with other developers, create a new branch from `main` to track its development.
+Use the automatic Vercel preview for sharing the feature to collect feedback.  
 When the feature is ready for review, create a new pull request from the feature branch into `main` and request reviews from 
 the appropriate UX reviewers (PMs or designers).
 
