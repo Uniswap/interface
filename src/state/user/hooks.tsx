@@ -1,6 +1,8 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
+import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
@@ -182,10 +184,11 @@ export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Pe
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
+  const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-  const userDeadline = useAppSelector((state) => {
-    return state.user.userDeadline
-  })
+  const userDeadline = useAppSelector((state) => state.user.userDeadline)
+  const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
+  const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
 
   const setUserDeadline = useCallback(
     (userDeadline: number) => {
@@ -194,7 +197,7 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
     [dispatch]
   )
 
-  return [userDeadline, setUserDeadline]
+  return [deadline, setUserDeadline]
 }
 
 export function useAddUserToken(): (token: Token) => void {
