@@ -1,3 +1,4 @@
+
 # Contributing
 
 Thank you for your interest in contributing to the Uniswap interface! 🦄
@@ -23,6 +24,7 @@ makes large architectural changes, consider following all the standards.
 - Have at least one engineer approve of large code refactorings
 - At least manually test small code changes, prefer automated tests
 - Thoroughly unit test when code is not obviously correct
+- If something breaks, add automated tests so it doesn't break again
 - Add integration tests for new pages or flows
 - Verify that all CI checks pass before merging
 - Have at least one product manager or designer approve of significant UX changes
@@ -41,6 +43,20 @@ The following points should help guide your development:
   - All other external dependencies should only enhance the UX ([graceful degradation](https://developer.mozilla.org/en-US/docs/Glossary/Graceful_degradation))
 - Accessibility: anyone can use the interface
   - The interface should be responsive, small and run well on low performance devices (majority of swaps on mobile!)
+
+## Release process
+
+Releases are cut automatically from the `main` branch Monday-Thursday in the morning according to the [release workflow](./.github/workflows/release.yaml).
+
+Fix pull requests should be merged whenever ready and tested. 
+If a fix is urgently needed in production, releases can be manually triggered on [GitHub](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml)
+after the fix is merged into `main`.
+
+Features should not be merged into `main` until they are ready for users.
+When building larger features or collaborating with other developers, create a new branch from `main` to track its development.
+Use the automatic Vercel preview for sharing the feature to collect feedback.  
+When the feature is ready for review, create a new pull request from the feature branch into `main` and request reviews from 
+the appropriate UX reviewers (PMs or designers).
 
 ## Finding a first issue
 
