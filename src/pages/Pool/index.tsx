@@ -17,7 +17,6 @@ import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
-import { useAllIncentives } from '../../hooks/incentives/useAllIncentives'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -134,8 +133,6 @@ export default function Pool() {
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
-
-  const { incentives, loading: incentivesLoading } = useAllIncentives()
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {

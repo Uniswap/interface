@@ -1,13 +1,15 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Pool } from '@uniswap/v3-sdk'
 import { defaultAbiCoder, keccak256, Result } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useLogs } from '../../state/logs/hooks'
 import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
+import { PoolState, usePoolsByAddresses } from '../usePools'
 
 export interface Incentive {
-  pool: string
+  pool: Pool
   startTime: number
   endTime: number
   initialRewardAmount: CurrencyAmount<Token>
@@ -55,13 +57,23 @@ export function useAllIncentives(): {
   //   )
   // }, [parsedLogs])
 
-  /**
-   *
-   *  @TODO
-   *
-   *  fetch pool data with a usePools or something for each incentive
-   *
-   */
+  const poolAddresses = useMemo(() => {
+    return Object.keys(
+      parsedLogs?.reduce<{ [poolAddress: string]: true }>((memo, value) => {
+        if (value.pool) memo[value.pool] = true
+        return memo
+      }, {}) ?? {}
+    )
+  }, [parsedLogs])
+
+  const pools = usePoolsByAddresses(poolAddresses)
+
+  const poolMap = useMemo(() => {
+    return poolAddresses.reduce<{ [poolAddress: string]: [PoolState, Pool | null] }>((memo, address, ix) => {
+      memo[address] = pools[ix]
+      return memo
+    }, {})
+  }, [poolAddresses, pools])
 
   // todo: get the tokens not in the active token lists
   const allTokens = useAllTokens()
@@ -75,8 +87,11 @@ export function useAllIncentives(): {
         .map((result, ix): Incentive | null => {
           const token = allTokens[result.rewardToken]
           const state = incentiveStates[ix]?.result
-          // todo: currently we filter any icnentives for tokens not on the active token lists
+          // todo: currently we filter out any incentives for tokens not on the active token lists
           if (!token || !state) return null
+          const [, pool] = poolMap[result.pool]
+          // todo: currently we filter out any incentives for pools not containing tokens on the active lists
+          if (!pool) return null
 
           const initialRewardAmount = CurrencyAmount.fromRawAmount(token, result.reward.toString())
           const rewardAmountRemaining = CurrencyAmount.fromRawAmount(token, state.totalRewardUnclaimed.toString())
@@ -86,7 +101,7 @@ export function useAllIncentives(): {
           const rewardRatePerSecond = initialRewardAmount.divide(endTime - startTime)
 
           return {
-            pool: result.pool,
+            pool,
             startTime,
             endTime,
             initialRewardAmount,
@@ -96,5 +111,5 @@ export function useAllIncentives(): {
         })
         .filter((x): x is Incentive => x !== null),
     }
-  }, [allTokens, incentiveStates, parsedLogs])
+  }, [allTokens, incentiveStates, parsedLogs, poolMap])
 }
