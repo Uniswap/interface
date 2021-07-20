@@ -1,4 +1,4 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query/react'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useActiveWeb3React } from './web3'
@@ -10,19 +10,14 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const { account } = useActiveWeb3React()
 
   const { isLoading, isError, data } = useGetQuoteQuery(
-    amountIn?.currency?.wrapped?.address &&
-      currencyOut?.wrapped?.address &&
-      amountIn?.currency?.chainId &&
-      currencyOut?.chainId &&
-      account &&
-      amountIn !== undefined
+    amountIn && currencyOut && account
       ? {
           tokenIn: { address: amountIn.currency.wrapped.address, chainId: amountIn.currency.chainId },
           tokenOut: {
             address: currencyOut.wrapped.address,
             chainId: currencyOut.chainId,
           },
-          amount: amountIn.toSignificant(6),
+          amount: amountIn.toExact(),
           type: 'exactIn',
           recipient: account,
           slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE,

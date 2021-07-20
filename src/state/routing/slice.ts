@@ -34,6 +34,7 @@ export const routingApi = createApi({
     getQuote: build.query<
       GetQuoteResult,
       {
+        // add block number to invalidate on block change
         tokenIn: { address: string; chainId: SupportedChainId }
         tokenOut: { address: string; chainId: SupportedChainId }
         amount: string
