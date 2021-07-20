@@ -9,6 +9,8 @@ import useTheme from 'hooks/useTheme'
 import { GenericBadge } from 'components/Badge'
 import { Zap } from 'react-feather'
 import { useAllIncentives } from '../../hooks/incentives/useAllIncentives'
+import ProgramCard from './ProgramCard'
+import Loader from 'components/Loader'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -20,7 +22,7 @@ const TopSection = styled(AutoColumn)`
   width: 100%;
 `
 
-const PoolSection = styled.div`
+const ProgramSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   column-gap: 10px;
@@ -38,7 +40,7 @@ flex-direction: column;
 export default function Earn() {
   const theme = useTheme()
 
-  // const allIncentives = useAllIncentives()
+  const { loading, incentives: allIncentives } = useAllIncentives()
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -73,7 +75,13 @@ export default function Earn() {
               <Trans>Rewards programs</Trans>
             </TYPE.body>
           </DataRow>
-          <PoolSection></PoolSection>
+          <ProgramSection>
+            {loading ? (
+              <Loader />
+            ) : (
+              allIncentives?.map((incentive, i) => <ProgramCard key={`program-card-${i}`} incentive={incentive} />)
+            )}
+          </ProgramSection>
         </AutoColumn>
       </DarkCard>
     </PageWrapper>

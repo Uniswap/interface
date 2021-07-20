@@ -6,7 +6,7 @@ import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
 
-interface Incentive {
+export interface Incentive {
   pool: string
   startTime: number
   endTime: number
@@ -54,6 +54,14 @@ export function useAllIncentives(): {
   //     }, {}) ?? {}
   //   )
   // }, [parsedLogs])
+
+  /**
+   *
+   *  @TODO
+   *
+   *  fetch pool data with a usePools or something for each incentive
+   *
+   */
 
   // todo: get the tokens not in the active token lists
   const allTokens = useAllTokens()

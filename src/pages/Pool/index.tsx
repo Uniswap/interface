@@ -137,8 +137,6 @@ export default function Pool() {
 
   const { incentives, loading: incentivesLoading } = useAllIncentives()
 
-  console.log(incentives)
-
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
       acc[p.liquidity?.isZero() ? 1 : 0].push(p)
