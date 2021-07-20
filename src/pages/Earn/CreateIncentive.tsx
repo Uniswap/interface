@@ -1,9 +1,8 @@
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { useV3Staker } from 'hooks/useContract'
-import { useMemo, useState } from 'react'
+import { ChangeEventHandler, useCallback, useMemo, useState } from 'react'
 import { Currency } from '@uniswap/sdk-core'
-import Input from 'components/NumericalInput'
 import { BlueCard } from 'components/Card'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -14,6 +13,10 @@ import FeeSelector from 'components/FeeSelector'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
+
+function dateTimeToUnixSeconds(dateTimeString: string): number {
+  return Math.floor(new Date(dateTimeString).getTime() / 1000)
+}
 
 export default function CreateIncentive() {
   const { account, chainId } = useActiveWeb3React()
@@ -67,8 +70,8 @@ export default function CreateIncentive() {
           {
             rewardToken: currencyC.wrapped.address,
             pool: poolAddress,
-            startTime,
-            endTime,
+            startTime: dateTimeToUnixSeconds(startTime),
+            endTime: dateTimeToUnixSeconds(endTime),
             refundee,
           },
           toHex(rewardAmount.quotient)
@@ -83,6 +86,13 @@ export default function CreateIncentive() {
         })
     }
   }
+
+  const handleChangeStartTime: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    setStartTime(e.target.value)
+  }, [])
+  const handleChangeEndTime: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    setEndTime(e.target.value)
+  }, [])
 
   return (
     <AutoColumn gap="30px">
@@ -139,14 +149,14 @@ export default function CreateIncentive() {
       </AutoColumn>
       <BlueCard>
         <AutoColumn gap="4px">
-          <div>Start timestamp unix</div>
-          <Input value={startTime} onUserInput={(val) => setStartTime(val)} style={{ width: '400px' }} />
+          <div>Start time</div>
+          <input type="datetime-local" value={startTime} onChange={handleChangeStartTime} style={{ width: '400px' }} />
         </AutoColumn>
       </BlueCard>
       <BlueCard>
         <AutoColumn gap="4px">
-          <div>End timestamp unix</div>
-          <Input value={endTime} onUserInput={(val) => setEndTime(val)} style={{ width: '400px' }} />
+          <div>End time</div>
+          <input type="datetime-local" value={endTime} onChange={handleChangeEndTime} style={{ width: '400px' }} />
         </AutoColumn>
       </BlueCard>
       <AutoColumn gap="4px">
