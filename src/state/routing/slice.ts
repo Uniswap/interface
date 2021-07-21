@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { SupportedChainId } from 'constants/chains'
+import qs from 'qs'
 
 export interface GetQuoteResult {
   blockNumber: string
@@ -34,21 +35,21 @@ export const routingApi = createApi({
     getQuote: build.query<
       GetQuoteResult,
       {
-        // add block number to invalidate on block change
-        tokenIn: { address: string; chainId: SupportedChainId }
-        tokenOut: { address: string; chainId: SupportedChainId }
+        tokenInAddress: string
+        tokenInChainId: SupportedChainId
+        tokenOutAddress: string
+        tokenOutChainId: SupportedChainId
         amount: string
         type: 'exactIn' | 'exactOut'
-        recipient: string
+        recipient?: string
         slippageTolerance?: string
         deadline?: string
+
+        // internal: invalidates query on block sync
+        blockNumber: number
       }
     >({
-      query: (args) => ({
-        url: `quote`,
-        method: 'POST',
-        body: args,
-      }),
+      query: (args) => `quote?${qs.stringify(args)}`,
     }),
   }),
 })
