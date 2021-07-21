@@ -39,13 +39,19 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
     <AutoColumn gap="16px">
       <TabBar
         titles={[
-          <TabTitle key="active" loadingAmount={!!(!pair || loadingActive)} itemsAmount={activeWrappedCampaigns.length}>
+          <TabTitle
+            key="active"
+            loadingAmount={!!(!pair || loadingActive)}
+            itemsAmount={activeWrappedCampaigns.length}
+            badgeTheme="green"
+          >
             Active rewards
           </TabTitle>,
           <TabTitle
             key="active"
             loadingAmount={!!(!pair || loadingUpcoming)}
             itemsAmount={upcomingWrappedCampaigns.length}
+            badgeTheme="orange"
           >
             Upcoming
           </TabTitle>,
@@ -53,6 +59,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
             key="active"
             loadingAmount={!!(!pair || loadingExpired)}
             itemsAmount={expiredWrappedCampaigns.length}
+            badgeTheme="red"
           >
             Expired (30 days)
           </TabTitle>
