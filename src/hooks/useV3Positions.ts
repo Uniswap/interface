@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { useV3NFTPositionManagerContract } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Pool } from '@uniswap/v3-sdk'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -110,5 +111,56 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   return {
     loading: someTokenIdsLoading || balanceLoading || positionsLoading,
     positions,
+  }
+}
+
+interface PositionsForPoolResults {
+  loading: boolean
+  inRangePositions: PositionDetails[] | undefined
+  outOfRangePositions: PositionDetails[] | undefined
+}
+
+/**
+ * Return the positions within certain pool
+ * Useful for returning positions related to a specific LM program
+ * @param account
+ * @param pool
+ */
+export function useV3PositionsForPool(
+  account: string | null | undefined,
+  pool: Pool | undefined
+): PositionsForPoolResults {
+  const { positions, loading: positionsLoading } = useV3Positions(account)
+
+  if (!positions || !pool || !positionsLoading) {
+    return {
+      loading: false,
+      inRangePositions: undefined,
+      outOfRangePositions: undefined,
+    }
+  }
+
+  const relevantPositions = positions.filter((p) =>
+    Boolean(p.token0 === pool.token0.address && p.token1 == pool.token1.address && p.fee === pool.fee)
+  )
+
+  const inRangePositions = relevantPositions.filter((p) => {
+    // check if price is within range
+    const below = typeof p.tickLower === 'number' ? pool.tickCurrent < p.tickLower : undefined
+    const above = typeof p.tickUpper === 'number' ? pool.tickCurrent >= p.tickUpper : undefined
+    return typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
+  })
+
+  const outOfRangePositions = relevantPositions.filter((p) => {
+    // check if price is within range
+    const below = typeof p.tickLower === 'number' ? pool.tickCurrent < p.tickLower : undefined
+    const above = typeof p.tickUpper === 'number' ? pool.tickCurrent >= p.tickUpper : undefined
+    return !Boolean(typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false)
+  })
+
+  return {
+    loading: false,
+    inRangePositions,
+    outOfRangePositions,
   }
 }

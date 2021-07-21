@@ -9,7 +9,7 @@ import { TYPE } from 'theme'
 import { Incentive } from '../../hooks/incentives/useAllIncentives'
 import { Countdown } from './Countdown'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { useV3Positions } from 'hooks/useV3Positions'
+import { useV3PositionsForPool } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 
 const Wrapper = styled.div`
@@ -38,7 +38,7 @@ export default function ProgramCard({ incentive }: ProgramCardProps) {
   const initialUSD = useUSDCValue(incentive.initialRewardAmount)
   const remainingUSD = useUSDCValue(incentive.rewardAmountRemaining)
 
-  const { positions, loading: positionsLoading } = useV3Positions(account)
+  const { loading, inRangePositions, outOfRangePositions } = useV3PositionsForPool(account, incentive.pool)
 
   return (
     <Wrapper>
