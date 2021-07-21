@@ -18,6 +18,7 @@ import { Trans } from '@lingui/macro'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
+import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -281,7 +282,8 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
+              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
+              <AnimatedConfirmation />
             ) : (
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
             )
