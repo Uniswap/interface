@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { Trans } from '@lingui/macro'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
-  padding: '7px',
+  padding: '8px',
   $borderRadius: '8px',
 }))`
   color: ${({ theme }) => theme.text1};
@@ -15,7 +15,7 @@ const Button = styled(ButtonOutlined).attrs(() => ({
 
 export default function PresetsButtons({ setFullRange }: { setFullRange: () => void }) {
   return (
-    <AutoRow gap="4px" width="auto" paddingTop="1px">
+    <AutoRow gap="4px" width="auto">
       <Button onClick={() => setFullRange()}>
         <TYPE.body fontSize={12}>
           <Trans>Full Range</Trans>
