@@ -35,14 +35,14 @@ const HeaderFrame = styled.div`
   `};
 `
 
-const HeaderControls = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+const HeaderControls = styled.div<{isConnected: boolean}>`
+  ${({ theme, isConnected }) => theme.mediaWidth.upToMedium`
     position: fixed;
     bottom: 0px;
     left: 0px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${isConnected => !isConnected ? 'space-between' : 'center'};
     flex-direction: row-reverse;
     width: 100%;
     height: 72px;
@@ -62,7 +62,6 @@ const HeaderElement = styled.div`
     flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
-    width: 100%;
   `};
 `
 
@@ -283,7 +282,7 @@ function Header({ history }: { history: any }) {
           </MobileSettingsWrapper>
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls>
+      <HeaderControls isConnected={!!account}>
         <HeaderElement>
           <Web3Status />
           <DesktopSettingsWrapper>

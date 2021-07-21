@@ -52,7 +52,7 @@ const SwitchNetworkButton = styled.button`
 const Button = styled.button`
   height: 32px;
   padding: 10.5px 14px;
-  margin: 0 auto;
+  margin: 0 0 0 auto;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
   border-radius: 12px;
@@ -150,15 +150,13 @@ export default function Web3Status() {
             {t('Connect wallet')}
           </Button>
         )}
-        {(networkConnectorChainId && !!account) && (
-          <AccountStatus
-            pendingTransactions={pending}
-            ENSName={ENSName ?? undefined}
-            account={account}
-            networkConnectorChainId={networkConnectorChainId}
-            onAddressClick={() => setModal(ModalView.Account)}
-          />
-        )}
+        <AccountStatus
+          pendingTransactions={pending}
+          ENSName={ENSName ?? undefined}
+          account={account}
+          networkConnectorChainId={networkConnectorChainId}
+          onAddressClick={() => setModal(ModalView.Account)}
+        />
       </ConnectWalletPopover>
       <WalletModal
         modal={modal}
