@@ -4,6 +4,7 @@ export interface PositionDetails {
   nonce: BigNumber
   tokenId: BigNumber
   operator: string
+  owner: string
   token0: string
   token1: string
   fee: number

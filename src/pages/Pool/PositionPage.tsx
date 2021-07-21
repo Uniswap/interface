@@ -35,7 +35,6 @@ import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import useTheme from '../../hooks/useTheme'
 import RateToggle from '../../components/RateToggle'
-import { useSingleCallResult } from 'state/multicall/hooks'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import useUSDCPrice from 'hooks/useUSDCPrice'
@@ -331,6 +330,7 @@ export function PositionPage({
     tickLower,
     tickUpper,
     tokenId,
+    owner,
   } = positionDetails || {}
 
   const removed = liquidity?.eq(0)
@@ -469,7 +469,6 @@ export function PositionPage({
       })
   }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
-  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1

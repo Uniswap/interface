@@ -12,39 +12,49 @@ interface UseV3PositionsResults {
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
-  const results = useSingleContractMultipleData(positionManager, 'positions', inputs)
+  const positionInfos = useSingleContractMultipleData(positionManager, 'positions', inputs)
+  const tokenIdOwners = useSingleContractMultipleData(positionManager, 'ownerOf', inputs)
 
-  const loading = useMemo(() => results.some(({ loading }) => loading), [results])
-  const error = useMemo(() => results.some(({ error }) => error), [results])
+  const [loading, error] = useMemo(
+    () => [
+      positionInfos.some(({ loading }) => loading) || tokenIdOwners.some(({ loading }) => loading),
+      positionInfos.some(({ error }) => error) || tokenIdOwners.some(({ error }) => error),
+    ],
+    [positionInfos, tokenIdOwners]
+  )
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
-      return results.map((call, i) => {
-        const tokenId = tokenIds[i]
-        const result = call.result as Result
-        return {
-          tokenId,
-          fee: result.fee,
-          feeGrowthInside0LastX128: result.feeGrowthInside0LastX128,
-          feeGrowthInside1LastX128: result.feeGrowthInside1LastX128,
-          liquidity: result.liquidity,
-          nonce: result.nonce,
-          operator: result.operator,
-          tickLower: result.tickLower,
-          tickUpper: result.tickUpper,
-          token0: result.token0,
-          token1: result.token1,
-          tokensOwed0: result.tokensOwed0,
-          tokensOwed1: result.tokensOwed1,
-        }
-      })
+      return tokenIds
+        .map((tokenId, i) => {
+          const owner = tokenIdOwners[i].result?.[0]
+          const positionInfo = positionInfos[i].result
+          if (!owner || !positionInfo) return null
+          return {
+            tokenId,
+            owner,
+            fee: positionInfo.fee,
+            feeGrowthInside0LastX128: positionInfo.feeGrowthInside0LastX128,
+            feeGrowthInside1LastX128: positionInfo.feeGrowthInside1LastX128,
+            liquidity: positionInfo.liquidity,
+            nonce: positionInfo.nonce,
+            operator: positionInfo.operator,
+            tickLower: positionInfo.tickLower,
+            tickUpper: positionInfo.tickUpper,
+            token0: positionInfo.token0,
+            token1: positionInfo.token1,
+            tokensOwed0: positionInfo.tokensOwed0,
+            tokensOwed1: positionInfo.tokensOwed1,
+          }
+        })
+        .filter((p): p is PositionDetails => Boolean(p))
     }
     return undefined
-  }, [loading, error, results, tokenIds])
+  }, [loading, error, tokenIds, tokenIdOwners, positionInfos])
 
   return {
     loading,
-    positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
+    positions,
   }
 }
 
