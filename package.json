@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "pulsarswap",
+  "description": "",
   "homepage": ".",
   "private": true,
   "devDependencies": {
@@ -155,5 +155,6 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {},
+  "keywords": []
 }
