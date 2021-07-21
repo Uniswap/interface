@@ -87,6 +87,8 @@ export default function LiquidityChartRangeInput({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
+  const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
+
   const { isLoading, isUninitialized, isError, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
@@ -104,11 +106,11 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if ((!ticksAtLimit[Bound.LOWER] || mode === 'handle') && leftRangeValue > 0) {
+        if ((!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === 'handle') && leftRangeValue > 0) {
           onLeftRangeInput(leftRangeValue.toFixed(6))
         }
 
-        if ((!ticksAtLimit[Bound.UPPER] || mode === 'handle') && rightRangeValue > 0) {
+        if (!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -117,36 +119,32 @@ export default function LiquidityChartRangeInput({
         }
       })
     },
-    [onLeftRangeInput, onRightRangeInput, ticksAtLimit]
+    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
   )
 
   interactive = interactive && Boolean(formattedData?.length)
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
-    const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
-
     const leftPrice = isSorted ? priceLower : priceUpper?.invert()
     const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
     return leftPrice && rightPrice
       ? [parseFloat(leftPrice?.toSignificant(6)), parseFloat(rightPrice?.toSignificant(6))]
       : undefined
-  }, [currencyA, currencyB, priceLower, priceUpper])
+  }, [isSorted, priceLower, priceUpper])
 
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
       if (!price) return ''
 
-      if (d === 'w' && ticksAtLimit[Bound.LOWER]) return '0'
-      if (d === 'e' && ticksAtLimit[Bound.UPPER]) return '∞'
-
-      //const percent = (((x < price ? -1 : 1) * (Math.max(x, price) - Math.min(x, price))) / Math.min(x, price)) * 100
+      if (d === 'w' && ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]) return '0'
+      if (d === 'e' && ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]) return '∞'
 
       const percent = (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100
 
       return price ? `${format(Math.abs(percent) > 1 ? '.2~s' : '.2~f')(percent)}%` : ''
     },
-    [price, ticksAtLimit]
+    [isSorted, price, ticksAtLimit]
   )
 
   if (isError) {
