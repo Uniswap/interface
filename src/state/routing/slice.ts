@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { SupportedChainId } from 'constants/chains'
 import qs from 'qs'
 
@@ -44,9 +44,6 @@ export const routingApi = createApi({
         recipient?: string
         slippageTolerance?: string
         deadline?: string
-
-        // internal: invalidates query on block sync
-        blockNumber: number
       }
     >({
       query: (args) => `quote?${qs.stringify(args)}`,
