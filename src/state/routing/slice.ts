@@ -44,9 +44,6 @@ export const routingApi = createApi({
         recipient?: string
         slippageTolerance?: string
         deadline?: string
-
-        // internal: invalidates query on block sync
-        blockNumber: number
       }
     >({
       query: (args) => `quote?${qs.stringify(args)}`,
