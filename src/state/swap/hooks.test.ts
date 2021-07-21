@@ -13,17 +13,31 @@ describe('hooks', () => {
       expect(tryParseAmount('0', undefined)).toBeUndefined()
     })
 
+    it('should return a CurrencyAmount when currency has 0 decimals', () => {
+      const currency = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 0)
+
+      expect(tryParseAmount('20.05', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20')).toExact()
+      )
+      expect(tryParseAmount('20.123456789', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20')).toExact()
+      )
+      expect(tryParseAmount('0.123456789', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0')).toExact()
+      )
+    })
+
     it('should return a CurrencyAmount', () => {
       const currency = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
 
-      expect(tryParseAmount('20.05', currency)?.toSignificant(6)).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20050000')).toSignificant()
+      expect(tryParseAmount('20.05', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20050000')).toExact()
       )
-      expect(tryParseAmount('20.123456789', currency)?.toSignificant(6)).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20123400')).toSignificant()
+      expect(tryParseAmount('20.123456789', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20123456')).toExact()
       )
-      expect(tryParseAmount('0.123456789', currency)?.toSignificant(6)).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0123456')).toSignificant()
+      expect(tryParseAmount('0.123456789', currency)?.toExact()).toEqual(
+        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0123456')).toExact()
       )
     })
   })
