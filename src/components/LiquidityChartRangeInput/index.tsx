@@ -109,7 +109,11 @@ export default function LiquidityChartRangeInput({
         }
 
         if ((!ticksAtLimit[Bound.UPPER] || mode === 'handle') && rightRangeValue > 0) {
-          onRightRangeInput(rightRangeValue.toFixed(6))
+          // todo: remove this check. Upper bound for large numbers
+          // sometimes fails to parse to tick.
+          if (rightRangeValue < 1e35) {
+            onRightRangeInput(rightRangeValue.toFixed(6))
+          }
         }
       })
     },
