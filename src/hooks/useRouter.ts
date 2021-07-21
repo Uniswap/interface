@@ -5,9 +5,6 @@ import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useActiveWeb3React } from './web3'
 
-const DEFAULT_SLIPPAGE_TOLERANCE = '5'
-const DEFAULT_DEADLINE = '360'
-
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
   const { account } = useActiveWeb3React()
 
@@ -22,9 +19,6 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           tokenOutChainId: currencyOut.chainId,
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
-          recipient: account,
-          slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE,
-          deadline: DEFAULT_DEADLINE,
         }
       : skipToken,
     { pollingInterval: ms`10s` }
