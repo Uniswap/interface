@@ -5,22 +5,30 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, ArrowLeft, CheckCircle, GitCommit, HelpCircle, Info, ChevronUp } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
+import { RouterTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import {
+  ButtonConfirmed,
+  ButtonError,
+  ButtonGray,
+  ButtonLight,
+  ButtonPrimary,
+  ButtonEmpty,
+} from '../../components/Button'
+import { GreyCard, OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import Row, { AutoRow, RowFixed, RowBetween } from '../../components/Row'
+import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -58,6 +66,14 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
+type Trade =
+  // v2 may offer a better trade
+  | V2Trade<Currency, Currency, TradeType>
+  // when the routing api is not available (network, unsupported chain, etc.)
+  | V3Trade<Currency, Currency, TradeType>
+  // default routing engine
+  | RouterTrade
+
 const StyledInfo = styled(Info)`
   opacity: 0.4;
   color: ${({ theme }) => theme.text1};
@@ -66,6 +82,28 @@ const StyledInfo = styled(Info)`
   :hover {
     opacity: 0.8;
   }
+`
+
+const StyledChevron = styled(ChevronUp)`
+  color: ${({ theme }) => theme.text2};
+  height: 24px;
+  width: 24px;
+  :hover {
+    opacity: 0.8;
+  }
+`
+
+const StyledAutoRouterIcon = styled(GitCommit)`
+  height: 16px;
+  width: 16px;
+  color: #2172e5;
+`
+
+const GradientText = styled(TYPE.black)`
+  background: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
+  background-clip: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -109,8 +147,8 @@ export default function Swap({ history }: RouteComponentProps) {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    v3TradeState: { trade: v3Trade, state: v3TradeState },
-    routerTrade,
+    v3TradeState: { trade: v3OnChainTrade, state: v3OnChainTradeState },
+    routerTradeState: { trade: routerTrade, state: routerTradeState },
     toggledTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -118,6 +156,10 @@ export default function Swap({ history }: RouteComponentProps) {
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
+
+  // merge v3 on-chain trade and router trade
+  const v3Trade = routerTradeState === V3TradeState.VALID ? routerTrade : v3OnChainTrade
+  const v3TradeState = routerTradeState === V3TradeState.VALID ? routerTradeState : v3OnChainTradeState
 
   const {
     wrapType,
@@ -171,7 +213,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+    tradeToConfirm: Trade | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -183,6 +225,14 @@ export default function Swap({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
+  // advanced swap details
+  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useState<boolean>(false)
+
+  // hide swap details if currencies change
+  useEffect(() => {
+    setShowAdvancedSwapDetails(false)
+  }, [currencies?.INPUT, currencies?.OUTPUT, setShowAdvancedSwapDetails])
+
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
@@ -193,7 +243,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
-  const routeNotFound = !trade?.route
+  const routeNotFound = toggledVersion === Version.v3 ? V3TradeState.NO_ROUTE_FOUND === v3TradeState : !trade?.route
   const isLoadingRoute = toggledVersion === Version.v3 && V3TradeState.LOADING === v3TradeState
 
   // check whether the user has approved the router on the input token
@@ -434,88 +484,70 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
-                <RowFixed>
-                  {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
-                    (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                      <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                    ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                      <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-                    ) : (
-                      toggledVersion === Version.v2 && (
-                        <ButtonGray
-                          width="fit-content"
-                          padding="0.1rem 0.5rem 0.1rem 0.35rem"
-                          as={Link}
-                          to="/swap"
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            height: '24px',
-                            lineHeight: '120%',
-                            marginLeft: '0.75rem',
-                          }}
-                        >
-                          <ArrowLeft color={theme.text3} size={12} /> &nbsp;
-                          <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                            <Trans>
-                              <HideSmall>Back to </HideSmall>
-                              V3
-                            </Trans>
-                          </TYPE.main>
-                        </ButtonGray>
-                      )
-                    ))}
-
-                  {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                    <ButtonGray
-                      width="fit-content"
-                      padding="0.1rem 0.5rem"
-                      disabled
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        height: '24px',
-                        opacity: 0.8,
-                        marginLeft: '0.25rem',
-                      }}
-                    >
-                      <TYPE.black fontSize={12}>
-                        <Trans>V3</Trans>
-                      </TYPE.black>
-                    </ButtonGray>
-                  )}
-                </RowFixed>
-                {trade ? (
+              <OutlineCard padding="0.5rem">
+                <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
                   <RowFixed>
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                    <MouseoverTooltipContent
-                      content={
-                        <>
-                          <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
-                          <RowBetween>
-                            <RowFixed>
-                              <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-                                <Trans>Routing API</Trans>
-                              </TYPE.black>
-                            </RowFixed>
-                            <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
-                              {routerTrade}
-                            </TYPE.black>
-                          </RowBetween>
-                        </>
-                      }
-                    >
-                      <StyledInfo />
-                    </MouseoverTooltipContent>
+                    {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                      (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                        <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+                      ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                        <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+                      ) : (
+                        toggledVersion === Version.v2 && (
+                          <ButtonGray
+                            width="fit-content"
+                            padding="0.1rem 0.5rem 0.1rem 0.35rem"
+                            as={Link}
+                            to="/swap"
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              height: '24px',
+                              lineHeight: '120%',
+                              marginLeft: '0.75rem',
+                            }}
+                          >
+                            <ArrowLeft color={theme.text3} size={12} /> &nbsp;
+                            <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
+                              <Trans>
+                                <HideSmall>Back to </HideSmall>
+                                V3
+                              </Trans>
+                            </TYPE.main>
+                          </ButtonGray>
+                        )
+                      ))}
+
+                    {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
+                      <AutoRow gap="4px" width="auto" padding=".5rem">
+                        <StyledAutoRouterIcon size={18} />
+                        <GradientText fontSize={12}>Auto Router</GradientText>
+                      </AutoRow>
+                    )}
                   </RowFixed>
-                ) : null}
-              </Row>
+                  {trade ? (
+                    <RowFixed>
+                      <TradePrice
+                        price={trade.executionPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
+                      <ButtonEmpty
+                        onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
+                        margin=".5rem"
+                        padding="0"
+                        width="24px"
+                        height="24px"
+                      >
+                        {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
+                      </ButtonEmpty>
+                    </RowFixed>
+                  ) : null}
+                </Row>
+
+                {showAdvancedSwapDetails && <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+              </OutlineCard>
             )}
 
             <div>

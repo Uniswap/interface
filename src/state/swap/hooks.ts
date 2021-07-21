@@ -21,7 +21,8 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useRouterTradeExactIn } from 'hooks/useRouterTradeExactIn'
+import { useRouterTradeExactIn, useRouterTradeExactOut } from 'hooks/useRouter'
+import { RouterTrade } from 'state/routing/types'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -122,7 +123,10 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
-  routerTrade: string | undefined
+  routerTradeState: {
+    trade: RouterTrade | undefined
+    state: V3TradeState
+  }
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
@@ -162,11 +166,11 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const routerTradeExactIn = useRouterTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const routerTradeExactOut = useRouterTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
   const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
-
-  const routerTrade = isExactIn ? routerTradeExactIn : undefined
+  const routerTrade = (isExactIn ? routerTradeExactIn : routerTradeExactOut) ?? undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -221,7 +225,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     inputError,
     v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
-    routerTrade,
+    routerTradeState: routerTrade,
     toggledTrade,
     allowedSlippage,
   }

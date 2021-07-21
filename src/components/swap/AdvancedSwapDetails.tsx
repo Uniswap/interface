@@ -29,61 +29,65 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
   }, [trade])
 
   return !trade ? null : (
-    <AutoColumn gap="8px">
+    <AutoColumn gap="8px" style={{ padding: '.5rem' }}>
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Route</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12}>
           <SwapRoute trade={trade} />
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Price Impact</Trans>
+          <TYPE.black fontSize={12} fontWeight={400}>
+            <Trans>Expected price Impact</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12}>
           <FormattedPriceImpact priceImpact={priceImpact} />
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
+          <TYPE.black fontSize={12} fontWeight={400}>
+            <Trans>Allowed Slippage</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
-          {trade.tradeType === TradeType.EXACT_INPUT
-            ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-            : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+        <TYPE.black textAlign="right" fontSize={12}>
+          {allowedSlippage.toFixed(2)}%
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Slippage tolerance</Trans>
+          <TYPE.black fontSize={12} fontWeight={400}>
+            {trade.tradeType === TradeType.EXACT_INPUT ? (
+              <Trans>Minimum amount received</Trans>
+            ) : (
+              <Trans>Maximum amount sent</Trans>
+            )}
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
-          {allowedSlippage.toFixed(2)}%
+        <TYPE.black textAlign="right" fontSize={12}>
+          {trade.tradeType === TradeType.EXACT_INPUT
+            ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+            : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
         </TYPE.black>
       </RowBetween>
     </AutoColumn>

@@ -1,30 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { SupportedChainId } from 'constants/chains'
-
-export interface GetQuoteResult {
-  blockNumber: string
-  gasPriceWei: string
-  gasUseEstimate: string
-  gasUseEstimateQuote: string
-  gasUseEstimateQuoteDecimals: string
-  gasUseEstimateUSD: string
-  methodParameters: { calldata: string; value: string }
-  quote: string
-  quoteDecimals: string
-  quoteGasAdjusted: string
-  quoteGasAdjustedDecimals: string
-  quoteId: string
-  routeEdges: {
-    fee: string
-    id: string
-    inId: string
-    outId: string
-    percent: number
-    type: string
-  }[]
-  routeNodes: { chainId: number; id: string; symbol: string; type: string }[]
-  routeString: string
-}
+import { GetQuoteResult } from './types'
 
 export const routingApi = createApi({
   baseQuery: fetchBaseQuery({
@@ -34,7 +10,7 @@ export const routingApi = createApi({
     getQuote: build.query<
       GetQuoteResult,
       {
-        // add block number to invalidate on block change
+        blockNumber: number // invalidates query on block change
         tokenIn: { address: string; chainId: SupportedChainId }
         tokenOut: { address: string; chainId: SupportedChainId }
         amount: string
