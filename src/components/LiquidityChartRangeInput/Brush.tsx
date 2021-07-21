@@ -63,7 +63,7 @@ export const Brush = ({
   interactive: boolean
   brushLabelValue: (d: 'w' | 'e', x: number) => string
   brushExtent: [number, number]
-  setBrushExtent: (extent: [number, number], mode: 'drag' | 'space' | 'handle' | 'center') => void
+  setBrushExtent: (extent: [number, number], mode: string | undefined) => void
   innerWidth: number
   innerHeight: number
   westHandleColor: string
