@@ -94,7 +94,7 @@ export default function LiquidityChartRangeInput({
   })
 
   const onBrushDomainChangeEnded = useCallback(
-    (domain) => {
+    (domain, mode) => {
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 
@@ -104,8 +104,13 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        !ticksAtLimit[Bound.LOWER] && leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
-        !ticksAtLimit[Bound.UPPER] && rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
+        if ((!ticksAtLimit[Bound.LOWER] || mode === 'handle') && leftRangeValue > 0) {
+          onLeftRangeInput(leftRangeValue.toFixed(6))
+        }
+
+        if ((!ticksAtLimit[Bound.UPPER] || mode === 'handle') && rightRangeValue > 0) {
+          onRightRangeInput(rightRangeValue.toFixed(6))
+        }
       })
     },
     [onLeftRangeInput, onRightRangeInput, ticksAtLimit]

@@ -63,7 +63,7 @@ export const Brush = ({
   interactive: boolean
   brushLabelValue: (d: 'w' | 'e', x: number) => string
   brushExtent: [number, number]
-  setBrushExtent: (extent: [number, number]) => void
+  setBrushExtent: (extent: [number, number], mode: 'drag' | 'space' | 'handle' | 'center') => void
   innerWidth: number
   innerHeight: number
   westHandleColor: string
@@ -80,7 +80,9 @@ export const Brush = ({
   const previousBrushExtent = usePrevious(brushExtent)
 
   const brushed = useCallback(
-    ({ type, selection }: D3BrushEvent<unknown>) => {
+    (event: D3BrushEvent<unknown>) => {
+      const { type, selection, mode } = event
+
       if (!selection) {
         setLocalBrushExtent(null)
         return
@@ -90,7 +92,7 @@ export const Brush = ({
 
       // avoid infinite render loop by checking for change
       if (type === 'end' && compare(brushExtent, scaled, xScale)) {
-        setBrushExtent(scaled)
+        setBrushExtent(scaled, mode)
       }
 
       setLocalBrushExtent(scaled)
