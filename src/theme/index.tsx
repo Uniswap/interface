@@ -419,18 +419,20 @@ body {
 }
 
 .rc-pagination-simple-pager {
-  padding: 0 8px;
+  padding: 0 16px;
 }
 
 .rc-pagination-slash {
-  margin-right: 4px;
+  margin: 0 10px 0 7px;
 }
 
 .rc-pagination-simple-pager > input {
+  padding: 0;
+  max-width: 10px;
   background-color: transparent;
   outline: none;
   border: none;
-  color: ${props => props.theme.text5};
+  color: ${props => props.theme.text1};
 }
 
 
