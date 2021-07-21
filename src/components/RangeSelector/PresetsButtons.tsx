@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { Trans } from '@lingui/macro'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
-  padding: '6px',
+  padding: '7px',
   borderRadius: '8px',
 }))`
   color: ${({ theme }) => theme.text1};
