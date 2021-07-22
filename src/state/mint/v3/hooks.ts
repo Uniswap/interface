@@ -298,6 +298,8 @@ export function useV3DerivedMintInfo(
     currencies[independentField]
   )
 
+  console.log(independentAmount)
+
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     // we wrap the currencies just to get the price in terms of the other token
     const wrappedIndependentAmount = independentAmount?.wrapped

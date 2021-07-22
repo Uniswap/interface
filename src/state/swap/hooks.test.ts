@@ -1,47 +1,8 @@
 import { parse } from 'qs'
 import { Field } from './actions'
-import { queryParametersToSwapState, tryParseAmount } from './hooks'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
+import { queryParametersToSwapState } from './hooks'
 
 describe('hooks', () => {
-  describe('#tryParseAmount', () => {
-    it('should return undefined if amount is not a number or 0', () => {
-      expect(tryParseAmount(undefined, undefined)).toBeUndefined()
-      expect(tryParseAmount('', undefined)).toBeUndefined()
-      expect(tryParseAmount('abc', undefined)).toBeUndefined()
-      expect(tryParseAmount('0', undefined)).toBeUndefined()
-    })
-
-    it('should return a CurrencyAmount when currency has 0 decimals', () => {
-      const currency = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 0)
-
-      expect(tryParseAmount('20.05', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20')).toExact()
-      )
-      expect(tryParseAmount('20.123456789', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20')).toExact()
-      )
-      expect(tryParseAmount('0.123456789', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0')).toExact()
-      )
-    })
-
-    it('should return a CurrencyAmount', () => {
-      const currency = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
-
-      expect(tryParseAmount('20.05', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20050000')).toExact()
-      )
-      expect(tryParseAmount('20.123456789', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('20123456')).toExact()
-      )
-      expect(tryParseAmount('0.123456789', currency)?.toExact()).toEqual(
-        CurrencyAmount.fromRawAmount(currency, JSBI.BigInt('0123456')).toExact()
-      )
-    })
-  })
-
   describe('#queryParametersToSwapState', () => {
     test('ETH to DAI', () => {
       expect(
