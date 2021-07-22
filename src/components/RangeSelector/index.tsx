@@ -49,8 +49,8 @@ export default function RangeSelector({
           width="48%"
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
           increment={isSorted ? getIncrementLower : getDecrementUpper}
-          decrementDisabled={ticksAtLimit[Bound.LOWER]}
-          incrementDisabled={ticksAtLimit[Bound.LOWER]}
+          decrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+          incrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
@@ -63,8 +63,8 @@ export default function RangeSelector({
           width="48%"
           decrement={isSorted ? getDecrementUpper : getIncrementLower}
           increment={isSorted ? getIncrementUpper : getDecrementLower}
-          incrementDisabled={ticksAtLimit[Bound.UPPER]}
-          decrementDisabled={ticksAtLimit[Bound.UPPER]}
+          incrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+          decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
           tokenA={currencyA?.symbol}
