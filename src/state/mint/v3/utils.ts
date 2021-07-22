@@ -13,9 +13,9 @@ export function tryParseAmountToPrice(baseToken?: Token, quoteToken?: Token, val
   if (!baseToken || !quoteToken || !value) {
     return undefined
   }
+
   const numDecimals = value.indexOf('.') > -1 ? value.length - value.indexOf('.') - 1 : 0
 
-  // base token fixed at 1 unit, quote token amount based on typed input
   return new Price(
     baseToken,
     quoteToken,
