@@ -9,18 +9,18 @@ import {
 import { Price, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
-export function tryParseAmountToPrice(baseToken?: Token, quoteToken?: Token, value?: string) {
+export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {
   if (!baseToken || !quoteToken || !value) {
     return undefined
   }
 
-  const numDecimals = value.indexOf('.') > -1 ? value.length - value.indexOf('.') - 1 : 0
+  const numberOfDecimals = value.split('.')[1]?.length ?? 0
 
   return new Price(
     baseToken,
     quoteToken,
-    10 ** numDecimals * 10 ** baseToken.decimals,
-    parseFloat(value) * 10 ** numDecimals * 10 ** quoteToken.decimals
+    JSBI.multiply(JSBI.BigInt(10 ** numberOfDecimals), JSBI.BigInt(10 ** baseToken.decimals)),
+    JSBI.multiply(JSBI.BigInt(parseFloat(value) * 10 ** numberOfDecimals), JSBI.BigInt(10 ** quoteToken.decimals))
   )
 }
 
@@ -34,7 +34,7 @@ export function tryParseTick(
     return undefined
   }
 
-  const price = tryParseAmountToPrice(baseToken, quoteToken, value)
+  const price = tryParsePrice(baseToken, quoteToken, value)
 
   if (!price) {
     return undefined
