@@ -107,7 +107,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
 
   const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
   const someTokenIdsLoading = useMemo(
-    () => depositedTokenIdsState !== DepositedTokenIdsState.LOADED || tokenIdResults.some(({ loading }) => loading),
+    () => depositedTokenIdsState === DepositedTokenIdsState.LOADING || tokenIdResults.some(({ loading }) => loading),
     [depositedTokenIdsState, tokenIdResults]
   )
 
