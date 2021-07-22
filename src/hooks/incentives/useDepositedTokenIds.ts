@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { LogsState, useLogs } from '../../state/logs/hooks'
 import compareLogs from '../../utils/compareLogs'
 import { useV3Staker } from '../useContract'
-import { useActiveWeb3React } from '../web3'
 
 const VALID_STATES: LogsState[] = [LogsState.SYNCING, LogsState.SYNCED]
 
@@ -18,15 +17,18 @@ export interface DepositedTokenIdsResult {
   tokenIds: JSBI[] | undefined
 }
 
-export function useDepositedTokenIds(): DepositedTokenIdsResult {
+export function useDepositedTokenIds(account: string | undefined | null): DepositedTokenIdsResult {
   const v3Staker = useV3Staker()
-  const { account } = useActiveWeb3React()
   const filters = useMemo(() => {
-    if (!v3Staker) return []
-    return [
-      v3Staker.filters.DepositTransferred(null, account, null),
-      v3Staker.filters.DepositTransferred(null, null, account),
+    if (!v3Staker || !account) return []
+    const filters = [
+      v3Staker.filters.DepositTransferred(undefined, account, undefined),
+      v3Staker.filters.DepositTransferred(undefined, undefined, account),
     ]
+
+    console.log(filters)
+
+    return filters
   }, [account, v3Staker])
 
   const transferredFromLogs = useLogs(filters[0])
@@ -40,7 +42,7 @@ export function useDepositedTokenIds(): DepositedTokenIdsResult {
   }, [transferredFromLogs.logs, transferredFromLogs.state, transferredToLogs])
 
   return useMemo(() => {
-    if (!v3Staker)
+    if (!v3Staker || !account)
       return {
         state: DepositedTokenIdsState.INVALID,
         tokenIds: undefined,

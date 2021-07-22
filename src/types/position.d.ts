@@ -5,6 +5,7 @@ export interface PositionDetails {
   tokenId: BigNumber
   operator: string
   owner: string
+  depositedInStaker: boolean
   token0: string
   token1: string
   fee: number
