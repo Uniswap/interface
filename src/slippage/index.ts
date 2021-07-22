@@ -75,10 +75,11 @@ export async function getOutput2() {
   )
   const tensor = new Tensor('float32', X, [38, 4])
   const input = session.inputNames[0]
+  const outputname = session.outputNames[0]
   const feed = { [input]: tensor }
   try {
     console.log('feed', feed)
-    const results = await session.run(feed, ['output_label'], { logSeverityLevel: 0, logVerbosityLevel: 10 })
+    const results = await session.run(feed, [outputname], { logSeverityLevel: 0, logVerbosityLevel: 10 })
     console.log('results', results)
   } catch (error) {
     console.log('error: ', error)
