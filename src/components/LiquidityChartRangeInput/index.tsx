@@ -106,11 +106,14 @@ export default function LiquidityChartRangeInput({
 
       batch(() => {
         // simulate user input for auto-formatting and other validations
-        if ((!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === 'handle') && leftRangeValue > 0) {
+        if (
+          (!ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] || mode === 'handle' || mode === 'reset') &&
+          leftRangeValue > 0
+        ) {
           onLeftRangeInput(leftRangeValue.toFixed(6))
         }
 
-        if (!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] && rightRangeValue > 0) {
+        if ((!ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] || mode === 'reset') && rightRangeValue > 0) {
           // todo: remove this check. Upper bound for large numbers
           // sometimes fails to parse to tick.
           if (rightRangeValue < 1e35) {
@@ -196,6 +199,7 @@ export default function LiquidityChartRangeInput({
             brushDomain={brushDomain}
             onBrushDomainChange={onBrushDomainChangeEnded}
             zoomLevels={ZOOM_LEVELS[feeAmount ?? FeeAmount.MEDIUM]}
+            ticksAtLimit={ticksAtLimit}
           />
         </ChartWrapper>
       )}

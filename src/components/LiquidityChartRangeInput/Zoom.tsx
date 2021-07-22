@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
 import styled from 'styled-components/macro'
-import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform } from 'd3'
+import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform, zoomIdentity } from 'd3'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
 import { ZoomLevels } from './types'
 
@@ -41,7 +41,8 @@ export default function Zoom({
   setZoom,
   width,
   height,
-  showClear,
+  resetBrush,
+  showResetButton,
   zoomLevels,
 }: {
   svg: SVGElement | null
@@ -49,12 +50,13 @@ export default function Zoom({
   setZoom: (transform: ZoomTransform) => void
   width: number
   height: number
-  showClear: boolean
+  resetBrush: () => void
+  showResetButton: boolean
   zoomLevels: ZoomLevels
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
-  const [zoomIn, zoomOut, reset, initial] = useMemo(
+  const [zoomIn, zoomOut, zoomInitial, zoomReset] = useMemo(
     () => [
       () =>
         svg &&
@@ -73,15 +75,16 @@ export default function Zoom({
         zoomBehavior.current &&
         select(svg as Element)
           .transition()
-          .call(zoomBehavior.current.scaleTo, 1),
+          .call(zoomBehavior.current.scaleTo, 0.5),
       () =>
         svg &&
         zoomBehavior.current &&
         select(svg as Element)
+          .call(zoomBehavior.current.transform, zoomIdentity.translate(0, 0).scale(1))
           .transition()
           .call(zoomBehavior.current.scaleTo, 0.5),
     ],
-    [svg, zoomBehavior]
+    [svg]
   )
 
   useEffect(() => {
@@ -100,13 +103,19 @@ export default function Zoom({
 
   useEffect(() => {
     // reset zoom to initial on zoomLevel change
-    initial()
-  }, [initial, zoomLevels])
+    zoomInitial()
+  }, [zoomInitial, zoomLevels])
 
   return (
-    <Wrapper count={showClear ? 3 : 2}>
-      {showClear && (
-        <Button onClick={reset} disabled={false}>
+    <Wrapper count={showResetButton ? 3 : 2}>
+      {showResetButton && (
+        <Button
+          onClick={() => {
+            resetBrush()
+            zoomReset()
+          }}
+          disabled={false}
+        >
           <RefreshCcw size={16} />
         </Button>
       )}
