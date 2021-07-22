@@ -110,7 +110,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const {
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
-    routerTrade,
     toggledTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -505,7 +504,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               </TYPE.black>
                             </RowFixed>
                             <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
-                              {routerTrade}
+                              TBD
                             </TYPE.black>
                           </RowBetween>
                         </>

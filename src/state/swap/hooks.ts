@@ -21,7 +21,8 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useRouterTradeExactIn } from 'hooks/useRouterTradeExactIn'
+import { MultiRouteTrade } from 'state/routing/slice'
+import { useRouterTradeExactIn, useRouterTradeExactOut } from 'hooks/useRouter'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -121,9 +122,15 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
-  v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
-  routerTrade: string | undefined
-  toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  v3TradeState: {
+    trade: V3Trade<Currency, Currency, TradeType> | MultiRouteTrade<Currency, Currency, TradeType> | null
+    state: V3TradeState
+  }
+  toggledTrade:
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | MultiRouteTrade<Currency, Currency, TradeType>
+    | undefined
   allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()
@@ -157,16 +164,23 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, {
     maxHops: singleHopOnly ? 1 : undefined,
   })
-
   const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const routerTradeExactIn = useRouterTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const routerTradeExactOut = useRouterTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
 
-  const routerTrade = isExactIn ? routerTradeExactIn : undefined
+  // fallback to v3 if mult-route trade was unsuccessful
+  const v3Trade =
+    (isExactIn
+      ? routerTradeExactIn.state === V3TradeState.NO_ROUTE_FOUND
+        ? bestV3TradeExactIn
+        : routerTradeExactIn
+      : routerTradeExactOut.state === V3TradeState.NO_ROUTE_FOUND
+      ? bestV3TradeExactOut
+      : routerTradeExactOut) ?? undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -208,7 +222,13 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], toggledTrade?.maximumAmountIn(allowedSlippage)]
+  const [balanceIn, amountIn] = [
+    currencyBalances[Field.INPUT],
+    toggledTrade instanceof V2Trade || toggledTrade instanceof V3Trade
+      ? toggledTrade?.maximumAmountIn(allowedSlippage)
+      : // todo(judo): figure out why this is needed
+        currencyBalances[Field.INPUT],
+  ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = t`Insufficient ${amountIn.currency.symbol} balance`
@@ -221,7 +241,6 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     inputError,
     v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
-    routerTrade,
     toggledTrade,
     allowedSlippage,
   }

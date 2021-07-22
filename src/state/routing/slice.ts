@@ -1,6 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { SupportedChainId } from 'constants/chains'
 import qs from 'qs'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+
+export interface MultiRouteTrade<TInput extends Currency, TOutput extends Currency, TTradeType extends TradeType>
+  extends GetQuoteResult {
+  tradeType: TTradeType
+  inputAmount: CurrencyAmount<TInput>
+  outputAmount: CurrencyAmount<TOutput>
+}
 
 export interface GetQuoteResult {
   blockNumber: string
