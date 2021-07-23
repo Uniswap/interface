@@ -125,7 +125,10 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
           )}
         </PoolInfo>
 
-        <StyledInternalLink to={`/farm/${currencyId(token0)}/${currencyId(token1)}`} style={{ width: '100%' }}>
+        <StyledInternalLink
+          to={`/${dualRewards ? 'dualfarm' : 'farm'}/${currencyId(token0)}/${currencyId(token1)}`}
+          style={{ width: '100%' }}
+        >
           <ButtonPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
           </ButtonPrimary>

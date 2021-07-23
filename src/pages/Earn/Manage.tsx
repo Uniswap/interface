@@ -1,7 +1,7 @@
 import { cUSD, JSBI } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import React, { useCallback, useState } from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { CountUp } from 'use-count-up'
 
@@ -92,6 +92,7 @@ export default function Manage({
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
+  const location = useLocation()
 
   // get currencies and pair
   const [tokenA, tokenB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
@@ -99,8 +100,9 @@ export default function Manage({
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
   const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo)
+  const isDualFarm = location.pathname.includes('dualfarm')
 
-  const stakingInfo = dualStakingInfo || singleStakingInfo
+  const stakingInfo = isDualFarm ? dualStakingInfo : singleStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -322,7 +324,7 @@ export default function Manage({
                   {' UBE / week'}
                 </TYPE.black>
               </RowBetween>
-              {dualStakingInfo && (
+              {isDualFarm && (
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.largeHeader fontSize={36} fontWeight={600}>
                     <CountUp

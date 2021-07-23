@@ -15,7 +15,7 @@ interface IStakingPoolValue {
   userAmountTokenB?: TokenAmount
 }
 
-export const useStakingPoolValue = (stakingInfo?: StakingInfo): IStakingPoolValue => {
+export const useStakingPoolValue = (stakingInfo?: StakingInfo | null): IStakingPoolValue => {
   const { chainId } = useActiveWeb3React()
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakingToken)
   const [, stakingTokenPair] = usePair(stakingInfo?.tokens[0], stakingInfo?.tokens[1])

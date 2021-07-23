@@ -119,6 +119,7 @@ export default function App() {
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 <Route exact strict path="/farm" component={Earn} />
                 <Route exact strict path="/farm/:currencyIdA/:currencyIdB" component={Manage} />
+                <Route exact strict path="/dualfarm/:currencyIdA/:currencyIdB" component={Manage} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
