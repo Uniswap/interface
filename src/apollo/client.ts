@@ -26,7 +26,7 @@ export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new Apol
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'
-      : 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic',
+      : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
   cache: new InMemoryCache()
 })
 

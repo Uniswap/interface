@@ -329,14 +329,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </FixedHeightRow>
 
-            {/* <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
-              >
-                View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
-              </ExternalLink>
-            </ButtonSecondary> */}
             {!!currency0 &&
               !!currency1 &&
               userDefaultPoolBalance &&

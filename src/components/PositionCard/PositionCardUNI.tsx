@@ -328,14 +328,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </FixedHeightRow>
 
-            <ButtonSecondary2 padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
-              >
-                View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
-              </ExternalLink>
-            </ButtonSecondary2>
             {!!currency0 &&
               !!currency1 &&
               userDefaultPoolBalance &&
