@@ -20,7 +20,7 @@ export function useEagerConnect() {
   const triedToConnectToSafe = useSafeAppConnection(gnosisSafe)
 
   useEffect(() => {
-    if (triedToConnectToSafe) {
+    if (triedToConnectToSafe && !active) {
       injected.isAuthorized().then((isAuthorized) => {
         if (isAuthorized) {
           activate(injected, undefined, true).catch(() => {
@@ -37,7 +37,7 @@ export function useEagerConnect() {
         }
       })
     }
-  }, [activate, triedToConnectToSafe]) // intentionally only running on mount (make sure it's only mounted once :))
+  }, [activate, active, triedToConnectToSafe]) // intentionally only running on mount (make sure it's only mounted once :))
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
