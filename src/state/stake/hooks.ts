@@ -23,6 +23,15 @@ import {
   useSingleContractMultipleData,
 } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
+import { DualRewardsInfo, useDualStakeRewards } from './useDualStakeRewards'
+
+export const POOF_DUAL_POOL = '0x969D7653ddBAbb42589d73EfBC2051432332A940'
+export const POOF_DUAL_LP = '0x573bcEBD09Ff805eD32df2cb1A968418DC74DCf7'
+
+export const MOO_DUAL_POOL1 = '0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0'
+export const MOO_LP1 = '0x27616d3DBa43f55279726c422daf644bc60128a8'
+export const MOO_DUAL_POOL2 = '0x84Bb1795b699Bf7a798C0d63e9Aad4c96B0830f4'
+export const MOO_LP2 = '0x69d5646e63C7cE63171F76EBA89348b52c1D552c'
 
 export const STAKING_GENESIS = 1619100000
 
@@ -37,10 +46,13 @@ export interface StakingInfo {
   readonly stakedAmount?: TokenAmount
   // the amount of reward token earned by the active account, or undefined if no account
   readonly earnedAmount: TokenAmount
+  readonly earnedAmountUbe: TokenAmount
   // the total amount of token staked in the contract
   readonly totalStakedAmount: TokenAmount
   // the amount of token distributed per second to all LPs, constant
   readonly totalRewardRate: TokenAmount
+  readonly ubeRewardRate: TokenAmount
+  readonly totalUBERewardRate: TokenAmount
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
   readonly rewardRate: TokenAmount
@@ -57,10 +69,25 @@ export interface StakingInfo {
   readonly nextPeriodRewards: TokenAmount
   readonly poolInfo: IRawPool
   readonly dollarRewardPerYear: TokenAmount | undefined
+  readonly rewardToken: Token | undefined
+  readonly dualRewards: boolean
 }
 
 export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
   return useStakingInfo(pairToFilterBy)[0] ?? undefined
+}
+
+export const usePairDualStakingInfo = (stakingInfo: StakingInfo | undefined): DualRewardsInfo | null => {
+  const { account } = useActiveWeb3React()
+  let dualStakeAddress = ''
+  if (stakingInfo?.poolInfo.stakingToken === POOF_DUAL_LP) {
+    dualStakeAddress = POOF_DUAL_POOL
+  } else if (stakingInfo?.poolInfo.stakingToken == MOO_LP1) {
+    dualStakeAddress = MOO_DUAL_POOL1
+  } else if (stakingInfo?.poolInfo.stakingToken == MOO_LP2) {
+    dualStakeAddress = MOO_DUAL_POOL2
+  }
+  return useDualStakeRewards(dualStakeAddress, stakingInfo, account)
 }
 
 interface UnclaimedInfo {
@@ -141,14 +168,13 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
-  const ubePrice = useCUSDPrice(UBE[chainId as ChainId])
+  const ube = chainId ? UBE[chainId] : undefined
+  const ubePrice = useCUSDPrice(ube)
 
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
 
   const info = useStakingPools(pairToFilterBy)
-
-  const ube = chainId ? UBE[chainId] : undefined
 
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
@@ -261,8 +287,11 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
             tokens,
             periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
             earnedAmount: new TokenAmount(ube, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+            earnedAmountUbe: new TokenAmount(ube, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
             rewardRate: individualRewardRate,
+            ubeRewardRate: individualRewardRate,
             totalRewardRate: totalRewardRate,
+            totalUBERewardRate: totalRewardRate,
             nextPeriodRewards,
             stakedAmount: stakedAmount,
             totalStakedAmount: totalStakedAmount,
@@ -270,6 +299,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
             active,
             poolInfo,
             dollarRewardPerYear,
+            rewardToken: ube,
+            dualRewards: false,
           })
         }
         return memo

@@ -20,7 +20,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { usePairStakingInfo } from '../../state/stake/hooks'
+import { usePairDualStakingInfo, usePairStakingInfo } from '../../state/stake/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLinkIcon, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -97,7 +97,10 @@ export default function Manage({
   const [tokenA, tokenB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = usePairStakingInfo(stakingTokenPair)
+  const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
+  const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo)
+
+  const stakingInfo = dualStakingInfo || singleStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -122,6 +125,8 @@ export default function Manage({
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
 
+  const ubeCountUpAmount = stakingInfo?.earnedAmountUbe?.toFixed(6) ?? '0'
+  const ubeCountUpAmountPrevious = usePrevious(ubeCountUpAmount) ?? '0'
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
@@ -168,9 +173,8 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo?.active
-                ? stakingInfo?.totalRewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+                ? stakingInfo?.ubeRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
+                  '-'
                 : '0'}
               {' UBE / week'}
             </TYPE.body>
@@ -280,9 +284,10 @@ export default function Manage({
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <TYPE.black>Your unclaimed UBE</TYPE.black>
+                  <TYPE.black>Your unclaimed rewards</TYPE.black>
                 </div>
-                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
+                {((stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw)) ||
+                  (stakingInfo?.earnedAmountUbe && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmountUbe?.raw))) && (
                   <ButtonEmpty
                     padding="8px"
                     borderRadius="8px"
@@ -296,11 +301,11 @@ export default function Manage({
               <RowBetween style={{ alignItems: 'baseline' }}>
                 <TYPE.largeHeader fontSize={36} fontWeight={600}>
                   <CountUp
-                    key={countUpAmount}
+                    key={ubeCountUpAmount}
                     isCounting
                     decimalPlaces={4}
-                    start={parseFloat(countUpAmountPrevious)}
-                    end={parseFloat(countUpAmount)}
+                    start={parseFloat(ubeCountUpAmountPrevious)}
+                    end={parseFloat(ubeCountUpAmount)}
                     thousandsSeparator={','}
                     duration={1}
                   />
@@ -310,13 +315,39 @@ export default function Manage({
                     ⚡
                   </span>
                   {stakingInfo?.active
-                    ? stakingInfo?.rewardRate
+                    ? stakingInfo?.ubeRewardRate
                         ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                         ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   {' UBE / week'}
                 </TYPE.black>
               </RowBetween>
+              {dualStakingInfo && (
+                <RowBetween style={{ alignItems: 'baseline' }}>
+                  <TYPE.largeHeader fontSize={36} fontWeight={600}>
+                    <CountUp
+                      key={countUpAmount}
+                      isCounting
+                      decimalPlaces={4}
+                      start={parseFloat(countUpAmountPrevious)}
+                      end={parseFloat(countUpAmount)}
+                      thousandsSeparator={','}
+                      duration={1}
+                    />
+                  </TYPE.largeHeader>
+                  <TYPE.black fontSize={16} fontWeight={500}>
+                    <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
+                      ⚡
+                    </span>
+                    {dualStakingInfo?.active
+                      ? dualStakingInfo?.rewardRate
+                          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                      : '0'}
+                    {` ${dualStakingInfo?.rewardToken?.symbol} / week`}
+                  </TYPE.black>
+                </RowBetween>
+              )}
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>

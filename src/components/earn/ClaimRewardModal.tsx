@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import React, { useState } from 'react'
+import { DualRewardsInfo } from 'state/stake/useDualStakeRewards'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -21,7 +22,7 @@ const ContentWrapper = styled(AutoColumn)`
 interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
-  stakingInfo: StakingInfo
+  stakingInfo: StakingInfo | DualRewardsInfo
 }
 
 export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
@@ -74,12 +75,17 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <TYPE.mediumHeader>Claim</TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
-          {stakingInfo?.earnedAmount && (
+          {stakingInfo?.earnedAmountUbe && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmount?.toSignificant(6)}
+                {stakingInfo?.earnedAmountUbe?.toSignificant(6)} UBE
               </TYPE.body>
-              <TYPE.body>Unclaimed UBE</TYPE.body>
+              {stakingInfo?.dualRewards && (
+                <TYPE.body fontWeight={600} fontSize={36}>
+                  {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol}
+                </TYPE.body>
+              )}
+              <TYPE.body>Unclaimed rewards</TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>

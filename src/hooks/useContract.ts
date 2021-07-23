@@ -5,11 +5,12 @@ import { useMemo } from 'react'
 
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI, { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import DUAL_REWARDS_ABI from '../constants/abis/moola/MoolaStakingRewards.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { Erc20, PoolManager, StakingRewards } from '../generated'
+import { Erc20, MoolaStakingRewards, PoolManager, StakingRewards } from '../generated'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
@@ -72,4 +73,11 @@ export function useReleaseUbeContract(withSignerIfPossible?: boolean): ReleaseUb
     RELEASE_UBE_ABI,
     withSignerIfPossible
   ) as ReleaseUbe | null
+}
+
+export function useDualStakingContract(
+  stakingAddress?: string,
+  withSignerIfPossible?: boolean
+): MoolaStakingRewards | null {
+  return useContract(stakingAddress, DUAL_REWARDS_ABI, withSignerIfPossible) as MoolaStakingRewards | null
 }

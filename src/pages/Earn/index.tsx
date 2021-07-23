@@ -5,13 +5,23 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AutoColumn } from '../../components/Column'
-import PoolCard from '../../components/earn/PoolCard'
+import { PoolCard } from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import { RowBetween } from '../../components/Row'
 import { BIG_INT_ZERO } from '../../constants'
-import { StakingInfo, useStakingInfo } from '../../state/stake/hooks'
+import {
+  MOO_DUAL_POOL1,
+  MOO_DUAL_POOL2,
+  MOO_LP1,
+  MOO_LP2,
+  POOF_DUAL_LP,
+  POOF_DUAL_POOL,
+  StakingInfo,
+  useStakingInfo,
+} from '../../state/stake/hooks'
 import { ExternalLink, TYPE } from '../../theme'
+import { DualPoolCard } from './DualPoolCard'
 import { COUNTDOWN_END, LaunchCountdown } from './LaunchCountdown'
 
 const PageWrapper = styled(AutoColumn)`
@@ -46,20 +56,26 @@ export default function Earn() {
   // toggle copy if rewards are inactive
   const stakingRewardsExist = true
 
+  const allPools = useMemo(
+    () =>
+      // Sort staking info by highest rewards
+      stakingInfos?.slice().sort((a: StakingInfo, b: StakingInfo) => {
+        return JSBI.toNumber(JSBI.subtract(b.totalRewardRate.raw, a.totalRewardRate.raw))
+      }),
+    [stakingInfos]
+  )
+
   const [stakedPools, unstakedPools] = useMemo(() => {
-    // Sort staking info by highest rewards
-    const sortedStakingInfos = stakingInfos?.slice().sort((a: StakingInfo, b: StakingInfo) => {
-      return JSBI.toNumber(JSBI.subtract(b.totalRewardRate.raw, a.totalRewardRate.raw))
-    })
-    return partition(
-      sortedStakingInfos,
-      (pool) => pool.stakedAmount && JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO)
-    )
-  }, [stakingInfos])
+    return partition(allPools, (pool) => pool.stakedAmount && JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  }, [allPools])
 
   const [activePools, inactivePools] = partition(unstakedPools, (pool) => pool.active)
 
   const isGenesisOver = COUNTDOWN_END < new Date().getTime()
+
+  const poofUBELP = allPools.find((pool) => pool.stakingToken.address === POOF_DUAL_LP)
+  const mcUSDmcEURLP = allPools.find((pool) => pool.stakingToken.address === MOO_LP1)
+  const moomCELOLP = allPools.find((pool) => pool.stakingToken.address === MOO_LP2)
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -92,6 +108,34 @@ export default function Earn() {
       )}
 
       {!isGenesisOver && <LaunchCountdown />}
+
+      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+        <DataRow style={{ alignItems: 'baseline' }}>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Dual Pools</TYPE.mediumHeader>
+        </DataRow>
+        {!(mcUSDmcEURLP && poofUBELP && moomCELOLP) && <Loader />}
+        {mcUSDmcEURLP && (
+          <PoolSection>
+            <ErrorBoundary>
+              <DualPoolCard poolAddress={MOO_DUAL_POOL1} underlyingPool={mcUSDmcEURLP} />
+            </ErrorBoundary>
+          </PoolSection>
+        )}
+        {moomCELOLP && (
+          <PoolSection>
+            <ErrorBoundary>
+              <DualPoolCard poolAddress={MOO_DUAL_POOL2} underlyingPool={moomCELOLP} />
+            </ErrorBoundary>
+          </PoolSection>
+        )}
+        {poofUBELP && (
+          <PoolSection>
+            <ErrorBoundary>
+              <DualPoolCard poolAddress={POOF_DUAL_POOL} underlyingPool={poofUBELP} />
+            </ErrorBoundary>
+          </PoolSection>
+        )}
+      </AutoColumn>
 
       {stakedPools.length > 0 && (
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>

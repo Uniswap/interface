@@ -2,6 +2,7 @@ import { Percent } from '@ubeswap/sdk'
 import QuestionHelper, { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
+import { DualRewardsInfo } from 'state/stake/useDualStakeRewards'
 import styled from 'styled-components'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -64,7 +65,12 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+interface Props {
+  stakingInfo: StakingInfo
+  dualRewards?: DualRewardsInfo
+}
+
+export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) => {
   const [token0, token1] = stakingInfo.tokens
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
@@ -138,21 +144,35 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           </TYPE.white>
         </RowBetween>
         <RowBetween>
-          <TYPE.white>Pool rate</TYPE.white>
+          <TYPE.white>{dualRewards ? dualRewards.totalRewardRate.token.symbol : 'Pool'} rate</TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
                 ? `${stakingInfo.totalRewardRate
                     ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' })} UBE / week`
-                : '0 UBE / week'
+                    ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.totalRewardRate.token.symbol} / week`
+                : `0 ${stakingInfo.totalRewardRate.token.symbol} / week`
               : '-'}
           </TYPE.white>
         </RowBetween>
+        {dualRewards && (
+          <RowBetween>
+            <TYPE.white>{dualRewards.totalUBERewardRate.token.symbol} rate</TYPE.white>
+            <TYPE.white>
+              {stakingInfo
+                ? stakingInfo.active
+                  ? `${dualRewards.totalUBERewardRate
+                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                      ?.toFixed(0, { groupSeparator: ',' })} ${dualRewards.totalUBERewardRate.token.symbol} / week`
+                  : `0 ${dualRewards.totalUBERewardRate.token.symbol} / week`
+                : '-'}
+            </TYPE.white>
+          </RowBetween>
+        )}
         {apy && apy.greaterThan('0') && (
           <RowBetween>
             <RowFixed>
-              <TYPE.white>APR</TYPE.white>
+              <TYPE.white>{dualRewards ? 'Combined APR' : 'APR'}</TYPE.white>
               <LightQuestionHelper
                 text={
                   <>
@@ -178,7 +198,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               <TYPE.white>
                 {`${stakingInfo.nextPeriodRewards.toFixed(0, {
                   groupSeparator: ',',
-                })} UBE / week`}
+                })} ${stakingInfo.nextPeriodRewards.token.symbol} / week`}
               </TYPE.white>
             </RowBetween>
           ))}
@@ -198,11 +218,19 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                   ⚡
                 </span>
                 {stakingInfo
-                  ? stakingInfo.active
-                    ? `${stakingInfo.rewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' })} UBE / week`
-                    : '0 UBE / week'
+                  ? `${
+                      stakingInfo.active
+                        ? stakingInfo.ubeRewardRate
+                            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                            ?.toSignificant(4, { groupSeparator: ',' })
+                        : '0'
+                    } UBE${
+                      stakingInfo.dualRewards
+                        ? ` + ${stakingInfo.rewardRate
+                            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                            ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo?.rewardToken?.symbol}`
+                        : ''
+                    } / week`
                   : '-'}
               </TYPE.black>
             </RowBetween>

@@ -45,7 +45,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     if (stakingContract && stakingInfo?.stakedAmount) {
       setAttempting(true)
       await stakingContract
-        .exit({ gasLimit: 300000 })
+        .exit({ gasLimit: 3000000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Withdraw deposited liquidity`,
@@ -83,12 +83,20 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
               <TYPE.body>Deposited liquidity:</TYPE.body>
             </AutoColumn>
           )}
-          {stakingInfo?.earnedAmount && (
+          {stakingInfo?.earnedAmountUbe && (
+            <AutoColumn justify="center" gap="md">
+              <TYPE.body fontWeight={600} fontSize={36}>
+                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmountUbe} />}
+              </TYPE.body>
+              <TYPE.body>Unclaimed UBE</TYPE.body>
+            </AutoColumn>
+          )}
+          {stakingInfo?.dualRewards && stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
               </TYPE.body>
-              <TYPE.body>Unclaimed UBE</TYPE.body>
+              <TYPE.body>Unclaimed {stakingInfo?.rewardToken?.symbol}</TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
