@@ -14,13 +14,25 @@ export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: str
     return undefined
   }
 
-  const numberOfDecimals = value.split('.')[1]?.length ?? 0
+  if (!value.match(/^[0-9,.]+$/)) {
+    console.log('regex')
+    return undefined
+  }
+
+  const [whole, fraction, ...rest] = value.split('.')
+
+  if (rest.length > 0) {
+    return undefined
+  }
+
+  const decimals = fraction?.length ?? 0
+  const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
 
   return new Price(
     baseToken,
     quoteToken,
-    JSBI.multiply(JSBI.BigInt(10 ** numberOfDecimals), JSBI.BigInt(10 ** baseToken.decimals)),
-    JSBI.multiply(JSBI.BigInt(parseFloat(value) * 10 ** numberOfDecimals), JSBI.BigInt(10 ** quoteToken.decimals))
+    JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** baseToken.decimals)),
+    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals))
   )
 }
 

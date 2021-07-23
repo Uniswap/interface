@@ -10,6 +10,8 @@ describe('hooks', () => {
       expect(tryParsePrice(undefined, undefined, undefined)).toBeUndefined()
       expect(tryParsePrice(baseToken, quoteToken)).toBeUndefined()
       expect(tryParsePrice(baseToken, quoteToken, '')).toBeUndefined()
+      expect(tryParsePrice(baseToken, quoteToken, 'abc.123')).toBeUndefined()
+      expect(tryParsePrice(baseToken, quoteToken, '1.2.3')).toBeUndefined()
     })
 
     it('should return a price', () => {
