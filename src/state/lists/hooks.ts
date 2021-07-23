@@ -13,6 +13,10 @@ export type TokenAddressMap = Readonly<{
   [chainId: number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
 }>
 
+type Mutable<T> = {
+  -readonly [P in keyof T]: Mutable<T[P]>
+}
+
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
@@ -20,23 +24,19 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
   if (result) return result
 
-  const map = list.tokens.reduce<TokenAddressMap>((tokenMap, tokenInfo) => {
+  const map = list.tokens.reduce<Mutable<TokenAddressMap>>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      console.error(new Error(`Duplicate token! ${token.address}`))
+      console.error(`Duplicate token! ${token.address}`)
       return tokenMap
     }
-    return {
-      ...tokenMap,
-      [token.chainId]: {
-        ...tokenMap[token.chainId],
-        [token.address]: {
-          token,
-          list,
-        },
-      },
+    if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}
+    tokenMap[token.chainId][token.address] = {
+      token,
+      list,
     }
-  }, {})
+    return tokenMap
+  }, {}) as TokenAddressMap
   listCache?.set(list, map)
   return map
 }
@@ -47,6 +47,7 @@ export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
 }
 
+// TODO: return a proxy instead of doing a reduce
 export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   const chainIds = Object.keys({ ...map1, ...map2 }).map((id) => parseInt(id))
   return chainIds.reduce(
