@@ -14,16 +14,11 @@ export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: str
     return undefined
   }
 
-  if (!value.match(/^[0-9,.]+$/)) {
-    console.log('regex')
+  if (!value.match(/^\d*\.?\d+$/)) {
     return undefined
   }
 
-  const [whole, fraction, ...rest] = value.split('.')
-
-  if (rest.length > 0) {
-    return undefined
-  }
+  const [whole, fraction] = value.split('.')
 
   const decimals = fraction?.length ?? 0
   const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
