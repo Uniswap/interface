@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Incentive } from '../hooks/incentives/useAllIncentives'
 
 export interface PositionDetails {
   nonce: BigNumber
@@ -16,4 +17,5 @@ export interface PositionDetails {
   feeGrowthInside1LastX128: BigNumber
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
+  incentives: Incentive[]
 }

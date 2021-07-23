@@ -1,30 +1,21 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
-import { defaultAbiCoder, keccak256, Result } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useLogs } from '../../state/logs/hooks'
 import { useSingleContractMultipleData } from '../../state/multicall/hooks'
 import { useAllTokens } from '../Tokens'
 import { useV3Staker } from '../useContract'
 import { PoolState, usePoolsByAddresses } from '../usePools'
+import { incentiveKeyToIncentiveId } from './incentiveKeyToIncentiveId'
 
 export interface Incentive {
   pool: Pool
+  poolAddress: string
   startTime: number
   endTime: number
   initialRewardAmount: CurrencyAmount<Token>
   rewardAmountRemaining: CurrencyAmount<Token>
   rewardRatePerSecond: CurrencyAmount<Token>
-}
-
-// TODO: check this encoding matches the abi encoding of the tuple
-function incentiveKeyToIncentiveId(log: Result): string {
-  return keccak256(
-    defaultAbiCoder.encode(
-      ['address', 'address', 'uint256', 'uint256', 'address'],
-      [log.rewardToken, log.pool, log.startTime, log.endTime, log.refundee]
-    )
-  )
 }
 
 export function useAllIncentives(): {
@@ -102,6 +93,7 @@ export function useAllIncentives(): {
 
           return {
             pool,
+            poolAddress: result.pool,
             startTime,
             endTime,
             initialRewardAmount,

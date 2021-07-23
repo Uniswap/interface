@@ -21,14 +21,10 @@ export function useDepositedTokenIds(account: string | undefined | null): Deposi
   const v3Staker = useV3Staker()
   const filters = useMemo(() => {
     if (!v3Staker || !account) return []
-    const filters = [
+    return [
       v3Staker.filters.DepositTransferred(undefined, account, undefined),
       v3Staker.filters.DepositTransferred(undefined, undefined, account),
     ]
-
-    console.log(filters)
-
-    return filters
   }, [account, v3Staker])
 
   const transferredFromLogs = useLogs(filters[0])

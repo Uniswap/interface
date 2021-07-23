@@ -2,15 +2,23 @@ import { AddressZero } from '@ethersproject/constants'
 import { useSingleCallResult, useSingleContractMultipleData, Result } from 'state/multicall/hooks'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
+import { Incentive, useAllIncentives } from './incentives/useAllIncentives'
 import { DepositedTokenIdsState, useDepositedTokenIds } from './incentives/useDepositedTokenIds'
 import { useV3NFTPositionManagerContract, useV3Staker } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Pool } from '@uniswap/v3-sdk'
+import { Token } from '@uniswap/sdk-core'
 
 interface UseV3PositionsResults {
   loading: boolean
   error: boolean
   positions: PositionDetails[] | undefined
+}
+
+function toPoolKey(pool: Pool | { token0: string | Token; token1: string | Token; fee: number }): string {
+  return `${typeof pool.token0 === 'string' ? pool.token0 : pool.token0.address}-${
+    typeof pool.token1 === 'string' ? pool.token1 : pool.token1.address
+  }-${pool.fee}`
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
@@ -20,14 +28,26 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
   const positionInfos = useSingleContractMultipleData(positionManager, 'positions', inputs)
   const tokenIdOwners = useSingleContractMultipleData(positionManager, 'ownerOf', inputs)
   const depositOwners = useSingleContractMultipleData(staker, 'deposits', inputs)
+  const { incentives, loading: incentivesLoading } = useAllIncentives()
 
   const [loading, error] = useMemo(() => {
     const states = [positionInfos, tokenIdOwners, depositOwners]
     return [
-      states.some((calls) => calls.some(({ loading }) => loading)),
+      incentivesLoading || states.some((calls) => calls.some(({ loading }) => loading)),
       states.some((calls) => calls.some(({ error }) => error)),
     ]
-  }, [depositOwners, positionInfos, tokenIdOwners])
+  }, [depositOwners, incentivesLoading, positionInfos, tokenIdOwners])
+
+  const incentivesByPoolKey = useMemo(() => {
+    return (
+      incentives?.reduce<{ [poolKey: string]: Incentive[] }>((memo, incentive) => {
+        const key = toPoolKey(incentive.pool)
+        memo[key] = memo[key] ?? []
+        memo[key].push(incentive)
+        return memo
+      }, {}) ?? {}
+    )
+  }, [incentives])
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
@@ -39,11 +59,16 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
 
           if (!owner || !positionInfo) return null
           const depositedInStaker = Boolean(depositOwner && depositOwner !== AddressZero)
+          const poolKey = {
+            token0: positionInfo.token0,
+            token1: positionInfo.token1,
+            fee: positionInfo.fee,
+          }
           return {
+            ...poolKey,
             tokenId,
             owner: depositedInStaker ? depositOwner : owner,
             depositedInStaker,
-            fee: positionInfo.fee,
             feeGrowthInside0LastX128: positionInfo.feeGrowthInside0LastX128,
             feeGrowthInside1LastX128: positionInfo.feeGrowthInside1LastX128,
             liquidity: positionInfo.liquidity,
@@ -51,16 +76,15 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
             operator: positionInfo.operator,
             tickLower: positionInfo.tickLower,
             tickUpper: positionInfo.tickUpper,
-            token0: positionInfo.token0,
-            token1: positionInfo.token1,
             tokensOwed0: positionInfo.tokensOwed0,
             tokensOwed1: positionInfo.tokensOwed1,
+            incentives: incentivesByPoolKey[toPoolKey(poolKey)] ?? [],
           }
         })
         .filter((p): p is PositionDetails => Boolean(p))
     }
     return undefined
-  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners])
+  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners, incentivesByPoolKey])
 
   return {
     loading,
