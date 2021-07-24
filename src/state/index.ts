@@ -18,6 +18,11 @@ import { routingApi } from './routing/slice'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
+let preloadedState = undefined
+if (process.env.NODE_ENV === 'production') {
+  preloadedState = load({ states: PERSISTED_KEYS })
+}
+
 const store = configureStore({
   reducer: {
     application,
@@ -39,7 +44,7 @@ const store = configureStore({
       .concat(dataApi.middleware)
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({ states: PERSISTED_KEYS }),
+  preloadedState,
 })
 
 store.dispatch(updateVersion())
