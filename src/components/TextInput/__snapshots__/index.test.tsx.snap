@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResizableTextArea renders correctly 1`] = `
+<DocumentFragment>
+  <textarea
+    autocapitalize="off"
+    autocomplete="off"
+    autocorrect="off"
+    class="TextInput__TextAreaInput-sc-4obmhd-1 kHGDTn testing"
+    font-size="12"
+    placeholder="Test Placeholder"
+    spellcheck="false"
+    style="height: auto; min-height: 500px;"
+  >
+    My test input
+  </textarea>
+</DocumentFragment>
+`;
+
+exports[`TextInput renders correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="testing"
+  >
+    <input
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      class="TextInput__Input-sc-4obmhd-0 iJHpit"
+      font-size="12"
+      placeholder="Test Placeholder"
+      spellcheck="false"
+      type="text"
+      value="My test input"
+    />
+  </div>
+</DocumentFragment>
+`;
