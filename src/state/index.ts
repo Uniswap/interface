@@ -19,7 +19,7 @@ import { routingApi } from './routing/slice'
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 let preloadedState = undefined
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
   preloadedState = load({ states: PERSISTED_KEYS })
 }
 
