@@ -1,3 +1,5 @@
+// Custom test environment to provide `TextEncoder`/`TextDecoder`
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Environment = require('jest-environment-jsdom')
 
