@@ -39,6 +39,7 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -188,6 +189,18 @@ export default function Swap({ history }: RouteComponentProps) {
       ? parsedAmounts[independentField]?.toExact() ?? ''
       : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
+
+  const [debouncedTypeInput, setDebouncedTypeInput] = useDebouncedChangeHandler(
+    formattedAmounts[Field.INPUT],
+    handleTypeInput,
+    150
+  )
+
+  const [debouncedTypeOutput, setDebouncedTypeOutput] = useDebouncedChangeHandler(
+    formattedAmounts[Field.OUTPUT],
+    handleTypeOutput,
+    150
+  )
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
@@ -381,10 +394,10 @@ export default function Swap({ history }: RouteComponentProps) {
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
-                value={formattedAmounts[Field.INPUT]}
+                value={debouncedTypeInput}
                 showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
-                onUserInput={handleTypeInput}
+                onUserInput={setDebouncedTypeInput}
                 onMax={handleMaxInput}
                 fiatValue={fiatValueInput ?? undefined}
                 onCurrencySelect={handleInputSelect}
@@ -403,8 +416,8 @@ export default function Swap({ history }: RouteComponentProps) {
                 />
               </ArrowWrapper>
               <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={handleTypeOutput}
+                value={debouncedTypeOutput}
+                onUserInput={setDebouncedTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
