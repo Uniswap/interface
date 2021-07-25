@@ -11,6 +11,7 @@ const KLEROS_LIST = 't2crtokens.eth'
 export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
+const UMA_LIST = 'https://umaproject.org/uma.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
 
 // only load blocked list if on app url
@@ -22,6 +23,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   AAVE_LIST,
   CMC_ALL_LIST,
   CMC_STABLECOIN,
+  UMA_LIST,
   WRAPPED_LIST,
   SET_LIST,
   ROLL_LIST,
