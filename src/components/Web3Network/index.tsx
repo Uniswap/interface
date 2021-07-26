@@ -16,6 +16,7 @@ const NetworkSwitchContainer = styled.div`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 12px 20px;
+  border: 1px solid transparent;
 
   &:hover {
     text-decoration: none;
