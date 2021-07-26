@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { AlertTriangle } from 'react-feather'
@@ -101,16 +101,11 @@ export default function AddLiquidity({
       ? parseFloat(feeAmountFromUrl)
       : undefined
 
-  const currencyA = useCurrency(currencyIdA)
+  const baseCurrency = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
-
-  // keep track for UI display purposes of user selected base currency
-  const baseCurrency = currencyA
-  const quoteCurrency = useMemo(
-    () =>
-      currencyA && currencyB && baseCurrency ? (baseCurrency.equals(currencyA) ? currencyB : currencyA) : undefined,
-    [currencyA, currencyB, baseCurrency]
-  )
+  // prevent an error if they input ETH/WETH
+  const quoteCurrency =
+    baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
@@ -135,8 +130,8 @@ export default function AddLiquidity({
     invertPrice,
     ticksAtLimit,
   } = useV3DerivedMintInfo(
-    currencyA ?? undefined,
-    currencyB ?? undefined,
+    baseCurrency ?? undefined,
+    quoteCurrency ?? undefined,
     feeAmount,
     baseCurrency ?? undefined,
     existingPosition
@@ -154,7 +149,7 @@ export default function AddLiquidity({
   // capital efficiency warning
   const [showCapitalEfficiencyWarning, setShowCapitalEfficiencyWarning] = useState(false)
 
-  useEffect(() => setShowCapitalEfficiencyWarning(false), [currencyA, currencyB, feeAmount])
+  useEffect(() => setShowCapitalEfficiencyWarning(false), [baseCurrency, quoteCurrency, feeAmount])
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
@@ -213,7 +208,7 @@ export default function AddLiquidity({
   async function onCreate() {
     if (!chainId || !library) return
 
-    if (!positionManager || !currencyA || !currencyB) {
+    if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
     }
 
@@ -242,7 +237,7 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                summary: t`Create ${currencyA?.symbol}/${currencyB?.symbol} V3 pool`,
+                summary: t`Create ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 pool`,
               })
               // dont set txn hash as we dont want submitted txn screen for create
               ReactGA.event({
@@ -268,12 +263,12 @@ export default function AddLiquidity({
   async function onAdd() {
     if (!chainId || !library || !account) return
 
-    if (!positionManager || !currencyA || !currencyB) {
+    if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
     }
 
     if (position && account && deadline) {
-      const useNative = currencyA.isNative ? currencyA : currencyB.isNative ? currencyB : undefined
+      const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
       const { calldata, value } =
         hasExistingPosition && tokenId
           ? NonfungiblePositionManager.addCallParameters(position, {
@@ -338,8 +333,8 @@ export default function AddLiquidity({
               setAttemptingTxn(false)
               addTransaction(response, {
                 summary: noLiquidity
-                  ? t`Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`
-                  : t`Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
+                  ? t`Create pool and add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`
+                  : t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`,
               })
               setTxHash(response.hash)
               ReactGA.event({
@@ -663,11 +658,11 @@ export default function AddLiquidity({
                       </RowBetween>
 
                       <FeeSelector
-                        disabled={!currencyB || !currencyA}
+                        disabled={!quoteCurrency || !baseCurrency}
                         feeAmount={feeAmount}
                         handleFeePoolSelect={handleFeePoolSelect}
-                        currencyA={currencyA ?? undefined}
-                        currencyB={currencyB ?? undefined}
+                        currencyA={baseCurrency ?? undefined}
+                        currencyB={quoteCurrency ?? undefined}
                       />
                     </AutoColumn>{' '}
                   </>

@@ -2,6 +2,7 @@
   "background_color": "#fff",
   "display": "standalone",
   "homepage_url": "https://app.uniswap.org",
+  "providedBy": { "name": "Uniswap", "url": "https://uniswap.org" },
   "icons": [
     {
       "src": "./images/192x192_App_Icon.png",
@@ -18,6 +19,8 @@
   ],
   "orientation": "portrait",
   "name": "Uniswap",
+  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "iconPath": "./images/256x256_App_Icon_Pink.svg",
   "short_name": "Uniswap",
   "start_url": ".",
   "theme_color": "#ff007a"

@@ -100,34 +100,12 @@ export const renBTC = new Token(
   'renBTC',
   'renBTC'
 )
-export const UMA = new Token(
-  SupportedChainId.MAINNET,
-  '0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828',
-  18,
-  'UMA',
-  'UMA Voting Token v1'
-)
 export const ETH2X_FLI = new Token(
   SupportedChainId.MAINNET,
   '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD',
   18,
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
-)
-// Mirror Protocol compat.
-export const UST = new Token(
-  SupportedChainId.MAINNET,
-  '0xa47c8bf37f92abed4a126bda807a7b7498661acd',
-  18,
-  'UST',
-  'Wrapped UST'
-)
-export const MIR = new Token(
-  SupportedChainId.MAINNET,
-  '0x09a3ecafa817268f77be1283176b946c4ff2e608',
-  18,
-  'MIR',
-  'Wrapped MIR'
 )
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
