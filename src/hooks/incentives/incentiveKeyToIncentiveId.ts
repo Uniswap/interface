@@ -4,8 +4,8 @@ import { defaultAbiCoder, keccak256, Result } from 'ethers/lib/utils'
 export interface IncentiveKey {
   rewardToken: string
   pool: string
-  startTime: BigNumber
-  endTime: BigNumber
+  startTime: BigNumber | number
+  endTime: BigNumber | number
   refundee: string
 }
 
