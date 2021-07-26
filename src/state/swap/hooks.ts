@@ -159,6 +159,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, {
     maxHops: singleHopOnly ? 1 : undefined,
   })
+
   const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
@@ -167,7 +168,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
 
-  // fallback to v3 if mult-route trade was unsuccessful
+  // fallback to v3 if router trade was unsuccessful
   const v3Trade =
     (isExactIn
       ? [V3TradeState.NO_ROUTE_FOUND, V3TradeState.INVALID].includes(routerTradeExactIn.state)
@@ -217,13 +218,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [
-    currencyBalances[Field.INPUT],
-    toggledTrade instanceof V2Trade || toggledTrade instanceof V3Trade
-      ? toggledTrade?.maximumAmountIn(allowedSlippage)
-      : // todo(judo): figure out why this is needed
-        currencyBalances[Field.INPUT],
-  ]
+  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], toggledTrade?.maximumAmountIn(allowedSlippage)]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = t`Insufficient ${amountIn.currency.symbol} balance`
