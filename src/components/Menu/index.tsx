@@ -337,11 +337,11 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>
             external ? (
-              <ExternalMenuItem id="link" href={link} key={link + i}>
+              <ExternalMenuItem href={link} key={i}>
                 {content}
               </ExternalMenuItem>
             ) : (
-              <NewMenuItem id="link" to={link} key={link + i}>
+              <NewMenuItem to={link} key={i}>
                 {content}
               </NewMenuItem>
             )

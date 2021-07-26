@@ -7,8 +7,29 @@ import {
   TickMath,
 } from '@uniswap/v3-sdk/dist/'
 import { Price, Token } from '@uniswap/sdk-core'
-import { tryParseAmount } from 'state/swap/hooks'
 import JSBI from 'jsbi'
+
+export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {
+  if (!baseToken || !quoteToken || !value) {
+    return undefined
+  }
+
+  if (!value.match(/^\d*\.?\d+$/)) {
+    return undefined
+  }
+
+  const [whole, fraction] = value.split('.')
+
+  const decimals = fraction?.length ?? 0
+  const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
+
+  return new Price(
+    baseToken,
+    quoteToken,
+    JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** baseToken.decimals)),
+    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals))
+  )
+}
 
 export function tryParseTick(
   baseToken?: Token,
@@ -20,14 +41,11 @@ export function tryParseTick(
     return undefined
   }
 
-  // base token fixed at 1 unit, quote token amount based on typed input
-  const amount = tryParseAmount(value, quoteToken)
-  const amountOne = tryParseAmount('1', baseToken)
+  const price = tryParsePrice(baseToken, quoteToken, value)
 
-  if (!amount || !amountOne) return undefined
-
-  // parse the typed value into a price
-  const price = new Price(baseToken, quoteToken, amountOne.quotient, amount.quotient)
+  if (!price) {
+    return undefined
+  }
 
   let tick: number
 
