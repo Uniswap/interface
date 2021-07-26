@@ -10,8 +10,6 @@ import {
   FXS,
   renBTC,
   TRIBE,
-  UMA,
-  UNI,
   USDC,
   USDT,
   WBTC,
@@ -43,11 +41,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
     '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
-    '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [UNI[SupportedChainId.MAINNET]],
-    '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [UNI[SupportedChainId.MAINNET]],
-    '0xE0360A9e2cdd7d03B9408c7D3001E017BAc2EcD5': [UNI[SupportedChainId.MAINNET]],
-    '0xa6e3454fec677772dd771788a079355e43910638': [UMA],
-    '0xB46F57e7Ce3a284d74b70447Ef9352B5E5Df8963': [UMA],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
     [FRAX.address]: [FXS],

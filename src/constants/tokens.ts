@@ -100,13 +100,6 @@ export const renBTC = new Token(
   'renBTC',
   'renBTC'
 )
-export const UMA = new Token(
-  SupportedChainId.MAINNET,
-  '0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828',
-  18,
-  'UMA',
-  'UMA Voting Token v1'
-)
 export const ETH2X_FLI = new Token(
   SupportedChainId.MAINNET,
   '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD',
