@@ -116,7 +116,7 @@ function useSwapCallArguments(
           }
         }
       })
-    } else if (trade instanceof V3Trade) {
+    } else {
       // trade is V3Trade
       const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
       if (!swapRouterAddress) return []
@@ -171,12 +171,13 @@ function useSwapCallArguments(
           value,
         },
       ]
-    } else {
-      const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-      if (!swapRouterAddress) return []
-
-      return [{ address: swapRouterAddress, ...trade.methodParameters }]
     }
+    // else {
+    //   const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+    //   if (!swapRouterAddress) return []
+
+    //   return [{ address: swapRouterAddress, ...trade.methodParameters }]
+    // }
   }, [
     account,
     allowedSlippage,
