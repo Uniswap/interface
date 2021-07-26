@@ -114,21 +114,6 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
-// Mirror Protocol compat.
-export const UST = new Token(
-  SupportedChainId.MAINNET,
-  '0xa47c8bf37f92abed4a126bda807a7b7498661acd',
-  18,
-  'UST',
-  'Wrapped UST'
-)
-export const MIR = new Token(
-  SupportedChainId.MAINNET,
-  '0x09a3ecafa817268f77be1283176b946c4ff2e608',
-  18,
-  'MIR',
-  'Wrapped MIR'
-)
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
