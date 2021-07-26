@@ -105,6 +105,14 @@ export const MAINNET_TOKEN_LIST = {
       name: 'Smart MFG',
       decimals: 18,
       logoURI: 'https://i.imgur.com/oReNLqf.png'
+    },
+    {
+      chainId: 1,
+      address: '0x70e8dE73cE538DA2bEEd35d14187F6959a8ecA96',
+      symbol: 'XSGD',
+      name: 'XSGD',
+      decimals: 6,
+      logoURI: 'https://assets.website-files.com/600e34cbaf525c42912af8b6/600e34cbaf525c7ad82af99b_xgd-img%20(1).svg'
     }
   ],
   version: {
