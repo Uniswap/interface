@@ -1,7 +1,5 @@
-import React from 'react'
 import { TextInput, ResizingTextArea } from './'
 import { render, screen, fireEvent } from 'test-utils'
-import '@testing-library/jest-dom/extend-expect'
 
 describe('TextInput', () => {
   it('renders correctly', () => {
@@ -17,7 +15,7 @@ describe('TextInput', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('call the handler on user input', () => {
+  it('calls the handler on user input', () => {
     const onUserInputSpy = jest.fn()
     render(
       <TextInput
@@ -50,7 +48,7 @@ describe('ResizableTextArea', () => {
     expect(asFragment()).toMatchSnapshot()
   })
 
-  it('call the handler on user input', () => {
+  it('calls the handler on user input', () => {
     const onUserInputSpy = jest.fn()
     render(
       <ResizingTextArea
