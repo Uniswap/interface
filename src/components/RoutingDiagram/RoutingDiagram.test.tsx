@@ -2,7 +2,8 @@ import React from 'react'
 import RoutingDiagram, { Route } from './RoutingDiagram'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { render } from '../../utils/testUtils'
+import { render } from 'test-utils'
+import useHttpLocations from 'hooks/useHttpLocations'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
 const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')
@@ -21,17 +22,25 @@ const multiRoute: Route[] = [
   },
 ]
 
+// mock useHttpLocations to avoid having to load Web3
+jest.mock('hooks/useHttpLocations')
+const mockUseHttpLocation = useHttpLocations as jest.MockedFunction<typeof useHttpLocations>
+
+beforeEach(() => {
+  mockUseHttpLocation.mockReturnValue([])
+})
+
 it('renders when no routes are provided', () => {
-  const component = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} routes={[]} />)
-  expect(component).toMatchSnapshot()
+  const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} routes={[]} />)
+  expect(asFragment()).toMatchSnapshot()
 })
 
 it('renders single route', () => {
-  const component = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={[singleRoute]} />)
-  expect(component).toMatchSnapshot()
+  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={[singleRoute]} />)
+  expect(asFragment()).toMatchSnapshot()
 })
 
 it('renders multi route', () => {
-  const component = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={multiRoute} />)
-  expect(component).toMatchSnapshot()
+  const { asFragment } = render(<RoutingDiagram currencyIn={USDC} currencyOut={DAI} routes={multiRoute} />)
+  expect(asFragment()).toMatchSnapshot()
 })
