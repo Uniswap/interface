@@ -18,7 +18,6 @@ import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
-import { MultiRouteTrade } from 'state/routing/slice'
 
 enum SwapCallbackState {
   INVALID,
@@ -54,11 +53,7 @@ interface FailedCall extends SwapCallEstimate {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | MultiRouteTrade<Currency, Currency, TradeType>
-    | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
@@ -242,11 +237,7 @@ function swapErrorToUserReadableMessage(error: any): string {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | MultiRouteTrade<Currency, Currency, TradeType>
-    | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null

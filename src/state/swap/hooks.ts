@@ -21,7 +21,6 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { MultiRouteTrade } from 'state/routing/slice'
 import { useRouterTradeExactIn, useRouterTradeExactOut } from 'hooks/useRouter'
 
 export function useSwapState(): AppState['swap'] {
@@ -123,14 +122,10 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3TradeState: {
-    trade: V3Trade<Currency, Currency, TradeType> | MultiRouteTrade<Currency, Currency, TradeType> | null
+    trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
   }
-  toggledTrade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | MultiRouteTrade<Currency, Currency, TradeType>
-    | undefined
+  toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()
@@ -175,10 +170,10 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   // fallback to v3 if mult-route trade was unsuccessful
   const v3Trade =
     (isExactIn
-      ? routerTradeExactIn.state === V3TradeState.NO_ROUTE_FOUND
+      ? [V3TradeState.NO_ROUTE_FOUND, V3TradeState.INVALID].includes(routerTradeExactIn.state)
         ? bestV3TradeExactIn
         : routerTradeExactIn
-      : routerTradeExactOut.state === V3TradeState.NO_ROUTE_FOUND
+      : [V3TradeState.NO_ROUTE_FOUND, V3TradeState.INVALID].includes(routerTradeExactOut.state)
       ? bestV3TradeExactOut
       : routerTradeExactOut) ?? undefined
 
