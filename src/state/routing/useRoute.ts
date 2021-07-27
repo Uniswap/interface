@@ -39,13 +39,19 @@ function buildRoute(
   const initialPool = getPool({ poolsInRoute, token0: inId, token1: outId })
   const pools = [initialPool]
 
+  console.log(`initial pool: ${initialPool.token0.address} ${initialPool.token1.address}`)
+
   while (outId !== currencyOut.wrapped.address) {
     const pool = getPool({ poolsInRoute, token0: outId })
     pools.push(pool)
 
+    console.log(`pool: ${pool.token0.address} ${pool.token1.address}`)
+
     inId = outId
     outId = pool.token1.wrapped.address
   }
+
+  console.log('done')
 
   return new Route<Currency, Currency>(pools, currencyIn, currencyOut)
 }
@@ -84,6 +90,8 @@ export function useRoute(
         : undefined,
     [quoteResult?.routeEdges, tokensInRoute]
   )
+
+  console.log('runing')
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut || !quoteResult || !poolsInRoute) {

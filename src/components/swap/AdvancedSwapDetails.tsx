@@ -31,6 +31,10 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
   return !trade ? null : (
     <AutoColumn gap="8px" style={{ padding: '.5rem' }}>
       <RowBetween>
+        <SwapRoute trade={trade} />
+      </RowBetween>
+
+      <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Liquidity Provider Fee</Trans>
@@ -38,17 +42,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-        </TYPE.black>
-      </RowBetween>
-
-      <RowBetween>
-        <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400}>
-            <Trans>Route</Trans>
-          </TYPE.black>
-        </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12}>
-          <SwapRoute trade={trade} />
         </TYPE.black>
       </RowBetween>
 
