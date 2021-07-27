@@ -79,7 +79,6 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
-
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
@@ -99,52 +98,22 @@ function TransactionSubmittedContent({
 
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
-  const transaction = useTransaction(hash)
-  const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
-
-  // convert unix time difference to seconds
-  const secondsToConfirm = transaction?.confirmedTime
-    ? (transaction.confirmedTime - transaction.addedTime) / 1000
-    : undefined
-
   return (
     <Wrapper>
       <Section inline={inline}>
         {!inline && (
           <RowBetween>
-            <div></div>
+            <div />
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
-        {confirmed ? (
-          <ConfirmedIcon inline={inline}>
-            {transactionSuccess ? (
-              <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
-            ) : (
-              <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
-            )}
-          </ConfirmedIcon>
-        ) : (
-          <ConfirmedIcon inline={inline}>
-            <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
-          </ConfirmedIcon>
-        )}
+        <ConfirmedIcon inline={inline}>
+          <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
+        </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            {!transactionSuccess ? (
-              <Trans>Error</Trans>
-            ) : confirmed ? (
-              <Trans>Success</Trans>
-            ) : (
-              <Trans>Transaction Submitted</Trans>
-            )}
+            <Trans>Transaction Submitted</Trans>
           </Text>
-          {!transaction ? null : (
-            <Text fontWeight={400} fontSize={16} textAlign="center">
-              {transaction?.summary}
-            </Text>
-          )}
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
@@ -168,7 +137,7 @@ function TransactionSubmittedContent({
               )}
             </ButtonLight>
           )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: secondsToConfirm ? '4px 0 0 0' : '20px 0 0 0' }}>
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
             </Text>
