@@ -64,12 +64,6 @@ export default function Popups() {
   const { chainId } = useActiveWeb3React()
   const isNotOnMainnet = Boolean(chainId && chainId !== SupportedChainId.MAINNET)
 
-  const anyModalOpen = useIsAnyModalOpen()
-
-  if (anyModalOpen) {
-    return null
-  }
-
   return (
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive} xlPadding={isNotOnMainnet}>
