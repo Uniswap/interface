@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import { useActivePopups, useIsAnyModalOpen } from '../../state/application/hooks'
+import { useActivePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
 import PopupItem from './PopupItem'
 import ClaimPopup from './ClaimPopup'
