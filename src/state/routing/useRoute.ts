@@ -13,9 +13,12 @@ function getPool({
   token0: string
   token1?: string | undefined
 }): Pool {
-  const pool = poolsInRoute.find(
-    (p) => p.token0.wrapped.address === token0 && (!token1 || p.token1.wrapped.address === token1)
-  )
+  const pool = poolsInRoute.find((p) => {
+    return (
+      [p.token0.wrapped.address, p.token1.wrapped.address].includes(token0) &&
+      (!token1 || [p.token0.wrapped.address, p.token1.wrapped.address].includes(token1))
+    )
+  })
   if (!pool) {
     throw new Error(`Pool with token0 ${token0} ${token1 ? `and token1 ${token1}` : ''} not found`)
   }
@@ -91,7 +94,8 @@ export function useRoute(
       return quoteResult.routeEdges
         .filter((edge) => edge.inId === currencyIn.wrapped.address)
         .map((edge) => buildRoute(poolsInRoute, currencyIn, currencyOut, edge))
-    } catch {
+    } catch (err) {
+      console.debug(err)
       return undefined
     }
   }, [currencyIn, currencyOut, poolsInRoute, quoteResult])

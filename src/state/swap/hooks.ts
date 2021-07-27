@@ -21,7 +21,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useRouterTradeExactIn, useRouterTradeExactOut } from 'hooks/useRouter'
+import { useRouterTradeExactIn, useRouterTradeExactOut } from 'state/routing/useRouterTrade'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
