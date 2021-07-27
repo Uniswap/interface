@@ -606,6 +606,7 @@ export default function AddLiquidity({
                     handleRateToggle={() => {
                       onLeftRangeInput((invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '')
                       onRightRangeInput((invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '')
+                      onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
                       history.push(
                         `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
                       )
