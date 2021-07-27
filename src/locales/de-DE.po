@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-07-27 19:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-07-15 22:05\n"
+"PO-Revision-Date: 2021-07-27 20:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -413,6 +413,7 @@ msgid "Clear all"
 msgstr "Alles löschen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Schließen"
 
@@ -482,6 +483,10 @@ msgstr "Tausch bestätigen"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Diese Transaktion in Ihrer Wallet bestätigen"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Transaktion in Wallet bestätigen"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +734,7 @@ msgstr "Gültigen Listenort eingeben"
 msgid "Enter valid token address"
 msgstr "Gültige Token-Adresse eingeben"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1373,6 +1379,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "Begrenzt Swaps nur auf Direktpaare."
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Zurück"
@@ -1483,6 +1490,10 @@ msgstr "Stimmabgabe wird eingereicht"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Erfolgreich"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Erfolg"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1646,6 +1657,7 @@ msgid "Transaction Settings"
 msgstr "Transaktionseinstellungen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1665,10 @@ msgstr "Transaktionseinstellungen"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transaktion gesendet"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transaktion abgeschlossen in"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1845,7 @@ msgstr "Auf Etherscan ansehen"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Im Explorer anzeigen"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-07-27 19:57+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-19 13:09\n"
+"PO-Revision-Date: 2021-07-27 20:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -413,6 +413,7 @@ msgid "Clear all"
 msgstr "すべてクリア"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "閉じる"
 
@@ -481,6 +482,10 @@ msgstr "スワップの確認"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
+msgstr "ウォレットで取引を確認する"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
 msgstr "ウォレットで取引を確認する"
 
 #: src/pages/AddLiquidityV2/index.tsx
@@ -729,6 +734,7 @@ msgstr "有効なリストの位置を入力ください"
 msgid "Enter valid token address"
 msgstr "有効なトークンアドレスを入力してください"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1373,6 +1379,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "スワップをダイレクトペアのみに制限します。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "戻る"
@@ -1482,6 +1489,10 @@ msgstr "投票を送信中"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
+msgstr "成功"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
 msgstr "成功"
 
 #: src/pages/AddLiquidityV2/index.tsx
@@ -1646,6 +1657,7 @@ msgid "Transaction Settings"
 msgstr "取引設定"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1665,10 @@ msgstr "取引設定"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "取引が送信されました"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "で完了したトランザクション"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1845,7 @@ msgstr "Etherscanで表示"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "エクスプローラーで見る"
