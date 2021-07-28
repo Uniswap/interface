@@ -8,17 +8,16 @@ import { Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
 import { GenericBadge } from 'components/Badge'
 import { Zap } from 'react-feather'
-import { useAllIncentives } from '../../hooks/incentives/useAllIncentives'
-import ProgramCard from './ProgramCard'
+import { useAllIncentivesByPool } from '../../hooks/incentives/useAllIncentives'
+import ProgramCard from '../../components/earn/ProgramCard'
 import Loader from 'components/Loader'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  max-width: 840px;
   width: 100%;
 `
 
 const TopSection = styled(AutoColumn)`
-  max-width: 720px;
   width: 100%;
 `
 
@@ -26,7 +25,7 @@ const ProgramSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   column-gap: 10px;
-  row-gap: 15px;
+  row-gap: 24px;
   width: 100%;
   justify-self: center;
 `
@@ -40,7 +39,7 @@ flex-direction: column;
 export default function Earn() {
   const theme = useTheme()
 
-  const { loading, incentives: allIncentives } = useAllIncentives()
+  const { loading, incentives } = useAllIncentivesByPool()
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -69,7 +68,7 @@ export default function Earn() {
       </TopSection>
 
       <DarkCard>
-        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+        <AutoColumn gap="lg" style={{ width: '100%' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
             <TYPE.body style={{ marginTop: '0.5rem' }}>
               <Trans>Rewards programs</Trans>
@@ -78,8 +77,18 @@ export default function Earn() {
           <ProgramSection>
             {loading ? (
               <Loader />
+            ) : !incentives ? (
+              <TYPE.body>
+                <Trans>Error loading program</Trans>{' '}
+              </TYPE.body>
             ) : (
-              allIncentives?.map((incentive, i) => <ProgramCard key={`program-card-${i}`} incentive={incentive} />)
+              Object.keys(incentives).map((poolAddress) => (
+                <ProgramCard
+                  key={poolAddress + '-program-overview'}
+                  poolAddress={poolAddress}
+                  incentives={incentives[poolAddress]}
+                />
+              ))
             )}
           </ProgramSection>
         </AutoColumn>

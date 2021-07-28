@@ -105,3 +105,42 @@ export function useAllIncentives(): {
     }
   }, [allTokens, incentiveStates, parsedLogs, poolMap])
 }
+
+export function useAllIncentivesByPool(): {
+  loading: boolean
+  incentives?: {
+    [poolAddress: string]: Incentive[]
+  }
+} {
+  const { loading, incentives } = useAllIncentives()
+
+  return useMemo(() => {
+    if (loading) {
+      return {
+        loading: true,
+        incentives: undefined,
+      }
+    }
+    if (!incentives) {
+      return {
+        loading: false,
+        incentives: undefined,
+      }
+    }
+    return {
+      loading: false,
+      incentives: incentives.reduce(
+        (
+          accum: {
+            [poolAddress: string]: Incentive[]
+          },
+          incentive
+        ) => {
+          accum[incentive.poolAddress] = [...(accum[incentive.poolAddress] ?? []), incentive]
+          return accum
+        },
+        {}
+      ),
+    }
+  }, [incentives, loading])
+}

@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
@@ -6,18 +7,21 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 
-const MonoFront = styled(TYPE.body)`
+const MonoFront = styled(TYPE.body)<{ faded?: boolean }>`
   font-variant-numeric: tabular-nums;
-  color: ${({ theme }) => theme.blue3};
-  background-color: ${({ theme }) => theme.blue4};
-  padding: 4px 8px;
+  background-color: ${({ theme }) => transparentize(0.7, theme.bg3)};
+  padding: 6px 8px;
   border-radius: 12px;
   display: flex;
   align-items: center;
-  font-size: 12px;
+  justify-content: center;
+  text-align: center;
+  font-size: 15px;
+  opacity: ${({ faded }) => (faded ? 0.5 : 1)};
 
   > * {
-    font-size: 12px;
+    text-align: center;
+    font-size: 15px;
   }
 `
 
@@ -25,7 +29,7 @@ const Dot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: ${({ theme }) => theme.blue3};
+  background-color: ${({ theme }) => theme.white};
 `
 
 export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd: Date }) {
@@ -51,7 +55,7 @@ export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd
   let timeRemaining: number
   let message: string
   if (timeUntilGenesis >= 0) {
-    message = 'Rewards begin in'
+    message = ''
     timeRemaining = timeUntilGenesis
   } else {
     const ongoing = timeUntilEnd >= 0
@@ -59,7 +63,7 @@ export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd
       message = ''
       timeRemaining = timeUntilEnd
     } else {
-      message = 'Rewards have ended!'
+      message = 'Rewards ended!'
       timeRemaining = Infinity
     }
   }
@@ -73,13 +77,15 @@ export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd
   const seconds = timeRemaining
 
   return (
-    <MonoFront fontWeight={700}>
-      <span style={{ fontSize: '12px', marginRight: '4px' }}>{message !== '' ? message : <Dot />}</span>
+    <MonoFront fontWeight={700} faded={timeUntilGenesis >= 0}>
+      <span style={{ fontSize: '16px', marginRight: '4px' }}>{message !== '' ? message : <Dot />}</span>
       {Number.isFinite(timeRemaining) && (
         <code>
-          {`${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds
-            .toString()
-            .padStart(2, '0')}`}
+          {timeUntilGenesis >= 0
+            ? `${days}d ${hours.toString().padStart(2, '0')}h`
+            : `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds
+                .toString()
+                .padStart(2, '0')}`}
           s
         </code>
       )}

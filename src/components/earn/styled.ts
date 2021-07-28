@@ -21,7 +21,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   border-radius: 12px;
   opacity: 0.7;
   top: -300px;
-  left: -160px;
+  left: 40px;
   transform: rotate(0deg);
   user-select: none;
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
@@ -63,6 +63,7 @@ export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
 
 export const Break = styled.div`
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(to left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.24));
   height: 1px;
+  border-radius: 1px;
 `

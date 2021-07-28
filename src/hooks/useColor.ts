@@ -1,3 +1,4 @@
+import { useActiveWeb3React } from 'hooks/web3'
 import { useState, useLayoutEffect } from 'react'
 import { shade } from 'polished'
 import Vibrant from 'node-vibrant'
@@ -46,8 +47,14 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 export function useColor(token?: Token) {
   const [color, setColor] = useState('#2172E5')
 
+  const { chainId } = useActiveWeb3React()
+
   useLayoutEffect(() => {
     let stale = false
+
+    if (!chainId || chainId !== 1) {
+      return
+    }
 
     if (token) {
       getColorFromToken(token).then((tokenColor) => {
@@ -61,7 +68,7 @@ export function useColor(token?: Token) {
       stale = true
       setColor('#2172E5')
     }
-  }, [token])
+  }, [chainId, token])
 
   return color
 }
