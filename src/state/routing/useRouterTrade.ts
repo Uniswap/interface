@@ -12,7 +12,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const { account } = useActiveWeb3React()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    amountIn && currencyOut && account
+    amountIn && currencyOut
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
           tokenInChainId: amountIn.currency.chainId,
@@ -20,6 +20,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           tokenOutChainId: currencyOut.chainId,
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
+          recipient: account ?? undefined,
         }
       : skipToken,
     { pollingInterval: ms`5m` }
@@ -70,7 +71,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const { account } = useActiveWeb3React()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    amountOut && currencyIn && account
+    amountOut && currencyIn
       ? {
           tokenInAddress: currencyIn.wrapped.address,
           tokenInChainId: currencyIn.chainId,
@@ -78,6 +79,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           tokenOutChainId: amountOut.currency.chainId,
           amount: amountOut.quotient.toString(),
           type: 'exactOut',
+          recipient: account ?? undefined,
         }
       : skipToken,
     { pollingInterval: ms`5m` }
