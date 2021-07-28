@@ -16,7 +16,7 @@ function getTokenPath(trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Cu
   }
 
   return trade.swaps.map((swap) => ({
-    percent: 50, // TODO
+    percent: 0, // TODO
     path: swap.route.pools.map(({ token0, token1, fee }: Pool) => [token0, token1, fee]),
   }))
 }
