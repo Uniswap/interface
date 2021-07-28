@@ -1,12 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, Trade } from '@uniswap/v3-sdk'
+import { Trade } from '@uniswap/v3-sdk'
+import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { V3TradeState } from '../../hooks/useBestV3Trade'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useRoute } from './useRoute'
+import { useRoutes } from './useRoutes'
 
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
   const { account } = useActiveWeb3React()
@@ -26,8 +26,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   )
 
   // process route data
-  // todo(judo): add s
-  const routes = useRoute(amountIn?.currency, currencyOut, data)
+  const routes = useRoutes(amountIn?.currency, currencyOut, data)
 
   // todo(judo): validate block number for freshness
 
@@ -71,19 +70,21 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const { account } = useActiveWeb3React()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    // amountOut && currencyIn && account
-    //   ? {
-    //       tokenInAddress: currencyIn.wrapped.address,
-    //       tokenInChainId: currencyIn.chainId,
-    //       tokenOutAddress: amountOut.currency.wrapped.address,
-    //       tokenOutChainId: amountOut.currency.chainId,
-    //       amount: amountOut.quotient.toString(),
-    //       type: 'exactOut',
-    //     }
-    //   :
-    skipToken,
+    amountOut && currencyIn && account
+      ? {
+          tokenInAddress: currencyIn.wrapped.address,
+          tokenInChainId: currencyIn.chainId,
+          tokenOutAddress: amountOut.currency.wrapped.address,
+          tokenOutChainId: amountOut.currency.chainId,
+          amount: amountOut.quotient.toString(),
+          type: 'exactOut',
+        }
+      : skipToken,
     { pollingInterval: ms`5m` }
   )
+
+  // process route data
+  const routes = useRoutes(currencyIn, amountOut?.currency, data)
 
   // todo(judo): validate block number for freshness
 
@@ -95,7 +96,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       }
     }
 
-    if (isLoading) {
+    if (isLoading || routes === undefined) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -112,13 +113,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     }
 
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_OUTPUT>({
-      routes: [
-        {
-          route: null as any as Route<Currency, Currency>,
-          inputAmount: amountIn,
-          outputAmount: amountOut,
-        },
-      ],
+      routes: routes.map((route) => ({ route, inputAmount: amountIn, outputAmount: amountOut })),
       tradeType: TradeType.EXACT_OUTPUT,
     })
 
@@ -126,5 +121,5 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountOut, currencyIn, isError, isLoading, isFetching])
+  }, [amountOut, currencyIn, isError, isLoading, routes, data, isFetching])
 }

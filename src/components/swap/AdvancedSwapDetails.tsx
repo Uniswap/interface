@@ -17,8 +17,6 @@ interface AdvancedSwapDetailsProps {
 }
 
 export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
-
   const { realizedLPFee, priceImpact } = useMemo(() => {
     if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
 
