@@ -40,8 +40,8 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <SEO
-      title="Kyber DMM - Powering decentralized token exchange and liquidity"
-      description="Kyber DMM is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. Kyber DMM is the first major protocol in Kyber’s liquidity hub."
+      title="KyberDMM - Powering decentralized token exchange and liquidity"
+      description="KyberDMM is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber’s liquidity hub."
     />
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
