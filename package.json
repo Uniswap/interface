@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@ethersproject/experimental": "^5.2.0",
+    "@ethersproject/experimental": "^5.4.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/typescript": "1.22.3",
