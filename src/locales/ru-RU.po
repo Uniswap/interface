@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-27 20:04\n"
+"PO-Revision-Date: 2021-07-28 11:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1493,7 +1493,7 @@ msgstr "Успешно"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Success"
-msgstr "Успех"
+msgstr "Успешно"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1668,7 +1668,7 @@ msgstr "Транзакция отправлена"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction completed in"
-msgstr "Транзакция завершена в"
+msgstr "Транзакция завершена за"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
