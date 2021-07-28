@@ -3,59 +3,6 @@ import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { GetQuoteResult } from 'state/routing/slice'
 
-// utility to get pool from array
-function getPool({
-  poolsInRoute,
-  token0,
-  token1,
-}: {
-  poolsInRoute: Pool[]
-  token0: string
-  token1?: string | undefined
-}): Pool {
-  const pool = poolsInRoute.find((p) => {
-    return (
-      [p.token0.wrapped.address, p.token1.wrapped.address].includes(token0) &&
-      (!token1 || [p.token0.wrapped.address, p.token1.wrapped.address].includes(token1))
-    )
-  })
-  if (!pool) {
-    throw new Error(`Pool with token0 ${token0} ${token1 ? `and token1 ${token1}` : ''} not found`)
-  }
-
-  return pool
-}
-
-// assumes every node has exactly one incoming and one outgoing edge, except for
-// the source and the destination respectively
-function buildRoute(
-  poolsInRoute: Pool[],
-  currencyIn: Currency,
-  currencyOut: Currency,
-  startingEdge: GetQuoteResult['routeEdges'][0]
-): Route<Currency, Currency> {
-  let { inId, outId } = startingEdge
-
-  const initialPool = getPool({ poolsInRoute, token0: inId, token1: outId })
-  const pools = [initialPool]
-
-  console.log(`initial pool: ${initialPool.token0.address} ${initialPool.token1.address}`)
-
-  while (outId !== currencyOut.wrapped.address) {
-    const pool = getPool({ poolsInRoute, token0: outId })
-    pools.push(pool)
-
-    console.log(`pool: ${pool.token0.address} ${pool.token1.address}`)
-
-    inId = outId
-    outId = pool.token1.wrapped.address
-  }
-
-  console.log('done')
-
-  return new Route<Currency, Currency>(pools, currencyIn, currencyOut)
-}
-
 export function useRoute(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
@@ -71,40 +18,115 @@ export function useRoute(
     [quoteResult]
   )
 
-  // convert edges to `Pool`s
-  // keep as array for simplicity since size will always be small
-  const poolsInRoute = useMemo(
+  // adjacency lists representing all outgoing edges from a given Token
+  const graph = useMemo(
     () =>
-      tokensInRoute
-        ? quoteResult?.routeEdges?.map(({ inId, outId, fee, sqrtRatioX96, liquidity, tickCurrent }) => {
-            return new Pool(
-              tokensInRoute[inId],
-              tokensInRoute[outId],
-              // todo(judo): will return undefined for invalid fee amounts. add tests
-              parseInt(fee) as FeeAmount,
-              sqrtRatioX96,
-              liquidity,
-              parseInt(tickCurrent)
-            )
-          })
+      quoteResult && tokensInRoute
+        ? quoteResult.routeEdges.reduce<Record<string, string[]>>((adjacencyList, { inId, outId }) => {
+            adjacencyList[inId] = (adjacencyList[inId] || []).concat(outId)
+            return adjacencyList
+          }, {})
         : undefined,
-    [quoteResult?.routeEdges, tokensInRoute]
+    [quoteResult, tokensInRoute]
   )
 
-  console.log('runing')
-
   return useMemo(() => {
-    if (!currencyIn || !currencyOut || !quoteResult || !poolsInRoute) {
+    if (!currencyIn || !currencyOut || !quoteResult || !tokensInRoute || !graph) {
       return undefined
     }
 
     try {
-      return quoteResult.routeEdges
-        .filter((edge) => edge.inId === currencyIn.wrapped.address)
-        .map((edge) => buildRoute(poolsInRoute, currencyIn, currencyOut, edge))
+      const allRoutes: string[][] = []
+      buildRoutes({
+        graph,
+        src: currencyIn.wrapped.address,
+        dest: currencyOut.wrapped.address,
+        discovered: {},
+        path: [],
+        acc: allRoutes,
+      })
+
+      console.log(`found all routes: ${JSON.stringify(allRoutes)}`)
+
+      return allRoutes.map(
+        (route) => new Route(parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges), currencyIn, currencyOut)
+      )
     } catch (err) {
       console.debug(err)
       return undefined
     }
-  }, [currencyIn, currencyOut, poolsInRoute, quoteResult])
+  }, [currencyIn, currencyOut, graph, quoteResult, tokensInRoute])
+}
+
+// DFS
+function buildRoutes({
+  graph,
+  src,
+  dest,
+  discovered,
+  path,
+  acc,
+}: {
+  graph: Record<string, string[]>
+  src: string
+  dest: string
+
+  // modified in-place
+  discovered: Record<string, boolean>
+  path: string[]
+  acc: string[][]
+}) {
+  // mark current as discovered
+  discovered[src] = true
+
+  // include current in path
+  path.push(src)
+
+  // if destination was found
+  if (src === dest) {
+    acc.push(path.slice())
+  }
+
+  for (const child of graph[src] ?? []) {
+    if (!discovered[child]) {
+      buildRoutes({ graph, src: child, dest, discovered, path, acc })
+    }
+  }
+
+  // backtrack
+  path.pop()
+  discovered[src] = false
+}
+
+// transforms an array of Token addresses into an array of Pools
+function parseRouteToPool(
+  tokens: string[],
+  tokensInRoute: Record<string, Token>,
+  edges: GetQuoteResult['routeEdges']
+): Pool[] {
+  const pools = []
+  for (let i = 1; i < tokens.length; i++) {
+    const [inId, outId] = [tokens[i - 1], tokens[i]]
+    const edge = edges.find(({ inId: edgeInId, outId: edgeOutId }) => inId === edgeInId && outId === edgeOutId)
+
+    if (!edge) {
+      throw new Error(`Edge ${inId}->${outId} not found`)
+    }
+
+    const { fee, sqrtRatioX96, liquidity, tickCurrent } = edge
+
+    pools.push(
+      new Pool(
+        tokensInRoute[inId],
+        tokensInRoute[outId],
+        // todo(judo): will return undefined for invalid fee amounts. add tests
+        parseInt(fee) as FeeAmount,
+        sqrtRatioX96,
+        liquidity,
+        parseInt(tickCurrent)
+      )
+    )
+  }
+
+  return pools
 }

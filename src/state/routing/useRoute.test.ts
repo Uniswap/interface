@@ -57,7 +57,7 @@ describe('#useRoute', () => {
     expect(result.current && result.current[0].tokenPath).toEqual([DAI, USDC])
   })
 
-  fit('handles a multi-route trade from DAI to USDC', () => {
+  it('handles a multi-route trade from DAI to USDC', () => {
     const { result } = renderHook(() =>
       useRoute(DAI, USDC, {
         routeEdges: [
