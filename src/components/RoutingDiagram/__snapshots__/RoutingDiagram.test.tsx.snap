@@ -49,10 +49,21 @@ exports[`renders multi route 1`] = `
               class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
               width="auto"
             >
-              <doublelogo
-                currency0="[object Object]"
-                currency1="[object Object]"
-              />
+              <div
+                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+              >
+                <img
+                  alt="USDC logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  alt="DAI logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
+                  sizeraw="16"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+              </div>
               500
             </div>
           </div>
@@ -124,10 +135,21 @@ exports[`renders multi route 1`] = `
               class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
               width="auto"
             >
-              <doublelogo
-                currency0="[object Object]"
-                currency1="[object Object]"
-              />
+              <div
+                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+              >
+                <img
+                  alt="USDC logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  alt="MKR logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
+                  sizeraw="16"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
+                />
+              </div>
               3000
             </div>
           </div>
@@ -159,10 +181,21 @@ exports[`renders multi route 1`] = `
               class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
               width="auto"
             >
-              <doublelogo
-                currency0="[object Object]"
-                currency1="[object Object]"
-              />
+              <div
+                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+              >
+                <img
+                  alt="MKR logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
+                />
+                <img
+                  alt="DAI logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
+                  sizeraw="16"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+              </div>
               10000
             </div>
           </div>
@@ -243,10 +276,21 @@ exports[`renders single route 1`] = `
               class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
               width="auto"
             >
-              <doublelogo
-                currency0="[object Object]"
-                currency1="[object Object]"
-              />
+              <div
+                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+              >
+                <img
+                  alt="USDC logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                />
+                <img
+                  alt="DAI logo"
+                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
+                  sizeraw="16"
+                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+              </div>
               500
             </div>
           </div>

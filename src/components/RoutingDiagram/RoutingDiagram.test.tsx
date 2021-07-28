@@ -27,7 +27,7 @@ jest.mock('hooks/useHttpLocations')
 const mockUseHttpLocation = useHttpLocations as jest.MockedFunction<typeof useHttpLocations>
 
 // avoid large snapshots
-jest.mock('components/DoubleLogo', () => 'DoubleLogo')
+//jest.mock('components/DoubleLogo')
 
 beforeEach(() => {
   mockUseHttpLocation.mockReturnValue([])
