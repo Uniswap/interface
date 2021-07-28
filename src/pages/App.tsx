@@ -74,7 +74,7 @@ export default function App() {
           <NetworkWarningModal />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
-            <DisclaimerBar/>
+            <DisclaimerBar />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
