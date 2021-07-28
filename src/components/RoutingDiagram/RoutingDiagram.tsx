@@ -14,7 +14,7 @@ export interface Route {
   path: [Currency, Currency, FeeAmount][]
 }
 
-const Wrapper = styled(Box)`
+const Wrapper = styled(AutoColumn)`
   border-top: 1px solid ${({ theme }) => theme.bg2};
   border-bottom: 1px solid ${({ theme }) => theme.bg2};
 
@@ -22,9 +22,9 @@ const Wrapper = styled(Box)`
   padding: 1rem 0;
 `
 
-const StyledRow = styled(Row)`
+const StyledRow = styled(Row)<{ gap: string }>`
   display: grid;
-  grid-gap: 4px;
+  grid-gap: ${({ gap }) => gap};
 
   & > * {
     grid-row: 1;
@@ -33,6 +33,7 @@ const StyledRow = styled(Row)`
 
 const StyledChevronRight = styled(ChevronRight).attrs({ size: 20 })`
   color: ${({ theme }) => theme.bg3};
+  margin: 0 !important; /* overrides AutoRow */
   stroke-width: 3px;
 `
 
@@ -46,7 +47,7 @@ export default function RoutingDiagram({
   routes: Route[]
 }) {
   return (
-    <Wrapper>
+    <Wrapper gap="4px">
       {routes.map((route, index) => (
         <AutoColumn key={index}>
           <Route currencyIn={currencyIn} currencyOut={currencyOut} {...route} />
@@ -68,31 +69,31 @@ function Route({
   path: [Currency, Currency, FeeAmount][]
 }) {
   return (
-    <AutoRow gap="2px" width="auto">
-      <Box>
-        <Badge style={{ marginRight: '8px' }}>
-          <TYPE.small fontSize={12}>{percent}%</TYPE.small>
-        </Badge>
-      </Box>
-      <TYPE.small fontSize={13}>{currencyIn.symbol}</TYPE.small>
-      <StyledChevronRight />
-      {path.map(([currency0, currency1, feeAmount], index) => {
-        return (
-          <AutoRow gap="2px" width="auto" key={index}>
-            <Pool currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
-            <StyledChevronRight />
-          </AutoRow>
-        )
-      })}
-      <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
-    </AutoRow>
+    <StyledRow gap="8px">
+      <Badge>
+        <TYPE.small fontSize={12}>{percent}%</TYPE.small>
+      </Badge>
+      <AutoRow gap="1px" width="auto">
+        <TYPE.small fontSize={13}>{currencyIn.symbol}</TYPE.small>
+        <StyledChevronRight />
+        {path.map(([currency0, currency1, feeAmount], index) => {
+          return (
+            <AutoRow gap="1px" width="auto" key={index}>
+              <Pool currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
+              <StyledChevronRight />
+            </AutoRow>
+          )
+        })}
+        <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
+      </AutoRow>
+    </StyledRow>
   )
 }
 
 function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
   return (
     <Badge>
-      <StyledRow>
+      <StyledRow gap="4px">
         <Box style={{ marginLeft: '6px' }}>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={13} />
         </Box>

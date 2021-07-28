@@ -3,72 +3,34 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
+    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
   >
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
+      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
-        width="auto"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          75%
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            75%
+          </div>
         </div>
         <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          USDC
-        </div>
-        <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
-          fill="none"
-          height="20"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polyline
-            points="9 18 15 12 9 6"
-          />
-        </svg>
-        <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
         >
           <div
-            class="Badge-sc-1mhw5si-0 gayll"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
           >
-            <div
-              class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
-              width="auto"
-            >
-              <div
-                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
-              >
-                <img
-                  alt="USDC logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-                <img
-                  alt="DAI logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
-                  sizeraw="16"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
-              </div>
-              500
-            </div>
+            USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -83,78 +45,94 @@ exports[`renders multi route 1`] = `
               points="9 18 15 12 9 6"
             />
           </svg>
-        </div>
-        <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          DAI
+          <div
+            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
+            width="auto"
+          >
+            <div
+              class="Badge-sc-1mhw5si-0 gayll"
+            >
+              <div
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+              >
+                <div
+                  class="css-vurnku"
+                  style="margin-left: 6px;"
+                >
+                  <div
+                    class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+                  >
+                    <img
+                      alt="USDC logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                    <img
+                      alt="DAI logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__CoveredLogo-sc-skatqk-2 FxUHh"
+                      sizeraw="13"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+                >
+                  0.05%
+                </div>
+              </div>
+            </div>
+            <svg
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
+          >
+            DAI
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
+      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
-        width="auto"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          25%
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            25%
+          </div>
         </div>
         <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          USDC
-        </div>
-        <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
-          fill="none"
-          height="20"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polyline
-            points="9 18 15 12 9 6"
-          />
-        </svg>
-        <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
         >
           <div
-            class="Badge-sc-1mhw5si-0 gayll"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
           >
-            <div
-              class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
-              width="auto"
-            >
-              <div
-                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
-              >
-                <img
-                  alt="USDC logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-                <img
-                  alt="MKR logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
-                  sizeraw="16"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
-                />
-              </div>
-              3000
-            </div>
+            USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -169,57 +147,119 @@ exports[`renders multi route 1`] = `
               points="9 18 15 12 9 6"
             />
           </svg>
-        </div>
-        <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
-          width="auto"
-        >
           <div
-            class="Badge-sc-1mhw5si-0 gayll"
+            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
+            width="auto"
           >
             <div
-              class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
-              width="auto"
+              class="Badge-sc-1mhw5si-0 gayll"
             >
               <div
-                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
               >
-                <img
-                  alt="MKR logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
-                />
-                <img
-                  alt="DAI logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
-                  sizeraw="16"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
+                <div
+                  class="css-vurnku"
+                  style="margin-left: 6px;"
+                >
+                  <div
+                    class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+                  >
+                    <img
+                      alt="USDC logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                    <img
+                      alt="MKR logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__CoveredLogo-sc-skatqk-2 FxUHh"
+                      sizeraw="13"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+                >
+                  0.3%
+                </div>
               </div>
-              10000
             </div>
+            <svg
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
           </div>
-          <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
+            width="auto"
           >
-            <polyline
-              points="9 18 15 12 9 6"
-            />
-          </svg>
-        </div>
-        <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          DAI
+            <div
+              class="Badge-sc-1mhw5si-0 gayll"
+            >
+              <div
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+              >
+                <div
+                  class="css-vurnku"
+                  style="margin-left: 6px;"
+                >
+                  <div
+                    class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+                  >
+                    <img
+                      alt="MKR logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
+                    />
+                    <img
+                      alt="DAI logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__CoveredLogo-sc-skatqk-2 FxUHh"
+                      sizeraw="13"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+                >
+                  1%
+                </div>
+              </div>
+            </div>
+            <svg
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
+          >
+            DAI
+          </div>
         </div>
       </div>
     </div>
@@ -230,72 +270,34 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
+    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
   >
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
+      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
-        width="auto"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          100%
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            100%
+          </div>
         </div>
         <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          USDC
-        </div>
-        <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
-          fill="none"
-          height="20"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polyline
-            points="9 18 15 12 9 6"
-          />
-        </svg>
-        <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
         >
           <div
-            class="Badge-sc-1mhw5si-0 gayll"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
           >
-            <div
-              class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
-              width="auto"
-            >
-              <div
-                class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
-              >
-                <img
-                  alt="USDC logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-                <img
-                  alt="DAI logo"
-                  class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 bzseWM DoubleLogo__CoveredLogo-sc-skatqk-2 jqDGQg"
-                  sizeraw="16"
-                  src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
-              </div>
-              500
-            </div>
+            USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -310,11 +312,65 @@ exports[`renders single route 1`] = `
               points="9 18 15 12 9 6"
             />
           </svg>
-        </div>
-        <div
-          class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
-        >
-          DAI
+          <div
+            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
+            width="auto"
+          >
+            <div
+              class="Badge-sc-1mhw5si-0 gayll"
+            >
+              <div
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+              >
+                <div
+                  class="css-vurnku"
+                  style="margin-left: 6px;"
+                >
+                  <div
+                    class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
+                  >
+                    <img
+                      alt="USDC logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__HigherLogo-sc-skatqk-1 djPAFc"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                    <img
+                      alt="DAI logo"
+                      class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 gPHHmJ DoubleLogo__CoveredLogo-sc-skatqk-2 FxUHh"
+                      sizeraw="13"
+                      src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+                >
+                  0.05%
+                </div>
+              </div>
+            </div>
+            <svg
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
+          >
+            DAI
+          </div>
         </div>
       </div>
     </div>
@@ -325,7 +381,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
+    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
   />
 </DocumentFragment>
 `;

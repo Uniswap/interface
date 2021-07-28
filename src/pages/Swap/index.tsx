@@ -470,7 +470,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <OutlineCard padding="0.5rem">
+              <OutlineCard padding="0.5rem" style={!trade ? { border: 'none' } : {}}>
                 <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
                   <RowFixed>
                     {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
@@ -507,6 +507,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
+                        {/* TODO(judo): use auto router icon */}
                         <StyledAutoRouterIcon size={18} />
                         <GradientText fontSize={12}>Auto Router</GradientText>
                       </AutoRow>
