@@ -64,6 +64,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { ReactComponent as RoutingAPIIcon } from '../../assets/svg/routing_api.svg'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -84,10 +85,10 @@ const StyledChevron = styled(ChevronUp)`
   }
 `
 
-const StyledAutoRouterIcon = styled(GitCommit)`
+const StyledAutoRouterIcon = styled(RoutingAPIIcon)`
   height: 16px;
   width: 16px;
-  color: #2172e5;
+  stroke: #2172e5;
 `
 
 const GradientText = styled(TYPE.black)`
@@ -507,9 +508,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
-                        {/* TODO(judo): use auto router icon */}
-                        <StyledAutoRouterIcon size={18} />
-                        <GradientText fontSize={12}>Auto Router</GradientText>
+                        <StyledAutoRouterIcon />
+                        <GradientText fontSize={14}>Uniswap API</GradientText>
                       </AutoRow>
                     )}
                   </RowFixed>

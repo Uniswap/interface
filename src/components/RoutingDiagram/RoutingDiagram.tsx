@@ -3,7 +3,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Row, { AutoRow, RowBetween } from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import { ChevronRight } from 'react-feather'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
@@ -11,7 +11,7 @@ import { TYPE } from 'theme'
 
 export interface Route {
   percent: number
-  path: [Currency, Currency, FeeAmount][]
+  path: [Currency, Currency, FeeAmount | undefined][]
 }
 
 const Wrapper = styled(AutoColumn)`
@@ -66,7 +66,7 @@ function Route({
   currencyIn: Currency
   currencyOut: Currency
   percent: number
-  path: [Currency, Currency, FeeAmount][]
+  path: [Currency, Currency, FeeAmount | undefined][]
 }) {
   return (
     <StyledRow gap="8px">
@@ -90,14 +90,22 @@ function Route({
   )
 }
 
-function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
+function Pool({
+  currency0,
+  currency1,
+  feeAmount,
+}: {
+  currency0: Currency
+  currency1: Currency
+  feeAmount: FeeAmount | undefined
+}) {
   return (
     <Badge>
       <StyledRow gap="4px">
         <Box style={{ marginLeft: '6px' }}>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={13} />
         </Box>
-        <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>
+        {feeAmount && <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>}
       </StyledRow>
     </Badge>
   )
