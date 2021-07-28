@@ -3,19 +3,19 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
   >
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
+      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
         width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          75
+          75%
         </div>
         <div
           class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
@@ -23,15 +23,15 @@ exports[`renders multi route 1`] = `
           USDC
         </div>
         <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
           fill="none"
-          height="16"
+          height="20"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           viewBox="0 0 24 24"
-          width="16"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <polyline
@@ -39,7 +39,7 @@ exports[`renders multi route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
           width="auto"
         >
           <div
@@ -68,15 +68,15 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
             fill="none"
-            height="16"
+            height="20"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             viewBox="0 0 24 24"
-            width="16"
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <polyline
@@ -92,16 +92,16 @@ exports[`renders multi route 1`] = `
       </div>
     </div>
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
+      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
         width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          25
+          25%
         </div>
         <div
           class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
@@ -109,15 +109,15 @@ exports[`renders multi route 1`] = `
           USDC
         </div>
         <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
           fill="none"
-          height="16"
+          height="20"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           viewBox="0 0 24 24"
-          width="16"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <polyline
@@ -125,7 +125,7 @@ exports[`renders multi route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
           width="auto"
         >
           <div
@@ -154,15 +154,15 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
             fill="none"
-            height="16"
+            height="20"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             viewBox="0 0 24 24"
-            width="16"
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <polyline
@@ -171,7 +171,7 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
           width="auto"
         >
           <div
@@ -200,15 +200,15 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
             fill="none"
-            height="16"
+            height="20"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             viewBox="0 0 24 24"
-            width="16"
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <polyline
@@ -230,19 +230,19 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
   >
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
+      class="Column__AutoColumn-sc-1kykgp9-2 hWDmCJ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
         width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
-          100
+          100%
         </div>
         <div
           class="theme__TextWrapper-sc-18nh1jk-0 isUuLU css-1kt4f20"
@@ -250,15 +250,15 @@ exports[`renders single route 1`] = `
           USDC
         </div>
         <svg
-          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+          class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
           fill="none"
-          height="16"
+          height="20"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
           viewBox="0 0 24 24"
-          width="16"
+          width="20"
           xmlns="http://www.w3.org/2000/svg"
         >
           <polyline
@@ -266,7 +266,7 @@ exports[`renders single route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa cJkaTS"
           width="auto"
         >
           <div
@@ -295,15 +295,15 @@ exports[`renders single route 1`] = `
             </div>
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-0"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 laQva-D"
             fill="none"
-            height="16"
+            height="20"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             viewBox="0 0 24 24"
-            width="16"
+            width="20"
             xmlns="http://www.w3.org/2000/svg"
           >
             <polyline
@@ -325,7 +325,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 cARyff css-vurnku"
   />
 </DocumentFragment>
 `;
