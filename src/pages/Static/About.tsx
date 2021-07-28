@@ -127,7 +127,7 @@ export default function About() {
           <Text mb={15}>Less tokens required for high liquidity</Text>
         </i>
         <div>
-          Kyber DMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and
+          KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and
           create amplified pools in advance, achieving&nbsp;
           <b>much higher capital efficiency</b> for providers and <b>better slippage</b> for users compared to AMMs.
         </div>
@@ -170,7 +170,7 @@ export default function About() {
           <Text mb={15}>Higher earnings potential for liquidity providers, reducing the impact of IL</Text>
         </i>
         <div>
-          Kyber DMM trading fees are <b>adjusted dynamically</b> according to on-chain market conditions. In a volatile
+          KyberDMM trading fees are <b>adjusted dynamically</b> according to on-chain market conditions. In a volatile
           market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of
           impermanent loss. In periods of low volatility, fees decrease to encourage more trading.
         </div>
