@@ -46,8 +46,6 @@ export function useRoute(
         acc: allRoutes,
       })
 
-      console.log(`found all routes: ${JSON.stringify(allRoutes)}`)
-
       return allRoutes.map(
         (route) => new Route(parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges), currencyIn, currencyOut)
       )

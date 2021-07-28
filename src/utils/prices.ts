@@ -29,7 +29,8 @@ export function computeRealizedLPFeePercent(
     )
   } else {
     percent = ONE_HUNDRED_PERCENT.subtract(
-      trade.route.pools.reduce<Percent>(
+      // TODO(judo): compute across all swaps
+      trade.swaps[0].route.pools.reduce<Percent>(
         (currentFee: Percent, pool): Percent =>
           currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
         ONE_HUNDRED_PERCENT

@@ -9,7 +9,8 @@ exports[`renders multi route 1`] = `
       class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
@@ -38,7 +39,8 @@ exports[`renders multi route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          width="auto"
         >
           <div
             class="Badge-sc-1mhw5si-0 gayll"
@@ -93,7 +95,8 @@ exports[`renders multi route 1`] = `
       class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
@@ -122,7 +125,8 @@ exports[`renders multi route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          width="auto"
         >
           <div
             class="Badge-sc-1mhw5si-0 gayll"
@@ -167,7 +171,8 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          width="auto"
         >
           <div
             class="Badge-sc-1mhw5si-0 gayll"
@@ -231,7 +236,8 @@ exports[`renders single route 1`] = `
       class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+        width="auto"
       >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
@@ -260,7 +266,8 @@ exports[`renders single route 1`] = `
           />
         </svg>
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 lmTMKd itvFNV fRMqhK"
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa fRMqhK"
+          width="auto"
         >
           <div
             class="Badge-sc-1mhw5si-0 gayll"

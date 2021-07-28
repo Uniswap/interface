@@ -48,13 +48,13 @@ function Route({
   path: [Currency, Currency, FeeAmount][]
 }) {
   return (
-    <AutoRow gap="4px">
+    <AutoRow gap="4px" width="auto">
       <Badge>{percent}</Badge>
       <TYPE.black>{currencyIn.symbol}</TYPE.black>
       <StyledChevronRight />
       {path.map(([currency0, currency1, feeAmount], index) => {
         return (
-          <AutoRow gap="4px" key={index}>
+          <AutoRow gap="4px" width="auto" key={index}>
             <Pool currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
             <StyledChevronRight />
           </AutoRow>
