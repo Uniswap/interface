@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-27 19:57+0000\n"
+"POT-Creation-Date: 2021-07-29 18:18+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-07-27 20:04\n"
+"PO-Revision-Date: 2021-07-29 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1141,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את הדף, או בקר בדפדפן או במכשיר אחר."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "זמני השבתה של אופטימיות"
+msgid "Optimism Scheduled Downtime"
+msgstr "אופטימיות מתוזמנת השבתה"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "האופטימיות צופה זמן השבתה מתוכנן בזמן הקרוב. <0> קרא עוד.</0>"
+msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
+msgstr "האופטימיות צופה השבתה מתוזמנת בזמן הקרוב. השבתה לא מתוכננת עשויה להתרחש. בזמן שהרשת מושבתת לא ייווצרו עמלות ולא תוכל להסיר נזילות. <0> קרא עוד.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1310,6 +1310,12 @@ msgstr "בתור"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "תעריפים"
+
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "קרא עוד"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

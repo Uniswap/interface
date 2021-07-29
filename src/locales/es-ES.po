@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-27 19:57+0000\n"
+"POT-Creation-Date: 2021-07-29 18:18+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-07-27 20:04\n"
+"PO-Revision-Date: 2021-07-29 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1141,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "¡Ups! Se ha producido un error desconocido. Actualice la página o acceda desde otro navegador o dispositivo."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Optimismo Tiempos de inactividad programados"
+msgid "Optimism Scheduled Downtime"
+msgstr "Optimismo Tiempo de inactividad programado"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "El optimismo espera algún tiempo de inactividad programado en un futuro próximo. <0> Leer más.</0>"
+msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
+msgstr "El optimismo espera un tiempo de inactividad programado en un futuro próximo. Puede producirse un tiempo de inactividad no planificado. Mientras la red esté inactiva, no se generarán tarifas y no podrá eliminar la liquidez. <0> Leer más.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1310,6 +1310,12 @@ msgstr "Puesto en cola"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tarifas"
+
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Lee mas"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

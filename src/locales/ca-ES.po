@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-27 19:57+0000\n"
+"POT-Creation-Date: 2021-07-29 18:18+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-07-27 20:04\n"
+"PO-Revision-Date: 2021-07-29 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1141,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Vaja! S'ha produït un error desconegut. Actualitzeu la pàgina o visiteu-la des d’un altre navegador o dispositiu."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Temps d'aturada programat per a l'optimisme"
+msgid "Optimism Scheduled Downtime"
+msgstr "Temps d'inactivitat programat per a l'optimisme"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "L’optimisme espera un temps d’aturada programat en un futur proper. <0> Llegiu-ne més.</0>"
+msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
+msgstr "L'optimisme espera un temps d'inactivitat programat en un futur proper. Es pot produir un temps d'inactivitat no planificat. Mentre la xarxa estigui inactiva, no es generaran comissions i no podreu eliminar la liquiditat. <0> Més informació.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1310,6 +1310,12 @@ msgstr "En cua"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tarifes"
+
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Llegeix més"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
