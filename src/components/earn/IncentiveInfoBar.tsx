@@ -11,6 +11,7 @@ import { Countdown } from './Countdown'
 import { useColor } from 'hooks/useColor'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import useTheme from 'hooks/useTheme'
+import { EmptyBadge, GreenBadge } from 'components/Badge'
 
 const Wrapper = styled.div`
   padding: 0;
@@ -18,15 +19,6 @@ const Wrapper = styled.div`
   grid-template-columns: 1.4fr 3fr 188px 168px;
   grid-column-gap: 24px;
   align-items: center;
-`
-
-const BadgeEmpty = styled(TYPE.body)`
-  background-color: ${({ theme }) => transparentize(0.7, theme.bg3)};
-  padding: 6px 8px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 const BadgeText = styled(TYPE.body)`
@@ -53,17 +45,6 @@ const Bar = styled.div<{ percent: number; color?: string }>`
 
 const WrappedLogo = styled(CurrencyLogo)`
   border: 1px solid black;
-`
-
-const GreenBadge = styled(TYPE.body)`
-  background-color: ${({ theme }) => transparentize(0.92, theme.green1)};
-  color: ${({ theme }) => theme.green2};
-  padding: 6px 8px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
 `
 
 interface IncentiveInfoBarProps {
@@ -133,14 +114,14 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
           </Bar>
         </BarWrapper>
       )}
-      <BadgeEmpty>
+      <EmptyBadge>
         <BadgeText fontWeight={700} fontSize="15px">
           {usdPerWeek
             ? `$${formatCurrencyAmount(usdPerWeek, 2)}`
             : `${formatCurrencyAmount(rewardTokensPerWeek, 3)} ${rewardToken.symbol}`}{' '}
           Weekly
         </BadgeText>
-      </BadgeEmpty>
+      </EmptyBadge>
       <Countdown exactStart={startDate} exactEnd={endDate} />
     </Wrapper>
   )

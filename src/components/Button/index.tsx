@@ -75,6 +75,13 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
+export const ButtonSmall = styled(ButtonPrimary)`
+  width: fit-content;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+`
+
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
@@ -115,6 +122,15 @@ export const ButtonGray = styled(Base)`
   &:active {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.bg2)};
   }
+`
+
+export const ButtonGreySmall = styled(ButtonGray)`
+  width: fit-content;
+  background-color: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text1};
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
 `
 
 export const ButtonSecondary = styled(Base)`

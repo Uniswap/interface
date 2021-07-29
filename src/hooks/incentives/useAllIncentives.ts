@@ -144,3 +144,36 @@ export function useAllIncentivesByPool(): {
     }
   }, [incentives, loading])
 }
+
+export function useIncentivesForPool(poolAddress?: string): {
+  loading: boolean
+  incentives?: Incentive[]
+} {
+  const { loading, incentives } = useAllIncentivesByPool()
+
+  if (!poolAddress) {
+    return {
+      loading: false,
+      incentives: undefined,
+    }
+  }
+
+  if (loading) {
+    return {
+      loading: true,
+      incentives: undefined,
+    }
+  }
+
+  if (!incentives) {
+    return {
+      loading: false,
+      incentives: undefined,
+    }
+  }
+
+  return {
+    loading: false,
+    incentives: incentives[poolAddress] ?? [],
+  }
+}

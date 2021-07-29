@@ -1,25 +1,20 @@
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { Incentive } from '../../hooks/incentives/useAllIncentives'
 import { usePoolsByAddresses } from 'hooks/usePools'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { LoadingRows } from 'pages/Pool/styleds'
-import Badge from 'components/Badge'
+import Badge, { GreenBadge, BlueBadge } from 'components/Badge'
 import { formattedFeeAmount } from 'utils'
-import { Break } from './styled'
+import { Break, CardWrapper } from './styled'
 import IncentiveInfoBar from './IncentiveInfoBar'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
-
-const Wrapper = styled.div`
-  padding: 24px;
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(30, 26, 49, 0.2) 0%, rgba(61, 81, 165, 0.2) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-`
+import { ButtonSmall } from 'components/Button'
+import { Link } from 'react-router-dom'
 
 const TitleGrid = styled.div`
   padding: 0px;
@@ -32,17 +27,22 @@ const TitleGrid = styled.div`
 interface ProgramCardProps {
   poolAddress: string
   incentives: Incentive[]
+  hideStake?: boolean // hide stake button on manage page
 }
 
-export default function ProgramCard({ poolAddress, incentives }: ProgramCardProps) {
+export default function ProgramCard({ poolAddress, incentives, hideStake = false }: ProgramCardProps) {
   const theme = useTheme()
   const [, pool] = usePoolsByAddresses([poolAddress])[0]
 
   const currency0 = pool ? unwrappedToken(pool.token0) : undefined
   const currency1 = pool ? unwrappedToken(pool.token1) : undefined
 
+  // dummy until real data from hooks
+  const amountBoosted = 1
+  const amountavailable = 1
+
   return (
-    <Wrapper>
+    <CardWrapper>
       {!pool || !currency0 || !currency1 ? (
         <LoadingRows>
           <div />
@@ -57,6 +57,27 @@ export default function ProgramCard({ poolAddress, incentives }: ProgramCardProp
               </TYPE.body>
               <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
             </RowFixed>
+            <AutoRow gap="6px" width="fit-content">
+              {amountavailable > 0 ? (
+                <BlueBadge>
+                  <TYPE.body fontWeight={700} fontSize="12px" color={theme.blue3}>
+                    {amountavailable} <Trans>Boosted</Trans>
+                  </TYPE.body>
+                </BlueBadge>
+              ) : null}
+              {amountBoosted > 0 ? (
+                <GreenBadge>
+                  <TYPE.body fontWeight={700} fontSize="12px" color={theme.green2}>
+                    {amountBoosted} <Trans>Available</Trans>
+                  </TYPE.body>
+                </GreenBadge>
+              ) : null}
+              {hideStake ? null : (
+                <ButtonSmall as={Link} to={'/stake/' + poolAddress}>
+                  <Trans>Stake</Trans>
+                </ButtonSmall>
+              )}
+            </AutoRow>
           </RowBetween>
           <Break />
           <AutoColumn gap="12px">
@@ -85,6 +106,6 @@ export default function ProgramCard({ poolAddress, incentives }: ProgramCardProp
           </AutoColumn>
         </AutoColumn>
       )}
-    </Wrapper>
+    </CardWrapper>
   )
 }

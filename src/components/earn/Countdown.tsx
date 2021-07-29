@@ -7,9 +7,10 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 
-const MonoFront = styled(TYPE.body)<{ faded?: boolean }>`
+const MonoFront = styled(TYPE.body)<{ faded?: boolean; ended?: boolean }>`
   font-variant-numeric: tabular-nums;
-  background-color: ${({ theme }) => transparentize(0.7, theme.bg3)};
+  background-color: ${({ theme, ended }) => (ended ? theme.yellow1 : transparentize(0.7, theme.bg3))};
+  color: ${({ theme, ended }) => (ended ? theme.black : theme.text1)};
   padding: 6px 8px;
   border-radius: 12px;
   display: flex;
@@ -63,7 +64,7 @@ export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd
       message = ''
       timeRemaining = timeUntilEnd
     } else {
-      message = 'Rewards ended!'
+      message = 'Ended'
       timeRemaining = Infinity
     }
   }
@@ -77,8 +78,8 @@ export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd
   const seconds = timeRemaining
 
   return (
-    <MonoFront fontWeight={700} faded={timeUntilGenesis >= 0}>
-      <span style={{ fontSize: '16px', marginRight: '4px' }}>{message !== '' ? message : <Dot />}</span>
+    <MonoFront fontWeight={700} faded={timeUntilGenesis >= 0} ended={!timeRemaining}>
+      <span style={{ fontSize: '14px', marginRight: '4px' }}>{message !== '' ? message : <Dot />}</span>
       {Number.isFinite(timeRemaining) && (
         <code>
           {timeUntilGenesis >= 0

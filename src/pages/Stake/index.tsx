@@ -1,7 +1,7 @@
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { CardSection, DataCard, CardBGImage } from '../../components/earn/styled'
 import { DarkCard } from '../../components/Card'
 import { Trans } from '@lingui/macro'
@@ -11,6 +11,7 @@ import { Zap } from 'react-feather'
 import { useAllIncentivesByPool } from '../../hooks/incentives/useAllIncentives'
 import ProgramCard from '../../components/earn/ProgramCard'
 import Loader from 'components/Loader'
+import { ButtonGreySmall } from 'components/Button'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 840px;
@@ -44,6 +45,15 @@ export default function Earn() {
   return (
     <PageWrapper gap="lg" justify="center">
       <TopSection gap="md">
+        <RowBetween>
+          <TYPE.body style={{ marginTop: '0.5rem' }} fontSize="20px" color={theme.text3}>
+            <Trans>Boosted Pools</Trans>
+          </TYPE.body>
+          <AutoRow gap="6px" width="fit-content">
+            <ButtonGreySmall>Find Program</ButtonGreySmall>
+            <ButtonGreySmall>New Program</ButtonGreySmall>
+          </AutoRow>
+        </RowBetween>
         <DataCard>
           <CardSection>
             <AutoColumn gap="md">
@@ -70,8 +80,8 @@ export default function Earn() {
       <DarkCard>
         <AutoColumn gap="lg" style={{ width: '100%' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.body style={{ marginTop: '0.5rem' }}>
-              <Trans>Rewards programs</Trans>
+            <TYPE.body style={{ marginTop: '0.5rem' }} fontSize="20px" color={theme.text3}>
+              <Trans>Active Staking Pools</Trans>
             </TYPE.body>
           </DataRow>
           <ProgramSection>
