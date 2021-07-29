@@ -471,8 +471,8 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <OutlineCard padding="0.5rem" style={!trade ? { border: 'none' } : {}}>
-                <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+              <OutlineCard padding="0.5rem" style={v3TradeState === V3TradeState.INVALID ? { display: 'none' } : {}}>
+                <Row justify={v3TradeState === V3TradeState.INVALID ? 'enter' : 'space-between'}>
                   <RowFixed>
                     {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                       (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
@@ -506,14 +506,19 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))}
 
-                    {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
+                    {toggledVersion === Version.v3 && (isLoadingRoute || isTradeBetter(v2Trade, v3Trade)) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
                         <StyledAutoRouterIcon />
                         <GradientText fontSize={14}>Uniswap API</GradientText>
                       </AutoRow>
                     )}
                   </RowFixed>
-                  {trade ? (
+                  {isLoadingRoute ? (
+                    <AutoRow gap="4px" width="auto" padding="0 .5rem">
+                      <TYPE.main>Finding best route...</TYPE.main>
+                      <Loader stroke={theme.text2} />
+                    </AutoRow>
+                  ) : trade ? (
                     <RowFixed>
                       <TradePrice
                         price={trade.executionPrice}
