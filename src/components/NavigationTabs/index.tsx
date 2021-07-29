@@ -85,11 +85,11 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
         <HistoryLink to={origin}>
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText style={{ flexGrow:0.5}}>
+        <ActiveText style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
           <Trans>Import V2 Pool</Trans>
         </ActiveText>
       </RowBetween>
