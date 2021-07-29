@@ -10,6 +10,7 @@ import BaoswapLogo from '../assets/images/baoswap-logo.png'
 import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const CLAIM_LEAVES_IPFS_HASH = 'QmSxj5c5JBhyRiFM2Rg1pse9651AeCz2f8TVuf7WBu22QW'
 
 // a list of tokens by chain
 type ChainTokenList = {

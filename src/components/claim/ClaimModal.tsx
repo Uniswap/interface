@@ -64,7 +64,7 @@ export default function ClaimModal({ onDismiss }: { onDismiss: () => void }) {
         <UpperAutoColumn gap="16px">
           <RowBetween>
             <TYPE.white fontWeight={500}>Claim SWPR Token</TYPE.white>
-            <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
+            <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} />
           </RowBetween>
           <TYPE.white fontWeight={700} fontSize={36}>
             {unclaimedBalance?.toFixed(3)} SWPR

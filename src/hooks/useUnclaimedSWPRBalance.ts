@@ -6,6 +6,7 @@ import { ZERO_ADDRESS } from '../constants'
 import { useSWPRClaimerContract } from './useContract'
 import { useClaimWhitelist } from '../state/claim/hooks'
 import { BigNumber } from 'ethers'
+import { getAddress } from 'ethers/lib/utils'
 
 export default function useUnclaimedSWPRBalance(
   account: string | null | undefined
@@ -17,11 +18,11 @@ export default function useUnclaimedSWPRBalance(
   const alreadyClaimedResult = useSingleCallResult(swprClaimerContract, 'claimed', [account || undefined])
 
   return useMemo(() => {
-    if (!chainId || !swpr || swpr.address === ZERO_ADDRESS || alreadyClaimedResult.error)
+    if (!chainId || !swpr || swpr.address === ZERO_ADDRESS || alreadyClaimedResult.error || !account)
       return { loading: false, unclaimedBalance: null }
     if (alreadyClaimedResult.loading) return { loading: true, unclaimedBalance: new TokenAmount(swpr, '0') }
     const whitelistEntry = whitelist.find(
-      item => item.account.toLowerCase() === account?.toLowerCase() && !BigNumber.from(item.amount).isZero()
+      item => getAddress(item.account) === getAddress(account) && !BigNumber.from(item.amount).isZero()
     )
     if (!whitelistEntry) return { loading: false, unclaimedBalance: new TokenAmount(swpr, '0') }
     if (alreadyClaimedResult.result && alreadyClaimedResult.result.length > 0 && alreadyClaimedResult.result[0])
