@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
@@ -9,8 +9,8 @@ import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
-export interface Route {
-  percent: number
+export interface RoutingDiagramEntry {
+  percent: Percent
   path: [Currency, Currency, FeeAmount | undefined][]
 }
 
@@ -44,7 +44,7 @@ export default function RoutingDiagram({
 }: {
   currencyIn: Currency
   currencyOut: Currency
-  routes: Route[]
+  routes: RoutingDiagramEntry[]
 }) {
   return (
     <Wrapper gap="4px">
@@ -65,13 +65,13 @@ function Route({
 }: {
   currencyIn: Currency
   currencyOut: Currency
-  percent: number
-  path: [Currency, Currency, FeeAmount | undefined][]
+  percent: RoutingDiagramEntry['percent']
+  path: RoutingDiagramEntry['path']
 }) {
   return (
     <StyledRow gap="8px">
       <Badge>
-        <TYPE.small fontSize={12}>{percent}%</TYPE.small>
+        <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
       </Badge>
       <AutoRow gap="1px" width="auto">
         <TYPE.small fontSize={13}>{currencyIn.symbol}</TYPE.small>
@@ -91,8 +91,8 @@ function Route({
 }
 
 function Pool({
-  currency0,
-  currency1,
+  currency0: coveredCurrency,
+  currency1: higherCurrency,
   feeAmount,
 }: {
   currency0: Currency
@@ -103,7 +103,7 @@ function Pool({
     <Badge>
       <StyledRow gap="4px">
         <Box style={{ marginLeft: '6px' }}>
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={13} />
+          <DoubleCurrencyLogo currency0={higherCurrency} currency1={coveredCurrency} size={13} />
         </Box>
         {feeAmount && <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>}
       </StyledRow>

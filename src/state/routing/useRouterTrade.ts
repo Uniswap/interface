@@ -36,7 +36,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     amountIn?.currency,
     currencyOut,
     // important to check `isUninitialized` as `skipToken` still returns cached data
-    isUninitialized ? data : undefined
+    isUninitialized ? undefined : data
   )
 
   // todo(judo): validate block number for freshness
@@ -105,7 +105,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     currencyIn,
     amountOut?.currency,
     // important to check `isUninitialized` as `skipToken` still returns cached data
-    isUninitialized ? data : undefined
+    isUninitialized ? undefined : data
   )
 
   // todo(judo): validate block number for freshness
