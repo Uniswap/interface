@@ -67,7 +67,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_INPUT>({
       //todo(judo): inputAmount should be from API
-      routes: routes.map((route) => ({ route, inputAmount: amountIn, outputAmount: amountOut })),
+      routes,
       tradeType: TradeType.EXACT_INPUT,
     })
 
@@ -135,7 +135,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     }
 
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_OUTPUT>({
-      routes: routes.map((route) => ({ route, inputAmount: amountIn, outputAmount: amountOut })),
+      routes,
       tradeType: TradeType.EXACT_OUTPUT,
     })
 

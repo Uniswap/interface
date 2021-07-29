@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { GetQuoteResult } from 'state/routing/slice'
@@ -7,7 +7,11 @@ export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
   quoteResult: Pick<GetQuoteResult, 'routeEdges' | 'routeNodes'> | undefined
-): Route<Currency, Currency>[] {
+): {
+  route: Route<Currency, Currency>
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+}[] {
   // lookup table for nodes
   const tokensInRoute = useMemo(
     () =>
@@ -46,9 +50,15 @@ export function useRoutes(
         acc: allRoutes,
       })
 
-      return allRoutes.map(
-        (route) => new Route(parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges), currencyIn, currencyOut)
-      )
+      return allRoutes.map((route) => {
+        const [pool, rawAmountIn, rawAmountOut] = parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges)
+
+        return {
+          route: new Route(pool, currencyIn, currencyOut),
+          inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+          outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
+        }
+      })
     } catch (err) {
       console.debug(err)
       return []
@@ -101,8 +111,11 @@ function parseRouteToPool(
   tokens: string[],
   tokensInRoute: Record<string, Token>,
   edges: GetQuoteResult['routeEdges']
-): Pool[] {
+): [Pool[], string, string] {
   const pools = []
+  let rawAmountIn: string | undefined = undefined
+  let rawAmountOut: string | undefined = undefined
+
   for (let i = 1; i < tokens.length; i++) {
     const [inId, outId] = [tokens[i - 1], tokens[i]]
     const edge = edges.find(({ inId: edgeInId, outId: edgeOutId }) => inId === edgeInId && outId === edgeOutId)
@@ -111,7 +124,10 @@ function parseRouteToPool(
       throw new Error(`Edge ${inId}->${outId} not found`)
     }
 
-    const { fee, sqrtRatioX96, liquidity, tickCurrent } = edge
+    const { amountIn, amountOut, fee, sqrtRatioX96, liquidity, tickCurrent } = edge
+
+    if (i === 1) rawAmountIn = amountIn
+    if (i === tokens.length - 1) rawAmountOut = amountOut
 
     pools.push(
       new Pool(
@@ -125,5 +141,9 @@ function parseRouteToPool(
     )
   }
 
-  return pools
+  if (!rawAmountIn || !rawAmountOut) {
+    throw new Error('Expected rawAmountIn & rawAmountOut to be defined')
+  }
+
+  return [pools, rawAmountIn, rawAmountOut]
 }

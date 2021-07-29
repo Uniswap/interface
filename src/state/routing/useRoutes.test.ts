@@ -6,6 +6,9 @@ const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC
 const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')
 const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR')
 
+// helper function to make amounts more readable
+const amount = (raw: TemplateStringsArray) => (parseInt(raw[0]) * 1e6).toString()
+
 describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
     const { result } = renderHook(() =>
@@ -23,8 +26,8 @@ describe('#useRoute', () => {
       useRoutes(DAI, USDC, {
         routeEdges: [
           {
-            amountIn: '99',
-            amountOut: '101',
+            amountIn: amount`1`,
+            amountOut: amount`5`,
             fee: '500',
             id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             inId: DAI.wrapped.address,
@@ -52,9 +55,11 @@ describe('#useRoute', () => {
 
     expect(result.current).toBeDefined()
     expect(result.current?.length).toBe(1)
-    expect(result.current && result.current[0].input).toBe(DAI)
-    expect(result.current && result.current[0].output).toBe(USDC)
-    expect(result.current && result.current[0].tokenPath).toEqual([DAI, USDC])
+    expect(result.current && result.current[0].route.input).toBe(DAI)
+    expect(result.current && result.current[0].route.output).toBe(USDC)
+    expect(result.current && result.current[0].route.tokenPath).toEqual([DAI, USDC])
+    expect(result.current && result.current[0].inputAmount.toSignificant()).toBe('1')
+    expect(result.current && result.current[0].outputAmount.toSignificant()).toBe('5')
   })
 
   it('handles a multi-route trade from DAI to USDC', () => {
@@ -62,8 +67,8 @@ describe('#useRoute', () => {
       useRoutes(DAI, USDC, {
         routeEdges: [
           {
-            amountIn: '99',
-            amountOut: '101',
+            amountIn: amount`5`,
+            amountOut: amount`6`,
             fee: '500',
             id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             inId: DAI.wrapped.address,
@@ -74,8 +79,8 @@ describe('#useRoute', () => {
             tickCurrent: '-69633',
           },
           {
-            amountIn: '48',
-            amountOut: '52',
+            amountIn: amount`10`,
+            amountOut: amount`1`,
             fee: '3000',
             id: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             inId: DAI.wrapped.address,
@@ -86,8 +91,8 @@ describe('#useRoute', () => {
             tickCurrent: '-69633',
           },
           {
-            amountIn: '48',
-            amountOut: '52',
+            amountIn: amount`1`,
+            amountOut: amount`200`,
             fee: '10000',
             id: '0x3f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             inId: MKR.wrapped.address,
@@ -102,7 +107,7 @@ describe('#useRoute', () => {
           {
             ...DAI,
             id: DAI.wrapped.address,
-            decimals: DAI.decimals.toString(), // todo wrapper around GetQuoteResult to simplify types?
+            decimals: DAI.decimals.toString(),
           },
           {
             ...USDC,
@@ -120,12 +125,18 @@ describe('#useRoute', () => {
 
     expect(result.current).toBeDefined()
     expect(result.current?.length).toBe(2)
-    expect(result.current && result.current[0].input).toBe(DAI)
-    expect(result.current && result.current[0].output).toBe(USDC)
-    expect(result.current && result.current[0].tokenPath).toEqual([DAI, USDC])
-    expect(result.current && result.current[1].input).toBe(DAI)
-    expect(result.current && result.current[1].output).toBe(USDC)
-    expect(result.current && result.current[1].tokenPath).toEqual([DAI, MKR, USDC])
+
+    expect(result.current && result.current[0].route.input).toBe(DAI)
+    expect(result.current && result.current[0].route.output).toBe(USDC)
+    expect(result.current && result.current[0].route.tokenPath).toEqual([DAI, USDC])
+    expect(result.current && result.current[1].route.input).toBe(DAI)
+    expect(result.current && result.current[1].route.output).toBe(USDC)
+    expect(result.current && result.current[1].route.tokenPath).toEqual([DAI, MKR, USDC])
+
+    expect(result.current && result.current[0].inputAmount.toSignificant()).toBe('5')
+    expect(result.current && result.current[0].outputAmount.toSignificant()).toBe('6')
+    expect(result.current && result.current[1].inputAmount.toSignificant()).toBe('10')
+    expect(result.current && result.current[1].outputAmount.toSignificant()).toBe('200')
   })
 
   xit('handles invalid fee amount', () => {
