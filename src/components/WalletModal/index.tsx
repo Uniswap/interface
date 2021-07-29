@@ -102,13 +102,13 @@ const HoverText = styled.div`
 interface WalletModalProps {
   modal: ModalView | null
   setModal: (modal: ModalView | null) => void
-  pendingTransactions: string[] 
+  pendingTransactions: string[]
   confirmedTransactions: string[]
   ENSName?: string
   tryActivation: (connector: AbstractConnector | undefined) => void
   pendingError: boolean | undefined
-  setPendingError: (value: boolean) => void;
-  pendingWallet: AbstractConnector | undefined;
+  setPendingError: (value: boolean) => void
+  pendingWallet: AbstractConnector | undefined
 }
 
 export default function WalletModal({
@@ -124,8 +124,8 @@ export default function WalletModal({
 }: WalletModalProps) {
   const { active, account, connector, error } = useWeb3React()
 
-  const closeModal = useCallback(() => setModal(null), [setModal]);  
-  
+  const closeModal = useCallback(() => setModal(null), [setModal])
+
   const isModalVisible = modal !== null
 
   const previousAccount = usePrevious(account)
@@ -137,7 +137,6 @@ export default function WalletModal({
     }
   }, [account, previousAccount, closeModal, isModalVisible])
 
-  
   const activePrevious = usePrevious(active)
   const connectorPrevious = usePrevious(connector)
   useEffect(() => {
@@ -152,7 +151,7 @@ export default function WalletModal({
     setModal(null)
     toggleWalletSwitcherPopover()
   }
-  
+
   function getModalContent() {
     if (error) {
       return (
