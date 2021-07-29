@@ -14,7 +14,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
-  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
     amountIn && currencyOut
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
@@ -32,8 +32,12 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     { pollingInterval: ms`5m` }
   )
 
-  // process route data
-  const routes = useRoutes(amountIn?.currency, currencyOut, data)
+  const routes = useRoutes(
+    amountIn?.currency,
+    currencyOut,
+    // important to check `isUninitialized` as `skipToken` still returns cached data
+    isUninitialized ? data : undefined
+  )
 
   // todo(judo): validate block number for freshness
 
@@ -54,7 +58,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
     const amountOut = currencyOut && data ? CurrencyAmount.fromRawAmount(currencyOut, data.quote) : undefined
 
-    if (isError || !amountOut || routes === []) {
+    if (isError || !amountOut || routes.length === 0) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -62,6 +66,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     }
 
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_INPUT>({
+      //todo(judo): inputAmount should be from API
       routes: routes.map((route) => ({ route, inputAmount: amountIn, outputAmount: amountOut })),
       tradeType: TradeType.EXACT_INPUT,
     })
@@ -78,7 +83,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
-  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
     amountOut && currencyIn
       ? {
           tokenInAddress: currencyIn.wrapped.address,
@@ -96,20 +101,24 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     { pollingInterval: ms`5m` }
   )
 
-  // process route data
-  const routes = useRoutes(currencyIn, amountOut?.currency, data)
+  const routes = useRoutes(
+    currencyIn,
+    amountOut?.currency,
+    // important to check `isUninitialized` as `skipToken` still returns cached data
+    isUninitialized ? data : undefined
+  )
 
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountOut || !currencyIn || isError) {
+    if (!amountOut || !currencyIn) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
       }
     }
 
-    if (isLoading || routes === undefined) {
+    if (isLoading) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -118,7 +127,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
     const amountIn = currencyIn && data ? CurrencyAmount.fromRawAmount(currencyIn, data.quote) : undefined
 
-    if (!amountIn) {
+    if (isError || !amountIn || routes.length === 0) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
