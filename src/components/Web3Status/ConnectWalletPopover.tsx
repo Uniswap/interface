@@ -42,6 +42,7 @@ const ListButton = styled.button`
   color: ${({ theme }) => theme.text2};
   border: 0;
   background: none;
+  outline: none;
   cursor: pointer;
 
   &:disabled {

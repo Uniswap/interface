@@ -48,6 +48,7 @@ const ChangeWalletButton = styled.button`
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1And2};
   border: none;
+  outline: none;
   cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     font-size: 10px;
