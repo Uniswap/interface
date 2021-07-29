@@ -113,6 +113,14 @@ export const MAINNET_TOKEN_LIST = {
       name: 'XSGD',
       decimals: 6,
       logoURI: 'https://assets.website-files.com/600e34cbaf525c42912af8b6/600e34cbaf525c7ad82af99b_xgd-img%20(1).svg'
+    },
+    {
+      chainId: 1,
+      address: '0xBCD515D6C5de70D3A31D999A7FA6a299657De294',
+      symbol: 'RICE',
+      name: 'RICE',
+      decimals: 18,
+      logoURI: 'https://drive.google.com/uc?export=download&id=16PVXI1Da5P27cywWiyqrcV-Q17u1aXsi'
     }
   ],
   version: {
