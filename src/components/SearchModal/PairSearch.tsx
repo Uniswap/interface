@@ -1,7 +1,6 @@
 import { Pair } from 'dxswap-sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon, TYPE } from '../../theme'
@@ -27,8 +26,7 @@ interface PairSearchProps {
 
 const Wrapper = styled.div`
   width: 100%;
-
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background-color: ${({ theme }) => theme.bg1And2};
 `
 
 export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filterPairs }: PairSearchProps) {
@@ -122,12 +120,8 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
             <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
           </RowBetween>
         </PaddedColumn>
-
         <Separator />
-
-        <div style={{ flex: '1' }}>
-          <PairList pairs={filteredSortedPairs} onPairSelect={handlePairSelect} selectedPair={selectedPair} />
-        </div>
+        <PairList pairs={filteredSortedPairs} onPairSelect={handlePairSelect} selectedPair={selectedPair} />
       </Column>
     </Wrapper>
   )

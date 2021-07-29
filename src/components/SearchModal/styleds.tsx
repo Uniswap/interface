@@ -2,10 +2,11 @@ import { transparentize } from 'polished'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { Flex } from 'rebass'
+import { ButtonProps, Flex } from 'rebass'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import React, { useContext } from 'react'
-import { Search } from 'react-feather'
+import { ChevronLeft, Search } from 'react-feather'
+import { ButtonInvisbile } from '../Button'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -31,7 +32,7 @@ export const MenuItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    background-color: ${({ theme, disabled }) => !disabled && theme.bg1And2};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
@@ -80,18 +81,6 @@ export const Separator = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => transparentize(0.5, theme.purple5)};
-`
-export const TokenListContainer = styled(Flex)`
-  min-height: 560px;
-  max-height: 560px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    min-height: 448px;
-    max-height: 448px;
-  `}
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-height: 280px;
-    max-height: 280px;
-  `}
 `
 
 const SearchInputWrapper = styled.div<{ width?: string; height?: string }>`
@@ -153,5 +142,38 @@ export default function SearchInputWithIcon({
       <SearchExpandedInput placeholder="SEARCH" fontSize={fontSize} fontWeight={fontWeight} />
       <Search color={theme.text4} size={14} />
     </SearchInputWrapper>
+  )
+}
+
+export const Checkbox = styled.input`
+  border: 1px solid ${({ theme }) => theme.red2};
+  height: 20px;
+  margin: 0;
+`
+
+export const TextDot = styled.div`
+  height: 3px;
+  width: 3px;
+  background-color: ${({ theme }) => theme.text2};
+  border-radius: 50%;
+`
+
+export const SeparatorDark = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg3};
+`
+
+const StyledGoBackIcon = styled(ChevronLeft)`
+  color: ${({ theme }) => theme.purple3};
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+`
+export const GoBackIcon = (props: ButtonProps) => {
+  return (
+    <ButtonInvisbile {...props}>
+      <StyledGoBackIcon />
+    </ButtonInvisbile>
   )
 }

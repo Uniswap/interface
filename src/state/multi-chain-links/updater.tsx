@@ -32,12 +32,13 @@ export default function Updater(): null {
       connector.supportedChainIds &&
       connector.supportedChainIds.indexOf(parseInt(requiredChainId)) >= 0
 
+    if (!requiredChainId) updateSwitchingToCorrectChain(false)
     if (requiredChainId && requiredChainIdSupported && switchingToCorrectChain) {
       if (requiredChainId !== stringChainId) return
       else updateSwitchingToCorrectChain(false)
     }
 
-    if (requiredChainId !== stringChainId) {
+    if (requiredChainId !== stringChainId && !switchingToCorrectChain) {
       searchParams.set('chainId', stringChainId)
       history.replace({ search: searchParams.toString() })
     }

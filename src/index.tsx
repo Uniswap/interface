@@ -1,3 +1,5 @@
+import './set-addresses'
+
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import '@fontsource/montserrat/400.css'
 import '@fontsource/montserrat/500.css'
@@ -16,7 +18,6 @@ import MulticallUpdater from './state/multicall/updater'
 import FeesUpdater from './state/fees/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
-import TokenIconsUpdater from './state/token-icons/updater'
 import TokenListUpdater from './state/lists/updater'
 import MultiChainLinksUpdater from './state/multi-chain-links/updater'
 import ClaimUpdater from './state/claim/updater'
@@ -42,7 +43,6 @@ function Updaters() {
       <MulticallUpdater />
       <FeesUpdater />
       <TokenListUpdater />
-      <TokenIconsUpdater />
       <ClaimUpdater />
     </>
   )

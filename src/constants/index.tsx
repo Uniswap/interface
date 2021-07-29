@@ -1,7 +1,13 @@
+import React, { ReactNode } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, CurrencyAmount, WETH, WSPOA, DXD, WXDAI, Token, Currency } from 'dxswap-sdk'
-import { tokens } from './tokens'
+import { ChainId, JSBI, Percent, CurrencyAmount, WETH, DXD, WXDAI, Token, Currency, RoutablePlatform } from 'dxswap-sdk'
 import { authereum, injected, walletConnect } from '../connectors'
+import UniswapLogo from '../assets/svg/uniswap-logo.svg'
+import SwaprLogo from '../assets/svg/logo.svg'
+import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
+import HoneyswapLogo from '../assets/svg/honeyswap-logo.svg'
+import BaoswapLogo from '../assets/images/baoswap-logo.png'
+import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -82,8 +88,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MAINNET]
   ],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [
     WXDAI[ChainId.XDAI],
     WETH[ChainId.XDAI],
@@ -103,8 +109,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.MAINNET]: [DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [],
-  [ChainId.ARBITRUM_TESTNET_V3]: [],
-  [ChainId.SOKOL]: [],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
 }
 
@@ -112,8 +118,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [WXDAI[ChainId.XDAI], DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI], STAKE]
 }
 
@@ -180,6 +186,7 @@ export const NetworkContextName = 'NETWORK'
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+export const DEFAULT_USER_MULTIHOP_ENABLED = true
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 
@@ -198,7 +205,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = tokens
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmeCv4FhDPXRCcG1odeaFyEqrfKe8DGjaprT8BeTurYY51'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
@@ -239,5 +246,26 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     rpcUrls: ['https://rpc.xdaichain.com/'],
     blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
     metamaskAddable: true
+  },
+  [ChainId.ARBITRUM_ONE]: {
+    chainId: `0x${ChainId.ARBITRUM_ONE.toString(16)}`,
+    chainName: 'Arbitrum one',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://arb1.arbitrum.io/rpc/'],
+    blockExplorerUrls: ['https://explorer.arbitrum.io/'],
+    metamaskAddable: true
   }
+}
+
+export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {
+  [RoutablePlatform.UNISWAP.name]: <img width={16} height={16} src={UniswapLogo} alt="uniswap" />,
+  [RoutablePlatform.SUSHISWAP.name]: <img width={16} height={16} src={SushiswapLogo} alt="sushiswap" />,
+  [RoutablePlatform.SWAPR.name]: <img width={16} height={16} src={SwaprLogo} alt="swapr" />,
+  [RoutablePlatform.HONEYSWAP.name]: <img width={16} height={16} src={HoneyswapLogo} alt="honeyswap" />,
+  [RoutablePlatform.BAOSWAP.name]: <img width={16} height={16} src={BaoswapLogo} alt="baoswap" />,
+  [RoutablePlatform.LEVINSWAP.name]: <img width={16} height={16} src={LevinswapLogo} alt="levinswap" />
 }

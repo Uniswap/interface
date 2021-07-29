@@ -1,10 +1,16 @@
-import { Token, TokenAmount } from 'dxswap-sdk'
-import { BigNumber } from 'ethers'
+import { CurrencyAmount, Token, TokenAmount } from 'dxswap-sdk'
+import { BigNumber, constants } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../constants/abis/erc20'
+import { useActiveWeb3React } from '../hooks'
 
 import { useMulticallContract, useTokenContract } from '../hooks/useContract'
-import { useMultipleContractSingleData, useSingleCallResult } from '../state/multicall/hooks'
+import { useNativeCurrency } from '../hooks/useNativeCurrency'
+import {
+  useMultipleContractSingleData,
+  useSingleCallResult,
+  useSingleContractMultipleData
+} from '../state/multicall/hooks'
 
 export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount | undefined {
   const contract = useTokenContract(token?.address, false)
@@ -46,4 +52,27 @@ export function useTokenAllowances(
       return new TokenAmount(relatedToken, allowance.toString())
     })
   }, [multicall, tokens, rawAllowances])
+}
+
+export function useTokenAllowancesForMultipleSpenders(
+  token?: Token,
+  owner?: string,
+  spenders?: string[]
+): CurrencyAmount[] | undefined {
+  const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
+  const contract = useTokenContract(token?.address, false)
+
+  const inputs = useMemo(() => {
+    if (spenders && spenders.length > 0 && !!owner) return spenders.map(spender => [owner, spender])
+    return []
+  }, [owner, spenders])
+  const allowances = useSingleContractMultipleData(contract, 'allowance', inputs)
+
+  return useMemo(() => {
+    if (!token || !spenders || !chainId) return undefined
+    if (nativeCurrency === token)
+      return spenders.map(() => CurrencyAmount.nativeCurrency(constants.MaxUint256.toString(), chainId))
+    return allowances.map(allowance => new TokenAmount(token, allowance.result?.[0] ?? '0'))
+  }, [token, spenders, nativeCurrency, allowances, chainId])
 }

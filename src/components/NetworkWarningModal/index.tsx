@@ -1,5 +1,4 @@
-import { transparentize } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import Modal from '../Modal'
@@ -10,7 +9,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { ButtonPrimary } from '../Button'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
 import { useIsSwitchingToCorrectChain } from '../../state/multi-chain-links/hooks'
-import { useDebounce } from 'react-use'
+import { useActiveWeb3React } from '../../hooks'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -18,7 +17,7 @@ const WarningContainer = styled.div`
 `
 
 const OuterContainer = styled.div`
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 const UpperSectionContainer = styled.div`
@@ -30,18 +29,15 @@ const StyledWarningIcon = styled(AlertTriangle)`
 `
 
 export default function NetworkWarningModal() {
+  const { chainId } = useActiveWeb3React()
   const urlLoadedChainId = useTargetedChainIdFromUrl()
   const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
   const [open, setOpen] = useState(false)
 
-  useDebounce(
-    () => {
-      setOpen(!!switchingToCorrectChain)
-    },
-    1000,
-    [switchingToCorrectChain]
-  )
+  useEffect(() => {
+    setOpen(!!chainId && !!urlLoadedChainId && !!switchingToCorrectChain)
+  }, [chainId, switchingToCorrectChain, urlLoadedChainId])
 
   const handleDismiss = useCallback(() => null, [])
 

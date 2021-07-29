@@ -1,47 +1,57 @@
-import { ChainId, Currency, Token, Fetcher, DXD } from 'dxswap-sdk'
+import { ChainId, Currency, Token, DXD } from 'dxswap-sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import PoaLogo from '../../assets/images/poa-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
 import { useActiveWeb3React } from '../../hooks'
 import useHttpLocations from '../../hooks/useHttpLocations'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
 import Logo from '../Logo'
 
 const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
 const StyledLogo = styled(Logo)<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: ${({ size }) => size};
-  border: solid 1px ${props => props.theme.white};
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-`
-
-const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
-  margin-right: ${({ marginRight }) => marginRight}px;
-  margin-left: ${({ marginLeft }) => marginLeft}px;
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
-  background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+`
+
+const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
   position: relative;
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+  margin-right: ${({ marginRight }) => marginRight}px;
+  margin-left: ${({ marginLeft }) => marginLeft}px;
+  border-radius: ${({ size }) => size};
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    ${({size}) => `width: calc(${size} - 1px)`};
+    ${({size}) => `height: calc(${size} - 1px)`};
+    background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+    border-radius: 50%;
+    z-index: -1;
+  }
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
-  [ChainId.ARBITRUM_TESTNET_V3]: EthereumLogo,
+  [ChainId.ARBITRUM_ONE]: EthereumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: EthereumLogo,
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.SOKOL]: PoaLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
@@ -71,7 +81,7 @@ export default function CurrencyLogo({
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
       if (chainId && DXD[chainId] && DXD[chainId].address === currency.address) return [DXDLogo]
-      return [getTokenLogoURL(currency.address), Fetcher.getCachedTokenLogo(currency), ...uriLocations]
+      return [getTokenLogoURL(currency.address), ...uriLocations]
     }
     return []
   }, [chainId, currency, nativeCurrencyLogo, uriLocations])

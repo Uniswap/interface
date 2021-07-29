@@ -197,6 +197,10 @@ export default function Pools() {
     setFilterToken(undefined)
   }, [])
 
+  const handleFilterChange = useCallback(filter => {
+    setAggregatedDataFilter(filter)
+  }, [])
+
   return (
     <>
       <PageWrapper>
@@ -208,12 +212,13 @@ export default function Pools() {
               filteredToken={filterToken}
               onFilteredTokenReset={handleFilterTokenReset}
             />
-            <ListFilter filter={aggregatedDataFilter} onFilterChange={setAggregatedDataFilter} />
+            <ListFilter filter={aggregatedDataFilter} onFilterChange={handleFilterChange} />
             <PairsList
               showMyPairs
               loading={loadingUserLpPositions || loadingAggregatedData}
               aggregatedPairs={aggregatedData}
               userLpPairs={userLpPairs}
+              filter={aggregatedDataFilter}
             />
           </AutoColumn>
         </AutoColumn>

@@ -1,4 +1,4 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
@@ -10,9 +10,9 @@ import swap from './swap/reducer'
 import mint from './mint/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
-import tokenList from './lists/reducer'
 import multiChainLinks from './multi-chain-links/reducer'
 import claim from './claim/reducer'
+import lists from './lists/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'claim']
 
@@ -27,14 +27,11 @@ const store = configureStore({
     mint,
     burn,
     multicall,
-    tokenList,
     multiChainLinks,
+    lists,
     claim
   },
-  middleware: [
-    ...getDefaultMiddleware({ thunk: false }),
-    save({ states: PERSISTED_KEYS, namespace: persistenceNamespace })
-  ],
+  middleware: [save({ states: PERSISTED_KEYS, namespace: persistenceNamespace })],
   preloadedState: load({ states: PERSISTED_KEYS, namespace: persistenceNamespace })
 })
 

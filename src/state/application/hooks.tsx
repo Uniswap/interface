@@ -1,13 +1,19 @@
-import { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal } from './actions'
+import { ApplicationModal, MainnetGasPrice, PopupContent, setOpenModal } from './actions'
+import { toast } from 'react-toastify'
+import PopupItem from '../../components/Popups/PopupItem'
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
+}
+
+export function useMainnetGasPrices(): { [speed in MainnetGasPrice]: string } | null {
+  return useSelector((state: AppState) => state.application.mainnetGasPrices)
 }
 
 export function useModalOpen(modal: ApplicationModal): boolean {
@@ -59,31 +65,8 @@ export function useNetworkSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK_SWITCHER)
 }
 
-// returns a function that allows adding a popup
-export function useAddPopup(): (content: PopupContent, key?: string) => void {
-  const dispatch = useDispatch()
-
-  return useCallback(
-    (content: PopupContent, key?: string) => {
-      dispatch(addPopup({ content, key }))
-    },
-    [dispatch]
-  )
-}
-
-// returns a function that allows removing a popup via its key
-export function useRemovePopup(): (key: string) => void {
-  const dispatch = useDispatch()
-  return useCallback(
-    (key: string) => {
-      dispatch(removePopup({ key }))
-    },
-    [dispatch]
-  )
-}
-
-// get the list of active popups
-export function useActivePopups(): AppState['application']['popupList'] {
-  const list = useSelector((state: AppState) => state.application.popupList)
-  return useMemo(() => list.filter(item => item.show), [list])
+export function useAddPopup(): (content: PopupContent, autoClose?: number | false) => void {
+  return useCallback((content: PopupContent, autoClose: number | false = 15000) => {
+    toast.info(<PopupItem content={content} />, { autoClose })
+  }, [])
 }

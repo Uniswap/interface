@@ -6,7 +6,7 @@ import DoubleCurrencyLogo from '../../../DoubleLogo'
 import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
 import ApyBadge from '../../ApyBadge'
-import { ethers } from 'ethers'
+import { formatCurrencyAmount } from '../../../../utils'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -33,6 +33,11 @@ const BadgeText = styled.div`
   line-height: 11px;
   letter-spacing: 0.02em;
   color: ${props => props.theme.green2};
+`
+
+const EllipsizedText = styled(TYPE.body)`
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 interface PairProps {
@@ -70,13 +75,13 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
         <Flex flexDirection="column">
           <Box>
             <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-              ${ethers.utils.commify(usdLiquidity.toSignificant(2))} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
             </TYPE.subHeader>
           </Box>
           <Box>
-            <TYPE.body color="white" lineHeight="20px" fontWeight="700" fontSize="16px">
+            <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
               {token0?.symbol}/{token1?.symbol}
-            </TYPE.body>
+            </EllipsizedText>
           </Box>
         </Flex>
       </Flex>

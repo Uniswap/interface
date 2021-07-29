@@ -6,12 +6,13 @@ import Tooltip from '../Tooltip'
 const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   background: none;
   color: ${({ theme }) => theme.purple3};
   transition: opacity 0.3s ease;
-  width: 16px;
+  width: 20px;
   height: 16px;
+  margin-left: 4;
 
   :hover,
   :focus {
@@ -41,13 +42,11 @@ export default function QuestionHelper({ text }: { text: string }) {
   const close = useCallback(() => setShow(false), [setShow])
 
   return (
-    <span style={{ marginLeft: 4, width: 16, height: 16 }}>
-      <Tooltip text={text} show={show}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Question size={16} />
-        </QuestionWrapper>
-      </Tooltip>
-    </span>
+    <Tooltip text={text} show={show}>
+      <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
+        <Question size={16} />
+      </QuestionWrapper>
+    </Tooltip>
   )
 }
 

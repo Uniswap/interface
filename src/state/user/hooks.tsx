@@ -7,6 +7,7 @@ import { PairState, usePairs } from '../../data/Reserves'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { MainnetGasPrice } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -20,7 +21,8 @@ import {
   updateUserSlippageTolerance,
   toggleURLWarning,
   removeSerializedPair,
-  updateUserMultihop
+  updateUserMultihop,
+  updateUserPreferredGasPrice
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -129,6 +131,25 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   )
 
   return [userSlippageTolerance, setUserSlippageTolerance]
+}
+
+export function useUserPreferredGasPrice(): [
+  MainnetGasPrice | string | null,
+  (preferredGasPrice: MainnetGasPrice | string | null) => void
+] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userPreferredGasPrice = useSelector<AppState, AppState['user']['userPreferredGasPrice']>(state => {
+    return state.user.userPreferredGasPrice
+  })
+
+  const setUserPreferredGasPrice = useCallback(
+    (userPreferredGasPrice: MainnetGasPrice | string | null) => {
+      dispatch(updateUserPreferredGasPrice(userPreferredGasPrice))
+    },
+    [dispatch]
+  )
+
+  return [userPreferredGasPrice, setUserPreferredGasPrice]
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {

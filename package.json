@@ -1,6 +1,6 @@
 {
   "name": "dxswap-dapp",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-beta.3",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.3.13",
@@ -9,6 +9,7 @@
     "@popperjs/core": "^2.9.1",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
+    "@react-spring/web": "^9.1.2",
     "@reduxjs/toolkit": "^1.3.5",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
@@ -29,20 +30,21 @@
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
+    "@uniswap/token-lists": "^1.0.0-beta.24",
     "@web3-react/authereum-connector": "^6.1.9",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",
-    "@web3-react/walletconnect-connector": "^6.1.9",
+    "@web3-react/walletconnect-connector": "^6.2.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
     "cypress": "^4.11.0",
     "decimal.js-light": "^2.5.1",
-    "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.7",
-    "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.8",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.8.0",
+    "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.9",
+    "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.10",
+    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.9.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -51,7 +53,6 @@
     "ethers": "^5.0.7",
     "git-revision-webpack-plugin": "^3.0.6",
     "graphql": "^15.5.0",
-    "http-server": "^0.12.3",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
@@ -80,13 +81,13 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.4.1",
-    "react-spring": "^8.0.27",
+    "react-toastify": "^7.0.4",
     "react-use-gesture": "^6.0.14",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "redux-localstorage-simple": "^2.3.1",
-    "serve": "^11.3.0",
+    "serve": "^11.3.2",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
@@ -94,7 +95,7 @@
     "wcag-contrast": "^3.0.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "1.1.1-alpha.0"
+    "@walletconnect/web3-provider": "1.4.2-rc.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -103,7 +104,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
-    "build-test": "http-server build"
+    "serve": "serve -s ./build"
   },
   "eslintConfig": {
     "extends": "react-app",

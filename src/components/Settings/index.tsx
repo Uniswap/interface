@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { Settings, X, Info, Code, MessageCircle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
+  useUserPreferredGasPrice,
   useMultihopManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
@@ -20,6 +20,8 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
+import { DarkCard } from '../Card'
+import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -64,9 +66,9 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuModal = styled(Modal)`
+const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
   position: absolute;
-  top: 80px;
+  top: ${props => (props.disclaimerBar ? '112px' : '80px')};
   right: 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
@@ -77,12 +79,14 @@ const MenuModal = styled(Modal)`
   `};
 `
 
-const ModalContentWrapper = styled.div`
+const ModalContentWrapper = styled(DarkCard)`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 26px 0;
-  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  ::before {
+    background-color: ${props => props.theme.bg1And2};
+  }
 `
 
 const MenuModalContentWrapper = styled(ModalContentWrapper)`
@@ -122,9 +126,11 @@ export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
+  const [userPreferredGasPrice, setUserPreferredGasPrice] = useUserPreferredGasPrice()
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
+  const showDisclaimerBar = useDisclaimerBar()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -176,7 +182,7 @@ export default function SettingsTab() {
           </span>
         </EmojiWrapper>
       )}
-      <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle}>
+      <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
         <MenuModalContentWrapper>
           <AutoColumn gap="md" style={{ padding: '8px' }}>
             <RowBetween>
@@ -188,6 +194,8 @@ export default function SettingsTab() {
             <TransactionSettings
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
+              rawPreferredGasPrice={userPreferredGasPrice}
+              setRawPreferredGasPrice={setUserPreferredGasPrice}
               deadline={ttl}
               setDeadline={setTtl}
               multihop={multihop}

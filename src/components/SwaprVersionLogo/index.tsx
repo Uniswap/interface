@@ -13,7 +13,7 @@ const RelativeContainer = styled.div`
 
 const Badge = styled.div`
   position: absolute;
-  bottom: -2px;
+  bottom: -4px;
   right: 0;
   background: ${({ theme }) => theme.bg3};
   padding: 3px 4px;

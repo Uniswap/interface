@@ -36,9 +36,10 @@ const StyledPositionCard = styled(GreyCard)`
 
 interface FullPositionCardProps {
   campaign?: LiquidityMiningCampaign
+  showUSDValue: boolean
 }
 
-export default function StakeCard({ campaign }: FullPositionCardProps) {
+export default function StakeCard({ campaign, showUSDValue }: FullPositionCardProps) {
   const { account } = useActiveWeb3React()
   const stakableTokenBalance = useTokenBalance(account || undefined, campaign?.targetedPair.liquidityToken)
   const callbacks = useLiquidityMiningActionCallbacks(campaign?.address)
@@ -263,127 +264,105 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                 My stake
               </TYPE.body>
             </Box>
-            <Flex mb="18px" justifyContent="flex-end">
+            <Flex mb="18px" justifyContent="space-between">
               <Box mr="20px">
                 <DataDisplayer
-                  alignTitleRight
-                  title="REWARDED"
+                  title={<Row>STAKED</Row>}
                   data={
-                    totalRewardedAmounts.length === 0 ? (
-                      <Row justifyContent="flex-end">
-                        <Skeleton width="40px" height="14px" />
-                        <CurrencyLogo loading marginLeft={4} size="14px" />
-                      </Row>
-                    ) : (
-                      totalRewardedAmounts.map(totalRewardedAmount => {
-                        return (
-                          <TokenAmountDisplayer
-                            key={totalRewardedAmount.token.address}
-                            amount={totalRewardedAmount}
-                            alignRight
-                          />
-                        )
-                      })
-                    )
-                  }
-                />
-              </Box>
-              <Box mr="20px">
-                <DataDisplayer
-                  alignTitleRight
-                  title="CLAIMABLE"
-                  data={
-                    claimableRewardAmounts.length === 0 ? (
-                      <Row justifyContent="flex-end">
-                        <Skeleton width="40px" height="14px" />
-                        <CurrencyLogo loading marginLeft={4} size="14px" />
-                      </Row>
-                    ) : (
-                      claimableRewardAmounts.map(claimableRewardAmount => {
-                        return (
-                          <TokenAmountDisplayer
-                            key={claimableRewardAmount.token.address}
-                            amount={claimableRewardAmount}
-                            alignRight
-                          />
-                        )
-                      })
-                    )
-                  }
-                />
-              </Box>
-              <Box>
-                <DataDisplayer
-                  title="CLAIMED"
-                  alignTitleRight
-                  data={
-                    claimedRewardAmounts.length === 0 ? (
-                      <Row justifyContent="flex-end">
-                        <Skeleton width="40px" height="14px" />
-                        <CurrencyLogo loading marginLeft={4} size="14px" />
-                      </Row>
-                    ) : (
-                      claimedRewardAmounts.map(claimedRewardAmount => {
-                        return (
-                          <TokenAmountDisplayer
-                            key={claimedRewardAmount.token.address}
-                            amount={claimedRewardAmount}
-                            alignRight
-                          />
-                        )
-                      })
-                    )
-                  }
-                />
-              </Box>
-            </Flex>
-            <Flex justifyContent="space-between" mb="20px">
-              <Box>
-                <DataDisplayer
-                  title="STAKE SIZE"
-                  data={
-                    !stakedTokenAmount ? (
-                      <Row>
-                        <Skeleton width="40px" height="14px" />
-                        <CurrencyLogo marginLeft={4} loading size="14px" />
-                      </Row>
-                    ) : (
-                      <TokenAmountDisplayer amount={stakedTokenAmount} />
-                    )
+                    <AutoColumn gap="4px">
+                      {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                        <>
+                          <Row justifyContent="flex-end">
+                            <Skeleton width="40px" height="14px" />
+                            <CurrencyLogo marginLeft={4} loading size="14px" />
+                          </Row>
+                          <Row justifyContent="flex-end">
+                            <Skeleton width="40px" height="14px" />
+                            <CurrencyLogo marginLeft={4} loading size="14px" />
+                          </Row>
+                        </>
+                      ) : (
+                        <>
+                          <TokenAmountDisplayer amount={underlyingAssets.token0} showUSDValue={showUSDValue} />
+                          <TokenAmountDisplayer amount={underlyingAssets.token1} showUSDValue={showUSDValue} />
+                        </>
+                      )}
+                    </AutoColumn>
                   }
                 />
               </Box>
               <Flex>
                 <Box mr="20px">
                   <DataDisplayer
-                    title={
-                      <Row>STAKED {campaign ? campaign.targetedPair.token0.symbol : <Skeleton width="24px" />}</Row>
-                    }
+                    alignTitleRight
+                    title="REWARDED"
                     data={
-                      loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                      totalRewardedAmounts.length === 0 ? (
                         <Row justifyContent="flex-end">
                           <Skeleton width="40px" height="14px" />
-                          <CurrencyLogo marginLeft={4} loading size="14px" />
+                          <CurrencyLogo loading marginLeft={4} size="14px" />
                         </Row>
                       ) : (
-                        <TokenAmountDisplayer amount={underlyingAssets.token0} alignRight />
+                        totalRewardedAmounts.map(totalRewardedAmount => {
+                          return (
+                            <TokenAmountDisplayer
+                              key={totalRewardedAmount.token.address}
+                              amount={totalRewardedAmount}
+                              alignRight
+                              showUSDValue={showUSDValue}
+                            />
+                          )
+                        })
+                      )
+                    }
+                  />
+                </Box>
+                <Box mr="20px">
+                  <DataDisplayer
+                    alignTitleRight
+                    title="CLAIMABLE"
+                    data={
+                      claimableRewardAmounts.length === 0 ? (
+                        <Row justifyContent="flex-end">
+                          <Skeleton width="40px" height="14px" />
+                          <CurrencyLogo loading marginLeft={4} size="14px" />
+                        </Row>
+                      ) : (
+                        claimableRewardAmounts.map(claimableRewardAmount => {
+                          return (
+                            <TokenAmountDisplayer
+                              key={claimableRewardAmount.token.address}
+                              amount={claimableRewardAmount}
+                              alignRight
+                              showUSDValue={showUSDValue}
+                            />
+                          )
+                        })
                       )
                     }
                   />
                 </Box>
                 <Box>
                   <DataDisplayer
-                    title={
-                      <Row>STAKED {campaign ? campaign.targetedPair.token1.symbol : <Skeleton width="24px" />}</Row>
-                    }
+                    title="CLAIMED"
+                    alignTitleRight
                     data={
-                      loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                      claimedRewardAmounts.length === 0 ? (
                         <Row justifyContent="flex-end">
                           <Skeleton width="40px" height="14px" />
-                          <CurrencyLogo marginLeft={4} loading size="14px" />
+                          <CurrencyLogo loading marginLeft={4} size="14px" />
                         </Row>
                       ) : (
-                        <TokenAmountDisplayer amount={underlyingAssets.token1} alignRight />
+                        claimedRewardAmounts.map(claimedRewardAmount => {
+                          return (
+                            <TokenAmountDisplayer
+                              key={claimedRewardAmount.token.address}
+                              amount={claimedRewardAmount}
+                              alignRight
+                              showUSDValue={showUSDValue}
+                            />
+                          )
+                        })
                       )
                     }
                   />

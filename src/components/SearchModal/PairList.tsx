@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { usePairAdder, usePairRemover } from '../../state/user/hooks'
 import { useIsUserAddedPair } from '../../hooks/Tokens'
 import Badge from '../Badge'
-import { TokenListContainer, TokenPickerItem } from './styleds'
+import { TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { isPairOnList } from '../../utils'
@@ -98,8 +98,8 @@ export default function PairList({
   )
 
   return (
-    <TokenListContainer>
-      <AutoSizer>
+    <Flex overflowY="auto" flex="1">
+      <AutoSizer style={{ width: '100%', height: '100%' }}>
         {({ width, height }) => (
           <FixedSizeList
             width={width}
@@ -113,6 +113,6 @@ export default function PairList({
           </FixedSizeList>
         )}
       </AutoSizer>
-    </TokenListContainer>
+    </Flex>
   )
 }

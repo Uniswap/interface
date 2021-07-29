@@ -109,6 +109,8 @@ export function theme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
 
+    darkMode,
+
     grids: {
       sm: 8,
       md: 12,
@@ -230,6 +232,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1};
+  color-scheme: ${props => (props.theme.darkMode ? 'dark' : 'light')};
 }
 
 body {
@@ -354,9 +357,73 @@ body {
   padding-top: 2px;
 }
 
+.swapr-pagination li.rc-pagination-options {
+  display: none;
+}
+
 .swapr-pagination li.rc-pagination-disabled {
   border: solid 1px ${props => props.theme.bg3};
   color: ${props => props.theme.bg3};
 }
 
+.custom-toast-root {
+    margin-top: 70px;
+}
+
+.custom-toast-container {
+    box-shadow: 0px 16px 12px ${({ theme }) => transparentize(0.55, theme.boxShadow)};
+    border-radius: 12px !important;
+}
+
+.custom-toast-body {
+    font-family: "Montserrat";
+    padding: 4px 8px;
+}
+
+.Toastify__toast {
+    min-height: auto !important;
+    padding: 16px;
+}
+
+.Toastify__toast-body {
+    margin: 0 !important;
+}
+
+.Toastify__close-button {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+.Toastify__toast--info {
+    background: ${props => props.theme.bg1} !important;
+}
+
+@media only screen and (max-width: 600px) {
+	.Toastify__toast-container--top-right {
+	    top: auto !important;
+	    bottom: 70px !important;
+	    left: 12px !important;
+	    right: 12px !important;
+	}
+	
+  .Toastify__toast-container {
+	    width: auto !important;
+	}
+}
+
+.rc-pagination-simple-pager {
+  padding: 0 8px;
+}
+
+.rc-pagination-slash {
+  margin-right: 4px;
+}
+
+.rc-pagination-simple-pager > input {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: ${props => props.theme.text5};
+}
 `

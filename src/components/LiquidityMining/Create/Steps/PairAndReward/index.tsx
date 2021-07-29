@@ -2,7 +2,6 @@ import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
-import { useAllTokens } from '../../../../../hooks/Tokens'
 import CurrencySearchModal from '../../../../SearchModal/CurrencySearchModal'
 import PairSearchModal from '../../../../SearchModal/PairSearchModal'
 import { Card, Divider } from '../../../styleds'
@@ -35,7 +34,6 @@ export default function PairAndReward({
 }: PairAndRewardProps) {
   const [pairSearchOpen, setPairSearchOpen] = useState<boolean>(false)
   const [currencySearchOpen, setCurrencySearchOpen] = useState<boolean>(false)
-  const allTokens = useAllTokens()
 
   const handleOpenPairSearch = useCallback(() => {
     setPairSearchOpen(true)
@@ -67,17 +65,6 @@ export default function PairAndReward({
     [onRewardTokenChange]
   )
 
-  const filterPairs = useCallback(
-    (pair: Pair) => {
-      const adjustedTokens = Object.values(allTokens)
-      return (
-        adjustedTokens.some(token => token.equals(pair.token0)) &&
-        adjustedTokens.some(token => token.equals(pair.token1))
-      )
-    },
-    [allTokens]
-  )
-
   return (
     <>
       <Card>
@@ -103,7 +90,6 @@ export default function PairAndReward({
         onDismiss={handleDismissPairSearch}
         onPairSelect={handlePairSelection}
         selectedPair={liquidityPair}
-        filterPairs={filterPairs}
       />
       <CurrencySearchModal
         isOpen={currencySearchOpen}

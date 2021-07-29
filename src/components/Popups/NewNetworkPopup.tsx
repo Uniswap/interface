@@ -24,7 +24,9 @@ export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
 
   return (
     <Flex flexDirection="column">
-      <Box mb="16px">Do you want to add {NETWORK_DETAIL[chainId].chainName} to your Metamask?</Box>
+      <Box mb="16px" mr="16px">
+        Do you want to add {NETWORK_DETAIL[chainId].chainName} to your Metamask?
+      </Box>
       <Flex justifyContent="flex-end" width="100%">
         <Box>
           <ResponsiveButtonPrimary padding="8px 14px" onClick={handleAddClick}>

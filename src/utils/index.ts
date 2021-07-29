@@ -6,6 +6,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/IDXswapRouter.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, RoutablePlatform } from 'dxswap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
+import Decimal from 'decimal.js-light'
+import { commify } from 'ethers/lib/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -19,17 +21,17 @@ export function isAddress(value: any): string | false {
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   4: 'rinkeby.',
-  [ChainId.ARBITRUM_TESTNET_V3]: '',
-  [ChainId.SOKOL]: '',
+  [ChainId.ARBITRUM_ONE]: '',
+  [ChainId.ARBITRUM_RINKEBY]: '',
   [ChainId.XDAI]: ''
 }
 
 const getExplorerPrefix = (chainId: ChainId) => {
   switch (chainId) {
-    case ChainId.ARBITRUM_TESTNET_V3:
+    case ChainId.ARBITRUM_ONE:
       return 'https://explorer.arbitrum.io/#'
-    case ChainId.SOKOL:
-      return 'https://blockscout.com/poa/sokol'
+    case ChainId.ARBITRUM_RINKEBY:
+      return 'https://rinkeby-explorer.arbitrum.io/#'
     case ChainId.XDAI:
       return 'https://blockscout.com/xdai/mainnet'
     default:
@@ -141,4 +143,30 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency: Currency
 export function isPairOnList(pairs: Pair[], pair?: Pair): boolean {
   if (!pair) return false
   return !!pairs.find(loopedPair => loopedPair.equals(pair))
+}
+
+export const formatCurrencyAmount = (amount: CurrencyAmount, significantDecimalPlaces = 2): string => {
+  const decimalAmount = new Decimal(amount.toExact())
+  if (decimalAmount.lessThan('0.00000001')) {
+    return '0.00'
+  }
+  const decimalPlaces = decimalAmount.decimalPlaces()
+  if (decimalPlaces === 0) {
+    return commify(decimalAmount.toString())
+  }
+  const [integers, decimals] = decimalAmount.toFixed(decimalPlaces).split('.')
+  let adjustedDecimals = ''
+  let significantDecimalPlacesAdded = 0
+  for (let i = 0; i < decimals.length; i++) {
+    const char = decimals.charAt(i)
+    if (significantDecimalPlacesAdded === 1 && char === '0') {
+      // handle cases like 0.0010001, stopping at the first 1
+      break
+    }
+    adjustedDecimals += char
+    if (char !== '0' && ++significantDecimalPlacesAdded === significantDecimalPlaces) {
+      break
+    }
+  }
+  return `${commify(integers)}.${adjustedDecimals}`
 }

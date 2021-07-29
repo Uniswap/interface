@@ -22,7 +22,7 @@ const Base = styled(RebassButton)<{
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
-  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '8px')};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '12px')};
   outline: none;
   border: none;
   color: ${({ theme }) => theme.white};
@@ -74,7 +74,6 @@ export const ButtonSecondary = styled(Base)`
   color: ${({ theme }) => theme.text5};
   background-color: transparent;
   font-size: 16px;
-  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:disabled {
@@ -92,7 +91,6 @@ export const ButtonGrey = styled(Base)`
   background-blend-mode: overlay, normal;
   color: ${({ theme }) => theme.text5};
   font-size: 16px;
-  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:disabled {
@@ -104,12 +102,17 @@ export const ButtonGrey = styled(Base)`
   }
 `
 
+export const ButtonInvisbile = styled.button`
+  border: none;
+  outline: none;
+  background: transparent;
+`
+
 export const ButtonDark = styled(Base)`
   border: 1px solid #252237;
   background-color: #171621;
   color: ${({ theme }) => theme.text5};
   font-size: 16px;
-  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:disabled {
@@ -123,7 +126,6 @@ export const ButtonDark = styled(Base)`
 
 export const ButtonOutlined = styled(Base)`
   border: 8px solid;
-  border-radius: 8px;
   border-image: url(${border8pxRadius}) 8;
   background-color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
   color: ${({ theme }) => theme.text1};

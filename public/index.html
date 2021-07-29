@@ -12,6 +12,35 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="title" content="Swapr" />
+    <meta name="description" content="A governance-enabled automated market maker with adjustable fees." />
+    <meta name="image" content="%PUBLIC_URL%/og.png" />
+    <meta property="og:title" content="Swapr" />
+    <meta property="og:description" content="A governance-enabled automated market maker with adjustable fees." />
+    <meta property="og:image" content="http://swapr.eth.link/og.png" />
+    <meta property="og:url" content="https://swapr.eth.link/" />
+    <meta property="og:site_name" content="Swapr" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Swapr" />
+    <meta name="twitter:description" content="A governance-enabled automated market maker with adjustable fees." />
+    <meta name="twitter:image" content="http://swapr.eth.link/og.png" />
+    <meta name="twitter:image:alt" content="Swapr" />
+    <meta name="twitter:site" content="@SwaprEth" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
+    <base href="/" />
+
+    <script>
+      ;(function() {
+        const { pathname, hostname, protocol } = window.location
+
+        // redirect to https on non-localhost
+        if (protocol === 'http:' && hostname !== 'localhost') {
+          window.location.protocol = 'https'
+          return
+        }
+      })()
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

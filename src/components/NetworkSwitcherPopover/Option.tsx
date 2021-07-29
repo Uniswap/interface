@@ -45,7 +45,7 @@ const Icon = styled.img`
 `
 
 const BadgeWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1And2};
   border-radius: 10%;
   margin-left: 8px;
 `

@@ -6,6 +6,7 @@ import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
+import { useAllTokensFromActiveListsOnCurrentChain } from '../state/lists/hooks'
 import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 
@@ -92,6 +93,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
   }[]
 } {
   const { chainId, account } = useActiveWeb3React()
+  const tokensInCurrentChain = useAllTokensFromActiveListsOnCurrentChain()
   const nativeCurrency = useNativeCurrency()
   const memoizedLowerTimeLimit = useMemo(
     () =>
@@ -133,14 +135,24 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
           reserve1,
           liquidityMiningCampaigns
         } = rawPair
-        const tokenAmountA = new TokenAmount(
-          new Token(chainId, getAddress(token0.address), parseInt(token0.decimals), token0.symbol, token0.name),
-          parseUnits(reserve0, token0.decimals).toString()
-        )
-        const tokenAmountB = new TokenAmount(
-          new Token(chainId, getAddress(token1.address), parseInt(token1.decimals), token1.symbol, token1.name),
-          parseUnits(reserve1, token1.decimals).toString()
-        )
+
+        const token0ChecksummedAddress = getAddress(token0.address)
+        const tokenA =
+          tokensInCurrentChain &&
+          tokensInCurrentChain[token0ChecksummedAddress] &&
+          tokensInCurrentChain[token0ChecksummedAddress].token
+            ? tokensInCurrentChain[token0ChecksummedAddress].token
+            : new Token(chainId, token0ChecksummedAddress, parseInt(token0.decimals), token0.symbol, token0.name)
+        const tokenAmountA = new TokenAmount(tokenA, parseUnits(reserve0, token0.decimals).toString())
+
+        const token1ChecksummedAddress = getAddress(token1.address)
+        const tokenB =
+          tokensInCurrentChain &&
+          tokensInCurrentChain[token1ChecksummedAddress] &&
+          tokensInCurrentChain[token1ChecksummedAddress].token
+            ? tokensInCurrentChain[token1ChecksummedAddress].token
+            : new Token(chainId, token1ChecksummedAddress, parseInt(token1.decimals), token1.symbol, token1.name)
+        const tokenAmountB = new TokenAmount(tokenB, parseUnits(reserve1, token1.decimals).toString())
         const pair = new Pair(tokenAmountA, tokenAmountB)
 
         const campaigns = toLiquidityMiningCampaigns(
@@ -162,5 +174,5 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
         }
       }, [])
     }
-  }, [chainId, data, error, filterTokenAddress, loading, nativeCurrency])
+  }, [chainId, data, error, filterTokenAddress, loading, nativeCurrency, tokensInCurrentChain])
 }

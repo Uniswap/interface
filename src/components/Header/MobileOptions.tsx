@@ -69,7 +69,7 @@ const StyledExternalLink = styled(ExternalLink)`
 
 const Wrapper = styled(Flex)`
   width: 100%;
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 export default function MobileOptions({ history }: { history: any }) {
