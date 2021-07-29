@@ -5,6 +5,7 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.2.0",
+    "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-operations": "^1.18.2",
@@ -18,7 +19,9 @@
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
     "@react-hook/window-scroll": "^1.3.0",
-    "@reduxjs/toolkit": "^1.6.0",
+    "@reduxjs/toolkit": "^1.6.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
     "@typechain/ethers-v5": "^7.0.0",
     "@types/d3": "^6.7.1",
     "@types/jest": "^25.2.1",
@@ -76,6 +79,7 @@
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "inter-ui": "^3.13.1",
+    "jest-styled-components": "^7.0.5",
     "lodash.flatmap": "^4.5.0",
     "luxon": "^1.25.0",
     "ms.macro": "^2.0.0",
@@ -120,7 +124,7 @@
     "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "1.5.0-rc.5"
+    "@walletconnect/web3-provider": "1.5.1"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
@@ -133,7 +137,7 @@
     "graphql:generate": "graphql-codegen --config codegen.yml",
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=./custom-test-env.js",
     "prestart": "yarn graphql:generate && touch src/locales/en-US.po"
   },
   "eslintConfig": {

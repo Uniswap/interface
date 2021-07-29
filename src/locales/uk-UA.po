@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-07-29 18:18+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-07-29 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -413,6 +413,7 @@ msgid "Clear all"
 msgstr "Очистити все"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Закрити"
 
@@ -482,6 +483,10 @@ msgstr "Підтвердити обмін"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Підтвердьте цю операцію у своєму гаманці"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Підтвердіть транзакцію в гаманці"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +734,7 @@ msgstr "Введіть дійсне місце списку"
 msgid "Enter valid token address"
 msgstr "Введіть дійсну адресу токена"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ой! Сталася невідома помилка. Оновіть сторінку або зайдіть з іншого браузера чи пристрою."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Оптимізм запланованих простоїв"
+msgid "Optimism Scheduled Downtime"
+msgstr "Оптимізм, запланований час простою"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Оптимізм очікує певного запланованого простою найближчим часом. <0> Детальніше.</0>"
+msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
+msgstr "Оптимізм очікує запланованого простою найближчим часом. Можуть виникнути незаплановані простої. Поки мережа не працює, комісія не генеруватиметься, і ви не зможете усунути ліквідність. <0> Детальніше.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "У черзі"
 msgid "Rates"
 msgstr "Ставки"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Читати далі"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Дізнатися більше про UNI"
@@ -1372,6 +1384,7 @@ msgstr "Видалення {0} {1} та {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Обмежує обмін лише прямими парами."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1496,10 @@ msgstr "Відправка голосу"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Вдалося"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Успіху"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1646,6 +1663,7 @@ msgid "Transaction Settings"
 msgstr "Налаштування транзакцій"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1671,10 @@ msgstr "Налаштування транзакцій"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Транзакцію надіслано"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Транзакція завершена в"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1851,7 @@ msgstr "Переглянути на Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Переглянути на Explorer"

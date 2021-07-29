@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-07-29 18:18+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-07-29 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -413,6 +413,7 @@ msgid "Clear all"
 msgstr "Tümünü temizle"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Kapat"
 
@@ -482,6 +483,10 @@ msgstr "Swap'ı Onayla"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Cüzdanınızda bu işlemi onaylayın"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Cüzdandaki işlemi onaylayın"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +734,7 @@ msgstr "Geçerli liste konumu girin"
 msgid "Enter valid token address"
 msgstr "Geçerli jeton adresini girin"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin veya başka bir tarayıcı ya da cihazdan ziyaret edin."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "İyimserlik Planlı Duruş Süreleri"
+msgid "Optimism Scheduled Downtime"
+msgstr "İyimserlik Planlanmış Kesinti Süresi"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "İyimserlik, yakın gelecekte bazı planlanmış kesintiler beklemektedir. <0>Daha fazlasını okuyun.</0>"
+msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
+msgstr "İyimserlik, yakın gelecekte planlanmış kesintiler beklemektedir. Planlanmamış kesintiler meydana gelebilir. Ağ kapalıyken ücretler oluşturulmaz ve likiditeyi kaldıramazsınız.<0>Daha fazlasını okuyun.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "sıraya alındı"
 msgid "Rates"
 msgstr "Oranlar"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Daha fazla oku"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "UNI hakkında daha fazla bilgi edinin"
@@ -1372,6 +1384,7 @@ msgstr "{0} {1} ve {2} {3} kaldırılıyor"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Swap'ları yalnızca doğrudan çiftlerle sınırlar."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1496,10 @@ msgstr "Oy Gönderme"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "başarılı"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Başarı"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1646,6 +1663,7 @@ msgid "Transaction Settings"
 msgstr "İşlem Ayarları"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1671,10 @@ msgstr "İşlem Ayarları"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "İşlem Gönderildi"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "İşlem tamamlandı"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1851,7 @@ msgstr "Etherscan üzerinde görüntüle"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Explorer'da Görüntüle"
