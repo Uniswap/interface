@@ -50,6 +50,7 @@ export function useRoutes(
         acc: allRoutes,
       })
 
+      // TODO(judo): validate sum of outputs is equal to quote
       return allRoutes.map((route) => {
         const [pool, rawAmountIn, rawAmountOut] = parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges)
 
