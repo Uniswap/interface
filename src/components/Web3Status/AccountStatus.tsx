@@ -16,16 +16,16 @@ import { TriangleIcon } from '../Icons'
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.ARBITRUM_TESTNET_V3]: ArbitrumLogo,
-  [ChainId.SOKOL]: '',
+  [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
 const ChainLabel: any = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
-  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
+  [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
   [ChainId.XDAI]: 'xDai'
 }
 

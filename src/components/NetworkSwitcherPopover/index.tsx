@@ -13,6 +13,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NETWORK_DETAIL } from '../../constants'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
+import { switchOrAddNetwork } from '../../utils'
 
 const StyledPopover = styled(Popover)`
   padding: 0;
@@ -70,16 +71,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
       if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
-      if (window.ethereum && window.ethereum.request && window.ethereum.isMetaMask && NETWORK_DETAIL[optionChainId]) {
-        window.ethereum
-          .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: NETWORK_DETAIL[optionChainId].chainId }]
-          })
-          .catch(error => {
-            console.error(`error adding network to metamask`, error)
-          })
-      }
+      switchOrAddNetwork(NETWORK_DETAIL[optionChainId])
       closeModals()
     },
     [account, chainId, closeModals, connector]

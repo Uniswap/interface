@@ -10,6 +10,7 @@ import { ButtonPrimary } from '../Button'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
 import { useIsSwitchingToCorrectChain } from '../../state/multi-chain-links/hooks'
 import { useActiveWeb3React } from '../../hooks'
+import { switchOrAddNetwork } from '../../utils'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -42,15 +43,8 @@ export default function NetworkWarningModal() {
   const handleDismiss = useCallback(() => null, [])
 
   const handleAddClick = useCallback(() => {
-    if (!window.ethereum || !window.ethereum.request || !urlLoadedChainId) return
-    window.ethereum
-      .request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: NETWORK_DETAIL[urlLoadedChainId].chainId }]
-      })
-      .catch(error => {
-        console.error(`error adding network to metamask`, error)
-      })
+    if (!urlLoadedChainId) return
+    switchOrAddNetwork(NETWORK_DETAIL[urlLoadedChainId])
   }, [urlLoadedChainId])
 
   return (
