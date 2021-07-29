@@ -4,7 +4,6 @@ import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import PoaLogo from '../../assets/images/poa-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -49,10 +48,10 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
-  [ChainId.ARBITRUM_TESTNET_V3]: EthereumLogo,
+  [ChainId.ARBITRUM_ONE]: EthereumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: EthereumLogo,
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.SOKOL]: PoaLogo,
   [ChainId.XDAI]: XDAILogo
 }
 

@@ -106,7 +106,6 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
                 }}
                 header={'Ethereum'}
                 logoSrc={EthereumLogo}
-                disabled={chainId === ChainId.MAINNET}
               />
               <Option
                 onClick={() => {
@@ -114,15 +113,13 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
                 }}
                 header={'xDai'}
                 logoSrc={XDAILogo}
-                disabled={chainId === ChainId.XDAI}
               />
               <Option
                 onClick={() => {
-                  selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
+                  selectNetwork(ChainId.ARBITRUM_ONE)
                 }}
-                header={'Arbitrum'}
+                header={'Arbitrum one'}
                 logoSrc={ArbitrumLogo}
-                comingSoon
               />
             </OptionGrid>
             <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>

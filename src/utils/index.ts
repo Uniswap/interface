@@ -21,17 +21,17 @@ export function isAddress(value: any): string | false {
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   4: 'rinkeby.',
-  [ChainId.ARBITRUM_TESTNET_V3]: '',
-  [ChainId.SOKOL]: '',
+  [ChainId.ARBITRUM_ONE]: '',
+  [ChainId.ARBITRUM_RINKEBY]: '',
   [ChainId.XDAI]: ''
 }
 
 const getExplorerPrefix = (chainId: ChainId) => {
   switch (chainId) {
-    case ChainId.ARBITRUM_TESTNET_V3:
+    case ChainId.ARBITRUM_ONE:
       return 'https://explorer.arbitrum.io/#'
-    case ChainId.SOKOL:
-      return 'https://blockscout.com/poa/sokol'
+    case ChainId.ARBITRUM_RINKEBY:
+      return 'https://rinkeby-explorer.arbitrum.io/#'
     case ChainId.XDAI:
       return 'https://blockscout.com/xdai/mainnet'
     default:

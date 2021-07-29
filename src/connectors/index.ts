@@ -11,13 +11,15 @@ export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 export const network = new CustomNetworkConnector({
   urls: {
     [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-    [ChainId.XDAI]: 'https://rpc.xdaichain.com/'
+    [ChainId.XDAI]: 'https://rpc.xdaichain.com/',
+    [ChainId.ARBITRUM_ONE]: 'https://arb1.arbitrum.io/rpc',
+    [ChainId.ARBITRUM_RINKEBY]: 'https://rinkeby.arbitrum.io/rpc'
   },
   defaultChainId: ChainId.MAINNET
 })
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ARBITRUM_TESTNET_V3, ChainId.SOKOL, ChainId.XDAI]
+  supportedChainIds: [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_RINKEBY, ChainId.XDAI]
 })
 
 // mainnet only
