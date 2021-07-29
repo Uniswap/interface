@@ -232,7 +232,6 @@ interface NetworkDetails {
   rpcUrls: string[]
   blockExplorerUrls?: string[]
   iconUrls?: string[] // Currently ignored.
-  metamaskAddable?: boolean
 }
 
 export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
@@ -256,8 +255,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.XDAI.decimals || 18
     },
     rpcUrls: ['https://rpc.xdaichain.com/'],
-    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
-    metamaskAddable: true
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
   }
 }
 

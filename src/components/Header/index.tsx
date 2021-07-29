@@ -35,14 +35,14 @@ const HeaderFrame = styled.div`
   `};
 `
 
-const HeaderControls = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+const HeaderControls = styled.div<{ isConnected: boolean }>`
+  ${({ theme, isConnected }) => theme.mediaWidth.upToMedium`
     position: fixed;
     bottom: 0px;
     left: 0px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: ${isConnected => (!isConnected ? 'space-between' : 'center')};
     flex-direction: row-reverse;
     width: 100%;
     height: 72px;
@@ -62,7 +62,6 @@ const HeaderElement = styled.div`
     flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
-    width: 100%;
   `};
 `
 
@@ -70,6 +69,7 @@ const MoreLinksIcon = styled(HeaderElement)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
+    justify-content: flex-start;
   `};
 `
 
@@ -85,7 +85,6 @@ const HeaderLinks = styled(Row)`
     justify-content: flex-end;
   `};
 `
-
 
 const Title = styled.a`
   display: flex;
@@ -176,7 +175,7 @@ const HeaderSubRow = styled(RowFlat)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 0;
   `};
-`;
+`
 
 const Amount = styled.p`
   padding: 8px 12px;
@@ -195,13 +194,13 @@ const Amount = styled.p`
   & + & {
     margin-left: 7px;
   }
-`;
+`
 
 const DesktopSettingsWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
-`;
+`
 
 const MobileSettingsWrapper = styled.div`
   display: none;
@@ -209,22 +208,21 @@ const MobileSettingsWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
-`;
+`
 
 const AmountDesktop = styled(Amount)`
   display: block;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
-`;
+`
 
 const AmountMobile = styled(Amount)`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
-`;
-
+`
 
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
@@ -238,7 +236,7 @@ function Header({ history }: { history: any }) {
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
   }, [])
-  
+
   return (
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
@@ -246,18 +244,10 @@ function Header({ history }: { history: any }) {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
-          <StyledNavLink
-            id="swap-nav-link"
-            to="/swap"
-            activeClassName="active"
-          >
+          <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink
-            id="pool-nav-link"
-            to="/pools"
-            activeClassName="active"
-          >
+          <StyledNavLink id="pool-nav-link" to="/pools" activeClassName="active">
             {t('pool')}
           </StyledNavLink>
           <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
@@ -282,7 +272,7 @@ function Header({ history }: { history: any }) {
           </MobileSettingsWrapper>
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls>
+      <HeaderControls isConnected={!!account}>
         <HeaderElement>
           <Web3Status />
           <DesktopSettingsWrapper>

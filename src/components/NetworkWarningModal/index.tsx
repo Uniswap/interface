@@ -45,8 +45,8 @@ export default function NetworkWarningModal() {
     if (!window.ethereum || !window.ethereum.request || !urlLoadedChainId) return
     window.ethereum
       .request({
-        method: 'wallet_addEthereumChain',
-        params: [{ ...NETWORK_DETAIL[urlLoadedChainId], metamaskAddable: undefined }]
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: NETWORK_DETAIL[urlLoadedChainId].chainId }]
       })
       .catch(error => {
         console.error(`error adding network to metamask`, error)
@@ -77,25 +77,21 @@ export default function NetworkWarningModal() {
                 {urlLoadedChainId && NETWORK_DETAIL[urlLoadedChainId] ? NETWORK_DETAIL[urlLoadedChainId].chainName : ''}{' '}
                 in your connected wallet to continue.
               </TYPE.body>
-              {urlLoadedChainId &&
-                window.ethereum &&
-                window.ethereum.isMetaMask &&
-                NETWORK_DETAIL[urlLoadedChainId] &&
-                NETWORK_DETAIL[urlLoadedChainId].metamaskAddable && (
-                  <>
-                    <TYPE.body
-                      marginY="20px"
-                      fontSize="14px"
-                      fontWeight="400"
-                      lineHeight="22px"
-                      letterSpacing="-0.02em"
-                      color="text4"
-                    >
-                      To add/switch to the requested network, click the button below.
-                    </TYPE.body>
-                    <ButtonPrimary onClick={handleAddClick}>Add</ButtonPrimary>
-                  </>
-                )}
+              {urlLoadedChainId && window.ethereum && window.ethereum.isMetaMask && NETWORK_DETAIL[urlLoadedChainId] && (
+                <>
+                  <TYPE.body
+                    marginY="20px"
+                    fontSize="14px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    letterSpacing="-0.02em"
+                    color="text4"
+                  >
+                    To add/switch to the requested network, click the button below.
+                  </TYPE.body>
+                  <ButtonPrimary onClick={handleAddClick}>Add</ButtonPrimary>
+                </>
+              )}
             </UpperSectionContainer>
           </AutoColumn>
         </WarningContainer>

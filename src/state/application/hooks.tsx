@@ -69,10 +69,6 @@ export function useWalletSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET_SWITCHER)
 }
 
-export function useEthereumOptionPopoverToggle(): () => void {
-  return useToggleModal(ApplicationModal.ETHEREUM_OPTION)
-}
-
 export function useAddArbitrumPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.ADD_ARBITRUM)
 }

@@ -52,7 +52,7 @@ const SwitchNetworkButton = styled.button`
 const Button = styled.button`
   height: 32px;
   padding: 10.5px 14px;
-  margin: 0 auto;
+  margin: 0 0 0 auto;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
   border-radius: 12px;
@@ -92,13 +92,13 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
   const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
-  const [modal, setModal] = useState<ModalView | null>(null);
+  const [modal, setModal] = useState<ModalView | null>(null)
 
   const [pendingError, setPendingError] = useState<boolean>()
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-  
+
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
-  
+
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     setPendingWallet(connector)
     setModal(ModalView.Pending)
@@ -119,12 +119,12 @@ export default function Web3Status() {
   }
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  const { t } = useTranslation();
-  
+  const { t } = useTranslation()
+
   if (!contextNetwork.active && !active) {
     return null
   }
-  
+
   if (error) {
     return (
       <NetworkSwitcherPopover>
@@ -132,33 +132,28 @@ export default function Web3Status() {
           {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
           <SwitchNetworkButton onClick={toggleNetworkSwitcherPopover}>
             Switch network
-            <TriangleIcon/>
+            <TriangleIcon />
           </SwitchNetworkButton>
         </Web3StatusError>
       </NetworkSwitcherPopover>
     )
   }
-  
+
   return (
     <>
-      <ConnectWalletPopover
-        setModal={setModal}
-        tryActivation={tryActivation}
-      >
-        {(networkConnectorChainId && !account) && (
+      <ConnectWalletPopover setModal={setModal} tryActivation={tryActivation}>
+        {networkConnectorChainId && !account && (
           <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
             {t('Connect wallet')}
           </Button>
         )}
-        {(networkConnectorChainId && !!account) && (
-          <AccountStatus
-            pendingTransactions={pending}
-            ENSName={ENSName ?? undefined}
-            account={account}
-            networkConnectorChainId={networkConnectorChainId}
-            onAddressClick={() => setModal(ModalView.Account)}
-          />
-        )}
+        <AccountStatus
+          pendingTransactions={pending}
+          ENSName={ENSName ?? undefined}
+          account={account}
+          networkConnectorChainId={networkConnectorChainId}
+          onAddressClick={() => setModal(ModalView.Account)}
+        />
       </ConnectWalletPopover>
       <WalletModal
         modal={modal}

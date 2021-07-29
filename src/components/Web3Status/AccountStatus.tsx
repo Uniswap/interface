@@ -1,17 +1,17 @@
-import { ChainId } from 'dxswap-sdk';
+import { ChainId } from 'dxswap-sdk'
 import React from 'react'
-import { Text } from 'rebass';
-import styled from 'styled-components';
-import { useNetworkSwitcherPopoverToggle } from '../../state/application/hooks';
-import { TYPE } from '../../theme';
-import { shortenAddress } from '../../utils';
-import Loader from '../Loader';
-import NetworkSwitcherPopover from '../NetworkSwitcherPopover';
-import { RowBetween } from '../Row';
+import { Text } from 'rebass'
+import styled from 'styled-components'
+import { useNetworkSwitcherPopoverToggle } from '../../state/application/hooks'
+import { TYPE } from '../../theme'
+import { shortenAddress } from '../../utils'
+import Loader from '../Loader'
+import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
+import { RowBetween } from '../Row'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
-import { TriangleIcon } from '../Icons';
+import { TriangleIcon } from '../Icons'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -38,11 +38,12 @@ const View = styled.div`
   color: ${({ theme }) => theme.purple2};
   border-radius: 12px;
   white-space: nowrap;
-`;
+  margin-left: 8px;
+`
 
 const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   height: 29px;
-  padding: 0 0 0 8px;
+  padding: 0 8px;
   background: none;
   border: none;
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text4)};
@@ -52,23 +53,24 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-`;
+  outline: none;
+`
 
-const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean }>`
+const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean }>`
   display: flex;
   align-items: center;
   height: 29px;
   padding: 7px 8px;
-  margin-left: 10px;
   font-size: 12px;
   line-height: 15px;
   text-align: center;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #FFFFFF;
+  color: #ffffff;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.dark2};
+  background-color: ${({ theme, isConnected }) => (isConnected ? theme.dark2 : 'transparent')};
   border: none;
+  outline: none;
 
   &:hover {
     cursor: pointer;
@@ -94,62 +96,73 @@ const NetworkName = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
-`;
+`
 
 const AddressDesktop = styled.span`
   display: block;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `};
-`;
+`
 
 const AddressMobile = styled.span`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
-`;
-
+`
 
 interface AccountStatusProps {
-  pendingTransactions: string[];
-  ENSName?: string;
-  account: string;
-  networkConnectorChainId: ChainId;
-  onAddressClick: () => void;
+  pendingTransactions: string[]
+  ENSName?: string
+  account: string | undefined | null
+  networkConnectorChainId: ChainId | undefined
+  onAddressClick: () => void
 }
 
-export function AccountStatus({pendingTransactions, ENSName, account, networkConnectorChainId, onAddressClick}: AccountStatusProps) {
+export function AccountStatus({
+  pendingTransactions,
+  ENSName,
+  account,
+  networkConnectorChainId,
+  onAddressClick
+}: AccountStatusProps) {
   const hasPendingTransactions = !!pendingTransactions.length
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
-  
+
+  if (!networkConnectorChainId) return null
+
   return (
     <View>
-      <Web3StatusConnected id="web3-status-connected" onClick={onAddressClick} pending={hasPendingTransactions}>
-        {hasPendingTransactions ? (
-          <RowBetween>
-            <Text fontSize={13}>{pendingTransactions?.length} Pending</Text> <Loader />
-          </RowBetween>
-        ) : (
-          ENSName || (
-            <>
-              <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
-              <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
-            </>
-          )
-        )}
-      </Web3StatusConnected>
+      {account && (
+        <Web3StatusConnected id="web3-status-connected" onClick={onAddressClick} pending={hasPendingTransactions}>
+          {hasPendingTransactions ? (
+            <RowBetween>
+              <Text fontSize={13}>{pendingTransactions?.length} Pending</Text> <Loader />
+            </RowBetween>
+          ) : (
+            ENSName || (
+              <>
+                <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
+                <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
+              </>
+            )
+          )}
+        </Web3StatusConnected>
+      )}
       <NetworkSwitcherPopover>
-        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
+        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover} isConnected={!!account}>
           <IconWrapper size={20}>
             <img src={ChainLogo[networkConnectorChainId]} alt="chain logo" />
           </IconWrapper>
-          <NetworkName>
-            <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
-              {ChainLabel[networkConnectorChainId]}
-            </TYPE.white>
-          </NetworkName>
-          <TriangleIcon/>
+          {account && (
+            <NetworkName>
+              <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
+                {ChainLabel[networkConnectorChainId]}
+              </TYPE.white>
+            </NetworkName>
+          )}
+          <TriangleIcon />
         </Web3StatusNetwork>
       </NetworkSwitcherPopover>
     </View>
