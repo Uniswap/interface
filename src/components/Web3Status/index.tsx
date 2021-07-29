@@ -62,6 +62,7 @@ const Button = styled.button`
   line-height: 12px;
   letter-spacing: 0.08em;
   border: none;
+  outline: none;
   cursor: pointer;
 `
 

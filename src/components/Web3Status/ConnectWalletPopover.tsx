@@ -1,32 +1,32 @@
 import React, { ReactNode, useRef } from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { isMobile } from 'react-device-detect';
-import { SUPPORTED_WALLETS } from '../../constants';
+import { isMobile } from 'react-device-detect'
+import { SUPPORTED_WALLETS } from '../../constants'
 import { injected } from '../../connectors'
-import MetamaskIcon from '../../assets/images/metamask.png';
-import { ModalView } from '.';
-import Popover from '../Popover';
-import { useCloseModals, useModalOpen } from '../../state/application/hooks';
-import { ApplicationModal } from '../../state/application/actions';
-import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import MetamaskIcon from '../../assets/images/metamask.png'
+import { ModalView } from '.'
+import Popover from '../Popover'
+import { useCloseModals, useModalOpen } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/actions'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 const Wrapper = styled.div`
- width: 100%;
-`;
+  width: 100%;
+`
 
 const List = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
-`;
+`
 
 const ListItem = styled.li`
   & + & {
     margin-top: 24px;
   }
-`;
+`
 
 const ListButton = styled.button`
   display: flex;
@@ -49,7 +49,7 @@ const ListButton = styled.button`
     filter: grayscale(90%);
     opacity: 0.6;
   }
-`;
+`
 
 const ListIconWrapper = styled.div`
   display: inline-flex;
@@ -62,7 +62,7 @@ const ListIconWrapper = styled.div`
   img {
     max-width: 100%;
   }
-`;
+`
 
 const StyledPopover = styled(Popover)`
   max-width: 290px;
@@ -73,15 +73,15 @@ const StyledPopover = styled(Popover)`
   border-width: 1.2px;
   border-radius: 12px;
   border-image: none;
-`;
+`
 
 interface ConnectWalletProps {
-  setModal: (modal: ModalView | null) => void;
+  setModal: (modal: ModalView | null) => void
   tryActivation: (connector: AbstractConnector | undefined) => void
   children: ReactNode
 }
 
-export const ConnectWalletPopover = ({setModal, tryActivation, children}: ConnectWalletProps) => {
+export const ConnectWalletPopover = ({ setModal, tryActivation, children }: ConnectWalletProps) => {
   const { connector } = useWeb3React()
 
   function getOptions() {
@@ -90,7 +90,7 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (option.mobile) {
           return (
             <>
               <Item
@@ -146,9 +146,10 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
           <Item
             key={key}
             id={`connect-${key}`}
-            onClick={() => {option.connector === connector
-              ? setModal(ModalView.Account)
-              : !option.href && tryActivation(option.connector)
+            onClick={() => {
+              option.connector === connector
+                ? setModal(ModalView.Account)
+                : !option.href && tryActivation(option.connector)
             }}
             name={option.name}
             icon={require('../../assets/images/' + option.iconName)}
@@ -165,47 +166,46 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
   useOnClickOutside(popoverRef, () => {
     if (walletSwitcherPopoverOpen) closeModals()
   })
-  
-    
+
   return (
     <Wrapper ref={popoverRef}>
-      <StyledPopover
-        content={<List>{getOptions()}</List>}
-        show={walletSwitcherPopoverOpen}
-        placement="bottom-end"
-      >
-       {children} 
+      <StyledPopover content={<List>{getOptions()}</List>} show={walletSwitcherPopoverOpen} placement="bottom-end">
+        {children}
       </StyledPopover>
     </Wrapper>
   )
 }
 
 interface ItemProps {
-  id: string;
-  icon: string;
-  name: string;
-  link?: string;
-  onClick?: () => void;
-  active?: boolean;
+  id: string
+  icon: string
+  name: string
+  link?: string
+  onClick?: () => void
+  active?: boolean
 }
 
-export const Item = ({id, onClick, name, icon, link, active}: ItemProps) => {
-
+export const Item = ({ id, onClick, name, icon, link, active }: ItemProps) => {
   const getContent = () => (
     <>
       <ListIconWrapper>
-        <img src={icon} alt={name + ' logo'}/>
+        <img src={icon} alt={name + ' logo'} />
       </ListIconWrapper>
       {name}
     </>
   )
-  
+
   return (
     <ListItem id={id}>
-      {!!link 
-        ? <ListButton as="a" href={link} target="_blank" rel="noopener noreferrer">{getContent()}</ListButton>
-        : <ListButton disabled={active} onClick={onClick}>{getContent()}</ListButton>
-      }
+      {!!link ? (
+        <ListButton as="a" href={link} target="_blank" rel="noopener noreferrer">
+          {getContent()}
+        </ListButton>
+      ) : (
+        <ListButton disabled={active} onClick={onClick}>
+          {getContent()}
+        </ListButton>
+      )}
     </ListItem>
   )
 }
