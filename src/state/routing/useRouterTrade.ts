@@ -5,11 +5,14 @@ import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
+import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
   const { account } = useActiveWeb3React()
+  const userSlippageTolerance = useUserSlippageTolerance()
+  const [deadline] = useUserTransactionTTL()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
     amountIn && currencyOut
@@ -21,6 +24,9 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
           recipient: account ?? undefined,
+          slippageTolerance:
+            typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
+          deadline: deadline.toString(),
         }
       : skipToken,
     { pollingInterval: ms`5m` }
@@ -32,14 +38,14 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut || isError) {
+    if (!amountIn || !currencyOut) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
       }
     }
 
-    if (isLoading || routes === undefined) {
+    if (isLoading) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -48,7 +54,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
     const amountOut = currencyOut && data ? CurrencyAmount.fromRawAmount(currencyOut, data.quote) : undefined
 
-    if (!amountOut || routes === []) {
+    if (isError || !amountOut || routes === []) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -69,6 +75,8 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
   const { account } = useActiveWeb3React()
+  const userSlippageTolerance = useUserSlippageTolerance()
+  const [deadline] = useUserTransactionTTL()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
     amountOut && currencyIn
@@ -80,6 +88,9 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           amount: amountOut.quotient.toString(),
           type: 'exactOut',
           recipient: account ?? undefined,
+          slippageTolerance:
+            typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
+          deadline: deadline.toString(),
         }
       : skipToken,
     { pollingInterval: ms`5m` }

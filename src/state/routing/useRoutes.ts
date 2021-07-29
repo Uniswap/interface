@@ -7,7 +7,7 @@ export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
   quoteResult: Pick<GetQuoteResult, 'routeEdges' | 'routeNodes'> | undefined
-): Route<Currency, Currency>[] | undefined {
+): Route<Currency, Currency>[] {
   // lookup table for nodes
   const tokensInRoute = useMemo(
     () =>
@@ -32,7 +32,7 @@ export function useRoutes(
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut || !quoteResult || !tokensInRoute || !graph) {
-      return undefined
+      return []
     }
 
     try {
@@ -51,7 +51,7 @@ export function useRoutes(
       )
     } catch (err) {
       console.debug(err)
-      return undefined
+      return []
     }
   }, [currencyIn, currencyOut, graph, quoteResult, tokensInRoute])
 }
