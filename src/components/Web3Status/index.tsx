@@ -24,19 +24,19 @@ import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import { ChainId } from 'dxswap-sdk'
 import { useActiveWeb3React } from '../../hooks'
 
-const ChainLogo: any = {
+const ChainLogo: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.ARBITRUM_TESTNET_V3]: ArbitrumLogo,
-  [ChainId.SOKOL]: '',
+  [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
+  [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
-const ChainLabel: any = {
+const ChainLabel: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
-  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
+  [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum RInkeby',
   [ChainId.XDAI]: 'xDai'
 }
 
@@ -46,6 +46,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   justify-content: center;
   & > img,
   span {
+    border-radius: ${props => (props.size ? props.size / 2 : 15)}px;
     height: ${({ size }) => (size ? size + 'px' : '30px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`

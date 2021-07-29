@@ -21,7 +21,7 @@ export default function Footer() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   return (
-    <FooterFrame> 
+    <FooterFrame>
       <ButtonSecondary onClick={toggleDarkMode} p="8px 12px" ml="0.5rem" width="min-content">
         {darkMode ? <Sun size={16} /> : <Moon size={16} />}
       </ButtonSecondary>

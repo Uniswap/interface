@@ -38,9 +38,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
-      if (!!!account && connector instanceof CustomNetworkConnector) {
-        connector.changeChainId(optionChainId)
-      }
+      if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
       if (
         window.ethereum &&
         window.ethereum.isMetaMask &&
@@ -75,12 +73,10 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
             />
             <Option
               onClick={() => {
-                selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
+                selectNetwork(ChainId.ARBITRUM_ONE)
               }}
-              header={'Arbitrum'}
+              header={'Arbitrum one'}
               logoSrc={ArbitrumLogo}
-              disabled={true}
-              clickable={false}
             />
           </OptionGrid>
         }

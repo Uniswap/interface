@@ -10,7 +10,7 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedPairs, useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
-import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { useBytes32TokenContract, useTokenContract, useWrappingToken } from './useContract'
 import { useNativeCurrency } from './useNativeCurrency'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
@@ -121,6 +121,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 export function useToken(tokenAddress?: string): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
+  const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyWrapper = useWrappingToken(nativeCurrency)
 
   const address = isAddress(tokenAddress)
 
@@ -140,6 +142,8 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
+    if (!nativeCurrencyWrapper) return undefined
+    if (nativeCurrencyWrapper.address === tokenAddress) return nativeCurrencyWrapper
     if (token) return token
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
@@ -158,10 +162,12 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     chainId,
     decimals.loading,
     decimals.result,
+    nativeCurrencyWrapper,
     symbol.loading,
     symbol.result,
     symbolBytes32.result,
     token,
+    tokenAddress,
     tokenName.loading,
     tokenName.result,
     tokenNameBytes32.result
