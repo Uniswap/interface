@@ -173,18 +173,14 @@ export const formatCurrencyAmount = (amount: CurrencyAmount, significantDecimalP
 }
 
 export const switchOrAddNetwork = (networkDetails?: NetworkDetails) => {
-  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails) return
+  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails || !account) return
   window.ethereum
     .request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: networkDetails.chainId }]
     })
     .catch(error => {
-      if (
-        !error.message.toLowerCase().includes('unrecognized chain id') ||
-        !window.ethereum ||
-        !window.ethereum.request
-      ) {
+      if (error.code !== 4902 || !window.ethereum || !window.ethereum.request) {
         console.error('error switching to chain id', networkDetails.chainId, error)
         return
       }
