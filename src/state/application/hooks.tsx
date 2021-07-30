@@ -69,10 +69,6 @@ export function useWalletSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET_SWITCHER)
 }
 
-export function useAddArbitrumPopoverToggle(): () => void {
-  return useToggleModal(ApplicationModal.ADD_ARBITRUM)
-}
-
 export function useAddPopup(): (content: PopupContent, autoClose?: number | false) => void {
   return useCallback((content: PopupContent, autoClose: number | false = 15000) => {
     toast.info(<PopupItem content={content} />, { autoClose })
