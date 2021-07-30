@@ -115,7 +115,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               logoSrc={ArbitrumLogo}
             />
           </OptionGrid>
-          <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
+          {!!account && <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>}
         </>
       }
       show={networkSwitcherPopoverOpen}
