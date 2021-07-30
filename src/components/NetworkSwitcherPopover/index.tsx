@@ -87,41 +87,40 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
   }, [chainId, closeModals])
 
   return (
-    <div ref={popoverRef}>
-      <StyledPopover
-        placement="bottom-end"
-        content={
-          <>
-            <OptionGrid>
-              <Option
-                onClick={() => {
-                  selectNetwork(ChainId.MAINNET)
-                }}
-                header={'Ethereum'}
-                logoSrc={EthereumLogo}
-              />
-              <Option
-                onClick={() => {
-                  selectNetwork(ChainId.XDAI)
-                }}
-                header={'xDai'}
-                logoSrc={XDAILogo}
-              />
-              <Option
-                onClick={() => {
-                  selectNetwork(ChainId.ARBITRUM_ONE)
-                }}
-                header={'Arbitrum one'}
-                logoSrc={ArbitrumLogo}
-              />
-            </OptionGrid>
-            <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
-          </>
-        }
-        show={networkSwitcherPopoverOpen}
-      >
-        {children}
-      </StyledPopover>
-    </div>
+    <StyledPopover
+      innerRef={popoverRef}
+      placement="bottom-end"
+      content={
+        <>
+          <OptionGrid>
+            <Option
+              onClick={() => {
+                selectNetwork(ChainId.MAINNET)
+              }}
+              header={'Ethereum'}
+              logoSrc={EthereumLogo}
+            />
+            <Option
+              onClick={() => {
+                selectNetwork(ChainId.XDAI)
+              }}
+              header={'xDai'}
+              logoSrc={XDAILogo}
+            />
+            <Option
+              onClick={() => {
+                selectNetwork(ChainId.ARBITRUM_ONE)
+              }}
+              header={'Arbitrum one'}
+              logoSrc={ArbitrumLogo}
+            />
+          </OptionGrid>
+          <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
+        </>
+      }
+      show={networkSwitcherPopoverOpen}
+    >
+      {children}
+    </StyledPopover>
   )
 }

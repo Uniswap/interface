@@ -1,6 +1,6 @@
 import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { MutableRefObject, useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
@@ -34,12 +34,22 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement?: Placement
+  innerRef?: MutableRefObject<HTMLDivElement | null>
   className?: string
-  offsetX?: number;
-  offsetY?: number;
+  offsetX?: number
+  offsetY?: number
 }
 
-export default function Popover({ content, show, children, placement = 'auto', className, offsetY = 8, offsetX = 0 }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  innerRef,
+  children,
+  placement = 'auto',
+  className,
+  offsetY = 8,
+  offsetX = 0
+}: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
@@ -56,15 +66,17 @@ export default function Popover({ content, show, children, placement = 'auto', c
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer
-          className={className}
-          show={show}
-          ref={setPopperElement as any}
-          style={styles.popper}
-          {...attributes.popper}
-        >
-          {content}
-        </PopoverContainer>
+        <div ref={innerRef}>
+          <PopoverContainer
+            className={className}
+            show={show}
+            ref={setPopperElement as any}
+            style={styles.popper}
+            {...attributes.popper}
+          >
+            {content}
+          </PopoverContainer>
+        </div>
       </Portal>
     </>
   )

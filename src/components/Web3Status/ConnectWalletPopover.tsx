@@ -161,7 +161,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
     })
   }
 
-  const popoverRef = useRef(null)
+  const popoverRef = useRef<HTMLDivElement | null>(null)
   const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
   const closeModals = useCloseModals()
   useOnClickOutside(popoverRef, () => {
@@ -169,8 +169,13 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
   })
 
   return (
-    <Wrapper ref={popoverRef}>
-      <StyledPopover content={<List>{getOptions()}</List>} show={walletSwitcherPopoverOpen} placement="bottom-end">
+    <Wrapper>
+      <StyledPopover
+        innerRef={popoverRef}
+        content={<List>{getOptions()}</List>}
+        show={walletSwitcherPopoverOpen}
+        placement="bottom-end"
+      >
         {children}
       </StyledPopover>
     </Wrapper>
