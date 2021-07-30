@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { updateBlockNumber, updateChainId } from './actions'
+import { setConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -33,11 +33,13 @@ export default function Updater(): null {
 
   useQueryCacheInvalidator()
 
+  const [secondsSinceLastBlock, setSecondsSinceLastBlock] = useState(0)
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
       setState((state) => {
         if (chainId === state.chainId) {
           if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
+          setSecondsSinceLastBlock(0)
           return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
         }
         return state
@@ -45,6 +47,24 @@ export default function Updater(): null {
     },
     [chainId, setState]
   )
+
+  const connectivityWarningActive = useAppSelector((state) => state.application.connectivityWarning)
+  const timeout = useRef<ReturnType<typeof setTimeout>>(setTimeout(() => 0, 0))
+  useEffect(() => {
+    const SECONDS_INCREMENT = 10
+    const CHAIN_CONNECTIVITY_BLOCK_TIME_WARNING_THRESHOLD = 10 * 60
+    timeout.current = setTimeout(() => {
+      setSecondsSinceLastBlock(SECONDS_INCREMENT + secondsSinceLastBlock)
+      if (secondsSinceLastBlock > CHAIN_CONNECTIVITY_BLOCK_TIME_WARNING_THRESHOLD) {
+        dispatch(setConnectivityWarning({ warn: true }))
+      } else if (connectivityWarningActive) {
+        dispatch(setConnectivityWarning({ warn: false }))
+      }
+    }, SECONDS_INCREMENT * 1000)
+    return function cleanup() {
+      clearTimeout(timeout.current)
+    }
+  }, [chainId, connectivityWarningActive, dispatch, secondsSinceLastBlock])
 
   // attach/detach listeners
   useEffect(() => {
