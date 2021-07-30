@@ -84,6 +84,12 @@ interface ConnectWalletProps {
 
 export const ConnectWalletPopover = ({ setModal, tryActivation, children }: ConnectWalletProps) => {
   const { connector } = useWeb3React()
+  const popoverRef = useRef<HTMLDivElement | null>(null)
+  const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
+  const closeModals = useCloseModals()
+  useOnClickOutside(popoverRef, () => {
+    if (walletSwitcherPopoverOpen) closeModals()
+  })
 
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -99,6 +105,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
                 id={`connect-${key}`}
                 name={option.name}
                 onClick={() => {
+                  closeModals()
                   option.connector !== connector && !option.href && tryActivation(option.connector)
                 }}
                 icon={require('../../assets/images/' + option.iconName)}
@@ -123,6 +130,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
                   name="Install Metamask"
                   icon={MetamaskIcon}
                   link={'https://metamask.io/'}
+                  onClick={closeModals}
                 />
               </>
             )
@@ -148,6 +156,7 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
             key={key}
             id={`connect-${key}`}
             onClick={() => {
+              closeModals()
               option.connector === connector
                 ? setModal(ModalView.Account)
                 : !option.href && tryActivation(option.connector)
@@ -160,13 +169,6 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
       )
     })
   }
-
-  const popoverRef = useRef<HTMLDivElement | null>(null)
-  const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
-  const closeModals = useCloseModals()
-  useOnClickOutside(popoverRef, () => {
-    if (walletSwitcherPopoverOpen) closeModals()
-  })
 
   return (
     <Wrapper>
