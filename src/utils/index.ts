@@ -173,7 +173,7 @@ export const formatCurrencyAmount = (amount: CurrencyAmount, significantDecimalP
 }
 
 export const switchOrAddNetwork = (networkDetails?: NetworkDetails) => {
-  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails || !account) return
+  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails) return
   window.ethereum
     .request({
       method: 'wallet_switchEthereumChain',
