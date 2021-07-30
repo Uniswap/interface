@@ -11,6 +11,7 @@ import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl
 import { useIsSwitchingToCorrectChain } from '../../state/multi-chain-links/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { switchOrAddNetwork } from '../../utils'
+import { isMobile } from 'react-device-detect'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -71,21 +72,25 @@ export default function NetworkWarningModal() {
                 {urlLoadedChainId && NETWORK_DETAIL[urlLoadedChainId] ? NETWORK_DETAIL[urlLoadedChainId].chainName : ''}{' '}
                 in your connected wallet to continue.
               </TYPE.body>
-              {urlLoadedChainId && window.ethereum && window.ethereum.isMetaMask && NETWORK_DETAIL[urlLoadedChainId] && (
-                <>
-                  <TYPE.body
-                    marginY="20px"
-                    fontSize="14px"
-                    fontWeight="400"
-                    lineHeight="22px"
-                    letterSpacing="-0.02em"
-                    color="text4"
-                  >
-                    To add/switch to the requested network, click the button below.
-                  </TYPE.body>
-                  <ButtonPrimary onClick={handleAddClick}>Add</ButtonPrimary>
-                </>
-              )}
+              {!isMobile &&
+                urlLoadedChainId &&
+                window.ethereum &&
+                window.ethereum.isMetaMask &&
+                NETWORK_DETAIL[urlLoadedChainId] && (
+                  <>
+                    <TYPE.body
+                      marginY="20px"
+                      fontSize="14px"
+                      fontWeight="400"
+                      lineHeight="22px"
+                      letterSpacing="-0.02em"
+                      color="text4"
+                    >
+                      To add/switch to the requested network, click the button below.
+                    </TYPE.body>
+                    <ButtonPrimary onClick={handleAddClick}>Add</ButtonPrimary>
+                  </>
+                )}
             </UpperSectionContainer>
           </AutoColumn>
         </WarningContainer>
