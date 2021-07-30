@@ -11,7 +11,6 @@ import Transaction from './Transaction'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getExplorerLink } from '../../utils'
-import { injected } from '../../connectors'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { ButtonProps } from 'rebass'
@@ -180,6 +179,9 @@ const WalletAction = styled.button`
   outline: none;
   border: none;
   border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   :hover {
     cursor: pointer;
@@ -211,7 +213,7 @@ export default function AccountDetails({
   ENSName,
   openOptions
 }: AccountDetailsProps) {
-  const { chainId, account, connector } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -233,18 +235,7 @@ export default function AccountDetails({
           <YourAccount>
             <InfoCard>
               <AccountGroupingRow>
-                <div>
-                  {connector !== injected && (
-                    <WalletAction
-                      onClick={() => {
-                        ;(connector as any).close()
-                      }}
-                    >
-                      Disconnect
-                    </WalletAction>
-                  )}
-                  <WalletAction onClick={openOptions}>CHANGE WALLET</WalletAction>
-                </div>
+                <WalletAction onClick={openOptions}>CHANGE WALLET</WalletAction>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
                 <AccountControl>
