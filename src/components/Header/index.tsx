@@ -174,7 +174,8 @@ const HeaderSubRow = styled(RowFlat)`
   margin-top: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 0;
+    margin-right: 8px;
+    margin-top: 0px;
   `};
 `
 
@@ -206,20 +207,6 @@ const DesktopSettingsWrapper = styled.div`
 const MobileSettingsWrapper = styled.div`
   display: none;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: block;
-  `};
-`
-
-const AmountDesktop = styled(Amount)`
-  display: block;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `};
-`
-
-const AmountMobile = styled(Amount)`
-  display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
@@ -281,14 +268,16 @@ function Header({ history }: { history: any }) {
           </DesktopSettingsWrapper>
         </HeaderElement>
         <HeaderSubRow>
-          <AmountDesktop>
-            {account && userNativeCurrencyBalance ? userNativeCurrencyBalance?.toFixed(3) : <Skeleton width="40px" />}{' '}
+          <Amount>
+            {!account ? (
+              '0.000'
+            ) : userNativeCurrencyBalance ? (
+              userNativeCurrencyBalance?.toFixed(3)
+            ) : (
+              <Skeleton width="40px" />
+            )}{' '}
             {nativeCurrency.symbol}
-          </AmountDesktop>
-          <AmountMobile>
-            {account && userNativeCurrencyBalance ? userNativeCurrencyBalance?.toFixed(3) : <Skeleton width="40px" />}{' '}
-            {nativeCurrency.symbol}
-          </AmountMobile>
+          </Amount>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
