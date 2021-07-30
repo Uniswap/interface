@@ -186,7 +186,10 @@ export default function WalletModal({
           pendingTransactions={pendingTransactions}
           confirmedTransactions={confirmedTransactions}
           ENSName={ENSName}
-          openOptions={() => setModal(null)}
+          openOptions={() => {
+            setModal(null)
+            toggleWalletSwitcherPopover()
+          }}
         />
       )
     }
