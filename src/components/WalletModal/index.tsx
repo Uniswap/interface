@@ -137,6 +137,13 @@ export default function WalletModal({
     }
   }, [account, previousAccount, closeModal, isModalVisible])
 
+  // close on wallet change
+  useEffect(() => {
+    if (account && previousAccount && previousAccount !== account && isModalVisible) {
+      closeModal()
+    }
+  }, [account, previousAccount, closeModal, isModalVisible])
+
   const activePrevious = usePrevious(active)
   const connectorPrevious = usePrevious(connector)
   useEffect(() => {
