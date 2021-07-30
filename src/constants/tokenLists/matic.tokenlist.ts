@@ -47,6 +47,14 @@ export const MATIC_TOKEN_LIST = {
       symbol: 'WMATIC',
       name: 'Wrapped Matic',
       decimals: 18
+    },
+    {
+      chainId: 137,
+      address: '0x3A3e7650f8B9f667dA98F236010fBf44Ee4B2975',
+      symbol: 'XUSD',
+      name: 'xDollar Stablecoin',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/16291/small/xUSD-web-transparent.png'
     }
   ],
   version: {
