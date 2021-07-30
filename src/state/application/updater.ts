@@ -6,7 +6,7 @@ import { supportedChainId } from 'utils/supportedChainId'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { setConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
+import { setChainConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -52,18 +52,18 @@ export default function Updater(): null {
     [chainId, setState]
   )
 
-  const connectivityWarningActive = useAppSelector((state) => state.application.connectivityWarning)
+  const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainconnectivityWarning)
   const timeout = useRef<NodeJS.Timeout>()
   useEffect(() => {
-    const waitSecondsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitSecondsBeforeWarning : DEFAULT_SECONDS_BEFORE_WARNING_WAIT) ||
+    const waitMSBeforeWarning =
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMSBeforeWarning : DEFAULT_SECONDS_BEFORE_WARNING_WAIT) ||
       DEFAULT_SECONDS_BEFORE_WARNING_WAIT
     timeout.current = setTimeout(() => {
       setSecondsSinceLastBlock(NETWORK_HEALTH_CHECK_SECONDS + secondsSinceLastBlock)
-      if (secondsSinceLastBlock > waitSecondsBeforeWarning) {
-        dispatch(setConnectivityWarning({ warn: true }))
-      } else if (connectivityWarningActive) {
-        dispatch(setConnectivityWarning({ warn: false }))
+      if (secondsSinceLastBlock > waitMSBeforeWarning) {
+        dispatch(setChainConnectivityWarning({ warn: true }))
+      } else if (chainConnectivityWarningActive) {
+        dispatch(setChainConnectivityWarning({ warn: false }))
       }
     }, NETWORK_HEALTH_CHECK_SECONDS * 1000)
     return function cleanup() {
@@ -71,7 +71,7 @@ export default function Updater(): null {
         clearTimeout(timeout.current)
       }
     }
-  }, [chainId, connectivityWarningActive, dispatch, secondsSinceLastBlock])
+  }, [chainId, chainConnectivityWarningActive, dispatch, secondsSinceLastBlock])
 
   // attach/detach listeners
   useEffect(() => {

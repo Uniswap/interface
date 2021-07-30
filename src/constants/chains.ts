@@ -1,5 +1,6 @@
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
+import ms from 'ms.macro'
 
 export enum SupportedChainId {
   MAINNET = 1,
@@ -47,7 +48,7 @@ export const L2_CHAIN_IDS = [
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
 interface L1ChainInfo {
-  readonly blockWaitSecondsBeforeWarning?: number
+  readonly blockWaitMSBeforeWarning?: number
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
@@ -112,7 +113,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
-    blockWaitSecondsBeforeWarning: 10 * 60, // 10 minutes
+    blockWaitMSBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
@@ -122,7 +123,7 @@ export const CHAIN_INFO: ChainInfo = {
     statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
-    blockWaitSecondsBeforeWarning: 10 * 60, // 10 minutes
+    blockWaitMSBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
