@@ -19,6 +19,7 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
+import Skeleton from 'react-loading-skeleton'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -280,16 +281,14 @@ function Header({ history }: { history: any }) {
           </DesktopSettingsWrapper>
         </HeaderElement>
         <HeaderSubRow>
-          {account && userNativeCurrencyBalance ? (
-            <>
-              <AmountDesktop>
-                {userNativeCurrencyBalance?.toFixed(2)} {nativeCurrency.symbol}
-              </AmountDesktop>
-              <AmountMobile>
-                {userNativeCurrencyBalance?.toFixed(3)} {nativeCurrency.symbol}
-              </AmountMobile>
-            </>
-          ) : null}
+          <AmountDesktop>
+            {account && userNativeCurrencyBalance ? userNativeCurrencyBalance?.toFixed(3) : <Skeleton width="40px" />}{' '}
+            {nativeCurrency.symbol}
+          </AmountDesktop>
+          <AmountMobile>
+            {account && userNativeCurrencyBalance ? userNativeCurrencyBalance?.toFixed(3) : <Skeleton width="40px" />}{' '}
+            {nativeCurrency.symbol}
+          </AmountMobile>
         </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
