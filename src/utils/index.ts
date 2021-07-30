@@ -172,8 +172,8 @@ export const formatCurrencyAmount = (amount: CurrencyAmount, significantDecimalP
   return `${commify(integers)}.${adjustedDecimals}`
 }
 
-export const switchOrAddNetwork = (networkDetails?: NetworkDetails) => {
-  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails) return
+export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: string) => {
+  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails || !account) return
   window.ethereum
     .request({
       method: 'wallet_switchEthereumChain',
@@ -187,7 +187,7 @@ export const switchOrAddNetwork = (networkDetails?: NetworkDetails) => {
       window.ethereum
         .request({
           method: 'wallet_addEthereumChain',
-          params: [{ ...networkDetails }]
+          params: [{ ...networkDetails }, account]
         })
         .catch(error => {
           console.error('error adding chain with id', networkDetails.chainId, error)

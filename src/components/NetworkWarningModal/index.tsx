@@ -31,7 +31,7 @@ const StyledWarningIcon = styled(AlertTriangle)`
 `
 
 export default function NetworkWarningModal() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const urlLoadedChainId = useTargetedChainIdFromUrl()
   const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
@@ -45,8 +45,8 @@ export default function NetworkWarningModal() {
 
   const handleAddClick = useCallback(() => {
     if (!urlLoadedChainId) return
-    switchOrAddNetwork(NETWORK_DETAIL[urlLoadedChainId])
-  }, [urlLoadedChainId])
+    switchOrAddNetwork(NETWORK_DETAIL[urlLoadedChainId], account || undefined)
+  }, [urlLoadedChainId, account])
 
   return (
     <Modal isOpen={open} onDismiss={handleDismiss} maxHeight={90}>

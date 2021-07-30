@@ -72,7 +72,8 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
       if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
-      if (!(connector instanceof CustomNetworkConnector)) switchOrAddNetwork(NETWORK_DETAIL[optionChainId])
+      if (!(connector instanceof CustomNetworkConnector))
+        switchOrAddNetwork(NETWORK_DETAIL[optionChainId], account || undefined)
       closeModals()
     },
     [account, chainId, closeModals, connector]
