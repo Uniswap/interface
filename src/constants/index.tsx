@@ -242,7 +242,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       symbol: Currency.XDAI.symbol || 'xDAI',
       decimals: Currency.XDAI.decimals || 18
     },
-    rpcUrls: ['https://rpc.xdaichain.com/'],
+    rpcUrls: ['https://rpc.xdaichain.com'],
     blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
   },
   [ChainId.ARBITRUM_ONE]: {
@@ -253,8 +253,8 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
-    rpcUrls: ['https://arb1.arbitrum.io/rpc/'],
-    blockExplorerUrls: ['https://explorer.arbitrum.io/']
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://explorer.arbitrum.io']
   }
 }
 
