@@ -47,6 +47,7 @@ export const L2_CHAIN_IDS = [
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
 interface L1ChainInfo {
+  readonly blockWaitSecondsBeforeWarning?: number
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
@@ -55,6 +56,7 @@ interface L1ChainInfo {
 export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
   readonly logoUrl: string
+  readonly statusPage?: string
 }
 
 type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
@@ -110,19 +112,23 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
+    blockWaitSecondsBeforeWarning: 10 * 60, // 10 minutes
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimism',
     logoUrl: optimismLogoUrl,
+    statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
+    blockWaitSecondsBeforeWarning: 10 * 60, // 10 minutes
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
+    statusPage: 'https://optimism.io/status',
   },
 }

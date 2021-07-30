@@ -1,3 +1,4 @@
+import { CHAIN_INFO } from 'constants/chains'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -19,6 +20,9 @@ function useQueryCacheInvalidator() {
     dispatch(api.util.invalidateTags([CHAIN_TAG]))
   }, [chainId, dispatch])
 }
+
+const NETWORK_HEALTH_CHECK_SECONDS = 15
+const DEFAULT_SECONDS_BEFORE_WARNING_WAIT = 10 * 60
 
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
@@ -49,20 +53,23 @@ export default function Updater(): null {
   )
 
   const connectivityWarningActive = useAppSelector((state) => state.application.connectivityWarning)
-  const timeout = useRef<ReturnType<typeof setTimeout>>(setTimeout(() => 0, 0))
+  const timeout = useRef<NodeJS.Timeout>()
   useEffect(() => {
-    const SECONDS_INCREMENT = 10
-    const CHAIN_CONNECTIVITY_BLOCK_TIME_WARNING_THRESHOLD = 10 * 60
+    const waitSecondsBeforeWarning =
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitSecondsBeforeWarning : DEFAULT_SECONDS_BEFORE_WARNING_WAIT) ||
+      DEFAULT_SECONDS_BEFORE_WARNING_WAIT
     timeout.current = setTimeout(() => {
-      setSecondsSinceLastBlock(SECONDS_INCREMENT + secondsSinceLastBlock)
-      if (secondsSinceLastBlock > CHAIN_CONNECTIVITY_BLOCK_TIME_WARNING_THRESHOLD) {
+      setSecondsSinceLastBlock(NETWORK_HEALTH_CHECK_SECONDS + secondsSinceLastBlock)
+      if (secondsSinceLastBlock > waitSecondsBeforeWarning) {
         dispatch(setConnectivityWarning({ warn: true }))
       } else if (connectivityWarningActive) {
         dispatch(setConnectivityWarning({ warn: false }))
       }
-    }, SECONDS_INCREMENT * 1000)
+    }, NETWORK_HEALTH_CHECK_SECONDS * 1000)
     return function cleanup() {
-      clearTimeout(timeout.current)
+      if (timeout.current) {
+        clearTimeout(timeout.current)
+      }
     }
   }, [chainId, connectivityWarningActive, dispatch, secondsSinceLastBlock])
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
-
 import { useBlockNumber } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -65,8 +64,9 @@ const Spinner = styled.div`
 
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
-
   const blockNumber = useBlockNumber()
+  // todo: use this to warn the user of an issue
+  // const warning = useAppSelector((state) => state.application.connectivityWarning)
 
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
