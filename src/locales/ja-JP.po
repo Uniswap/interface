@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-29 21:04\n"
+"PO-Revision-Date: 2021-07-30 05:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1138,7 +1138,7 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism Scheduled Downtime"
-msgstr "楽観的なスケジュールされたダウンタイム"
+msgstr "楽観的にスケジュールされた保守用時間"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
