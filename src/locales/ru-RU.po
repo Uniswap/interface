@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-29 21:04\n"
+"PO-Revision-Date: 2021-07-31 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1138,19 +1138,19 @@ msgstr "Ой! Произошла неизвестная ошибка. Пожал
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism Scheduled Downtime"
-msgstr "Оптимизм по расписанию"
+msgstr "Перерывы в работе Optimism"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
-msgstr "Оптимизм ожидает запланированного простоя в ближайшем будущем. Возможны незапланированные простои. Пока сеть не работает, комиссии не будут генерироваться, и вы не сможете удалить ликвидность. <0> Подробнее.</0>"
+msgstr "В ближайшее время ожидается запланированный перерыв в работе Optimism. Возможны внезапные перерывы в работе. Когда сеть не работает, комиссии не начисляются, а ликвидность невозможно удалять. <0>Подробнее.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
-msgstr "Оптимистичный Etherscan"
+msgstr "Etherscan сети Optimism"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic L2 Gateway"
-msgstr "Оптимистичный шлюз L2"
+msgstr "L2-шлюз в Optimism"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1311,7 +1311,7 @@ msgstr "Тарифы"
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Read more"
-msgstr "Прочитайте больше"
+msgstr "Узнать подробнее"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
