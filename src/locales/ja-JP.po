@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-07-30 05:04\n"
+"PO-Revision-Date: 2021-07-31 08:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -706,7 +706,7 @@ msgstr "受取人を入力"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "有効なスリップページの値を入力してください"
+msgstr "有効なスリッページの値を入力してください"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -759,7 +759,7 @@ msgstr "あなたが利用していないトークンリストからの検索結
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "エキスパートモードは取引確認画面をスキップし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
+msgstr "エキスパートモードは取引確認画面をスキップし、不利な価格や資金を失う可能性のある高スリッページ取引を許可します。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
@@ -1138,11 +1138,11 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism Scheduled Downtime"
-msgstr "楽観的にスケジュールされた保守用時間"
+msgstr "Optimismの予定されているダウンタイム"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
-msgstr "楽観主義は、近い将来に予定されたダウンタイムを予想しています。計画外のダウンタイムが発生する可能性があります。ネットワークがダウンしている間、料金は発生せず、流動性を取り除くことはできません。<0>続きを読む。</0>"
+msgstr "Optimismは、近い将来に予定されたダウンタイムを予想しています。計画外のダウンタイムが発生する可能性があります。ネットワークがダウンしている間、手数料は発生せず、流動性を取り除くことはできません。<0>続きを読む。</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1459,7 +1459,7 @@ msgstr "シンプル"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "スリップページの許容範囲"
+msgstr "スリッページの許容範囲"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1471,7 +1471,7 @@ msgstr "何らかの問題が発生しました"
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1524,7 +1524,7 @@ msgstr "{0} {1} を {2} {3} にスワップ中"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Switch to L1 (Mainnet)"
-msgstr "L1（メインネット）に切り替えます"
+msgstr "L1（メインネット）に切り替え"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
