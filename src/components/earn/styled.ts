@@ -1,35 +1,28 @@
 import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 
-import uImage from '../../assets/images/earn-bg-image.png'
+import uImage from '../../assets/images/big_unicorn.png'
 import xlUnicorn from '../../assets/images/xl_uni.png'
 import noise from '../../assets/images/noise.png'
 
-export const CardWrapper = styled.div`
-  padding: 24px;
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(30, 26, 49, 0.2) 0%, rgba(61, 81, 165, 0.2) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-`
-
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  border-radius: 20px;
+  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
+  border-radius: 12px;
   width: 100%;
   position: relative;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.blue4};
 `
 
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   background: url(${uImage});
-  width: 800px;
-  height: 1200px;
+  width: 1000px;
+  height: 600px;
   position: absolute;
   border-radius: 12px;
-  opacity: 0.7;
-  top: -300px;
-  left: 40px;
-  transform: rotate(0deg);
+  opacity: 0.4;
+  top: -100px;
+  left: -100px;
+  transform: rotate(-15deg);
   user-select: none;
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
@@ -63,14 +56,13 @@ export const CardNoise = styled.span`
 `
 
 export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
-  padding: 24px 32px;
+  padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};
 `
 
 export const Break = styled.div`
   width: 100%;
-  background-image: linear-gradient(to left, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.24));
+  background-color: rgba(255, 255, 255, 0.2);
   height: 1px;
-  border-radius: 1px;
 `
