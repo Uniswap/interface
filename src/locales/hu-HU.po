@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-29 20:49+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-07-29 21:04\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1138,12 +1138,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Hoppá! Ismeretlen hiba történt. Kérjük, frissítse az oldalt, vagy látogasson el egy másik böngészőből vagy eszközről."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtime"
-msgstr "Optimizmus ütemezett leállás"
+msgid "Optimism Planned Downtime"
+msgstr "Az optimizmus tervezett leállása"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
-msgstr "Az optimizmus a közeljövőben tervezett ütemezésre számít. Tervezetlen leállás léphet fel. Amíg a hálózat leáll, a díj nem keletkezik, és nem tudja eltávolítani a likviditást. <0> További információ.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Az optimizmus a tervezett leállásokra számít a közeljövőben. Előfordulhat nem tervezett leállás is. Amíg a hálózat nem működik, díjak nem keletkeznek, és nem tudja eltávolítani a likviditást. <0> További információ.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"

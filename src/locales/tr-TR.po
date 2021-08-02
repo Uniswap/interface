@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-29 20:49+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-07-31 08:05\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1137,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin veya başka bir tarayıcı ya da cihazdan ziyaret edin."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtime"
-msgstr "İyimserlik Planlanmış Kesinti Süresi"
+msgid "Optimism Planned Downtime"
+msgstr "İyimserlik Planlı Kesinti Süresi"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects scheduled downtime in the near future. Unplanned downtime may occur. While the network is down fees will not be generated and you will be unable to remove liquidity.<0>Read more.</0>"
-msgstr "İyimserlik, yakın gelecekte planlanmış kesintiler beklemektedir. Planlanmamış kesintiler meydana gelebilir. Ağ kapalıyken ücretler oluşturulmaz ve likiditeyi kaldıramazsınız.<0>Daha fazlasını okuyun.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "İyimserlik, yakın gelecekte planlı kesintiler beklemektedir. Planlanmamış kesintiler de meydana gelebilir. Ağ kapalıyken ücret alınmayacak ve likiditeyi kaldıramayacaksınız. <0>Daha fazlasını okuyun.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
