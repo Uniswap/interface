@@ -69,7 +69,7 @@ export const walletconnect = new WalletConnectConnector({
     [NETWORK_CHAIN_ID]: NETWORK_URL,
     [BINANCE_CHAIN_ID]: BINANCE_NETWORK_URL
   },
-  bridge: WALLETCONNECT_BRIDGE ?? '',
+  bridge: WALLETCONNECT_BRIDGE,
   qrcode: true,
   pollingInterval: 15000
 })
