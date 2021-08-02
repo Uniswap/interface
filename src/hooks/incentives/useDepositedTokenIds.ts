@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { LogsState, useLogs } from '../../state/logs/hooks'
@@ -65,4 +66,19 @@ export function useDepositedTokenIds(account: string | undefined | null): Deposi
       tokenIds,
     }
   }, [account, orderedDepositEvents, v3Staker])
+}
+
+// check if position is deposited into staker contract
+export function useIsPositionDeposited(account: string | undefined | null, tokenId: BigNumber | undefined): boolean {
+  const { state, tokenIds } = useDepositedTokenIds(account)
+
+  if (!account || !tokenId) {
+    return false
+  }
+
+  return Boolean(
+    state === DepositedTokenIdsState.LOADED &&
+      tokenIds &&
+      tokenIds.find((id) => BigNumber.from(id.toString()).eq(tokenId))
+  )
 }
