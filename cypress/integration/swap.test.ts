@@ -53,8 +53,8 @@ describe('Swap', () => {
           cy.stub(win, 'prompt').returns('confirm')
         })
         cy.get('#open-settings-dialog-button').click()
-        cy.get('#toggle-expert-mode-button').click()
-        cy.get('#confirm-expert-mode').click()
+        cy.get('#toggle-expert-mode-button').click({ force: true })
+        cy.get('#confirm-expert-mode').click({ force: true })
       })
 
       it('add a recipient is visible', () => {
