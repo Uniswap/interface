@@ -124,6 +124,20 @@ export const ButtonGray = styled(Base)`
   }
 `
 
+export const ButtonLightGray = styled(Base)`
+  background-color: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text1};
+  font-size: 16px;
+  font-weight: 500;
+
+  &:hover {
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg3)};
+  }
+  &:active {
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.bg3)};
+  }
+`
+
 export const ButtonGreySmall = styled(ButtonGray)`
   width: fit-content;
   background-color: ${({ theme }) => theme.bg2};

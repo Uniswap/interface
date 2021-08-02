@@ -1,15 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { Pool, Position } from '@uniswap/v3-sdk'
-import { GreenBadge } from 'components/Badge'
+import Badge, { GreenBadge } from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
+import { ButtonLightGray, ButtonGreySmall, ButtonPrimary, ButtonSmall } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Loader'
 import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
-import { RowBetween, RowFixed } from 'components/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import AppleToggle from 'components/Toggle/AppleToggle'
 import { BigNumber } from 'ethers'
-import { useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
+import { Incentive, useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
 import { DepositedTokenIdsState, useDepositedTokenIds } from 'hooks/incentives/useDepositedTokenIds'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -17,18 +19,20 @@ import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronUp, Zap } from 'react-feather'
+import { ChevronDown, ChevronUp, Lock, Zap } from 'react-feather'
+import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
 import { HideSmall, HoverText, SmallOnly, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Break } from './styled'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ open?: boolean }>`
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme, open }) => (open ? theme.blue3 : theme.bg3)};
   border-radius: 12px;
   padding: 16px;
 `
@@ -42,6 +46,7 @@ const RangeLineItem = styled(DataLineItem)`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  user-select: none;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     background-color: ${({ theme }) => theme.bg2};
@@ -60,9 +65,9 @@ const DoubleArrow = styled.span`
 `
 
 const RangeText = styled.span`
-  /* background-color: ${({ theme }) => theme.bg2}; */
   padding: 0.25rem 0.5rem;
   border-radius: 8px;
+  user-select: none;
 `
 
 const ExtentsText = styled.span`
@@ -73,6 +78,62 @@ const ExtentsText = styled.span`
     display: none;
   `};
 `
+
+const HoverRow = styled(RowBetween)`
+  :hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+`
+
+const DynamicSection = styled.div<{ disabled?: boolean }>`
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  user-select: ${({ disabled }) => (disabled ? 'none' : 'inherit')};
+`
+
+interface BoostStatusRowProps {
+  incentive: Incentive
+  positionDetails: PositionDetails
+}
+
+function BoostStatusRow({ incentive, positionDetails }: BoostStatusRowProps) {
+  const rewardCurrency = incentive.initialRewardAmount.currency
+  /**
+   * @TODO make these real
+   */
+  const availableClaim = incentive.initialRewardAmount
+  const weeklyRewards = incentive.initialRewardAmount
+  const isStaked = true
+
+  const [attemptingUnstake, setAttemptingUnstake] = useState(false)
+
+  const handleToggleStakeOn = () => {
+    setAttemptingUnstake(true)
+    console.log('toggle on')
+  }
+
+  const handleToggleStakeOff = () => {
+    console.log('toggle on')
+  }
+
+  return (
+    <RowBetween>
+      <RowFixed>
+        <CurrencyLogo currency={rewardCurrency} />
+        <TYPE.body m="0 12px" fontSize="20px">{`${formatCurrencyAmount(availableClaim, 5)} ${
+          rewardCurrency.symbol
+        }`}</TYPE.body>
+        <Badge>{`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}</Badge>
+      </RowFixed>
+      <AutoRow gap="8px" width="fit-content">
+        <ButtonGreySmall>
+          <Trans>Claim</Trans>
+        </ButtonGreySmall>
+        <AppleToggle isActive={isStaked && !attemptingUnstake} toggle={handleToggleStakeOn} />
+      </AutoRow>
+    </RowBetween>
+  )
+}
 
 interface PositionManageCardProps {
   positionDetails: PositionDetails
@@ -116,7 +177,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
 
   // incentives for this pool
   const poolAddress = pool ? Pool.getAddress(pool.token0, pool.token1, pool.fee) : undefined
-  const { incentives } = useIncentivesForPool(poolAddress)
+  const { incentives, loading: incentivesLoading } = useIncentivesForPool(poolAddress)
 
   // toggle open state
   const [open, setOpen] = useState(false)
@@ -127,7 +188,6 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
         /**
          * @TODO get data about which positions are staked
          */
-        console.log(incentive)
         accum += 0
         // accum += 1
         return accum
@@ -150,12 +210,15 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
       tokenIds.find((id) => BigNumber.from(id.toString()).eq(positionDetails.tokenId))
   )
 
-  console.log(isDeposited)
+  /**
+   * @TODO
+   */
+  const totalUnclaimedUSD = 0.023
 
   return (
-    <Wrapper>
+    <Wrapper open={open}>
       {priceLower && priceUpper && incentives ? (
-        <RowBetween>
+        <HoverRow onClick={() => setOpen(!open)}>
           <RowFixed>
             <RangeLineItem>
               <RangeBadge removed={removed} inRange={!outOfRange} />
@@ -243,14 +306,57 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
               )}
             </HoverText>
           </RowFixed>
-        </RowBetween>
+        </HoverRow>
       ) : (
         <Loader />
       )}
       {open ? (
-        <AutoColumn gap="24px" style={{ marginTop: '20px' }}>
-          <Break />
-        </AutoColumn>
+        incentivesLoading ? (
+          <Loader />
+        ) : !incentives || incentives.length === 0 ? (
+          <TYPE.body>No boosts for this pool.</TYPE.body>
+        ) : (
+          <AutoColumn gap="24px" style={{ marginTop: '20px' }}>
+            <Break />
+            {isDeposited ? (
+              <RowBetween>
+                <AutoColumn gap="sm">
+                  <TYPE.body fontSize="12px" color={theme.text3}>
+                    <Trans>TOTAL UNCLAIMED REWARDS</Trans>
+                  </TYPE.body>
+                  <TYPE.body fontSize="36px" color={theme.green1} fontWeight={500}>
+                    <Trans>${totalUnclaimedUSD}</Trans>
+                  </TYPE.body>
+                </AutoColumn>
+                <AutoRow gap="8px" width="fit-content">
+                  <ButtonSmall>
+                    <Trans>Claim All</Trans>
+                  </ButtonSmall>
+                  <ButtonSmall>
+                    <Trans>Unstake</Trans>
+                  </ButtonSmall>
+                </AutoRow>
+              </RowBetween>
+            ) : (
+              <ButtonPrimary padding="12px" $borderRadius="12px">
+                <RowFixed>
+                  <Lock height="16px" style={{ marginRight: '4px' }} />
+                  <Trans>Unlock & Join</Trans>
+                </RowFixed>
+              </ButtonPrimary>
+            )}
+            <DynamicSection disabled={!isDeposited}>
+              <AutoColumn gap="16px">
+                {incentives.map((incentive, i) => (
+                  <BoostStatusRow key={'boost-status' + i} incentive={incentive} positionDetails={positionDetails} />
+                ))}
+              </AutoColumn>
+            </DynamicSection>
+            <ButtonLightGray as={Link} to={'/pool/' + positionDetails.tokenId}>
+              <Trans>View position details →</Trans>
+            </ButtonLightGray>
+          </AutoColumn>
+        )
       ) : null}
     </Wrapper>
   )

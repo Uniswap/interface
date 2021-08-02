@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ButtonSmall } from 'components/Button'
+import { DarkGreyCard, GreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import PositionManageCard from 'components/earn/PositionManageCard'
 import ProgramCard from 'components/earn/ProgramCard'
@@ -11,6 +12,7 @@ import useTheme from 'hooks/useTheme'
 import { useV3PositionsForPool } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import { LoadingRows } from 'pages/Pool/styleds'
+import { AlertCircle } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HoverText, TYPE } from 'theme'
@@ -90,6 +92,18 @@ export default function Manage({
             positions.map((p, i) => <PositionManageCard key={'position-manage-' + i} positionDetails={p} />)
           )}
         </AutoColumn>
+        <DarkGreyCard>
+          <RowBetween>
+            <AlertCircle size={32} />
+            <TYPE.body ml="8px" fontSize="12px">
+              <Trans>
+                Boosting liquidity deposits your liquidity in the Uniswap Liquidity mining contracts. When boosted, your
+                liquidity will continue to earn fees while in range. You must remove boosts to be able to claim fees or
+                withdraw liquidity.`
+              </Trans>
+            </TYPE.body>
+          </RowBetween>
+        </DarkGreyCard>
       </AutoColumn>
     </Wrapper>
   )
