@@ -119,7 +119,7 @@ export function AddLiquidityNetworkAlert() {
       <Body>
         <Trans>This is an alpha release of Uniswap on the {info.label} network.</Trans>
         <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>{' '}
-        <ReadMoreLink href="https://app.intercom.com/a/apps/ggour1ku/articles/articles/5392809/show">
+        <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
           <Trans>Read more</Trans>
         </ReadMoreLink>
       </Body>
