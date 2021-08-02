@@ -1,10 +1,10 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { SupportedChainId } from 'constants/chains'
 import { BigNumber, utils } from 'ethers'
-import { Web3Provider } from '@ethersproject/providers'
 
 interface SwitchNetworkArguments {
   library: Web3Provider
-  chainId: SupportedChainId
+  chainId?: SupportedChainId
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
@@ -12,6 +12,9 @@ interface SwitchNetworkArguments {
 export async function switchToNetwork({ library, chainId }: SwitchNetworkArguments): Promise<null | void> {
   if (!library?.provider?.request) {
     return
+  }
+  if (!chainId && library?.getNetwork) {
+    ;({ chainId } = await library.getNetwork())
   }
   const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
   return library?.provider.request({

@@ -8,23 +8,26 @@ import {
   ApplicationModal,
   setOpenModal,
   updateChainId,
+  setImplements3085,
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   // used by RTK-Query to build dynamic subgraph urls
-  readonly chainId: number | null
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly popupList: PopupList
+  readonly chainId: number | null
+  readonly implements3085: boolean
   readonly openModal: ApplicationModal | null
+  readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
-  chainId: null,
   blockNumber: {},
-  popupList: [],
+  chainId: null,
+  implements3085: false,
   openModal: null,
+  popupList: [],
 }
 
 export default createReducer(initialState, (builder) =>
@@ -60,5 +63,8 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(setImplements3085, (state, { payload: { implements3085 } }) => {
+      state.implements3085 = implements3085
     })
 )

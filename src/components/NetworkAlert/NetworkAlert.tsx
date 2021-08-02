@@ -3,7 +3,7 @@ import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/ch
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
-import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
+import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
@@ -123,17 +123,34 @@ export function NetworkAlert() {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
+  const [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged] = useOptimismAlphaAlert()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const dismiss = useCallback(() => {
     if (userEthBalance?.greaterThan(0)) {
-      setArbitrumAlphaAcknowledged(true)
+      switch (chainId) {
+        case SupportedChainId.OPTIMISM:
+          setOptimismAlphaAcknowledged(true)
+          break
+        case SupportedChainId.ARBITRUM_ONE:
+          setArbitrumAlphaAcknowledged(true)
+          break
+      }
     } else {
       setLocallyDimissed(true)
     }
-  }, [setArbitrumAlphaAcknowledged, userEthBalance])
-  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged || locallyDismissed) {
+  }, [chainId, setArbitrumAlphaAcknowledged, setOptimismAlphaAcknowledged, userEthBalance])
+
+  const onOptimismAndOptimismAcknowledged = SupportedChainId.OPTIMISM === chainId && optimismAlphaAcknowledged
+  const onArbitrumAndArbitrumAcknowledged = SupportedChainId.ARBITRUM_ONE === chainId && arbitrumAlphaAcknowledged
+  if (
+    !chainId ||
+    !L2_CHAIN_IDS.includes(chainId) ||
+    onArbitrumAndArbitrumAcknowledged ||
+    onOptimismAndOptimismAcknowledged ||
+    locallyDismissed
+  ) {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]

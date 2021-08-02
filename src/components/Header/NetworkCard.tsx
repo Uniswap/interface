@@ -2,14 +2,16 @@ import { Trans } from '@lingui/macro'
 import { YellowCard } from 'components/Card'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { ArrowDownCircle, ChevronDown, ToggleLeft } from 'react-feather'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '../../constants/chains'
+import L2LaunchAlert from './L2LaunchAlert'
 
 const BaseWrapper = css`
   position: relative;
@@ -168,23 +170,15 @@ export default function NetworkCard() {
   const open = useModalOpen(ApplicationModal.ARBITRUM_OPTIONS)
   const toggle = useToggleModal(ApplicationModal.ARBITRUM_OPTIONS)
   useOnClickOutside(node, open ? toggle : undefined)
-
-  const [implements3085, setImplements3085] = useState(false)
-  useEffect(() => {
-    // metamask is currently the only known implementer of this EIP
-    // here we proceed w/ a noop feature check to ensure the user's version of metamask supports network switching
-    // if not, we hide the UI
-    if (!library?.provider?.request || !chainId || !library?.provider?.isMetaMask) {
-      return
-    }
-    switchToNetwork({ library, chainId })
-      .then((x) => x ?? setImplements3085(true))
-      .catch(() => setImplements3085(false))
-  }, [library, chainId])
+  const implements3085 = useAppSelector((state) => state.application.implements3085)
 
   const info = chainId ? CHAIN_INFO[chainId] : undefined
-  if (!chainId || chainId === SupportedChainId.MAINNET || !info || !library) {
+  if (!chainId || !info || !library) {
     return null
+  }
+
+  if (library && chainId === SupportedChainId.MAINNET) {
+    return <L2LaunchAlert />
   }
 
   if (L2_CHAIN_IDS.includes(chainId)) {
