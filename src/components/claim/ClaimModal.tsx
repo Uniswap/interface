@@ -10,7 +10,7 @@ import useIsClaimAvailable from '../../hooks/useIsClaimAvailable'
 import useClaimCallback from '../../hooks/useClaimCallback'
 import { useShowClaimPopup } from '../../state/application/hooks'
 import { transparentize } from 'polished'
-import TransactionConfirmationModal from '../TransactionConfirmationModal'
+import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { TokenAmount } from 'dxswap-sdk'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -40,6 +40,7 @@ export default function ClaimModal({
   const { account } = useActiveWeb3React()
 
   const [attempting, setAttempting] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
   const [hash, setHash] = useState<string | undefined>()
   const open = useShowClaimPopup()
 
@@ -63,18 +64,22 @@ export default function ClaimModal({
       })
       .catch(error => {
         setAttempting(false)
+        setError(true)
         console.log(error)
       })
   }, [claimCallback])
 
   const wrappedOnDismiss = () => {
     setAttempting(false)
+    setError(false)
     setHash(undefined)
     onDismiss()
   }
 
   const content = () => {
-    return (
+    return error ? (
+      <TransactionErrorContent onDismiss={wrappedOnDismiss} message="The claim wasn't successful" />
+    ) : (
       <ContentWrapper gap="lg">
         <UpperAutoColumn gap="16px">
           <RowBetween>
@@ -120,7 +125,7 @@ export default function ClaimModal({
   return (
     <TransactionConfirmationModal
       isOpen={open}
-      onDismiss={onDismiss}
+      onDismiss={wrappedOnDismiss}
       attemptingTxn={attempting}
       hash={hash}
       content={content}
