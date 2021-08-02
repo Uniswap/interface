@@ -74,8 +74,11 @@ const L2Icon = styled.img`
   justify-self: center;
 `
 const ReadMoreLink = styled(ExternalLink)`
+  border: 1px solid ${({ theme }) => theme.text1};
+  border-radius: 8px;
   color: ${({ theme }) => theme.text1};
   font-size: 16px;
+  padding: 8px 12px;
 `
 const SwitchNetworks = styled(BaseButton)`
   background-color: black;
