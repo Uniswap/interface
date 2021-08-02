@@ -11,6 +11,7 @@ import { unwrapOrThrow } from '../utils'
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
+const WALLETCONNECT_BRIDGE = process.env.REACT_APP_WALLETCONNECT_BRIDGE
 
 export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 
@@ -68,7 +69,7 @@ export const walletconnect = new WalletConnectConnector({
     [NETWORK_CHAIN_ID]: NETWORK_URL,
     [BINANCE_CHAIN_ID]: BINANCE_NETWORK_URL
   },
-  bridge: 'https://bridge.walletconnect.org',
+  bridge: WALLETCONNECT_BRIDGE ?? '',
   qrcode: true,
   pollingInterval: 15000
 })
