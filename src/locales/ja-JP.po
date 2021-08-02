@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-08-02 03:10\n"
+"PO-Revision-Date: 2021-08-02 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1983,7 +1983,7 @@ msgstr "プールにはまだ流動性がありません。"
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
-msgstr "L1アセットを使用するには、L1アセットをネットワークにブリッジする必要があります。"
+msgstr "レイヤー1の資産を使用するには、ネットワークでブリッジする必要があります。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
