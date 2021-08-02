@@ -22,7 +22,7 @@ function useQueryCacheInvalidator() {
 }
 
 export default function Updater(): null {
-  const { library, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   const windowVisible = useIsWindowVisible()
@@ -78,13 +78,13 @@ export default function Updater(): null {
   }, [dispatch, debouncedState.chainId])
 
   useEffect(() => {
-    if (!library?.provider?.request || !library?.provider?.isMetaMask) {
+    if (!account || !library?.provider?.request || !library?.provider?.isMetaMask) {
       return
     }
     switchToNetwork({ library })
       .then((x) => x ?? dispatch(setImplements3085({ implements3085: true })))
       .catch(() => dispatch(setImplements3085({ implements3085: false })))
-  }, [chainId, dispatch, library])
+  }, [account, chainId, dispatch, library])
 
   return null
 }

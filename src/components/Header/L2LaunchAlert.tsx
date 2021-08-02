@@ -89,7 +89,7 @@ const SwitchNetworks = styled(BaseButton)`
 `
 
 export default function L2LaunchAlert() {
-  const { library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
   const implements3085 = useAppSelector((state) => state.application.implements3085)
 
@@ -97,7 +97,7 @@ export default function L2LaunchAlert() {
     setLocallyDimissed(true)
   }, [setLocallyDimissed])
 
-  if (locallyDismissed || !library) {
+  if (locallyDismissed || !library || !account) {
     return null
   }
 
