@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
+import { SWPR } from 'dxswap-sdk'
 
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
+import { useNativeCurrencyBalances, useTokenBalance } from '../../state/wallet/hooks'
 
 import Settings from '../Settings'
 
@@ -20,7 +21,6 @@ import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { isMobile } from 'react-device-detect'
-import useIsClaimAvailable from '../../hooks/useIsClaimAvailable'
 import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 
@@ -211,19 +211,14 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 const SWPRAmount = styled.div`
   border-radius: 8px;
   padding: 4px 12px;
-  height: 36px;
+  height: 32px;
   font-weight: 500;
   color: white;
   white-space: nowrap;
   display: flex;
   align-items: center;
   background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(
-      174.47% 188.91% at 1.84% 0%,
-      ${props => props.theme.primary1} 0%,
-      ${props => props.theme.purpleBase} 100%
-    ),
-    #edeef2;
+  background: linear-gradient(90deg, #2e17f2 -24.77%, #fb52a1 186.93%);
 `
 
 const SWPRWrapper = styled.div`
@@ -243,9 +238,9 @@ function Header({ history }: { history: any }) {
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalances = useNativeCurrencyBalances(account ? [account] : [])
   const userNativeCurrencyBalance = userNativeCurrencyBalances?.[account || '']
-  const { available: availableSwprClaim } = useIsClaimAvailable(account)
   const [isDark] = useDarkModeManager()
   const toggleClaimPopup = useToggleShowClaimPopup()
+  const swprBalance = useTokenBalance(account || undefined, chainId ? SWPR[chainId] : undefined)
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -253,7 +248,7 @@ function Header({ history }: { history: any }) {
 
   return (
     <HeaderFrame>
-      <ClaimModal onDismiss={toggleClaimPopup} />
+      <ClaimModal onDismiss={toggleClaimPopup} swprBalance={swprBalance} />
       <HeaderRow isDark={isDark}>
         <Title href=".">
           <SwaprVersionLogo />
@@ -296,11 +291,9 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          {availableSwprClaim && (
-            <SWPRWrapper onClick={toggleClaimPopup}>
-              <SWPRAmount>Claim SWPR</SWPRAmount>
-            </SWPRWrapper>
-          )}
+          <SWPRWrapper onClick={toggleClaimPopup}>
+            <SWPRAmount>{swprBalance ? swprBalance.toFixed() : '0'} SWPR</SWPRAmount>
+          </SWPRWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userNativeCurrencyBalance ? (
               <TYPE.white
