@@ -30,6 +30,14 @@ const BottomAutoColumn = styled(AutoColumn)`
   padding: 26px;
 `
 
+const StyledClaimButton = styled(ButtonPrimary)`
+  color: ${props => props.theme.white} !important;
+  background: linear-gradient(90deg, ${props => props.theme.primary1} -24.77%, #fb52a1 186.93%);
+  :disabled {
+    opacity: 0.5;
+  }
+`
+
 export default function ClaimModal({
   onDismiss,
   swprBalance
@@ -89,10 +97,10 @@ export default function ClaimModal({
             <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} />
           </RowBetween>
           <TYPE.white fontWeight={700} fontSize={36}>
-            {swprBalance ? swprBalance?.toFixed(3) : '0'}
+            {swprBalance?.toFixed(3) || '0'}
           </TYPE.white>
           <TYPE.white fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text4">
-            TOTAL SWPR (INCLUDING UNCLAIMED
+            TOTAL SWPR ON CURRENT NETWORK
           </TYPE.white>
         </UpperAutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
@@ -101,18 +109,11 @@ export default function ClaimModal({
               UNCLAIMED SWPR
             </TYPE.small>
             <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-              {unclaimedBalance?.toFixed(3)} SWPR
+              {unclaimedBalance?.toFixed(3) || '0'} SWPR
             </TYPE.white>
-            <ButtonPrimary
-              disabled={!availableClaim}
-              padding="16px 16px"
-              width="100%"
-              borderRadius="12px"
-              mt="1rem"
-              onClick={onClaim}
-            >
+            <StyledClaimButton disabled={!availableClaim} padding="16px 16px" width="100%" mt="1rem" onClick={onClaim}>
               Claim SWPR
-            </ButtonPrimary>
+            </StyledClaimButton>
           </BottomAutoColumn>
           <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
             Read about the airdrop

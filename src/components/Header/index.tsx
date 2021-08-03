@@ -218,7 +218,7 @@ const SWPRAmount = styled.div`
   display: flex;
   align-items: center;
   background-color: ${({ theme }) => theme.bg3};
-  background: linear-gradient(90deg, #2e17f2 -24.77%, #fb52a1 186.93%);
+  background: linear-gradient(90deg, ${props => props.theme.primary1} -24.77%, #fb52a1 186.93%);
 `
 
 const SWPRWrapper = styled.div`
