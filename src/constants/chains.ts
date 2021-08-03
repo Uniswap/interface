@@ -46,18 +46,24 @@ export const L2_CHAIN_IDS = [
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
-interface L1ChainInfo {
+export interface L1ChainInfo {
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
   readonly label: string
+  readonly rpcUrls?: string[]
+  readonly nativeCurrency: {
+    name: string // 'Goerli ETH',
+    symbol: string // 'gorETH',
+    decimals: number //18,
+  }
 }
 export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
   readonly logoUrl: string
 }
 
-type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
+export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
   readonly [chainId in SupportedL2ChainId]: L2ChainInfo
 } &
   { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
@@ -70,6 +76,8 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     bridge: 'https://bridge.arbitrum.io/',
@@ -78,36 +86,43 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Rinkeby',
     logoUrl: arbitrumLogoUrl,
+    nativeCurrency: { name: 'Rinkeby ArbETH', symbol: 'rinkArbETH', decimals: 18 },
+    rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
   },
   [SupportedChainId.MAINNET]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Mainnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.RINKEBY]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
+    nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
   },
   [SupportedChainId.ROPSTEN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ropsten',
+    nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
   },
   [SupportedChainId.KOVAN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Kovan',
+    nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
   },
   [SupportedChainId.GOERLI]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Görli',
+    nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
   },
   [SupportedChainId.OPTIMISM]: {
     bridge: 'https://gateway.optimism.io/',
@@ -116,6 +131,8 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimism',
     logoUrl: optimismLogoUrl,
+    nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://mainnet.optimism.io'],
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     bridge: 'https://gateway.optimism.io/',
@@ -123,6 +140,8 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
+    rpcUrls: ['https://kovan.optimism.io'],
     logoUrl: optimismLogoUrl,
+    nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
   },
 }
