@@ -12,8 +12,10 @@ import Popover from '../Popover'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NETWORK_DETAIL } from '../../constants'
-import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { switchOrAddNetwork } from '../../utils'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { CustomWalletConnectConnector } from '../../connectors/CustomWalletConnectConnector'
+import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 
 const StyledPopover = styled(Popover)`
   padding: 0;
@@ -71,8 +73,12 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
-      if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
-      if (!(connector instanceof CustomNetworkConnector))
+      if (
+        (!!!account && connector instanceof CustomNetworkConnector) ||
+        (!!account && connector instanceof CustomWalletConnectConnector)
+      ) {
+        connector.changeChainId(optionChainId)
+      } else if (connector instanceof InjectedConnector)
         switchOrAddNetwork(NETWORK_DETAIL[optionChainId], account || undefined)
       closeModals()
     },
@@ -98,6 +104,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.MAINNET)
               }}
+              disabled={connector?.supportedChainIds?.indexOf(ChainId.MAINNET) === -1 || chainId === ChainId.MAINNET}
               header={'Ethereum'}
               logoSrc={EthereumLogo}
             />
@@ -105,6 +112,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.XDAI)
               }}
+              disabled={connector?.supportedChainIds?.indexOf(ChainId.XDAI) === -1 || chainId === ChainId.XDAI}
               header={'xDai'}
               logoSrc={XDAILogo}
             />
@@ -112,6 +120,9 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.ARBITRUM_ONE)
               }}
+              disabled={
+                connector?.supportedChainIds?.indexOf(ChainId.ARBITRUM_ONE) === -1 || chainId === ChainId.ARBITRUM_ONE
+              }
               header={'Arbitrum one'}
               logoSrc={ArbitrumLogo}
             />
