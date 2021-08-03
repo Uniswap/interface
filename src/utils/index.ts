@@ -180,10 +180,10 @@ export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: st
       params: [{ chainId: networkDetails.chainId }]
     })
     .catch(error => {
-      if (error.code !== 4902 || !window.ethereum || !window.ethereum.request) {
+      if (error.code !== 4902) {
         console.error('error switching to chain id', networkDetails.chainId, error)
-        return
       }
+      if (!window.ethereum || !window.ethereum.request) return
       window.ethereum
         .request({
           method: 'wallet_addEthereumChain',
