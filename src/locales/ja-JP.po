@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-08-02 15:05\n"
+"PO-Revision-Date: 2021-08-03 07:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -101,7 +101,7 @@ msgstr "V3に<0>戻る</0>"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0>現在の価格：</0><1><2/></1><3>{0} あたり {1}</3>"
+msgstr "<0>現在の価格：</0><1><2/></1><3>{0} / {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -1138,11 +1138,11 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism Planned Downtime"
-msgstr "楽観的な計画的ダウンタイム"
+msgstr "Optimismの予定されているダウンタイム"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "楽観主義は、近い将来に計画されたダウンタイムを予想しています。計画外のダウンタイムも発生する可能性があります。ネットワークがダウンしている間、料金は発生せず、流動性を取り除くことはできません。 <0>続きを読む。</0>"
+msgstr "Optimismは、近い将来に計画されたダウンタイムを予想しています。計画外のダウンタイムも発生する可能性があります。ネットワークがダウンしている間、手数料は発生せず、流動性を取り除くことはできません。 <0>続きを読む</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1790,7 +1790,7 @@ msgstr "サポートされていないアセット"
 
 #: src/state/governance/hooks.ts
 msgid "Untitled"
-msgstr "無題"
+msgstr "タイトル未設定"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1823,7 +1823,7 @@ msgstr "V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
-msgstr "v3 {0} 価格:"
+msgstr "V3での {0} 価格:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
@@ -1843,7 +1843,7 @@ msgstr "リストを表示"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
-msgstr "Etherscanで表示"
+msgstr "Etherscanで見る"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -2264,7 +2264,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} 流動性トークン"
+msgstr "{0}/{1} LPトークン"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
