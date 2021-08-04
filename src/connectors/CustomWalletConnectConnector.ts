@@ -4,7 +4,6 @@
 import { ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { IWalletConnectProviderOptions } from '@walletconnect/types'
-import invariant from 'tiny-invariant'
 import { network } from '.'
 
 export const URI_AVAILABLE = 'URI_AVAILABLE'
@@ -117,19 +116,5 @@ export class CustomWalletConnectConnector extends AbstractConnector {
 
   public async close() {
     await this.walletConnectProvider?.close()
-  }
-
-  public changeChainId(chainId: number) {
-    invariant(
-      !!this.config.rpc && Object.keys(this.config.rpc).includes(chainId.toString()),
-      `No url found for chainId ${chainId}`
-    )
-    this.getAccount()
-      .then(account => {
-        this.walletConnectProvider.wc.updateSession({ chainId, accounts: [account] })
-      })
-      .catch(error => {
-        console.error('error switching wallet connect chain', error)
-      })
   }
 }

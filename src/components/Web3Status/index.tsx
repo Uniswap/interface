@@ -78,7 +78,7 @@ export enum ModalView {
 
 export default function Web3Status() {
   const { active, activate, account, error } = useWeb3React()
-  const { chainId: networkConnectorChainId } = useActiveWeb3React()
+  const { chainId: networkConnectorChainId, connector: activeConnector } = useActiveWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
   const { ENSName } = useENSName(account ?? undefined)
@@ -152,6 +152,7 @@ export default function Web3Status() {
           pendingTransactions={pending}
           ENSName={ENSName ?? undefined}
           account={account}
+          connector={activeConnector}
           networkConnectorChainId={networkConnectorChainId}
           onAddressClick={() => setModal(ModalView.Account)}
         />

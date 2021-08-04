@@ -1,5 +1,5 @@
 import { ChainId } from 'dxswap-sdk'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useNetworkSwitcherPopoverToggle } from '../../state/application/hooks'
@@ -12,6 +12,9 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import { TriangleIcon } from '../Icons'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
+import { InjectedConnector } from '@web3-react/injected-connector'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -116,6 +119,7 @@ interface AccountStatusProps {
   pendingTransactions: string[]
   ENSName?: string
   account: string | undefined | null
+  connector: AbstractConnector | undefined
   networkConnectorChainId: ChainId | undefined
   onAddressClick: () => void
 }
@@ -124,11 +128,17 @@ export function AccountStatus({
   pendingTransactions,
   ENSName,
   account,
+  connector,
   networkConnectorChainId,
   onAddressClick
 }: AccountStatusProps) {
   const hasPendingTransactions = !!pendingTransactions.length
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
+  const [networkSwitchingActive, setNetworkSwitchingActive] = useState(false)
+
+  useEffect(() => {
+    setNetworkSwitchingActive(connector instanceof CustomNetworkConnector || connector instanceof InjectedConnector)
+  }, [connector])
 
   if (!networkConnectorChainId) return null
 
@@ -151,7 +161,10 @@ export function AccountStatus({
         </Web3StatusConnected>
       )}
       <NetworkSwitcherPopover>
-        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover} isConnected={!!account}>
+        <Web3StatusNetwork
+          onClick={networkSwitchingActive ? toggleNetworkSwitcherPopover : undefined}
+          isConnected={!!account}
+        >
           <IconWrapper size={20}>
             <img src={ChainLogo[networkConnectorChainId]} alt="chain logo" />
           </IconWrapper>
@@ -162,7 +175,7 @@ export function AccountStatus({
               </TYPE.white>
             </NetworkName>
           )}
-          <TriangleIcon />
+          {networkSwitchingActive && <TriangleIcon />}
         </Web3StatusNetwork>
       </NetworkSwitcherPopover>
     </View>

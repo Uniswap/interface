@@ -3,7 +3,12 @@ import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useCloseModals, useWalletSwitcherPopoverToggle, useEthereumOptionPopoverToggle } from '../../state/application/hooks'
+import {
+  useModalOpen,
+  useCloseModals,
+  useWalletSwitcherPopoverToggle,
+  useEthereumOptionPopoverToggle
+} from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -14,11 +19,10 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NETWORK_DETAIL } from '../../constants'
 import { switchOrAddNetwork } from '../../utils'
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { CustomWalletConnectConnector } from '../../connectors/CustomWalletConnectConnector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { X } from 'react-feather'
-import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png';
-import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png';
+import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
+import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
 import { isMobile } from 'react-device-detect'
 
 const StyledPopover = styled(Popover)`
@@ -78,12 +82,8 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
       if (optionChainId === chainId) return
-      if (
-        (!!!account && connector instanceof CustomNetworkConnector) ||
-        (!!account && connector instanceof CustomWalletConnectConnector)
-      ) {
-        connector.changeChainId(optionChainId)
-      } else if (connector instanceof InjectedConnector)
+      if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
+      else if (connector instanceof InjectedConnector)
         switchOrAddNetwork(NETWORK_DETAIL[optionChainId], account || undefined)
       closeModals()
     },
@@ -101,25 +101,22 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
   const isOptionDisabled = (networkId: ChainId) => {
     return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
   }
-  
-  const toggleEthereumOptionPopover = useEthereumOptionPopoverToggle();
+
+  const toggleEthereumOptionPopover = useEthereumOptionPopoverToggle()
 
   const onEthereumOptionClick = () => {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     if (isMobile && isMetamask) {
       closeModals()
-      toggleEthereumOptionPopover();
-    }
-    else {
+      toggleEthereumOptionPopover()
+    } else {
       selectNetwork(ChainId.MAINNET)
     }
   }
-  
+
   return (
     <div ref={popoverRef}>
-      <EthereumOptionPopover
-        show={ethereumOptionPopoverOpen}
-      >
+      <EthereumOptionPopover show={ethereumOptionPopoverOpen}>
         <StyledPopover
           placement="bottom-end"
           content={
@@ -144,7 +141,9 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
                   logoSrc={ArbitrumLogo}
                 />
               </OptionGrid>
-              {!!account && <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>}
+              {!!account && (
+                <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
+              )}
             </>
           }
           show={networkSwitcherPopoverOpen}
@@ -157,20 +156,20 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
 }
 
 interface EthereumOptionPopoverProps {
-  children: ReactNode;
-  show: boolean;
+  children: ReactNode
+  show: boolean
 }
 
 const View = styled.div`
   max-width: 305px;
   padding: 22px;
-`;
+`
 
 const Row = styled.div`
   display: flex;
   align-items: flex-start;
   margin-bottom: 24px;
-`;
+`
 
 const Text = styled.p`
   margin: 0;
@@ -179,7 +178,7 @@ const Text = styled.p`
   line-height: 17px;
   color: ${({ theme }) => theme.text2};
   opacity: 0.8;
-`;
+`
 
 const CloseButton = styled.button`
   padding: 0;
@@ -190,13 +189,13 @@ const CloseButton = styled.button`
   svg {
     stroke: ${({ theme }) => theme.text2};
   }
-`;
+`
 
 const Image = styled.img`
   max-width: 100%;
-`;
+`
 
-const EthereumOptionPopover = ({children, show}: EthereumOptionPopoverProps) => {
+const EthereumOptionPopover = ({ children, show }: EthereumOptionPopoverProps) => {
   return (
     <StyledPopover
       placement="bottom-end"
@@ -206,7 +205,7 @@ const EthereumOptionPopover = ({children, show}: EthereumOptionPopoverProps) => 
           <Row>
             <Text>Please open up Metamask and Switch to Ethereum manually.</Text>
             <CloseButton>
-              <X size="16"/>
+              <X size="16" />
             </CloseButton>
           </Row>
           <Image src={ethereumHintImage1x} srcSet={ethereumHintImage2x} alt="hint screenshot" />
