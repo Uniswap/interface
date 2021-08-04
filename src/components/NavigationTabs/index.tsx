@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
 import { NavLink, useHistory } from 'react-router-dom'
 import { ArrowLeft } from 'react-feather'
+import { t, Trans } from '@lingui/macro'
 
 import { ButtonEmpty } from 'components/Button'
 import { RowBetween } from '../Row'
@@ -54,14 +54,13 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
-  const { t } = useTranslation()
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none' }}>
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        {t('swap')}
+        <Trans>Swap</Trans>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        {t('pool')}
+        <Trans>Pool</Trans>
       </StyledNavLink>
     </Tabs>
   )
@@ -80,8 +79,10 @@ export function FindPoolTabs() {
         <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonEmpty>
-        <ActiveText>Import Pool</ActiveText>
-        <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
+        <ActiveText>
+          <Trans>Import Pool</Trans>
+        </ActiveText>
+        <QuestionHelper text={t`Use this tool to find pairs that don't automatically appear in the interface.`} />
       </RowBetween>
     </Tabs>
   )
@@ -100,12 +101,12 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonEmpty>
-        <ActiveText>{creating ? 'Create a new pool' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
+        <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
         <QuestionHelper
           text={
             adding
-              ? 'Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.'
-              : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
+              ? t`Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.`
+              : t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.`
           }
         />
       </RowBetween>
@@ -126,8 +127,12 @@ export function MigrateTab() {
         <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonEmpty>
-        <ActiveText>{'Migrate Liquidity'}</ActiveText>
-        <QuestionHelper text="Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address." />
+        <ActiveText>
+          <Trans>Migrate Liquidity</Trans>
+        </ActiveText>
+        <QuestionHelper
+          text={t`Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address.`}
+        />
       </RowBetween>
     </Tabs>
   )

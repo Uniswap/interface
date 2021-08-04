@@ -4,6 +4,7 @@ import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Tra
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -153,7 +154,7 @@ export function useDerivedSwapInfo(): {
 
   let inputError: string | undefined
   if (!account) {
-    inputError = 'Connect Wallet'
+    inputError = t`Connect wallet`
   }
 
   if (!parsedAmount) {

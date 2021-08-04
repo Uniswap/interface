@@ -4,6 +4,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { fortmatic, injected, portis } from '../../connectors'
@@ -297,9 +298,11 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
+              <h5>
+                <Trans>Please connect to the appropriate Ethereum network.</Trans>
+              </h5>
             ) : (
-              'Error connecting. Try refreshing the page.'
+              t`Error connecting. Try refreshing the page.`
             )}
           </ContentWrapper>
         </UpperSection>
@@ -329,12 +332,14 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              Back
+              <Trans>Back</Trans>
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Import your Wallet</HoverText>
+            <HoverText>
+              <Trans>Import your Wallet</Trans>
+            </HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>
@@ -352,13 +357,15 @@ export default function WalletModal({
         <FooterRow>
           <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
           <ToSText>
-            Accept <ExternalLink href="http://files.dmm.exchange/tac.pdf">Terms of Use</ExternalLink> and{' '}
-            <ExternalLink
-              href="http://files.dmm.exchange/privacy.pdf
+            <Trans>
+              Accept <ExternalLink href="http://files.dmm.exchange/tac.pdf">Terms of Use</ExternalLink> and{' '}
+              <ExternalLink
+                href="http://files.dmm.exchange/privacy.pdf
 "
-            >
-              Privacy Policy
-            </ExternalLink>
+              >
+                Privacy Policy
+              </ExternalLink>
+            </Trans>
           </ToSText>
         </FooterRow>
       </UpperSection>

@@ -3,6 +3,7 @@ import { ETHER, TokenAmount } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
+import { t, Trans } from '@lingui/macro'
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -13,12 +14,11 @@ import { MinimalPositionCard as MinimalPositionCardSUSHI } from '../../component
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/ReservesUNI'
-import { PairState as PairStateSUSHI, usePair as usePairSUSHI } from '../../data/ReservesSUSHI'
+import { usePair as usePairSUSHI } from '../../data/ReservesSUSHI'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
-import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
@@ -110,7 +110,7 @@ export default function PoolFinderExternal() {
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
       <Text textAlign="center">
-        {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your liquidity.'}
+        {!account ? t`Connect to a wallet to find pools` : t`Select a token to find your liquidity.`}
       </Text>
     </LightCard>
   )
@@ -134,21 +134,25 @@ export default function PoolFinderExternal() {
             ) : (
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">You don’t have liquidity in this {type} pool yet.</Text>
+                  <Text textAlign="center">
+                    <Trans>You don’t have liquidity in this {type} pool yet.</Trans>
+                  </Text>
                 </AutoColumn>
               </LightCard>
             )
           ) : validPairNoLiquidity ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">No {type} pool found.</Text>
+                <Text textAlign="center">
+                  <Trans>No {type} pool found.</Trans>
+                </Text>
               </AutoColumn>
             </LightCard>
           ) : pairState === PairState.INVALID ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center" fontWeight={500}>
-                  Invalid pair.
+                  <Trans>Invalid pair.</Trans>
                 </Text>
               </AutoColumn>
             </LightCard>
@@ -156,7 +160,7 @@ export default function PoolFinderExternal() {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">
-                  Loading
+                  <Trans>Loading</Trans>
                   <Dots />
                 </Text>
               </AutoColumn>
@@ -172,7 +176,9 @@ export default function PoolFinderExternal() {
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
-              <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the interface.
+              <Trans>
+                <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the interface.
+              </Trans>
             </TYPE.link>
           </AutoColumn>
         </BlueCard>
@@ -191,7 +197,7 @@ export default function PoolFinderExternal() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              Select a Token
+              <Trans>Select a Token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
@@ -215,7 +221,7 @@ export default function PoolFinderExternal() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              Select a Token
+              <Trans>Select a Token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
@@ -224,10 +230,12 @@ export default function PoolFinderExternal() {
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
             <Text textAlign="center" fontWeight={500}>
-              Pool Found!
+              <Trans>Pool Found!</Trans>
             </Text>
             <StyledInternalLink to={`/migration`}>
-              <Text textAlign="center">Manage this pool.</Text>
+              <Text textAlign="center">
+                <Trans>Manage this pool.</Trans>
+              </Text>
             </StyledInternalLink>
           </ColumnCenter>
         )}

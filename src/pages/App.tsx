@@ -1,9 +1,10 @@
-import React, { Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
 import { defaultExchangeClient, exchangeCient } from 'apollo/client'
+import Loader from 'components/LocalLoader'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
@@ -17,23 +18,25 @@ import {
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
-import Pool from './Pool'
-import Migration from './Pool/lp'
 import Pools from './Pools'
 import Farms from './Farms'
-import PoolFinder from './PoolFinder'
-import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
-import RemoveLiquidity from './RemoveLiquidity'
-import MigrateLiquidityUNI from './RemoveLiquidity/migrate_uni'
-import MigrateLiquiditySUSHI from './RemoveLiquidity/migrate_sushi'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import About from './Static/About'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
-import Vesting from './Farms/vesting'
 import { ChainId } from 'libs/sdk/src'
+
+// Route-based code splitting
+const Pool = lazy(() => import('./Pool'))
+const PoolFinder = lazy(() => import('./PoolFinder'))
+const PoolFinderExternal = lazy(() => import('./PoolFinder/PoolFinderExternal'))
+const Vesting = lazy(() => import('./Farms/vesting'))
+const Migration = lazy(() => import('./Pool/lp'))
+const RemoveLiquidity = lazy(() => import('./RemoveLiquidity'))
+const MigrateLiquidityUNI = lazy(() => import('./RemoveLiquidity/migrate_uni'))
+const MigrateLiquiditySUSHI = lazy(() => import('./RemoveLiquidity/migrate_sushi'))
+const About = lazy(() => import('./Static/About'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -109,7 +112,7 @@ export default function App() {
     <>
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
-          <Suspense fallback={null}>
+          <Suspense fallback={<Loader />}>
             <Route component={DarkModeQueryParamReader} />
             <AppWrapper>
               <URLWarning />

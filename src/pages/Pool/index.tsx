@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
+import { t, Trans } from '@lingui/macro'
 
 import { Pair, JSBI, Token } from 'libs/sdk/src'
 import { BIG_INT_ZERO } from '../../constants'
@@ -10,6 +10,7 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import FullPositionCard from 'components/PositionCard'
 import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import Card from 'components/Card'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { ButtonOutlined } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
@@ -130,8 +131,6 @@ export default function Pool() {
     )
   })
 
-  const { t } = useTranslation()
-
   const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
 
   const transformedUserLiquidityPositions: {
@@ -157,14 +156,14 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <AutoRow>
               <InstructionText>
-                Here you can view all your liquidity positions and remove/add more liquidity.
+                <Trans>Here you can view all your liquidity positions and remove/add more liquidity.</Trans>
               </InstructionText>
             </AutoRow>
 
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  My Liquidity Pools
+                  <Trans>My Liquidity Pools</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
@@ -175,7 +174,7 @@ export default function Pool() {
                   to={`/create/ETH`}
                   style={{ float: 'right' }}
                 >
-                  {t('createNewPool')}
+                  <Trans>+ Create New Pool</Trans>
                 </ButtonOutlined>
                 {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
                   <Text fontWeight={500} fontSize={16}>
@@ -188,13 +187,15 @@ export default function Pool() {
             {!account ? (
               <Card padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
+                  <Trans>Connect to a wallet to view your liquidity.</Trans>
                 </TYPE.body>
               </Card>
             ) : v2IsLoading || loadingUserLiquidityPositions ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
+                  <Dots>
+                    <Trans>Loading</Trans>
+                  </Dots>
                 </TYPE.body>
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
@@ -221,22 +222,23 @@ export default function Pool() {
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                  <Trans>No liquidity found.</Trans>
                 </TYPE.body>
               </EmptyProposals>
             )}
 
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {"Don't see a pool you joined?"}{' '}
+                {t`Don't see a pool you joined?`}{' '}
                 <StyledInternalLink id="import-pool-link" to={'/find'}>
-                  Import it.
+                  <Trans>Import it.</Trans>
                 </StyledInternalLink>
               </Text>
             </AutoColumn>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
+      <SwitchLocaleLink />
     </>
   )
 }

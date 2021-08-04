@@ -7,6 +7,7 @@ import { ethers } from 'ethers'
 import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
+import { Trans } from '@lingui/macro'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ZERO } from 'libs/sdk/src/constants'
@@ -396,8 +397,10 @@ const ListItem = ({ farm }: ListItemProps) => {
               <div>
                 <BalanceInfo grid-area="stake">
                   <GreyText>
-                    Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                    {farm.token1?.symbol} LP
+                    <Trans>
+                      Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                      {farm.token1?.symbol} LP
+                    </Trans>
                   </GreyText>
                   <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
                 </BalanceInfo>
@@ -409,8 +412,10 @@ const ListItem = ({ farm }: ListItemProps) => {
               <div>
                 <BalanceInfo grid-area="unstake">
                   <GreyText>
-                    Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                    {farm.token1?.symbol} LP
+                    <Trans>
+                      Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                      {farm.token1?.symbol} LP
+                    </Trans>
                   </GreyText>
                   <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
                 </BalanceInfo>
@@ -420,7 +425,9 @@ const ListItem = ({ farm }: ListItemProps) => {
                 </GreyText>
               </div>
               <div grid-area="harvest">
-                <GreyText>Reward</GreyText>
+                <GreyText>
+                  <Trans>Reward</Trans>
+                </GreyText>
               </div>
             </StakeGroup>
             <StakeGroup>
@@ -429,7 +436,13 @@ const ListItem = ({ farm }: ListItemProps) => {
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
                   <div className="px-4">
                     <ButtonPrimary color="blue" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
-                      {approvalState === ApprovalState.PENDING ? <Dots>Approving </Dots> : 'Approve'}
+                      {approvalState === ApprovalState.PENDING ? (
+                        <Dots>
+                          <Trans>Approving </Trans>
+                        </Dots>
+                      ) : (
+                        <Trans>Approve</Trans>
+                      )}
                     </ButtonPrimary>
                   </div>
                 )}
@@ -523,7 +536,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                         margin="15px 0"
                         onClick={() => handleClickHarvest(farm.pid)}
                       >
-                        Harvest
+                        <Trans>Harvest</Trans>
                       </ButtonPrimary>
                     </AutoRow>
                   </>
@@ -542,7 +555,9 @@ const ListItem = ({ farm }: ListItemProps) => {
                 style={{ textDecoration: 'none' }}
               >
                 <GetLP>
-                  Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
+                  <Trans>
+                    Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
+                  </Trans>
                 </GetLP>
               </Link>
             </LPInfoContainer>
@@ -581,7 +596,9 @@ const ListItem = ({ farm }: ListItemProps) => {
 
         <GridItem>
           <DataTitle>
-            <span>Staked TVL</span>
+            <span>
+              <Trans>Staked TVL</Trans>
+            </span>
           </DataTitle>
           <DataText grid-area="liq">
             <div>{formattedNum(liquidity.toString(), true)}</div>
@@ -589,7 +606,9 @@ const ListItem = ({ farm }: ListItemProps) => {
         </GridItem>
         <GridItem>
           <DataTitle>
-            <span>APY</span>
+            <span>
+              <Trans>APY</Trans>
+            </span>
             <InfoHelper text={'Estimated total annualized yield from fees + rewards'} size={12} />
           </DataTitle>
           <DataText grid-area="apy">
@@ -598,7 +617,9 @@ const ListItem = ({ farm }: ListItemProps) => {
         </GridItem>
 
         <GridItem noBorder>
-          <DataTitle>My Rewards</DataTitle>
+          <DataTitle>
+            <Trans>My Rewards</Trans>
+          </DataTitle>
           <DataText style={{ display: 'flex', flexDirection: 'column' }}>
             {farmRewards.map((reward, index) => {
               return (
@@ -612,7 +633,9 @@ const ListItem = ({ farm }: ListItemProps) => {
         </GridItem>
 
         <GridItem noBorder>
-          <DataTitle>My Deposit</DataTitle>
+          <DataTitle>
+            <Trans>My Deposit</Trans>
+          </DataTitle>
           <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
         </GridItem>
       </StyledItemCard>
@@ -623,8 +646,10 @@ const ListItem = ({ farm }: ListItemProps) => {
             <div>
               <BalanceInfo grid-area="stake">
                 <GreyText>
-                  Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                  {farm.token1?.symbol} LP
+                  <Trans>
+                    Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                    {farm.token1?.symbol} LP
+                  </Trans>
                 </GreyText>
                 <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
               </BalanceInfo>
@@ -638,7 +663,13 @@ const ListItem = ({ farm }: ListItemProps) => {
             {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
               <div className="px-4">
                 <ButtonPrimary color="blue" disabled={approvalState === ApprovalState.PENDING} onClick={approve}>
-                  {approvalState === ApprovalState.PENDING ? <Dots>Approving </Dots> : 'Approve'}
+                  {approvalState === ApprovalState.PENDING ? (
+                    <Dots>
+                      <Trans>Approving </Trans>
+                    </Dots>
+                  ) : (
+                    <Trans>Approve</Trans>
+                  )}
                 </ButtonPrimary>
               </div>
             )}
@@ -691,7 +722,9 @@ const ListItem = ({ farm }: ListItemProps) => {
                 style={{ textDecoration: 'none' }}
               >
                 <GetLP>
-                  Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
+                  <Trans>
+                    Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
+                  </Trans>
                 </GetLP>
               </Link>
             </LPInfoContainer>
@@ -701,8 +734,10 @@ const ListItem = ({ farm }: ListItemProps) => {
             <div>
               <BalanceInfo grid-area="unstake">
                 <GreyText>
-                  Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
-                  {farm.token1?.symbol} LP
+                  <Trans>
+                    Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                    {farm.token1?.symbol} LP
+                  </Trans>
                 </GreyText>
                 <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
               </BalanceInfo>
@@ -751,7 +786,9 @@ const ListItem = ({ farm }: ListItemProps) => {
             <Seperator />
 
             <div grid-area="harvest">
-              <GreyText>Reward</GreyText>
+              <GreyText>
+                <Trans>Reward</Trans>
+              </GreyText>
             </div>
 
             {approvalState === ApprovalState.APPROVED && (
@@ -778,7 +815,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   margin="15px 0"
                   onClick={() => handleClickHarvest(farm.pid)}
                 >
-                  Harvest
+                  <Trans>Harvest</Trans>
                 </ButtonPrimary>
               </AutoRow>
             )}

@@ -7,6 +7,8 @@ import { ArrowDown, Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
+
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -376,7 +378,7 @@ export default function RemoveLiquidity({
         </RowBetween>
 
         <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
+          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
             100}% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
@@ -401,7 +403,7 @@ export default function RemoveLiquidity({
           <>
             <RowBetween>
               <Text color={theme.text2} fontWeight={500} fontSize={16}>
-                Price
+                <Trans>Price</Trans>
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
                 1 {nativeA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {nativeB?.symbol}
@@ -417,7 +419,7 @@ export default function RemoveLiquidity({
         )}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
           <Text fontWeight={500} fontSize={20}>
-            Confirm
+            <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
       </>
@@ -533,7 +535,7 @@ export default function RemoveLiquidity({
                         75%
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
-                        Max
+                        <Trans>Max</Trans>
                       </MaxButton>
                     </RowBetween>
                   </>
@@ -577,7 +579,7 @@ export default function RemoveLiquidity({
                               currencyB === ETHER ? WETH[chainId].address : currencyIdB
                             }/${pairAddress}`}
                           >
-                            Receive Wrapped Token
+                            <Trans>Receive Wrapped Token</Trans>
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
@@ -591,7 +593,7 @@ export default function RemoveLiquidity({
                                 : currencyIdB
                             }/${pairAddress}`}
                           >
-                            Receive Native Token
+                            <Trans>Receive Native Token</Trans>
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>
@@ -665,7 +667,9 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                <ButtonLight onClick={toggleWalletModal}>
+                  <Trans>Connect Wallet</Trans>
+                </ButtonLight>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed
@@ -677,11 +681,13 @@ export default function RemoveLiquidity({
                     fontSize={16}
                   >
                     {approval === ApprovalState.PENDING ? (
-                      <Dots>Approving</Dots>
+                      <Dots>
+                        <Trans>Approving</Trans>
+                      </Dots>
                     ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                      'Approved'
+                      t`Approved`
                     ) : (
-                      'Approve'
+                      t`Approve`
                     )}
                   </ButtonConfirmed>
                   <ButtonError
@@ -692,7 +698,7 @@ export default function RemoveLiquidity({
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
                     <Text fontSize={16} fontWeight={500}>
-                      {error || 'Remove'}
+                      {error || t`Remove`}
                     </Text>
                   </ButtonError>
                 </RowBetween>

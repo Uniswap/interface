@@ -4,6 +4,7 @@ import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
+import { t, Trans } from '@lingui/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
@@ -19,6 +20,7 @@ import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
@@ -269,7 +271,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
           <AutoColumn gap={'7px'}>
             <CurrencyInputPanel
-              label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
+              label={independentField === Field.OUTPUT && !showWrap && trade ? t`From (estimated)` : t`From`}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
@@ -293,7 +295,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (
                   <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                    + Add a send (optional)
+                    <Trans>+ Add a send (optional)</Trans>
                   </LinkStyledButton>
                 ) : null}
               </AutoRow>
@@ -316,7 +318,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    - Remove send
+                    <Trans>- Remove send</Trans>
                   </LinkStyledButton>
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
@@ -329,7 +331,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   {Boolean(trade) && (
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                        Price:&nbsp;
+                        <Trans>Price:</Trans>&nbsp;
                       </Text>
                       <TradePrice
                         price={trade?.executionPrice}
@@ -341,7 +343,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        Slippage Tolerance:&nbsp;
+                        <Trans>Slippage Tolerance:</Trans>&nbsp;
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                         {allowedSlippage / 100}%
@@ -354,7 +356,9 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>
+                <Trans>Connect Wallet</Trans>
+              </ButtonLight>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
@@ -362,7 +366,9 @@ export default function Swap({ history }: RouteComponentProps) {
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
-                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                <TYPE.main mb="4px">
+                  <Trans>Insufficient liquidity for this trade.</Trans>
+                </TYPE.main>
               </GreyCard>
             ) : showApproveFlow ? (
               <RowBetween>
@@ -375,12 +381,12 @@ export default function Swap({ history }: RouteComponentProps) {
                 >
                   {approval === ApprovalState.PENDING ? (
                     <AutoRow gap="6px" justify="center">
-                      Approving <Loader stroke="white" />
+                      <Trans>Approving</Trans> <Loader stroke="white" />
                     </AutoRow>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    'Approved'
+                    t`Approved`
                   ) : (
-                    'Approve ' + currencies[Field.INPUT]?.symbol
+                    t`Approve ${currencies[Field.INPUT]?.symbol}`
                   )}
                 </ButtonConfirmed>
                 <ButtonError
@@ -406,8 +412,10 @@ export default function Swap({ history }: RouteComponentProps) {
                 >
                   <Text fontSize={16} fontWeight={500}>
                     {priceImpactSeverity > 3 && !isExpertMode
-                      ? `Price Impact High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                      ? t`Price Impact High`
+                      : priceImpactSeverity > 2
+                      ? t`Swap Anyway`
+                      : t`Swap`}
                   </Text>
                 </ButtonError>
               </RowBetween>
@@ -434,8 +442,10 @@ export default function Swap({ history }: RouteComponentProps) {
                   {swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
-                    ? `Price Impact Too High`
-                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    ? t`Price Impact Too High`
+                    : priceImpactSeverity > 2
+                    ? t`Swap Anyway`
+                    : t`Swap`}
                 </Text>
               </ButtonError>
             )}
@@ -449,6 +459,7 @@ export default function Swap({ history }: RouteComponentProps) {
         </Wrapper>
       </AppBody>
       <AdvancedSwapDetailsDropdown trade={trade} />
+      <SwitchLocaleLink />
     </>
   )
 }

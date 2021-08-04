@@ -3,6 +3,7 @@ import { Settings, CheckCircle } from 'react-feather'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { TokenList } from '@uniswap/token-lists'
@@ -160,12 +161,16 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
               <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
                 <div>{list && listVersionLabel(list.version)}</div>
                 <SeparatorDark />
-                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
+                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+                  <Trans>View list</Trans>
+                </ExternalLink>
                 <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                  Remove list
+                  <Trans>Remove list</Trans>
                 </UnpaddedLinkStyledButton>
                 {pending && (
-                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>Update list</UnpaddedLinkStyledButton>
+                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
+                    <Trans>Update list</Trans>
+                  </UnpaddedLinkStyledButton>
                 )}
               </PopoverContainer>
             )}
@@ -304,7 +309,7 @@ export function ManageLists({
           <SearchInput
             type="text"
             id="list-add-input"
-            placeholder="https:// or ipfs:// or ENS name"
+            placeholder={t`https:// or ipfs:// or ENS name`}
             value={listUrlInput}
             onChange={handleInput}
           />
@@ -323,7 +328,9 @@ export function ManageLists({
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
                 <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
                   <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
-                  <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
+                  <TYPE.main fontSize={'12px'}>
+                    <Trans>{tempList.tokens.length} tokens</Trans>
+                  </TYPE.main>
                 </AutoColumn>
               </RowFixed>
               {isImported ? (
@@ -331,7 +338,9 @@ export function ManageLists({
                   <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
                     <CheckCircle />
                   </IconWrapper>
-                  <TYPE.body color={theme.text2}>Loaded</TYPE.body>
+                  <TYPE.body color={theme.text2}>
+                    <Trans>Loaded</Trans>
+                  </TYPE.body>
                 </RowFixed>
               ) : (
                 <ButtonPrimary
@@ -340,7 +349,7 @@ export function ManageLists({
                   width="fit-content"
                   onClick={handleImport}
                 >
-                  Import
+                  <Trans>Import</Trans>
                 </ButtonPrimary>
               )}
             </RowBetween>

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
+import { t, Trans } from '@lingui/macro'
 
 import { Currency } from 'libs/sdk/src'
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
@@ -10,6 +10,7 @@ import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
 import Search from 'components/Search'
 import LocalLoader from 'components/LocalLoader'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useETHPrice } from 'state/application/hooks'
@@ -41,7 +42,6 @@ const Pools = ({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
-  const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
@@ -128,19 +128,25 @@ const Pools = ({
       <PageWrapper>
         <GlobalDataContainer>
           <GlobalDataItem>
-            <GlobalDataItemTitle>Total Trading Volume:</GlobalDataItemTitle>
+            <GlobalDataItemTitle>
+              <Trans>Total Trading Volume:</Trans>
+            </GlobalDataItemTitle>
             <GlobalDataItemValue>
               {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </GlobalDataItemValue>
           </GlobalDataItem>
           <GlobalDataItem>
-            <GlobalDataItemTitle>Total Value Locked:</GlobalDataItemTitle>
+            <GlobalDataItemTitle>
+              <Trans>Total Value Locked:</Trans>
+            </GlobalDataItemTitle>
             <GlobalDataItemValue>
               {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </GlobalDataItemValue>
           </GlobalDataItem>
           <GlobalDataItem>
-            <GlobalDataItemTitle>Total AMP Liquidity:</GlobalDataItemTitle>
+            <GlobalDataItemTitle>
+              <Trans>Total AMP Liquidity:</Trans>
+            </GlobalDataItemTitle>
             <GlobalDataItemValue>
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </GlobalDataItemValue>
@@ -148,16 +154,22 @@ const Pools = ({
         </GlobalDataContainer>
 
         <AddLiquidityInstructionContainer>
-          <AddLiquidityTitle>Add liquidity:</AddLiquidityTitle>
+          <AddLiquidityTitle>
+            <Trans>Add liquidity:</Trans>
+          </AddLiquidityTitle>
           <AddLiquidityInstructionText>
-            Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees
-            are automatically claimed when you withdraw your liquidity.
+            <Trans>
+              Receive liquidity pool tokens representing your position and earn fees proportional to your pool share.
+              Fees are automatically claimed when you withdraw your liquidity.
+            </Trans>
           </AddLiquidityInstructionText>
         </AddLiquidityInstructionContainer>
 
         {above1400 ? (
           <>
-            <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
+            <div style={{ marginBottom: '16px' }}>
+              <Trans>Select Pair</Trans>
+            </div>
             <ToolbarWrapper>
               <CurrencyWrapper>
                 <PoolsCurrencyInputPanel
@@ -185,7 +197,9 @@ const Pools = ({
                     width="fit-content"
                     style={{ marginLeft: '1rem', borderRadius: '8px' }}
                   >
-                    <span>Trade</span>
+                    <span>
+                      <Trans>Trade</Trans>
+                    </span>
                   </ButtonPrimary>
                 )}
               </CurrencyWrapper>
@@ -201,7 +215,7 @@ const Pools = ({
                   }`}
                   style={{ float: 'right' }}
                 >
-                  {t('createNewPool')}
+                  <Trans>+ Create New Pool</Trans>
                 </ButtonOutlined>
               </SearchWrapper>
             </ToolbarWrapper>
@@ -209,7 +223,7 @@ const Pools = ({
         ) : (
           <>
             <ToolbarWrapper>
-              <div>{t('selectPair')}</div>
+              <Trans>Select Pair</Trans>
               <SearchWrapper>
                 <ButtonOutlined
                   width="98px"
@@ -220,7 +234,7 @@ const Pools = ({
                   }`}
                   style={{ float: 'right' }}
                 >
-                  {t('newPool')}
+                  <Trans>+ Create New Pool</Trans>
                 </ButtonOutlined>
               </SearchWrapper>
             </ToolbarWrapper>
@@ -254,12 +268,17 @@ const Pools = ({
             />
           ) : (
             <SelectPairInstructionWrapper>
-              <div style={{ marginBottom: '1rem' }}>{t('thereAreNoPools')}</div>
-              <div>{t('thereAreNoPoolsInstruction')}</div>
+              <div style={{ marginBottom: '1rem' }}>
+                <Trans>There are no pools for this token pair.</Trans>
+              </div>
+              <div>
+                <Trans>Create a new pool or select another pair of tokens to view the available pools.</Trans>
+              </div>
             </SelectPairInstructionWrapper>
           )}
         </Panel>
       </PageWrapper>
+      <SwitchLocaleLink />
     </>
   )
 }
