@@ -6,6 +6,7 @@ import { stringify } from 'qs'
 
 import { LOCALE_LABEL } from 'constants/locales'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useUserLocale } from 'state/user/hooks'
 
 const StyledLanguageSelector = styled.div`
   display: flex;
@@ -20,6 +21,7 @@ export default function LanguageSelector() {
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
+  const userLocale = useUserLocale()
 
   const handleSelectLanguage = (event: any) => {
     event.preventDefault()
@@ -37,6 +39,7 @@ export default function LanguageSelector() {
       <Select
         id="language-selector"
         name="language"
+        value={userLocale as string}
         defaultValue={LOCALE_LABEL['en-US']}
         sx={{
           border: 'none',
