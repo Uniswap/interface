@@ -41,7 +41,12 @@ export function useLocalV3TradeExactIn(
   })
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut) {
+    if (
+      !amountIn ||
+      !currencyOut ||
+      quotesResults.some(({ valid }) => !valid) ||
+      amountIn.currency.wrapped.address === currencyOut?.wrapped.address
+    ) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -125,7 +130,12 @@ export function useLocalV3TradeExactOut(
   })
 
   return useMemo(() => {
-    if (!amountOut || !currencyIn || quotesResults.some(({ valid }) => !valid)) {
+    if (
+      !amountOut ||
+      !currencyIn ||
+      quotesResults.some(({ valid }) => !valid) ||
+      amountOut.currency.wrapped.address === currencyIn?.wrapped.address
+    ) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
