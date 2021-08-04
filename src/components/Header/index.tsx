@@ -172,29 +172,6 @@ const StyledExternalLink = styled(ExternalLink)`
   `};
 `
 
-const SWPRAmount = styled.div`
-  border-radius: 8px;
-  padding: 4px 12px;
-  height: 32px;
-  font-weight: 500;
-  color: white;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  background-color: ${({ theme }) => theme.bg3};
-  background: linear-gradient(90deg, ${props => props.theme.primary1} -24.77%, #fb52a1 186.93%);
-`
-
-const SWPRWrapper = styled.div`
-  margin-right: 12px;
-  position: relative;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-  :hover {
-    opacity: 0.8;
-  }
-`
-
 const HeaderSubRow = styled(RowFlat)`
   align-items: center;
   justify-content: flex-end;
@@ -206,7 +183,7 @@ const HeaderSubRow = styled(RowFlat)`
   `};
 `
 
-const Amount = styled.p`
+const Amount = styled.p<{ clickable?: boolean }>`
   padding: 8px 12px;
   margin: 0;
   font-weight: bold;
@@ -218,6 +195,7 @@ const Amount = styled.p`
   color: ${({ theme }) => theme.text4};
   background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
+  cursor: ${props => (props.clickable ? 'pointer' : 'initial')};
   white-space: nowrap;
 
   & + & {
@@ -277,13 +255,13 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls isConnected={!!account}>
         <HeaderElement>
-          <SWPRWrapper onClick={toggleClaimPopup}>
-            <SWPRAmount>{swprBalance ? swprBalance.toFixed() : '0'} SWPR</SWPRAmount>
-          </SWPRWrapper>
           <Web3Status />
           {!isMobileByMedia && <Settings />}
         </HeaderElement>
         <HeaderSubRow>
+          <Amount clickable onClick={toggleClaimPopup}>
+            {!account || !swprBalance ? '0.000' : <Skeleton width="40px" />} SWPR
+          </Amount>
           <Amount>
             {!account ? (
               '0.000'
