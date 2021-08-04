@@ -5,13 +5,13 @@ import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
-import useUnclaimedSWPRBalance from '../../hooks/useUnclaimedSWPRBalance'
-import useIsClaimAvailable from '../../hooks/useIsClaimAvailable'
-import useClaimCallback from '../../hooks/useClaimCallback'
+import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
 import { useShowClaimPopup } from '../../state/application/hooks'
 import { transparentize } from 'polished'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { TokenAmount } from 'dxswap-sdk'
+import useClaimCallback from '../../hooks/swpr/useClaimCallback'
+import useIsClaimAvailable from '../../hooks/swpr/useIsClaimAvailable'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -97,7 +97,7 @@ export default function ClaimModal({
             <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} />
           </RowBetween>
           <TYPE.white fontWeight={700} fontSize={36}>
-            {swprBalance?.toFixed(3) || '0'}
+            {swprBalance?.toFixed(3) || '0.000'}
           </TYPE.white>
           <TYPE.white fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text4">
             TOTAL SWPR ON CURRENT NETWORK

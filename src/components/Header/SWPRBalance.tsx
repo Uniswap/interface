@@ -8,7 +8,7 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardSection, DataCard } from '../earn/styled'
-import useUnclaimedSWPRBalance from '../../hooks/useUnclaimedSWPRBalance'
+import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
 import Skeleton from 'react-loading-skeleton'
 import { useTotalSupply } from '../../data/TotalSupply'
 

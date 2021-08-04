@@ -10,7 +10,8 @@ import {
   STAKING_REWARDS_FACTORY_ADDRESS,
   STAKING_REWARDS_FACTORY_ABI,
   STAKING_REWARDS_DISTRIBUTION_ABI,
-  SWPR_CLAIMER_ABI
+  SWPR_CLAIMER_ABI,
+  SWPR_CLAIMER_ADDRESS
 } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
@@ -27,20 +28,32 @@ import WXDAI_ABI from '../constants/abis/wxdai.json'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
+import { providers } from 'ethers'
+import { ARBITRUM_RINKEBY_PROVIDER } from '../constants'
 
 // returns null on errors
-function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+function useContract(
+  address: string | undefined,
+  ABI: any,
+  withSignerIfPossible = true,
+  provider?: providers.Web3Provider | providers.JsonRpcProvider
+): Contract | null {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
-    if (!address || !ABI || !library) return null
+    if (!address || !ABI || (!provider && !library)) return null
     try {
-      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+      return getContract(
+        address,
+        ABI,
+        (provider || library) as providers.JsonRpcProvider | providers.Web3Provider,
+        withSignerIfPossible && account ? account : undefined
+      )
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
     }
-  }, [address, ABI, library, withSignerIfPossible, account])
+  }, [address, ABI, provider, library, withSignerIfPossible, account])
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -129,6 +142,11 @@ export function useStakingRewardsDistributionContract(
   return useContract(address, STAKING_REWARDS_DISTRIBUTION_ABI, withSignerIfPossible)
 }
 
-export function useSWPRClaimerContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(address, SWPR_CLAIMER_ABI, withSignerIfPossible)
+export function useSWPRClaimerContract(withSignerIfPossible?: boolean): Contract | null {
+  return useContract(
+    SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_RINKEBY],
+    SWPR_CLAIMER_ABI,
+    withSignerIfPossible,
+    ARBITRUM_RINKEBY_PROVIDER
+  )
 }

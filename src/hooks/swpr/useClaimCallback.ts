@@ -1,12 +1,10 @@
-import { useActiveWeb3React } from './index'
 import { useMemo } from 'react'
-import { ChainId, SWPR_CLAIMER_ADDRESS } from 'dxswap-sdk'
-import { useSWPRClaimerContract } from './useContract'
-import { useClaimWhitelist } from '../state/claim/hooks'
+import { useSWPRClaimerContract } from '../useContract'
+import { useClaimWhitelist } from '../../state/claim/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { solidityKeccak256, solidityPack } from 'ethers/lib/utils'
 import { MerkleTree as MerkleTreeJS } from 'merkletreejs'
-import { WhitelistItem } from '../state/claim/actions'
+import { WhitelistItem } from '../../state/claim/actions'
 
 const hashLeaf = (leaf: WhitelistItem) => {
   return solidityKeccak256(['bytes'], [solidityPack(['address', 'uint256'], [leaf.account, leaf.amount])])
@@ -38,9 +36,8 @@ export class MerkleTree {
 }
 
 export default function useClaimCallback(account: string | null | undefined): () => Promise<TransactionResponse> {
-  const { chainId } = useActiveWeb3React()
   const whitelist = useClaimWhitelist()
-  const swprClaimerContract = useSWPRClaimerContract(SWPR_CLAIMER_ADDRESS[chainId || ChainId.MAINNET])
+  const swprClaimerContract = useSWPRClaimerContract()
 
   return useMemo(
     () => () => {
