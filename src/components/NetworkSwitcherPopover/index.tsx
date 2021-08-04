@@ -93,6 +93,10 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
     }
   }, [chainId, closeModals])
 
+  const isOptionDisabled = (networkId: ChainId) => {
+    return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
+  }
+  
   return (
     <StyledPopover
       innerRef={popoverRef}
@@ -104,7 +108,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.MAINNET)
               }}
-              disabled={connector?.supportedChainIds?.indexOf(ChainId.MAINNET) === -1 || chainId === ChainId.MAINNET}
+              disabled={isOptionDisabled(ChainId.MAINNET)}
               header={'Ethereum'}
               logoSrc={EthereumLogo}
             />
@@ -112,7 +116,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.XDAI)
               }}
-              disabled={connector?.supportedChainIds?.indexOf(ChainId.XDAI) === -1 || chainId === ChainId.XDAI}
+              disabled={isOptionDisabled(ChainId.XDAI)}
               header={'xDai'}
               logoSrc={XDAILogo}
             />
@@ -120,9 +124,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
               onClick={() => {
                 selectNetwork(ChainId.ARBITRUM_ONE)
               }}
-              disabled={
-                connector?.supportedChainIds?.indexOf(ChainId.ARBITRUM_ONE) === -1 || chainId === ChainId.ARBITRUM_ONE
-              }
+              disabled={isOptionDisabled(ChainId.ARBITRUM_ONE)}
               header={'Arbitrum one'}
               logoSrc={ArbitrumLogo}
             />
