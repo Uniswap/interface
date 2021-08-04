@@ -11,9 +11,9 @@ const BadgeWrapper = styled.div`
   justify-content: flex-end;
 `
 
-const BadgeText = styled.div`
+const BadgeText = styled.div<{ small?: boolean }>`
   font-weight: 500;
-  font-size: 14px;
+  font-size: ${({ small }) => (small ? '12px' : '14px')};
 `
 
 const ActiveDot = styled.span`
@@ -27,9 +27,11 @@ const ActiveDot = styled.span`
 export default function RangeBadge({
   removed,
   inRange,
+  small,
 }: {
   removed: boolean | undefined
   inRange: boolean | undefined
+  small?: boolean | undefined
 }) {
   return (
     <BadgeWrapper>
@@ -38,7 +40,7 @@ export default function RangeBadge({
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
-            <BadgeText>
+            <BadgeText small={small}>
               <Trans>Closed</Trans>
             </BadgeText>
           </Badge>
@@ -53,7 +55,7 @@ export default function RangeBadge({
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
-            <BadgeText>
+            <BadgeText small={small}>
               <Trans>In range</Trans>
             </BadgeText>
           </Badge>
@@ -69,7 +71,7 @@ export default function RangeBadge({
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
             &nbsp;
-            <BadgeText>
+            <BadgeText small={small}>
               <Trans>Out of range</Trans>
             </BadgeText>
           </Badge>

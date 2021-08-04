@@ -16,6 +16,7 @@ export interface Incentive {
   initialRewardAmount: CurrencyAmount<Token>
   rewardAmountRemaining: CurrencyAmount<Token>
   rewardRatePerSecond: CurrencyAmount<Token>
+  refundee: string
 }
 
 export function useAllIncentives(): {
@@ -91,6 +92,8 @@ export function useAllIncentives(): {
 
           const rewardRatePerSecond = initialRewardAmount.divide(endTime - startTime)
 
+          const refundee = result.refundee
+
           return {
             pool,
             poolAddress: result.pool,
@@ -99,6 +102,7 @@ export function useAllIncentives(): {
             initialRewardAmount,
             rewardAmountRemaining,
             rewardRatePerSecond,
+            refundee,
           }
         })
         .filter((x): x is Incentive => x !== null),

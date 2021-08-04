@@ -37,7 +37,7 @@ flex-direction: column;
 `};
 `
 
-export default function Earn() {
+export default function Stake() {
   const theme = useTheme()
 
   const { loading, incentives } = useAllIncentivesByPool()
@@ -76,14 +76,8 @@ export default function Earn() {
           <CardBGImage />
         </DataCard>
       </TopSection>
-
-      <DarkCard>
+      <DarkCard padding="24px">
         <AutoColumn gap="lg" style={{ width: '100%' }}>
-          <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.body style={{ marginTop: '0.5rem' }} fontSize="20px" color={theme.text3}>
-              <Trans>Active Staking Pools</Trans>
-            </TYPE.body>
-          </DataRow>
           <ProgramSection>
             {loading ? (
               <Loader />

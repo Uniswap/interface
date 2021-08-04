@@ -3,19 +3,13 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
-  padding: 8px;
-  height: 24px;
-  width: 24px;
+  padding: 11px;
   border-radius: 50%;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.white) : 'none')};
-  color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
-  font-size: 14px;
-  font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
     background: ${({ theme, isActive, isOnSwitch }) =>
       isActive ? (isOnSwitch ? darken(0.05, theme.white) : darken(0.05, theme.white)) : 'none'};
-    color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.white) : theme.text3)};
     opacity: 0.8;
   }
 `
@@ -27,7 +21,7 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
   display: flex;
   cursor: pointer;
   outline: none;
-  padding: 4px;
+  padding: 3px;
 
   :hover {
     opacity: 0.8;

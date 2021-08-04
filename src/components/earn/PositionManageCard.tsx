@@ -1,82 +1,37 @@
 import { Trans } from '@lingui/macro'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { Pool } from '@uniswap/v3-sdk'
 import Badge, { GreenBadge } from 'components/Badge'
-import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonLightGray, ButtonGreySmall, ButtonPrimary, ButtonSmall } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
-import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Loader'
-import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import AppleToggle from 'components/Toggle/AppleToggle'
+import { BIG_INT_ZERO } from 'constants/misc'
 import { BigNumber } from 'ethers'
 import { Incentive, useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
 import { DepositedTokenIdsState, useDepositedTokenIds } from 'hooks/incentives/useDepositedTokenIds'
 import { useToken } from 'hooks/Tokens'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown, ChevronUp, Lock, Zap } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
-import { HideSmall, HoverText, SmallOnly, TYPE } from 'theme'
+import { HoverText, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Break } from './styled'
+import StakingModal from './StakingModal'
+import RangeStatus from 'components/RangeStatus'
 
 const Wrapper = styled.div<{ open?: boolean }>`
   width: 100%;
   border: 1px solid ${({ theme, open }) => (open ? theme.blue3 : theme.bg3)};
   border-radius: 12px;
   padding: 16px;
-`
-
-const DataLineItem = styled.div`
-  font-size: 14px;
-`
-
-const RangeLineItem = styled(DataLineItem)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  user-select: none;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
-    padding: 8px 0;
-`};
-`
-
-const DoubleArrow = styled.span`
-  margin: 0 2px;
-  color: ${({ theme }) => theme.text3};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin: 4px;
-    padding: 20px;
-  `};
-`
-
-const RangeText = styled.span`
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  user-select: none;
-`
-
-const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text3};
-  font-size: 14px;
-  margin-right: 4px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    display: none;
-  `};
 `
 
 const HoverRow = styled(RowBetween)`
@@ -103,7 +58,7 @@ function BoostStatusRow({ incentive, positionDetails }: BoostStatusRowProps) {
    */
   const availableClaim = incentive.initialRewardAmount
   const weeklyRewards = incentive.initialRewardAmount
-  const isStaked = true
+  const isStaked = false
 
   const [attemptingUnstake, setAttemptingUnstake] = useState(false)
 
@@ -126,9 +81,11 @@ function BoostStatusRow({ incentive, positionDetails }: BoostStatusRowProps) {
         <Badge>{`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}</Badge>
       </RowFixed>
       <AutoRow gap="8px" width="fit-content">
-        <ButtonGreySmall>
-          <Trans>Claim</Trans>
-        </ButtonGreySmall>
+        {availableClaim.greaterThan(BIG_INT_ZERO) ? (
+          <ButtonGreySmall>
+            <Trans>Claim</Trans>
+          </ButtonGreySmall>
+        ) : null}
         <AppleToggle isActive={isStaked && !attemptingUnstake} toggle={handleToggleStakeOn} />
       </AutoRow>
     </RowBetween>
@@ -143,14 +100,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
   const theme = useTheme()
   const { account } = useActiveWeb3React()
 
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = positionDetails
+  const { token0: token0Address, token1: token1Address, fee: feeAmount } = positionDetails
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -159,21 +109,6 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
-
-  const position = useMemo(() => {
-    if (pool) {
-      return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
-    }
-    return undefined
-  }, [liquidity, pool, tickLower, tickUpper])
-
-  // meta data about position
-  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
-  const currencyQuote = quote && unwrappedToken(quote)
-  const currencyBase = base && unwrappedToken(base)
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
-  const removed = liquidity?.eq(0)
 
   // incentives for this pool
   const poolAddress = pool ? Pool.getAddress(pool.token0, pool.token1, pool.fee) : undefined
@@ -215,42 +150,20 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
    */
   const totalUnclaimedUSD = 0.023
 
+  const [showStakingModal, setShowStakingModal] = useState(false)
+  const [showClaimModal, setShowClaimModal] = useState(false)
+
   return (
     <Wrapper open={open}>
-      {priceLower && priceUpper && incentives ? (
+      <StakingModal
+        isOpen={showStakingModal}
+        onDismiss={() => setShowStakingModal(false)}
+        incentives={incentives}
+        positionDetails={positionDetails}
+      />
+      {incentives ? (
         <HoverRow onClick={() => setOpen(!open)}>
-          <RowFixed>
-            <RangeLineItem>
-              <RangeBadge removed={removed} inRange={!outOfRange} />
-              <RangeText>
-                <ExtentsText>
-                  <Trans>Min: </Trans>
-                </ExtentsText>
-                <Trans>
-                  {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}{' '}
-                  <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-                  <HoverInlineText text={currencyBase?.symbol ?? ''} />
-                </Trans>
-              </RangeText>{' '}
-              <HideSmall>
-                <DoubleArrow>⟷</DoubleArrow>{' '}
-              </HideSmall>
-              <SmallOnly>
-                <DoubleArrow>⟷</DoubleArrow>{' '}
-              </SmallOnly>
-              <RangeText>
-                <ExtentsText>
-                  <Trans>Max:</Trans>
-                </ExtentsText>
-                <Trans>
-                  {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}{' '}
-                  <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-                  <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-                </Trans>
-              </RangeText>
-            </RangeLineItem>
-          </RowFixed>
-
+          <RangeStatus positionDetails={positionDetails} />
           <RowFixed height="36px">
             {amountBoosted > 0 && !open ? (
               <GreenBadge>
@@ -338,7 +251,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
                 </AutoRow>
               </RowBetween>
             ) : (
-              <ButtonPrimary padding="12px" $borderRadius="12px">
+              <ButtonPrimary padding="12px" $borderRadius="12px" onClick={() => setShowStakingModal(true)}>
                 <RowFixed>
                   <Lock height="16px" style={{ marginRight: '4px' }} />
                   <Trans>Unlock & Join</Trans>
