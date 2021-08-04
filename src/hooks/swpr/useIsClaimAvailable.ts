@@ -10,6 +10,7 @@ export default function useIsClaimAvailable(
   const { loading: loadingHasClaimed, claimed } = useHasClaimed(account)
 
   return useMemo(() => {
+    if (!account) return { loading: false, available: false }
     if (loadingHasClaimed) return { loading: true, available: false }
     return {
       loading: false,

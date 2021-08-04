@@ -260,6 +260,17 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
     blockExplorerUrls: ['https://explorer.arbitrum.io']
+  },
+  [ChainId.ARBITRUM_RINKEBY]: {
+    chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,
+    chainName: 'Arbitrum Rinkeby',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io']
   }
 }
 

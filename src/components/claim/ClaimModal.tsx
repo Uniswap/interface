@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { AutoRow, RowBetween } from '../Row'
@@ -9,10 +9,13 @@ import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
 import { useShowClaimPopup } from '../../state/application/hooks'
 import { transparentize } from 'polished'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
-import { TokenAmount } from 'dxswap-sdk'
+import { ChainId, TokenAmount } from 'dxswap-sdk'
 import useClaimCallback from '../../hooks/swpr/useClaimCallback'
 import useIsClaimAvailable from '../../hooks/swpr/useIsClaimAvailable'
 import { ExternalLink } from 'react-feather'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { switchOrAddNetwork } from '../../utils'
+import { NETWORK_DETAIL } from '../../constants'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -39,6 +42,20 @@ const StyledClaimButton = styled(ButtonPrimary)`
   }
 `
 
+const NetworkWarning = styled.div`
+  width: 100%;
+  background-color: rgba(242, 153, 74, 0.25);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0em;
+  margin-bottom: 12px;
+  text-align: center;
+  color: #f2994a;
+`
+
 export default function ClaimModal({
   onDismiss,
   swprBalance
@@ -46,16 +63,21 @@ export default function ClaimModal({
   onDismiss: () => void
   swprBalance: TokenAmount | undefined
 }) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId, connector } = useActiveWeb3React()
 
   const [attempting, setAttempting] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
   const [hash, setHash] = useState<string | undefined>()
+  const [correctNetwork, setCorrectNetwork] = useState(false)
   const open = useShowClaimPopup()
 
   const claimCallback = useClaimCallback(account || undefined)
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
   const { available: availableClaim } = useIsClaimAvailable(account || undefined)
+
+  useEffect(() => {
+    setCorrectNetwork(chainId === ChainId.ARBITRUM_RINKEBY)
+  }, [chainId])
 
   const onClaim = useCallback(() => {
     setAttempting(true)
@@ -78,12 +100,17 @@ export default function ClaimModal({
       })
   }, [claimCallback])
 
-  const wrappedOnDismiss = () => {
+  const wrappedOnDismiss = useCallback(() => {
     setAttempting(false)
     setError(false)
     setHash(undefined)
     onDismiss()
-  }
+  }, [onDismiss])
+
+  const onSwitchToArbitrum = useCallback(() => {
+    if (connector instanceof InjectedConnector)
+      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_RINKEBY], account || undefined)
+  }, [account, connector])
 
   const content = () => {
     return error ? (
@@ -105,6 +132,9 @@ export default function ClaimModal({
           </TYPE.white>
         </UpperAutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+          <NetworkWarning>
+            Receive your SWPR airdrop on Arbitrum network. Please switch network to claim.
+          </NetworkWarning>
           <BottomAutoColumn gap="8px">
             <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
               UNCLAIMED SWPR
@@ -112,8 +142,20 @@ export default function ClaimModal({
             <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
               {unclaimedBalance?.toFixed(3) || '0'} SWPR
             </TYPE.white>
-            <StyledClaimButton disabled={!availableClaim} padding="16px 16px" width="100%" mt="1rem" onClick={onClaim}>
-              Claim SWPR
+            <StyledClaimButton
+              disabled={!availableClaim}
+              padding="16px 16px"
+              width="100%"
+              mt="1rem"
+              onClick={
+                !correctNetwork && connector instanceof InjectedConnector
+                  ? onSwitchToArbitrum
+                  : availableClaim
+                  ? onClaim
+                  : undefined
+              }
+            >
+              {correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum Rinkeby'}
             </StyledClaimButton>
           </BottomAutoColumn>
           <AutoRow gap="3px" justifyContent="center" width="100%">
