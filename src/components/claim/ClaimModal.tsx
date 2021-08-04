@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
-import { RowBetween } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
@@ -12,6 +12,7 @@ import TransactionConfirmationModal, { TransactionErrorContent } from '../Transa
 import { TokenAmount } from 'dxswap-sdk'
 import useClaimCallback from '../../hooks/swpr/useClaimCallback'
 import useIsClaimAvailable from '../../hooks/swpr/useIsClaimAvailable'
+import { ExternalLink } from 'react-feather'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -115,9 +116,12 @@ export default function ClaimModal({
               Claim SWPR
             </StyledClaimButton>
           </BottomAutoColumn>
-          <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
-            Read about the airdrop
-          </TYPE.small>
+          <AutoRow gap="3px" justifyContent="center" width="100%">
+            <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
+              Read about the airdrop
+            </TYPE.small>
+            <ExternalLink size="12px" />
+          </AutoRow>
         </AutoColumn>
       </ContentWrapper>
     )
