@@ -99,19 +99,17 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
       if (isMobile) {
         if (option.mobile) {
           return (
-            <>
-              <Item
-                key={key}
-                id={`connect-${key}`}
-                name={option.name}
-                onClick={() => {
-                  closeModals()
-                  option.connector !== connector && !option.href && tryActivation(option.connector)
-                }}
-                icon={require('../../assets/images/' + option.iconName)}
-                active={option.connector && option.connector === connector}
-              />
-            </>
+            <Item
+              key={key}
+              id={`connect-${key}`}
+              name={option.name}
+              onClick={() => {
+                closeModals()
+                option.connector !== connector && !option.href && tryActivation(option.connector)
+              }}
+              icon={require('../../assets/images/' + option.iconName)}
+              active={option.connector && option.connector === connector}
+            />
           )
         }
         return null
@@ -123,16 +121,14 @@ export const ConnectWalletPopover = ({ setModal, tryActivation, children }: Conn
         if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {
             return (
-              <>
-                <Item
-                  key={key}
-                  id={`connect-${key}`}
-                  name="Install Metamask"
-                  icon={MetamaskIcon}
-                  link={'https://metamask.io/'}
-                  onClick={closeModals}
-                />
-              </>
+              <Item
+                key={key}
+                id={`connect-${key}`}
+                name="Install Metamask"
+                icon={MetamaskIcon}
+                link={'https://metamask.io/'}
+                onClick={closeModals}
+              />
             )
           } else {
             return null //dont want to return install twice
