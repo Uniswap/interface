@@ -59,7 +59,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   outline: none;
 `
 
-const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean }>`
+const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
   display: flex;
   align-items: center;
   height: 29px;
@@ -74,10 +74,7 @@ const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConne
   background-color: ${({ theme, isConnected }) => (isConnected ? theme.dark2 : 'transparent')};
   border: none;
   outline: none;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: ${props => (props.clickable ? 'pointer' : 'initial')};
 `
 
 const IconWrapper = styled.div<{ size?: number | null }>`
@@ -162,6 +159,7 @@ export function AccountStatus({
       )}
       <NetworkSwitcherPopover>
         <Web3StatusNetwork
+          clickable={networkSwitchingActive}
           onClick={networkSwitchingActive ? toggleNetworkSwitcherPopover : undefined}
           isConnected={!!account}
         >
