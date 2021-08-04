@@ -5,7 +5,7 @@ import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useUserRoutingAPIEnabled, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 
@@ -14,8 +14,11 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
+  // skip query if routing API is disabled
+  const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+
   const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    amountIn && currencyOut
+    userRoutingAPIEnabled && amountIn && currencyOut
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
           tokenInChainId: amountIn.currency.chainId,
@@ -83,8 +86,11 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
+  // skip query if routing API is disabled
+  const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+
   const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    amountOut && currencyIn
+    userRoutingAPIEnabled && amountOut && currencyIn
       ? {
           tokenInAddress: currencyIn.wrapped.address,
           tokenInChainId: currencyIn.chainId,

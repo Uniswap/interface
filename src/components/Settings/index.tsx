@@ -7,7 +7,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useUserRoutingAPIEnabled, useUserSingleHopOnly } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -125,6 +125,8 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
 
+  const [routingAPIEnabled, setRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
@@ -193,6 +195,47 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               <Trans>Interface Settings</Trans>
             </Text>
+
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Optimized Router</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Optimizes trade routes with the Uniswap API.</Trans>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-optimized-router-button"
+                isActive={routingAPIEnabled}
+                toggle={() => {
+                  ReactGA.event({
+                    category: 'Routing',
+                    action: routingAPIEnabled ? 'disable routing API' : 'enable routing API',
+                  })
+                  setRoutingAPIEnabled(!routingAPIEnabled)
+                }}
+              />
+            </RowBetween>
+
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Disable Multihops</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Restricts swaps to direct pairs only.</Trans>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-disable-multihop-button"
+                isActive={singleHopOnly}
+                toggle={() => {
+                  ReactGA.event({
+                    category: 'Routing',
+                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
+                  })
+                  setSingleHopOnly(!singleHopOnly)
+                }}
+              />
+            </RowBetween>
+
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
@@ -218,25 +261,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                         setShowConfirmation(true)
                       }
                 }
-              />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Disable Multihops</Trans>
-                </TYPE.black>
-                <QuestionHelper text={<Trans>Restricts swaps to direct pairs only.</Trans>} />
-              </RowFixed>
-              <Toggle
-                id="toggle-disable-multihop-button"
-                isActive={singleHopOnly}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
-                  })
-                  setSingleHopOnly(!singleHopOnly)
-                }}
               />
             </RowBetween>
           </AutoColumn>

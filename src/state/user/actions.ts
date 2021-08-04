@@ -22,6 +22,9 @@ export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')
+export const updateUserRoutingAPIEnabled = createAction<{ userRoutingAPIEnabled: boolean }>(
+  'user/updateUserRoutingAPIEnabled'
+)
 export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'

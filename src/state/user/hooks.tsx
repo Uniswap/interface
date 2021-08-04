@@ -25,6 +25,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
+  updateUserRoutingAPIEnabled,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
@@ -118,6 +119,21 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   )
 
   return [singleHopOnly, setSingleHopOnly]
+}
+
+export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const routingAPI = useAppSelector((state) => state.user.userRoutingAPIEnabled)
+
+  const setRoutingAPI = useCallback(
+    (newRoutingAPI: boolean) => {
+      dispatch(updateUserRoutingAPIEnabled({ userRoutingAPIEnabled: newRoutingAPI }))
+    },
+    [dispatch]
+  )
+
+  return [routingAPI, setRoutingAPI]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

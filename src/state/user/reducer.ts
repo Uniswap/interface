@@ -1,5 +1,6 @@
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { createReducer } from '@reduxjs/toolkit'
+import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -8,17 +9,17 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  updateArbitrumAlphaAcknowledged,
+  updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserDeadline,
-  updateUserSingleHopOnly,
-  updateHideClosedPositions,
+  updateUserExpertMode,
   updateUserLocale,
-  updateArbitrumAlphaAcknowledged,
+  updateUserRoutingAPIEnabled,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance,
 } from './actions'
-import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -36,6 +37,8 @@ export interface UserState {
   userExpertMode: boolean
 
   userSingleHopOnly: boolean // only allow swaps on direct pairs
+
+  userRoutingAPIEnabled: boolean // whether the user has enabled the routing API
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -75,6 +78,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userLocale: null,
   userSingleHopOnly: false,
+  userRoutingAPIEnabled: true,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -149,6 +153,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserSingleHopOnly, (state, action) => {
       state.userSingleHopOnly = action.payload.userSingleHopOnly
+    })
+    .addCase(updateUserRoutingAPIEnabled, (state, action) => {
+      state.userRoutingAPIEnabled = action.payload.userRoutingAPIEnabled
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
