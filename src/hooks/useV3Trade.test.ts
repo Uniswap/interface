@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
-import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from './useV3Trade'
+import { RouterVersion, useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from './useV3Trade'
 import { useRouterTradeExactIn, useRouterTradeExactOut } from '../state/routing/useRouterTrade'
 
 // test fixtures
@@ -42,7 +42,7 @@ describe('#useV3TradeExactIn', () => {
       const { result } = renderHook(() => useV3TradeExactIn(USDCAmount, DAI))
 
       expect(mockUseLocalV3TradeExactIn).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.LOADING, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.LOADING, trade: null, router: RouterVersion.UNISWAP_API })
     })
 
     it('does not compute local v3 trade if router trade is VALID', () => {
@@ -51,7 +51,7 @@ describe('#useV3TradeExactIn', () => {
       const { result } = renderHook(() => useV3TradeExactIn(USDCAmount, DAI))
 
       expect(mockUseLocalV3TradeExactIn).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.UNISWAP_API })
     })
 
     it('does not compute local v3 trade if router trade is SYNCING', () => {
@@ -60,7 +60,7 @@ describe('#useV3TradeExactIn', () => {
       const { result } = renderHook(() => useV3TradeExactIn(USDCAmount, DAI))
 
       expect(mockUseLocalV3TradeExactIn).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.SYNCING, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.SYNCING, trade: null, router: RouterVersion.UNISWAP_API })
     })
   })
 
@@ -72,7 +72,7 @@ describe('#useV3TradeExactIn', () => {
       const { result } = renderHook(() => useV3TradeExactIn(USDCAmount, DAI))
 
       expect(mockUseLocalV3TradeExactIn).toHaveBeenCalledWith(USDCAmount, DAI)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.LEGACY })
     })
 
     it('computes local v3 trade if router trade is NO_ROUTE_FOUND', () => {
@@ -82,7 +82,7 @@ describe('#useV3TradeExactIn', () => {
       const { result } = renderHook(() => useV3TradeExactIn(USDCAmount, DAI))
 
       expect(mockUseLocalV3TradeExactIn).toHaveBeenCalledWith(USDCAmount, DAI)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.LEGACY })
     })
   })
 })
@@ -95,7 +95,7 @@ describe('#useV3TradeExactOut', () => {
       const { result } = renderHook(() => useV3TradeExactOut(USDC, DAIAmount))
 
       expect(mockUseLocalV3TradeExactOut).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.LOADING, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.LOADING, trade: null, router: RouterVersion.UNISWAP_API })
     })
 
     it('does not compute local v3 trade if router trade is VALID', () => {
@@ -104,7 +104,7 @@ describe('#useV3TradeExactOut', () => {
       const { result } = renderHook(() => useV3TradeExactOut(USDC, DAIAmount))
 
       expect(mockUseLocalV3TradeExactOut).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.UNISWAP_API })
     })
 
     it('does not compute local v3 trade if router trade is SYNCING', () => {
@@ -113,7 +113,7 @@ describe('#useV3TradeExactOut', () => {
       const { result } = renderHook(() => useV3TradeExactOut(USDC, DAIAmount))
 
       expect(mockUseLocalV3TradeExactOut).toHaveBeenCalledWith(undefined, undefined)
-      expect(result.current).toEqual({ state: V3TradeState.SYNCING, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.SYNCING, trade: null, router: RouterVersion.UNISWAP_API })
     })
   })
 
@@ -125,7 +125,7 @@ describe('#useV3TradeExactOut', () => {
       const { result } = renderHook(() => useV3TradeExactOut(USDC, DAIAmount))
 
       expect(mockUseLocalV3TradeExactOut).toHaveBeenCalledWith(USDC, DAIAmount)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.LEGACY })
     })
 
     it('computes local v3 trade if router trade is NO_ROUTE_FOUND', () => {
@@ -135,7 +135,7 @@ describe('#useV3TradeExactOut', () => {
       const { result } = renderHook(() => useV3TradeExactOut(USDC, DAIAmount))
 
       expect(mockUseLocalV3TradeExactOut).toHaveBeenCalledWith(USDC, DAIAmount)
-      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null })
+      expect(result.current).toEqual({ state: V3TradeState.VALID, trade: null, router: RouterVersion.LEGACY })
     })
   })
 })

@@ -3,7 +3,7 @@ import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from 'hooks/useV3Trade'
+import { RouterVersion, useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -123,6 +123,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   v3TradeState: {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
+    router: RouterVersion
   }
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent

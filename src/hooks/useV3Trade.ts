@@ -11,6 +11,11 @@ export enum V3TradeState {
   SYNCING,
 }
 
+export enum RouterVersion {
+  LEGACY,
+  UNISWAP_API,
+}
+
 const shouldUseFallback = (state: V3TradeState) => [V3TradeState.INVALID, V3TradeState.NO_ROUTE_FOUND].includes(state)
 
 /**
@@ -22,7 +27,7 @@ const shouldUseFallback = (state: V3TradeState) => [V3TradeState.INVALID, V3Trad
 export function useV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null; router: RouterVersion } {
   // attempt to use multi-route trade
   const multiRouteTradeExactIn = useRouterTradeExactIn(amountIn, currencyOut)
 
@@ -34,7 +39,9 @@ export function useV3TradeExactIn(
     useFallback ? currencyOut : undefined
   )
 
-  return useFallback ? bestV3TradeExactIn : multiRouteTradeExactIn
+  return useFallback
+    ? { ...bestV3TradeExactIn, router: RouterVersion.LEGACY }
+    : { ...multiRouteTradeExactIn, router: RouterVersion.UNISWAP_API }
 }
 
 /**
@@ -46,7 +53,7 @@ export function useV3TradeExactIn(
 export function useV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null; router: RouterVersion } {
   // attempt to use multi-route trade
   const multiRouteTradeExactOut = useRouterTradeExactOut(currencyIn, amountOut)
 
@@ -58,5 +65,7 @@ export function useV3TradeExactOut(
     useFallback ? amountOut : undefined
   )
 
-  return useFallback ? bestV3TradeExactOut : multiRouteTradeExactOut
+  return useFallback
+    ? { ...bestV3TradeExactOut, router: RouterVersion.LEGACY }
+    : { ...multiRouteTradeExactOut, router: RouterVersion.UNISWAP_API }
 }
