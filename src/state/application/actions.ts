@@ -1,6 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import { ChainId } from 'dxswap-sdk'
 
 export type PopupContent =
   | {
@@ -9,9 +8,6 @@ export type PopupContent =
         success: boolean
         summary?: string
       }
-    }
-  | {
-      newNetworkChainId: ChainId
     }
   | {
       listUpdate: {
@@ -30,7 +26,9 @@ export enum ApplicationModal {
   CLAIM_POPUP,
   MENU,
   MOBILE,
-  NETWORK_SWITCHER
+  WALLET_SWITCHER,
+  NETWORK_SWITCHER,
+  ETHEREUM_OPTION
 }
 
 export enum MainnetGasPrice {

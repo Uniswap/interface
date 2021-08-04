@@ -11,81 +11,70 @@ import { useNativeCurrencyBalances, useTokenBalance } from '../../state/wallet/h
 
 import Settings from '../Settings'
 
-import Row, { RowFixed } from '../Row'
+import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme'
 import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
-import { isMobile } from 'react-device-detect'
 import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
+import Skeleton from 'react-loading-skeleton'
+import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
 const HeaderFrame = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 120px;
-  align-items: center;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  width: 100%;
-  top: 0;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
     width: calc(100%);
     position: relative;
   `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
 
-const HeaderControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-self: flex-end;
-
+const HeaderControls = styled.div<{ isConnected: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
-    width: 100%;
-    max-width: 960px;
-    padding: 1rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: ${isConnected => (!isConnected ? 'space-between' : 'center')};
+    flex-direction: row-reverse;
     width: 100%;
-    z-index: 99;
     height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    max-width: 960px;
+    padding: 1rem;
+    z-index: 99;
+    background-color: ${({ theme }) => theme.bg2};
   `};
 `
 
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
+    flex-direction: row-reverse;
     align-items: center;
+    justify-content: center;
   `};
 `
 
 const MoreLinksIcon = styled(HeaderElement)`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: flex;
+    justify-content: flex-start;
   `};
 `
 
@@ -98,30 +87,8 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
 const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
   `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 1rem 0 1rem 0;
-  `};
-`
-
-const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme }) => theme.dark1};
-  border: solid 2px transparent;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.purple2};
-  border-radius: 8px;
-  white-space: nowrap;
-  width: 100%;
-  cursor: pointer;
-
-  :focus {
-    border: solid 2px transparent;
-  }
 `
 
 const Title = styled.a`
@@ -142,11 +109,7 @@ const Title = styled.a`
   }
 `
 
-const activeClassName = 'ACTIVE'
-
-export const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
+export const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -160,12 +123,15 @@ export const StyledNavLink = styled(NavLink).attrs({
   font-size: 16px;
   line-height: 19.5px;
 
-  &.${activeClassName} {
+  &.active {
     font-weight: 600;
     color: ${({ theme }) => theme.white};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin: 0 8px;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -178,7 +144,7 @@ const StyledNavLinkWithBadge = styled.a`
   font-size: 16px;
   line-height: 19.5px;
   color: ${({ theme }) => transparentize(0.6, theme.text5)};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -188,9 +154,7 @@ const AbsoluteComingSoonBadgeFlex = styled(Flex)`
   top: 20px;
 `
 
-const StyledExternalLink = styled(ExternalLink).attrs({
-  activeClassName
-})<{ isActive?: boolean }>`
+const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   outline: none;
@@ -203,7 +167,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   width: fit-content;
   text-decoration: none !important;
   margin: 0 12px;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
@@ -231,6 +195,36 @@ const SWPRWrapper = styled.div`
   }
 `
 
+const HeaderSubRow = styled(RowFlat)`
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-right: 8px;
+    margin-top: 0px;
+  `};
+`
+
+const Amount = styled.p`
+  padding: 8px 12px;
+  margin: 0;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text4};
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 12px;
+  white-space: nowrap;
+
+  & + & {
+    margin-left: 7px;
+  }
+`
+
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -241,6 +235,7 @@ function Header({ history }: { history: any }) {
   const [isDark] = useDarkModeManager()
   const toggleClaimPopup = useToggleShowClaimPopup()
   const swprBalance = useTokenBalance(account || undefined, chainId ? SWPR[chainId] : undefined)
+  const isMobileByMedia = useIsMobileByMedia()
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -254,19 +249,10 @@ function Header({ history }: { history: any }) {
           <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
+          <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pools'}
-            isActive={() =>
-              history.location.pathname.includes('/pools') ||
-              history.location.pathname.includes('/add') ||
-              history.location.pathname.includes('/remove') ||
-              history.location.pathname.includes('/create')
-            }
-          >
+          <StyledNavLink id="pool-nav-link" to="/pools" activeClassName="active">
             {t('pool')}
           </StyledNavLink>
           <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
@@ -277,41 +263,38 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
+          <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
               ↗
             </Text>
           </StyledExternalLink>
-          {isMobile && <Settings />}
           <MoreLinksIcon>
             <MobileOptions history={history} />
           </MoreLinksIcon>
+          {isMobileByMedia && <Settings />}
         </HeaderLinks>
       </HeaderRow>
-      <HeaderControls>
+      <HeaderControls isConnected={!!account}>
         <HeaderElement>
           <SWPRWrapper onClick={toggleClaimPopup}>
             <SWPRAmount>{swprBalance ? swprBalance.toFixed() : '0'} SWPR</SWPRAmount>
           </SWPRWrapper>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userNativeCurrencyBalance ? (
-              <TYPE.white
-                style={{ flexShrink: 0 }}
-                ml="18px"
-                mr="12px"
-                fontWeight={700}
-                fontSize="12px"
-                lineHeight="15px"
-                letterSpacing="0.08em"
-              >
-                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
-              </TYPE.white>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
+          <Web3Status />
+          {!isMobileByMedia && <Settings />}
         </HeaderElement>
-        {!isMobile && <Settings />}
+        <HeaderSubRow>
+          <Amount>
+            {!account ? (
+              '0.000'
+            ) : userNativeCurrencyBalance ? (
+              userNativeCurrencyBalance?.toFixed(3)
+            ) : (
+              <Skeleton width="40px" />
+            )}{' '}
+            {nativeCurrency.symbol}
+          </Amount>
+        </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
   )

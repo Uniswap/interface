@@ -426,4 +426,9 @@ body {
   border: none;
   color: ${props => props.theme.text5};
 }
+
+
+.walletconnect-modal__mobile__toggle a {
+  color: rgb(64, 153, 255);
+}
 `

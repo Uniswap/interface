@@ -12,8 +12,7 @@ export const network = new CustomNetworkConnector({
   urls: {
     [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
     [ChainId.XDAI]: 'https://rpc.xdaichain.com/',
-    [ChainId.ARBITRUM_ONE]: 'https://arb1.arbitrum.io/rpc',
-    [ChainId.ARBITRUM_RINKEBY]: 'https://rinkeby.arbitrum.io/rpc'
+    [ChainId.ARBITRUM_ONE]: 'https://arb1.arbitrum.io/rpc'
   },
   defaultChainId: ChainId.MAINNET
 })

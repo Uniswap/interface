@@ -21,12 +21,12 @@ import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
+import { transparentize } from 'polished'
 import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
 
 const StyledMenuIcon = styled(Settings)`
-  height: 18px;
-  width: 18px;
-  margin: 0 8px;
+  height: 15px;
+  width: 15px;
   cursor: pointer;
 
   > * {
@@ -56,19 +56,26 @@ const EmojiWrapper = styled.div`
   font-size: 12px;
 `
 
-const StyledMenu = styled.div`
-  margin-left: 0.5rem;
+const StyledMenu = styled.button`
+  height: 32px;
+  width: 32px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  margin-left: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   border: none;
   text-align: left;
+  background: ${({ theme }) => transparentize(1, theme.bg1)};
+  cursor: pointer;
+  outline: none;
 `
 
 const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
   position: absolute;
-  top: ${props => (props.disclaimerBar ? '112px' : '80px')};
+  top: ${props => (props.disclaimerBar ? '112px' : '95px')};
   right: 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
@@ -137,7 +144,7 @@ export default function SettingsTab() {
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu>
+    <>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="25px">
@@ -174,84 +181,86 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
-      {expertMode && (
-        <EmojiWrapper onClick={toggle}>
-          <span role="img" aria-label="wizard-icon">
-            😎
-          </span>
-        </EmojiWrapper>
-      )}
-      <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
-        <MenuModalContentWrapper>
-          <AutoColumn gap="md" style={{ padding: '8px' }}>
-            <RowBetween>
-              <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-                Transaction settings
-              </Text>
-              <CloseIcon onClick={toggle} />
-            </RowBetween>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              rawPreferredGasPrice={userPreferredGasPrice}
-              setRawPreferredGasPrice={setUserPreferredGasPrice}
-              deadline={ttl}
-              setDeadline={setTtl}
-              multihop={multihop}
-              onMultihopChange={toggleMultihop}
-            />
-            <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-              Interface settings
-            </Text>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
-                  Toggle expert mode
-                </TYPE.body>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-              </RowFixed>
-              <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
+      <StyledMenu onClick={toggle} id="open-settings-dialog-button">
+        <StyledMenuIcon />
+        {expertMode && (
+          <EmojiWrapper onClick={toggle}>
+            <span role="img" aria-label="wizard-icon">
+              😎
+            </span>
+          </EmojiWrapper>
+        )}
+        <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
+          <MenuModalContentWrapper>
+            <AutoColumn gap="md" style={{ padding: '8px' }}>
+              <RowBetween>
+                <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+                  Transaction settings
+                </Text>
+                <CloseIcon onClick={toggle} />
+              </RowBetween>
+              <TransactionSettings
+                rawSlippage={userSlippageTolerance}
+                setRawSlippage={setUserslippageTolerance}
+                rawPreferredGasPrice={userPreferredGasPrice}
+                setRawPreferredGasPrice={setUserPreferredGasPrice}
+                deadline={ttl}
+                setDeadline={setTtl}
+                multihop={multihop}
+                onMultihopChange={toggleMultihop}
               />
-            </RowBetween>
-            <Divider />
-            <RowBetween width="100%" marginBottom="12px">
-              <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                <Info size={14} />
-                About
-              </MenuItem>
-              <MenuItem href={CODE_LINK}>
-                <Code size={14} />
-                Code
-              </MenuItem>
-              <MenuItem href="https://discord.com/invite/4QXEJQkvHH">
-                <MessageCircle size={14} />
-                Discord
-              </MenuItem>
-            </RowBetween>
-            <RowBetween alignItems="center" marginBottom="8px">
-              <SwaprVersionLogo />
-              <Divider horizontal style={{ height: 48 }} />
-              <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
-                A DXDAO PRODUCT
-              </TYPE.body>
-            </RowBetween>
-          </AutoColumn>
-        </MenuModalContentWrapper>
-      </MenuModal>
-    </StyledMenu>
+              <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+                Interface settings
+              </Text>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
+                    Toggle expert mode
+                  </TYPE.body>
+                  <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                </RowFixed>
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={expertMode}
+                  toggle={
+                    expertMode
+                      ? () => {
+                          toggleExpertMode()
+                          setShowConfirmation(false)
+                        }
+                      : () => {
+                          toggle()
+                          setShowConfirmation(true)
+                        }
+                  }
+                />
+              </RowBetween>
+              <Divider />
+              <RowBetween width="100%" marginBottom="12px">
+                <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                  <Info size={14} />
+                  About
+                </MenuItem>
+                <MenuItem href={CODE_LINK}>
+                  <Code size={14} />
+                  Code
+                </MenuItem>
+                <MenuItem href="https://discord.com/invite/4QXEJQkvHH">
+                  <MessageCircle size={14} />
+                  Discord
+                </MenuItem>
+              </RowBetween>
+              <RowBetween alignItems="center" marginBottom="8px">
+                <SwaprVersionLogo />
+                <Divider horizontal style={{ height: 48 }} />
+                <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
+                  A DXDAO PRODUCT
+                </TYPE.body>
+              </RowBetween>
+            </AutoColumn>
+          </MenuModalContentWrapper>
+        </MenuModal>
+      </StyledMenu>
+    </>
   )
 }

@@ -31,11 +31,11 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/token-lists": "^1.0.0-beta.24",
-    "@web3-react/authereum-connector": "^6.1.9",
+    "@web3-react/authereum-connector": "^6.2.0",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",
-    "@web3-react/walletconnect-connector": "^6.2.0",
+    "@web3-react/walletconnect-connector": "^6.2.4",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
@@ -91,11 +91,7 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "use-count-up": "^2.2.5",
     "wcag-contrast": "^3.0.0"
-  },
-  "resolutions": {
-    "@walletconnect/web3-provider": "1.4.2-rc.2"
   },
   "scripts": {
     "start": "react-scripts start",
