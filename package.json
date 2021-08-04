@@ -124,7 +124,7 @@
     "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "1.5.1"
+    "@walletconnect/web3-provider": "1.5.2"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
