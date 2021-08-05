@@ -32,7 +32,6 @@ const HeaderFrame = styled.div`
   align-items: flex-start;
   width: 100%;
   padding: 1rem;
-  z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     width: calc(100%);
@@ -248,7 +247,7 @@ function Header({ history }: { history: any }) {
             </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
-            <MobileOptions history={history} />
+            <MobileOptions />
           </MoreLinksIcon>
           {isMobileByMedia && <Settings />}
         </HeaderLinks>

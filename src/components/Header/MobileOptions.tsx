@@ -15,19 +15,19 @@ const StyledPopover = styled(Popover)`
   border: none;
   background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
-`;
+`
 
 const List = styled.ul`
   margin: 0;
   padding: 0;
   list-style: none;
-`;
+`
 
 const ListItem = styled.li`
   & + & {
     margin-top: 28px;
   }
-`;
+`
 
 const StyledNavLink = styled(NavLink)`
   display: block;
@@ -98,10 +98,9 @@ const MenuButton = styled.button`
       fill: ${({ theme }) => theme.text3};
     }
   }
-`;
+`
 
-
-export default function MobileOptions({ history }: { history: any }) {
+export default function MobileOptions() {
   const popoverRef = useRef(null)
   const open = useModalOpen(ApplicationModal.MOBILE)
   const toggle = useToggleMobileMenu()
@@ -113,21 +112,21 @@ export default function MobileOptions({ history }: { history: any }) {
     event.preventDefault()
   }, [])
 
-  const location = useLocation();
+  const location = useLocation()
   const getActiveLInk = () => {
     switch (location.pathname) {
       case '/swap':
-        return t('swap');
+        return t('swap')
       case '/pools':
       case '/add':
       case '/remove':
       case '/create':
-        return t('pool');
+        return t('pool')
       default:
-        return '';
+        return ''
     }
   }
-  
+
   return (
     <div ref={popoverRef}>
       <StyledPopover
@@ -137,22 +136,12 @@ export default function MobileOptions({ history }: { history: any }) {
           <>
             <List>
               <ListItem>
-                <StyledNavLink
-                  id="swap-nav-link"
-                  to="/swap"
-                  onClick={closeModals}
-                  activeClassName="active"
-                >
+                <StyledNavLink id="swap-nav-link" to="/swap" onClick={closeModals} activeClassName="active">
                   {t('swap')}
                 </StyledNavLink>
               </ListItem>
               <ListItem>
-                <StyledNavLink
-                  id="pool-nav-link"
-                  to="/pools"
-                  onClick={closeModals}
-                  activeClassName="active"
-                >
+                <StyledNavLink id="pool-nav-link" to="/pools" onClick={closeModals} activeClassName="active">
                   {t('pool')}
                 </StyledNavLink>
               </ListItem>
