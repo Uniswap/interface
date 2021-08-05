@@ -6,7 +6,7 @@ import { TYPE, CloseIcon } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
 import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
-import { useShowClaimPopup } from '../../state/application/hooks'
+import { useCloseModals, useShowClaimPopup, useToggleModal } from '../../state/application/hooks'
 import { transparentize } from 'polished'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { ChainId, TokenAmount } from 'dxswap-sdk'
@@ -16,6 +16,7 @@ import { ExternalLink } from 'react-feather'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { switchOrAddNetwork } from '../../utils'
 import { NETWORK_DETAIL } from '../../constants'
+import { ApplicationModal } from '../../state/application/actions'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -75,6 +76,8 @@ export default function ClaimModal({
   const claimCallback = useClaimCallback(account || undefined)
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
   const { available: availableClaim } = useIsClaimAvailable(account || undefined)
+  const closeModals = useCloseModals()
+  const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
   useEffect(() => {
     setCorrectNetwork(chainId === ChainId.ARBITRUM_RINKEBY)
@@ -113,6 +116,21 @@ export default function ClaimModal({
       switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_RINKEBY], account || undefined)
   }, [account, connector])
 
+  const onConnectWallet = useCallback(() => {
+    closeModals()
+    toggleWalletConnectionModal()
+  }, [closeModals, toggleWalletConnectionModal])
+
+  const onClick = useCallback(() => {
+    if (!account) {
+      onConnectWallet()
+    } else if (!correctNetwork && connector instanceof InjectedConnector) {
+      onSwitchToArbitrum()
+    } else if (availableClaim) {
+      onClaim()
+    }
+  }, [account, availableClaim, connector, correctNetwork, onClaim, onConnectWallet, onSwitchToArbitrum])
+
   const content = () => {
     return error ? (
       <TransactionErrorContent onDismiss={wrappedOnDismiss} message="The claim wasn't successful" />
@@ -133,9 +151,11 @@ export default function ClaimModal({
           </TYPE.white>
         </UpperAutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          <NetworkWarning>
-            Receive your SWPR airdrop on Arbitrum network. Please switch network to claim.
-          </NetworkWarning>
+          {availableClaim && (
+            <NetworkWarning>
+              Receive your SWPR airdrop on Arbitrum network. Please switch network to claim.
+            </NetworkWarning>
+          )}
           <BottomAutoColumn gap="8px">
             <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
               UNCLAIMED SWPR
@@ -144,19 +164,13 @@ export default function ClaimModal({
               {unclaimedBalance?.toFixed(3) || '0'} SWPR
             </TYPE.white>
             <StyledClaimButton
-              disabled={!availableClaim}
+              disabled={!!account && !availableClaim}
               padding="16px 16px"
               width="100%"
               mt="1rem"
-              onClick={
-                !correctNetwork && connector instanceof InjectedConnector
-                  ? onSwitchToArbitrum
-                  : availableClaim
-                  ? onClaim
-                  : undefined
-              }
+              onClick={onClick}
             >
-              {correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum Rinkeby'}
+              {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum Rinkeby'}
             </StyledClaimButton>
           </BottomAutoColumn>
           <AutoRow gap="3px" justifyContent="center" width="100%">
