@@ -19,6 +19,7 @@ import { NETWORK_DETAIL } from '../../constants'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 const UpperAutoColumn = styled(AutoColumn)`
