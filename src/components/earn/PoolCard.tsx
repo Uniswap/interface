@@ -108,6 +108,20 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
     console.error('Weekly apy overflow', e)
   }
 
+  const showNextPoolRate =
+    (stakingInfo.active && stakingInfo.nextPeriodRewards.equalTo('0')) ||
+    (stakingInfo.active &&
+      // If the next rate is >=1_000 change from previous rate, then show it
+      Math.abs(
+        parseFloat(
+          stakingInfo.totalRewardRate
+            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+            .subtract(stakingInfo.nextPeriodRewards)
+            .toFixed(0) ?? 0
+        )
+      ) >= 1_000) ||
+    (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0'))
+
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <CardNoise />
@@ -191,20 +205,19 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
           </RowBetween>
         )}
 
-        {(stakingInfo.active && stakingInfo.nextPeriodRewards.equalTo('0')) ||
-          (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0') && (
-            <RowBetween>
-              <RowFixed>
-                <TYPE.white>Next pool rate</TYPE.white>
-                <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
-              </RowFixed>
-              <TYPE.white>
-                {`${stakingInfo.nextPeriodRewards.toFixed(0, {
-                  groupSeparator: ',',
-                })} ${stakingInfo.nextPeriodRewards.token.symbol} / week`}
-              </TYPE.white>
-            </RowBetween>
-          ))}
+        {showNextPoolRate && (
+          <RowBetween>
+            <RowFixed>
+              <TYPE.white>Next pool rate</TYPE.white>
+              <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
+            </RowFixed>
+            <TYPE.white>
+              {`${stakingInfo.nextPeriodRewards.toFixed(0, {
+                groupSeparator: ',',
+              })} ${stakingInfo.nextPeriodRewards.token.symbol} / week`}
+            </TYPE.white>
+          </RowBetween>
+        )}
       </StatContainer>
 
       {isStaking && (
