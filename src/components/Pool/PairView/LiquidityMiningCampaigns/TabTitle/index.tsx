@@ -56,9 +56,16 @@ export default function TabTitle({ itemsAmount, children, loadingAmount, badgeTh
       <Flex alignItems="center">
         <Box>{children}</Box>
         <Box ml="8px">
-          {loadingAmount
-            ? <Skeleton circle width="16px" height="16px" />
-            : <NumberBadge badgeTheme={badgeTheme}><span>{itemsAmount}</span></NumberBadge>}
+          {loadingAmount ? (
+            <Skeleton circle width="16px" height="16px" />
+          ) : (
+            <NumberBadge
+              style={itemsAmount === 0 ? {opacity: 0.5} : {}}
+              badgeTheme={badgeTheme}
+            >
+              <span>{itemsAmount}</span>
+            </NumberBadge>
+          )}
         </Box>
       </Flex>
     </>
