@@ -77,12 +77,18 @@ const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
   position: absolute;
   top: ${props => (props.disclaimerBar ? '112px' : '95px')};
   right: 20px;
+  max-width: 322px;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
     top: initial;
     right: initial;
     justify-content: center;
     align-items: center;
+  `};
+  
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    max-width: 95%;
   `};
 `
 
@@ -192,34 +198,18 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenu onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
-        {expertMode && (
-          <EmojiWrapper onClick={toggle}>
-            <span role="img" aria-label="wizard-icon">
-              😎
-            </span>
-          </EmojiWrapper>
-        )}
-        <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
-          <MenuModalContentWrapper>
-            <AutoColumn gap="md" style={{ padding: '8px' }}>
-              <RowBetween>
-                <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-                  Transaction settings
-                </Text>
-                <CloseIcon onClick={toggle} />
-              </RowBetween>
-              <TransactionSettings
-                rawSlippage={userSlippageTolerance}
-                setRawSlippage={setUserslippageTolerance}
-                rawPreferredGasPrice={userPreferredGasPrice}
-                setRawPreferredGasPrice={setUserPreferredGasPrice}
-                deadline={ttl}
-                setDeadline={setTtl}
-                multihop={multihop}
-                onMultihopChange={toggleMultihop}
-              />
+      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
+      {expertMode && (
+        <EmojiWrapper onClick={toggle}>
+          <span role="img" aria-label="wizard-icon">
+            😎
+          </span>
+        </EmojiWrapper>
+      )}
+      <MenuModal isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
+        <MenuModalContentWrapper>
+          <AutoColumn gap="md" style={{ padding: '8px' }}>
+            <RowBetween>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
                 Interface settings
               </Text>
