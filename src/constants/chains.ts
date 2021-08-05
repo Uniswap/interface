@@ -1,5 +1,6 @@
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
+import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 
 export enum SupportedChainId {
   MAINNET = 1,
@@ -51,6 +52,7 @@ export interface L1ChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly label: string
+  readonly logoUrl?: string
   readonly rpcUrls?: string[]
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
@@ -93,7 +95,8 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Mainnet',
+    label: 'Ethereum',
+    logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
   },
   [SupportedChainId.RINKEBY]: {

@@ -33,6 +33,8 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
       // metamask's behavior when switching to the current network is just to return null (a no-op)
       await addNetwork({ library, chainId, info })
       await switchToNetwork({ library, chainId })
+    } else {
+      throw error
     }
   }
 }
