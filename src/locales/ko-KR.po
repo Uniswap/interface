@@ -171,7 +171,7 @@ msgstr "승인"
 
 #: src/pages/Swap/index.tsx
 msgid "Approve {0}"
-msgstr "{0} 승인"
+msgstr "승인{0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -336,7 +336,7 @@ msgstr "주소 복사"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new pool"
-msgstr "+ 새 풀 만들기"
+msgstr "새 풀 만들기"
 
 #: src/pages/Pools/index.tsx
 msgid "Create a new pool or select another pair of tokens to view the available pools."
@@ -629,22 +629,13 @@ msgstr "잘못된 쌍입니다."
 msgid "Inventory ratio:"
 msgstr "재고 비율:"
 
-#: 
-#~ msgid "Kyber DMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-#~ msgstr "카이버 DMM 거래 수수료는 <0>동적으로 조정됩니다.</0> 온체인 시장 상황에 따라서 변동성이 큰 시장(평소보다 높은 거래량)에서 수수료는 자동으로 최적의 수준으로 증가하여 비영구적 손실의 영향을 줄입니다. 변동성이 낮은 기간에는 더 많은 거래를 장려하기 위해 수수료가 감소합니다."
-
-#: 
-#, fuzzy
-#~ msgid "Kyber DMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-#~ msgstr "카이버 DMM의 프로그래밍 가능한 가격 곡선을 통해 유동성 풀 생성자는 적절한 가격 곡선을 설정하고 사전에 증폭된 풀을 생성하여"
-
 #: src/pages/Static/About.tsx
 msgid "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-msgstr ""
+msgstr "카이버DMM 거래 수수료는 <0>동적으로 조정됩니다.</0> 온체인 시장 상황에 따라서 변동성이 큰 시장(평소보다 높은 거래량)에서 수수료는 자동으로 최적의 수준으로 증가하여 비영구적 손실의 영향을 줄입니다. 변동성이 낮은 기간에는 더 많은 거래를 장려하기 위해 수수료가 감소합니다."
 
 #: src/pages/Static/About.tsx
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-msgstr ""
+msgstr "카이버DMM의 프로그래밍 가능한 가격 곡선을 통해 유동성 풀 생성자는 적절한 가격 곡선을 설정하고 사전에 증폭된 풀을 생성하여"
 
 #: src/pages/Farms/vesting.tsx
 msgid "LOCKED"
@@ -887,7 +878,7 @@ msgstr "풀 주소"
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "풀 관리하기!"
+msgstr "풀 발견!"
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -917,7 +908,7 @@ msgstr "풀링된 {0}:"
 
 #: src/components/Header/index.tsx
 msgid "Pools"
-msgstr "AMP = 증폭 계수. 증폭된 풀은 높은 자본 효율성을 제공합니다. 높은 AMP는 높은 자본 효율성을 제공하기 위해서 정해진 가격 범위 안에서 유동성을 증폭시킵니다"
+msgstr "풀"
 
 #: src/components/FarmsList/index.tsx
 msgid "Pools | AMP"
@@ -1281,7 +1272,7 @@ msgstr "목록 업데이트"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>팁:</0> 이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 토큰 쌍을 찾을 수 잇습니다."
+msgstr "이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 토큰 쌍을 찾을 수 잇습니다."
 
 #: src/components/PositionCard/V1.tsx
 msgid "V1"
@@ -1334,7 +1325,7 @@ msgstr "유동성 마이닝"
 
 #: src/components/NetworkModal/index.tsx
 msgid "You are currently browsing DMM on the {0} network"
-msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다."
+msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
@@ -1396,7 +1387,7 @@ msgstr "제공자 및"
 
 #: src/pages/Static/About.tsx
 msgid "for users compared to AMMs."
-msgstr "AMM에 비해서는."
+msgstr "다른 AMM에 비해서는"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"

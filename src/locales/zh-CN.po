@@ -629,21 +629,13 @@ msgstr "无效的交易对。"
 msgid "Inventory ratio:"
 msgstr "库存比例:"
 
-#: 
-#~ msgid "Kyber DMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-#~ msgstr "Kyber DMM 交易费用根据链上市场情况<0>动态调整</0>。 在波动的市场中（高于平常的交易量），费用会自动增加到最佳水平，从而减少无偿损失的影响。 在低波动时期，费用减少以鼓励更多交易。"
-
-#: 
-#~ msgid "Kyber DMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-#~ msgstr "Kyber DMM 的可编程定价曲线使流动性池创建者能够设置合适的定价曲线并提前创建放大池，实现"
-
 #: src/pages/Static/About.tsx
 msgid "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-msgstr ""
+msgstr "KyberDMM 交易费用根据链上市场情况<0>动态调整</0>。 在波动的市场中（高于平常的交易量），费用会自动增加到最佳水平，从而减少无偿损失的影响。 在低波动时期，费用减少以鼓励更多交易。"
 
 #: src/pages/Static/About.tsx
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-msgstr ""
+msgstr "KyberDMM 的可编程定价曲线使流动性池创建者能够设置合适的定价曲线并提前创建放大池，实现"
 
 #: src/pages/Farms/vesting.tsx
 msgid "LOCKED"
