@@ -9,18 +9,22 @@ interface NumberBadgeProps {
 }
 
 const NumberBadge = styled.div<NumberBadgeProps>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
   width: 16px;
   height: 16px;
-  font-weight: 500;
-  font-size: 11px;
-  line-height: 14px;
   border: 1px solid ${props => props.theme.bg3};
   border-radius: 50%;
   background-color: ${props => transparentize(0.3, props.theme.bg3)};
 
+  & > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 500;
+    font-size: 11px;
+  }
+  
   ${({badgeTheme: theme}) => theme === 'green' && css`
     background: rgba(14, 159, 110, 0.08);
     border: 1px solid rgba(14, 159, 110, 0.65);
@@ -52,7 +56,9 @@ export default function TabTitle({ itemsAmount, children, loadingAmount, badgeTh
       <Flex alignItems="center">
         <Box>{children}</Box>
         <Box ml="8px">
-          {loadingAmount ? <Skeleton circle width="16px" height="16px" /> : <NumberBadge badgeTheme={badgeTheme}>{itemsAmount}</NumberBadge>}
+          {loadingAmount
+            ? <Skeleton circle width="16px" height="16px" />
+            : <NumberBadge badgeTheme={badgeTheme}><span>{itemsAmount}</span></NumberBadge>}
         </Box>
       </Flex>
     </>
