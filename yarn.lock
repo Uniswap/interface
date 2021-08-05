@@ -4328,10 +4328,10 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/sdk-core@^3.0.0-alpha.3":
-  version "3.0.0-alpha.3"
-  resolved "https://registry.npmjs.org/@uniswap/sdk-core/-/sdk-core-3.0.0-alpha.3.tgz"
-  integrity sha512-SS6fFbFZT2s/oq1dCdbqLGppVszfL1dkP8uQOIgXm9qecH9Vt70zTwQU73bLP2VskFZcpkN5inTAwSZiZSs5wA==
+"@uniswap/sdk-core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.1.tgz#d08dd68257983af64b9a5f4d6b9cf26124b4138f"
+  integrity sha512-WbeDkhZ9myVR0VnHOdTrb8nHKKkqTFa5uE9RvUbG3eyDt2NWWDwhhqGHwAWJEHG405l30Fa1u3PogHDFsIOQlA==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -4402,14 +4402,14 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.2.1.tgz#2da1dab8427aa5e79b266536f9a2f8854b52c3ae"
-  integrity sha512-AqDvYwSguuBwOvZyY2gdV2e15Cfu1/cdxGcjdClZGs4vmYZH/zMCfO99G+efGa+O6K4TtEWJYtgBc77XBQ5lzA==
+"@uniswap/v3-sdk@^3.3.0":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.3.2.tgz#78ce18c846739f8d16ae1296f6a6b2ef7c8e26ad"
+  integrity sha512-oADWpKPkmtgnrBr8xUmLURZnH1wO2HFPoQw/K2gI2ZLjyR1xkAbZT6X+hjLaXCdOI+PN5WMZo3/OiPUJC2X1bA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^3.0.0-alpha.3"
+    "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-periphery" "1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
