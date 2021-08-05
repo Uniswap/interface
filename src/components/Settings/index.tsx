@@ -23,6 +23,7 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
 import { transparentize } from 'polished'
 import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
+import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
 const StyledMenuIcon = styled(Settings)`
   height: 15px;
@@ -104,6 +105,7 @@ const MenuItem = styled(ExternalLink)`
   width: 50%;
   color: ${({ theme }) => theme.text2};
   display: flex;
+  justify-content: center;
   align-items: center;
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -123,7 +125,6 @@ const CloseTextButton = styled(LinkStyledButton)`
 
 const Divider = styled.div<{ horizontal?: boolean }>`
   border: 0.5px solid ${props => props.theme.bg2};
-  margin: ${props => (props.horizontal ? '0 10px' : '10px 0')};
   height: ${props => (props.horizontal ? '100%' : 'auto')};
 `
 
@@ -138,6 +139,7 @@ export default function SettingsTab() {
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
   const showDisclaimerBar = useDisclaimerBar()
+  const isMobileByMedia = useIsMobileByMedia()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -190,7 +192,12 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         )}
-        <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
+        <MenuModal
+          maxWidth={isMobileByMedia ? undefined : 322}
+          isOpen={open}
+          onDismiss={toggle}
+          disclaimerBar={showDisclaimerBar}
+        >
           <MenuModalContentWrapper>
             <AutoColumn gap="md" style={{ padding: '8px' }}>
               <RowBetween>
@@ -250,13 +257,13 @@ export default function SettingsTab() {
                   Discord
                 </MenuItem>
               </RowBetween>
-              <RowBetween alignItems="center" marginBottom="8px">
+              <Row alignItems="center" justifyContent="space-around" marginBottom="8px">
                 <SwaprVersionLogo />
                 <Divider horizontal style={{ height: 48 }} />
                 <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
                   A DXDAO PRODUCT
                 </TYPE.body>
-              </RowBetween>
+              </Row>
             </AutoColumn>
           </MenuModalContentWrapper>
         </MenuModal>
