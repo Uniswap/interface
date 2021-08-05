@@ -17,7 +17,6 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserRoutingAPIEnabled,
-  updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -35,8 +34,6 @@ export interface UserState {
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
-
-  userSingleHopOnly: boolean // only allow swaps on direct pairs
 
   userRoutingAPIEnabled: boolean // whether the user has enabled the routing API
 
@@ -77,7 +74,6 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userLocale: null,
-  userSingleHopOnly: false,
   userRoutingAPIEnabled: true,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
@@ -150,9 +146,6 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
-    })
-    .addCase(updateUserSingleHopOnly, (state, action) => {
-      state.userSingleHopOnly = action.payload.userSingleHopOnly
     })
     .addCase(updateUserRoutingAPIEnabled, (state, action) => {
       state.userRoutingAPIEnabled = action.payload.userRoutingAPIEnabled

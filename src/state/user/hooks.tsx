@@ -26,7 +26,6 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserRoutingAPIEnabled,
-  updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -104,21 +103,6 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
-}
-
-export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
-  const dispatch = useAppDispatch()
-
-  const singleHopOnly = useAppSelector((state) => state.user.userSingleHopOnly)
-
-  const setSingleHopOnly = useCallback(
-    (newSingleHopOnly: boolean) => {
-      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
-    },
-    [dispatch]
-  )
-
-  return [singleHopOnly, setSingleHopOnly]
 }
 
 export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) => void] {
