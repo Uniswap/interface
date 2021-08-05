@@ -6,14 +6,13 @@ import { GetQuoteResult } from 'state/routing/slice'
 export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  quoteResult: Pick<GetQuoteResult, 'routeEdges' | 'routeNodes'> | undefined
+  quoteResult: Pick<GetQuoteResult, 'routeEdges' | 'routeNodes' | 'quote'> | undefined
 ): {
   route: Route<Currency, Currency>
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
 }[] {
-  // lookup table for nodes
-  const tokensInRoute = useMemo(
+  const tokensInRoute: Record<string, Token> | undefined = useMemo(
     () =>
       quoteResult?.routeNodes?.reduce<Record<string, Token>>((map, node) => {
         map[node.id] = new Token(node.chainId, node.id, parseInt(node.decimals), node.symbol)
@@ -22,14 +21,15 @@ export function useRoutes(
     [quoteResult]
   )
 
-  // adjacency lists representing all outgoing edges from a given Token
-  const graph = useMemo(
+  // adjacency lists representing all edges (Pools) from a given Token
+  const graph: Map<Token, Pool[]> | undefined = useMemo(
     () =>
       quoteResult && tokensInRoute
-        ? quoteResult.routeEdges.reduce<Record<string, string[]>>((adjacencyList, { inId, outId }) => {
-            adjacencyList[inId] = (adjacencyList[inId] || []).concat(outId)
+        ? quoteResult.routeEdges.reduce<Map<Token, Pool[]>>((adjacencyList, edge) => {
+            const key = tokensInRoute[edge.inId]
+            adjacencyList.set(key, (adjacencyList.get(key) || []).concat(parsePool(edge, tokensInRoute)))
             return adjacencyList
-          }, {})
+          }, new Map<Token, Pool[]>())
         : undefined,
     [quoteResult, tokensInRoute]
   )
@@ -40,26 +40,47 @@ export function useRoutes(
     }
 
     try {
-      const allRoutes: string[][] = []
+      const allPoolPaths: Pool[][] = []
       buildRoutes({
         graph,
-        src: currencyIn.wrapped.address,
-        dest: currencyOut.wrapped.address,
+        tokenMap: tokensInRoute,
+        src: currencyIn.wrapped,
+        dest: currencyOut.wrapped,
         discovered: {},
         path: [],
-        acc: allRoutes,
+        acc: allPoolPaths,
       })
 
-      // TODO(judo): validate sum of outputs is equal to quote
-      return allRoutes.map((route) => {
-        const [pool, rawAmountIn, rawAmountOut] = parseRouteToPool(route, tokensInRoute, quoteResult.routeEdges)
+      return validate(
+        allPoolPaths.map((pools) => {
+          const { token0: inToken0, token1: inToken1, fee: inFee } = pools[0]
+          const { token0: outToken0, token1: outToken1, fee: outFee } = pools[pools.length - 1]
 
-        return {
-          route: new Route(pool, currencyIn, currencyOut),
-          inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
-          outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
-        }
-      })
+          const rawAmountIn = quoteResult.routeEdges.find(
+            ({ inId, outId, fee: edgeFee }) =>
+              (inId === inToken0.address || inId === inToken1.address) &&
+              (outId === inToken0.address || outId === inToken1.address) &&
+              inFee === (parseInt(edgeFee) as FeeAmount)
+          )?.amountIn
+
+          const rawAmountOut = quoteResult.routeEdges.find(
+            ({ inId, outId, fee: edgeFee }) =>
+              (inId === outToken0.address || inId === outToken1.address) &&
+              (outId === outToken0.address || outId === outToken1.address) &&
+              outFee === (parseInt(edgeFee) as FeeAmount)
+          )?.amountOut
+
+          if (!rawAmountIn || !rawAmountOut) throw new Error('Failed to find pool in edges.')
+
+          return {
+            route: new Route(pools, currencyIn, currencyOut),
+            inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+            outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
+          }
+        }),
+        currencyOut,
+        quoteResult.quote
+      )
     } catch (err) {
       console.debug(err)
       return []
@@ -70,81 +91,85 @@ export function useRoutes(
 // DFS
 function buildRoutes({
   graph,
+  tokenMap,
   src,
   dest,
   discovered,
   path,
   acc,
 }: {
-  graph: Record<string, string[]>
-  src: string
-  dest: string
+  graph: Map<Token, Pool[]>
+  tokenMap: Record<string, Token>
+  src: Token
+  dest: Token
 
   // modified in-place
   discovered: Record<string, boolean>
-  path: string[]
-  acc: string[][]
+  path: Pool[]
+  acc: Pool[][]
 }) {
-  // mark current as discovered
-  discovered[src] = true
+  const { address: inId } = src
 
-  // include current in path
-  path.push(src)
+  // mark current as discovered
+  discovered[inId] = true
 
   // if destination was found
-  if (src === dest) {
+  if (inId === dest.address) {
     acc.push(path.slice())
   }
 
-  for (const child of graph[src] ?? []) {
-    if (!discovered[child]) {
-      buildRoutes({ graph, src: child, dest, discovered, path, acc })
+  for (const pool of graph.get(tokenMap[inId]) ?? []) {
+    const { token0, token1 } = pool
+    const child = token0.address === inId ? token1 : token0
+
+    if (!discovered[child.address]) {
+      // include current in path
+      path.push(pool)
+
+      buildRoutes({ graph, tokenMap, src: child, dest, discovered, path, acc })
+
+      // backtrack
+      path.pop()
     }
   }
-
-  // backtrack
-  path.pop()
-  discovered[src] = false
+  discovered[inId] = false
 }
 
-// transforms an array of Token addresses into an array of Pools
-function parseRouteToPool(
-  tokens: string[],
-  tokensInRoute: Record<string, Token>,
-  edges: GetQuoteResult['routeEdges']
-): [Pool[], string, string] {
-  const pools = []
-  let rawAmountIn: string | undefined = undefined
-  let rawAmountOut: string | undefined = undefined
+const parsePool = (
+  { inId, outId, fee, sqrtRatioX96, liquidity, tickCurrent }: GetQuoteResult['routeEdges'][0],
+  tokensInRoute: Record<string, Token>
+): Pool =>
+  new Pool(
+    tokensInRoute[inId],
+    tokensInRoute[outId],
+    parseInt(fee) as FeeAmount,
+    sqrtRatioX96,
+    liquidity,
+    parseInt(tickCurrent)
+  )
 
-  for (let i = 1; i < tokens.length; i++) {
-    const [inId, outId] = [tokens[i - 1], tokens[i]]
-    const edge = edges.find(({ inId: edgeInId, outId: edgeOutId }) => inId === edgeInId && outId === edgeOutId)
+/**
+ * Validates the routes
+ * @returns allRoutes if all routes are valid
+ * @throws if any route is invalid
+ */
+function validate(
+  allRoutes: {
+    route: Route<Currency, Currency>
+    inputAmount: CurrencyAmount<Currency>
+    outputAmount: CurrencyAmount<Currency>
+  }[],
+  currencyOut: Currency,
+  expectedAmount: string
+) {
+  const derivedOutputAmount = allRoutes.reduce(
+    (acc, cur) => acc.add(cur.outputAmount),
+    CurrencyAmount.fromRawAmount(currencyOut, '0')
+  )
 
-    if (!edge) {
-      throw new Error(`Edge ${inId}->${outId} not found`)
-    }
-
-    const { amountIn, amountOut, fee, sqrtRatioX96, liquidity, tickCurrent } = edge
-
-    if (i === 1) rawAmountIn = amountIn
-    if (i === tokens.length - 1) rawAmountOut = amountOut
-
-    pools.push(
-      new Pool(
-        tokensInRoute[inId],
-        tokensInRoute[outId],
-        parseInt(fee) as FeeAmount,
-        sqrtRatioX96,
-        liquidity,
-        parseInt(tickCurrent)
-      )
-    )
+  if (derivedOutputAmount.toSignificant().toString() !== expectedAmount) {
+    throw new Error('Expected sum of outputs to be quote result output')
   }
 
-  if (!rawAmountIn || !rawAmountOut) {
-    throw new Error('Expected rawAmountIn & rawAmountOut to be defined')
-  }
-
-  return [pools, rawAmountIn, rawAmountOut]
+  return allRoutes
 }

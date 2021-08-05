@@ -1,9 +1,6 @@
 import { useRoutes } from './useRoutes'
 import { renderHook } from '@testing-library/react-hooks'
 import { Token } from '@uniswap/sdk-core'
-import { useGetQuoteQuery } from './slice'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { useUserRoutingAPIEnabled } from 'state/user/hooks'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
 const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')
@@ -18,6 +15,7 @@ describe('#useRoute', () => {
       useRoutes(USDC, DAI, {
         routeEdges: [],
         routeNodes: [],
+        quote: '0',
       })
     )
 
@@ -45,7 +43,7 @@ describe('#useRoute', () => {
           {
             ...DAI,
             id: DAI.wrapped.address,
-            decimals: DAI.decimals.toString(), // todo wrapper around GetQuoteResult to simplify types?
+            decimals: DAI.decimals.toString(),
           },
           {
             ...USDC,
@@ -53,6 +51,7 @@ describe('#useRoute', () => {
             decimals: USDC.decimals.toString(),
           },
         ],
+        quote: '5',
       })
     )
 
@@ -123,6 +122,7 @@ describe('#useRoute', () => {
             decimals: MKR.decimals.toString(),
           },
         ],
+        quote: '206',
       })
     )
 
@@ -142,15 +142,27 @@ describe('#useRoute', () => {
     expect(result.current && result.current[1].outputAmount.toSignificant()).toBe('200')
   })
 
-  xit('handles invalid fee amount', () => {
+  it('handles a single route trade with same token pair, different fee tiers', () => {
     const { result } = renderHook(() =>
       useRoutes(DAI, USDC, {
         routeEdges: [
           {
-            amountIn: '99',
-            amountOut: '101',
-            fee: 'NOT_A_FEE_AMOUNT',
+            amountIn: amount`1`,
+            amountOut: amount`5`,
+            fee: '500',
             id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+            inId: DAI.wrapped.address,
+            outId: USDC.wrapped.address,
+            type: 'EXACT_IN',
+            sqrtRatioX96: '2437312313659959819381354528',
+            liquidity: '10272714736694327408',
+            tickCurrent: '-69633',
+          },
+          {
+            amountIn: amount`10`,
+            amountOut: amount`50`,
+            fee: '3000',
+            id: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             inId: DAI.wrapped.address,
             outId: USDC.wrapped.address,
             type: 'EXACT_IN',
@@ -171,9 +183,16 @@ describe('#useRoute', () => {
             decimals: USDC.decimals.toString(),
           },
         ],
+        quote: '55',
       })
     )
 
-    expect(result.current).toBeUndefined()
+    expect(result.current).toBeDefined()
+    expect(result.current?.length).toBe(2)
+    expect(result.current && result.current[0].route.input).toBe(DAI)
+    expect(result.current && result.current[0].route.output).toBe(USDC)
+    expect(result.current && result.current[0].route.tokenPath).toEqual([DAI, USDC])
+    expect(result.current && result.current[0].inputAmount.toSignificant()).toBe('1')
+    expect(result.current && result.current[0].outputAmount.toSignificant()).toBe('5')
   })
 })
