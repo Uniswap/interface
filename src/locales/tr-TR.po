@@ -629,21 +629,13 @@ msgstr "Geçersiz çift."
 msgid "Inventory ratio:"
 msgstr "Envanter oranı:"
 
-#: 
-#~ msgid "Kyber DMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-#~ msgstr "Kyber DMM işlem ücretleri zincir içi piyasa koşullarına göre <0>dinamik olarak ayarlanır</0>. Dalgalı bir piyasada (normal hacimden daha yüksek), ücretler otomatik olarak optimum seviyeye yükselir ve kalıcı kaybın etkisini azaltır. Düşük volatilite dönemlerinde, daha fazla ticareti teşvik etmek için ücretler düşer."
-
-#: 
-#~ msgid "Kyber DMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-#~ msgstr "Kyber DMM'nin Programlanabilir Fiyatlandırma Eğrisi, likidite havuzu oluşturucularının uygun bir fiyatlandırma eğrisi belirlemesine ve önceden güçlendirilmiş havuzlar oluşturmasına olanak tanır"
-
 #: src/pages/Static/About.tsx
 msgid "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
-msgstr ""
+msgstr "KyberDMM işlem ücretleri zincir içi piyasa koşullarına göre <0>dinamik olarak ayarlanır</0>. Dalgalı bir piyasada (normal hacimden daha yüksek), ücretler otomatik olarak optimum seviyeye yükselir ve kalıcı kaybın etkisini azaltır. Düşük volatilite dönemlerinde, daha fazla ticareti teşvik etmek için ücretler düşer."
 
 #: src/pages/Static/About.tsx
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
-msgstr ""
+msgstr "KyberDMM'nin Programlanabilir Fiyatlandırma Eğrisi, likidite havuzu oluşturucularının uygun bir fiyatlandırma eğrisi belirlemesine ve önceden güçlendirilmiş havuzlar oluşturmasına olanak tanır"
 
 #: src/pages/Farms/vesting.tsx
 msgid "LOCKED"
