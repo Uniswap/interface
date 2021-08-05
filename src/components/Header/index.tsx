@@ -260,7 +260,7 @@ function Header({ history }: { history: any }) {
         </HeaderElement>
         <HeaderSubRow>
           <Amount clickable onClick={toggleClaimPopup}>
-            {!account || !swprBalance ? '0.000' : <Skeleton width="40px" />} SWPR
+            {!account || !swprBalance ? '0.000' : swprBalance.toFixed(3)} SWPR
           </Amount>
           <Amount>
             {!account ? (
