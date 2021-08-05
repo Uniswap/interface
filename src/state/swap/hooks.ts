@@ -6,7 +6,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { RouterVersion, useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -151,7 +151,10 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const parsedAmount = useMemo(
+    () => tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
+    [inputCurrency, isExactIn, outputCurrency, typedValue]
+  )
 
   const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
     maxHops: singleHopOnly ? 1 : undefined,

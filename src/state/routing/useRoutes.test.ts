@@ -51,7 +51,7 @@ describe('#useRoute', () => {
             decimals: USDC.decimals.toString(),
           },
         ],
-        quote: '5',
+        quote: amount`5`,
       })
     )
 
@@ -122,7 +122,7 @@ describe('#useRoute', () => {
             decimals: MKR.decimals.toString(),
           },
         ],
-        quote: '206',
+        quote: amount`206`,
       })
     )
 
@@ -183,7 +183,7 @@ describe('#useRoute', () => {
             decimals: USDC.decimals.toString(),
           },
         ],
-        quote: '55',
+        quote: amount`55`,
       })
     )
 

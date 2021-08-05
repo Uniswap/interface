@@ -167,7 +167,7 @@ function validate(
     CurrencyAmount.fromRawAmount(currencyOut, '0')
   )
 
-  if (derivedOutputAmount.toSignificant().toString() !== expectedAmount) {
+  if (!derivedOutputAmount.equalTo(CurrencyAmount.fromRawAmount(currencyOut, expectedAmount))) {
     throw new Error('Expected sum of outputs to be quote result output')
   }
 

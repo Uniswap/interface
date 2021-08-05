@@ -52,7 +52,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
-    if (isLoading) {
+    if (isLoading || isUninitialized) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -78,7 +78,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountIn, currencyOut, isError, isLoading, routes, data, isFetching])
+  }, [amountIn, currencyOut, isLoading, isUninitialized, data, isError, routes, isFetching])
 }
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
@@ -124,7 +124,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       }
     }
 
-    if (isLoading) {
+    if (isLoading || isUninitialized) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -149,5 +149,5 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountOut, currencyIn, isError, isLoading, routes, data, isFetching])
+  }, [amountOut, currencyIn, isLoading, isUninitialized, data, isError, routes, isFetching])
 }

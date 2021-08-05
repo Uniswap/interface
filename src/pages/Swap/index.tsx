@@ -507,7 +507,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       ))}
 
                     {toggledVersion === Version.v3 &&
-                      (isLoadingRoute || isTradeBetter(v2Trade, v3Trade)) &&
+                      isTradeBetter(v2Trade, v3Trade) &&
                       (v3Router === RouterVersion.LEGACY ? (
                         <ButtonGray
                           width="fit-content"
@@ -532,29 +532,31 @@ export default function Swap({ history }: RouteComponentProps) {
                         </AutoRow>
                       ))}
                   </RowFixed>
-                  {isLoadingRoute ? (
-                    <AutoRow gap="4px" width="auto" padding="0 .5rem">
-                      <TYPE.main>Finding best route...</TYPE.main>
-                      <Loader stroke={theme.text2} />
-                    </AutoRow>
-                  ) : trade ? (
-                    <RowFixed>
-                      <TradePrice
-                        price={trade.executionPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                      />
-                      <ButtonEmpty
-                        onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
-                        margin=".5rem"
-                        padding="0"
-                        width="24px"
-                        height="24px"
-                      >
-                        {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
-                      </ButtonEmpty>
-                    </RowFixed>
-                  ) : null}
+                  <RowFixed minHeight="40px">
+                    {isLoadingRoute ? (
+                      <AutoRow gap="4px" width="auto" padding="0 .5rem">
+                        <TYPE.main>Finding best route...</TYPE.main>
+                        <Loader stroke={theme.text2} />
+                      </AutoRow>
+                    ) : trade ? (
+                      <>
+                        <TradePrice
+                          price={trade.executionPrice}
+                          showInverted={showInverted}
+                          setShowInverted={setShowInverted}
+                        />
+                        <ButtonEmpty
+                          onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
+                          margin=".5rem"
+                          padding="0"
+                          width="24px"
+                          height="24px"
+                        >
+                          {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
+                        </ButtonEmpty>
+                      </>
+                    ) : null}
+                  </RowFixed>
                 </Row>
 
                 {showAdvancedSwapDetails && <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
