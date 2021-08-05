@@ -35,7 +35,6 @@ const AppWrapper = styled.div`
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
-  z-index: 4;
   justify-content: space-between;
 `
 
