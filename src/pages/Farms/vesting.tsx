@@ -245,7 +245,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
       {Object.keys(info).length > 0 && (
         <div>
           <ButtonPrimary height="30px" onClick={onClaimAll}>
-            Claim All
+            <Trans>Claim All</Trans>
           </ButtonPrimary>
         </div>
       )}

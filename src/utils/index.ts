@@ -58,7 +58,7 @@ function getEtherscanDomain(chainId: ChainId): string {
     case ChainId.MATIC:
       return 'https://polygonscan.com'
     case ChainId.MUMBAI:
-      return 'https://explorer-mumbai.maticvigil.com'
+      return 'https://mumbai.polygonscan.com'
     case ChainId.BSCTESTNET:
       return 'https://testnet.bscscan.com'
     case ChainId.BSCMAINNET:
