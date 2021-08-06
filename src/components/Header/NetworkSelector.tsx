@@ -1,4 +1,3 @@
-import { Web3Provider } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import L2LaunchAlert from 'components/Header/L2LaunchAlert'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
@@ -205,7 +204,7 @@ export default function NetworkSelector() {
             </FlyoutHeader>
             <Row targetChain={SupportedChainId.MAINNET} />
             <Row targetChain={SupportedChainId.OPTIMISM} />
-            <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {false && <Row targetChain={SupportedChainId.ARBITRUM_ONE} />}
           </FlyoutMenu>
         )}
       </SelectorWrapper>
