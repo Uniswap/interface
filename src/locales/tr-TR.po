@@ -434,9 +434,24 @@ msgstr "Yüksek kaymalı işlemlere olanak tanır. Kendi sorumluluğunuzda kulla
 msgid "Encourage trading"
 msgstr "Alım satımı teşvik edin"
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "Bir alıcı girin"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Geçerli bir kayma yüzdesi girin"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Enter an amount"
+msgstr "Bir miktar girin"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -624,6 +639,10 @@ msgstr "tarafından sigortalıdır"
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Invalid pair."
 msgstr "Geçersiz çift."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "Geçersiz alıcı"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Inventory ratio:"
@@ -1058,6 +1077,7 @@ msgstr "Bir Token Seç"
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "Bir token seç"
 

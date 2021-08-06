@@ -434,9 +434,24 @@ msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. �
 msgid "Encourage trading"
 msgstr "거래 장려"
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "받는 사람을 입력하세요"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "유효한 슬립페지 비율을 입력하십시오"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Enter an amount"
+msgstr "금액을 입력"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -625,6 +640,10 @@ msgstr "보험 제공"
 msgid "Invalid pair."
 msgstr "잘못된 쌍입니다."
 
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "잘못된 수신자"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Inventory ratio:"
 msgstr "재고 비율:"
@@ -752,7 +771,7 @@ msgstr "최소 수령"
 
 #: src/components/Header/index.tsx
 msgid "My Dashboard"
-msgstr "내 대시보드"
+msgstr "대시보드"
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/index.tsx
@@ -808,7 +827,7 @@ msgstr "{type} 풀을 찾을 수 없습니다."
 
 #: src/components/PositionCard/index.tsx
 msgid "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
-msgstr "참고: {warningToken}은 이제 풀의 <10% o입니다. {warningToken}가 0%에 도달하면 풀이 비활성화될 수 있습니다"
+msgstr "참고: {warningToken}은 이제 풀의 <10% 입니다. {warningToken}가 0%에 도달하면 풀이 비활성화될 수 있습니다"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
@@ -1048,7 +1067,7 @@ msgstr "이름 검색 또는 주소 붙여넣기"
 #: src/pages/Pools/index.tsx
 #: src/pages/Pools/index.tsx
 msgid "Select Pair"
-msgstr "쌍 선택"
+msgstr "토큰 페어 선택"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
@@ -1058,6 +1077,7 @@ msgstr "토큰 선택"
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "토큰 선택"
 
@@ -1106,7 +1126,7 @@ msgstr "스테이킹된 TVL"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr "교체"
+msgstr "토큰 스왑"
 
 #: src/components/swap/SwapModalFooter.tsx
 #: src/pages/Swap/index.tsx
