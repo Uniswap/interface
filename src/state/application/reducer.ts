@@ -16,7 +16,7 @@ type PopupList = Array<{ key: string; show: boolean; content: PopupContent; remo
 export interface ApplicationState {
   // used by RTK-Query to build dynamic subgraph urls
   readonly chainId: number | null
-  readonly chainconnectivityWarning: boolean
+  readonly chainConnectivityWarning: boolean
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
@@ -24,7 +24,7 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   chainId: null,
-  chainconnectivityWarning: false,
+  chainConnectivityWarning: false,
   blockNumber: {},
   popupList: [],
   openModal: null,
@@ -65,6 +65,6 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(setChainConnectivityWarning, (state, { payload: { warn } }) => {
-      state.chainconnectivityWarning = warn
+      state.chainConnectivityWarning = warn
     })
 )

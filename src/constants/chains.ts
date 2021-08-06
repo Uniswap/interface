@@ -48,7 +48,7 @@ export const L2_CHAIN_IDS = [
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
 interface L1ChainInfo {
-  readonly blockWaitMSBeforeWarning?: number
+  readonly blockWaitMsBeforeWarning?: number
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
@@ -113,7 +113,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
-    blockWaitMSBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
@@ -123,7 +123,7 @@ export const CHAIN_INFO: ChainInfo = {
     statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
-    blockWaitMSBeforeWarning: ms`10m`,
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
