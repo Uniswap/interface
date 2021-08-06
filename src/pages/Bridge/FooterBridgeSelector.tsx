@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { HideableAutoColumn } from '../../components/Column'
 import Radio from '../../components/Radio'
@@ -10,10 +11,17 @@ interface FooterBridgeSelectorProps {
   onBridgeChange: () => void
 }
 
+const Footer = styled(AdvancedDetailsFooter)`
+  background: none;
+  border: none;
+  box-shadow: none;
+`;
+
+
 export const FooterBridgeSelector = ({show, onBridgeChange}: FooterBridgeSelectorProps) => {
   return (
     <HideableAutoColumn show={show}>
-      <AdvancedDetailsFooter fullWidth padding="16px">
+      <Footer fullWidth padding="16px">
         <Table>
           <thead>
             <tr>
@@ -51,7 +59,7 @@ export const FooterBridgeSelector = ({show, onBridgeChange}: FooterBridgeSelecto
             </tr>
           </tbody>
         </Table>
-      </AdvancedDetailsFooter>
+      </Footer>
     </HideableAutoColumn>
   )
 }
