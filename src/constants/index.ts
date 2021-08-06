@@ -16,7 +16,10 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
       : '0x546C79662E028B661dFB4767664d0273184E4dD1',
-  [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956'
+  [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956',
+  [ChainId.BSCTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8' : ''
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -32,7 +35,10 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0x10908C875D865C66f271F5d3949848971c9595C9'
       : '0x5F1fe642060B5B9658C15721Ea22E982643c095c',
-  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453'
+  [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x10908C875D865C66f271F5d3949848971c9595C9' : ''
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -45,7 +51,9 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
   [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: ''
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.BSCMAINNET]: ''
 }
 
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
@@ -72,7 +80,9 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://staging-matic-dmm-info.knstats.com'
       : 'https://polygon-info.dmm.exchange',
-  [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com'
+  [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
+  [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
+  [ChainId.BSCMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
 }
 
 // a list of tokens by chain
@@ -105,7 +115,27 @@ export const DAI: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xad6d458402f60fd3bd25163575031acdce07538d', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xad6d458402f60fd3bd25163575031acdce07538d', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x5e2de02472aC02736b43054f095837725A5870eF', 18, 'DAI', 'Dai Stablecoin')
+  [ChainId.MUMBAI]: new Token(
+    ChainId.MUMBAI,
+    '0x5e2de02472aC02736b43054f095837725A5870eF',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+  [ChainId.BSCTESTNET]: new Token(
+    ChainId.BSCTESTNET,
+    '0xBb843a2296F9AA49070EB2Dcd482f23548238f65',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+  [ChainId.BSCMAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  )
 }
 
 export const USDC: { [chainId in ChainId]: Token } = {
@@ -115,7 +145,21 @@ export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD Coin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USD Coin'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE', 6, 'USDC', 'USD Coin')
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE', 6, 'USDC', 'USD Coin'),
+  [ChainId.BSCTESTNET]: new Token(
+    ChainId.BSCTESTNET,
+    '0xb448B701807E644f141a4E4a269aD2F567526505',
+    6,
+    'USDC',
+    'USD Coin'
+  ),
+  [ChainId.BSCMAINNET]: new Token(
+    ChainId.BSCMAINNET,
+    '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+    6,
+    'USDC',
+    'USD Coin'
+  )
 }
 
 export const USDT: { [chainId in ChainId]: Token } = {
@@ -125,7 +169,21 @@ export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0x65Bd1F48f1dd07bb285a3715c588F75684128acE', 6, 'USDT', 'Tether USD'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 6, 'USDT', 'Tether USD'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x064B91Bda6d178DfE03835de9450BFe78201c43F', 6, 'USDT', 'Tether USD')
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, '0x064B91Bda6d178DfE03835de9450BFe78201c43F', 6, 'USDT', 'Tether USD'),
+  [ChainId.BSCTESTNET]: new Token(
+    ChainId.BSCTESTNET,
+    '0x3d8f2Ada8e97e4eF19e4ccBf6ec1Ca52900406aA',
+    6,
+    'USDT',
+    'Tether USD'
+  ),
+  [ChainId.BSCMAINNET]: new Token(
+    ChainId.BSCMAINNET,
+    '0x55d398326f99059ff775485246999027b3197955',
+    6,
+    'USDT',
+    'Tether USD'
+  )
 }
 
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
@@ -142,7 +200,9 @@ export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
   [ChainId.GÖRLI]: 13.13,
   [ChainId.KOVAN]: 13.13,
   [ChainId.MATIC]: 2.1,
-  [ChainId.MUMBAI]: 2.1
+  [ChainId.MUMBAI]: 2.1,
+  [ChainId.BSCTESTNET]: 5,
+  [ChainId.BSCMAINNET]: 5
 }
 
 export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
@@ -152,7 +212,9 @@ export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
   [ChainId.GÖRLI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.GÖRLI]) * 60 * 24 * 365),
   [ChainId.KOVAN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.KOVAN]) * 60 * 24 * 365),
   [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MATIC]) * 60 * 24 * 365),
-  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MUMBAI]) * 60 * 24 * 365)
+  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MUMBAI]) * 60 * 24 * 365),
+  [ChainId.BSCTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCTESTNET]) * 60 * 24 * 365),
+  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCMAINNET]) * 60 * 24 * 365)
 }
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
@@ -163,7 +225,9 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.BSCTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.BSCMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -173,7 +237,9 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
-  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
+  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
+  [ChainId.BSCTESTNET]: [WETH[ChainId.BSCTESTNET]],
+  [ChainId.BSCMAINNET]: [WETH[ChainId.BSCMAINNET]]
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
@@ -223,6 +289,20 @@ export const KNC: { [chainId in ChainId]: Token } = {
     18,
     'KNC',
     'Kyber Network Crystal'
+  ),
+  [ChainId.BSCTESTNET]: new Token(
+    ChainId.BSCTESTNET,
+    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.BSCMAINNET]: new Token(
+    ChainId.BSCMAINNET,
+    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
   )
 }
 
@@ -246,6 +326,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC[ChainId.ROPSTEN],
     USDT[ChainId.ROPSTEN]
   ],
+  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], DAI[ChainId.MUMBAI], USDC[ChainId.MUMBAI], USDT[ChainId.MUMBAI]],
   [ChainId.MATIC]: [
     ...WETH_ONLY[ChainId.MATIC],
     DAI[ChainId.MATIC],
@@ -253,7 +334,20 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MATIC],
     new Token(ChainId.MATIC, '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619', 18, 'ETH', 'Ether')
   ],
-  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], DAI[ChainId.MUMBAI], USDC[ChainId.MUMBAI], USDT[ChainId.MUMBAI]]
+
+  [ChainId.BSCTESTNET]: [
+    ...WETH_ONLY[ChainId.BSCTESTNET],
+    DAI[ChainId.BSCTESTNET],
+    USDC[ChainId.BSCTESTNET],
+    USDT[ChainId.BSCTESTNET]
+  ],
+  [ChainId.BSCMAINNET]: [
+    ...WETH_ONLY[ChainId.BSCMAINNET],
+    DAI[ChainId.BSCMAINNET],
+    USDC[ChainId.BSCMAINNET],
+    USDT[ChainId.BSCMAINNET],
+    new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+  ]
 }
 
 /**
@@ -468,7 +562,9 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
       : ['0x829c27fd3013b944cbE76E92c3D6c45767c0C789', '0x3aDd3034Fcf921F20c74c6149FB44921709595B1'],
-  [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6']
+  [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
+  [ChainId.BSCTESTNET]: [],
+  [ChainId.BSCMAINNET]: []
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -484,7 +580,9 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
       : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
-  [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391'
+  [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.BSCMAINNET]: ''
 }
 
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
@@ -527,5 +625,7 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0x95D708e9eE04b0136b98579141624d19c89B9d68',
           '0xd8B9E9444fCBF26BEA4BAdd6142dD6a962BCA86A'
         ],
-  [ChainId.MUMBAI]: ['0x967a889dbF977DD9c7b79BF422f5Fa50294e56FD', '0x801Da4b550D1645F7aD3De8A5349a51B8dea48b8']
+  [ChainId.MUMBAI]: ['0x967a889dbF977DD9c7b79BF422f5Fa50294e56FD', '0x801Da4b550D1645F7aD3De8A5349a51B8dea48b8'],
+  [ChainId.BSCTESTNET]: [],
+  [ChainId.BSCMAINNET]: []
 }

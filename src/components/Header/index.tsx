@@ -277,6 +277,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
     case ChainId.MUMBAI:
       return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    case ChainId.BSCTESTNET:
+      return `/pools/BNB`
+    case ChainId.BSCMAINNET:
+      return `/pools/BNB`
     default:
       return '/pools/ETH'
   }
@@ -375,7 +379,12 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} {chainId && [1, 3, 4, 5, 42].includes(chainId) ? `ETH` : `MATIC`}
+                {userEthBalance?.toSignificant(4)}{' '}
+                {chainId && [1, 3, 4, 5, 42].includes(chainId)
+                  ? `ETH`
+                  : chainId && [137, 80001].includes(chainId)
+                  ? `MATIC`
+                  : `BNB`}
               </BalanceText>
             ) : null}
             <Web3Status />

@@ -22,6 +22,9 @@ const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.MATIC]: {
     chainId: '0x89'
+  },
+  [ChainId.BSCMAINNET]: {
+    chainId: '0x38'
   }
 }
 
@@ -163,7 +166,7 @@ export default function NetworkModal(): JSX.Element | null {
         </InstructionText>
 
         <NetworkList>
-          {[ChainId.MAINNET, ChainId.MATIC].map((key: ChainId, i: number) => {
+          {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">
