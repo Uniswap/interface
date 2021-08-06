@@ -456,6 +456,7 @@ export function PositionPage({
               category: 'Liquidity',
               action: 'CollectV3',
               label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+              value: chainId,
             })
 
             addTransaction(response, {

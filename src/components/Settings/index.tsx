@@ -17,6 +17,7 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { Percent } from '@uniswap/sdk-core'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -115,6 +116,7 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
+  const { chainId } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -234,6 +236,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   ReactGA.event({
                     category: 'Routing',
                     action: singleHopOnly ? 'disable single hop' : 'enable single hop',
+                    value: chainId,
                   })
                   setSingleHopOnly(!singleHopOnly)
                 }}

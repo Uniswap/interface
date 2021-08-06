@@ -200,6 +200,7 @@ export default function AddLiquidity({
             category: 'Liquidity',
             action: 'Add',
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            value: chainId,
           })
         })
       )

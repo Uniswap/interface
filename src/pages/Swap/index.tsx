@@ -69,7 +69,7 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -266,6 +266,7 @@ export default function Swap({ history }: RouteComponentProps) {
             getTradeVersion(trade),
             singleHopOnly ? 'SH' : 'MH',
           ].join('/'),
+          value: chainId,
         })
       })
       .catch((error) => {
@@ -278,6 +279,7 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [
+    chainId,
     swapCallback,
     priceImpact,
     tradeToConfirm,

@@ -278,6 +278,7 @@ export default function RemoveLiquidity({
             category: 'Liquidity',
             action: 'Remove',
             label: [currencyA?.symbol, currencyB?.symbol].join('/'),
+            value: chainId,
           })
         })
         .catch((error: Error) => {

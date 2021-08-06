@@ -21,6 +21,7 @@ import { removeList, enableList } from 'state/lists/actions'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { useAllLists } from 'state/lists/hooks'
 import { Trans } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,6 +37,7 @@ interface ImportProps {
 }
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
+  const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const dispatch = useAppDispatch()
 
@@ -58,6 +60,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           category: 'Lists',
           action: 'Add List',
           label: listURL,
+          value: chainId,
         })
 
         // turn list on
@@ -70,11 +73,12 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           category: 'Lists',
           action: 'Add List Failed',
           label: listURL,
+          value: chainId,
         })
         setAddError(error.message)
         dispatch(removeList(listURL))
       })
-  }, [adding, dispatch, fetchList, listURL, setModalView])
+  }, [adding, chainId, dispatch, fetchList, listURL, setModalView])
 
   return (
     <Wrapper>

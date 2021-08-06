@@ -14,6 +14,7 @@ import usePrevious from 'hooks/usePrevious'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import ReactGA from 'react-ga'
 import { Box } from 'rebass'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -81,6 +82,7 @@ export default function FeeSelector({
   currencyA?: Currency | undefined
   currencyB?: Currency | undefined
 }) {
+  const { chainId } = useActiveWeb3React()
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
   const [showOptions, setShowOptions] = useState(false)
@@ -95,10 +97,11 @@ export default function FeeSelector({
       ReactGA.event({
         category: 'FeePoolSelect',
         action: 'Manual',
+        value: chainId,
       })
       handleFeePoolSelect(fee)
     },
-    [handleFeePoolSelect]
+    [chainId, handleFeePoolSelect]
   )
 
   useEffect(() => {
@@ -116,11 +119,12 @@ export default function FeeSelector({
       ReactGA.event({
         category: 'FeePoolSelect',
         action: ' Recommended',
+        value: chainId,
       })
 
       handleFeePoolSelect(largestUsageFeeTier)
     }
-  }, [feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
+  }, [chainId, feeAmount, isLoading, isError, largestUsageFeeTier, handleFeePoolSelect])
 
   useEffect(() => {
     setShowOptions(isError)

@@ -94,9 +94,10 @@ export function CurrencySearch({
         category: 'Currency Select',
         action: 'Search by address',
         label: isAddressSearch,
+        value: chainId,
       })
     }
-  }, [isAddressSearch])
+  }, [chainId, isAddressSearch])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 

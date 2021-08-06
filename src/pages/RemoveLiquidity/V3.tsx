@@ -148,6 +148,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               category: 'Liquidity',
               action: 'RemoveV3',
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
+              value: chainId,
             })
             setTxnHash(response.hash)
             setAttemptingTxn(false)

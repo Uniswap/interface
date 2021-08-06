@@ -127,43 +127,48 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
       category: 'Lists',
       action: 'Update List from List Select',
       label: listUrl,
+      value: chainId,
     })
     dispatch(acceptListUpdate(listUrl))
-  }, [dispatch, listUrl, pending])
+  }, [chainId, dispatch, listUrl, pending])
 
   const handleRemoveList = useCallback(() => {
     ReactGA.event({
       category: 'Lists',
       action: 'Start Remove List',
       label: listUrl,
+      value: chainId,
     })
     if (window.prompt(t`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
       ReactGA.event({
         category: 'Lists',
         action: 'Confirm Remove List',
         label: listUrl,
+        value: chainId,
       })
       dispatch(removeList(listUrl))
     }
-  }, [dispatch, listUrl])
+  }, [chainId, dispatch, listUrl])
 
   const handleEnableList = useCallback(() => {
     ReactGA.event({
       category: 'Lists',
       action: 'Enable List',
       label: listUrl,
+      value: chainId,
     })
     dispatch(enableList(listUrl))
-  }, [dispatch, listUrl])
+  }, [chainId, dispatch, listUrl])
 
   const handleDisableList = useCallback(() => {
     ReactGA.event({
       category: 'Lists',
       action: 'Disable List',
       label: listUrl,
+      value: chainId,
     })
     dispatch(disableList(listUrl))
-  }, [dispatch, listUrl])
+  }, [chainId, dispatch, listUrl])
 
   if (!list) return null
 
