@@ -9,7 +9,7 @@ import { transparentize } from 'polished'
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: 10;
     overflow: hidden;
 
     display: flex;
