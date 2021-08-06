@@ -204,7 +204,7 @@ export default function NetworkSelector() {
             </FlyoutHeader>
             <Row targetChain={SupportedChainId.MAINNET} />
             <Row targetChain={SupportedChainId.OPTIMISM} />
-            {false && <Row targetChain={SupportedChainId.ARBITRUM_ONE} />}
+            <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
           </FlyoutMenu>
         )}
       </SelectorWrapper>
