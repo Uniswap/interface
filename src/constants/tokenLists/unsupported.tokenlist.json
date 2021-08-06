@@ -1045,6 +1045,13 @@
       "name": "Mirrored Tesla",
       "symbol": "MTSLA",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0xe82bbB62fA81d0701643d1675FB50ec52fD3Df92",
+      "name": "DYDX Token",
+      "symbol": "DYDX",
+      "decimals": 18
     }
   ]
 }
