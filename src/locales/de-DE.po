@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-08-02 15:05\n"
+"PO-Revision-Date: 2021-08-06 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -482,7 +482,7 @@ msgstr "Diese Transaktion in Ihrer Wallet bestätigen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "Transaktion in Wallet bestätigen"
+msgstr "Bestätigen Sie diese Transaktion in Ihrer Wallet"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -2099,7 +2099,7 @@ msgstr "Ihre Transaktionen werden hier erscheinen..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Deine noch nicht bezogenen UNI"
+msgstr "Deine unbeanspruchte UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -2169,7 +2169,7 @@ msgstr "{0} ETH"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "{0} Explorer"
-msgstr "{0} Entdecker"
+msgstr "{0} Explorer"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
