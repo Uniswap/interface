@@ -434,9 +434,24 @@ msgstr "允许高滑点交易。使用的风险自负。"
 msgid "Encourage trading"
 msgstr "鼓勵交易"
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "输入收件人"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "输入有效的滑点百分比"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Enter an amount"
+msgstr "输入金额"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -624,6 +639,10 @@ msgstr "承保"
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Invalid pair."
 msgstr "无效的交易对。"
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "收件人无效"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Inventory ratio:"
@@ -1058,6 +1077,7 @@ msgstr "选择一个代币"
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "选择一个代币"
 

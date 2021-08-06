@@ -434,9 +434,24 @@ msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạ
 msgid "Encourage trading"
 msgstr "Khuyến khích giao dịch"
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "Nhập người nhận"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Nhập phần trăm trượt giá hợp lệ"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Enter an amount"
+msgstr "Nhập số tiền"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -624,6 +639,10 @@ msgstr "Được bảo hiểm bởi"
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Invalid pair."
 msgstr "Cặp không hợp lệ."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "Người nhận không hợp lệ"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Inventory ratio:"
@@ -1058,6 +1077,7 @@ msgstr "Chọn một Token"
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "Chọn một token"
 
