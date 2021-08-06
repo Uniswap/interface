@@ -31,7 +31,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137]
+  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.MATIC]
@@ -44,7 +44,9 @@ const NETWORK_URLS: {
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.MUMBAI]: `https://peaceful-austin:boned-fruit-crave-feast-heat-boots@nd-526-681-843.p2pify.com/`,
-  [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`
+  [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
+  [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+  [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`
 }
 
 export const walletconnect = new WalletConnectConnector({

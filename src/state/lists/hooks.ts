@@ -9,6 +9,8 @@ import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
 import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
 import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
+import { BSC_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.testnet.tokenlist'
+import { BSC_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.mainnet.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
@@ -48,7 +50,9 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
   [ChainId.MATIC]: {},
-  [ChainId.MUMBAI]: {}
+  [ChainId.MUMBAI]: {},
+  [ChainId.BSCTESTNET]: {},
+  [ChainId.BSCMAINNET]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -104,6 +108,10 @@ export function useDMMTokenList(): TokenAddressMap {
       return listToTokenMap(MATIC_TOKEN_LIST)
     case ChainId.MUMBAI:
       return listToTokenMap(MUMBAI_TOKEN_LIST)
+    case ChainId.BSCTESTNET:
+      return listToTokenMap(BSC_TESTNET_TOKEN_LIST)
+    case ChainId.BSCMAINNET:
+      return listToTokenMap(BSC_MAINNET_TOKEN_LIST)
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }
@@ -171,7 +179,9 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
     [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
     [ChainId.MUMBAI]: { ...map1[ChainId.MUMBAI], ...map2[ChainId.MUMBAI] },
-    [ChainId.MATIC]: { ...map1[ChainId.MATIC], ...map2[ChainId.MATIC] }
+    [ChainId.MATIC]: { ...map1[ChainId.MATIC], ...map2[ChainId.MATIC] },
+    [ChainId.BSCTESTNET]: { ...map1[ChainId.BSCTESTNET], ...map2[ChainId.BSCTESTNET] },
+    [ChainId.BSCMAINNET]: { ...map1[ChainId.BSCMAINNET], ...map2[ChainId.BSCMAINNET] }
   }
 }
 

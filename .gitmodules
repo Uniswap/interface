@@ -1,4 +1,4 @@
 [submodule "src/libs/sdk"]
 	path = src/libs/sdk
 	url = https://github.com/dynamic-amm/dmm-sdk.git
-	branch = update-wmatic-mumbai
+	branch = main

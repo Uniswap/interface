@@ -145,6 +145,10 @@ export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
       return ChainIdSUSHI.MATIC
     case ChainIdDMM.MUMBAI:
       return ChainIdSUSHI.MATIC_TESTNET
+    case ChainIdDMM.BSCTESTNET:
+      return ChainIdSUSHI.BSC_TESTNET
+    case ChainIdDMM.BSCMAINNET:
+      return ChainIdSUSHI.BSC
   }
 }
 
@@ -302,8 +306,9 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
 }
 
 export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainIdDMM): Currency {
-  if (chainId && [137, 80001].includes(chainId) && currency === Currency.ETHER) {
-    return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
+  if (chainId && currency === Currency.ETHER) {
+    if ([137, 80001].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
+    if ([97, 56].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BNB', 'BNB')
   }
 
   return currency

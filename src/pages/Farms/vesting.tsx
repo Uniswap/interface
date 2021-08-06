@@ -242,11 +242,13 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
           {formattedNum(unlockedUSD.toString(), true)}
         </TYPE.body>
       </div>
-      <div>
-        <ButtonPrimary height="30px" onClick={onClaimAll}>
-          <Trans>Claim All</Trans>
-        </ButtonPrimary>
-      </div>
+      {Object.keys(info).length > 0 && (
+        <div>
+          <ButtonPrimary height="30px" onClick={onClaimAll}>
+            Claim All
+          </ButtonPrimary>
+        </div>
+      )}
     </Tag>
   )
   return (
