@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "Bạn có chắc không?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Là một thành viên của cộng đồng Uniswap, bạn có thể yêu cầu UNI được sử dụng để bỏ phiếu và quản trị. <0 /> <1 /> <2> Đọc thêm về UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,11 +358,11 @@ msgstr "Nhận"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "Nhận UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
 msgstr "Yêu cầu mã token UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1910,7 +1910,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Khi bạn yêu cầu mà không rút tiền, thanh khoản của bạn vẫn còn trong pool khai thác."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "Khi bạn rút tiền, hợp đồng sẽ tự động yêu cầu UNI thay mặt bạn!"
 
 #: src/components/earn/UnstakingModal.tsx

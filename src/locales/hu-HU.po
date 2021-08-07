@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "Biztos ebben?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Az Uniswap közösség tagjaként igényelheti az UNI-t, hogy szavazásra és kormányzásra használhassa.<0/><1/><2>Bővebben az UNI-ról</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,11 +358,11 @@ msgstr "Követelés"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "UNI igénylése"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
 msgstr "UNI token igénylése"
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1911,7 +1911,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Ha visszavonás nélkül igényel, a likviditása a bányászpoolban marad."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "Amikor visszavonja, a szerződés automatikusan UNI-t követel az Ön nevében!"
 
 #: src/components/earn/UnstakingModal.tsx

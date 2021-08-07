@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "Is jy seker?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "As lid van die Uniswap-gemeenskap kan u daarop aanspraak maak dat UNI gebruik word vir stemming en beheer. <0/> <1/> <2> Lees meer oor UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,11 +358,11 @@ msgstr "Eis"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "Eis UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
 msgstr "Eis UNI-teken"
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1910,7 +1910,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "As u eis sonder om te onttrek, bly u likiditeit in die mynpoel."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "As u onttrek, sal die kontrak outomaties namens u UNI eis!"
 
 #: src/components/earn/UnstakingModal.tsx

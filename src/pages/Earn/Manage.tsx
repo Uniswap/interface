@@ -334,7 +334,7 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          <Trans>When you withdraw, the contract will automagically claim UNI on your behalf!</Trans>
+          <Trans>When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!</Trans>
         </TYPE.main>
 
         {!showAddLiquidityButton && (
