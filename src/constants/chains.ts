@@ -14,7 +14,6 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
   BSC_MAINNET = 56,
   BSC_TESTNET = 97,
-  
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
@@ -132,17 +131,16 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
   },
-    [SupportedChainId.BSC_MAINNET]: {
+  [SupportedChainId.BSC_MAINNET]: {
     docs: 'https://optimism.io/',
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'BSC_MAINNET',
   },
-    [SupportedChainId.OPTIMISTIC_KOVAN]: {
+  [SupportedChainId.OPTIMISTIC_KOVAN]: {
     docs: 'https://BSCTESTNET.io/',
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'BSC_TESTNET',
   },
- 
 }
