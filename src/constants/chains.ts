@@ -12,6 +12,9 @@ export enum SupportedChainId {
   ARBITRUM_RINKEBY = 421611,
   OPTIMISM = 10,
   OPTIMISTIC_KOVAN = 69,
+  BSC_MAINNET = 56,
+  BSC_TESTNET = 97,
+  
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
@@ -25,6 +28,8 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
+  SupportedChainId.BSC_MAINNET,
+  SupportedChainId.BSC_TESTNET,
 ]
 
 export const L1_CHAIN_IDS = [
@@ -33,6 +38,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.BSC_MAINNET,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
@@ -42,6 +48,7 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
+  SupportedChainId.BSC_TESTNET,
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
@@ -125,4 +132,17 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
   },
+    [SupportedChainId.BSC_MAINNET]: {
+    docs: 'https://optimism.io/',
+    explorer: 'https://bscscan.com/',
+    infoLink: 'https://info.uniswap.org/#/optimism',
+    label: 'BSC_MAINNET',
+  },
+    [SupportedChainId.OPTIMISTIC_KOVAN]: {
+    docs: 'https://BSCTESTNET.io/',
+    explorer: 'https://bscscan.com/',
+    infoLink: 'https://info.uniswap.org/#/optimism',
+    label: 'BSC_TESTNET',
+  },
+ 
 }
