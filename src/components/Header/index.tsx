@@ -262,7 +262,7 @@ export default function Header() {
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
-      <Title  href="https://babytrumptoken.com">
+      <Title href="https://babytrumptoken.com">
         <UniIcon>
           <img width={'100px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
         </UniIcon>
