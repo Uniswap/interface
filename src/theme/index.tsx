@@ -49,7 +49,7 @@ function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#FFF',
+    bg0: darkMode ? '#223569' : '#FFF',
     bg1: darkMode ? '#212429' : '#F7F8FA',
     bg2: darkMode ? '#2C2F36' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
@@ -62,17 +62,17 @@ function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#E8006F',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
+    primary1: darkMode ? '#2e4990' : '#2e4990',
+    primary2: darkMode ? '#FF8CC3' : '#FF8CC3',
+    primary3: darkMode ? '#d51909' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#438BF0' : '#D50066',
+    primaryText1: darkMode ? '#d41b0b' : '#d51909',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#E8006F',
+    secondary1: darkMode ? '#2172E5' : '#00203d',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
@@ -84,7 +84,7 @@ function colors(darkMode: boolean): Colors {
     yellow1: '#E3A507',
     yellow2: '#FF8F00',
     yellow3: '#F3B71E',
-    blue1: darkMode ? '#2172E5' : '#0068FC',
+    blue1: darkMode ? '#FF8CC3' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
     error: darkMode ? '#FD4040' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
