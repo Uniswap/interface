@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "Вы уверены?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Как член сообщества Uniswap, вы можете востребовать токены UNI, которые используются для голосования и управления.<0/><1/><2>Подробнее об UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,12 +358,12 @@ msgstr "Востребовать"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "Востребовать UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
+msgstr "Claim StimulusCheck Token"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1910,7 +1910,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Если вы востребуете без вывода, ваша ликвидность останется в майнинговом пуле."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "При выводе контракт автоматически востребует для вас начисленные UNI!"
 
 #: src/components/earn/UnstakingModal.tsx

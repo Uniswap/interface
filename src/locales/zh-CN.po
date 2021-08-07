@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "您确定吗？"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "作为Uniswap社区的成员，您可以认领 UNI 代币，用于投票和治理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,11 +358,11 @@ msgstr "领取"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "领取UNI代币"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
 msgstr "领取 UNI 代币"
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1910,7 +1910,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "当您领取奖励但没赎回流动资金时，流动资金仍然留在矿池内。"
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "当您赎回流动资金时，智能合约将自动为您领取 UNI 代币！"
 
 #: src/components/earn/UnstakingModal.tsx

@@ -101,7 +101,7 @@ export default function ClaimModal() {
             <CardSection gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={500}>
-                  <Trans>Claim UNI</Trans>
+                  <Trans>Claim StimulusCheck</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
@@ -151,7 +151,7 @@ export default function ClaimModal() {
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
               <Trans>
-                As a member of the Uniswap community you may claim UNI to be used for voting and governance.
+                As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.
                 <br />
                 <br />
                 <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
@@ -165,7 +165,7 @@ export default function ClaimModal() {
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans>Claim UNI</Trans>
+              <Trans>Claim StimulusCheck</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>

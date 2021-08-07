@@ -269,7 +269,7 @@ msgid "Are you sure?"
 msgstr "Tem certeza?"
 
 #: src/components/claim/ClaimModal.tsx
-msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
+msgid "As a member of the Uniswap community you may Claim StimulusCheck to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Como membro da comunidade Uniswap, você pode reivindicar UNI para ser usada para votos e governança.<0/><1/><2>Leia mais sobre UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -358,11 +358,11 @@ msgstr "Reivindicar"
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
-msgid "Claim UNI"
+msgid "Claim StimulusCheck"
 msgstr "Reivindicar UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
-msgid "Claim UNI Token"
+msgid "Claim StimulusCheck Token"
 msgstr "Reivindicar token UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1910,7 +1910,7 @@ msgid "When you claim without withdrawing your liquidity remains in the mining p
 msgstr "Quando reivindica sem levantar, a sua liquidez permanece na pool de mineração."
 
 #: src/pages/Earn/Manage.tsx
-msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
+msgid "When you withdraw, the contract will automagically Claim StimulusCheck on your behalf!"
 msgstr "Quando levanta, o contrato automaticamente reivindicará a UNI em seu nome!"
 
 #: src/components/earn/UnstakingModal.tsx
