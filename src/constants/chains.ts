@@ -131,16 +131,16 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
   },
-  [SupportedChainId.BSC_MAINNET]: {
-    docs: 'https://optimism.io/',
+   [SupportedChainId.BSC_MAINNET]: {
+    docs: 'https://bscscan.com/',
     explorer: 'https://bscscan.com/',
-    infoLink: 'https://info.uniswap.org/#/optimism',
+    infoLink: 'https://bscscan.com/',
     label: 'BSC_MAINNET',
   },
-  [SupportedChainId.OPTIMISTIC_KOVAN]: {
-    docs: 'https://BSCTESTNET.io/',
+   [SupportedChainId.OPTIMISTIC_KOVAN]: {
+    docs: 'https://bscscan.com/',
     explorer: 'https://bscscan.com/',
-    infoLink: 'https://info.uniswap.org/#/optimism',
+    infoLink: 'https://bscscan.com/',
     label: 'BSC_TESTNET',
   },
 }
