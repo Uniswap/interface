@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-07-13 20:04\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(vyprázdnit vše)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(upravit)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Vymazat vše"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Zavřít"
 
@@ -482,6 +479,10 @@ msgstr "Potvrdit výměnu"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Potvrďte tuto transakci ve své peněžence"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Potvrďte transakci v peněžence"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "Zadejte platnou adresu žetonu"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Chyba"
@@ -912,6 +914,10 @@ msgstr "Vybrán neplatný rozsah. Minimální cena musí být nižší než maxi
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
 msgstr "Neplatný příjemce"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Jazyk"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1131,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Jejda! Došlo k neznámé chybě. Obnovte prosím stránku nebo ji navštivte z jiného prohlížeče nebo zařízení."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Optimismus plánované odstávky"
+msgid "Optimism Planned Downtime"
+msgstr "Optimismus plánované prostoje"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optimismus očekává v blízké budoucnosti určité plánované odstávky. <0> Přečtěte si více.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimismus v blízké budoucnosti očekává plánované prostoje. Může dojít také k neplánovanému výpadku. I když je síť nefunkční, nebudou generovány poplatky a nebudete moci odstranit likviditu. <0> Přečtěte si více.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1301,6 +1307,12 @@ msgstr "Ve frontě"
 msgid "Rates"
 msgstr "Sazby"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Přečtěte si více"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Přečtěte si více o UNI"
@@ -1368,6 +1380,7 @@ msgstr "Odstraňování {0} {1} a {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Omezte swapy jen na přímé páry."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1479,6 +1492,10 @@ msgstr "Odesílání hlasů"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Uspěl"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Úspěch"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Nastavení transakcí"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "Nastavení transakcí"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transakce odeslána"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transakce dokončena v"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "Pohled na Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Zobrazit v Průzkumníku"

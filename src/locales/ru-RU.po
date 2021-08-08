@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
+"PO-Revision-Date: 2021-08-02 19:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(очистить всё)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(изменить)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Очистить всё"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Закрыть"
 
@@ -464,7 +461,7 @@ msgstr "Подтвердить"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Confirm Create"
-msgstr "Подтвердите создание"
+msgstr "Подтвердить создание"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -482,6 +479,10 @@ msgstr "Подтвердить обмен"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Подтвердите эту транзакцию в своём кошельке"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Подтвердите транзакцию в кошельке"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -584,7 +585,7 @@ msgstr "Текущая цена {0}:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
-msgstr "Темная тема"
+msgstr "Тёмная тема"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "Введите правильный адрес токена"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Ошибка"
@@ -798,7 +800,7 @@ msgstr "Полный диапазон"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "Позиции полного диапазона могут приносить меньше комиссионных, чем позиции концентрированных. Подробнее <0> здесь</0> ."
+msgstr "Позиции полного диапазона могут зарабатывать меньше комиссий, чем концентрированные позиции. Узнайте подробнее <0> здесь</0>."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -913,13 +915,17 @@ msgstr "Выбран неверный диапазон. Минимальная �
 msgid "Invalid recipient"
 msgstr "Неверный получатель"
 
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Язык"
+
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Узнать больше"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
-msgstr "Узнайте о предоставлении ликвидности"
+msgstr "Узнать подробнее о предоставлении ликвидности"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
@@ -1131,20 +1137,20 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ой! Произошла неизвестная ошибка. Пожалуйста, обновите страницу или откройте из другого браузера или с другого устройства."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Перерывы в работе Optimism"
+msgid "Optimism Planned Downtime"
+msgstr "Плановые перерывы в работе Optimism"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "В ближайшее время ожидается запланированный перерыв в работе Optimism. <0>Узнать подробности.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "В ближайшее время ожидается плановый перерыв в работе Optimism. Также возможны внезапные перерывы в работе. Когда сеть не работает, комиссии не начисляются, а ликвидность невозможно удалить. <0>Подробнее.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
-msgstr "Оптимистичный Etherscan"
+msgstr "Etherscan сети Optimism"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic L2 Gateway"
-msgstr "Оптимистичный шлюз L2"
+msgstr "L2-шлюз в Optimism"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1177,7 +1183,7 @@ msgstr "Ожидает"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Please confirm you would like to remove this list by typing REMOVE"
-msgstr "Подтвердите, что вы хотите удалить этот список, набрав УДАЛИТЬ"
+msgstr "Чтобы подтвердить, что вы хотите удалить этот список, наберите УДАЛИТЬ"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1301,6 +1307,12 @@ msgstr "В очереди"
 msgid "Rates"
 msgstr "Тарифы"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Узнать подробнее"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Подробнее о UNI"
@@ -1368,6 +1380,7 @@ msgstr "Удаление {0} {1} и {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Производить обмен только через прямые пары."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1480,6 +1493,10 @@ msgstr "Отправка голоса"
 msgid "Succeeded"
 msgstr "Успешно"
 
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Успешно"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
 msgstr "Внести"
@@ -1572,11 +1589,11 @@ msgstr "Это альфа-версия Uniswap в сети {0}. Вам нужн�
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "Этот пул необходимо инициализировать, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен ликвидности и сумму депозита. Плата за газ будет выше, чем обычно, из-за транзакции инициализации."
+msgstr "Этот пул необходимо инициализировать, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен для ликвидности и сумму депозита. Плата за газ будет выше, чем обычно, из-за инициализирующей транзакции."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Этот пул должен быть инициализирован на {0} прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен ликвидности и сумму депозита."
+msgstr "Этот пул необходимо инициализировать в {0}, прежде чем вы сможете добавить ликвидность. Для инициализации выберите начальную цену для пула. Затем введите диапазон цен для ликвидности и сумму депозита."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Настройки транзакций"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "Настройки транзакций"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Транзакция отправлена"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Транзакция завершена за"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "Посмотреть на Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Просмотреть в обозревателе"

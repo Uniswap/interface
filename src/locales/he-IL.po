@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(נקה הכל)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(עריכה)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "נקה הכל"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "סגור"
 
@@ -482,6 +479,10 @@ msgstr "אשר החלפה"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "אשר את העסקה בארנק שלך"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "אשר עסקה בארנק"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "הזן כתובת אסימון חוקית"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "שְׁגִיאָה"
@@ -912,6 +914,10 @@ msgstr "נבחר טווח לא חוקי. המחיר המינימלי חייב ל
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "שפה"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1131,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את הדף, או בקר בדפדפן או במכשיר אחר."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "זמני השבתה של אופטימיות"
+msgid "Optimism Planned Downtime"
+msgstr "אופטימיות מתוכננת השבתה"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "האופטימיות צופה זמן השבתה מתוכנן בזמן הקרוב. <0> קרא עוד.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "אופטימיות צופה השבתה מתוכננת בעתיד הקרוב. זמן השבתה לא מתוכנן עשוי להתרחש גם כן. בזמן שהרשת מושבתת, לא ייווצרו עמלות ולא תוכל להסיר נזילות. <0> קרא עוד.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1301,6 +1307,12 @@ msgstr "בתור"
 msgid "Rates"
 msgstr "תעריפים"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "קרא עוד"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "קרא עוד על UNI"
@@ -1368,6 +1380,7 @@ msgstr "הסרת {0} {1} ו {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "מגבלות מחליפות לזוגות ישירים בלבד."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1479,6 +1492,10 @@ msgstr "הגשת הצבעה"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "הצליח"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "הַצלָחָה"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "הגדרות עסקה"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "הגדרות עסקה"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "העסקה הוגשה"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "העסקה הושלמה בשנת"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "מבט על אתרסקאן"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "צפה ב- Explorer"

@@ -21,6 +21,8 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
 }
 
+const DEFAULT_GAS_QUOTE = 2_000_000
+
 /**
  * Returns the best v3 trade for a desired exact input swap
  * @param amountIn the amount to swap in
@@ -42,7 +44,7 @@ export function useBestV3TradeExactIn(
   }, [amountIn, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
   return useMemo(() => {
@@ -126,7 +128,7 @@ export function useBestV3TradeExactOut(
   }, [amountOut, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
   return useMemo(() => {

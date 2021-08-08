@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(clear all)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(edit)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Tyhjennä kaikki"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Sulje"
 
@@ -482,6 +479,10 @@ msgstr "Vahvista vaihto"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Vahvista lompakkosi tapahtuma"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Vahvista tapahtuma lompakossa"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "Syötä kelvollinen rahakeosoite"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Virhe"
@@ -912,6 +914,10 @@ msgstr "Virheellinen vaihteluväli valittu. Minimihinnan on oltava pienempi kuin
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
 msgstr "Virheellinen vastaanottaja"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Kieli"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1131,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Hups! Tapahtui tuntematon virhe. Ole hyvä ja päivitä sivu tai vieraile sivulla toisella selaimella tai laitteella."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Optimismi suunnitellut seisokit"
+msgid "Optimism Planned Downtime"
+msgstr "Optimismi Suunniteltu seisokki"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optimismi odottaa joitain suunniteltuja seisokkeja lähitulevaisuudessa. <0> Lue lisää.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimismi odottaa suunniteltuja seisokkeja lähitulevaisuudessa. Myös odottamattomia seisokkeja voi esiintyä. Kun verkko on poissa käytöstä, maksuja ei synny ja et voi poistaa likviditeettiä. <0> Lue lisää.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1301,6 +1307,12 @@ msgstr "Jonossa"
 msgid "Rates"
 msgstr "Kurssit"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Lue lisää"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Lue lisää UNIsta"
@@ -1368,6 +1380,7 @@ msgstr "Poistetaan {0} {1} ja {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Rajoittaa vaihdot vain suoriin pareihin."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1479,6 +1492,10 @@ msgstr "Lähetetään ääntä"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Menestyi"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Menestys"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Tapahtuma-asetukset"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "Tapahtuma-asetukset"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Tapahtuma lähetetty"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Kauppa suoritettu vuonna"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "Näkymä Etherscanissa"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Näytä Explorerissa"
