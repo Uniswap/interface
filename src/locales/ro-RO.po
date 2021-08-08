@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(elimină tot)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(editează)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Șterge tot"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Închide"
 
@@ -482,6 +479,10 @@ msgstr "Confirmă Schimbul"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Confirmă această tranzacție în portofelul tău"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Confirmați tranzacția în portofel"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "Introdu o listă valabilă a locației"
 msgid "Enter valid token address"
 msgstr "Introdu o adresă valabilă a grupului"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1135,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ups! A avut loc o eroare necunoscută. Reîmprospătează pagina, sau vizitează un alt browser sau dispozitiv."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Timpurile de nefuncționare programate pentru optimism"
+msgid "Optimism Planned Downtime"
+msgstr "Timp de inactivitate planificat pentru optimism"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optimismul așteaptă o perioadă de nefuncționare programată în viitorul apropiat. <0> Citiți mai multe.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimismul așteaptă perioade de nefuncționare planificate în viitorul apropiat. Poate să apară și perioade de nefuncționare neplanificate. În timp ce rețeaua este oprită, taxele nu vor fi generate și nu veți putea elimina lichiditatea. <0> Citiți mai multe.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1307,12 @@ msgstr "În așteptare"
 msgid "Rates"
 msgstr "Tarife"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Citeste mai mult"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Citește mai multe despre UNI"
@@ -1372,6 +1380,7 @@ msgstr "Se elimină {0} {1} și {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Restricționează rocadele doar la perechi directe."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1492,10 @@ msgstr "Se trimite votul"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Reușit"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Succes"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1646,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Setări Tranzacție"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1667,10 @@ msgstr "Setări Tranzacție"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Tranzacție Trimisă"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Tranzacție finalizată în"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1847,7 @@ msgstr "Vizualizare pe Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Vizualizează pe Explorer"

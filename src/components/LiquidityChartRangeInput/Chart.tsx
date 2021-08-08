@@ -1,5 +1,6 @@
 import { max, scaleLinear, ZoomTransform } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Bound } from 'state/mint/v3/actions'
 import { Area } from './Area'
 import { AxisBottom } from './AxisBottom'
 import { Brush } from './Brush'
@@ -13,6 +14,7 @@ export const yAccessor = (d: ChartEntry) => d.activeLiquidity
 export function Chart({
   id = 'liquidityChartRangeInput',
   data: { series, current },
+  ticksAtLimit,
   styles,
   dimensions: { width, height },
   margins,
@@ -56,7 +58,7 @@ export function Chart({
 
   useEffect(() => {
     if (!brushDomain) {
-      onBrushDomainChange(xScale.domain() as [number, number])
+      onBrushDomainChange(xScale.domain() as [number, number], undefined)
     }
   }, [brushDomain, onBrushDomainChange, xScale])
 
@@ -71,7 +73,13 @@ export function Chart({
           // allow zooming inside the x-axis
           height
         }
-        showClear={false}
+        resetBrush={() => {
+          onBrushDomainChange(
+            [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
+            'reset'
+          )
+        }}
+        showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}
         zoomLevels={zoomLevels}
       />
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>

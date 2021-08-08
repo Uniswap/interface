@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
+"POT-Creation-Date: 2021-08-02 14:52+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Portuguese\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
+"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(limpar tudo)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(editar)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Limpar tudo"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Fechar"
 
@@ -482,6 +479,10 @@ msgstr "Confirmar troca"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Confirmar esta transação na sua carteira"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Confirme a transação na carteira"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "Insira um local de lista válido"
 msgid "Enter valid token address"
 msgstr "Insira um endereço de token válido"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1135,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ups! Ocorreu um erro desconhecido. Por favor, atualize a página, ou visite a partir de outro navegador ou dispositivo."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Tempo de inatividade programado para otimismo"
+msgid "Optimism Planned Downtime"
+msgstr "Tempo de inatividade planejado para otimismo"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "O otimismo espera algum tempo de inatividade programado em um futuro próximo. <0> Leia mais.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "O otimismo espera um tempo de inatividade planejado em um futuro próximo. Tempo de inatividade não planejado também pode ocorrer. Enquanto a rede estiver desligada, as taxas não serão geradas e você não poderá remover a liquidez. <0> Leia mais.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1307,12 @@ msgstr "Na fila"
 msgid "Rates"
 msgstr "Taxas"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Consulte Mais informação"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Leia mais sobre a UNI"
@@ -1372,6 +1380,7 @@ msgstr "A remover {0} {1} e {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Restringe trocas apenas para pares diretos."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1492,10 @@ msgstr "A Enviar Voto"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Bem sucedido"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Sucesso"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1646,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Configurações de transação"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1653,6 +1667,10 @@ msgstr "Configurações de transação"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transação Enviada"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transação concluída em"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1847,7 @@ msgstr "Ver no Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Ver no Explorador"

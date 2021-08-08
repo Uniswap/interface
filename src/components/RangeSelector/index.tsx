@@ -44,13 +44,13 @@ export default function RangeSelector({
     <AutoColumn gap="md">
       <RowBetween>
         <StepCounter
-          value={ticksAtLimit[Bound.LOWER] ? '0' : leftPrice?.toSignificant(5) ?? ''}
+          value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : leftPrice?.toSignificant(5) ?? ''}
           onUserInput={onLeftRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementLower : getIncrementUpper}
           increment={isSorted ? getIncrementLower : getDecrementUpper}
-          decrementDisabled={ticksAtLimit[Bound.LOWER]}
-          incrementDisabled={ticksAtLimit[Bound.LOWER]}
+          decrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
+          incrementDisabled={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
@@ -58,13 +58,13 @@ export default function RangeSelector({
           tokenB={currencyB?.symbol}
         />
         <StepCounter
-          value={ticksAtLimit[Bound.UPPER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
+          value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
           onUserInput={onRightRangeInput}
           width="48%"
           decrement={isSorted ? getDecrementUpper : getIncrementLower}
           increment={isSorted ? getIncrementUpper : getDecrementLower}
-          incrementDisabled={ticksAtLimit[Bound.UPPER]}
-          decrementDisabled={ticksAtLimit[Bound.UPPER]}
+          incrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
+          decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
           tokenA={currencyA?.symbol}
