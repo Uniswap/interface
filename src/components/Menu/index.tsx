@@ -10,6 +10,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Check,
+  BarChart2,
+  Twitter,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -254,23 +256,17 @@ export default function Menu() {
                     </div>
                     <BookOpen opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href={CODE_LINK}>
+                  <MenuItem href="https://www.dextools.io/app/uniswap/pair-explorer/0x409de5926a8a6879a5ee3ff594ad76c11d88e921">
                     <div>
-                      <Trans>Code</Trans>
+                      <Trans>Dextools</Trans>
                     </div>
-                    <Code opacity={0.6} size={16} />
+                    <BarChart2 opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://discord.gg/FCfyBSbCU5">
+                  <MenuItem href={'https://twitter.com/BabyTrumpETH'}>
                     <div>
-                      <Trans>Discord</Trans>
+                      <Trans>Twitter</Trans>
                     </div>
-                    <MessageCircle opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={infoLink}>
-                    <div>
-                      <Trans>Analytics</Trans>
-                    </div>
-                    <PieChart opacity={0.6} size={16} />
+                    <Twitter opacity={0.6} size={16} />
                   </MenuItem>
                   <ToggleMenuItem onClick={() => setMenu('lang')}>
                     <div>
