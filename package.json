@@ -161,6 +161,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "moment": "^2.29.1",
     "web3": "^1.5.1"
   }
 }
