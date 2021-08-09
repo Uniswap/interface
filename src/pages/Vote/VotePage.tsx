@@ -4,7 +4,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import { DateTime } from 'luxon'
 import React, { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, ArrowLeft, ArrowUp, DollarSign, Info } from 'react-feather'
+import { AlertCircle, ArrowLeft, ArrowUp, Clock, DollarSign, Info } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import * as web3 from 'web3'
 import { RouteComponentProps } from 'react-router-dom'
@@ -48,6 +48,9 @@ import Header from 'components/Header'
 import { relative } from 'path'
 import { DialogOverlay } from '@reach/dialog'
 import Badge from 'components/Badge'
+import { mnemonicToEntropy } from 'ethers/lib/utils'
+import moment from 'moment'
+import { BlueCard } from 'components/Card'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -162,14 +165,21 @@ export default function VotePage({
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
     storedTrumpBalance !== undefined && +storedTrumpBalance > 0 && !!account
   )
+
+  const trackingSince = useMemo(() => {
+    return moment(new Date(localStorage.getItem('trackingSince') as string)).fromNow()
+  }, [localStorage.getItem('trackingSince')])
+
   const trackGains = () => {
     if (isTrackingGains) {
       localStorage.setItem('trumpBalance', '0')
       localStorage.setItem('stimulusBalance', '0')
+      localStorage.setItem('trackingSince', '')
       setIsTrackingGains(false)
     } else if (!!trumpBalance || !!stimulusBalance) {
       localStorage.setItem('trumpBalance', (trumpBalance || 0)?.toFixed(2))
       localStorage.setItem('stimulusBalance', (stimulusBalance || 0)?.toFixed(2))
+      localStorage.setItem('trackingSince', `${new Date()}`)
       setIsTrackingGains(true)
     } else {
       setIsTrackingGains(false)
@@ -180,6 +190,7 @@ export default function VotePage({
   const trackingLabel = useMemo(() => {
     return isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'
   }, [isTrackingGains])
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -197,6 +208,17 @@ export default function VotePage({
                   </small>
                 </Trans>
               </TYPE.black>
+              <br />
+              {isTrackingGains && (
+                <BlueCard>
+                  <TYPE.main>
+                    <small>
+                      <Clock />
+                      &nbsp;Started tracking gains {trackingSince}
+                    </small>
+                  </TYPE.main>
+                </BlueCard>
+              )}
             </CardSection>
             <AutoColumn gap="50px">
               <GreyCard>
