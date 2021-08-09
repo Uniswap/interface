@@ -260,7 +260,6 @@ export default function VotePage({
             <br />
             <AutoColumn gap="2em">
               <GreyCard>
-                <Badge>COMING SOON</Badge>
                 <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
                   <div>
                     <img src={'https://babytrumptoken.com/images/Untitled_Artwork-9.png'} width="100px" />
@@ -289,6 +288,11 @@ export default function VotePage({
                         )}
                       </TYPE.main>
                     )}
+
+                    {stimulusBalance !== undefined &&
+                      trumpBalance !== undefined &&
+                      +stimulusBalance.toFixed(2) > 0 &&
+                      +trumpBalance.toFixed(2) > 0 && <Badge>2X REDISTRIBUTION</Badge>}
                   </CardSection>
                 </div>
               </GreyCard>
