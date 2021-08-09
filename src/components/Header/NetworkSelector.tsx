@@ -23,12 +23,11 @@ const ActiveRowLinkList = styled.div`
     font-size: 12px;
     font-weight: 500;
     justify-content: space-between;
-    margin-top: 8px;
+    padding: 8px 0 4px;
     text-decoration: none;
   }
   & > a:first-child {
     border-top: 1px solid ${({ theme }) => theme.text2};
-    padding-top: 8px;
     margin: 0;
   }
 `
@@ -94,13 +93,13 @@ const Logo = styled.img`
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
 `
-const SelectorControls = styled.div<{ canSwitchNetworks: boolean }>`
+const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 2px solid ${({ theme }) => theme.bg1};
   border-radius: 12px;
   color: ${({ theme }) => theme.text1};
-  cursor: ${({ canSwitchNetworks }) => (canSwitchNetworks ? 'pointer' : 'auto')};
+  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
@@ -143,29 +142,37 @@ export default function NetworkSelector() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
   const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
-
   useOnClickOutside(node, open ? toggle : undefined)
   const implements3085 = useAppSelector((state) => state.application.implements3085)
-  const toggleWithFeatureCheck = useCallback(() => {
-    if (implements3085) {
+
+  const info = chainId ? CHAIN_INFO[chainId] : undefined
+
+  const isOnL2 = chainId ? L2_CHAIN_IDS.includes(chainId) : false
+  const showSelector = Boolean(implements3085 || isOnL2)
+  const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
+
+  const conditionalToggle = useCallback(() => {
+    if (showSelector) {
       toggle()
     }
-  }, [implements3085, toggle])
-  const info = chainId ? CHAIN_INFO[chainId] : undefined
+  }, [showSelector, toggle])
+
   if (!chainId || !info || !library) {
     return null
   }
 
-  const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
-
   function Row({ targetChain }: { targetChain: number }) {
-    if (!library || !chainId) {
+    if (!library || !chainId || (!implements3085 && targetChain !== chainId)) {
       return null
+    }
+    const handleRowClick = () => {
+      switchToNetwork({ library, chainId: targetChain })
+      toggle()
     }
     const active = chainId === targetChain
     const hasExtendedInfo = L2_CHAIN_IDS.includes(targetChain)
     const RowContent = () => (
-      <FlyoutRow onClick={() => switchToNetwork({ library, chainId: targetChain })} active={active}>
+      <FlyoutRow onClick={handleRowClick} active={active}>
         <Logo src={CHAIN_INFO[targetChain].logoUrl} />
         <NetworkLabel>{CHAIN_INFO[targetChain].label}</NetworkLabel>
         {chainId === targetChain && <FlyoutRowActiveIndicator />}
@@ -191,12 +198,13 @@ export default function NetworkSelector() {
     }
     return <RowContent />
   }
+
   return (
     <SelectorWrapper ref={node as any}>
-      <SelectorControls onClick={toggleWithFeatureCheck} canSwitchNetworks={implements3085}>
+      <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
         <Logo src={info.logoUrl || mainnetInfo.logoUrl} />
         <NetworkLabel>{info.label}</NetworkLabel>
-        {implements3085 && <StyledChevronDown />}
+        {showSelector && <StyledChevronDown />}
       </SelectorControls>
       {open && (
         <FlyoutMenu>
