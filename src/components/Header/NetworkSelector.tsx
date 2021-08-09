@@ -117,7 +117,7 @@ const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
       return <Trans>Arbitrum Bridge</Trans>
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
-      return <Trans>Optimistic L2 Gateway</Trans>
+      return <Trans>Optimism Gateway</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
@@ -181,7 +181,7 @@ export default function NetworkSelector() {
               <ExplorerText chainId={chainId} /> <LinkOutCircle />
             </ExternalLink>
             <ExternalLink href={CHAIN_INFO[targetChain].infoLink}>
-              <Trans>Learn more</Trans> <LinkOutCircle />
+              <Trans>Help center</Trans> <LinkOutCircle />
             </ExternalLink>
           </ActiveRowLinkList>
         </ActiveRowWrapper>
@@ -204,7 +204,7 @@ export default function NetworkSelector() {
             </FlyoutHeader>
             <Row targetChain={SupportedChainId.MAINNET} />
             <Row targetChain={SupportedChainId.OPTIMISM} />
-            <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
+            {/* <Row targetChain={SupportedChainId.ARBITRUM_ONE} /> */}
           </FlyoutMenu>
         )}
       </SelectorWrapper>

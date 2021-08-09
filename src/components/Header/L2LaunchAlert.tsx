@@ -88,7 +88,7 @@ const SwitchNetworks = styled(BaseButton)`
   height: 36px;
   margin-right: 12px;
   padding: 8px 12px;
-  width: 120px;
+  width: 152px;
 `
 
 export default function L2LaunchAlert() {
@@ -113,16 +113,16 @@ export default function L2LaunchAlert() {
           <Trans>Uniswap on Optimism</Trans>
         </Header>
         <Body>
-          <Trans>Instant transactions, Native meta-transactions, No gas, and Low fees.</Trans>
+          <Trans>Uniswap is now on Layer 2! Enjoy instant transactions and low fees on Optimistic Ethereum (OΞ)</Trans>
         </Body>
       </ContentWrapper>
       <ControlsWrapper>
         {implements3085 && (
           <SwitchNetworks onClick={() => switchToNetwork({ library, chainId: SupportedChainId.OPTIMISM })}>
-            <Trans>Try the beta</Trans>
+            ✨<Trans>Try the beta</Trans>✨
           </SwitchNetworks>
         )}
-        <ReadMoreLink href="https://help.uniswap.org/en/articles/5391401-uniswap-on-optimistic-ethereum">
+        <ReadMoreLink href="https://uniswap.org/blog/uniswap-optimism-alpha/">
           <Trans>Read more</Trans>
         </ReadMoreLink>
       </ControlsWrapper>

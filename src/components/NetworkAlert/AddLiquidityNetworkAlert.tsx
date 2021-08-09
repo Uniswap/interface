@@ -11,6 +11,7 @@ import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { DesktopTextBreak } from './general'
 import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
@@ -18,12 +19,6 @@ const L2Icon = styled.img`
   height: 40px;
   margin: auto 20px auto 4px;
   width: 40px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: block;
-  }
-`
-const DesktopTextBreak = styled.div`
-  display: none;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     display: block;
   }
@@ -40,6 +35,7 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  max-width: 880px;
   overflow: hidden;
   padding: 12px;
   position: relative;
@@ -96,7 +92,7 @@ const LinkOutToBridge = styled(ExternalLink)`
     background-color: black;
   }
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    margin: auto 0 auto auto;
+    margin: auto 0 auto 12px;
     padding: 14px 16px;
     min-width: 226px;
   }
