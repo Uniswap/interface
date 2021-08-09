@@ -57,7 +57,7 @@ exports[`renders multi route 1`] = `
               >
                 <div
                   class="css-vurnku"
-                  style="margin-left: 6px;"
+                  style="margin-left: 6px; height: 15px;"
                 >
                   <div
                     class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
@@ -159,7 +159,7 @@ exports[`renders multi route 1`] = `
               >
                 <div
                   class="css-vurnku"
-                  style="margin-left: 6px;"
+                  style="margin-left: 6px; height: 15px;"
                 >
                   <div
                     class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
@@ -213,7 +213,7 @@ exports[`renders multi route 1`] = `
               >
                 <div
                   class="css-vurnku"
-                  style="margin-left: 6px;"
+                  style="margin-left: 6px; height: 15px;"
                 >
                   <div
                     class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"
@@ -324,7 +324,7 @@ exports[`renders single route 1`] = `
               >
                 <div
                   class="css-vurnku"
-                  style="margin-left: 6px;"
+                  style="margin-left: 6px; height: 15px;"
                 >
                   <div
                     class="DoubleLogo__Wrapper-sc-skatqk-0 diDXho"

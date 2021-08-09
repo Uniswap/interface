@@ -102,7 +102,7 @@ function Pool({
   return (
     <Badge>
       <StyledRow gap="4px">
-        <Box style={{ marginLeft: '6px' }}>
+        <Box style={{ marginLeft: '6px', height: '15px' }}>
           <DoubleCurrencyLogo currency0={higherCurrency} currency1={coveredCurrency} size={13} />
         </Box>
         {feeAmount && <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>}
