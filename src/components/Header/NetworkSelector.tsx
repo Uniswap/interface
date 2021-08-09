@@ -12,10 +12,9 @@ import { ExternalLink } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
 const ActiveRowLinkList = styled.div`
-  border-top: 1px solid #3b3c3f;
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  padding: 0 8px;
   & > a {
     align-items: center;
     color: ${({ theme }) => theme.text1};
@@ -27,12 +26,17 @@ const ActiveRowLinkList = styled.div`
     margin-top: 8px;
     text-decoration: none;
   }
+  & > a:first-child {
+    border-top: 1px solid #3b3c3f;
+    padding-top: 8px;
+    margin: 0;
+  }
 `
 const ActiveRowWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 8px;
   cursor: pointer;
-  padding: 8px;
+  padding: 8px 0 8px 0;
   width: 100%;
 `
 const FlyoutHeader = styled.div`
@@ -94,7 +98,7 @@ const SelectorControls = styled.div<{ canSwitchNetworks: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 2px solid ${({ theme }) => theme.bg1};
-  border-radius: 8px;
+  border-radius: 12px;
   color: ${({ theme }) => theme.text1};
   cursor: ${({ canSwitchNetworks }) => (canSwitchNetworks ? 'pointer' : 'auto')};
   display: flex;
