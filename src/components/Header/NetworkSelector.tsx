@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import L2LaunchAlert from 'components/Header/L2LaunchAlert'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -153,7 +152,6 @@ export default function NetworkSelector() {
     return null
   }
 
-  const showOptimismLaunchAlert = Boolean(library && !L2_CHAIN_IDS.includes(chainId))
   const mainnetInfo = CHAIN_INFO[SupportedChainId.MAINNET]
 
   function Row({ targetChain }: { targetChain: number }) {
@@ -190,25 +188,22 @@ export default function NetworkSelector() {
     return <RowContent />
   }
   return (
-    <>
-      <SelectorWrapper ref={node as any}>
-        <SelectorControls onClick={toggleWithFeatureCheck} canSwitchNetworks={implements3085}>
-          <Logo src={info.logoUrl || mainnetInfo.logoUrl} />
-          <NetworkLabel>{info.label}</NetworkLabel>
-          {implements3085 && <StyledChevronDown />}
-        </SelectorControls>
-        {open && (
-          <FlyoutMenu>
-            <FlyoutHeader>
-              <Trans>Select a network</Trans>
-            </FlyoutHeader>
-            <Row targetChain={SupportedChainId.MAINNET} />
-            <Row targetChain={SupportedChainId.OPTIMISM} />
-            {/* <Row targetChain={SupportedChainId.ARBITRUM_ONE} /> */}
-          </FlyoutMenu>
-        )}
-      </SelectorWrapper>
-      {showOptimismLaunchAlert && <L2LaunchAlert />}
-    </>
+    <SelectorWrapper ref={node as any}>
+      <SelectorControls onClick={toggleWithFeatureCheck} canSwitchNetworks={implements3085}>
+        <Logo src={info.logoUrl || mainnetInfo.logoUrl} />
+        <NetworkLabel>{info.label}</NetworkLabel>
+        {implements3085 && <StyledChevronDown />}
+      </SelectorControls>
+      {open && (
+        <FlyoutMenu>
+          <FlyoutHeader>
+            <Trans>Select a network</Trans>
+          </FlyoutHeader>
+          <Row targetChain={SupportedChainId.MAINNET} />
+          <Row targetChain={SupportedChainId.OPTIMISM} />
+          {/* <Row targetChain={SupportedChainId.ARBITRUM_ONE} /> */}
+        </FlyoutMenu>
+      )}
+    </SelectorWrapper>
   )
 }
