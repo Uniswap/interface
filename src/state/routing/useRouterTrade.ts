@@ -18,7 +18,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
 
   const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    userRoutingAPIEnabled && amountIn && currencyOut
+    userRoutingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
           tokenInChainId: amountIn.currency.chainId,
@@ -38,6 +38,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const routes = useRoutes(
     amountIn?.currency,
     currencyOut,
+    'exactIn',
     // important to check `isUninitialized` as `skipToken` still returns cached data
     isUninitialized ? undefined : data
   )
@@ -69,7 +70,6 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     }
 
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_INPUT>({
-      //todo(judo): inputAmount should be from API
       routes,
       tradeType: TradeType.EXACT_INPUT,
     })
@@ -90,7 +90,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
 
   const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    userRoutingAPIEnabled && amountOut && currencyIn
+    userRoutingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
       ? {
           tokenInAddress: currencyIn.wrapped.address,
           tokenInChainId: currencyIn.chainId,
@@ -111,6 +111,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     currencyIn,
     amountOut?.currency,
     // important to check `isUninitialized` as `skipToken` still returns cached data
+    'exactOut',
     isUninitialized ? undefined : data
   )
 

@@ -6,6 +6,7 @@ import { GetQuoteResult } from 'state/routing/slice'
 export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
+  type: 'exactIn' | 'exactOut',
   quoteResult: Pick<GetQuoteResult, 'routeEdges' | 'routeNodes' | 'quote'> | undefined
 ): {
   route: Route<Currency, Currency>
@@ -78,14 +79,15 @@ export function useRoutes(
             outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
           }
         }),
-        currencyOut,
+        type === 'exactIn' ? currencyOut : currencyIn,
+        type,
         quoteResult.quote
       )
     } catch (err) {
       console.debug(err)
       return []
     }
-  }, [currencyIn, currencyOut, graph, quoteResult, tokensInRoute])
+  }, [currencyIn, currencyOut, graph, quoteResult, tokensInRoute, type])
 }
 
 // DFS
@@ -159,15 +161,16 @@ function validate(
     inputAmount: CurrencyAmount<Currency>
     outputAmount: CurrencyAmount<Currency>
   }[],
-  currencyOut: Currency,
+  currency: Currency,
+  type: 'exactIn' | 'exactOut',
   expectedAmount: string
 ) {
   const derivedOutputAmount = allRoutes.reduce(
-    (acc, cur) => acc.add(cur.outputAmount),
-    CurrencyAmount.fromRawAmount(currencyOut, '0')
+    (acc, cur) => acc.add(type === 'exactIn' ? cur.outputAmount : cur.inputAmount),
+    CurrencyAmount.fromRawAmount(currency, '0')
   )
 
-  if (!derivedOutputAmount.equalTo(CurrencyAmount.fromRawAmount(currencyOut, expectedAmount))) {
+  if (!derivedOutputAmount.equalTo(CurrencyAmount.fromRawAmount(currency, expectedAmount))) {
     throw new Error('Expected sum of outputs to be quote result output')
   }
 

@@ -12,7 +12,7 @@ const amount = (raw: TemplateStringsArray) => (parseInt(raw[0]) * 1e6).toString(
 describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
     const { result } = renderHook(() =>
-      useRoutes(USDC, DAI, {
+      useRoutes(USDC, DAI, 'exactIn', {
         routeEdges: [],
         routeNodes: [],
         quote: '0',
@@ -24,7 +24,7 @@ describe('#useRoute', () => {
 
   it('handles a single route trade from DAI to USDC', () => {
     const { result } = renderHook(() =>
-      useRoutes(DAI, USDC, {
+      useRoutes(DAI, USDC, 'exactIn', {
         routeEdges: [
           {
             amountIn: amount`1`,
@@ -66,7 +66,7 @@ describe('#useRoute', () => {
 
   it('handles a multi-route trade from DAI to USDC', () => {
     const { result } = renderHook(() =>
-      useRoutes(DAI, USDC, {
+      useRoutes(DAI, USDC, 'exactIn', {
         routeEdges: [
           {
             amountIn: amount`5`,
@@ -144,7 +144,7 @@ describe('#useRoute', () => {
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
     const { result } = renderHook(() =>
-      useRoutes(DAI, USDC, {
+      useRoutes(DAI, USDC, 'exactIn', {
         routeEdges: [
           {
             amountIn: amount`1`,

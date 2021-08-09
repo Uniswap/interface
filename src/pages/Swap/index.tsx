@@ -471,7 +471,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <OutlineCard padding="0.5rem" style={v3TradeState === V3TradeState.INVALID ? { display: 'none' } : {}}>
+              <OutlineCard padding="0.5rem" style={v2Trade || v3Trade ? {} : { display: 'none' }}>
                 <Row justify={v3TradeState === V3TradeState.INVALID ? 'enter' : 'space-between'}>
                   <RowFixed>
                     {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
@@ -528,7 +528,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       ) : (
                         <AutoRow gap="4px" width="auto" padding=".5rem">
                           <StyledAutoRouterIcon />
-                          <GradientText fontSize={14}>Uniswap API</GradientText>
+                          <GradientText fontSize={14}>Auto Router</GradientText>
                         </AutoRow>
                       ))}
                   </RowFixed>
