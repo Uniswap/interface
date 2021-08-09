@@ -253,6 +253,10 @@ export default function VotePage({
                 </CardSection>
               </GreyCard>
             </AutoColumn>
+            <br />
+            <AutoColumn gap="50px">
+              <ButtonPrimary onClick={trackGains}>{trackingLabel}</ButtonPrimary>
+            </AutoColumn>
             <CardSection>
               <TYPE.blue>
                 <div className="d-flex align-items-center">
