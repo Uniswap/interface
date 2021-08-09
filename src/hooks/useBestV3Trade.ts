@@ -52,7 +52,7 @@ export function useBestV3TradeExactIn(
       !amountIn ||
       !currencyOut ||
       // skip when tokens are the same
-      !amountIn.currency.equals(currencyOut)
+      amountIn.currency.equals(currencyOut)
     ) {
       return {
         state: V3TradeState.INVALID,
@@ -142,7 +142,7 @@ export function useBestV3TradeExactOut(
       !currencyIn ||
       quotesResults.some(({ valid }) => !valid) ||
       // skip when tokens are the same
-      !amountOut.currency.equals(currencyIn)
+      amountOut.currency.equals(currencyIn)
     ) {
       return {
         state: V3TradeState.INVALID,
