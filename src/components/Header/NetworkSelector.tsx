@@ -17,7 +17,7 @@ const ActiveRowLinkList = styled.div`
   padding: 0 8px;
   & > a {
     align-items: center;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.text2};
     display: flex;
     flex-direction: row;
     font-size: 12px;
@@ -27,7 +27,7 @@ const ActiveRowLinkList = styled.div`
     text-decoration: none;
   }
   & > a:first-child {
-    border-top: 1px solid #3b3c3f;
+    border-top: 1px solid ${({ theme }) => theme.text2};
     padding-top: 8px;
     margin: 0;
   }
