@@ -5,7 +5,8 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
+import { useDarkModeManager } from 'state/user/hooks'
+import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { SupportedChainId } from '../../constants/chains'
@@ -41,15 +42,21 @@ const Header = styled.h2`
   margin: 0;
   padding-right: 30px;
 `
-const L2LaunchAlertWrapper = styled.div`
-  display: none;
-  position: absolute;
-  top: 80px;
-  right: 20px;
-  background: radial-gradient(948.6% 291.5% at 41.77% 0%, rgba(255, 58, 212, 0.06) 0%, rgba(255, 255, 255, 0.04) 100%),
-    radial-gradient(98.16% 96.19% at 1.84% 0%, rgba(255, 39, 39, 0.3) 0%, rgba(235, 0, 255, 0.207) 95.71%);
+const darkModeWrapperBackground = css`
+  background: radial-gradient(98% 96% at 2% 0%, hsl(349, 49%, 27%) 0%, hsl(293, 51%, 23%) 100%);
+`
+const lightModeWrapperBackground = css`
+  background: radial-gradient(98% 96% at 2% 0%, hsl(355, 86%, 84%) 0%, hsl(296, 83%, 86%) 100%);
+`
+const L2LaunchAlertWrapper = styled.div<{ darkMode: boolean }>`
+  ${({ darkMode }) => (darkMode ? darkModeWrapperBackground : lightModeWrapperBackground)}
   border-radius: 12px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  display: none;
   overflow: hidden;
+  position: absolute;
+  right: 20px;
+  top: 80px;
   width: 348px;
   z-index: -1;
   :before {
@@ -95,6 +102,7 @@ export default function L2LaunchAlert() {
   const { account, library } = useActiveWeb3React()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
   const implements3085 = useAppSelector((state) => state.application.implements3085)
+  const [darkMode] = useDarkModeManager()
 
   const dismiss = useCallback(() => {
     setLocallyDimissed(true)
@@ -105,7 +113,7 @@ export default function L2LaunchAlert() {
   }
 
   return (
-    <L2LaunchAlertWrapper>
+    <L2LaunchAlertWrapper darkMode={darkMode}>
       <CloseIcon onClick={dismiss} />
       <ContentWrapper>
         <L2Icon src={optimismLogoUrl} />
