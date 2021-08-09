@@ -40,7 +40,7 @@ const expectLocalMock = (state: V3TradeState) => {
 
 beforeEach(() => {
   // ignore debounced value
-  mockedUseDebounce.mockImplementation((value) => [value, false])
+  mockedUseDebounce.mockImplementation((value) => value)
 })
 
 describe('#useV3TradeExactIn', () => {

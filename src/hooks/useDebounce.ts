@@ -1,18 +1,14 @@
 import { useEffect, useState } from 'react'
 
 // modified from https://usehooks.com/useDebounce/
-export default function useDebounce<T>(value: T, delay: number): [T, boolean] {
+export default function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
-  const [debouncing, setDebouncing] = useState(false)
 
   useEffect(() => {
     // Update debounced value after delay
     const handler = setTimeout(() => {
       setDebouncedValue(value)
-      setDebouncing(false)
     }, delay)
-
-    setDebouncing(true)
 
     // Cancel the timeout if value changes (also on delay change or unmount)
     // This is how we prevent debounced value from updating if value is changed ...
@@ -22,5 +18,5 @@ export default function useDebounce<T>(value: T, delay: number): [T, boolean] {
     }
   }, [value, delay])
 
-  return [debouncedValue, debouncing]
+  return debouncedValue
 }

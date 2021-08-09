@@ -29,7 +29,7 @@ export function useV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null; router: RouterVersion } {
-  const [debouncedAmountIn] = useDebounce(amountIn, 250)
+  const debouncedAmountIn = useDebounce(amountIn, 250)
 
   // attempt to use multi-route trade
   const multiRouteTradeExactIn = useRouterTradeExactIn(debouncedAmountIn, currencyOut)
@@ -65,7 +65,7 @@ export function useV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null; router: RouterVersion } {
-  const [debouncedAmountOut] = useDebounce(amountOut, 250)
+  const debouncedAmountOut = useDebounce(amountOut, 250)
 
   // attempt to use multi-route trade
   const multiRouteTradeExactOut = useRouterTradeExactOut(currencyIn, debouncedAmountOut)
