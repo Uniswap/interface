@@ -169,8 +169,8 @@ export function NetworkAlert() {
         </Header>
         <Body>
           <Trans>
-            Uniswap is now live on the Optimistic Ethereum (OΞ) layer 2 network. Trade with low fees and near-instant
-            confirmation transactions. To get started, deposit assets from layer 1 Ethereum to OΞ.
+            Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
+            transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
           </Trans>{' '}
           <ReadMoreLink href={readMoreLink}>
             <Trans>Read more</Trans>

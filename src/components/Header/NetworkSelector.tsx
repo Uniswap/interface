@@ -190,7 +190,7 @@ export default function NetworkSelector() {
               <ExplorerText chainId={chainId} /> <LinkOutCircle />
             </ExternalLink>
             <ExternalLink href={CHAIN_INFO[targetChain].infoLink}>
-              <Trans>Help center</Trans> <LinkOutCircle />
+              <Trans>Help Center</Trans> <LinkOutCircle />
             </ExternalLink>
           </ActiveRowLinkList>
         </ActiveRowWrapper>
