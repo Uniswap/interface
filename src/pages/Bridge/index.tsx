@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components';
 import QuestionHelper from '../../components/QuestionHelper';
 import { RowBetween } from '../../components/Row';
 import AppBody from '../AppBody';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
-import { ButtonPrimary } from '../../components/Button';
 import ArrowIcon from '../../assets/svg/arrow.svg';
 import { AssetSelector } from './AssetsSelector';
 import { FooterBridgeSelector } from './FooterBridgeSelector';
@@ -13,6 +12,7 @@ import { FooterReady } from './FooterReady';
 import { NetworkSwitcher } from './NetworkSwitcher';
 import { BridgeSuccesModal } from './BridgeSuccesModal';
 import { ApplicationModal } from '../../state/application/actions';
+import { BridgeButton } from './BridgeButton';
 
 const Title = styled.p`
   margin: 0;
@@ -22,6 +22,13 @@ const Title = styled.p`
   letter-spacing: -0.01em;
   color: ${({ theme }) => theme.purple2};
 `;
+
+const Row = styled(RowBetween)`
+  & > div {
+    width: 100%;
+  }
+`;
+
 
 const ArrowImg = styled.img`
   margin: 0 16px;
@@ -54,6 +61,9 @@ export default function Bridge() {
     setIsEthereumConnected(false);
   }
   
+  const [bridge, setBridge] = useState('Swapr Fast Exit');
+  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
+  
   return (
     <>
       <AppBody>
@@ -61,7 +71,7 @@ export default function Bridge() {
           <Title>{step === Step.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
-        <RowBetween mb="12px">
+        <Row mb="12px">
           <AssetSelector
             modal={ApplicationModal.NETWORK_SWITCHER_FROM}
             label="from"
@@ -77,7 +87,7 @@ export default function Bridge() {
             name="Ethereum"
             connected={isEthereumConnected}
           />
-        </RowBetween>
+        </Row>
         <CurrencyInputPanel
           label="Amount"
           value={amount}
@@ -96,12 +106,18 @@ export default function Bridge() {
             onCollectClick={() => setStep(Step.Success)}
           />
         ) : (
-          <ButtonPrimary onClick={() => setStep(Step.Pending)} mt="12px" disabled={isButtonDisabled}>
+          <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!!amount ? 'Brigde to ethereum' : 'Enter Eth Amount'}
-          </ButtonPrimary>
+          </BridgeButton>
         )}
       </AppBody>
-      {step === Step.Initial && !!amount && <FooterBridgeSelector show onBridgeChange={() => {}} />}
+      {step === Step.Initial && !!amount && (
+        <FooterBridgeSelector
+          show
+          selectedBridge={bridge}
+          onBridgeChange={handleBridgeRadioChange}
+        />
+      )}
       {step === Step.Pending && <FooterPending amount={amount} show />}
       {step === Step.Ready && <FooterReady amount={amount} show onCollectButtonClick={() => setStep(Step.Collect)} />}
       <BridgeSuccesModal

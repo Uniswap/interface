@@ -76,17 +76,17 @@ export const AssetSelector = ({label, icon, name, connected, modal}: AssetSelect
   const toggleNetworkSwitcherPopover = useToggleModal(modal);
   
   return (
-    <Section onClick={toggleNetworkSwitcherPopover}>
-      <Row>
-        <IconWrapper>
-          <img src={icon} alt={name} />
-        </IconWrapper>
-        {connected && <TagSuccess>Connected</TagSuccess>}
-      </Row>
-      <SmallLabel>{label}</SmallLabel>
-      <NetworkSwitcherPopover modal={modal} placement="bottom">
-        <AssetName>{name}</AssetName>
-      </NetworkSwitcherPopover>
-    </Section>
+    <NetworkSwitcherPopover modal={modal} placement="bottom">
+      <Section onClick={toggleNetworkSwitcherPopover}>
+          <Row>
+            <IconWrapper>
+              <img src={icon} alt={name} />
+            </IconWrapper>
+            {connected && <TagSuccess>Connected</TagSuccess>}
+          </Row>
+          <SmallLabel>{label}</SmallLabel>
+          <AssetName>{name}</AssetName>
+      </Section>
+    </NetworkSwitcherPopover>
   )
 }
