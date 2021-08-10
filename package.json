@@ -8,6 +8,7 @@
     "@fuseio/fuse-swap-default-token-list": "~2.0.0",
     "@fuseio/fuse-swap-sdk": "^3.1.1",
     "@fuseio/token-lists": "^1.1.0",
+    "@fuseio/web3-react-walletconnect-connector": "^7.0.1-alpha.0",
     "@fuseswap/default-token-list": "^1.0.0",
     "@popperjs/core": "^2.4.4",
     "@ramp-network/ramp-instant-sdk": "^2.4.3",
@@ -112,8 +113,5 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "@fuseio/web3-react-walletconnect-connector": "^7.0.1-alpha.0"
-  }
+  "license": "GPL-3.0-or-later"
 }
