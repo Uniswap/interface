@@ -24,6 +24,8 @@ export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('u
 export const updateUserRoutingAPIEnabled = createAction<{ userRoutingAPIEnabled: boolean }>(
   'user/updateUserRoutingAPIEnabled'
 )
+export const updateUserShowAdvancedSwapDetails =
+  createAction<{ userShowAdvancedSwapDetails: boolean }>('user/userAdvancedSwapDetails')
 export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'

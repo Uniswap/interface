@@ -12,6 +12,7 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateUserShowAdvancedSwapDetails as updateShowUserAdvancedSwapDetails,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
@@ -36,6 +37,8 @@ export interface UserState {
   userExpertMode: boolean
 
   userRoutingAPIEnabled: boolean // whether the user has enabled the routing API
+
+  userShowAdvancedSwapDetails: boolean // whether the user has toggled the advanced swap details
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -75,6 +78,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userLocale: null,
   userRoutingAPIEnabled: true,
+  userShowAdvancedSwapDetails: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -149,6 +153,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserRoutingAPIEnabled, (state, action) => {
       state.userRoutingAPIEnabled = action.payload.userRoutingAPIEnabled
+    })
+    .addCase(updateShowUserAdvancedSwapDetails, (state, action) => {
+      state.userShowAdvancedSwapDetails = action.payload.userShowAdvancedSwapDetails
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

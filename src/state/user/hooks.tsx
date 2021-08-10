@@ -26,6 +26,7 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserRoutingAPIEnabled,
+  updateUserShowAdvancedSwapDetails,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -118,6 +119,21 @@ export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) =
   )
 
   return [routingAPI, setRoutingAPI]
+}
+
+export function useUserShowAdvancedSwapDetails(): [boolean, (userAdvancedSwapDetails: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const showAdvancedSwapDetails = useAppSelector((state) => state.user.userShowAdvancedSwapDetails)
+
+  const setUserShowAdvancedSwapDetails = useCallback(
+    (newShowAdvancedSwapDetails: boolean) => {
+      dispatch(updateUserShowAdvancedSwapDetails({ userShowAdvancedSwapDetails: newShowAdvancedSwapDetails }))
+    },
+    [dispatch]
+  )
+
+  return [showAdvancedSwapDetails, setUserShowAdvancedSwapDetails]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

@@ -55,7 +55,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager } from '../../state/user/hooks'
+import { useExpertModeManager, useUserShowAdvancedSwapDetails } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -213,12 +213,7 @@ export default function Swap({ history }: RouteComponentProps) {
   })
 
   // advanced swap details
-  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useState<boolean>(false)
-
-  // hide swap details if currencies change
-  useEffect(() => {
-    setShowAdvancedSwapDetails(false)
-  }, [currencies?.INPUT, currencies?.OUTPUT, setShowAdvancedSwapDetails])
+  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useUserShowAdvancedSwapDetails()
 
   const formattedAmounts = {
     [independentField]: typedValue,
