@@ -15,19 +15,27 @@ export interface GetQuoteResult {
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
   quoteId: string
-  routeEdges: {
-    amountIn: string
-    amountOut: string
+  route: {
+    address: string
+    amountIn?: string
+    amountOut?: string
     fee: string
-    id: string
-    inId: string
-    outId: string
-    type: string
-    sqrtRatioX96: string
     liquidity: string
+    sqrtRatioX96: string
     tickCurrent: string
-  }[]
-  routeNodes: { chainId: number; id: string; decimals: string; symbol?: string | undefined; type?: string }[]
+    tokenIn: {
+      address: string
+      chainId: number
+      decimals: string | number
+      symbol?: string
+    }
+    tokenOut: {
+      address: string
+      chainId: number
+      decimals: string | number
+      symbol?: string
+    }
+  }[][]
   routeString: string
 }
 

@@ -46,7 +46,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut) {
+    if (!amountIn || !currencyOut || !routes) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -118,7 +118,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountOut || !currencyIn) {
+    if (!amountOut || !currencyIn || !routes) {
       return {
         state: V3TradeState.INVALID,
         trade: null,

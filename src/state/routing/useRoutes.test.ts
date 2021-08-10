@@ -13,9 +13,7 @@ describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
     const { result } = renderHook(() =>
       useRoutes(USDC, DAI, 'exactIn', {
-        routeEdges: [],
-        routeNodes: [],
-        quote: '0',
+        route: [],
       })
     )
 
@@ -25,33 +23,21 @@ describe('#useRoute', () => {
   it('handles a single route trade from DAI to USDC', () => {
     const { result } = renderHook(() =>
       useRoutes(DAI, USDC, 'exactIn', {
-        routeEdges: [
-          {
-            amountIn: amount`1`,
-            amountOut: amount`5`,
-            fee: '500',
-            id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: DAI.wrapped.address,
-            outId: USDC.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
+        route: [
+          [
+            {
+              address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`1`,
+              amountOut: amount`5`,
+              fee: '500',
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+              tokenIn: DAI,
+              tokenOut: USDC,
+            },
+          ],
         ],
-        routeNodes: [
-          {
-            ...DAI,
-            id: DAI.wrapped.address,
-            decimals: DAI.decimals.toString(),
-          },
-          {
-            ...USDC,
-            id: USDC.wrapped.address,
-            decimals: USDC.decimals.toString(),
-          },
-        ],
-        quote: amount`5`,
       })
     )
 
@@ -67,62 +53,45 @@ describe('#useRoute', () => {
   it('handles a multi-route trade from DAI to USDC', () => {
     const { result } = renderHook(() =>
       useRoutes(DAI, USDC, 'exactIn', {
-        routeEdges: [
-          {
-            amountIn: amount`5`,
-            amountOut: amount`6`,
-            fee: '500',
-            id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: DAI.wrapped.address,
-            outId: USDC.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
-          {
-            amountIn: amount`10`,
-            amountOut: amount`1`,
-            fee: '3000',
-            id: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: DAI.wrapped.address,
-            outId: MKR.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
-          {
-            amountIn: amount`1`,
-            amountOut: amount`200`,
-            fee: '10000',
-            id: '0x3f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: MKR.wrapped.address,
-            outId: USDC.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
+        route: [
+          [
+            {
+              address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`5`,
+              amountOut: amount`6`,
+              fee: '500',
+              tokenIn: DAI,
+              tokenOut: USDC,
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+            },
+          ],
+          [
+            {
+              address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`10`,
+              amountOut: amount`1`,
+              fee: '3000',
+              tokenIn: DAI,
+              tokenOut: MKR,
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+            },
+            {
+              address: '0x3f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`1`,
+              amountOut: amount`200`,
+              fee: '10000',
+              tokenIn: MKR,
+              tokenOut: USDC,
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+            },
+          ],
         ],
-        routeNodes: [
-          {
-            ...DAI,
-            id: DAI.wrapped.address,
-            decimals: DAI.decimals.toString(),
-          },
-          {
-            ...USDC,
-            id: USDC.wrapped.address,
-            decimals: USDC.decimals.toString(),
-          },
-          {
-            ...MKR,
-            id: MKR.wrapped.address,
-            decimals: MKR.decimals.toString(),
-          },
-        ],
-        quote: amount`206`,
       })
     )
 
@@ -145,45 +114,34 @@ describe('#useRoute', () => {
   it('handles a single route trade with same token pair, different fee tiers', () => {
     const { result } = renderHook(() =>
       useRoutes(DAI, USDC, 'exactIn', {
-        routeEdges: [
-          {
-            amountIn: amount`1`,
-            amountOut: amount`5`,
-            fee: '500',
-            id: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: DAI.wrapped.address,
-            outId: USDC.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
-          {
-            amountIn: amount`10`,
-            amountOut: amount`50`,
-            fee: '3000',
-            id: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
-            inId: DAI.wrapped.address,
-            outId: USDC.wrapped.address,
-            type: 'EXACT_IN',
-            sqrtRatioX96: '2437312313659959819381354528',
-            liquidity: '10272714736694327408',
-            tickCurrent: '-69633',
-          },
+        route: [
+          [
+            {
+              address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`1`,
+              amountOut: amount`5`,
+              fee: '500',
+              tokenIn: DAI,
+              tokenOut: USDC,
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+            },
+          ],
+          [
+            {
+              address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+              amountIn: amount`10`,
+              amountOut: amount`50`,
+              fee: '3000',
+              tokenIn: DAI,
+              tokenOut: USDC,
+              sqrtRatioX96: '2437312313659959819381354528',
+              liquidity: '10272714736694327408',
+              tickCurrent: '-69633',
+            },
+          ],
         ],
-        routeNodes: [
-          {
-            ...DAI,
-            id: DAI.wrapped.address,
-            decimals: DAI.decimals.toString(),
-          },
-          {
-            ...USDC,
-            id: USDC.wrapped.address,
-            decimals: USDC.decimals.toString(),
-          },
-        ],
-        quote: amount`55`,
       })
     )
 

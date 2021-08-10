@@ -472,7 +472,13 @@ export default function Swap({ history }: RouteComponentProps) {
 
             {showWrap ? null : (
               <OutlineCard padding="0.5rem" style={v2Trade || v3Trade ? {} : { display: 'none' }}>
-                <Row justify={v3TradeState === V3TradeState.INVALID ? 'enter' : 'space-between'}>
+                <Row
+                  justify={
+                    toggledVersion === Version.v3 && v3TradeState === V3TradeState.NO_ROUTE_FOUND
+                      ? 'center'
+                      : 'space-between'
+                  }
+                >
                   <RowFixed>
                     {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                       (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
