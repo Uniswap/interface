@@ -91,6 +91,7 @@ export const GreenBadge = styled.div`
   width: fit-content;
   white-space: nowrap;
 `
+
 export const BlueBadge = styled.div`
   background-color: ${({ theme }) => transparentize(0.92, theme.blue2)};
   padding: 6px 8px;

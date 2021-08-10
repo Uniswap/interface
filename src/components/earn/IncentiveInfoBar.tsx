@@ -12,6 +12,7 @@ import { useColor } from 'hooks/useColor'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import useTheme from 'hooks/useTheme'
 import { EmptyBadge, GreenBadge } from 'components/Badge'
+import useCountdownTime from 'hooks/useCountdownTime'
 
 const Wrapper = styled.div`
   padding: 0;
@@ -51,18 +52,11 @@ interface IncentiveInfoBarProps {
   incentive: Incentive
 }
 
-const MINUTE = 60
-const HOUR = MINUTE * 60
-const DAY = HOUR * 24
-
 export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
   const theme = useTheme()
 
   const rewardToken = incentive.initialRewardAmount.currency
   const rewardCurrency = unwrappedToken(rewardToken)
-
-  const startDate = new Date(incentive.startTime * 1000)
-  const endDate = new Date(incentive.endTime * 1000)
 
   const rewardTokensPerWeek = incentive.rewardRatePerSecond.multiply(BIG_INT_SECONDS_IN_WEEK)
 
@@ -74,14 +68,11 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
 
   const color = useColor(rewardToken)
 
+  // get countdown info if needed
+  const startDate = new Date(incentive.startTime * 1000)
+  const endDate = new Date(incentive.endTime * 1000)
   const beginsInFuture = incentive.startTime > Date.now() / 1000
-
-  let timeUntilGenesis: number = incentive.startTime - Date.now() / 1000
-  const days = (timeUntilGenesis - (timeUntilGenesis % DAY)) / DAY
-  timeUntilGenesis -= days * DAY
-  const hours = (timeUntilGenesis - (timeUntilGenesis % HOUR)) / HOUR
-  timeUntilGenesis -= hours * HOUR
-  const minutes = (timeUntilGenesis - (timeUntilGenesis % MINUTE)) / MINUTE
+  const countdownTimeText = useCountdownTime(startDate, endDate)
 
   return (
     <Wrapper>
@@ -99,7 +90,7 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
             </TYPE.body>
           </GreenBadge>
           <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
-            {`Starts in ${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`}
+            {countdownTimeText}
           </TYPE.main>
         </RowFixed>
       ) : (

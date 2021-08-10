@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ButtonSmall } from 'components/Button'
-import { DarkGreyCard, GreyCard } from 'components/Card'
+import { DarkGreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import PositionManageCard from 'components/earn/PositionManageCard'
 import ProgramCard from 'components/earn/ProgramCard'
@@ -17,6 +17,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HoverText, TYPE } from 'theme'
 import { formattedFeeAmount } from 'utils'
+import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const Wrapper = styled.div`
@@ -80,7 +81,7 @@ export default function Manage({
             <TYPE.body fontWeight={600} fontSize="18px">
               <Trans>Positions</Trans>
             </TYPE.body>
-            <ButtonSmall padding="4px" as={Link} to={`/add/${pool.token0.address}/${pool.token1.address}`}>
+            <ButtonSmall padding="4px" as={Link} to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
               <Trans>+ Add position</Trans>
             </ButtonSmall>
           </RowBetween>
@@ -99,7 +100,7 @@ export default function Manage({
               <Trans>
                 Boosting liquidity deposits your liquidity in the Uniswap Liquidity mining contracts. When boosted, your
                 liquidity will continue to earn fees while in range. You must remove boosts to be able to claim fees or
-                withdraw liquidity.`
+                withdraw liquidity.
               </Trans>
             </TYPE.body>
           </RowBetween>

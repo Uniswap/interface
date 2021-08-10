@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Pool } from '@uniswap/v3-sdk'
-import Badge, { GreenBadge } from 'components/Badge'
+import Badge, { GenericBadge, GreenBadge } from 'components/Badge'
 import { ButtonLightGray, ButtonGreySmall, ButtonPrimary, ButtonSmall } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -24,8 +24,10 @@ import { PositionDetails } from 'types/position'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Break } from './styled'
-import StakingModal from './StakingModal'
+import StakingModal, { ClaimModal, UnstakeModal } from './StakingModal'
 import RangeStatus from 'components/RangeStatus'
+import useCountdownTime from 'hooks/useCountdownTime'
+import { YellowCard } from 'components/Card'
 
 const Wrapper = styled.div<{ open?: boolean }>`
   width: 100%;
@@ -48,10 +50,11 @@ const DynamicSection = styled.div<{ disabled?: boolean }>`
 
 interface BoostStatusRowProps {
   incentive: Incentive
-  positionDetails: PositionDetails
 }
 
-function BoostStatusRow({ incentive, positionDetails }: BoostStatusRowProps) {
+function BoostStatusRow({ incentive }: BoostStatusRowProps) {
+  const theme = useTheme()
+
   const rewardCurrency = incentive.initialRewardAmount.currency
   /**
    * @TODO make these real
@@ -62,27 +65,54 @@ function BoostStatusRow({ incentive, positionDetails }: BoostStatusRowProps) {
 
   const [attemptingUnstake, setAttemptingUnstake] = useState(false)
 
+  // get countdown info if needed to display for future start time
+  const startDate = new Date(incentive.startTime * 1000)
+  const endDate = new Date(incentive.endTime * 1000)
+  const beginsInFuture = incentive.startTime > Date.now() / 1000
+  const ended = incentive.endTime < Date.now() / 1000
+  const countdownTimeText = useCountdownTime(startDate, endDate)
+
   const handleToggleStakeOn = () => {
     setAttemptingUnstake(true)
     console.log('toggle on')
   }
 
-  const handleToggleStakeOff = () => {
-    console.log('toggle on')
-  }
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <RowBetween>
+      <ClaimModal isOpen={showModal} onDismiss={() => setShowModal(false)} incentives={[incentive]} />
       <RowFixed>
         <CurrencyLogo currency={rewardCurrency} />
-        <TYPE.body m="0 12px" fontSize="20px">{`${formatCurrencyAmount(availableClaim, 5)} ${
+        <TYPE.body m="0 12px" fontSize="20px" fontWeight={500}>{`${formatCurrencyAmount(availableClaim, 5)} ${
           rewardCurrency.symbol
         }`}</TYPE.body>
-        <Badge>{`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}</Badge>
+        {}
+        {ended ? (
+          <GenericBadge style={{ backgroundColor: theme.yellow3 }}>
+            <TYPE.body color={theme.black}>
+              <Trans>Ended</Trans>
+            </TYPE.body>
+          </GenericBadge>
+        ) : (
+          <Badge>{`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}</Badge>
+        )}
+        {beginsInFuture ? (
+          <RowFixed style={{ marginLeft: '16px' }}>
+            <GreenBadge>
+              <TYPE.body fontWeight={700} color={theme.green2} fontSize="12px">
+                NEW
+              </TYPE.body>
+            </GreenBadge>
+            <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
+              {countdownTimeText}
+            </TYPE.main>
+          </RowFixed>
+        ) : null}
       </RowFixed>
       <AutoRow gap="8px" width="fit-content">
         {availableClaim.greaterThan(BIG_INT_ZERO) ? (
-          <ButtonGreySmall>
+          <ButtonGreySmall onClick={() => setShowModal(true)}>
             <Trans>Claim</Trans>
           </ButtonGreySmall>
         ) : null}
@@ -119,7 +149,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
 
   // amount of programs where position is staked
   const amountBoosted = incentives
-    ? incentives.reduce((accum, incentive) => {
+    ? incentives.reduce((accum) => {
         /**
          * @TODO get data about which positions are staked
          */
@@ -152,6 +182,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
 
   const [showStakingModal, setShowStakingModal] = useState(false)
   const [showClaimModal, setShowClaimModal] = useState(false)
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false)
 
   return (
     <Wrapper open={open}>
@@ -161,6 +192,8 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
         incentives={incentives}
         positionDetails={positionDetails}
       />
+      <ClaimModal isOpen={showClaimModal} onDismiss={() => setShowClaimModal(false)} incentives={incentives} />
+      <UnstakeModal isOpen={showUnstakeModal} onDismiss={() => setShowUnstakeModal(false)} incentives={incentives} />
       {incentives ? (
         <HoverRow onClick={() => setOpen(!open)}>
           <RangeStatus positionDetails={positionDetails} />
@@ -242,11 +275,11 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
                   </TYPE.body>
                 </AutoColumn>
                 <AutoRow gap="8px" width="fit-content">
-                  <ButtonSmall>
+                  <ButtonSmall onClick={() => setShowClaimModal(true)}>
                     <Trans>Claim All</Trans>
                   </ButtonSmall>
-                  <ButtonSmall>
-                    <Trans>Unstake</Trans>
+                  <ButtonSmall onClick={() => setShowUnstakeModal(true)}>
+                    <Trans>Unstake and Claim All</Trans>
                   </ButtonSmall>
                 </AutoRow>
               </RowBetween>
@@ -261,7 +294,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
             <DynamicSection disabled={!isDeposited}>
               <AutoColumn gap="16px">
                 {incentives.map((incentive, i) => (
-                  <BoostStatusRow key={'boost-status' + i} incentive={incentive} positionDetails={positionDetails} />
+                  <BoostStatusRow key={'boost-status' + i} incentive={incentive} />
                 ))}
               </AutoColumn>
             </DynamicSection>
