@@ -142,7 +142,9 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   return useMemo(() => {
     const proposalsCallData = proposalsV0.concat(proposalsV1)
     const proposalStatesCallData = proposalStatesV0.concat(proposalStatesV1)
-    const formattedLogs = (formattedLogsV0 ?? []).concat(formattedLogsV1 ?? [])
+    const formattedLogs = (formattedLogsV0 ?? [])
+      .slice(0, proposalsV0.length)
+      .concat((formattedLogsV1 ?? []).slice(0, proposalsV1.length))
 
     if (
       proposalsCallData.some((p) => p.loading) ||
