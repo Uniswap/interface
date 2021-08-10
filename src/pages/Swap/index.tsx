@@ -55,7 +55,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useUserShowAdvancedSwapDetails } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -213,12 +213,7 @@ export default function Swap({ history }: RouteComponentProps) {
   })
 
   // advanced swap details
-  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useState<boolean>(false)
-
-  // hide swap details if currencies change
-  useEffect(() => {
-    setShowAdvancedSwapDetails(false)
-  }, [currencies?.INPUT, currencies?.OUTPUT, setShowAdvancedSwapDetails])
+  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useUserShowAdvancedSwapDetails()
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -277,8 +272,6 @@ export default function Swap({ history }: RouteComponentProps) {
     signatureData
   )
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
       return
@@ -302,7 +295,7 @@ export default function Swap({ history }: RouteComponentProps) {
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
             getTradeVersion(trade),
-            singleHopOnly ? 'SH' : 'MH',
+            'MH',
           ].join('/'),
         })
       })
@@ -315,17 +308,7 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [
-    swapCallback,
-    priceImpact,
-    tradeToConfirm,
-    showConfirm,
-    recipient,
-    recipientAddress,
-    account,
-    trade,
-    singleHopOnly,
-  ])
+  }, [swapCallback, priceImpact, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -596,8 +579,6 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
-                    ) : singleHopOnly ? (
-                      <Trans>Insufficient liquidity for this trade. Try enabling multi-hop trades.</Trans>
                     ) : (
                       <Trans>Insufficient liquidity for this trade.</Trans>
                     )}

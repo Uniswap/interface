@@ -26,7 +26,7 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserRoutingAPIEnabled,
-  updateUserSingleHopOnly,
+  updateUserShowAdvancedSwapDetails,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -106,21 +106,6 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
-  const dispatch = useAppDispatch()
-
-  const singleHopOnly = useAppSelector((state) => state.user.userSingleHopOnly)
-
-  const setSingleHopOnly = useCallback(
-    (newSingleHopOnly: boolean) => {
-      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
-    },
-    [dispatch]
-  )
-
-  return [singleHopOnly, setSingleHopOnly]
-}
-
 export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) => void] {
   const dispatch = useAppDispatch()
 
@@ -134,6 +119,21 @@ export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) =
   )
 
   return [routingAPI, setRoutingAPI]
+}
+
+export function useUserShowAdvancedSwapDetails(): [boolean, (userAdvancedSwapDetails: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const showAdvancedSwapDetails = useAppSelector((state) => state.user.userShowAdvancedSwapDetails)
+
+  const setUserShowAdvancedSwapDetails = useCallback(
+    (newShowAdvancedSwapDetails: boolean) => {
+      dispatch(updateUserShowAdvancedSwapDetails({ userShowAdvancedSwapDetails: newShowAdvancedSwapDetails }))
+    },
+    [dispatch]
+  )
+
+  return [showAdvancedSwapDetails, setUserShowAdvancedSwapDetails]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

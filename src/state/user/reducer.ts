@@ -12,12 +12,12 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateUserShowAdvancedSwapDetails as updateShowUserAdvancedSwapDetails,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
   updateUserRoutingAPIEnabled,
-  updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -36,9 +36,9 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userSingleHopOnly: boolean // only allow swaps on direct pairs
-
   userRoutingAPIEnabled: boolean // whether the user has enabled the routing API
+
+  userShowAdvancedSwapDetails: boolean // whether the user has toggled the advanced swap details
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -77,8 +77,8 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userLocale: null,
-  userSingleHopOnly: false,
   userRoutingAPIEnabled: true,
+  userShowAdvancedSwapDetails: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -151,11 +151,11 @@ export default createReducer(initialState, (builder) =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserSingleHopOnly, (state, action) => {
-      state.userSingleHopOnly = action.payload.userSingleHopOnly
-    })
     .addCase(updateUserRoutingAPIEnabled, (state, action) => {
       state.userRoutingAPIEnabled = action.payload.userRoutingAPIEnabled
+    })
+    .addCase(updateShowUserAdvancedSwapDetails, (state, action) => {
+      state.userShowAdvancedSwapDetails = action.payload.userShowAdvancedSwapDetails
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

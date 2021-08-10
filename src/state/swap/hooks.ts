@@ -8,7 +8,6 @@ import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useUserSingleHopOnly } from 'state/user/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
@@ -130,8 +129,6 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 } {
   const { account } = useActiveWeb3React()
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   const {
     independentField,
     typedValue,
@@ -156,12 +153,8 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
-  const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
+  const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const bestV3TradeExactIn = useV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
