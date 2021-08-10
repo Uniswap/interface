@@ -8,13 +8,11 @@ import Loader from 'components/Loader'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import AppleToggle from 'components/Toggle/AppleToggle'
 import { BIG_INT_ZERO } from 'constants/misc'
-import { BigNumber } from 'ethers'
 import { Incentive, useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
-import { DepositedTokenIdsState, useDepositedTokenIds } from 'hooks/incentives/useDepositedTokenIds'
+import { useIsPositionDeposited } from 'hooks/incentives/useDepositedTokenIds'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
-import { useActiveWeb3React } from 'hooks/web3'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, Lock, Zap } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -27,7 +25,6 @@ import { Break } from './styled'
 import StakingModal, { ClaimModal, UnstakeModal } from './StakingModal'
 import RangeStatus from 'components/RangeStatus'
 import useCountdownTime from 'hooks/useCountdownTime'
-import { YellowCard } from 'components/Card'
 
 const Wrapper = styled.div<{ open?: boolean }>`
   width: 100%;
@@ -45,7 +42,7 @@ const HoverRow = styled(RowBetween)`
 
 const DynamicSection = styled.div<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-  user-select: ${({ disabled }) => (disabled ? 'none' : 'inherit')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'inherit')};
 `
 
 interface BoostStatusRowProps {
@@ -124,11 +121,11 @@ function BoostStatusRow({ incentive }: BoostStatusRowProps) {
 
 interface PositionManageCardProps {
   positionDetails: PositionDetails
+  isPositionPage?: boolean
 }
 
-export default function PositionManageCard({ positionDetails }: PositionManageCardProps) {
+export default function PositionManageCard({ positionDetails, isPositionPage }: PositionManageCardProps) {
   const theme = useTheme()
-  const { account } = useActiveWeb3React()
 
   const { token0: token0Address, token1: token1Address, fee: feeAmount } = positionDetails
 
@@ -166,14 +163,8 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
   // const amountAvailable = incentives ? incentives.length - amountBoosted : 0
   const amountAvailable = incentives ? incentives.length : 0
 
-  const { state, tokenIds } = useDepositedTokenIds(account)
-
   // check if position is deposited into staker contract
-  const isDeposited = Boolean(
-    state === DepositedTokenIdsState.LOADED &&
-      tokenIds &&
-      tokenIds.find((id) => BigNumber.from(id.toString()).eq(positionDetails.tokenId))
-  )
+  const isDeposited = useIsPositionDeposited(positionDetails)
 
   /**
    * @TODO
@@ -185,7 +176,7 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
   const [showUnstakeModal, setShowUnstakeModal] = useState(false)
 
   return (
-    <Wrapper open={open}>
+    <Wrapper open={open || isPositionPage}>
       <StakingModal
         isOpen={showStakingModal}
         onDismiss={() => setShowStakingModal(false)}
@@ -195,68 +186,82 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
       <ClaimModal isOpen={showClaimModal} onDismiss={() => setShowClaimModal(false)} incentives={incentives} />
       <UnstakeModal isOpen={showUnstakeModal} onDismiss={() => setShowUnstakeModal(false)} incentives={incentives} />
       {incentives ? (
-        <HoverRow onClick={() => setOpen(!open)}>
-          <RangeStatus positionDetails={positionDetails} />
-          <RowFixed height="36px">
-            {amountBoosted > 0 && !open ? (
-              <GreenBadge>
-                <RowFixed style={{ flexWrap: 'nowrap' }}>
-                  <Zap strokeWidth="3px" color={theme.green2} size="14px" />
-                  <TYPE.body ml="4px" fontWeight={700} color={theme.green2} fontSize="12px">
-                    <Trans>Boosted</Trans>
-                  </TYPE.body>
-                  {incentives.map((incentive, i) => (
-                    <CurrencyLogo
-                      key={'incentive-logo-' + i}
-                      size="20px"
-                      style={{ marginLeft: '6px' }}
-                      currency={incentive.initialRewardAmount.currency}
-                    />
-                  ))}
-                </RowFixed>
-              </GreenBadge>
-            ) : null}
-            {amountAvailable > 0 && !open ? (
-              <GreenBadge>
-                <RowFixed style={{ flexWrap: 'nowrap' }}>
-                  <Zap strokeWidth="3px" color={theme.green2} size="14px" />
-                  <TYPE.body ml="4px" fontWeight={700} color={theme.green2} fontSize="12px">
-                    <Trans>Boosts available</Trans>
-                  </TYPE.body>
-                  {incentives.map((incentive, i) => (
-                    <CurrencyLogo
-                      key={'incentive-logo-' + i}
-                      size="20px"
-                      style={{ marginLeft: '6px' }}
-                      currency={incentive.initialRewardAmount.currency}
-                    />
-                  ))}
-                </RowFixed>
-              </GreenBadge>
-            ) : null}
-            <HoverText>
-              {!open ? (
-                <ChevronDown
-                  size="28px"
-                  color={theme.text3}
-                  style={{ marginLeft: '4px' }}
-                  onClick={() => setOpen(!open)}
-                />
-              ) : (
-                <ChevronUp
-                  size="28px"
-                  color={theme.text3}
-                  style={{ marginLeft: '4px' }}
-                  onClick={() => setOpen(!open)}
-                />
-              )}
-            </HoverText>
-          </RowFixed>
-        </HoverRow>
+        isPositionPage ? (
+          <RowBetween>
+            <RowFixed>
+              <Zap strokeWidth="3px" color={theme.blue3} size="16px" />
+              <TYPE.body ml="8px" fontWeight={500} color={theme.blue3}>
+                Position is Staked
+              </TYPE.body>
+            </RowFixed>
+            <ButtonSmall as={Link} to={'/stake/' + poolAddress}>
+              <Trans>Manage</Trans>
+            </ButtonSmall>
+          </RowBetween>
+        ) : (
+          <HoverRow onClick={() => setOpen(!open)}>
+            <RangeStatus positionDetails={positionDetails} />
+            <RowFixed height="36px">
+              {amountBoosted > 0 && !open ? (
+                <GreenBadge>
+                  <RowFixed style={{ flexWrap: 'nowrap' }}>
+                    <Zap strokeWidth="3px" color={theme.green2} size="14px" />
+                    <TYPE.body ml="4px" fontWeight={700} color={theme.green2} fontSize="12px">
+                      <Trans>Boosted</Trans>
+                    </TYPE.body>
+                    {incentives.map((incentive, i) => (
+                      <CurrencyLogo
+                        key={'incentive-logo-' + i}
+                        size="20px"
+                        style={{ marginLeft: '6px' }}
+                        currency={incentive.initialRewardAmount.currency}
+                      />
+                    ))}
+                  </RowFixed>
+                </GreenBadge>
+              ) : null}
+              {amountAvailable > 0 && !open ? (
+                <GreenBadge>
+                  <RowFixed style={{ flexWrap: 'nowrap' }}>
+                    <Zap strokeWidth="3px" color={theme.green2} size="14px" />
+                    <TYPE.body ml="4px" fontWeight={700} color={theme.green2} fontSize="12px">
+                      <Trans>Boosts available</Trans>
+                    </TYPE.body>
+                    {incentives.map((incentive, i) => (
+                      <CurrencyLogo
+                        key={'incentive-logo-' + i}
+                        size="20px"
+                        style={{ marginLeft: '6px' }}
+                        currency={incentive.initialRewardAmount.currency}
+                      />
+                    ))}
+                  </RowFixed>
+                </GreenBadge>
+              ) : null}
+              <HoverText>
+                {!open ? (
+                  <ChevronDown
+                    size="28px"
+                    color={theme.text3}
+                    style={{ marginLeft: '4px' }}
+                    onClick={() => setOpen(!open)}
+                  />
+                ) : (
+                  <ChevronUp
+                    size="28px"
+                    color={theme.text3}
+                    style={{ marginLeft: '4px' }}
+                    onClick={() => setOpen(!open)}
+                  />
+                )}
+              </HoverText>
+            </RowFixed>
+          </HoverRow>
+        )
       ) : (
         <Loader />
       )}
-      {open ? (
+      {open || isPositionPage ? (
         incentivesLoading ? (
           <Loader />
         ) : !incentives || incentives.length === 0 ? (
@@ -298,9 +303,11 @@ export default function PositionManageCard({ positionDetails }: PositionManageCa
                 ))}
               </AutoColumn>
             </DynamicSection>
-            <ButtonLightGray as={Link} to={'/pool/' + positionDetails.tokenId}>
-              <Trans>View position details →</Trans>
-            </ButtonLightGray>
+            {isPositionPage ? null : (
+              <ButtonLightGray as={Link} to={'/pool/' + positionDetails.tokenId}>
+                <Trans>View position details →</Trans>
+              </ButtonLightGray>
+            )}
           </AutoColumn>
         )
       ) : null}

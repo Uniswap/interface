@@ -1,5 +1,8 @@
+import { BigNumber } from 'ethers'
+import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { PositionDetails } from 'types/position'
 import { LogsState, useLogs } from '../../state/logs/hooks'
 import compareLogs from '../../utils/compareLogs'
 import { useV3Staker } from '../useContract'
@@ -65,4 +68,18 @@ export function useDepositedTokenIds(account: string | undefined | null): Deposi
       tokenIds,
     }
   }, [account, orderedDepositEvents, v3Staker])
+}
+
+export function useIsPositionDeposited(positionDetails: PositionDetails | undefined): boolean {
+  const { account } = useActiveWeb3React()
+
+  const { state, tokenIds } = useDepositedTokenIds(account)
+
+  // check if position is deposited into staker contract
+  return Boolean(
+    state === DepositedTokenIdsState.LOADED &&
+      tokenIds &&
+      positionDetails &&
+      tokenIds.find((id) => BigNumber.from(id.toString()).eq(positionDetails.tokenId))
+  )
 }

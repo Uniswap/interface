@@ -82,7 +82,7 @@ export const GenericBadge = styled.div`
 `
 
 export const GreenBadge = styled.div`
-  background-color: ${({ theme }) => transparentize(0.92, theme.green1)};
+  background-color: ${({ theme }) => transparentize(0.86, theme.green1)};
   padding: 6px 8px;
   border-radius: 6px;
   display: flex;

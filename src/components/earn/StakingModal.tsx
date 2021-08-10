@@ -121,13 +121,24 @@ export function ClaimModal({ incentives, isOpen, onDismiss }: ClaimModalProps) {
         {!incentives ? (
           <Loader />
         ) : (
-          <AutoColumn gap="lg">
+          <AutoColumn gap="md">
             <RowBetween>
               <TYPE.body fontSize="20px" fontWeight={600}>
                 <Trans>Claim Rewards</Trans>
               </TYPE.body>
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
+            <DarkerGreyCard>
+              <RowBetween>
+                <AlertCircle size={60} />
+                <TYPE.body ml="12px" fontSize="12px" fontWeight={500}>
+                  <Trans>
+                    Claiming rewards withdraws the rewards into your wallet. Your liquidity remains staked and will
+                    continue to earn fees when in range.
+                  </Trans>
+                </TYPE.body>
+              </RowBetween>
+            </DarkerGreyCard>
             <DarkerGreyCard>
               <AutoColumn gap="md" justify="center">
                 <TYPE.body ml="12px" fontSize="11px" fontWeight={400}>
@@ -151,17 +162,6 @@ export function ClaimModal({ incentives, isOpen, onDismiss }: ClaimModalProps) {
             <ButtonPrimary padding="8px" $borderRadius="12px">
               <Trans>Claim</Trans>
             </ButtonPrimary>
-            <DarkerGreyCard>
-              <RowBetween>
-                <AlertCircle size={60} />
-                <TYPE.body ml="12px" fontSize="12px" fontWeight={500}>
-                  <Trans>
-                    Claiming rewards withdraws the rewards into your wallet. Your liquidity remains staked and will
-                    continue to earn fees when in range.
-                  </Trans>
-                </TYPE.body>
-              </RowBetween>
-            </DarkerGreyCard>
           </AutoColumn>
         )}
       </Wrapper>
@@ -187,7 +187,7 @@ export function UnstakeModal({ incentives, isOpen, onDismiss }: UnstakeModalProp
         {!incentives ? (
           <Loader />
         ) : (
-          <AutoColumn gap="lg">
+          <AutoColumn gap="md">
             <RowBetween>
               <TYPE.body fontSize="20px" fontWeight={600}>
                 <Trans>Unstake and Claim</Trans>
