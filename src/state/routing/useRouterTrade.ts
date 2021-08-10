@@ -32,21 +32,20 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           deadline: deadline.toString(),
         }
       : skipToken,
-    { pollingInterval: ms`5m` }
+    { pollingInterval: ms`5m`, refetchOnMountOrArgChange: true }
   )
 
   const routes = useRoutes(
     amountIn?.currency,
     currencyOut,
-    'exactIn',
     // important to check `isUninitialized` as `skipToken` still returns cached data
-    isUninitialized ? undefined : data
+    isFetching || isUninitialized ? undefined : data
   )
 
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut || !routes) {
+    if (!amountIn || !currencyOut) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -62,7 +61,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
     const amountOut = currencyOut && data ? CurrencyAmount.fromRawAmount(currencyOut, data.quote) : undefined
 
-    if (isError || !amountOut || routes.length === 0) {
+    if (isError || !amountOut || !routes || routes.length === 0) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -104,21 +103,20 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           deadline: deadline.toString(),
         }
       : skipToken,
-    { pollingInterval: ms`5m` }
+    { pollingInterval: ms`5m`, refetchOnMountOrArgChange: true }
   )
 
   const routes = useRoutes(
     currencyIn,
     amountOut?.currency,
     // important to check `isUninitialized` as `skipToken` still returns cached data
-    'exactOut',
-    isUninitialized ? undefined : data
+    isFetching || isUninitialized ? undefined : data
   )
 
   // todo(judo): validate block number for freshness
 
   return useMemo(() => {
-    if (!amountOut || !currencyIn || !routes) {
+    if (!amountOut || !currencyIn) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -134,7 +132,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
     const amountIn = currencyIn && data ? CurrencyAmount.fromRawAmount(currencyIn, data.quote) : undefined
 
-    if (isError || !amountIn || routes.length === 0) {
+    if (isError || !amountIn || !routes || routes.length === 0) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,

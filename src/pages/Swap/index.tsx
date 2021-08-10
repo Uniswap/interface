@@ -471,7 +471,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <OutlineCard padding="0.5rem" style={v2Trade || v3Trade ? {} : { display: 'none' }}>
+              <OutlineCard padding="0.5rem" style={v3TradeState === V3TradeState.INVALID ? { display: 'none' } : {}}>
                 <Row
                   justify={
                     toggledVersion === Version.v3 && v3TradeState === V3TradeState.NO_ROUTE_FOUND

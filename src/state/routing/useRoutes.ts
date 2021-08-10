@@ -6,7 +6,6 @@ import { GetQuoteResult } from 'state/routing/slice'
 export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
-  type: 'exactIn' | 'exactOut',
   quoteResult: Pick<GetQuoteResult, 'route'> | undefined
 ):
   | {
@@ -15,27 +14,33 @@ export function useRoutes(
       outputAmount: CurrencyAmount<Currency>
     }[]
   | undefined {
-  return useMemo(
-    () =>
-      currencyIn &&
-      currencyOut &&
-      quoteResult &&
-      quoteResult['route'].map((route) => {
-        const rawAmountIn = route[0].amountIn
-        const rawAmountOut = route[route.length - 1].amountOut
+  return useMemo(() => {
+    try {
+      return (
+        currencyIn &&
+        currencyOut &&
+        quoteResult &&
+        quoteResult['route'].map((route) => {
+          const rawAmountIn = route[0].amountIn
+          const rawAmountOut = route[route.length - 1].amountOut
 
-        if (!rawAmountIn || !rawAmountOut) {
-          throw new Error('Expected both amountIn and amountOut to be present')
-        }
+          if (!rawAmountIn || !rawAmountOut) {
+            throw new Error('Expected both amountIn and amountOut to be present')
+          }
 
-        return {
-          route: new Route(route.map(parsePool), currencyIn, currencyOut),
-          inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
-          outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
-        }
-      }),
-    [currencyIn, currencyOut, quoteResult]
-  )
+          return {
+            route: new Route(route.map(parsePool), currencyIn, currencyOut),
+            inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+            outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
+          }
+        })
+      )
+    } catch {
+      // RTK-Query sometimes returns cached data for the wrong key (?),
+      // meaning the currencies inside `quoteResult` are stale.
+    }
+    return undefined
+  }, [currencyIn, currencyOut, quoteResult])
 }
 
 const parsePool = ({
