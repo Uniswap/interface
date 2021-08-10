@@ -282,16 +282,17 @@ export default function VotePage({
             <AutoColumn gap="2em">
               <GreyCard>
                 <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
+                  {!account && <Trans>{`Connect your wallet to start tracking gains`}</Trans>}
                   <div>
                     <img src={'https://babytrumptoken.com/images/Untitled_Artwork-9.png'} width="100px" />
                   </div>
                   <CardSection style={{ marginTop: 40, alignItems: 'center' }}>
                     <TYPE.black>
                       <Trans>
-                        {stimulusBalance !== undefined && `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}`}
+                        {stimulusBalance !== undefined ? `Stimulus Check Balance ${stimulusBalance?.toFixed(2)}` : null}
                       </Trans>
                     </TYPE.black>
-                    {isTrackingGains && (
+                    {isTrackingGains === true && (
                       <TYPE.main>
                         {storedSimulusBalance !== undefined && stimulusBalance !== undefined && account !== undefined && (
                           <React.Fragment>
