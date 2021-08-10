@@ -68,6 +68,9 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
+    // TODO(judo): remove after polish session
+    console.log('polish ', data?.quoteId)
+
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_INPUT>({
       routes,
       tradeType: TradeType.EXACT_INPUT,
