@@ -9,7 +9,7 @@ import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
-const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
+const INFURA_KEY = 'd2fa5c13a5614503a43a8ca751e8a9d6'
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
