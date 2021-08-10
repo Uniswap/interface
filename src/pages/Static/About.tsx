@@ -29,6 +29,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
     case ChainId.MUMBAI:
       return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    case ChainId.BSCTESTNET:
+      return `/pools/BNB`
+    case ChainId.BSCMAINNET:
+      return `/pools/BNB`
     default:
       return '/pools/ETH'
   }

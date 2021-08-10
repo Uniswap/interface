@@ -25,6 +25,7 @@ import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } 
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
 import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
+import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -93,6 +94,9 @@ export function getEtherscanLink(
 export function getEtherscanLinkText(chainId: ChainId): string {
   if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
     return 'View on Explorer'
+  }
+  if ([ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
+    return 'View on Bscscan'
   }
 
   return 'View on Etherscan'
@@ -379,6 +383,12 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       break
     case ChainId.MUMBAI:
       imageURL = getMumbaiTokenLogoURL(address)
+      break
+    case ChainId.BSCTESTNET:
+      imageURL = getBscTestnetTokenLogoURL(address)
+      break
+    case ChainId.BSCMAINNET:
+      imageURL = `https://pancakeswap.finance/images/tokens/${isAddress(address)}.png`
       break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
