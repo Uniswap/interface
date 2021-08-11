@@ -558,6 +558,14 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </TYPE.main>
                 </GreyCard>
+              ) : isSyncingRoute ? (
+                <GreyCard style={{ textAlign: 'center' }}>
+                  <TYPE.main mb="4px">
+                    <Dots>
+                      <Trans>Loading</Trans>
+                    </Dots>
+                  </TYPE.main>
+                </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                   <AutoColumn style={{ width: '100%' }} gap="12px">
