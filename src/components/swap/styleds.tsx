@@ -5,6 +5,7 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import { TYPE } from 'theme'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -127,4 +128,25 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
+`
+
+export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ syncing: boolean }>`
+  padding: 0.5rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    backdrop-filter: ${({ syncing }) => (syncing ? 'grayscale(100%)' : '')};
+  }
+`
+
+export const DimmableText = styled(TYPE.main)<{ dim: boolean }>`
+  color: ${({ theme, dim }) => (dim ? theme.text4 : theme.text1)};
 `

@@ -1,5 +1,6 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, Ether } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { GetQuoteResult } from 'state/routing/slice'
 
@@ -21,11 +22,11 @@ export function useRoutes(quoteResult: Pick<GetQuoteResult, 'route'> | undefined
           throw new Error('Expected both amountIn and amountOut to be present')
         }
 
-        const pools = route.map(parsePool)
-        const [currencyIn, currencyOut] = [pools[0].token0, pools[pools.length - 1].token1]
+        // extract currency[In|Out] from route[first|last]
+        const [currencyIn, currencyOut] = [parseToken(route[0].tokenIn), parseToken(route[route.length - 1].tokenOut)]
 
         return {
-          route: new Route(pools, currencyIn, currencyOut),
+          route: new Route(route.map(parsePool), currencyIn, currencyOut),
           inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
           outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
         }
@@ -34,17 +35,23 @@ export function useRoutes(quoteResult: Pick<GetQuoteResult, 'route'> | undefined
   }, [quoteResult])
 }
 
+const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Currency => {
+  return address === Ether.onChain(chainId).wrapped.address
+    ? Ether.onChain(SupportedChainId.MAINNET)
+    : new Token(chainId, address, parseInt(decimals.toString()), symbol)
+}
+
 const parsePool = ({
   fee,
   sqrtRatioX96,
   liquidity,
   tickCurrent,
-  tokenIn: { address: addressA, chainId: chainIdA, decimals: decimalsA, symbol: symbolA },
-  tokenOut: { address: addressB, chainId: chainIdB, decimals: decimalsB, symbol: symbolB },
+  tokenIn,
+  tokenOut,
 }: GetQuoteResult['route'][0][0]): Pool =>
   new Pool(
-    new Token(chainIdA, addressA, parseInt(decimalsA.toString()), symbolA),
-    new Token(chainIdB, addressB, parseInt(decimalsB.toString()), symbolB),
+    parseToken(tokenIn).wrapped,
+    parseToken(tokenOut).wrapped,
     parseInt(fee) as FeeAmount,
     sqrtRatioX96,
     liquidity,

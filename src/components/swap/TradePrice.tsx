@@ -8,6 +8,7 @@ interface TradePriceProps {
   price: Price<Currency, Currency>
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
+  dim?: boolean
 }
 
 const StyledPriceContainer = styled.button`
@@ -23,7 +24,7 @@ const StyledPriceContainer = styled.button`
   cursor: pointer;
 `
 
-export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
+export default function TradePrice({ price, showInverted, setShowInverted, dim }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
   let formattedPrice: string
@@ -42,7 +43,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
       <div style={{ alignItems: 'center', display: 'flex', width: 'fit-content' }}>
-        <Text fontWeight={500} fontSize={14} color={theme.text1}>
+        <Text fontWeight={500} fontSize={14} color={dim ? theme.text4 : theme.text1}>
           {text}
         </Text>
       </div>

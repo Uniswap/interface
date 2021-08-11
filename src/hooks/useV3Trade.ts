@@ -12,7 +12,7 @@ export enum V3TradeState {
   SYNCING,
 }
 
-const shouldUseFallback = (state: V3TradeState) => [V3TradeState.NO_ROUTE_FOUND].includes(state)
+const shouldUseFallback = (state: V3TradeState) => false //[V3TradeState.NO_ROUTE_FOUND].includes(state)
 
 /**
  * Returns the best v3 trade for a desired exact input swap.

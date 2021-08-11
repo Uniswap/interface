@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useUserRoutingAPIEnabled, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -35,7 +35,8 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           deadline: deadline.toString(),
         }
       : skipToken,
-    { pollingInterval: ms`10s` }
+    // TODO(judo): change back to 10s
+    { pollingInterval: ms`10m` }
   )
 
   // always calcuate routes regardless of query status
@@ -50,7 +51,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
-    if (isLoading) {
+    if (isLoading && !data) {
       // only on first hook render
       return {
         state: V3TradeState.LOADING,

@@ -227,6 +227,7 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const routeNotFound = toggledVersion === Version.v3 ? !v3Trade?.swaps : !trade?.route
   const isLoadingRoute = toggledVersion === Version.v3 && V3TradeState.LOADING === v3TradeState
+  const isSyncingRoute = toggledVersion === Version.v3 && V3TradeState.SYNCING === v3TradeState
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
@@ -497,17 +498,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </RowFixed>
                   <RowFixed minHeight="40px">
-                    {isLoadingRoute ? (
-                      <AutoRow gap="4px" width="auto" padding="0 .5rem">
-                        <TYPE.main>Finding best route...</TYPE.main>
-                        <Loader stroke={theme.text2} />
-                      </AutoRow>
-                    ) : trade ? (
+                    {trade ? (
                       <>
                         <TradePrice
                           price={trade.executionPrice}
                           showInverted={showInverted}
                           setShowInverted={setShowInverted}
+                          dim={isSyncingRoute}
                         />
                         <ButtonEmpty
                           onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
@@ -523,7 +520,9 @@ export default function Swap({ history }: RouteComponentProps) {
                   </RowFixed>
                 </Row>
 
-                {showAdvancedSwapDetails && <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                {showAdvancedSwapDetails && (
+                  <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={isSyncingRoute} />
+                )}
               </OutlineCard>
             )}
 
