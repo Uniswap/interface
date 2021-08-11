@@ -172,12 +172,6 @@ function useSwapCallArguments(
         },
       ]
     }
-    // else {
-    //   const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-    //   if (!swapRouterAddress) return []
-
-    //   return [{ address: swapRouterAddress, ...trade.methodParameters }]
-    // }
   }, [
     account,
     allowedSlippage,
