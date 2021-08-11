@@ -1,27 +1,41 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
+import { L2_CHAIN_IDS } from 'constants/chains'
+import { V3_SWAP_DEFAULT_SLIPPAGE } from 'hooks/useSwapSlippageTolerance'
 import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { useUserRoutingAPIEnabled, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useUserRoutingAPIEnabled, useUserSlippageToleranceWithDefault, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 
 // todo(judo): validate block number for freshness
 
-export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
-  const { account } = useActiveWeb3React()
+function useRouterTradeArguments() {
+  const { account, chainId } = useActiveWeb3React()
+  const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
 
-  // TODO(judo): `useUserSlippageToleranceWithDefault` when 'auto'
-  const userSlippageTolerance = useUserSlippageTolerance()
+  const userSlippageTolerance = useUserSlippageToleranceWithDefault(V3_SWAP_DEFAULT_SLIPPAGE)
   const [deadline] = useUserTransactionTTL()
 
   const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
 
+  return {
+    recipient: account ?? undefined,
+    slippageTolerance:
+      typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
+    deadline: deadline.toString(),
+    routingAPIEnabled: userRoutingAPIEnabled && !onL2,
+  }
+}
+
+export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
+  const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
+
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    userRoutingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
+    routingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
           tokenInChainId: amountIn.currency.chainId,
@@ -29,18 +43,14 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           tokenOutChainId: currencyOut.chainId,
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
-          recipient: account ?? undefined,
-          slippageTolerance:
-            typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
-          deadline: deadline.toString(),
+          recipient,
+          slippageTolerance,
+          deadline,
         }
       : skipToken,
-    // TODO(judo): change back to 10s
-    { pollingInterval: ms`10m` }
+    { pollingInterval: ms`10s` }
   )
 
-  // always calcuate routes regardless of query status
-  // note: `data` may be stale, rely on UI treatment of query status
   const routes = useRoutes(data)
 
   return useMemo(() => {
@@ -82,14 +92,10 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 }
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
-  const { account } = useActiveWeb3React()
-  const userSlippageTolerance = useUserSlippageTolerance()
-  const [deadline] = useUserTransactionTTL()
-
-  const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+  const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
 
   const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
-    userRoutingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
+    routingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
       ? {
           tokenInAddress: currencyIn.wrapped.address,
           tokenInChainId: currencyIn.chainId,
@@ -97,18 +103,15 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           tokenOutChainId: amountOut.currency.chainId,
           amount: amountOut.quotient.toString(),
           type: 'exactOut',
-          recipient: account ?? undefined,
-          slippageTolerance:
-            typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
-          deadline: deadline.toString(),
+          recipient,
+          slippageTolerance,
+          deadline,
         }
       : skipToken,
     { pollingInterval: ms`10s` }
   )
 
   const routes = useRoutes(data)
-
-  // todo(judo): validate block number for freshness
 
   return useMemo(() => {
     if (!amountOut || !currencyIn) {
