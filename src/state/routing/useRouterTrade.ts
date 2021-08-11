@@ -35,12 +35,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     { pollingInterval: ms`10s` }
   )
 
-  const routes = useRoutes(
-    amountIn?.currency,
-    currencyOut,
-    // important to check `isUninitialized` as `skipToken` still returns cached data
-    isFetching || isUninitialized ? undefined : data
-  )
+  const routes = useRoutes(data)
 
   // todo(judo): validate block number for freshness
 
@@ -109,12 +104,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     { pollingInterval: ms`10s` }
   )
 
-  const routes = useRoutes(
-    currencyIn,
-    amountOut?.currency,
-    // important to check `isUninitialized` as `skipToken` still returns cached data
-    isFetching || isUninitialized ? undefined : data
-  )
+  const routes = useRoutes(data)
 
   // todo(judo): validate block number for freshness
 
