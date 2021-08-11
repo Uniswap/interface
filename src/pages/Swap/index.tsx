@@ -65,6 +65,7 @@ import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ReactComponent as RoutingAPIIcon } from '../../assets/svg/routing_api.svg'
 import { V3TradeState } from 'hooks/useV3Trade'
+import AutoRouterLabel from './styled'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -492,8 +493,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
-                        <StyledAutoRouterIcon />
-                        <GradientText fontSize={14}>Auto Router</GradientText>
+                        <AutoRouterLabel pulsing={isSyncingRoute} />
                       </AutoRow>
                     )}
                   </RowFixed>
