@@ -8,14 +8,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
       address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
       symbol: 'USDC',
       name: 'USDC',
-      decimals: 6
+      decimals: 18
     },
     {
       chainId: 56,
       address: '0x55d398326f99059ff775485246999027b3197955',
       symbol: 'USDT',
       name: 'USDT',
-      decimals: 6
+      decimals: 18
     },
     {
       chainId: 56,
