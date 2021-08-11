@@ -3,10 +3,11 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
+import { TYPE } from 'theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { AdvancedSwapDetailsContainer, DimmableText } from './styleds'
+import { AdvancedSwapDetailsContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
@@ -26,59 +27,59 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   }, [trade])
 
   return !trade ? null : (
-    <AdvancedSwapDetailsContainer gap="8px" syncing={syncing}>
+    <AdvancedSwapDetailsContainer gap="8px" dim={syncing}>
       <RowBetween>
         <SwapRoute trade={trade} />
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <DimmableText dim={syncing} fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Liquidity Provider Fee</Trans>
-          </DimmableText>
+          </TYPE.black>
         </RowFixed>
-        <DimmableText dim={syncing} textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={12}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-        </DimmableText>
+        </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <DimmableText dim={syncing} fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Expected price Impact</Trans>
-          </DimmableText>
+          </TYPE.black>
         </RowFixed>
-        <DimmableText dim={syncing} textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={12}>
           <FormattedPriceImpact priceImpact={priceImpact} />
-        </DimmableText>
+        </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <DimmableText dim={syncing} fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             <Trans>Allowed Slippage</Trans>
-          </DimmableText>
+          </TYPE.black>
         </RowFixed>
-        <DimmableText dim={syncing} textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={12}>
           {allowedSlippage.toFixed(2)}%
-        </DimmableText>
+        </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <DimmableText dim={syncing} fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={12} fontWeight={400}>
             {trade.tradeType === TradeType.EXACT_INPUT ? (
               <Trans>Minimum amount received</Trans>
             ) : (
               <Trans>Maximum amount sent</Trans>
             )}
-          </DimmableText>
+          </TYPE.black>
         </RowFixed>
-        <DimmableText dim={syncing} textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={12}>
           {trade.tradeType === TradeType.EXACT_INPUT
             ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
             : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-        </DimmableText>
+        </TYPE.black>
       </RowBetween>
     </AdvancedSwapDetailsContainer>
   )

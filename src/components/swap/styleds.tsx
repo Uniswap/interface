@@ -130,23 +130,12 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ syncing: boolean }>`
+export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ dim: boolean }>`
   padding: 0.5rem;
   position: relative;
 
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    backdrop-filter: ${({ syncing }) => (syncing ? 'grayscale(100%)' : '')};
-  }
-`
-
-export const DimmableText = styled(TYPE.main)<{ dim: boolean }>`
-  color: ${({ theme, dim }) => (dim ? theme.text4 : theme.text1)};
+  opacity: ${({ dim }) => (dim ? '0.5' : '1')};
+  filter: ${({ dim }) => (dim ? 'grayscale(100%)' : '')};
+  transition: opacity 0.2s ease, filter 0.2s ease;
+  will-change: opacity filter;
 `

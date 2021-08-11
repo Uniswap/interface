@@ -18,6 +18,8 @@ const GradientText = styled(TYPE.black)<{ pulsing: boolean }>`
   -webkit-text-fill-color: transparent;
 
   animation: ${({ pulsing }) => pulsing && pulse} 0.6s infinite ease-in-out;
+  will-change: background-position;
+  transform: translateZ(0); /* GPU acceleration */
 `
 
 const StyledAutoRouterIcon = styled(RoutingAPIIcon)`
