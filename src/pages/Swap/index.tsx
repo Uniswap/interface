@@ -489,7 +489,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))}
 
-                    {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
+                    {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
                         <StyledAutoRouterIcon />
                         <GradientText fontSize={14}>Auto Router</GradientText>
