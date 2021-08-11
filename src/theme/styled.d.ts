@@ -44,12 +44,13 @@ export interface Colors {
   red2: Color
   red3: Color
   green1: Color
+  green2: Color
   yellow1: Color
   yellow2: Color
   yellow3: Color
   blue1: Color
   blue2: Color
-
+  blue3: Color
   blue4: Color
 
   error: Color

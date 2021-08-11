@@ -1,17 +1,16 @@
 import { useState } from 'react'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
+import Modal from '../../Modal'
+import { AutoColumn } from '../../Column'
 import styled from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
-import { useStakingContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
+import { RowBetween } from '../../Row'
+import { TYPE, CloseIcon } from '../../../theme'
+import { ButtonError } from '../../Button'
+import { StakingInfo } from '../../../state/stake/hooks'
+import { useStakingContract } from '../../../hooks/useContract'
+import { SubmittedView, LoadingView } from '../../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useTransactionAdder } from '../../../state/transactions/hooks'
+import { useActiveWeb3React } from '../../../hooks/web3'
 import { t, Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -25,7 +24,7 @@ interface StakingModalProps {
   stakingInfo: StakingInfo
 }
 
-export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
+export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
   const { account } = useActiveWeb3React()
 
   // monitor call to help UI loading state
@@ -33,7 +32,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
-  function wrappedOndismiss() {
+  function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
     onDismiss()
@@ -41,15 +40,13 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
 
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
 
-  async function onWithdraw() {
+  async function onClaimReward() {
     if (stakingContract && stakingInfo?.stakedAmount) {
       setAttempting(true)
       await stakingContract
-        .exit({ gasLimit: 300000 })
+        .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: t`Withdraw deposited liquidity`,
-          })
+          addTransaction(response, { summary: t`Claim accumulated UNI rewards` })
           setHash(response.hash)
         })
         .catch((error: any) => {
@@ -61,36 +58,26 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
 
   let error: string | undefined
   if (!account) {
-    error = t`Connect a wallet`
+    error = t`Connect wallet`
   }
   if (!stakingInfo?.stakedAmount) {
     error = error ?? t`Enter an amount`
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOndismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
             <TYPE.mediumHeader>
-              <Trans>Withdraw</Trans>
+              <Trans>Claim</Trans>
             </TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOndismiss} />
+            <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
-          {stakingInfo?.stakedAmount && (
-            <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
-              </TYPE.body>
-              <TYPE.body>
-                <Trans>Deposited liquidity:</Trans>
-              </TYPE.body>
-            </AutoColumn>
-          )}
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
+                {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
               <TYPE.body>
                 <Trans>Unclaimed UNI</Trans>
@@ -98,34 +85,28 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            <Trans>When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool.</Trans>
+            <Trans>When you claim without withdrawing your liquidity remains in the mining pool.</Trans>
           </TYPE.subHeader>
-          <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
-            {error ?? <Trans>Withdraw & Claim</Trans>}
+          <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
+            {error ?? <Trans>Claim</Trans>}
           </ButtonError>
         </ContentWrapper>
       )}
       {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOndismiss}>
+        <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>
-              <Trans>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </TYPE.body>
-            <TYPE.body fontSize={20}>
-              <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</Trans>
+              <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
-        <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
+        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
               <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>
-            <TYPE.body fontSize={20}>
-              <Trans>Withdrew UNI-V2!</Trans>
-            </TYPE.body>
             <TYPE.body fontSize={20}>
               <Trans>Claimed UNI!</Trans>
             </TYPE.body>

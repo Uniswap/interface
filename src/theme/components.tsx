@@ -23,6 +23,17 @@ export const ButtonText = styled.button`
   }
 `
 
+export const HoverText = styled.div<{ color?: string }>`
+  text-decoration: none;
+  color: ${({ theme, color }) => color ?? theme.text1};
+  display: flex;
+  align-items: center;
+  :hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+`
+
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
 `
