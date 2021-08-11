@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
@@ -159,7 +159,7 @@ export default function NetworkModal(): JSX.Element | null {
   return (
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
       <ModalContentWrapper>
-        <ModalHeader onClose={toggleNetworkModal} title="Select a Network" />
+        <ModalHeader onClose={toggleNetworkModal} title={t`Select a Network`} />
 
         <InstructionText>
           <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>

@@ -389,7 +389,9 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             <RowBetween>
               <Text fontSize={14} fontWeight={500}>
                 Price range {pair.token1.symbol}/{pair.token0.symbol}{' '}
-                <QuestionHelper text="Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive." />
+                <QuestionHelper
+                  text={t`Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive.`}
+                />
                 :
               </Text>
               <Text fontSize={14} fontWeight={500} marginLeft="12px">
@@ -421,7 +423,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                     width="150px"
                     to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                   >
-                    Remove
+                    <Trans>Remove</Trans>
                   </ButtonOutlined2>
                   &nbsp;
                   <ButtonPrimary
@@ -430,7 +432,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                     to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                     width="150px"
                   >
-                    Add
+                    <Trans>Add</Trans>
                   </ButtonPrimary>
                 </span>
               </AutoRow>

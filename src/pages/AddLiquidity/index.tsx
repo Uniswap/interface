@@ -483,7 +483,7 @@ export default function AddLiquidity({
             content={() =>
               !linkToUnamplifiedPool ? (
                 <ConfirmationModalContent
-                  title={isCreate ? 'You are creating a pool' : 'You will receive'}
+                  title={isCreate ? t`You are creating a pool` : t`You will receive`}
                   onDismiss={handleDismissConfirmation}
                   topContent={modalHeader}
                   bottomContent={modalBottom}
@@ -521,14 +521,18 @@ export default function AddLiquidity({
                   <AutoColumn gap="10px">
                     {isPoolExisted && (
                       <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                        Note: There are existing pools for this token pair. Please check{' '}
-                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
+                        <Trans>Note: There are existing pools for this token pair. Please check</Trans>{' '}
+                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>
+                          <Trans>here</Trans>
+                        </Link>
                       </TYPE.link>
                     )}
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                      You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
-                      supply below will set the initial price of this pool. Once you are satisfied with the rate,
-                      proceed to supply liquidity.
+                      <Trans>
+                        You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
+                        supply below will set the initial price of this pool. Once you are satisfied with the rate,
+                        proceed to supply liquidity.
+                      </Trans>
                     </TYPE.link>
                   </AutoColumn>
                 </BlueCard>
@@ -577,7 +581,7 @@ export default function AddLiquidity({
                 <OutlineCard2 padding="0px" borderRadius={'20px'}>
                   <Row padding="4px 0 1rem 0" style={{ justifyContent: 'center' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                      {noLiquidity ? 'Initial ratio' : 'Ratio'} and Pool share
+                      {noLiquidity ? t`Initial ratio` : t`Ratio`} <Trans>and Pool share</Trans>
                     </TYPE.subHeader>
                   </Row>
 
@@ -637,18 +641,13 @@ export default function AddLiquidity({
               <OutlineCard2>
                 <AutoRow>
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Dynamic Fee Range:{' '}
+                    <Trans>Dynamic Fee Range</Trans>:{' '}
                     {feeRangeCalc(
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
                   </Text>
                   <QuestionHelper
-                    text={t({
-                      id:
-                        'Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.',
-                      message:
-                        'Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.'
-                    })}
+                    text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
                   />
                 </AutoRow>
               </OutlineCard2>

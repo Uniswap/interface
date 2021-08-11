@@ -357,15 +357,17 @@ export default function WalletModal({
         <FooterRow>
           <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
           <ToSText>
-            <Trans>
-              Accept <ExternalLink href="http://files.dmm.exchange/tac.pdf">Terms of Use</ExternalLink> and{' '}
-              <ExternalLink
-                href="http://files.dmm.exchange/privacy.pdf
+            <Trans>Accept</Trans>{' '}
+            <ExternalLink href="http://files.dmm.exchange/tac.pdf">
+              <Trans>Terms of Use</Trans>
+            </ExternalLink>{' '}
+            <Trans>and</Trans>{' '}
+            <ExternalLink
+              href="http://files.dmm.exchange/privacy.pdf
 "
-              >
-                Privacy Policy
-              </ExternalLink>
-            </Trans>
+            >
+              <Trans>Privacy Policy</Trans>
+            </ExternalLink>
           </ToSText>
         </FooterRow>
       </UpperSection>

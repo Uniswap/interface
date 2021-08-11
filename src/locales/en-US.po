@@ -78,13 +78,10 @@ msgstr "APY"
 msgid "About"
 msgstr "About"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
 msgstr "Accept"
-
-#: src/components/WalletModal/index.tsx
-msgid "Accept <0>Terms of Use</0> and <1>Privacy Policy</1>"
-msgstr "Accept <0>Terms of Use</0> and <1>Privacy Policy</1>"
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "Accept update"
@@ -101,6 +98,14 @@ msgstr "Account"
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
 msgstr "Active"
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Active Price Range"
+msgstr "Active Price Range"
+
+#: src/components/PositionCard/index.tsx
+msgid "Add"
+msgstr "Add"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Static/About.tsx
@@ -222,6 +227,10 @@ msgstr "By adding liquidity you'll earn 0.3% of all trades on this pair proporti
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
 msgstr "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "CLAIM"
+msgstr "CLAIM"
 
 #: src/pages/Farms/vesting.tsx
 msgid "CLAIMED"
@@ -351,6 +360,10 @@ msgstr "Current token pair ratio of the pool. Ratio changes depending on pool tr
 msgid "Custom"
 msgstr "Custom"
 
+#: src/components/FarmHistoryModal/index.tsx
+msgid "DEPOSIT"
+msgstr "DEPOSIT"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "DMM Exchange available in: <0>{0}</0>"
 msgstr "DMM Exchange available in: <0>{0}</0>"
@@ -409,6 +422,10 @@ msgstr "Don't see a pool you joined?"
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Dynamic"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Dynamic Fee Range"
+msgstr "Dynamic Fee Range"
 
 #: src/pages/Static/About.tsx
 msgid "Dynamic Fees"
@@ -542,6 +559,10 @@ msgstr "Get {0}-{1} LP ↗"
 msgid "Github"
 msgstr "Github"
 
+#: src/components/FarmHistoryModal/index.tsx
+msgid "HARVEST"
+msgstr "HARVEST"
+
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "Harvest"
@@ -620,6 +641,10 @@ msgstr "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. T
 msgid "Increase LP Profit"
 msgstr "Increase LP Profit"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Initial ratio"
+msgstr "Initial ratio"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Initializing..."
@@ -628,13 +653,30 @@ msgstr "Initializing..."
 msgid "Input is estimated. You will sell at most"
 msgstr "Input is estimated. You will sell at most"
 
+#: src/hooks/useWrapCallback.ts
+msgid "Insufficient W{0} balance"
+msgstr "Insufficient W{0} balance"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Insufficient liquidity for this trade."
 
+#: src/hooks/useWrapCallback.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr "Insufficient {0} balance"
+
 #: src/pages/Static/About.tsx
 msgid "Insured by"
 msgstr "Insured by"
+
+#: src/state/mint/hooks_for_migration.ts
+msgid "Invalid pair"
+msgstr "Invalid pair"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Invalid pair."
@@ -825,6 +867,10 @@ msgstr "No results found."
 msgid "No {type} pool found."
 msgstr "No {type} pool found."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Note: There are existing pools for this token pair. Please check"
+msgstr "Note: There are existing pools for this token pair. Please check"
+
 #: src/components/PositionCard/index.tsx
 msgid "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
 msgstr "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
@@ -910,8 +956,11 @@ msgstr "Pool share"
 msgid "Pool tokens in rewards pool:"
 msgstr "Pool tokens in rewards pool:"
 
+#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Pooled {0}"
 msgstr "Pooled {0}"
@@ -973,6 +1022,10 @@ msgstr "Price:"
 msgid "Privacy"
 msgstr "Privacy"
 
+#: src/components/WalletModal/index.tsx
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
 #: src/pages/Static/About.tsx
 msgid "Protocol"
 msgstr "Protocol"
@@ -983,6 +1036,7 @@ msgstr "Providing frictionless crypto liquidity with greater flexibility and ext
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Ratio"
 msgstr "Ratio"
 
@@ -1015,6 +1069,7 @@ msgid "Reduce the impact of IL"
 msgstr "Reduce the impact of IL"
 
 #: src/components/PositionCard/V1.tsx
+#: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
 msgstr "Remove"
@@ -1069,6 +1124,10 @@ msgstr "Search name or paste address"
 msgid "Select Pair"
 msgstr "Select Pair"
 
+#: src/components/NetworkModal/index.tsx
+msgid "Select a Network"
+msgstr "Select a Network"
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "Select a Token"
@@ -1085,6 +1144,10 @@ msgstr "Select a token"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your liquidity."
 msgstr "Select a token to find your liquidity."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "Share of Pool"
 
 #: src/components/PoolList/index.tsx
 msgid "Show More Pools"
@@ -1142,6 +1205,10 @@ msgstr "TOTAL HARVESTED REWARDS"
 #: src/pages/Static/About.tsx
 msgid "Terms"
 msgstr "Terms"
+
+#: src/components/WalletModal/index.tsx
+msgid "Terms of Use"
+msgstr "Terms of Use"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1230,8 +1297,13 @@ msgid "Total rewards that can be harvested. Harvested rewards are locked and ves
 msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 
 #: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
 msgid "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
+msgstr "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 
 #: src/components/PoolList/ListItem.tsx
 #: src/pages/Pools/index.tsx
@@ -1265,6 +1337,10 @@ msgstr "Turn On Advanced Mode"
 #: src/pages/Static/About.tsx
 msgid "Typical AMM"
 msgstr "Typical AMM"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "UNKNOWN"
+msgstr "UNKNOWN"
 
 #: src/pages/Farms/vesting.tsx
 msgid "UNLOCKED"
@@ -1327,6 +1403,10 @@ msgstr "View transaction on Etherscan"
 msgid "Volume (24h)"
 msgstr "Volume (24h)"
 
+#: src/components/FarmHistoryModal/index.tsx
+msgid "WITHDRAW"
+msgstr "WITHDRAW"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Waiting For Confirmation"
@@ -1343,6 +1423,14 @@ msgstr "Wrong Network"
 msgid "Yield"
 msgstr "Yield"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
+msgstr "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are creating a pool"
+msgstr "You are creating a pool"
+
 #: src/components/NetworkModal/index.tsx
 msgid "You are currently browsing DMM on the {0} network"
 msgstr "You are currently browsing DMM on the {0} network"
@@ -1351,6 +1439,7 @@ msgstr "You are currently browsing DMM on the {0} network"
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "You don’t have liquidity in this {type} pool yet."
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "You will receive"
 msgstr "You will receive"
@@ -1397,6 +1486,14 @@ msgstr "Your transaction will revert if there is a large, unfavorable price move
 msgid "Your transactions will appear here..."
 msgstr "Your transactions will appear here..."
 
+#: src/components/WalletModal/index.tsx
+msgid "and"
+msgstr "and"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "and Pool share"
+msgstr "and Pool share"
+
 #: src/pages/Static/About.tsx
 msgid "better slippage"
 msgstr "better slippage"
@@ -1408,6 +1505,10 @@ msgstr "for providers and"
 #: src/pages/Static/About.tsx
 msgid "for users compared to AMMs."
 msgstr "for users compared to AMMs."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "here"
+msgstr "here"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -1426,6 +1527,11 @@ msgstr "much higher capital efficiency"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "or the transaction will revert."
 msgstr "or the transaction will revert."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "per"
+msgstr "per"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

@@ -607,7 +607,7 @@ export default function MigrateLiquidity({
         <AutoColumn gap="10px">
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
-              Pooled {currencyA?.symbol}
+              <Trans>Pooled {currencyA?.symbol}</Trans>
             </Text>
             <Text fontSize={14} fontWeight={500}>
               {currencyAmountAToAddPool?.toSignificant(6)}

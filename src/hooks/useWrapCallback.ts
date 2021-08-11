@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { Currency, currencyEquals, ETHER, WETH } from 'libs/sdk/src'
 import { useMemo } from 'react'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
@@ -57,7 +58,7 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance
           ? undefined
-          : `Insufficient ${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
+          : t`Insufficient ${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
       }
     } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
       return {
@@ -75,7 +76,7 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance
           ? undefined
-          : `Insufficient W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
+          : t`Insufficient W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
       }
     } else {
       return NOT_APPLICABLE

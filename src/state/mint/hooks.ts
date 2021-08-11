@@ -155,11 +155,11 @@ export function useDerivedMintInfo(
   const cA = currencies[Field.CURRENCY_A]
   const cB = currencies[Field.CURRENCY_B]
   if (!!cA && currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = 'Insufficient ' + convertToNativeTokenFromETH(cA, chainId).symbol + ' balance'
+    error = t`Insufficient ${convertToNativeTokenFromETH(cA, chainId).symbol} balance`
   }
 
   if (!!cB && currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = 'Insufficient ' + convertToNativeTokenFromETH(cB, chainId).symbol + ' balance'
+    error = t`Insufficient ${convertToNativeTokenFromETH(cB, chainId).symbol} balance`
   }
 
   return {
