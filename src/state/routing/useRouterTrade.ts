@@ -32,7 +32,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           deadline: deadline.toString(),
         }
       : skipToken,
-    { pollingInterval: ms`5m`, refetchOnMountOrArgChange: true }
+    { pollingInterval: ms`10s` }
   )
 
   const routes = useRoutes(
@@ -106,7 +106,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           deadline: deadline.toString(),
         }
       : skipToken,
-    { pollingInterval: ms`5m`, refetchOnMountOrArgChange: true }
+    { pollingInterval: ms`10s` }
   )
 
   const routes = useRoutes(
