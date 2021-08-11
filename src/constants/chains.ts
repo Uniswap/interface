@@ -131,7 +131,7 @@ export const CHAIN_INFO: ChainInfo = {
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/optimism/',
+    infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'OΞ',
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },

@@ -15,6 +15,15 @@ const L2Icon = styled.img`
   height: 40px;
   justify-self: center;
 `
+const Body = styled.p`
+  font-size: 12px;
+  grid-column: 1 / 3;
+  line-height: 143%;
+  margin: 0;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    grid-column: 2 / 3;
+  }
+`
 const CloseIcon = styled(X)`
   cursor: pointer;
   position: absolute;
@@ -86,7 +95,7 @@ const Header = styled.h2`
   margin: 0;
   padding-right: 30px;
 `
-const Body = styled.p`
+const BodyWrapper = styled.p`
   font-size: 12px;
   grid-column: 1 / 3;
   line-height: 143%;

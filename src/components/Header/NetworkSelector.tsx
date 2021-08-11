@@ -62,8 +62,10 @@ const FlyoutMenu = styled.div`
   width: 78%;
   z-index: 99;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    left: unset;
     position: absolute;
     top: 50px;
+    transform: unset;
     width: 272px;
   }
   & > *:not(:last-child) {
@@ -93,10 +95,13 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 16px;
   height: 16px;
 `
-const Logo = styled.img`
+const Logo = styled.img<{ interactive?: boolean }>`
   height: 20px;
   width: 20px;
-  margin-right: 8px;
+  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    margin-right: 8px;
+  }
 `
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
@@ -213,7 +218,10 @@ export default function NetworkSelector() {
             <ExternalLink href={CHAIN_INFO[targetChain].explorer}>
               <ExplorerText chainId={chainId} /> <LinkOutCircle />
             </ExternalLink>
-            <ExternalLink href={CHAIN_INFO[targetChain].infoLink}>
+            <ExternalLink
+              href="https://help.uniswap.org/en/collections/3033942-layer-2
+https://help.uniswap.org/en/collections/3033942-layer-2"
+            >
               <Trans>Help Center</Trans> <LinkOutCircle />
             </ExternalLink>
           </ActiveRowLinkList>
@@ -226,7 +234,7 @@ export default function NetworkSelector() {
   return (
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
-        <Logo src={info.logoUrl || mainnetInfo.logoUrl} />
+        <Logo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
       </SelectorControls>
