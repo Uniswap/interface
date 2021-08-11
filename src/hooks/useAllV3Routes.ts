@@ -5,6 +5,18 @@ import { useUserSingleHopOnly } from '../state/user/hooks'
 import { useActiveWeb3React } from './web3'
 import { useV3SwapPools } from './useV3SwapPools'
 
+/**
+ * Returns true if poolA is equivalent to poolB
+ * @param poolA one of the two pools
+ * @param poolB the other pool
+ */
+function poolEquals(poolA: Pool, poolB: Pool): boolean {
+  return (
+    poolA === poolB ||
+    (poolA.token0.equals(poolB.token0) && poolA.token1.equals(poolB.token1) && poolA.fee === poolB.fee)
+  )
+}
+
 function computeAllRoutes(
   currencyIn: Currency,
   currencyOut: Currency,
@@ -20,7 +32,7 @@ function computeAllRoutes(
   if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
 
   for (const pool of pools) {
-    if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
+    if (!pool.involvesToken(tokenIn) || currentPath.find((pathPool) => poolEquals(pool, pathPool))) continue
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {
