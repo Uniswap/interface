@@ -118,7 +118,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       }
     }
 
-    if (isLoading) {
+    if (isLoading && !data) {
       return {
         state: V3TradeState.LOADING,
         trade: null,

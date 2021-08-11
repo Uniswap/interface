@@ -12,6 +12,7 @@ export enum V3TradeState {
   SYNCING,
 }
 
+// TODO(judo): reenable
 const shouldUseFallback = (state: V3TradeState) => false //[V3TradeState.NO_ROUTE_FOUND].includes(state)
 
 /**
