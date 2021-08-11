@@ -95,13 +95,10 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 16px;
   height: 16px;
 `
-const Logo = styled.img<{ interactive?: boolean }>`
+const Logo = styled.img`
   height: 20px;
   width: 20px;
-  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    margin-right: 8px;
-  }
+  margin-right: 8px;
 `
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
@@ -124,6 +121,12 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+`
+const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
+  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    margin-right: 8px;
+  }
 `
 const SelectorWrapper = styled.div`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -234,7 +237,7 @@ https://help.uniswap.org/en/collections/3033942-layer-2"
   return (
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
-        <Logo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
+        <SelectorLogo interactive={showSelector} src={info.logoUrl || mainnetInfo.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
       </SelectorControls>
