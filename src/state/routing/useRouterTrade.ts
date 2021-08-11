@@ -9,15 +9,18 @@ import { useUserRoutingAPIEnabled, useUserSlippageTolerance, useUserTransactionT
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 
+// todo(judo): validate block number for freshness
+
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
   const { account } = useActiveWeb3React()
+
+  // TODO(judo): `useUserSlippageToleranceWithDefault` when 'auto'
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
-  // skip query if routing API is disabled
   const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
 
-  const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
     userRoutingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
@@ -35,9 +38,9 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     { pollingInterval: ms`10s` }
   )
 
+  // always calcuate routes regardless of query status
+  // note: `data` may be stale, rely on UI treatment of query status
   const routes = useRoutes(data)
-
-  // todo(judo): validate block number for freshness
 
   return useMemo(() => {
     if (!amountIn || !currencyOut) {
@@ -48,6 +51,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     }
 
     if (isLoading) {
+      // only on first hook render
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -63,15 +67,13 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
-    // TODO(judo): remove after polish session
-    console.log('polish ', data?.quoteId)
-
     const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType.EXACT_INPUT>({
       routes,
       tradeType: TradeType.EXACT_INPUT,
     })
 
     return {
+      // when syncing, UI should visually invalidate `trade`
       state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: trade,
     }
@@ -83,10 +85,9 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const userSlippageTolerance = useUserSlippageTolerance()
   const [deadline] = useUserTransactionTTL()
 
-  // skip query if routing API is disabled
   const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
 
-  const { isUninitialized, isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
     userRoutingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
       ? {
           tokenInAddress: currencyIn.wrapped.address,
