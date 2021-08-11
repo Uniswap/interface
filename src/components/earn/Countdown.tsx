@@ -9,8 +9,8 @@ const DAY = HOUR * 24
 
 const MonoFront = styled(TYPE.body)<{ faded?: boolean; ended?: boolean }>`
   font-variant-numeric: tabular-nums;
-  background-color: ${({ theme, ended }) => (ended ? theme.yellow1 : transparentize(0.7, theme.bg3))};
-  color: ${({ theme, ended }) => (ended ? theme.black : theme.text1)};
+  background-color: ${({ theme, ended }) => (ended ? theme.bg2 : transparentize(0.7, theme.bg3))};
+  color: ${({ theme, ended }) => (ended ? theme.text3 : theme.text1)};
   padding: 6px 8px;
   border-radius: 12px;
   display: flex;
@@ -33,7 +33,7 @@ const Dot = styled.div`
   background-color: ${({ theme }) => theme.white};
 `
 
-export function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd: Date }) {
+export default function Countdown({ exactStart, exactEnd }: { exactStart: Date; exactEnd: Date }) {
   // get end/beginning times
   const begin = Math.floor(exactStart.getTime() / 1000)
   const end = Math.floor(exactEnd.getTime() / 1000)

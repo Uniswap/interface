@@ -8,6 +8,7 @@ import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
+import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
   width: 40px;
@@ -152,7 +153,10 @@ export function NetworkAlert() {
           <Trans>
             This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
             swap them.
-          </Trans>
+          </Trans>{' '}
+          <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+            <Trans>Read more</Trans>
+          </ReadMoreLink>
         </Body>
       </ContentWrapper>
       <LinkOutToBridge href={depositUrl}>

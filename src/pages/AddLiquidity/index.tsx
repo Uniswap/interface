@@ -63,6 +63,7 @@ import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
 import { PositionPreview } from 'components/PositionPreview'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
+import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -604,8 +605,11 @@ export default function AddLiquidity({
                     currencyA={baseCurrency}
                     currencyB={quoteCurrency}
                     handleRateToggle={() => {
-                      onLeftRangeInput((invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '')
-                      onRightRangeInput((invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '')
+                      if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
+                        onLeftRangeInput((invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '')
+                        onRightRangeInput((invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '')
+                        onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
+                      }
                       history.push(
                         `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
                       )
@@ -862,6 +866,13 @@ export default function AddLiquidity({
                               feeAmount={feeAmount}
                               ticksAtLimit={ticksAtLimit}
                             />
+                            {!noLiquidity && (
+                              <PresetsButtons
+                                setFullRange={() => {
+                                  setShowCapitalEfficiencyWarning(true)
+                                }}
+                              />
+                            )}
                           </AutoColumn>
                         </StackedItem>
 
@@ -889,7 +900,9 @@ export default function AddLiquidity({
                                       Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
                                         style={{ color: theme.yellow3, textDecoration: 'underline' }}
-                                        href={''}
+                                        href={
+                                          'https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3'
+                                        }
                                       >
                                         here
                                       </ExternalLink>

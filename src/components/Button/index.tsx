@@ -75,13 +75,6 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
-export const ButtonSmall = styled(ButtonPrimary)`
-  width: fit-content;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 14px;
-`
-
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
@@ -108,6 +101,13 @@ export const ButtonLight = styled(Base)`
       outline: none;
     }
   }
+`
+
+export const ButtonSmall = styled(ButtonPrimary)`
+  width: fit-content;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
 `
 
 export const ButtonGray = styled(Base)`

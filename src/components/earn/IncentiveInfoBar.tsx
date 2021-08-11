@@ -7,12 +7,11 @@ import { darken, transparentize } from 'polished'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { BIG_INT_SECONDS_IN_WEEK } from 'constants/misc'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { Countdown } from './Countdown'
-import { useColor } from 'hooks/useColor'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import useTheme from 'hooks/useTheme'
 import { EmptyBadge, GreenBadge } from 'components/Badge'
 import useCountdownTime from 'hooks/useCountdownTime'
+import Countdown from './Countdown'
 
 const Wrapper = styled.div`
   padding: 0;
@@ -66,8 +65,6 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
   const percentageRemaining =
     (parseFloat(incentive.rewardAmountRemaining.toExact()) / parseFloat(incentive.initialRewardAmount.toExact())) * 100
 
-  const color = useColor(rewardToken)
-
   // get countdown info if needed
   const startDate = new Date(incentive.startTime * 1000)
   const endDate = new Date(incentive.endTime * 1000)
@@ -95,7 +92,7 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
         </RowFixed>
       ) : (
         <BarWrapper>
-          <Bar percent={percentageRemaining} color={color}>
+          <Bar percent={percentageRemaining} color={theme.primary3}>
             <RowFixed>
               <WrappedLogo currency={rewardCurrency} size="14px" />
               <TYPE.body fontSize="12px" fontWeight={600} ml="8px" mt="-2px">

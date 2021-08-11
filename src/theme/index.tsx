@@ -88,12 +88,14 @@ function colors(darkMode: boolean): Colors {
     blue1: darkMode ? '#2172E5' : '#0068FC',
     blue2: darkMode ? '#5199FF' : '#0068FC',
     blue3: '#00C2FF',
-    // dont wanna forget these blue yet
     blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
     error: darkMode ? '#FD4040' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',
     warning: '#FF8F00',
+
+    // dont wanna forget these blue yet
+    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
   }
 }
 

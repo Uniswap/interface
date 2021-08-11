@@ -39,7 +39,7 @@ const store = configureStore({
       .concat(dataApi.middleware)
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({ states: PERSISTED_KEYS }),
+  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
 })
 
 store.dispatch(updateVersion())
