@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import { ButtonEmpty } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { FixedHeightRow } from 'components/PositionCard'
@@ -71,7 +72,7 @@ export function PoolPriceBar({
         <>
           <AutoRow justify="space-between" gap="4px">
             <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
-              {nativeB?.symbol} per {nativeA?.symbol}
+              {nativeB?.symbol} <Trans>per</Trans> {nativeA?.symbol}
             </Text>
             <TYPE.black fontWeight={500} fontSize={14}>
               {price?.toSignificant(6) ?? '-'}
@@ -80,7 +81,7 @@ export function PoolPriceBar({
 
           <AutoRow justify="space-between" gap="4px">
             <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
-              {nativeA?.symbol} per {nativeB?.symbol}
+              {nativeA?.symbol} <Trans>per</Trans> {nativeB?.symbol}
             </Text>
             <TYPE.black fontWeight={500} fontSize={14}>
               {price?.invert()?.toSignificant(6) ?? '-'}
@@ -93,7 +94,7 @@ export function PoolPriceBar({
 
       <AutoRow justify="space-between" gap="4px">
         <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-          Share of Pool:
+          <Trans>Share of Pool</Trans>:
         </Text>
         <TYPE.black fontWeight={500} fontSize={14}>
           {noLiquidity && price
@@ -160,8 +161,8 @@ export function PoolPriceRangeBarToggle({
   return (
     <OutlineCard3>
       <ToggleComponent
-        title="Active Price Range"
-        question="Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
+        title={t`Active Price Range`}
+        question={t`Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive.`}
       >
         <PoolPriceRangeBar currencies={currencies} price={price} pair={pair} amplification={amplification} />
       </ToggleComponent>

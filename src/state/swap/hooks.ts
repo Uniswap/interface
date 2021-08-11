@@ -189,7 +189,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + convertToNativeTokenFromETH(amountIn.currency, chainId).symbol + ' balance'
+    inputError = t`Insufficient ${convertToNativeTokenFromETH(amountIn.currency, chainId).symbol} balance`
   }
 
   return {

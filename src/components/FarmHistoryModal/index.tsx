@@ -130,15 +130,15 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
   const getMethodLabel = (method: FarmHistoryMethod) => {
     switch (method) {
       case FarmHistoryMethod.DEPOSIT:
-        return 'DEPOSIT'
+        return t`DEPOSIT`
       case FarmHistoryMethod.WITHDRAW:
-        return 'WITHDRAW'
+        return t`WITHDRAW`
       case FarmHistoryMethod.HARVEST:
-        return 'HARVEST'
+        return t`HARVEST`
       case FarmHistoryMethod.CLAIM:
-        return 'CLAIM'
+        return t`CLAIM`
       default:
-        return 'UNKNOWN'
+        return t`UNKNOWN`
     }
   }
 
