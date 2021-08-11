@@ -64,7 +64,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ReactComponent as RoutingAPIIcon } from '../../assets/svg/routing_api.svg'
-import { RouterVersion, V3TradeState } from 'hooks/useV3Trade'
+import { V3TradeState } from 'hooks/useV3Trade'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -139,7 +139,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    v3TradeState: { trade: v3Trade, state: v3TradeState, router: v3Router },
+    v3TradeState: { trade: v3Trade, state: v3TradeState },
     toggledTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -495,31 +495,12 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))}
 
-                    {toggledVersion === Version.v3 &&
-                      isTradeBetter(v2Trade, v3Trade) &&
-                      (v3Router === RouterVersion.LEGACY ? (
-                        <ButtonGray
-                          width="fit-content"
-                          padding="0.1rem 0.5rem"
-                          disabled
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            height: '24px',
-                            opacity: 0.8,
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          <TYPE.black fontSize={12}>
-                            <Trans>V3</Trans>
-                          </TYPE.black>
-                        </ButtonGray>
-                      ) : (
-                        <AutoRow gap="4px" width="auto" padding=".5rem">
-                          <StyledAutoRouterIcon />
-                          <GradientText fontSize={14}>Auto Router</GradientText>
-                        </AutoRow>
-                      ))}
+                    {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
+                      <AutoRow gap="4px" width="auto" padding=".5rem">
+                        <StyledAutoRouterIcon />
+                        <GradientText fontSize={14}>Auto Router</GradientText>
+                      </AutoRow>
+                    )}
                   </RowFixed>
                   <RowFixed minHeight="40px">
                     {isLoadingRoute ? (

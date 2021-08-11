@@ -12,11 +12,6 @@ export enum V3TradeState {
   SYNCING,
 }
 
-export enum RouterVersion {
-  LEGACY,
-  UNISWAP_API,
-}
-
 const shouldUseFallback = (state: V3TradeState) => [V3TradeState.NO_ROUTE_FOUND].includes(state)
 
 /**
@@ -28,7 +23,7 @@ const shouldUseFallback = (state: V3TradeState) => [V3TradeState.NO_ROUTE_FOUND]
 export function useV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null; router: RouterVersion } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
   const debouncedAmountIn = useDebounce(amountIn, 250)
 
   // attempt to use multi-route trade
@@ -46,13 +41,10 @@ export function useV3TradeExactIn(
     useFallback ? currencyOut : undefined
   )
 
-  if (debouncing) {
-    return { state: V3TradeState.LOADING, trade: null, router: RouterVersion.UNISWAP_API }
+  return {
+    ...(useFallback ? bestV3TradeExactIn : multiRouteTradeExactIn),
+    ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
   }
-
-  return useFallback
-    ? { ...bestV3TradeExactIn, router: RouterVersion.LEGACY }
-    : { ...multiRouteTradeExactIn, router: RouterVersion.UNISWAP_API }
 }
 
 /**
@@ -64,7 +56,7 @@ export function useV3TradeExactIn(
 export function useV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null; router: RouterVersion } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
   const debouncedAmountOut = useDebounce(amountOut, 250)
 
   // attempt to use multi-route trade
@@ -82,11 +74,8 @@ export function useV3TradeExactOut(
     useFallback ? debouncedAmountOut : undefined
   )
 
-  if (debouncing) {
-    return { state: V3TradeState.LOADING, trade: null, router: RouterVersion.UNISWAP_API }
+  return {
+    ...(useFallback ? bestV3TradeExactOut : multiRouteTradeExactOut),
+    ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
   }
-
-  return useFallback
-    ? { ...bestV3TradeExactOut, router: RouterVersion.LEGACY }
-    : { ...multiRouteTradeExactOut, router: RouterVersion.UNISWAP_API }
 }
