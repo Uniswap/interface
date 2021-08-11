@@ -91,7 +91,6 @@ export default function App() {
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/stake" component={Stake} />
               <Route exact strict path="/stake/:poolAddress" component={Manage} />
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
 
               <Route exact strict path="/program" component={CreateIncentive} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
