@@ -8,8 +8,9 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
-import { ExternalLink } from 'theme'
+import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
+import { X } from 'react-feather'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -43,9 +44,13 @@ const FlyoutHeader = styled.div`
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   align-items: flex-start;
   background-color: ${({ theme }) => theme.bg1};
-  top: 50px;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
@@ -54,10 +59,13 @@ const FlyoutMenu = styled.div`
   font-size: 16px;
   overflow: auto;
   padding: 16px;
-  position: absolute;
-  width: 272px;
+  width: 84%;
   z-index: 99;
-
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    position: absolute;
+    top: 50px;
+    width: 272px;
+  }
   & > *:not(:last-child) {
     margin-bottom: 12px;
   }
@@ -93,6 +101,13 @@ const Logo = styled.img`
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
 `
+const SelectorLabel = styled(NetworkLabel)`
+  display: none;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: block;
+    margin-right: 8px;
+  }
+`
 const SelectorControls = styled.div<{ interactive: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
@@ -106,10 +121,19 @@ const SelectorControls = styled.div<{ interactive: boolean }>`
   padding: 6px 8px;
 `
 const SelectorWrapper = styled.div`
-  position: relative;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    position: relative;
+  }
+`
+const StyledClose = styled(X)`
+  cursor: pointer;
+  position: absolute;
+  height: 20px;
+  right: 20px;
+  top: 20px;
+  width: 20px;
 `
 const StyledChevronDown = styled(ChevronDown)`
-  margin-left: 8px;
   width: 12px;
 `
 const BridgeText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
@@ -203,17 +227,18 @@ export default function NetworkSelector() {
     <SelectorWrapper ref={node as any}>
       <SelectorControls onClick={conditionalToggle} interactive={showSelector}>
         <Logo src={info.logoUrl || mainnetInfo.logoUrl} />
-        <NetworkLabel>{info.label}</NetworkLabel>
+        <SelectorLabel>{info.label}</SelectorLabel>
         {showSelector && <StyledChevronDown />}
       </SelectorControls>
       {open && (
         <FlyoutMenu>
+          <StyledClose onClick={toggle} />
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>
           <Row targetChain={SupportedChainId.MAINNET} />
           <Row targetChain={SupportedChainId.OPTIMISM} />
-          {/* <Row targetChain={SupportedChainId.ARBITRUM_ONE} /> */}
+          <Row targetChain={SupportedChainId.ARBITRUM_ONE} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>
