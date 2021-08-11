@@ -59,7 +59,7 @@ const FlyoutMenu = styled.div`
   font-size: 16px;
   overflow: auto;
   padding: 16px;
-  width: 84%;
+  width: 78%;
   z-index: 99;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     position: absolute;
