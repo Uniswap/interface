@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
-import { useActiveLocale, useSetLocaleFromUrl } from 'hooks/useActiveLocale'
+import { initialLocale, useActiveLocale, useSetLocaleFromUrl } from 'hooks/useActiveLocale'
 import { SupportedLocale } from 'constants/locales'
 import {
   af,
@@ -106,3 +106,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     </I18nProvider>
   )
 }
+
+// eagerly import the locale to unblock pageload
+;(() => {
+  const locale = initialLocale()
+  import(`@lingui/loader!./locales/${locale}.po`)
+})()
