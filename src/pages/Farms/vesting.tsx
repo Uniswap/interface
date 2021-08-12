@@ -62,7 +62,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const { schedules } = useVesting(rewardTokens)
-  console.log('==schedules', schedules)
 
   const info = schedules.reduce<{
     [key: string]: {

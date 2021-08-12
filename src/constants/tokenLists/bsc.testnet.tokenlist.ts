@@ -5,6 +5,13 @@ export const BSC_TESTNET_TOKEN_LIST = {
   tokens: [
     {
       chainId: 97,
+      address: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
+      symbol: 'KNC',
+      name: 'Kyber Network Crystal',
+      decimals: 18
+    },
+    {
+      chainId: 97,
       address: '0xb448B701807E644f141a4E4a269aD2F567526505',
       symbol: 'USDC',
       name: 'USDC',
