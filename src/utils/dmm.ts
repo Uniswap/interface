@@ -415,7 +415,8 @@ export function useRewardTokensFullInfo(): Token[] {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokens()
   const allTokens = useAllTokens()
-  const nativeName = chainId && [137, 80001].includes(chainId) ? 'MATIC' : 'ETH'
+  const nativeName =
+    chainId && [137, 80001].includes(chainId) ? 'MATIC' : chainId && [97, 56].includes(chainId) ? 'BNB' : 'ETH'
   return !!rewardTokens
     ? rewardTokens.map(address =>
         address.toLowerCase() === ZERO_ADDRESS.toLowerCase()

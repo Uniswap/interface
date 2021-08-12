@@ -130,7 +130,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
     'Dai Stablecoin'
   ),
   [ChainId.BSCMAINNET]: new Token(
-    ChainId.MAINNET,
+    ChainId.BSCMAINNET,
     '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
     18,
     'DAI',
@@ -292,7 +292,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BSCTESTNET]: new Token(
     ChainId.BSCTESTNET,
-    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
+    '0x51E8D106C646cA58Caf32A47812e95887C071a62',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -563,7 +563,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
       : ['0x829c27fd3013b944cbE76E92c3D6c45767c0C789', '0x3aDd3034Fcf921F20c74c6149FB44921709595B1'],
   [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
-  [ChainId.BSCTESTNET]: [],
+  [ChainId.BSCTESTNET]: ['0x98910F7f13496fcDE2ade93648F05b4854Fc99D9', '0x4BC18Ae212F798FD7b0eae94dfCA18c0333157c4'],
   [ChainId.BSCMAINNET]: []
 }
 
@@ -581,7 +581,7 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
       ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
       : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
   [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
-  [ChainId.BSCTESTNET]: '',
+  [ChainId.BSCTESTNET]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
   [ChainId.BSCMAINNET]: ''
 }
 
@@ -626,6 +626,11 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0xd8B9E9444fCBF26BEA4BAdd6142dD6a962BCA86A'
         ],
   [ChainId.MUMBAI]: ['0x967a889dbF977DD9c7b79BF422f5Fa50294e56FD', '0x801Da4b550D1645F7aD3De8A5349a51B8dea48b8'],
-  [ChainId.BSCTESTNET]: [],
+  [ChainId.BSCTESTNET]: [
+    '0xEA6A8B8ef82512e989FaAF7a7614fD89BbC3c8A5',
+    '0x7FC3B624dB42a90bE70dd8bCee5C1E0ea7ae01b1',
+    '0xb09a1EA652962197f54B580812D153b1Cfd3274e',
+    '0x30F2F907B014cB6520bfFe7FC715ad9c138dF7B0'
+  ],
   [ChainId.BSCMAINNET]: []
 }

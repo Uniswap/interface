@@ -4,7 +4,7 @@ import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { MATIC_TOKEN_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
+import { BSC_TOKEN_LISTS, MATIC_TOKEN_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
 import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
@@ -155,6 +155,13 @@ export function useAllListsByChainId(): {
   if (chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
     lists = Object.keys(allLists)
       .filter(key => MATIC_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else if (chainId && [ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
+    lists = Object.keys(allLists)
+      .filter(key => BSC_TOKEN_LISTS.includes(key))
       .reduce((obj, key) => {
         obj[key] = allLists[key]
         return obj
