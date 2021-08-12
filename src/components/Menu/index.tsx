@@ -179,13 +179,13 @@ const ToggleMenuItem = styled.button`
 
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
-function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
+function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
 
   if (!to) return null
 
   return (
-    <InternalLinkMenuItem onClick={onClick} key={key} to={to}>
+    <InternalLinkMenuItem onClick={onClick} to={to}>
       <div>{LOCALE_LABEL[locale]}</div>
       {active && <Check opacity={0.6} size={16} />}
     </InternalLinkMenuItem>
