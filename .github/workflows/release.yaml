@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Extract en-US translation
+        run: yarn i18n:extract --locale en-US
+
       - name: Build the IPFS bundle
         run: yarn build
 
