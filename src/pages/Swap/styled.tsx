@@ -9,11 +9,14 @@ const pulse = keyframes`
   100%{background-position:10% 100%}
 `
 
-const GradientText = styled(TYPE.black)<{ pulsing: boolean }>`
+const GradientText = styled(AutoRow)<{ pulsing: boolean }>`
   background: ${({ pulsing }) =>
     `linear-gradient(90deg, #2172e5, ${pulsing ? ' #2172e5,#2172e5, #fff, #54e526, #54e526,' : ''} #54e526)`};
-  background-size: ${({ pulsing }) => (pulsing ? '200% 100%' : '100% 100%')};
+
+  background-size: ${({ pulsing }) => (pulsing ? '200%' : '100%')};
   background-clip: none;
+  background-repeat: repeat;
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
@@ -30,11 +33,9 @@ const StyledAutoRouterIcon = styled(RoutingAPIIcon)`
 
 export default function AutoRouterLabel({ pulsing = false }: { pulsing?: boolean }) {
   return (
-    <AutoRow gap="4px" width="auto" padding=".5rem">
+    <GradientText gap="4px" width="auto" padding=".5rem" pulsing={pulsing}>
       <StyledAutoRouterIcon />
-      <GradientText pulsing={pulsing} fontSize={14}>
-        Auto Router
-      </GradientText>
-    </AutoRow>
+      <TYPE.black fontSize={14}>Auto Routing</TYPE.black>
+    </GradientText>
   )
 }

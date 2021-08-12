@@ -5,7 +5,6 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
-import { TYPE } from 'theme'
 
 export const Wrapper = styled.div`
   position: relative;
