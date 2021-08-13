@@ -9,7 +9,6 @@ import { Version } from 'hooks/useToggledVersion'
 import { Link } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Box } from 'rebass'
 import { useUserRoutingAPIEnabled } from 'state/user/hooks'
 
 const pulse = keyframes`

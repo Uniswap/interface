@@ -14,20 +14,19 @@ import { useRoutes } from './useRoutes'
 // todo(judo): validate block number for freshness
 
 function useRouterTradeArguments() {
-  const { account, chainId } = useActiveWeb3React()
-  const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
+  const { account } = useActiveWeb3React()
 
   const userSlippageTolerance = useUserSlippageToleranceWithDefault(V3_SWAP_DEFAULT_SLIPPAGE)
   const [deadline] = useUserTransactionTTL()
 
-  const [userRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+  const [routingAPIEnabled] = useUserRoutingAPIEnabled()
 
   return {
     recipient: account ?? undefined,
     slippageTolerance:
       typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
     deadline: deadline.toString(),
-    routingAPIEnabled: userRoutingAPIEnabled && !onL2,
+    routingAPIEnabled,
   }
 }
 
