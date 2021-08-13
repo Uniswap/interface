@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   BookOpen,
@@ -229,7 +230,7 @@ export default function Menu() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton onClick={toggle} aria-label={t`Menu`}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
