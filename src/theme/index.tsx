@@ -367,7 +367,7 @@ body {
 }
 
 .custom-toast-root {
-    margin-top: 70px;
+    margin-top: 86px;
 }
 
 .custom-toast-container {
