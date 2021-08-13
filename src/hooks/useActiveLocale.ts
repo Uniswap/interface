@@ -2,7 +2,7 @@ import { DEFAULT_LOCALE, SupportedLocale, SUPPORTED_LOCALES } from 'constants/lo
 import { parse } from 'qs'
 import { useEffect, useMemo } from 'react'
 import { useUserLocale, useUserLocaleManager } from 'state/user/hooks'
-import { initialState } from 'state'
+import store from 'state'
 import useParsedQueryString from './useParsedQueryString'
 
 /**
@@ -32,7 +32,7 @@ function urlLocale(): SupportedLocale | undefined {
  * Returns the supported locale read from the user state (redux)
  */
 function userLocale(): SupportedLocale | undefined {
-  return initialState.user?.userLocale ?? undefined
+  return store.getState().user.userLocale ?? undefined
 }
 
 /**
