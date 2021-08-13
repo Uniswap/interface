@@ -17,6 +17,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { switchOrAddNetwork } from '../../utils'
 import { NETWORK_DETAIL } from '../../constants'
 import { ApplicationModal } from '../../state/application/actions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -73,6 +74,7 @@ export default function ClaimModal({
   const [correctNetwork, setCorrectNetwork] = useState(false)
   const open = useShowClaimPopup()
 
+  const addTransaction = useTransactionAdder()
   const claimCallback = useClaimCallback(account || undefined)
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
   const { available: availableClaim } = useIsClaimAvailable(account || undefined)
@@ -88,21 +90,18 @@ export default function ClaimModal({
     claimCallback()
       .then(transaction => {
         setHash(transaction.hash)
-        transaction
-          .wait()
-          .then(() => {
-            setAttempting(false)
-          })
-          .catch(() => {
-            console.error('error submitting tx')
-          })
+        addTransaction(transaction, {
+          summary: `Claim ${unclaimedBalance?.toFixed(3)} SWPR`
+        })
       })
       .catch(error => {
-        setAttempting(false)
         setError(true)
         console.log(error)
       })
-  }, [claimCallback])
+      .finally(() => {
+        setAttempting(false)
+      })
+  }, [addTransaction, claimCallback, unclaimedBalance])
 
   const wrappedOnDismiss = useCallback(() => {
     setAttempting(false)
@@ -151,9 +150,9 @@ export default function ClaimModal({
           </TYPE.white>
         </UpperAutoColumn>
         <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-          {availableClaim && (
+          {availableClaim && chainId !== ChainId.ARBITRUM_RINKEBY && (
             <NetworkWarning>
-              Receive your SWPR airdrop on Arbitrum network. Please switch network to claim.
+              Receive your SWPR airdrop on Arbitrum Rinkeby. Please switch network to claim.
             </NetworkWarning>
           )}
           <BottomAutoColumn gap="8px">
