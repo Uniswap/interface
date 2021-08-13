@@ -63,9 +63,8 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ReactComponent as RoutingAPIIcon } from '../../assets/svg/routing_api.svg'
 import { V3TradeState } from 'hooks/useV3Trade'
-import AutoRouterLabel from './styled'
+import AutoRouterLabel from './RouterLabel'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -84,19 +83,6 @@ const StyledChevron = styled(ChevronUp)`
   :hover {
     opacity: 0.8;
   }
-`
-
-const StyledAutoRouterIcon = styled(RoutingAPIIcon)`
-  height: 16px;
-  width: 16px;
-  stroke: #2172e5;
-`
-
-const GradientText = styled(TYPE.black)`
-  background: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
-  background-clip: none;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -458,8 +444,9 @@ export default function Swap({ history }: RouteComponentProps) {
             {showWrap ? null : (
               <OutlineCard padding="0.5rem" style={!trade ? { display: 'none' } : {}}>
                 <Row justify={!trade ? 'center' : 'space-between'}>
-                  <RowFixed>
-                    {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                  <AutoRouterLabel
+                    label={
+                      [V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                       (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
                         <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
                       ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
@@ -480,7 +467,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               marginLeft: '0.75rem',
                             }}
                           >
-                            <ArrowLeft color={theme.text3} size={12} /> &nbsp;
+                            {/* <ArrowLeft color={theme.text3} size={12} /> &nbsp; */}
                             <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
                               <Trans>
                                 <HideSmall>Back to </HideSmall>
@@ -489,14 +476,32 @@ export default function Swap({ history }: RouteComponentProps) {
                             </TYPE.main>
                           </ButtonGray>
                         )
-                      ))}
-
-                    {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                      <AutoRow gap="4px" width="auto" padding=".5rem">
-                        <AutoRouterLabel pulsing={isSyncingRoute} />
-                      </AutoRow>
-                    )}
-                  </RowFixed>
+                      ))
+                    }
+                    suffix={
+                      toggledVersion === Version.v3 &&
+                      trade &&
+                      isTradeBetter(v2Trade, v3Trade) && (
+                        <ButtonGray
+                          width="fit-content"
+                          padding="0.1rem 0.5rem"
+                          disabled
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            height: '24px',
+                            opacity: 0.8,
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          <TYPE.black fontSize={12}>
+                            <Trans>V3</Trans>
+                          </TYPE.black>
+                        </ButtonGray>
+                      )
+                    }
+                    pulsing={isLoadingRoute || isSyncingRoute}
+                  />
                   <RowFixed minHeight="40px">
                     {trade ? (
                       <>
