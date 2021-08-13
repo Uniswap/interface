@@ -112,12 +112,7 @@ export function getProviderOrSigner(
 }
 
 // account is optional
-export function getContract(
-  address: string,
-  ABI: any,
-  library: Web3Provider | JsonRpcProvider,
-  account?: string
-): Contract {
+export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
