@@ -20,7 +20,10 @@ function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined 
  * Returns the supported locale read from the url query parameter (lng=)
  */
 function urlLocale(): SupportedLocale | undefined {
-  const search = location.search || location.hash.match(/\?.*/)?.[0]
+  const search =
+    location.search ||
+    // support react router idiom of specifying search after hash
+    location.hash.match(/\?.*/)?.[0]
   const parsed = search && search.length > 1 ? parse(search, { parseArrays: false, ignoreQueryPrefix: true }) : {}
   return typeof parsed.lng === 'string' ? parseLocale(parsed.lng) : undefined
 }
