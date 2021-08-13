@@ -136,7 +136,8 @@
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
     "test": "react-scripts test --env=./custom-test-env.js",
-    "prestart": "yarn graphql:generate && touch src/locales/en-US.po"
+    "prei18n:extract": "touch src/locales/en-US.po",
+    "prestart": "yarn graphql:generate && yarn prei18n:extract"
   },
   "eslintConfig": {
     "extends": "react-app",
