@@ -6375,7 +6375,7 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 
 "dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#feature/swpr-claimer":
   version "0.9.3"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#8168e55449c00bf7c58ea3701a256e0f21f4f7ec"
+  resolved "git://github.com/levelkdev/dxswap-sdk.git#5042f06e0fce4ef8106f967985e46c146f973165"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
