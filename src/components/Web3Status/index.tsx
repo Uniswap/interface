@@ -15,6 +15,7 @@ import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 import { useNetworkSwitcherPopoverToggle, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { TriangleIcon } from '../Icons'
 import { useTranslation } from 'react-i18next'
+import Row from '../Row'
 
 const Web3StatusError = styled.div`
   display: flex;
@@ -50,8 +51,8 @@ const SwitchNetworkButton = styled.button`
 `
 
 const Button = styled.button`
-  height: 32px;
-  padding: 10.5px 14px;
+  min-height: 32px;
+  padding: 10.5px 10px;
   margin: 0 0 0 auto;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
@@ -143,19 +144,21 @@ export default function Web3Status() {
   return (
     <>
       <ConnectWalletPopover setModal={setModal} tryActivation={tryActivation}>
-        {networkConnectorChainId && !account && (
-          <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
-            {t('Connect wallet')}
-          </Button>
-        )}
-        <AccountStatus
-          pendingTransactions={pending}
-          ENSName={ENSName ?? undefined}
-          account={account}
-          connector={activeConnector}
-          networkConnectorChainId={networkConnectorChainId}
-          onAddressClick={() => setModal(ModalView.Account)}
-        />
+        <Row alignItems="center">
+          {networkConnectorChainId && !account && (
+            <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
+              {t('Connect wallet')}
+            </Button>
+          )}
+          <AccountStatus
+            pendingTransactions={pending}
+            ENSName={ENSName ?? undefined}
+            account={account}
+            connector={activeConnector}
+            networkConnectorChainId={networkConnectorChainId}
+            onAddressClick={() => setModal(ModalView.Account)}
+          />
+        </Row>
       </ConnectWalletPopover>
       <WalletModal
         modal={modal}

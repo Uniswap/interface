@@ -33,6 +33,7 @@ const ChainLabel: any = {
 }
 
 const View = styled.div`
+  height: 29px;
   display: flex;
   align-items: center;
   margin-left: auto;
