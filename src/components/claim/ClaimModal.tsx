@@ -179,8 +179,8 @@ export default function ClaimModal({
               <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
                 {unclaimedBalance?.toFixed(3) || '0'} SWPR
               </TYPE.white>
-              {chainId === ChainId.ARBITRUM_RINKEBY && (
-                /* nativeCurrencyBalance?.equalTo('0') && */ <>
+              {chainId === ChainId.ARBITRUM_RINKEBY && nativeCurrencyBalance?.equalTo('0') && (
+                <>
                   <NativeCurrencyWarning>
                     You have no Arbitrum ETH to claim your SWPR. Please make sure to transfer enough ETH to Arbitrum
                     using the official bridge in order to complete the transaction.
