@@ -53,7 +53,7 @@ const SwitchNetworkButton = styled.button`
 
 const Button = styled.button`
   height: 29px;
-  padding: 10.5px 10px;
+  padding: 10.5px 14px;
   margin: 0 0 0 auto;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
