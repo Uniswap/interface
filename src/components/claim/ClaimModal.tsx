@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { AutoRow, RowBetween } from '../Row'
-import { TYPE, CloseIcon, ExternalLink } from '../../theme'
+import { TYPE, CloseIcon } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
 import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
@@ -58,6 +58,20 @@ const NetworkWarning = styled.div`
   margin-bottom: 12px;
   text-align: center;
   color: #f2994a;
+`
+
+const NativeCurrencyWarning = styled.div`
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17px;
+  letter-spacing: 0em;
+  margin-bottom: 12px;
+  color: ${props => props.theme.red1};
+`
+
+const SpacedExternalLinkIcon = styled(ExternalLinkIcon)`
+  margin-left: 6px;
 `
 
 export default function ClaimModal({
@@ -158,15 +172,6 @@ export default function ClaimModal({
                 Receive your SWPR airdrop on Arbitrum Rinkeby. Please switch network to claim.
               </NetworkWarning>
             )}
-            {chainId === ChainId.ARBITRUM_RINKEBY && nativeCurrencyBalance?.equalTo('0') && (
-              <NetworkWarning>
-                L2 ETH is necessary to claim your SWPR. Deposit some using{' '}
-                <ExternalLink underlined color="orange1" href="https://bridge.arbitrum.io/">
-                  the official bridge
-                </ExternalLink>
-                .
-              </NetworkWarning>
-            )}
             <BottomAutoColumn gap="8px">
               <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
                 UNCLAIMED SWPR
@@ -174,6 +179,23 @@ export default function ClaimModal({
               <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
                 {unclaimedBalance?.toFixed(3) || '0'} SWPR
               </TYPE.white>
+              {chainId === ChainId.ARBITRUM_RINKEBY && (
+                /* nativeCurrencyBalance?.equalTo('0') && */ <>
+                  <NativeCurrencyWarning>
+                    You have no Arbitrum ETH to claim your SWPR. Please make sure to transfer enough ETH to Arbitrum
+                    using the official bridge in order to complete the transaction.
+                  </NativeCurrencyWarning>
+                  <ButtonPrimary
+                    as="a"
+                    href="http://bridge.arbitrum.io/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    padding="16px 16px"
+                  >
+                    Arbitrum bridge <SpacedExternalLinkIcon size="12px" />
+                  </ButtonPrimary>
+                </>
+              )}
               <StyledClaimButton
                 disabled={
                   (!!account && !availableClaim) ||
