@@ -77,14 +77,6 @@ export default function App() {
               <Header />
             </HeaderWrapper>
             <BodyWrapper>
-              <ToastContainer
-                draggable={false}
-                className="custom-toast-root"
-                toastClassName="custom-toast-container"
-                bodyClassName="custom-toast-body"
-                position="top-right"
-                transition={Slide}
-              />
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/swap" component={Swap} />
@@ -114,6 +106,14 @@ export default function App() {
               <Marginer />
             </BodyWrapper>
           </AppWrapper>
+          <ToastContainer
+            draggable={false}
+            className="custom-toast-root"
+            toastClassName="custom-toast-container"
+            bodyClassName="custom-toast-body"
+            position="top-right"
+            transition={Slide}
+          />
         </ApolloProvider>
       </SkeletonTheme>
     </Suspense>
