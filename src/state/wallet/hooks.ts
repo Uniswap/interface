@@ -55,7 +55,7 @@ export function useNativeCurrencyBalance(): CurrencyAmount | undefined {
     // the name is misleading. Depending on the deployment network, the
     // function returns the native currency balance
     'getEthBalance',
-    [[account || undefined]]
+    account ? [[account]] : []
   )
 
   return useMemo(() => {
