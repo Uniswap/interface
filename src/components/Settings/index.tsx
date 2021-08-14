@@ -25,10 +25,21 @@ import { transparentize } from 'polished'
 import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
+const StyledMenuIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 8px;
+  height: 29px;
+  width: 29px;
+  cursor: pointer;
+  background: ${props => props.theme.dark1};
+  border-radius: 12px;
+`
+
 const StyledMenuIcon = styled(Settings)`
   height: 15px;
   width: 15px;
-  cursor: pointer;
 
   > * {
     stroke: ${({ theme }) => theme.text4};
@@ -184,7 +195,9 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenu onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+        <StyledMenuIconContainer>
+          <StyledMenuIcon />
+        </StyledMenuIconContainer>
         {expertMode && (
           <EmojiWrapper onClick={toggle}>
             <span role="img" aria-label="wizard-icon">
