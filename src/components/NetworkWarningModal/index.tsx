@@ -38,8 +38,8 @@ export default function NetworkWarningModal() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    setOpen(!!chainId && !!urlLoadedChainId && !!switchingToCorrectChain)
-  }, [chainId, switchingToCorrectChain, urlLoadedChainId])
+    setOpen(!!account && !!chainId && !!urlLoadedChainId && !!switchingToCorrectChain)
+  }, [account, chainId, switchingToCorrectChain, urlLoadedChainId])
 
   const handleDismiss = useCallback(() => null, [])
 
