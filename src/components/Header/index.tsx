@@ -3,7 +3,7 @@ import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from 'dxswap-sdk'
 
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -24,6 +24,7 @@ import { useToggleShowClaimPopup } from '../../state/application/hooks'
 import ClaimModal from '../claim/ClaimModal'
 import Skeleton from 'react-loading-skeleton'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
+import useIsClaimAvailable from '../../hooks/swpr/useIsClaimAvailable'
 
 const HeaderFrame = styled.div`
   position: relative;
@@ -182,7 +183,7 @@ const HeaderSubRow = styled(RowFlat)`
   `};
 `
 
-const Amount = styled.p<{ clickable?: boolean }>`
+const Amount = styled.p<{ clickable?: boolean; zero: boolean }>`
   padding: 8px 12px;
   margin: 0;
   font-weight: bold;
@@ -196,13 +197,38 @@ const Amount = styled.p<{ clickable?: boolean }>`
   border-radius: 12px;
   cursor: ${props => (props.clickable ? 'pointer' : 'initial')};
   white-space: nowrap;
+  ${props =>
+    props.zero &&
+    css`
+      color: ${props => props.theme.red1};
+      background: rgba(240, 46, 81, 0.2);
+    `};
 
   & + & {
     margin-left: 7px;
   }
 `
 
-function Header({ history }: { history: any }) {
+const AirdropSign = styled.div`
+  padding: 8px 12px;
+  margin: 0;
+  font-family: Montserrat;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 10px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.white};
+  background: linear-gradient(90deg, #2e17f2 -24.77%, #fb52a1 186.93%);
+  box-shadow: 0px 0px 42px rgba(165, 58, 196, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-right: 7px;
+`
+
+function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
@@ -213,6 +239,7 @@ function Header({ history }: { history: any }) {
   const toggleClaimPopup = useToggleShowClaimPopup()
   const swprBalance = useTokenBalance(account || undefined, chainId ? SWPR[chainId] : undefined)
   const isMobileByMedia = useIsMobileByMedia()
+  const { loading: loadingClaimAvailable, available: claimAvailable } = useIsClaimAvailable(account)
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -258,10 +285,19 @@ function Header({ history }: { history: any }) {
           {!isMobileByMedia && <Settings />}
         </HeaderElement>
         <HeaderSubRow>
-          <Amount clickable onClick={toggleClaimPopup}>
-            {!account || !swprBalance ? '0.000' : swprBalance.toFixed(3)} SWPR
-          </Amount>
-          <Amount>
+          {!loadingClaimAvailable && claimAvailable ? (
+            <AirdropSign onClick={toggleClaimPopup}>
+              <span role="img" aria-label="Airdrop emoji">
+                ✨
+              </span>{' '}
+              Claim airdrop
+            </AirdropSign>
+          ) : (
+            <Amount zero={false} clickable onClick={toggleClaimPopup}>
+              {!account || !swprBalance ? '0.000' : swprBalance.toFixed(3)} SWPR
+            </Amount>
+          )}
+          <Amount zero={!!!userNativeCurrencyBalance || userNativeCurrencyBalance.equalTo('0')}>
             {!account ? (
               '0.000'
             ) : userNativeCurrencyBalance ? (
