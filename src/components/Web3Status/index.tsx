@@ -16,6 +16,7 @@ import { useNetworkSwitcherPopoverToggle, useWalletSwitcherPopoverToggle } from 
 import { TriangleIcon } from '../Icons'
 import { useTranslation } from 'react-i18next'
 import Row from '../Row'
+import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
 const Web3StatusError = styled.div`
   display: flex;
@@ -51,7 +52,7 @@ const SwitchNetworkButton = styled.button`
 `
 
 const Button = styled.button`
-  min-height: 32px;
+  height: 29px;
   padding: 10.5px 10px;
   margin: 0 0 0 auto;
   background-color: ${({ theme }) => theme.primary1};
@@ -60,10 +61,13 @@ const Button = styled.button`
   text-transform: uppercase;
   font-weight: bold;
   font-size: 12px;
-  line-height: 12px;
+  line-height: 10px;
   letter-spacing: 0.08em;
   border: none;
   outline: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   cursor: pointer;
 `
 
@@ -122,6 +126,7 @@ export default function Web3Status() {
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { t } = useTranslation()
+  const mobileByMedia = useIsMobileByMedia()
 
   if (!contextNetwork.active && !active) {
     return null
@@ -147,7 +152,7 @@ export default function Web3Status() {
         <Row alignItems="center">
           {networkConnectorChainId && !account && (
             <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
-              {t('Connect wallet')}
+              {mobileByMedia ? 'Connect' : t('Connect wallet')}
             </Button>
           )}
           <AccountStatus
