@@ -146,7 +146,10 @@ export function AccountStatus({
         <Web3StatusConnected id="web3-status-connected" onClick={onAddressClick} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
             <RowBetween>
-              <Text fontSize={13}>{pendingTransactions?.length} Pending</Text> <Loader />
+              <Text fontSize={13} marginRight="5px">
+                {pendingTransactions?.length} Pending
+              </Text>{' '}
+              <Loader />
             </RowBetween>
           ) : (
             ENSName || (
