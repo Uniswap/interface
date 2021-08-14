@@ -297,7 +297,7 @@ function Header() {
               {!account || !swprBalance ? '0.000' : swprBalance.toFixed(3)} SWPR
             </Amount>
           )}
-          <Amount zero={!!!userNativeCurrencyBalance || userNativeCurrencyBalance.equalTo('0')}>
+          <Amount zero={!!userNativeCurrencyBalance?.equalTo('0')}>
             {!account ? (
               '0.000'
             ) : userNativeCurrencyBalance ? (
