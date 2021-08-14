@@ -175,7 +175,10 @@ export default function ClaimModal({
                 {unclaimedBalance?.toFixed(3) || '0'} SWPR
               </TYPE.white>
               <StyledClaimButton
-                disabled={!!account && !availableClaim}
+                disabled={
+                  (!!account && !availableClaim) ||
+                  (chainId === ChainId.ARBITRUM_RINKEBY && nativeCurrencyBalance?.equalTo('0'))
+                }
                 padding="16px 16px"
                 width="100%"
                 mt="1rem"
