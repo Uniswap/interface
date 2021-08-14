@@ -158,7 +158,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
+    mobile: true
   },
   WALLET_CONNECT: {
     connector: walletConnect,
@@ -209,7 +210,7 @@ export const DEFAULT_TOKEN_LIST = 'ipfs://QmeCv4FhDPXRCcG1odeaFyEqrfKe8DGjaprT8B
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
-interface NetworkDetails {
+export interface NetworkDetails {
   chainId: string
   chainName: string
   nativeCurrency: {
@@ -220,7 +221,6 @@ interface NetworkDetails {
   rpcUrls: string[]
   blockExplorerUrls?: string[]
   iconUrls?: string[] // Currently ignored.
-  metamaskAddable?: boolean
 }
 
 export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
@@ -243,9 +243,8 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       symbol: Currency.XDAI.symbol || 'xDAI',
       decimals: Currency.XDAI.decimals || 18
     },
-    rpcUrls: ['https://rpc.xdaichain.com/'],
-    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
-    metamaskAddable: true
+    rpcUrls: ['https://rpc.xdaichain.com'],
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
   },
   [ChainId.ARBITRUM_ONE]: {
     chainId: `0x${ChainId.ARBITRUM_ONE.toString(16)}`,
@@ -255,9 +254,8 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       symbol: Currency.ETHER.symbol || 'ETH',
       decimals: Currency.ETHER.decimals || 18
     },
-    rpcUrls: ['https://arb1.arbitrum.io/rpc/'],
-    blockExplorerUrls: ['https://explorer.arbitrum.io/'],
-    metamaskAddable: true
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://explorer.arbitrum.io']
   }
 }
 
