@@ -46,6 +46,26 @@ export function useNativeCurrencyBalances(
   )
 }
 
+export function useNativeCurrencyBalance(): CurrencyAmount | undefined {
+  const { chainId, account } = useActiveWeb3React()
+  const multicallContract = useMulticallContract()
+
+  const results = useSingleContractMultipleData(
+    multicallContract,
+    // the name is misleading. Depending on the deployment network, the
+    // function returns the native currency balance
+    'getEthBalance',
+    [[account || undefined]]
+  )
+
+  return useMemo(() => {
+    if (!chainId) return
+    const value = results?.[0]?.result?.[0]
+    if (!value) return
+    return CurrencyAmount.nativeCurrency(JSBI.BigInt(value.toString()), chainId)
+  }, [results, chainId])
+}
+
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */

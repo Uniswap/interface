@@ -41,6 +41,7 @@ export interface Colors {
   // other
   red1: Color
   red2: Color
+  orange1: Color
   green1: Color
   green2: Color
   yellow1: Color

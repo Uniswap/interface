@@ -96,8 +96,8 @@ export const StyledInternalLink = styled(Link)<{ color?: keyof Colors }>`
   }
 `
 
-const StyledLink = styled.a<{ color?: keyof Colors }>`
-  text-decoration: none;
+const StyledLink = styled.a<{ color?: keyof Colors; underlined?: boolean }>`
+  text-decoration: ${props => (props.underlined ? 'underline' : 'none')};
   cursor: pointer;
   color: ${({ theme, color }) => (color ? theme[color] : theme.text4)};
   font-weight: 500;
@@ -124,8 +124,13 @@ export function ExternalLink({
   href,
   rel = 'noopener noreferrer',
   color,
+  underlined,
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string; color?: keyof Colors }) {
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
+  href: string
+  color?: keyof Colors
+  underlined?: boolean
+}) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
@@ -135,7 +140,17 @@ export function ExternalLink({
     },
     [target]
   )
-  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} color={color} {...rest} />
+  return (
+    <StyledLink
+      underlined={underlined}
+      target={target}
+      rel={rel}
+      href={href}
+      onClick={handleClick}
+      color={color}
+      {...rest}
+    />
+  )
 }
 
 const rotate = keyframes`
