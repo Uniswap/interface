@@ -11,7 +11,7 @@ import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 import { providers } from 'ethers'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const CLAIM_LEAVES_IPFS_HASH = 'QmSxj5c5JBhyRiFM2Rg1pse9651AeCz2f8TVuf7WBu22QW'
+export const CLAIM_LEAVES_IPFS_HASH = process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -132,7 +132,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
   ]
 }
 
-export const ARBITRUM_RINKEBY_PROVIDER = new providers.JsonRpcProvider('https://rinkeby.arbitrum.io/rpc')
+export const ARBITRUM_ONE_PROVIDER = new providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc')
 
 export interface WalletInfo {
   connector?: AbstractConnector

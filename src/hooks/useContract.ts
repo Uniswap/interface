@@ -28,7 +28,7 @@ import WXDAI_ABI from '../constants/abis/wxdai.json'
 import { getContract, getProviderOrSigner, isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
-import { ARBITRUM_RINKEBY_PROVIDER } from '../constants'
+import { ARBITRUM_ONE_PROVIDER } from '../constants'
 import { constants } from 'ethers'
 
 // returns null on errors
@@ -135,7 +135,7 @@ export function useStakingRewardsDistributionContract(
 export function useSWPRClaimerContract(): Contract | null {
   const { library, chainId, account } = useActiveWeb3React()
   return useMemo(() => {
-    const address = SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_RINKEBY]
+    const address = SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE]
     const ABI = SWPR_CLAIMER_ABI
     if (!address || !isAddress(address) || address === constants.AddressZero || !ABI || !library) return null
     try {
@@ -143,10 +143,7 @@ export function useSWPRClaimerContract(): Contract | null {
         address,
         ABI,
         account
-          ? (getProviderOrSigner(
-              chainId === ChainId.ARBITRUM_RINKEBY ? library : ARBITRUM_RINKEBY_PROVIDER,
-              account
-            ) as any)
+          ? (getProviderOrSigner(chainId === ChainId.ARBITRUM_ONE ? library : ARBITRUM_ONE_PROVIDER, account) as any)
           : account
       )
     } catch (error) {

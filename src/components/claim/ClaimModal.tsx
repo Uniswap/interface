@@ -98,7 +98,7 @@ export default function ClaimModal({
   const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
   useEffect(() => {
-    setCorrectNetwork(chainId === ChainId.ARBITRUM_RINKEBY)
+    setCorrectNetwork(chainId === ChainId.ARBITRUM_ONE)
   }, [chainId])
 
   const onClaim = useCallback(() => {
@@ -128,7 +128,7 @@ export default function ClaimModal({
 
   const onSwitchToArbitrum = useCallback(() => {
     if (connector instanceof InjectedConnector)
-      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_RINKEBY], account || undefined)
+      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_ONE], account || undefined)
   }, [account, connector])
 
   const onConnectWallet = useCallback(() => {
@@ -167,9 +167,9 @@ export default function ClaimModal({
             </TYPE.white>
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            {availableClaim && chainId !== ChainId.ARBITRUM_RINKEBY && (
+            {availableClaim && chainId !== ChainId.ARBITRUM_ONE && (
               <NetworkWarning>
-                Receive your SWPR airdrop on Arbitrum Rinkeby. Please switch network to claim.
+                Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
               </NetworkWarning>
             )}
             <BottomAutoColumn gap="8px">
@@ -179,7 +179,7 @@ export default function ClaimModal({
               <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
                 {unclaimedBalance?.toFixed(3) || '0'} SWPR
               </TYPE.white>
-              {chainId === ChainId.ARBITRUM_RINKEBY && nativeCurrencyBalance?.equalTo('0') && (
+              {chainId === ChainId.ARBITRUM_ONE && nativeCurrencyBalance?.equalTo('0') && (
                 <>
                   <NativeCurrencyWarning>
                     You have no Arbitrum ETH to claim your SWPR. Please make sure to transfer enough ETH to Arbitrum
@@ -199,14 +199,14 @@ export default function ClaimModal({
               <StyledClaimButton
                 disabled={
                   (!!account && !availableClaim) ||
-                  (chainId === ChainId.ARBITRUM_RINKEBY && nativeCurrencyBalance?.equalTo('0'))
+                  (chainId === ChainId.ARBITRUM_ONE && nativeCurrencyBalance?.equalTo('0'))
                 }
                 padding="16px 16px"
                 width="100%"
                 mt="1rem"
                 onClick={onClick}
               >
-                {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum Rinkeby'}
+                {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum One'}
               </StyledClaimButton>
             </BottomAutoColumn>
             <AutoRow gap="3px" justifyContent="center" width="100%">
