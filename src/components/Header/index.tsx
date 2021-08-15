@@ -7,7 +7,7 @@ import styled, { css } from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useNativeCurrencyBalances, useTokenBalance } from '../../state/wallet/hooks'
+import { useNativeCurrencyBalance, useTokenBalance } from '../../state/wallet/hooks'
 
 import Settings from '../Settings'
 
@@ -233,8 +233,7 @@ function Header() {
   const { t } = useTranslation()
 
   const nativeCurrency = useNativeCurrency()
-  const userNativeCurrencyBalances = useNativeCurrencyBalances(account ? [account] : [])
-  const userNativeCurrencyBalance = userNativeCurrencyBalances?.[account || '']
+  const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
   const toggleClaimPopup = useToggleShowClaimPopup()
   const swprBalance = useTokenBalance(account || undefined, chainId ? SWPR[chainId] : undefined)
