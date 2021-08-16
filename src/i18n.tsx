@@ -80,7 +80,6 @@ async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   i18n.load(locale, messages)
   i18n.activate(locale)
-  document.documentElement.setAttribute('lang', locale)
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -91,6 +90,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
+        document.documentElement.setAttribute('lang', locale)
         setLoaded(true)
       })
       .catch((error) => {
