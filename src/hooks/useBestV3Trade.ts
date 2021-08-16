@@ -21,6 +21,8 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
 }
 
+const DEFAULT_GAS_QUOTE = 2_000_000
+
 /**
  * Returns the best v3 trade for a desired exact input swap
  * @param amountIn the amount to swap in
@@ -42,11 +44,16 @@ export function useBestV3TradeExactIn(
   }, [amountIn, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut) {
+    if (
+      !amountIn ||
+      !currencyOut ||
+      // skip when tokens are the same
+      amountIn.currency.equals(currencyOut)
+    ) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -126,11 +133,17 @@ export function useBestV3TradeExactOut(
   }, [amountOut, routes])
 
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? 1_000_000 : undefined,
+    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
   })
 
   return useMemo(() => {
-    if (!amountOut || !currencyIn || quotesResults.some(({ valid }) => !valid)) {
+    if (
+      !amountOut ||
+      !currencyIn ||
+      quotesResults.some(({ valid }) => !valid) ||
+      // skip when tokens are the same
+      amountOut.currency.equals(currencyIn)
+    ) {
       return {
         state: V3TradeState.INVALID,
         trade: null,

@@ -14,20 +14,18 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId) as SupportedChainId[]
+export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
 
-export type SupportedL2ChainId =
-  | SupportedChainId.ARBITRUM_ONE
-  | SupportedChainId.ARBITRUM_RINKEBY
-  | SupportedChainId.OPTIMISM
-  | SupportedChainId.OPTIMISTIC_KOVAN
-
-export type SupportedL1ChainId =
-  | SupportedChainId.MAINNET
-  | SupportedChainId.ROPSTEN
-  | SupportedChainId.RINKEBY
-  | SupportedChainId.GOERLI
-  | SupportedChainId.KOVAN
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+]
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
@@ -35,27 +33,34 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
-]
+] as const
+
+export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
 
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
-]
+] as const
+
+export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+
 interface L1ChainInfo {
-  docs: string
-  explorer: string
-  infoLink: string
-  label: string
+  readonly docs: string
+  readonly explorer: string
+  readonly infoLink: string
+  readonly label: string
 }
-interface L2ChainInfo extends L1ChainInfo {
-  bridge: string
-  logoUrl: string
+export interface L2ChainInfo extends L1ChainInfo {
+  readonly bridge: string
+  readonly logoUrl: string
 }
 
-type ChainInfo = { [chainId in SupportedL2ChainId]: L2ChainInfo } &
-  { [chainId in SupportedL1ChainId]: L1ChainInfo } & { [chainId: number]: L1ChainInfo | L2ChainInfo }
+type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
+  readonly [chainId in SupportedL2ChainId]: L2ChainInfo
+} &
+  { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {

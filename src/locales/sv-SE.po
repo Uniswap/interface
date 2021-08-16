@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-13 22:05\n"
+"Last-Translator: \n"
+"Language: sv_SE\n"
+"Language-Team: Swedish\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: sv\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: sv-SE\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Swedish\n"
-"PO-Revision-Date: 2021-07-13 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(rensa alla)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(redigera)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Rensa alla"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Stäng"
 
@@ -482,6 +479,10 @@ msgstr "Bekräfta byte"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Bekräfta transaktionen i din plånbok"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Bekräfta transaktionen i plånboken"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "Ange giltig tokenadress"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Fel"
@@ -912,6 +914,10 @@ msgstr "Ogiltigt intervall valt. Minimipriset måste vara lägre än maxpriset."
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
 msgstr "Ogiltig mottagare"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "Språk"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1131,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Hoppsan! Ett okänt fel inträffade. Uppdatera sidan eller använd en annan webbläsare eller enhet."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Optimism schemalagda stilleståndstider"
+msgid "Optimism Planned Downtime"
+msgstr "Optimism planerad driftstopp"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optimism förväntar sig en viss schemalagd driftstopp inom en snar framtid. <0> Läs mer.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimismen förväntar sig planerad driftstopp inom en snar framtid. Oplanerad stillestånd kan också förekomma. Medan nätverket är nere genereras inte avgifter och du kommer inte att kunna ta bort likviditet. <0> Läs mer.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1301,6 +1307,12 @@ msgstr "Kö"
 msgid "Rates"
 msgstr "Kurser"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Läs mer"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Läs mer om UNI"
@@ -1368,6 +1380,7 @@ msgstr "Tar bort {0} {1} och {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Begränsar byten till direkta par."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1479,6 +1492,10 @@ msgstr "Skickar röstning"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Lyckades"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Framgång"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "Transaktionsinställningar"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "Transaktionsinställningar"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transaktion skickad"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transaktionen slutfördes"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "Visa på Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Visa i Utforskare"

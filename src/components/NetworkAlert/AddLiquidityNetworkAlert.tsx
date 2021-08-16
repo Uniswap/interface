@@ -11,6 +11,7 @@ import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
   display: none;
@@ -117,7 +118,10 @@ export function AddLiquidityNetworkAlert() {
       <L2Icon src={info.logoUrl} />
       <Body>
         <Trans>This is an alpha release of Uniswap on the {info.label} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
+        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>{' '}
+        <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+          <Trans>Read more</Trans>
+        </ReadMoreLink>
       </Body>
       <LinkOutToBridge href={depositUrl}>
         <Trans>Deposit to {info.label}</Trans>

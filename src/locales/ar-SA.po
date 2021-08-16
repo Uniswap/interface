@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-13 19:19+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-13 22:05\n"
+"Last-Translator: \n"
+"Language: ar_SA\n"
+"Language-Team: Arabic\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: ar\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: ar\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Arabic\n"
-"PO-Revision-Date: 2021-07-13 20:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(مسح الكل)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(تعديل)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}٪"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "مسح الكل"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "إغلاق"
 
@@ -482,6 +479,10 @@ msgstr "تأكيد المبادلة"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "تأكيد هذه المعاملة في محفظتك"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "تأكيد المعاملة في المحفظة"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -730,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "أدخل عنوان رمز صالح"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "خطأ"
@@ -912,6 +914,10 @@ msgstr "النطاق المحدد غير صالح. يجب أن يكون الحد
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
 msgstr "مستلم غير صالح"
+
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "لغة"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1131,12 +1137,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "عفواً! حدث خطأ غير معروف. يُرجى تحديث الصفحة، أو الزيارة من متصفح آخر أو جهاز آخر."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "التفاؤل أوقات التعطل المجدولة"
+msgid "Optimism Planned Downtime"
+msgstr "التفاؤل وقت التوقف المخطط له"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "يتوقع التفاؤل بعض التوقفات المقررة في المستقبل القريب. <0> اقرأ المزيد.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "يتوقع التفاؤل توقفًا مخططًا له في المستقبل القريب. قد يحدث أيضًا توقف غير مخطط له. أثناء تعطل الشبكة ، لن يتم فرض رسوم ولن تتمكن من إزالة السيولة. <0> اقرأ المزيد.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1301,6 +1307,12 @@ msgstr "في قائمة الانتظار"
 msgid "Rates"
 msgstr "الأسعار"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "قراءة المزيد"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "اقرأ المزيد عن UNI"
@@ -1368,6 +1380,7 @@ msgstr "إزالة {0} {1} و {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "يقيد المبادلات إلى أزواج فقط ."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1479,6 +1492,10 @@ msgstr "تقديم التصويت"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "نجح"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "النجاح"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,6 +1659,7 @@ msgid "Transaction Settings"
 msgstr "إعدادات المعاملة"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1649,6 +1667,10 @@ msgstr "إعدادات المعاملة"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "تم إرسال المعاملة"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "اكتملت المعاملة في"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1825,6 +1847,7 @@ msgstr "عرض على Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "عرض على Explorer"
