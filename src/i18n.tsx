@@ -90,6 +90,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
+        document.documentElement.setAttribute('lang', locale)
         setLoaded(true)
       })
       .catch((error) => {
