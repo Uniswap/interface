@@ -212,8 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Balance: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-msgid "Bridge Assets"
-msgstr "Bridge Assets"
+msgid "Bridge Assets"
+msgstr "Bridge Assets"
 
 #: src/pages/Static/About.tsx
 msgid "Bug Bounty"

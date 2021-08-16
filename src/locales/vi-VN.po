@@ -212,7 +212,7 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Số dư: {0} {1} - {2} LP"
 
 #: src/components/Header/index.tsx
-msgid "Bridge Assets"
+msgid "Bridge Assets"
 msgstr "Cầu Nối"
 
 #: src/pages/Static/About.tsx
