@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-13 22:05\n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -1017,6 +1017,10 @@ msgstr "Màx.:"
 msgid "Maximum sent"
 msgstr "Màxim enviat"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Menú"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1654,6 +1658,7 @@ msgstr "Total dipositat"
 msgid "Total deposits"
 msgstr "Dipòsits totals"
 
+#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Configuració de transaccions"

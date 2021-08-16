@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-13 22:05\n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -1017,6 +1017,10 @@ msgstr "最大："
 msgid "Maximum sent"
 msgstr "最大売却数"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "メニュー"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1654,6 +1658,7 @@ msgstr "合計預入数量"
 msgid "Total deposits"
 msgstr "合計預入額"
 
+#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "取引設定"

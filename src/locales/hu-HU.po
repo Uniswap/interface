@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-13 22:05\n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -1018,6 +1018,10 @@ msgstr "Max:"
 msgid "Maximum sent"
 msgstr "Maximum elküldve"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Menü"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1655,6 +1659,7 @@ msgstr "Összesen letétbe helyezett"
 msgid "Total deposits"
 msgstr "Összes letét"
 
+#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Tranzakció beállítások"
