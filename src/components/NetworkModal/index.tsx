@@ -62,6 +62,17 @@ const ADD_NETWORK_PARAMS: {
     },
     rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
     blockExplorerUrls: ['https://polygonscan.com/']
+  },
+  [ChainId.BSCMAINNET]: {
+    chainId: '0x38',
+    chainName: 'BSC',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18
+    },
+    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com/']
   }
 }
 
