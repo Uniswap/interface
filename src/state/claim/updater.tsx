@@ -9,7 +9,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     const fetchAndUpdateWhitelist = async () => {
-      const response = await fetch(`https://ipfs.io/ipfs/${CLAIM_LEAVES_IPFS_HASH}`)
+      const response = await fetch(`https://infura-ipfs.io/ipfs/${CLAIM_LEAVES_IPFS_HASH}`)
       if (!response.ok) {
         console.warn('could not load claim whitelist')
         return
