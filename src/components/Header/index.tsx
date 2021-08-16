@@ -160,6 +160,7 @@ const BridgeExternalLink = styled(ExternalLink)`
   font-size: 16px;
   color: inherit;
   border: 1px solid ${({ theme }) => theme.bg3};
+  white-space: nowrap;
   :hover {
     text-decoration: none;
   }
@@ -364,7 +365,7 @@ export default function Header() {
           {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
             <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
               <HideText>
-                <Trans>Bridge&nbsp;Assets&nbsp;</Trans>
+                <Trans>Bridge Assets</Trans>
               </HideText>
               ↗
             </BridgeExternalLink>

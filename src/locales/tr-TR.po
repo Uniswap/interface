@@ -212,7 +212,7 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Bakiye: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-msgid "Bridge Assets"
+msgid "Bridge Assets"
 msgstr "Köprü Varlıkları"
 
 #: src/pages/Static/About.tsx
