@@ -1,17 +1,24 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { updateClaimWhitelist, WhitelistItem } from './actions'
+import { updateClaimWhitelist, updateClaimTxConfirmed, WhitelistItem } from './actions'
 
 export interface ClaimState {
   readonly whitelist: WhitelistItem[]
+  readonly claimTxConfirmed: boolean
 }
 
 const initialState: ClaimState = {
-  whitelist: []
+  whitelist: [],
+  claimTxConfirmed: false
 }
 
 export default createReducer<ClaimState>(initialState, builder =>
-  builder.addCase(updateClaimWhitelist, (state, { payload: { whitelist } }) => ({
-    ...state,
-    whitelist
-  }))
+  builder
+    .addCase(updateClaimWhitelist, (state, { payload: { whitelist } }) => ({
+      ...state,
+      whitelist
+    }))
+    .addCase(updateClaimTxConfirmed, (state, { payload }) => ({
+      ...state,
+      claimTxConfirmed: payload
+    }))
 )

@@ -1,14 +1,37 @@
-import { useMemo } from 'react'
-import { useSingleCallResult } from '../../state/multicall/hooks'
+import { useEffect, useState } from 'react'
+import { ARBITRUM_ONE_PROVIDER } from '../../constants'
+import { useClaimTxConfirmed } from '../../state/claim/hooks'
 import { useSWPRClaimerContract } from '../useContract'
 
 export default function useHasClaimed(account: string | null | undefined): { loading: boolean; claimed: boolean } {
   const swprClaimerContract = useSWPRClaimerContract()
-  const result = useSingleCallResult(swprClaimerContract, 'claimed', account ? [account] : [])
+  const [claimed, setClaimed] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [arbitrumOneBlockNumber, setArbitrumOneBlockNumber] = useState(0)
+  const claimTxConfirmed = useClaimTxConfirmed()
 
-  return useMemo(() => {
-    if (!account || !swprClaimerContract) return { loading: false, claimed: false }
-    if (result.loading || result.error) return { loading: true, claimed: false }
-    return { loading: false, claimed: result.result?.[0] }
-  }, [account, result, swprClaimerContract])
+  useEffect(() => {
+    ARBITRUM_ONE_PROVIDER.on('block', setArbitrumOneBlockNumber)
+    return () => {
+      ARBITRUM_ONE_PROVIDER.removeListener('block', setArbitrumOneBlockNumber)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!account || !swprClaimerContract || !arbitrumOneBlockNumber || claimTxConfirmed) {
+      setClaimed(true)
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    swprClaimerContract
+      .claimed(account, { blockTag: arbitrumOneBlockNumber })
+      .then(setClaimed)
+      .catch(console.error)
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [account, swprClaimerContract, arbitrumOneBlockNumber, claimTxConfirmed])
+
+  return { loading, claimed }
 }

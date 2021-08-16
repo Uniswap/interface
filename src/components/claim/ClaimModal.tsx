@@ -19,6 +19,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { ApplicationModal } from '../../state/application/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useNativeCurrencyBalance } from '../../state/wallet/hooks'
+import { useClaimTxConfirmedUpdater } from '../../state/claim/hooks'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -92,6 +93,7 @@ export default function ClaimModal({
   const addTransaction = useTransactionAdder()
   const nativeCurrencyBalance = useNativeCurrencyBalance()
   const claimCallback = useClaimCallback(account || undefined)
+  const updateClaimTxConfirmed = useClaimTxConfirmedUpdater()
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
   const { available: availableClaim } = useIsClaimAvailable(account || undefined)
   const closeModals = useCloseModals()
@@ -109,6 +111,9 @@ export default function ClaimModal({
         addTransaction(transaction, {
           summary: `Claim ${unclaimedBalance?.toFixed(3)} SWPR`
         })
+        transaction.wait().then(() => {
+          updateClaimTxConfirmed(true)
+        })
       })
       .catch(error => {
         setError(true)
@@ -117,7 +122,7 @@ export default function ClaimModal({
       .finally(() => {
         setAttempting(false)
       })
-  }, [addTransaction, claimCallback, unclaimedBalance])
+  }, [addTransaction, claimCallback, unclaimedBalance, updateClaimTxConfirmed])
 
   const wrappedOnDismiss = useCallback(() => {
     setAttempting(false)

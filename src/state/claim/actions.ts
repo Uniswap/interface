@@ -6,3 +6,4 @@ export interface WhitelistItem {
 }
 
 export const updateClaimWhitelist = createAction<{ whitelist: WhitelistItem[] }>('claim/updateClaimWhitelist')
+export const updateClaimTxConfirmed = createAction<boolean>('claim/updateClaimTxConfirmed')

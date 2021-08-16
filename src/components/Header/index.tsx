@@ -222,7 +222,7 @@ const AirdropSign = styled.div`
   color: ${({ theme }) => theme.white};
   background: linear-gradient(90deg, #2e17f2 -24.77%, #fb52a1 186.93%);
   box-shadow: 0px 0px 42px rgba(165, 58, 196, 0.35);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   white-space: nowrap;
   margin-right: 7px;
