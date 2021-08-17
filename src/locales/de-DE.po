@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-16 23:05\n"
+"PO-Revision-Date: 2021-08-17 00:09\n"
 "Last-Translator: \n"
 "Language: de_DE\n"
 "Language-Team: German\n"
@@ -482,7 +482,7 @@ msgstr "Diese Transaktion in Ihrer Wallet bestätigen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "Bestätigen Sie diese Transaktion in Ihrer Wallet"
+msgstr "Transaktion in Wallet bestätigen"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1048,7 +1048,7 @@ msgstr "Migrieren Sie Ihre Liquiditäts-Token von Uniswap V2 nach Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "Migriere"
+msgstr "Migrieren"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -1142,7 +1142,7 @@ msgstr "Hoppla! Ein unbekannter Fehler ist aufgetreten. Bitte aktualisieren Sie 
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism Planned Downtime"
-msgstr "Optimismus Geplante Ausfallzeiten"
+msgstr "Geplante Ausfallzeit bei Optimism"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
 msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -2104,7 +2104,7 @@ msgstr "Ihre Transaktionen werden hier erscheinen..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Deine unbeanspruchte UNI"
+msgstr "Deine noch nicht bezogenen UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
