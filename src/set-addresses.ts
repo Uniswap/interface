@@ -6,6 +6,7 @@ import {
   ROUTER_ADDRESS,
   STAKING_REWARDS_FACTORY_ADDRESS,
   SWPR,
+  RoutablePlatform,
   SWPR_CLAIMER_ADDRESS
 } from 'dxswap-sdk'
 import { isAddress } from './utils'
@@ -25,9 +26,12 @@ if (
   throw new Error('missing env variables')
 
 FACTORY_ADDRESS[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_FACTORY_ADDRESS_ARBITRUM_ONE as string
+RoutablePlatform.SWAPR.factoryAddress[ChainId.ARBITRUM_ONE] = process.env
+  .REACT_APP_FACTORY_ADDRESS_ARBITRUM_ONE as string
 console.log('Arbitrum One factory address set to', FACTORY_ADDRESS[ChainId.ARBITRUM_ONE])
 
 ROUTER_ADDRESS[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_ROUTER_ADDRESS_ARBITRUM_ONE as string
+RoutablePlatform.SWAPR.routerAddress[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_ROUTER_ADDRESS_ARBITRUM_ONE as string
 console.log('Arbitrum One router address set to', ROUTER_ADDRESS[ChainId.ARBITRUM_ONE])
 
 STAKING_REWARDS_FACTORY_ADDRESS[ChainId.ARBITRUM_ONE] = process.env
