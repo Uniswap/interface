@@ -263,7 +263,7 @@ export function PoolPriceRangeBar({
           </AutoColumn>
           <AutoColumn justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {nativeA?.symbol}/{nativeB?.symbol}
+              {nativeB?.symbol}/{nativeA?.symbol}
             </Text>
             {show ? (
               <>

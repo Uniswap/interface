@@ -57,6 +57,7 @@ export default function CommonBases({
           <Text fontWeight={500} fontSize={16}>
             {chainId && [1, 3, 4, 5, 42].includes(chainId) && `ETH`}
             {chainId && [137, 80001].includes(chainId) && `MATIC`}
+            {chainId && [97, 56].includes(chainId) && `BNB`}
           </Text>
         </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {

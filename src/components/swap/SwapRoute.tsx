@@ -16,7 +16,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
       style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
       flexWrap="wrap"
       width="100%"
-      justifyContent="space-evenly"
+      justifyContent="center"
       alignItems="center"
     >
       {trade.route.path.map((token, i, path) => {
