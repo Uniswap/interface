@@ -126,9 +126,6 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
 }
 
 export async function getBulkPoolData(poolList: string[], ethPrice?: string, chainId?: ChainId): Promise<any> {
-  const [t1] = getTimestampsForChanges()
-  const [{ number: b1 }] = await getBlocksFromTimestamps([t1], chainId)
-
   try {
     const current = await exchangeCient[chainId as ChainId].query({
       query: POOLS_BULK,
@@ -137,39 +134,47 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
       },
       fetchPolicy: 'network-only'
     })
+    let poolData
+    const [t1] = getTimestampsForChanges()
+    const blocks = await getBlocksFromTimestamps([t1], chainId)
+    if (blocks.length == 0) {
+      return current.data.pools
+    } else {
+      const [{ number: b1 }] = blocks
 
-    const [oneDayResult] = await Promise.all(
-      [b1].map(async block => {
-        const result = exchangeCient[chainId as ChainId].query({
-          query: POOLS_HISTORICAL_BULK(block, poolList),
-          fetchPolicy: 'network-only'
+      const [oneDayResult] = await Promise.all(
+        [b1].map(async block => {
+          const result = exchangeCient[chainId as ChainId].query({
+            query: POOLS_HISTORICAL_BULK(block, poolList),
+            fetchPolicy: 'network-only'
+          })
+          return result
         })
-        return result
-      })
-    )
+      )
 
-    const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
-      return { ...obj, [cur.id]: cur }
-    }, {})
+      const oneDayData = oneDayResult?.data?.pools.reduce((obj: any, cur: any) => {
+        return { ...obj, [cur.id]: cur }
+      }, {})
 
-    const poolData = await Promise.all(
-      current &&
-        current.data.pools.map(async (pool: any) => {
-          let data = { ...pool }
-          let oneDayHistory = oneDayData?.[pool.id]
-          if (!oneDayHistory) {
-            const newData = await exchangeCient[chainId as ChainId].query({
-              query: POOL_DATA(pool.id, b1),
-              fetchPolicy: 'network-only'
-            })
-            oneDayHistory = newData.data.pools[0]
-          }
+      poolData = await Promise.all(
+        current &&
+          current.data.pools.map(async (pool: any) => {
+            let data = { ...pool }
+            let oneDayHistory = oneDayData?.[pool.id]
+            if (!oneDayHistory) {
+              const newData = await exchangeCient[chainId as ChainId].query({
+                query: POOL_DATA(pool.id, b1),
+                fetchPolicy: 'network-only'
+              })
+              oneDayHistory = newData.data.pools[0]
+            }
 
-          data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
+            data = parseData(data, oneDayHistory, ethPrice, b1, chainId)
 
-          return data
-        })
-    )
+            return data
+          })
+      )
+    }
 
     return poolData
   } catch (e) {
