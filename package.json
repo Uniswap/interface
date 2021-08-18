@@ -124,6 +124,9 @@
     "workbox-routing": "^6.1.0",
     "workbox-strategies": "^6.1.0"
   },
+  "resolutions": {
+    "@walletconnect/ethereum-provider": "1.6.2"
+  },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
     "compile-external-abi-types": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
