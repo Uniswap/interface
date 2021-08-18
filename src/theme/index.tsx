@@ -423,7 +423,7 @@ body {
 
 .rc-pagination-simple-pager > input {
   padding: 0;
-  max-width: 10px;
+  max-width: 20px;
   background-color: transparent;
   outline: none;
   border: none;
