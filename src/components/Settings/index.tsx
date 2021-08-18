@@ -22,6 +22,7 @@ import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
 import { transparentize } from 'polished'
+import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
 
 const StyledMenuIconContainer = styled.div`
   display: flex;
@@ -81,6 +82,27 @@ const StyledMenu = styled.button`
   background: ${({ theme }) => transparentize(1, theme.bg1)};
   cursor: pointer;
   outline: none;
+`
+
+const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
+  && {
+    position: absolute;
+    top: ${props => (props.disclaimerBar ? '112px' : '95px')};
+    right: 20px;
+    max-width: 322px;
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+      position: fixed;
+      top: initial;
+      right: initial;
+      justify-content: center;
+      align-items: center;
+    `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      max-width: 100%;
+    `};
+  }
 `
 
 const MenuModalHeader = styled(RowBetween)`
@@ -165,6 +187,7 @@ export default function SettingsTab() {
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
+  const showDisclaimerBar = useDisclaimerBar()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -219,7 +242,7 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         )}
-        <Modal isOpen={open} onDismiss={toggle}>
+        <MenuModal isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
           <MenuModalContentWrapper>
             <MenuModalHeader>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
@@ -290,7 +313,7 @@ export default function SettingsTab() {
               </MenuModalInner>
             </MenuModalContent>
           </MenuModalContentWrapper>
-        </Modal>
+        </MenuModal>
       </StyledMenu>
     </>
   )
