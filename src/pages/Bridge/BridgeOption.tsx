@@ -39,8 +39,6 @@ const BridgeName = styled.p<{isActive: boolean}>`
   color: ${({ theme }) => theme.text3};
 
   ${({isActive}) => isActive && css`
-    font-weight: 600;
-    font-size: 14px;
     color: ${({ theme }) => theme.text1};
   `}
 `;
