@@ -22,12 +22,22 @@ import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
 import { transparentize } from 'polished'
-import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
+
+const StyledMenuIconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 8px;
+  height: 29px;
+  width: 29px;
+  cursor: pointer;
+  background: ${props => props.theme.dark1};
+  border-radius: 12px;
+`
 
 const StyledMenuIcon = styled(Settings)`
   height: 15px;
   width: 15px;
-  cursor: pointer;
 
   > * {
     stroke: ${({ theme }) => theme.text4};
@@ -73,33 +83,12 @@ const StyledMenu = styled.button`
   outline: none;
 `
 
-const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
-  && {
-    position: absolute;
-    top: ${props => (props.disclaimerBar ? '112px' : '95px')};
-    right: 20px;
-    max-width: 322px;
-
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-      position: fixed;
-      top: initial;
-      right: initial;
-      justify-content: center;
-      align-items: center;
-    `};
-    
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      max-width: 95%;
-    `};
-  }
-`
-
 const MenuModalHeader = styled(RowBetween)`
   @media only screen and (max-height: 600px) {
     padding: 24px 16px;
     box-shadow: 0px 16px 42px rgba(10, 10, 15, 0.45);
   }
-`;
+`
 
 const ModalContentWrapper = styled(DarkCard)`
   display: flex;
@@ -126,6 +115,7 @@ const MenuItem = styled(ExternalLink)`
   width: 50%;
   color: ${({ theme }) => theme.text2};
   display: flex;
+  justify-content: center;
   align-items: center;
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -145,7 +135,6 @@ const CloseTextButton = styled(LinkStyledButton)`
 
 const Divider = styled.div<{ horizontal?: boolean }>`
   border: 0.5px solid ${props => props.theme.bg2};
-  margin: ${props => (props.horizontal ? '0 10px' : '10px 0')};
   height: ${props => (props.horizontal ? '100%' : 'auto')};
 `
 
@@ -158,14 +147,13 @@ const MenuModalContent = styled.div`
   &::-webkit-scrollbar {
     width: 0;
   }
-`;
+`
 
 const MenuModalInner = styled.div`
   @media only screen and (max-height: 600px) {
     padding: 24px 16px;
   }
-`;
-
+`
 
 const CODE_LINK = 'https://github.com/levelkdev/dxswap-dapp'
 
@@ -177,7 +165,6 @@ export default function SettingsTab() {
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
-  const showDisclaimerBar = useDisclaimerBar()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -221,8 +208,10 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenu onClick={toggle} id="open-settings-dialog-button">        
-        <StyledMenuIcon/>
+      <StyledMenu onClick={toggle} id="open-settings-dialog-button">
+        <StyledMenuIconContainer>
+          <StyledMenuIcon />
+        </StyledMenuIconContainer>
         {expertMode && (
           <EmojiWrapper onClick={toggle}>
             <span role="img" aria-label="wizard-icon">
@@ -230,15 +219,15 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         )}
-        <MenuModal isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
+        <Modal isOpen={open} onDismiss={toggle}>
           <MenuModalContentWrapper>
             <MenuModalHeader>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-                Interface settings
+                Transaction settings
               </Text>
               <CloseIcon onClick={toggle} />
             </MenuModalHeader>
-            <MenuModalContent>  
+            <MenuModalContent>
               <MenuModalInner>
                 <TransactionSettings
                   rawSlippage={userSlippageTolerance}
@@ -250,10 +239,10 @@ export default function SettingsTab() {
                   multihop={multihop}
                   onMultihopChange={toggleMultihop}
                 />
-                <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+                <Text fontWeight="400" fontSize="14px" lineHeight="17px" marginTop="12px" marginBottom="8px">
                   Interface settings
                 </Text>
-                <RowBetween>
+                <RowBetween marginBottom="12px">
                   <RowFixed>
                     <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
                       Toggle expert mode
@@ -277,7 +266,7 @@ export default function SettingsTab() {
                   />
                 </RowBetween>
                 <Divider />
-                <RowBetween width="100%" marginBottom="12px">
+                <RowBetween width="100%" marginTop="12px" marginBottom="12px">
                   <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                     <Info size={14} />
                     About
@@ -301,7 +290,7 @@ export default function SettingsTab() {
               </MenuModalInner>
             </MenuModalContent>
           </MenuModalContentWrapper>
-        </MenuModal>
+        </Modal>
       </StyledMenu>
     </>
   )

@@ -33,6 +33,7 @@ const ChainLabel: any = {
 }
 
 const View = styled.div`
+  height: 29px;
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -62,7 +63,7 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
   display: flex;
   align-items: center;
-  height: 29px;
+  height: 25px;
   padding: 7px 8px;
   font-size: 12px;
   line-height: 15px;

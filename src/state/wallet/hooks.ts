@@ -3,47 +3,28 @@ import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
-import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
+import { useMulticallContract } from '../../hooks/useContract'
 
-/**
- * Returns a map of the given addresses to their eventually consistent native currenciy balances.
- */
-export function useNativeCurrencyBalances(
-  uncheckedAddresses?: (string | undefined)[]
-): { [address: string]: CurrencyAmount | undefined } {
-  const { chainId } = useActiveWeb3React()
+export function useNativeCurrencyBalance(): CurrencyAmount | undefined {
+  const { chainId, account } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
-
-  const addresses: string[] = useMemo(
-    () =>
-      uncheckedAddresses
-        ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
-        : [],
-    [uncheckedAddresses]
-  )
 
   const results = useSingleContractMultipleData(
     multicallContract,
     // the name is misleading. Depending on the deployment network, the
     // function returns the native currency balance
     'getEthBalance',
-    addresses.map(address => [address])
+    account ? [[account]] : []
   )
 
-  return useMemo(
-    () =>
-      addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
-        const value = results?.[i]?.result?.[0]
-        if (chainId && value) memo[address] = CurrencyAmount.nativeCurrency(JSBI.BigInt(value.toString()), chainId)
-        return memo
-      }, {}),
-    [addresses, results, chainId]
-  )
+  return useMemo(() => {
+    if (!chainId) return
+    const value = results?.[0]?.result?.[0]
+    if (!value) return
+    return CurrencyAmount.nativeCurrency(JSBI.BigInt(value.toString()), chainId)
+  }, [results, chainId])
 }
 
 /**
@@ -106,18 +87,14 @@ export function useCurrencyBalances(
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsNativeCurrency: boolean = useMemo(
-    () => currencies?.some(currency => !!(currency && Currency.isNative(currency))) ?? false,
-    [currencies]
-  )
-  const nativeCurrencyBalance = useNativeCurrencyBalances(containsNativeCurrency ? [account] : [])
+  const nativeCurrencyBalance = useNativeCurrencyBalance()
 
   return useMemo(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (Currency.isNative(currency)) return nativeCurrencyBalance[account]
+        if (Currency.isNative(currency)) return nativeCurrencyBalance
         return undefined
       }) ?? [],
     [account, currencies, nativeCurrencyBalance, tokenBalances]

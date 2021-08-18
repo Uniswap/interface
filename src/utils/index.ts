@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcSigner, Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/IDXswapRouter.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, RoutablePlatform } from 'dxswap-sdk'
@@ -99,12 +99,15 @@ export function calculateSlippageAmount(value: CurrencyAmount, slippage: number)
 }
 
 // account is not optional
-export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
+export function getSigner(library: Web3Provider | JsonRpcProvider, account: string): JsonRpcSigner {
   return library.getSigner(account).connectUnchecked()
 }
 
 // account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
+export function getProviderOrSigner(
+  library: Web3Provider | JsonRpcProvider,
+  account?: string
+): Web3Provider | JsonRpcProvider | JsonRpcSigner {
   return account ? getSigner(library, account) : library
 }
 
