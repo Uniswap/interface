@@ -7,7 +7,7 @@ import { PageWrapper } from './styleds'
 import { TYPE } from '../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../components/Button'
+import { ButtonSecondary, ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -33,31 +33,28 @@ const VoteCard = styled.div`
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
-    gap: 12px;
     width: 100%;
-    flex-direction: column-reverse;
+    flex-direction: column;
   `};
 `
 
 const ButtonRow = styled(RowFixed)`
-  gap: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  `};
-`
+  & > a + a {
+    margin-left: 8px;
+  }
 
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
+    justify-content: space-between;
+    margin: 26px 0 8px 0;
   `};
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
+  font-weight: 400;
+  color: ${({ theme }) => theme.text1};
+  border: 1px solid ${({ theme }) => theme.bg5};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
   `};
@@ -91,10 +88,11 @@ interface TitleProps {
   filteredToken?: Token
   onCurrencySelection: (currency: Currency) => void
   onFilteredTokenReset: () => void
+  aggregatedDataFilter: PairsFilterType
 }
 
 // decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
-function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset }: TitleProps) {
+function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggregatedDataFilter }: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
@@ -128,42 +126,52 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset }: Tit
               /
             </Text>
           </Box>
-          <PointableFlex onClick={handleAllClick}>
-            {!filteredToken && (
-              <Box mr="6px" height="21px">
-                <img src={threeBlurredCircles} alt="Circles" />
+          {aggregatedDataFilter === PairsFilterType.MY
+            ? (
+              <Box>
+                <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
+                  MY PAIRS
+                </TYPE.mediumHeader>
               </Box>
-            )}
-            {filteredToken && (
-              <Box mr="8px">
-                <CurrencyLogo currency={filteredToken} size="21px" />
-              </Box>
-            )}
-            <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-              {filteredToken ? filteredToken.symbol : 'ALL'}
-            </Text>
-            <Box>
-              <ChevronDown size={12} />
-            </Box>
-            {filteredToken && (
-              <Box ml="6px">
-                <ResetFilterIconContainer onClick={handleResetFilterLocal}>
-                  <ResetFilterIcon />
-                </ResetFilterIconContainer>
-              </Box>
-            )}
-          </PointableFlex>
+            ) : (
+              <PointableFlex onClick={handleAllClick}>
+                {!filteredToken && (
+                  <Box mr="6px" height="21px">
+                    <img src={threeBlurredCircles} alt="Circles" />
+                  </Box>
+                )}
+                {filteredToken && (
+                  <Box mr="8px">
+                    <CurrencyLogo currency={filteredToken} size="21px" />
+                  </Box>
+                )}
+                <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                  {filteredToken ? filteredToken.symbol : 'ALL'}
+                </Text>
+                <Box>
+                  <ChevronDown size={12} />
+                </Box>
+                {filteredToken && (
+                  <Box ml="6px">
+                    <ResetFilterIconContainer onClick={handleResetFilterLocal}>
+                      <ResetFilterIcon />
+                    </ResetFilterIconContainer>
+                  </Box>
+                )}
+              </PointableFlex>
+            )
+          }
         </Flex>
         <ButtonRow>
-          <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
+          <ResponsiveButtonSecondary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
             <Text fontWeight={700} fontSize={12}>
               CREATE PAIR
             </Text>
-          </ResponsiveButtonPrimary>
+          </ResponsiveButtonSecondary>
           {liquidityMiningEnabled && (
             <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
               <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                CREATE LIQ. MINING
+                Create Rewards
               </Text>
             </ResponsiveButtonSecondary>
           )}
@@ -188,7 +196,7 @@ export default function Pools() {
     filterToken
   )
   const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
-
+  
   const handleCurrencySelect = useCallback(token => {
     setFilterToken(token as Token)
   }, [])
@@ -200,26 +208,30 @@ export default function Pools() {
   const handleFilterChange = useCallback(filter => {
     setAggregatedDataFilter(filter)
   }, [])
-
+  
   return (
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="32px" style={{ width: '100%' }}>
+          <AutoColumn gap="27px" style={{ width: '100%' }}>
             <Title
+              aggregatedDataFilter={aggregatedDataFilter}
               onCurrencySelection={handleCurrencySelect}
               filteredToken={filterToken}
               onFilteredTokenReset={handleFilterTokenReset}
             />
             <ListFilter filter={aggregatedDataFilter} onFilterChange={handleFilterChange} />
-            <PairsList
-              showMyPairs
-              loading={loadingUserLpPositions || loadingAggregatedData}
-              aggregatedPairs={aggregatedData}
-              userLpPairs={userLpPairs}
-              filter={aggregatedDataFilter}
-            />
+            {aggregatedDataFilter === PairsFilterType.MY
+              ? <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
+              : (
+                <PairsList
+                  loading={loadingUserLpPositions || loadingAggregatedData}
+                  aggregatedPairs={aggregatedData}
+                  filter={aggregatedDataFilter}
+                />
+              )
+            }
           </AutoColumn>
         </AutoColumn>
         {account && (

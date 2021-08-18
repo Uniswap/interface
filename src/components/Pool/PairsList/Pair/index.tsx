@@ -10,10 +10,14 @@ import { formatCurrencyAmount } from '../../../../utils'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
-  height: 108px;
+  height: 120px;
   padding: 16px;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
+  `}
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    height: initial;
+    padding: 22px 16px;
   `}
 `
 
@@ -40,6 +44,27 @@ const EllipsizedText = styled(TYPE.body)`
   text-overflow: ellipsis;
 `
 
+const TextWrapper = styled.div`
+  order: 1;
+  width: 100%;
+  margin-top: 20px;
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    order: initial;
+    width: auto;
+    margin: 0;
+  `}
+`;
+
+const BadgeWrapper = styled.div`
+  align-self: flex-start;
+  margin-left: auto;
+
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    align-self: center;
+  `}
+`;
+
+
 interface PairProps {
   token0?: Token
   token1?: Token
@@ -52,38 +77,34 @@ interface PairProps {
 export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiquidityText, ...rest }: PairProps) {
   return (
     <SizedCard selectable {...rest}>
-      <Flex flexDirection="column" justifyContent="space-between" height="100%">
-        <Flex justifyContent="space-between" width="100%">
-          <Box>
+      <Flex alignItems="center" flexWrap="wrap">
+          <Box mr="16px">
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
           </Box>
-          <Flex flexDirection="column" alignItems="flex-end">
-            {apy.greaterThan('0') && (
-              <Box mb="8px">
-                <ApyBadge apy={apy} />
-              </Box>
-            )}
-            {staked && (
-              <Box>
-                <PositiveBadgeRoot>
-                  <BadgeText>STAKING</BadgeText>
-                </PositiveBadgeRoot>
-              </Box>
-            )}
-          </Flex>
-        </Flex>
-        <Flex flexDirection="column">
-          <Box>
-            <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
-            </TYPE.subHeader>
-          </Box>
-          <Box>
-            <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
-              {token0?.symbol}/{token1?.symbol}
-            </EllipsizedText>
-          </Box>
-        </Flex>
+          {staked && (
+            <Box>
+              <PositiveBadgeRoot>
+                <BadgeText>STAKING</BadgeText>
+              </PositiveBadgeRoot>
+            </Box>
+          )}
+          <TextWrapper>
+            <Box>
+              <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
+                ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+              </TYPE.subHeader>
+            </Box>
+            <Box>
+              <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
+                {token0?.symbol}/{token1?.symbol}
+              </EllipsizedText>
+            </Box>
+          </TextWrapper>
+          {apy.greaterThan('0') && (
+            <BadgeWrapper>
+              <ApyBadge apy={apy} />
+            </BadgeWrapper>
+          )}
       </Flex>
     </SizedCard>
   )

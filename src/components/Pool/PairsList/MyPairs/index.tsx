@@ -8,11 +8,15 @@ import { DarkCard } from '../../../Card'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
-  height: 108px;
+  height: 120px;
   padding: 12px 16px;
+  background-image: none;
   cursor: pointer;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
+  `}
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    height: initial;
   `}
 `
 

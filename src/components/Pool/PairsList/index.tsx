@@ -9,7 +9,6 @@ import Empty from '../Empty'
 import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
 import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
-import MyPairs from './MyPairs'
 import { useActiveWeb3React } from '../../../hooks'
 import { PairsFilterType } from '../ListFilter'
 
@@ -18,12 +17,25 @@ const ListLayout = styled.div`
   grid-gap: 12px 10px;
   grid-template-columns: 210px 210px 210px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
   `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     grid-template-columns: auto;
+    grid-gap: 8px;
   `};
 `
+
+const PaginationRow = styled(Flex)`
+  width: 100%;
+  justify-content: flex-end;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    justify-content: center;
+  `};
+
+  & ul {
+    margin: 22px 0;
+  }
+`;
 
 interface PairsListProps {
   aggregatedPairs: {
@@ -32,35 +44,28 @@ interface PairsListProps {
     maximumApy: Percent
     staked?: boolean
   }[]
-  userLpPairs?: {
-    pair: Pair
-    liquidityUSD: CurrencyAmount
-    maximumApy: Percent
-  }[]
-  showMyPairs?: boolean
   filter?: PairsFilterType
   loading?: boolean
 }
 
-export default function PairsList({ aggregatedPairs, loading, userLpPairs, showMyPairs, filter }: PairsListProps) {
+export default function PairsList({ aggregatedPairs, loading, filter }: PairsListProps) {
   const { chainId } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const responsiveItemsPerPgae = useResponsiveItemsPerPage()
-  const itemsPage = usePage(aggregatedPairs, responsiveItemsPerPgae, page, 1)
-
+  const responsiveItemsPerPage = useResponsiveItemsPerPage()
+  const itemsPage = usePage(aggregatedPairs, responsiveItemsPerPage, page, 0)
+  
   useEffect(() => {
     // reset page when connected chain or selected filter changes
     setPage(1)
   }, [chainId, filter, aggregatedPairs])
-
+  
   return (
     <Flex flexDirection="column">
-      <Box mb="8px" height="360px">
+      <Box>
         {loading ? (
           <LoadingList />
         ) : itemsPage.length > 0 ? (
           <ListLayout>
-            {showMyPairs && page === 1 && <MyPairs pairsAmount={userLpPairs?.length || 0} />}
             {itemsPage.map(aggregatedPair => {
               return (
                 <UndecoratedLink
@@ -86,16 +91,18 @@ export default function PairsList({ aggregatedPairs, loading, userLpPairs, showM
           </Empty>
         )}
       </Box>
-      <Flex width="100%" justifyContent="flex-end">
-        <Box>
-          <Pagination
-            page={page}
-            totalItems={aggregatedPairs.length + 1}
-            itemsPerPage={responsiveItemsPerPgae}
-            onPageChange={setPage}
-          />
-        </Box>
-      </Flex>
+      {aggregatedPairs.length > responsiveItemsPerPage && (
+        <PaginationRow>
+          <Box>
+            <Pagination
+              page={page}
+              totalItems={aggregatedPairs.length + 1}
+              itemsPerPage={responsiveItemsPerPage}
+              onPageChange={setPage}
+            />
+          </Box>
+        </PaginationRow>
+      )}
     </Flex>
   )
 }
