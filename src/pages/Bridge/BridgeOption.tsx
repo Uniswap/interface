@@ -16,6 +16,10 @@ interface BridgeItemProps {
 
 const Tr = styled.tr`
   position: relative;
+
+  td:last-child {
+    text-align: right;
+  }
 `;
 
 const StyledRadio = styled(Radio)`
