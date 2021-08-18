@@ -20,6 +20,7 @@ import {
   SerializedPair,
   SerializedToken,
   updateArbitrumAlphaAcknowledged,
+  updateFrontrunningProtection,
   updateHideClosedPositions,
   updateUserDarkMode,
   updateUserDeadline,
@@ -153,6 +154,31 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
   return useMemo(
     () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
     [userSlippageTolerance]
+  )
+}
+
+/**
+ * Return whether the user has enabled frontrunning protection
+ */
+export function useFrontrunningProtection(): boolean {
+  const frontrunningProtection = useAppSelector((state) => {
+    return state.user.frontrunningProtection
+  })
+
+  return Boolean(frontrunningProtection)
+}
+
+/**
+ * Return whether the user has enabled frontrunning protection
+ */
+export function useSetFrontrunningProtection(): (frontrunningProtection: boolean) => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (frontrunningProtection: boolean) => {
+      dispatch(updateFrontrunningProtection({ frontrunningProtection }))
+    },
+    [dispatch]
   )
 }
 

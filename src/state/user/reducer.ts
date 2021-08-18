@@ -17,6 +17,7 @@ import {
   updateHideClosedPositions,
   updateUserLocale,
   updateArbitrumAlphaAcknowledged,
+  updateFrontrunningProtection,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 
@@ -43,6 +44,9 @@ export interface UserState {
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number | 'auto'
   userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
+
+  // whether to use a frontrunning protection service
+  frontrunningProtection: boolean
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -78,6 +82,7 @@ export const initialState: UserState = {
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
+  frontrunningProtection: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
@@ -187,5 +192,8 @@ export default createReducer(initialState, (builder) =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateFrontrunningProtection, (state, { payload: { frontrunningProtection } }) => {
+      state.frontrunningProtection = frontrunningProtection
     })
 )

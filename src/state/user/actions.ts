@@ -26,6 +26,9 @@ export const updateHideClosedPositions = createAction<{ userHideClosedPositions:
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'
 )
+export const updateFrontrunningProtection = createAction<{ frontrunningProtection: boolean }>(
+  'user/updateFrontrunningProtection'
+)
 export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
