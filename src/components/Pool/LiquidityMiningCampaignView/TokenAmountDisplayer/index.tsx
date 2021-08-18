@@ -10,13 +10,14 @@ interface TokenAmountDisplayerProps {
   fontSize?: string
   alignRight?: boolean
   showUSDValue: boolean
+  className?: string
 }
 
-function TokenAmountDisplayer({ amount, fontSize = '14px', alignRight, showUSDValue }: TokenAmountDisplayerProps) {
+function TokenAmountDisplayer({ amount, fontSize = '14px', alignRight, showUSDValue, className }: TokenAmountDisplayerProps) {
   const { nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
 
   return (
-    <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center">
+    <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center" className={className}>
       <Box mr="4px">
         <TYPE.small fontWeight="500" fontSize={fontSize} color="text3">
           {showUSDValue
