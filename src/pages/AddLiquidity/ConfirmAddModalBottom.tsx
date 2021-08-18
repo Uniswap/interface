@@ -29,7 +29,7 @@ export function ConfirmAddModalBottom({
           {currencies[Field.CURRENCY_A]?.symbol} Deposited
         </TYPE.body>
         <RowFixed>
-          <CurrencyLogo size="16px" currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '4px' }} />
+          <CurrencyLogo size="16px" currency={currencies[Field.CURRENCY_A]} marginRight={4} />
           <TYPE.body fontSize="14px" fontWeight={500} color="text5">
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </TYPE.body>
@@ -40,7 +40,7 @@ export function ConfirmAddModalBottom({
           {currencies[Field.CURRENCY_B]?.symbol} Deposited
         </TYPE.body>
         <RowFixed>
-          <CurrencyLogo size="16px" currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '4px' }} />
+          <CurrencyLogo size="16px" currency={currencies[Field.CURRENCY_B]} marginRight={4} />
           <TYPE.body fontSize="14px" fontWeight={500} color="text5">
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </TYPE.body>

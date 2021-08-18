@@ -26,13 +26,11 @@ function QuestionHelper({ text }: { text: string }) {
   const close = useCallback(() => setShow(false), [setShow])
 
   return (
-    <span style={{ marginLeft: 4, width: 16, height: 16 }}>
+    <WarningWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
       <Tooltip text={text} show={show}>
-        <WarningWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <AlertTriangle size={16} />
-        </WarningWrapper>
+        <AlertTriangle size={16} />
       </Tooltip>
-    </span>
+    </WarningWrapper>
   )
 }
 

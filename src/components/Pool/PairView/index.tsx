@@ -72,6 +72,7 @@ function PairView({ loading, pair }: PairViewProps) {
 
   return (
     <>
+      {liquidityMiningEnabled && <LiquidityMiningCampaigns pair={pair || undefined} />}
       <StyledDarkCard padding="32px">
         <Flex flexDirection="column">
           <Flex mb="18px" alignItems="center">
@@ -108,7 +109,6 @@ function PairView({ loading, pair }: PairViewProps) {
           </RowBetween>
         </Flex>
       </StyledDarkCard>
-      {liquidityMiningEnabled && <LiquidityMiningCampaigns pair={pair || undefined} />}
     </>
   )
 }

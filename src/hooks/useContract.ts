@@ -4,11 +4,14 @@ import {
   Token,
   Currency,
   WETH,
-  WSPOA,
+  MULTICALL_ABI,
+  MULTICALL_ADDRESS,
   WXDAI,
   STAKING_REWARDS_FACTORY_ADDRESS,
   STAKING_REWARDS_FACTORY_ABI,
-  STAKING_REWARDS_DISTRIBUTION_ABI
+  STAKING_REWARDS_DISTRIBUTION_ABI,
+  SWPR_CLAIMER_ABI,
+  SWPR_CLAIMER_ADDRESS
 } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
@@ -21,12 +24,12 @@ import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import WETH_ABI from '../constants/abis/weth.json'
-import WSPOA_ABI from '../constants/abis/wspoa.json'
 import WXDAI_ABI from '../constants/abis/wxdai.json'
-import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { getContract } from '../utils'
+import { getContract, getProviderOrSigner, isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
+import { ARBITRUM_ONE_PROVIDER } from '../constants'
+import { constants } from 'ethers'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -59,8 +62,6 @@ function useWrappingTokenAbi(token?: Token): any | undefined {
   switch (token) {
     case WETH[chainId]:
       return WETH_ABI
-    case WSPOA[chainId]:
-      return WSPOA_ABI
     case WXDAI[chainId]:
       return WXDAI_ABI
     default:
@@ -112,7 +113,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+  return useContract(chainId && MULTICALL_ADDRESS[chainId], MULTICALL_ABI, false)
 }
 
 export function useStakingRewardsDistributionFactoryContract(withSignerIfPossible?: boolean): Contract | null {
@@ -129,4 +130,25 @@ export function useStakingRewardsDistributionContract(
   withSignerIfPossible?: boolean
 ): Contract | null {
   return useContract(address, STAKING_REWARDS_DISTRIBUTION_ABI, withSignerIfPossible)
+}
+
+export function useSWPRClaimerContract(): Contract | null {
+  const { library, chainId, account } = useActiveWeb3React()
+  return useMemo(() => {
+    const address = SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE]
+    const ABI = SWPR_CLAIMER_ABI
+    if (!address || !isAddress(address) || address === constants.AddressZero || !ABI || !library) return null
+    try {
+      return new Contract(
+        address,
+        ABI,
+        account
+          ? (getProviderOrSigner(chainId === ChainId.ARBITRUM_ONE ? library : ARBITRUM_ONE_PROVIDER, account) as any)
+          : account
+      )
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [library, chainId, account])
 }

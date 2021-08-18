@@ -23,6 +23,7 @@ import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
 import { Slide, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { DisclaimerBar } from '../components/DisclaimerBar'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -34,8 +35,6 @@ const AppWrapper = styled.div`
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
-  z-index: 4;
-  height: 86px;
   justify-content: space-between;
 `
 
@@ -73,18 +72,11 @@ export default function App() {
           <NetworkWarningModal />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
+            <DisclaimerBar />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
             <BodyWrapper>
-              <ToastContainer
-                draggable={false}
-                className="custom-toast-root"
-                toastClassName="custom-toast-container"
-                bodyClassName="custom-toast-body"
-                position="top-right"
-                transition={Slide}
-              />
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/swap" component={Swap} />
@@ -114,6 +106,14 @@ export default function App() {
               <Marginer />
             </BodyWrapper>
           </AppWrapper>
+          <ToastContainer
+            draggable={false}
+            className="custom-toast-root"
+            toastClassName="custom-toast-container"
+            bodyClassName="custom-toast-body"
+            position="top-right"
+            transition={Slide}
+          />
         </ApolloProvider>
       </SkeletonTheme>
     </Suspense>

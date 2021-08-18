@@ -11,7 +11,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   width: 100% !important;
 `
 
-const OptionCard = styled(InfoCard as any)`
+const OptionCard = styled(InfoCard)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -24,11 +24,16 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
-  cursor: ${({ clickable, disabled }) => (clickable && !disabled ? 'pointer' : 'not-allowed')};
+const OptionCardClickable = styled(OptionCard)`
   transition: border 0.3s ease;
   color: white;
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  cursor: pointer;
+
+  &:disabled {
+    filter: grayscale(90%);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `
 
 const HeaderText = styled.div`
@@ -51,27 +56,27 @@ const BadgeWrapper = styled.div`
 `
 
 export default function Option({
-  clickable = true,
   onClick,
   header,
   logoSrc,
+  comingSoon,
   active = false,
   disabled = false
 }: {
-  clickable?: boolean
   onClick?: any
   header: React.ReactNode
   logoSrc?: string
   active?: boolean
   disabled?: boolean
+  comingSoon?: boolean
 }) {
   return (
-    <OptionCardClickable onClick={onClick} clickable={clickable && !active} disabled={disabled} active={active}>
+    <OptionCardClickable onClick={onClick} disabled={disabled || comingSoon} active={active}>
       <OptionCardLeft>
         <AutoRow>
           {logoSrc && <Icon src={logoSrc} alt={'Icon'} />}
           <HeaderText>{header}</HeaderText>
-          <BadgeWrapper>{disabled ? <Badge label="COMING SOON" /> : ''}</BadgeWrapper>
+          <BadgeWrapper>{comingSoon ? <Badge label="COMING SOON" /> : ''}</BadgeWrapper>
         </AutoRow>
       </OptionCardLeft>
     </OptionCardClickable>
