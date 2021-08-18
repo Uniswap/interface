@@ -23,7 +23,6 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
 import { transparentize } from 'polished'
 import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
-import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
 const StyledMenuIconContainer = styled.div`
   display: flex;
@@ -86,16 +85,31 @@ const StyledMenu = styled.button`
 `
 
 const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
-  position: absolute;
-  top: ${props => (props.disclaimerBar ? '112px' : '95px')};
-  right: 20px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    position: fixed;
-    top: initial;
-    right: initial;
-    justify-content: center;
-    align-items: center;
-  `};
+  && {
+    position: absolute;
+    top: ${props => (props.disclaimerBar ? '112px' : '95px')};
+    right: 20px;
+    max-width: 322px;
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+      position: fixed;
+      top: initial;
+      right: initial;
+      justify-content: center;
+      align-items: center;
+    `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      max-width: 100%;
+    `};
+  }
+`
+
+const MenuModalHeader = styled(RowBetween)`
+  @media only screen and (max-height: 600px) {
+    padding: 24px 16px;
+    box-shadow: 0px 16px 42px rgba(10, 10, 15, 0.45);
+  }
 `
 
 const ModalContentWrapper = styled(DarkCard)`
@@ -109,7 +123,14 @@ const ModalContentWrapper = styled(DarkCard)`
 `
 
 const MenuModalContentWrapper = styled(ModalContentWrapper)`
-  padding: 12px;
+  display: grid;
+  grid-row-gap: 12px;
+  padding: 20px;
+
+  @media only screen and (max-height: 600px) {
+    padding: 0;
+    grid-gap: 0;
+  }
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -139,6 +160,23 @@ const Divider = styled.div<{ horizontal?: boolean }>`
   height: ${props => (props.horizontal ? '100%' : 'auto')};
 `
 
+const MenuModalContent = styled.div`
+  overflow-y: auto;
+  max-height: 60vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+`
+
+const MenuModalInner = styled.div`
+  @media only screen and (max-height: 600px) {
+    padding: 24px 16px;
+  }
+`
+
 const CODE_LINK = 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
@@ -150,7 +188,6 @@ export default function SettingsTab() {
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
   const showDisclaimerBar = useDisclaimerBar()
-  const isMobileByMedia = useIsMobileByMedia()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -205,79 +242,76 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         )}
-        <MenuModal
-          maxWidth={isMobileByMedia ? undefined : 322}
-          isOpen={open}
-          onDismiss={toggle}
-          disclaimerBar={showDisclaimerBar}
-        >
+        <MenuModal isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
           <MenuModalContentWrapper>
-            <AutoColumn gap="md" style={{ padding: '8px' }}>
-              <RowBetween>
-                <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-                  Transaction settings
-                </Text>
-                <CloseIcon onClick={toggle} />
-              </RowBetween>
-              <TransactionSettings
-                rawSlippage={userSlippageTolerance}
-                setRawSlippage={setUserslippageTolerance}
-                rawPreferredGasPrice={userPreferredGasPrice}
-                setRawPreferredGasPrice={setUserPreferredGasPrice}
-                deadline={ttl}
-                setDeadline={setTtl}
-                multihop={multihop}
-                onMultihopChange={toggleMultihop}
-              />
+            <MenuModalHeader>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
-                Interface settings
+                Transaction settings
               </Text>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
-                    Toggle expert mode
-                  </TYPE.body>
-                  <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-                </RowFixed>
-                <Toggle
-                  id="toggle-expert-mode-button"
-                  isActive={expertMode}
-                  toggle={
-                    expertMode
-                      ? () => {
-                          toggleExpertMode()
-                          setShowConfirmation(false)
-                        }
-                      : () => {
-                          toggle()
-                          setShowConfirmation(true)
-                        }
-                  }
+              <CloseIcon onClick={toggle} />
+            </MenuModalHeader>
+            <MenuModalContent>
+              <MenuModalInner>
+                <TransactionSettings
+                  rawSlippage={userSlippageTolerance}
+                  setRawSlippage={setUserslippageTolerance}
+                  rawPreferredGasPrice={userPreferredGasPrice}
+                  setRawPreferredGasPrice={setUserPreferredGasPrice}
+                  deadline={ttl}
+                  setDeadline={setTtl}
+                  multihop={multihop}
+                  onMultihopChange={toggleMultihop}
                 />
-              </RowBetween>
-              <Divider />
-              <RowBetween width="100%" marginBottom="12px">
-                <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                  <Info size={14} />
-                  About
-                </MenuItem>
-                <MenuItem href={CODE_LINK}>
-                  <Code size={14} />
-                  Code
-                </MenuItem>
-                <MenuItem href="https://discord.com/invite/4QXEJQkvHH">
-                  <MessageCircle size={14} />
-                  Discord
-                </MenuItem>
-              </RowBetween>
-              <Row alignItems="center" justifyContent="space-around" marginBottom="8px">
-                <SwaprVersionLogo />
-                <Divider horizontal style={{ height: 48 }} />
-                <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
-                  A DXDAO PRODUCT
-                </TYPE.body>
-              </Row>
-            </AutoColumn>
+                <Text fontWeight="400" fontSize="14px" lineHeight="17px" marginTop="12px" marginBottom="8px">
+                  Interface settings
+                </Text>
+                <RowBetween marginBottom="12px">
+                  <RowFixed>
+                    <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
+                      Toggle expert mode
+                    </TYPE.body>
+                    <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                  </RowFixed>
+                  <Toggle
+                    id="toggle-expert-mode-button"
+                    isActive={expertMode}
+                    toggle={
+                      expertMode
+                        ? () => {
+                            toggleExpertMode()
+                            setShowConfirmation(false)
+                          }
+                        : () => {
+                            toggle()
+                            setShowConfirmation(true)
+                          }
+                    }
+                  />
+                </RowBetween>
+                <Divider />
+                <RowBetween width="100%" marginTop="12px" marginBottom="12px">
+                  <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                    <Info size={14} />
+                    About
+                  </MenuItem>
+                  <MenuItem href={CODE_LINK}>
+                    <Code size={14} />
+                    Code
+                  </MenuItem>
+                  <MenuItem href="https://discord.com/invite/4QXEJQkvHH">
+                    <MessageCircle size={14} />
+                    Discord
+                  </MenuItem>
+                </RowBetween>
+                <RowBetween alignItems="center" marginBottom="8px">
+                  <SwaprVersionLogo />
+                  <Divider horizontal style={{ height: 48 }} />
+                  <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
+                    A DXDAO PRODUCT
+                  </TYPE.body>
+                </RowBetween>
+              </MenuModalInner>
+            </MenuModalContent>
           </MenuModalContentWrapper>
         </MenuModal>
       </StyledMenu>

@@ -9,7 +9,7 @@ import { transparentize } from 'polished'
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: 10;
     overflow: hidden;
 
     display: flex;
@@ -59,7 +59,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
       margin: 0;
     `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
-      width:  85vw;
+      width:  100vw;
       ${mobile &&
         css`
           width: 100vw;
