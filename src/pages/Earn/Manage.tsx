@@ -178,7 +178,7 @@ export default function Manage({
                 ? stakingInfo?.ubeRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
                   '-'
                 : '0'}
-              {' UBE / week'}
+              {` ${stakingInfo?.rewardToken?.symbol ?? 'UBE'} / week`}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -321,7 +321,7 @@ export default function Manage({
                         ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                         ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                     : '0'}
-                  {' UBE / week'}
+                  {` ${isDualFarm ? 'UBE' : stakingInfo?.rewardToken?.symbol ?? 'UBE'} / week`}
                 </TYPE.black>
               </RowBetween>
               {isDualFarm && (

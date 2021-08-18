@@ -88,7 +88,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
               <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmountUbe} />}
               </TYPE.body>
-              <TYPE.body>Unclaimed UBE</TYPE.body>
+              <TYPE.body>Unclaimed {stakingInfo?.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol}</TYPE.body>
             </AutoColumn>
           )}
           {stakingInfo?.dualRewards && stakingInfo?.earnedAmount && (
@@ -111,7 +111,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UBE-LP</TYPE.body>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UBE</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -120,7 +122,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             <TYPE.body fontSize={20}>Withdrew UBE-LP!</TYPE.body>
-            <TYPE.body fontSize={20}>Claimed UBE!</TYPE.body>
+            <TYPE.body fontSize={20}>Claimed {stakingInfo?.rewardToken?.symbol ?? 'UBE'}!</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

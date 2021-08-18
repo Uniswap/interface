@@ -78,11 +78,12 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           {stakingInfo?.earnedAmountUbe && (
             <AutoColumn justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmountUbe?.toSignificant(6)} UBE
+                {stakingInfo?.earnedAmountUbe?.toSignificant(6)}{' '}
+                {stakingInfo?.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol ?? 'UBE'}
               </TYPE.body>
               {stakingInfo?.dualRewards && (
                 <TYPE.body fontWeight={600} fontSize={36}>
-                  {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol}
+                  {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
                 </TYPE.body>
               )}
               <TYPE.body>Unclaimed rewards</TYPE.body>
@@ -99,7 +100,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UBE</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -107,7 +110,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Claimed UBE!</TYPE.body>
+            <TYPE.body fontSize={20}>Claimed {stakingInfo?.rewardToken?.symbol ?? 'UBE'}!</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}
