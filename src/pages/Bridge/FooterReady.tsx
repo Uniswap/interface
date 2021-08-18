@@ -42,7 +42,7 @@ export const FooterReady = ({show, onCollectButtonClick, amount}: FooterReadyPro
                 </TYPE.main>
               </td>
               <td align="right">
-                <TagSuccessArrow>
+                <TagSuccessArrow onClick={onCollectButtonClick}>
                   Ready
                 </TagSuccessArrow>
               </td>
