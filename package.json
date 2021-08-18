@@ -44,7 +44,7 @@
     "decimal.js-light": "^2.5.1",
     "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.9",
     "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.10",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#feature/swpr-claimer",
+    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.10.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
