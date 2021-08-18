@@ -45,6 +45,12 @@ const ShowMoreButton = styled.button`
   }
 `;
 
+const StyledHideableAutoColumn = styled(HideableAutoColumn)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
 const bridges = [
   {
     name: 'Swapr Fast Exit',
@@ -103,7 +109,7 @@ export const FooterBridgeSelector = ({show, selectedBridge, onBridgeChange}: Foo
   const numberOfItems = isAllItemsVisible ? bridgesAmount : 4
   
   return (
-    <HideableAutoColumn show={show}>
+    <StyledHideableAutoColumn show={show}>
       <Footer fullWidth padding="0">
         <StyledTable>
           <thead>
@@ -140,7 +146,7 @@ export const FooterBridgeSelector = ({show, selectedBridge, onBridgeChange}: Foo
           </ShowMoreButton>
         )}
       </Footer>
-    </HideableAutoColumn>
+    </StyledHideableAutoColumn>
   )
 }
 
