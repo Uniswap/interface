@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, currencyEquals, Token } from 'dxswap-sdk'
-import React, { CSSProperties, MutableRefObject, useCallback, useContext, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useContext, useMemo, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalances } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
@@ -55,6 +55,7 @@ function Balance({ balance }: { balance: CurrencyAmount }) {
 
 function CurrencyRow({
   currency,
+  balance,
   selectedTokenList,
   onSelect,
   isSelected,
@@ -62,6 +63,7 @@ function CurrencyRow({
   style
 }: {
   currency: Currency
+  balance: CurrencyAmount | undefined
   selectedTokenList: TokenAddressMap
   onSelect: () => void
   isSelected: boolean
@@ -71,7 +73,6 @@ function CurrencyRow({
   const { account, chainId } = useActiveWeb3React()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
@@ -168,16 +169,27 @@ export default function CurrencyList({
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
+  const { account } = useActiveWeb3React()
+  const [hasBreakLine, setHasBreakLine] = useState(false)
   const selectedTokenList = useCombinedActiveList()
   const itemData = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
       const foundByAddressAndNotInAnyList =
         otherListTokens.length === 1 && !(otherListTokens[0] instanceof WrappedTokenInfo)
-      if (foundByAddressAndNotInAnyList) return [...otherListTokens]
+      if (foundByAddressAndNotInAnyList) {
+        setHasBreakLine(false)
+        return otherListTokens
+      }
+      setHasBreakLine(true)
       return [BREAK_LINE, ...otherListTokens]
     }
+    setHasBreakLine(false)
     return currencies
   }, [currencies, otherListTokens])
+  const balances = useCurrencyBalances(
+    account || undefined,
+    (hasBreakLine ? itemData.slice(1) : itemData) as Currency[]
+  )
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -202,6 +214,7 @@ export default function CurrencyList({
           <CurrencyRow
             selectedTokenList={selectedTokenList}
             currency={currency}
+            balance={balances[hasBreakLine ? index - 1 : index]}
             isSelected={isSelected}
             onSelect={handleSelect}
             otherSelected={otherSelected}
@@ -212,7 +225,9 @@ export default function CurrencyList({
       return null
     },
     [
+      balances,
       currencies.length,
+      hasBreakLine,
       onCurrencySelect,
       otherCurrency,
       selectedCurrency,

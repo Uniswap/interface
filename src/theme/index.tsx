@@ -78,6 +78,7 @@ export function colors(darkMode: boolean): Colors {
     // other
     red1: '#F02E51',
     red2: '#F82D3A',
+    orange1: '#f2994a',
     green1: '#27AE60',
     green2: '#0E9F6E',
     yellow1: '#FFE270',
@@ -367,7 +368,7 @@ body {
 }
 
 .custom-toast-root {
-    margin-top: 70px;
+    margin-top: 86px;
 }
 
 .custom-toast-container {

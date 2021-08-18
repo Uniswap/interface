@@ -6,7 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { getExplorerLink, shortenAddress } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
 import Modal from '../Modal'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { AutoRow, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertCircle, AlertTriangle } from 'react-feather'
 import { ButtonError } from '../Button'
@@ -40,6 +40,10 @@ const WarningWrapper = styled.div`
   border-radius: 4px;
   padding: 4px;
   background-color: ${({ theme }) => transparentize(0.8, theme.red1)};
+`
+
+const SpacedButtonError = styled(ButtonError)`
+  margin-top: 24px;
 `
 
 interface TokenWarningCardProps {
@@ -150,17 +154,15 @@ export default function TokenWarningModal({
               {tokens.map(token => {
                 return <TokenWarningCard key={token.address} token={token} />
               })}
-              <RowBetween marginTop="24px">
-                <ButtonError
-                  error
-                  className="token-dismiss-button"
-                  onClick={() => {
-                    onConfirm()
-                  }}
-                >
-                  <TYPE.body color="white">I understand</TYPE.body>
-                </ButtonError>
-              </RowBetween>
+              <SpacedButtonError
+                error
+                className="token-dismiss-button"
+                onClick={() => {
+                  onConfirm()
+                }}
+              >
+                <TYPE.body color="white">I understand</TYPE.body>
+              </SpacedButtonError>
             </BottomSectionContainer>
           </AutoColumn>
         </WarningContainer>

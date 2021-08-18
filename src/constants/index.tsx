@@ -8,8 +8,10 @@ import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
 import HoneyswapLogo from '../assets/svg/honeyswap-logo.svg'
 import BaoswapLogo from '../assets/images/baoswap-logo.png'
 import LevinswapLogo from '../assets/images/levinswap-logo.svg'
+import { providers } from 'ethers'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const CLAIM_LEAVES_IPFS_HASH = process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -129,6 +131,8 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     [DAI, USDT[ChainId.MAINNET]]
   ]
 }
+
+export const ARBITRUM_ONE_PROVIDER = new providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc')
 
 export interface WalletInfo {
   connector?: AbstractConnector
@@ -256,6 +260,17 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
     blockExplorerUrls: ['https://explorer.arbitrum.io']
+  },
+  [ChainId.ARBITRUM_RINKEBY]: {
+    chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,
+    chainName: 'Arbitrum Rinkeby',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io']
   }
 }
 

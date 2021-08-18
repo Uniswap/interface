@@ -11,9 +11,10 @@ import mint from './mint/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import multiChainLinks from './multi-chain-links/reducer'
+import claim from './claim/reducer'
 import lists from './lists/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'claim']
 
 const persistenceNamespace = 'swapr'
 const store = configureStore({
@@ -27,7 +28,8 @@ const store = configureStore({
     burn,
     multicall,
     multiChainLinks,
-    lists
+    lists,
+    claim
   },
   middleware: [save({ states: PERSISTED_KEYS, namespace: persistenceNamespace })],
   preloadedState: load({ states: PERSISTED_KEYS, namespace: persistenceNamespace })

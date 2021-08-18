@@ -7,6 +7,7 @@ export function useLiquidityMiningFeatureFlag(): boolean {
     chainId === ChainId.RINKEBY ||
     chainId === ChainId.XDAI ||
     chainId === ChainId.MAINNET ||
-    chainId === ChainId.ARBITRUM_RINKEBY
+    chainId === ChainId.ARBITRUM_RINKEBY ||
+    chainId === ChainId.ARBITRUM_ONE
   )
 }
