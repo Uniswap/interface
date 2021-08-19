@@ -1052,6 +1052,14 @@
       "name": "DYDX Token",
       "symbol": "DYDX",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x212DD60D4Bf0DA8372fe8116474602d429E5735F",
+      "name": "Stobox Token",
+      "symbol": "STBU",
+      "decimals": 18,
+      "logoURI": "https://ipfs.io/ipfs/QmQYgzaCqpJsgscvT2VJFtAB7kywRKejp6xXacCKQMV18b",
     }
   ]
 }
