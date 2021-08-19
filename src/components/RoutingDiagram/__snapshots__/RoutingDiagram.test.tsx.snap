@@ -3,23 +3,14 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
+    class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
   >
     <div
       class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
       >
-        <div
-          class="Badge-sc-1mhw5si-0 gayll"
-        >
-          <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-          >
-            7.5%
-          </div>
-        </div>
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
@@ -30,7 +21,7 @@ exports[`renders multi route 1`] = `
             USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -53,7 +44,7 @@ exports[`renders multi route 1`] = `
               class="Badge-sc-1mhw5si-0 gayll"
             >
               <div
-                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
               >
                 <div
                   class="css-vurnku"
@@ -83,7 +74,7 @@ exports[`renders multi route 1`] = `
               </div>
             </div>
             <svg
-              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
               fill="none"
               height="20"
               stroke="currentColor"
@@ -105,23 +96,23 @@ exports[`renders multi route 1`] = `
             DAI
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
-    >
-      <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
-      >
         <div
           class="Badge-sc-1mhw5si-0 gayll"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
           >
-            2.5%
+            7.5%
           </div>
         </div>
+      </div>
+    </div>
+    <div
+      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+    >
+      <div
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
+      >
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
@@ -132,7 +123,7 @@ exports[`renders multi route 1`] = `
             USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -155,7 +146,7 @@ exports[`renders multi route 1`] = `
               class="Badge-sc-1mhw5si-0 gayll"
             >
               <div
-                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
               >
                 <div
                   class="css-vurnku"
@@ -185,7 +176,7 @@ exports[`renders multi route 1`] = `
               </div>
             </div>
             <svg
-              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
               fill="none"
               height="20"
               stroke="currentColor"
@@ -209,7 +200,7 @@ exports[`renders multi route 1`] = `
               class="Badge-sc-1mhw5si-0 gayll"
             >
               <div
-                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
               >
                 <div
                   class="css-vurnku"
@@ -239,7 +230,7 @@ exports[`renders multi route 1`] = `
               </div>
             </div>
             <svg
-              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
               fill="none"
               height="20"
               stroke="currentColor"
@@ -261,6 +252,15 @@ exports[`renders multi route 1`] = `
             DAI
           </div>
         </div>
+        <div
+          class="Badge-sc-1mhw5si-0 gayll"
+        >
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            2.5%
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -270,23 +270,14 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
+    class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
   >
     <div
       class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
     >
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV gkwTHp"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
       >
-        <div
-          class="Badge-sc-1mhw5si-0 gayll"
-        >
-          <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-          >
-            10%
-          </div>
-        </div>
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
           width="auto"
@@ -297,7 +288,7 @@ exports[`renders single route 1`] = `
             USDC
           </div>
           <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -320,7 +311,7 @@ exports[`renders single route 1`] = `
               class="Badge-sc-1mhw5si-0 gayll"
             >
               <div
-                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-1 lmTMKd itvFNV boeHyV"
+                class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV ePaBuF"
               >
                 <div
                   class="css-vurnku"
@@ -350,7 +341,7 @@ exports[`renders single route 1`] = `
               </div>
             </div>
             <svg
-              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 hZMrrc"
+              class="RoutingDiagram__StyledChevronRight-sc-o1ook0-1 jPPOTb"
               fill="none"
               height="20"
               stroke="currentColor"
@@ -372,6 +363,15 @@ exports[`renders single route 1`] = `
             DAI
           </div>
         </div>
+        <div
+          class="Badge-sc-1mhw5si-0 gayll"
+        >
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            10%
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -381,7 +381,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="Column__AutoColumn-sc-1kykgp9-2 RoutingDiagram__Wrapper-sc-o1ook0-0 bXKOWF cARyff"
+    class="Column__AutoColumn-sc-1kykgp9-2 bXKOWF"
   />
 </DocumentFragment>
 `;

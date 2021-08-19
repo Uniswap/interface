@@ -5,6 +5,7 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import { TYPE } from 'theme'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -137,4 +138,52 @@ export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ dim: boolean }>
   filter: ${({ dim }) => (dim ? 'grayscale(100%)' : '')};
   transition: opacity 0.2s ease, filter 0.2s ease;
   will-change: opacity filter;
+`
+
+export const DimmableText = styled(TYPE.black)<{ dim: boolean }>`
+  color: ${({ theme, dim }) => (dim ? 'transparent' : theme.text1)};
+  background-color: ${({ theme, dim }) => (dim ? theme.text2 : 'transparent')};
+  opacity: 1;
+
+  animation: ${({ dim }) => (dim ? 'pulse 1s infinite ease-in-out' : 'none')};
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.1;
+    }
+  }
+`
+
+export const LoadingPlaceholder = styled.div<{ width: number }>`
+  height: 15px;
+  width: ${({ width }) => `${width}px`};
+  opacity: 1;
+  animation: pulse 1s infinite ease-in-out;
+  background-color: ${({ theme }) => theme.text2};
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.1;
+    }
+  }
+`
+
+export const RoutingDiagramWrapper = styled(AutoColumn)`
+  border-top: 1px solid ${({ theme }) => theme.bg2};
+  border-bottom: 1px solid ${({ theme }) => theme.bg2};
+
+  width: 100%;
+  padding: 0.5rem 0;
 `

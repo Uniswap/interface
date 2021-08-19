@@ -14,14 +14,6 @@ export interface RoutingDiagramEntry {
   path: [Currency, Currency, FeeAmount | undefined][]
 }
 
-const Wrapper = styled(AutoColumn)`
-  border-top: 1px solid ${({ theme }) => theme.bg2};
-  border-bottom: 1px solid ${({ theme }) => theme.bg2};
-
-  width: 100%;
-  padding: 0.5rem 0;
-`
-
 const StyledRow = styled(Row)<{ gap: string }>`
   display: flex;
   justify-content: space-between;
@@ -43,13 +35,13 @@ export default function RoutingDiagram({
   routes: RoutingDiagramEntry[]
 }) {
   return (
-    <Wrapper gap="4px">
+    <AutoColumn gap="4px">
       {routes.map((route, index) => (
         <AutoColumn key={index}>
           <Route currencyIn={currencyIn} currencyOut={currencyOut} {...route} />
         </AutoColumn>
       ))}
-    </Wrapper>
+    </AutoColumn>
   )
 }
 

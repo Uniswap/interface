@@ -33,7 +33,7 @@ function useRouterTradeArguments() {
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
   const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
 
-  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
       ? {
           tokenInAddress: amountIn.currency.wrapped.address,
@@ -83,17 +83,17 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     })
 
     return {
-      // when syncing, UI should visually invalidate `trade`
-      state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
+      // always return VALID regardless of isFetching status
+      state: V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountIn, currencyOut, isLoading, data, isError, routes, isFetching])
+  }, [amountIn, currencyOut, isLoading, data, isError, routes])
 }
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
   const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
 
-  const { isLoading, isFetching, isError, data } = useGetQuoteQuery(
+  const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
       ? {
           tokenInAddress: currencyIn.wrapped.address,
@@ -142,8 +142,8 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     })
 
     return {
-      state: isFetching ? V3TradeState.SYNCING : V3TradeState.VALID,
+      state: V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountOut, currencyIn, isLoading, data, isError, routes, isFetching])
+  }, [amountOut, currencyIn, isLoading, data, isError, routes])
 }
