@@ -44,7 +44,6 @@ export const Input = React.memo(function InnerInput({
   value,
   onUserInput,
   placeholder,
-  prependSymbol,
   ...rest
 }: {
   value: string | number
@@ -52,7 +51,6 @@ export const Input = React.memo(function InnerInput({
   error?: boolean
   fontSize?: string
   align?: 'right' | 'left'
-  prependSymbol?: string | undefined
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
   const enforcer = (nextUserInput: string) => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
@@ -63,21 +61,9 @@ export const Input = React.memo(function InnerInput({
   return (
     <StyledInput
       {...rest}
-      value={prependSymbol && value ? prependSymbol + value : value}
+      value={value}
       onChange={(event) => {
-        if (prependSymbol) {
-          const value = event.target.value
-
-          // cut off prepended symbol
-          const formattedValue = value.toString().includes(prependSymbol)
-            ? value.toString().slice(1, value.toString().length + 1)
-            : value
-
-          // replace commas with periods, because uniswap exclusively uses period as the decimal separator
-          enforcer(formattedValue.replace(/,/g, '.'))
-        } else {
-          enforcer(event.target.value.replace(/,/g, '.'))
-        }
+        enforcer(event.target.value.replace(/,/g, '.'))
       }}
       // universal input options
       inputMode="decimal"
