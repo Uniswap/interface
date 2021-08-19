@@ -63,7 +63,8 @@ export const Input = React.memo(function InnerInput({
       {...rest}
       value={value}
       onChange={(event) => {
-        enforcer(event.target.value.replace(/,/g, '.'))
+        const value = event.target.value.replace(/,/g, '.')
+        enforcer(value.startsWith('.') ? '0' + value : value)
       }}
       // universal input options
       inputMode="decimal"
