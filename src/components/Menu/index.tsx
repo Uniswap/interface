@@ -1,17 +1,6 @@
 import { t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  BookOpen,
-  Code,
-  Info,
-  MessageCircle,
-  PieChart,
-  Moon,
-  Sun,
-  Globe,
-  ChevronLeft,
-  Check,
-} from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun, Globe, ChevronLeft, Check } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
