@@ -88,9 +88,9 @@ const DataRow = styled(RowBetween)`
 
 export default function Manage({
   match: {
-    params: { currencyIdA, currencyIdB },
+    params: { currencyIdA, currencyIdB, stakingAddress },
   },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stakingAddress: string }>) {
   const { account, chainId } = useActiveWeb3React()
   const location = useLocation()
 
@@ -98,7 +98,7 @@ export default function Manage({
   const [tokenA, tokenB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
+  const singleStakingInfo = usePairStakingInfo(stakingTokenPair, stakingAddress)
   const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo)
   const isDualFarm = location.pathname.includes('dualfarm')
 

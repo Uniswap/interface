@@ -140,7 +140,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
         </PoolInfo>
 
         <StyledInternalLink
-          to={`/${dualRewards ? 'dualfarm' : 'farm'}/${currencyId(token0)}/${currencyId(token1)}`}
+          to={`/${dualRewards ? 'dualfarm' : 'farm'}/${currencyId(token0)}/${currencyId(token1)}/${
+            stakingInfo.poolInfo.poolAddress
+          }`}
           style={{ width: '100%' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
@@ -240,7 +242,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
                             ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                             ?.toSignificant(4, { groupSeparator: ',' })
                         : '0'
-                    } UBE${
+                    } ${stakingInfo.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol}${
                       stakingInfo.dualRewards
                         ? ` + ${stakingInfo.rewardRate
                             ?.multiply(BIG_INT_SECONDS_IN_WEEK)

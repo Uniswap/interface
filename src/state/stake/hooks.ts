@@ -73,8 +73,8 @@ export interface StakingInfo {
   readonly dualRewards: boolean
 }
 
-export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
-  return useStakingInfo(pairToFilterBy)[0] ?? undefined
+export const usePairStakingInfo = (pairToFilterBy?: Pair | null, stakingAddress?: string): StakingInfo | undefined => {
+  return useStakingInfo(pairToFilterBy, stakingAddress)[0] ?? undefined
 }
 
 export const usePairDualStakingInfo = (stakingInfo: StakingInfo | undefined): DualRewardsInfo | null => {
@@ -166,7 +166,7 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
 }
 
 // gets the staking info from the network for the active chain id
-export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingInfo[] {
+export function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
   const ube = chainId ? UBE[chainId] : undefined
   const ubePrice = useCUSDPrice(ube)
@@ -174,7 +174,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
 
-  const info = useStakingPools(pairToFilterBy)
+  const info = useStakingPools(pairToFilterBy, stakingAddress)
 
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
@@ -334,7 +334,7 @@ interface IStakingPool {
   poolInfo: IRawPool
 }
 
-export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStakingPool[] {
+export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly IStakingPool[] {
   const { chainId } = useActiveWeb3React()
   const ube = chainId ? UBE[chainId] : undefined
 
@@ -365,17 +365,24 @@ export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStaking
             },
           ]
         }, [])
-        .filter((stakingRewardInfo) =>
-          pairToFilterBy === undefined
-            ? true
-            : pairToFilterBy === null
-            ? false
-            : stakingRewardInfo.tokens &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-        ) ?? []
+        .filter((stakingRewardInfo) => {
+          if (pairToFilterBy === undefined) {
+            return true
+          }
+          if (pairToFilterBy === null) {
+            return false
+          }
+          if (stakingAddress) {
+            return stakingAddress.toLowerCase() === stakingRewardInfo.stakingRewardAddress.toLowerCase()
+          }
+          return (
+            stakingRewardInfo.tokens &&
+            pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+            pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          )
+        }) ?? []
     )
-  }, [ube, pools, poolPairs, pairToFilterBy])
+  }, [ube, pools, poolPairs, pairToFilterBy, stakingAddress])
 }
 
 export function useStakingPoolAddresses(
