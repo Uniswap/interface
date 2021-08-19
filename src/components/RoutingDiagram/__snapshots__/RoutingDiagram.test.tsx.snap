@@ -12,7 +12,7 @@ exports[`renders multi route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV bJMZth"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-1 dNiDhH"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-1 ifJmrH"
         />
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
@@ -24,7 +24,7 @@ exports[`renders multi route 1`] = `
             style="display: grid; grid-template-columns: 1fr 1fr;"
           >
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
@@ -33,7 +33,7 @@ exports[`renders multi route 1`] = `
               </div>
             </div>
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -43,37 +43,40 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
-            width="auto"
+            class="css-vurnku"
+            style="background-color: rgb(255, 255, 255);"
+          >
+            <img
+              alt="USDC logo"
+              class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
+              src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              style="margin: 0px 10px;"
+            />
+          </div>
+          <div
+            class="Popover__ReferenceElement-sc-d5tbhs-1 jqqKVf"
           >
             <div
-              class="css-vurnku"
-              style="background-color: rgb(255, 255, 255);"
+              style="display: inline-block; line-height: 0; padding: 0.25rem;"
             >
-              <img
-                alt="USDC logo"
-                class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
-                src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                style="margin: 0px 10px;"
-              />
+              <svg
+                class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 gToNN"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
             </div>
           </div>
-          <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 eRVosv"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polyline
-              points="9 18 15 12 9 6"
-            />
-          </svg>
           <div
             class="css-vurnku"
             style="background-color: rgb(255, 255, 255);"
@@ -86,7 +89,7 @@ exports[`renders multi route 1`] = `
             />
           </div>
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
@@ -104,7 +107,7 @@ exports[`renders multi route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV bJMZth"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-1 dNiDhH"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-1 ifJmrH"
         />
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
@@ -116,7 +119,7 @@ exports[`renders multi route 1`] = `
             style="display: grid; grid-template-columns: 1fr 1fr;"
           >
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
@@ -125,7 +128,7 @@ exports[`renders multi route 1`] = `
               </div>
             </div>
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -135,69 +138,75 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
-            width="auto"
+            class="css-vurnku"
+            style="background-color: rgb(255, 255, 255);"
           >
-            <div
-              class="css-vurnku"
-              style="background-color: rgb(255, 255, 255);"
-            >
-              <img
-                alt="USDC logo"
-                class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
-                src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                style="margin: 0px 10px;"
-              />
-            </div>
-          </div>
-          <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 eRVosv"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polyline
-              points="9 18 15 12 9 6"
+            <img
+              alt="USDC logo"
+              class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
+              src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              style="margin: 0px 10px;"
             />
-          </svg>
+          </div>
           <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
-            width="auto"
+            class="Popover__ReferenceElement-sc-d5tbhs-1 jqqKVf"
           >
             <div
-              class="css-vurnku"
-              style="background-color: rgb(255, 255, 255);"
+              style="display: inline-block; line-height: 0; padding: 0.25rem;"
             >
-              <img
-                alt="MKR logo"
-                class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
-                src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
-                style="margin: 0px 10px;"
-              />
+              <svg
+                class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 gToNN"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
             </div>
           </div>
-          <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 eRVosv"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="css-vurnku"
+            style="background-color: rgb(255, 255, 255);"
           >
-            <polyline
-              points="9 18 15 12 9 6"
+            <img
+              alt="MKR logo"
+              class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
+              src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png"
+              style="margin: 0px 10px;"
             />
-          </svg>
+          </div>
+          <div
+            class="Popover__ReferenceElement-sc-d5tbhs-1 jqqKVf"
+          >
+            <div
+              style="display: inline-block; line-height: 0; padding: 0.25rem;"
+            >
+              <svg
+                class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 gToNN"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
+            </div>
+          </div>
           <div
             class="css-vurnku"
             style="background-color: rgb(255, 255, 255);"
@@ -210,7 +219,7 @@ exports[`renders multi route 1`] = `
             />
           </div>
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
@@ -237,7 +246,7 @@ exports[`renders single route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__StyledRow-sc-o1ook0-0 lmTMKd itvFNV bJMZth"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-1 dNiDhH"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-1 ifJmrH"
         />
         <div
           class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
@@ -249,7 +258,7 @@ exports[`renders single route 1`] = `
             style="display: grid; grid-template-columns: 1fr 1fr;"
           >
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"
@@ -258,7 +267,7 @@ exports[`renders single route 1`] = `
               </div>
             </div>
             <div
-              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+              class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
             >
               <div
                 class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -268,37 +277,40 @@ exports[`renders single route 1`] = `
             </div>
           </div>
           <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 fmeAVV drkpWa kkMfuq"
-            width="auto"
+            class="css-vurnku"
+            style="background-color: rgb(255, 255, 255);"
+          >
+            <img
+              alt="USDC logo"
+              class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
+              src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              style="margin: 0px 10px;"
+            />
+          </div>
+          <div
+            class="Popover__ReferenceElement-sc-d5tbhs-1 jqqKVf"
           >
             <div
-              class="css-vurnku"
-              style="background-color: rgb(255, 255, 255);"
+              style="display: inline-block; line-height: 0; padding: 0.25rem;"
             >
-              <img
-                alt="USDC logo"
-                class="CurrencyLogo__StyledLogo-sc-1fvnadz-1 fYDXfr"
-                src="https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                style="margin: 0px 10px;"
-              />
+              <svg
+                class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 gToNN"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
             </div>
           </div>
-          <svg
-            class="RoutingDiagram__StyledChevronRight-sc-o1ook0-2 eRVosv"
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polyline
-              points="9 18 15 12 9 6"
-            />
-          </svg>
           <div
             class="css-vurnku"
             style="background-color: rgb(255, 255, 255);"
@@ -311,7 +323,7 @@ exports[`renders single route 1`] = `
             />
           </div>
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll cikERH"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__TransparentBadge-sc-o1ook0-3 gayll ewhfgt"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-1spx986"

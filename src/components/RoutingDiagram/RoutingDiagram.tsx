@@ -91,19 +91,10 @@ function Route({
         </Box>
 
         {path.map(([currency0, currency1, feeAmount], index) => {
-          return (
-            <Fragment key={index}>
-              {index !== 0 && <MouseOverChevron currency0={currency0} currency1={currency1} feeAmount={feeAmount} />}
-              <AutoRow gap="1px" width="auto" key={index}>
-                <CurrencyWrapper currency={currency0} />
-              </AutoRow>
-            </Fragment>
-          )
+          return <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
         })}
 
-        <StyledChevronRight />
-
-        <CurrencyWrapper currency={currencyOut} />
+        <Pool currency0={currencyOut} />
 
         <TransparentBadge>
           <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
@@ -122,19 +113,34 @@ function MouseOverChevron({
   currency1: Currency
   feeAmount: FeeAmount | undefined
 }) {
-  const feeAmountLabel = feeAmount ? `${feeAmount / 1000}%` : ''
+  const feeAmountLabel = feeAmount ? `${feeAmount / 10000}%` : ''
   return (
-    <MouseoverTooltipContent content={`${currency0.symbol}/${currency1.symbol} ${feeAmountLabel}`}>
+    <MouseoverTooltipContent
+      width="auto"
+      content={<TYPE.small fontSize={12}>{`${currency0.symbol}/${currency1.symbol} ${feeAmountLabel}`}</TYPE.small>}
+      placement="top"
+    >
       <StyledChevronRight />
     </MouseoverTooltipContent>
   )
 }
 
-function CurrencyWrapper({ currency }: { currency: Currency }) {
+function Pool({
+  currency0,
+  currency1,
+  feeAmount,
+}: {
+  currency0: Currency
+  currency1?: Currency | undefined
+  feeAmount?: FeeAmount | undefined
+}) {
   const theme = useTheme()
   return (
-    <Box style={{ backgroundColor: theme.bg0 }}>
-      <CurrencyLogo currency={currency} size="15px" style={{ margin: '0 10px' }} />
-    </Box>
+    <>
+      <Box style={{ backgroundColor: theme.bg0 }}>
+        <CurrencyLogo currency={currency0} size="15px" style={{ margin: '0 10px' }} />
+      </Box>
+      {currency1 && <MouseOverChevron currency0={currency0} currency1={currency1} feeAmount={feeAmount} />}
+    </>
   )
 }
