@@ -8,7 +8,7 @@ import {
   PieChart,
   Moon,
   Sun,
-  ChevronRight,
+  Globe,
   ChevronLeft,
   Check,
 } from 'react-feather'
@@ -277,7 +277,7 @@ export default function Menu() {
                     <div>
                       <Trans>Language</Trans>
                     </div>
-                    <ChevronRight size={16} opacity={0.6} />
+                    <Globe opacity={0.6} size={16} />
                   </ToggleMenuItem>
                   <ToggleMenuItem onClick={() => toggleDarkMode()}>
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
