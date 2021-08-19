@@ -61,12 +61,16 @@ export default function AutoRouterLabel({ label, version, pulsing = false }: Rou
           }
           placement="top-end"
         >
-          <StyledAutoRouterIcon />
-          <HideSmall>
-            <GradientText fontSize={14} pulsing={pulsing}>
-              Auto Routing
-            </GradientText>
-          </HideSmall>
+          <AutoRow gap="4px" width="auto">
+            <StyledAutoRouterIcon />
+            {!label && (
+              <HideSmall>
+                <GradientText fontSize={14} pulsing={pulsing}>
+                  Auto Routing
+                </GradientText>
+              </HideSmall>
+            )}
+          </AutoRow>
         </MouseoverTooltip>
       )}
       {label ? (

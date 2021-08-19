@@ -19,16 +19,12 @@ const Wrapper = styled(AutoColumn)`
   border-bottom: 1px solid ${({ theme }) => theme.bg2};
 
   width: 100%;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 `
 
 const StyledRow = styled(Row)<{ gap: string }>`
-  display: grid;
-  grid-gap: ${({ gap }) => gap};
-
-  & > * {
-    grid-row: 1;
-  }
+  display: flex;
+  justify-content: space-between;
 `
 
 const StyledChevronRight = styled(ChevronRight).attrs({ size: 20 })`
@@ -70,9 +66,6 @@ function Route({
 }) {
   return (
     <StyledRow gap="8px">
-      <Badge>
-        <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
-      </Badge>
       <AutoRow gap="1px" width="auto">
         <TYPE.small fontSize={13}>{currencyIn.symbol}</TYPE.small>
         <StyledChevronRight />
@@ -86,6 +79,9 @@ function Route({
         })}
         <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
       </AutoRow>
+      <Badge>
+        <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
+      </Badge>
     </StyledRow>
   )
 }

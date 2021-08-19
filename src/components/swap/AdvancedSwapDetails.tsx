@@ -34,40 +34,40 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={14} fontWeight={400}>
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={14}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={14} fontWeight={400}>
             <Trans>Expected price Impact</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={14}>
           <FormattedPriceImpact priceImpact={priceImpact} />
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={14} fontWeight={400}>
             <Trans>Allowed Slippage</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={14}>
           {allowedSlippage.toFixed(2)}%
         </TYPE.black>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400}>
+          <TYPE.black fontSize={14} fontWeight={400}>
             {trade.tradeType === TradeType.EXACT_INPUT ? (
               <Trans>Minimum amount received</Trans>
             ) : (
@@ -75,7 +75,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             )}
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12}>
+        <TYPE.black textAlign="right" fontSize={14}>
           {trade.tradeType === TradeType.EXACT_INPUT
             ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
             : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}

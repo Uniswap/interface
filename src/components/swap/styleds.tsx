@@ -130,7 +130,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
 `
 
 export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ dim: boolean }>`
-  padding: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
   position: relative;
 
   opacity: ${({ dim }) => (dim ? '0.5' : '1')};
