@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
-import { AutoRow, RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import Row, { RowBetween } from '../Row'
+import { TYPE, CloseIcon, ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
 import useUnclaimedSWPRBalance from '../../hooks/swpr/useUnclaimedSWPRBalance'
@@ -214,12 +214,14 @@ export default function ClaimModal({
                 {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum One'}
               </StyledClaimButton>
             </BottomAutoColumn>
-            <AutoRow gap="3px" justifyContent="center" width="100%">
-              <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
-                Read about the airdrop
-              </TYPE.small>
-              <ExternalLinkIcon size="12px" />
-            </AutoRow>
+            <ExternalLink href="https://daotalk.org/t/swpr-token-and-swapr-guild/3118/">
+              <Row justifyContent="center" width="100%">
+                <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
+                  Read about the airdrop
+                </TYPE.small>
+                <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
+              </Row>
+            </ExternalLink>
           </AutoColumn>
         </ContentWrapper>
       )
