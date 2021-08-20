@@ -1,13 +1,14 @@
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcSigner, Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/IDXswapRouter.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, RoutablePlatform } from 'dxswap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import Decimal from 'decimal.js-light'
 import { commify } from 'ethers/lib/utils'
+import { NetworkDetails } from '../constants'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -69,12 +70,12 @@ export function getExplorerLink(
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(address: string, chars = 4): string {
+export function shortenAddress(address: string, charsBefore = 4, charsAfter = 4): string {
   const parsed = isAddress(address)
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  return `${parsed.substring(0, charsBefore + 2)}...${parsed.substring(42 - charsAfter)}`
 }
 
 // add 10%
@@ -98,12 +99,15 @@ export function calculateSlippageAmount(value: CurrencyAmount, slippage: number)
 }
 
 // account is not optional
-export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
+export function getSigner(library: Web3Provider | JsonRpcProvider, account: string): JsonRpcSigner {
   return library.getSigner(account).connectUnchecked()
 }
 
 // account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
+export function getProviderOrSigner(
+  library: Web3Provider | JsonRpcProvider,
+  account?: string
+): Web3Provider | JsonRpcProvider | JsonRpcSigner {
   return account ? getSigner(library, account) : library
 }
 
@@ -169,4 +173,27 @@ export const formatCurrencyAmount = (amount: CurrencyAmount, significantDecimalP
     }
   }
   return `${commify(integers)}.${adjustedDecimals}`
+}
+
+export const switchOrAddNetwork = (networkDetails?: NetworkDetails, account?: string) => {
+  if (!window.ethereum || !window.ethereum.request || !window.ethereum.isMetaMask || !networkDetails || !account) return
+  window.ethereum
+    .request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: networkDetails.chainId }]
+    })
+    .catch(error => {
+      if (error.code !== 4902) {
+        console.error('error switching to chain id', networkDetails.chainId, error)
+      }
+      if (!window.ethereum || !window.ethereum.request) return
+      window.ethereum
+        .request({
+          method: 'wallet_addEthereumChain',
+          params: [{ ...networkDetails }, account]
+        })
+        .catch(error => {
+          console.error('error adding chain with id', networkDetails.chainId, error)
+        })
+    })
 }

@@ -1,11 +1,13 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import Radio from '../../Radio'
 
 export enum PairsFilterType {
   ALL = 'ALL',
-  REWARDS = 'REWARDS'
+  REWARDS = 'REWARDS',
+  MY = 'MY'
 }
 
 const StyledRoot = styled(Flex)<{ disabled?: boolean }>`
@@ -20,6 +22,8 @@ interface ListFilterProps {
 }
 
 export default function ListFilter({ disabled, filter, onFilterChange }: ListFilterProps) {
+  const { account } = useWeb3React()
+  
   const handleFilterRadioChange = useCallback(
     event => {
       onFilterChange(PairsFilterType[event.target.value as keyof typeof PairsFilterType])
@@ -30,7 +34,7 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
   return (
     <StyledRoot justifyContent="space-between" disabled={disabled}>
       <Flex flex="1" flexWrap="wrap">
-        <Box mb={['8px', '0px']} mr="20px">
+        <Box mb={['8px', '0px']} mr="24px">
           <Radio
             onChange={handleFilterRadioChange}
             checked={filter === PairsFilterType.ALL}
@@ -38,7 +42,17 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
             value={PairsFilterType.ALL.toString()}
           />
         </Box>
-        <Box mr="20px">
+        {!!account && (
+          <Box mr="24px">
+            <Radio
+              onChange={handleFilterRadioChange}
+              checked={filter === PairsFilterType.MY}
+              label="My pairs"
+              value={PairsFilterType.MY.toString()}
+            />
+          </Box>
+        )}
+        <Box mr="24px">
           <Radio
             onChange={handleFilterRadioChange}
             checked={filter === PairsFilterType.REWARDS}
@@ -47,11 +61,6 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
           />
         </Box>
       </Flex>
-      <Box>
-        <Text fontSize="11px" fontWeight="600" lineHeight="11px" letterSpacing="0.08em">
-          SORTING: RELEVANCE
-        </Text>
-      </Box>
     </StyledRoot>
   )
 }

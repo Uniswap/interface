@@ -1,6 +1,6 @@
 import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { MutableRefObject, useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
@@ -26,7 +26,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 `
 
 const ReferenceElement = styled.div`
-  display: inline-block;
+  display: flex;
 `
 
 export interface PopoverProps {
@@ -34,15 +34,28 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement?: Placement
+  innerRef?: MutableRefObject<HTMLDivElement | null>
+  className?: string
+  offsetX?: number
+  offsetY?: number
 }
 
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  innerRef,
+  children,
+  placement = 'auto',
+  className,
+  offsetY = 8,
+  offsetX = 0
+}: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
     placement,
     strategy: 'fixed',
-    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }]
+    modifiers: [{ name: 'offset', options: { offset: [offsetX, offsetY] } }]
   })
   const updateCallback = useCallback(() => {
     update && update()
@@ -53,9 +66,17 @@ export default function Popover({ content, show, children, placement = 'auto' }:
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-          {content}
-        </PopoverContainer>
+        <div ref={innerRef}>
+          <PopoverContainer
+            className={className}
+            show={show}
+            ref={setPopperElement as any}
+            style={styles.popper}
+            {...attributes.popper}
+          >
+            {content}
+          </PopoverContainer>
+        </div>
       </Portal>
     </>
   )

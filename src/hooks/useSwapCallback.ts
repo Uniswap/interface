@@ -133,7 +133,10 @@ export function useSwapCallback(
             } = call
             const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, { ...options, gasLimit: 1000000 })
+            return contract.estimateGas[methodName](...args, {
+              ...options,
+              gasLimit: chainId === ChainId.XDAI ? 1000000 : undefined
+            })
               .then(gasEstimate => {
                 return {
                   call,

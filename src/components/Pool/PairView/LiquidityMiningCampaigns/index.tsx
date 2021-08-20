@@ -1,6 +1,7 @@
 import { Pair } from 'dxswap-sdk'
 import { DateTime, Duration } from 'luxon'
 import React, { useMemo, useState } from 'react'
+import styled from 'styled-components'
 import { useActiveLiquidityMiningCampaignsForPair } from '../../../../hooks/useActiveLiquidityMiningCampaignsForPair'
 import { useExpiredLiquidityMiningCampaignsForPair } from '../../../../hooks/useExpiredLiquidityMiningCampaignsForPair'
 import { useUpcomingLiquidityMiningCampaignsForPair } from '../../../../hooks/useUpcomingLiquidityMiningCampaignsForPair'
@@ -8,6 +9,10 @@ import { AutoColumn } from '../../../Column'
 import TabBar from '../../../TabBar'
 import List from './List'
 import TabTitle from './TabTitle'
+
+const View = styled(AutoColumn)`
+  margin-top: 20px;
+`;
 
 interface LiquidityMiningCampaignsListProps {
   pair?: Pair
@@ -36,16 +41,22 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <AutoColumn gap="16px">
+    <View gap="16px">
       <TabBar
         titles={[
-          <TabTitle key="active" loadingAmount={!!(!pair || loadingActive)} itemsAmount={activeWrappedCampaigns.length}>
+          <TabTitle
+            key="active"
+            loadingAmount={!!(!pair || loadingActive)}
+            itemsAmount={activeWrappedCampaigns.length}
+            badgeTheme="green"
+          >
             Active rewards
           </TabTitle>,
           <TabTitle
             key="active"
             loadingAmount={!!(!pair || loadingUpcoming)}
             itemsAmount={upcomingWrappedCampaigns.length}
+            badgeTheme="orange"
           >
             Upcoming
           </TabTitle>,
@@ -53,6 +64,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
             key="active"
             loadingAmount={!!(!pair || loadingExpired)}
             itemsAmount={expiredWrappedCampaigns.length}
+            badgeTheme="red"
           >
             Expired (30 days)
           </TabTitle>
@@ -69,6 +81,6 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
       ) : (
         <List loading />
       )}
-    </AutoColumn>
+    </View>
   )
 }

@@ -23,6 +23,10 @@ const BottomSectionContainer = styled.div`
   padding: 20px;
 `
 
+const SpacedButtonError = styled(ButtonError)`
+  margin-top: 24px;
+`
+
 interface ImportProps {
   tokens: Token[]
   list?: TokenList
@@ -64,7 +68,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
             {tokens.map(token => {
               return <TokenWarningCard key={token.address} token={token} list={list} />
             })}
-            <ButtonError
+            <SpacedButtonError
               error
               onClick={() => {
                 tokens.map(token => addToken(token))
@@ -72,7 +76,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
               }}
             >
               Import
-            </ButtonError>
+            </SpacedButtonError>
           </AutoColumn>
         </BottomSectionContainer>
       </AutoColumn>

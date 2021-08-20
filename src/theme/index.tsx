@@ -78,6 +78,7 @@ export function colors(darkMode: boolean): Colors {
     // other
     red1: '#F02E51',
     red2: '#F82D3A',
+    orange1: '#f2994a',
     green1: '#27AE60',
     green2: '#0E9F6E',
     yellow1: '#FFE270',
@@ -322,6 +323,7 @@ body {
 
 .swapr-pagination {
   list-style: none;
+  padding: 0;
 }
 
 .swapr-pagination ul {
@@ -345,6 +347,10 @@ body {
   text-align: center;
   line-height: 20px;
   color: ${props => props.theme.text5};
+
+}
+.swapr-pagination li:last-child {
+  margin-right: 0;
 }
 
 .swapr-pagination li.rc-pagination-item-active {
@@ -367,7 +373,7 @@ body {
 }
 
 .custom-toast-root {
-    margin-top: 70px;
+    margin-top: 86px;
 }
 
 .custom-toast-container {
@@ -413,17 +419,24 @@ body {
 }
 
 .rc-pagination-simple-pager {
-  padding: 0 8px;
+  padding: 0 16px;
 }
 
 .rc-pagination-slash {
-  margin-right: 4px;
+  margin: 0 10px 0 7px;
 }
 
 .rc-pagination-simple-pager > input {
+  padding: 0;
+  max-width: 20px;
   background-color: transparent;
   outline: none;
   border: none;
-  color: ${props => props.theme.text5};
+  color: ${props => props.theme.text1};
+}
+
+
+.walletconnect-modal__mobile__toggle a {
+  color: rgb(64, 153, 255);
 }
 `
