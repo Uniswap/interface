@@ -22,11 +22,17 @@ const ResponsiveButton = styled(ButtonPrimary)`
   `};
 `
 
-export const useToggleVersionLink = (version: Version) => {
+export default function BetterTradeLink({
+  version,
+  otherTradeNonexistent = false,
+}: {
+  version: Version
+  otherTradeNonexistent: boolean
+}) {
   const location = useLocation()
   const search = useParsedQueryString()
 
-  return useMemo(() => {
+  const linkDestination = useMemo(() => {
     return {
       ...location,
       search: `?${stringify({
@@ -35,16 +41,6 @@ export const useToggleVersionLink = (version: Version) => {
       })}`,
     }
   }, [location, search, version])
-}
-
-export default function BetterTradeLink({
-  version,
-  otherTradeNonexistent = false,
-}: {
-  version: Version
-  otherTradeNonexistent: boolean
-}) {
-  const linkDestination = useToggleVersionLink(version)
 
   return (
     <ResponsiveButton as={Link} to={linkDestination}>

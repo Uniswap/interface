@@ -6,9 +6,10 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info, ChevronUp } from 'react-feather'
+import { ArrowDown, ArrowLeft, CheckCircle, ChevronUp, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -16,13 +17,13 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import {
   ButtonConfirmed,
+  ButtonEmpty,
   ButtonError,
   ButtonGray,
   ButtonLight,
   ButtonPrimary,
-  ButtonEmpty,
 } from '../../components/Button'
-import { GreyCard, OutlineCard } from '../../components/Card'
+import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
@@ -63,7 +64,6 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { V3TradeState } from 'hooks/useV3Trade'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
