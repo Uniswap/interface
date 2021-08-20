@@ -418,7 +418,7 @@ export default function VotePage({
                           : null}
                       </Trans>
                     </TYPE.black>
-                    {isTrackingGains && (
+                    {isTrackingGains === true && (
                       <TYPE.main className="d-flex">
                         {storedTrumpBalance !== undefined &&
                           trumpBalance !== undefined &&
@@ -433,10 +433,10 @@ export default function VotePage({
                                 ).toFixed(2)}
                               </Trans>
                               <br />
-                              {trumpGainsUSD && (
+                              {isTrackingGains && trumpGainsUSD &&  (
                                 <Badge style={{ paddingTop: 5 }}>
                                   <small>Total GAINS </small>&nbsp;
-                                  {trumpGainsUSD}
+                                  {rawTrumpCurrency && +rawTrumpCurrency?.toFixed(0) > 0 ? trumpGainsUSD : '-'}
                                   <small>&nbsp;USD</small>
                                 </Badge>
                               )}
@@ -498,17 +498,17 @@ export default function VotePage({
                           )}
                       </TYPE.main>
                     )}
-                    {stimulusBalance !== undefined &&
+                    {isTrackingGains && stimulusBalance !== undefined &&
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
                       +trumpBalance.toFixed(2) > 0 && (
                         <Row style={{display:'flex', flexFlow: isMobile ? 'column wrap' : 'row wrap'}}>
                           <Column>
                             <Badge>
-                              {stimGainsUSD && (
+                              {stimGainsUSD && rawStimulusCurrency && (
                                 <TYPE.black>
                                   <small>Total GAINS</small>&nbsp;
-                                  {stimGainsUSD}
+                                  {+rawStimulusCurrency > 0 ? stimGainsUSD : '-'}
                                   <small>&nbsp;USD</small>
                                 </TYPE.black>
                               )}
@@ -577,7 +577,7 @@ export default function VotePage({
                           )}
                       </TYPE.main>
                     )}
-                    {stimulusBalance !== undefined &&
+                    {isTrackingGains && stimulusBalance !== undefined &&
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
                       +trumpBalance.toFixed(2) > 0 && (
