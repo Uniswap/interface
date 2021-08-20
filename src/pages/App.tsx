@@ -1,6 +1,12 @@
+import { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import React, { useState } from 'react'
+import { Clipboard } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { TYPE } from 'theme'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -29,12 +35,31 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+import VotePageV2 from './Vote/VotePageV2'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
 `
+const StyledInput = styled.input`
+* {
+  display:flex;
+  max-width: 275px;
+  width: 100%;
+  cursor: pointer;
+  background-color: #eaeaeb;
+  border:none;
+  color:#222;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 15px 45px 15px 15px;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 3px 15px #b8c6db;
+  -moz-box-shadow: 0 3px 15px #b8c6db;
+  -webkit-box-shadow: 0 3px 15px #b8c6db;
+}
+  `
 
 const BodyWrapper = styled.div`
   display: flex;
@@ -69,7 +94,11 @@ function TopLevelModals() {
   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
 }
 
+
 export default function App() {
+const [showContracts ,setShowContracts ] =useState(false);
+const [clip, setClip] = useCopyClipboard(undefined)
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -79,14 +108,18 @@ export default function App() {
         <AppWrapper>
           <HeaderWrapper>
             <Header />
+          
           </HeaderWrapper>
           <BodyWrapper>
+            
             <Popups />
             <Polling />
             <TopLevelModals />
             <Switch>
               <Route exact strict path="/gains" component={VotePage} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
+              <Route exact strict path="/vote" component={Vote} />
+              <Route exact strict path="/vote/:governorIndex/:id" component={VotePageV2} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/uni" component={Earn} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
@@ -126,8 +159,56 @@ export default function App() {
             </Switch>
             <Marginer />
           </BodyWrapper>
+          
         </AppWrapper>
       </Web3ReactManager>
+      {showContracts && (
+          <Row style={{display:'flex', flexFlow: 'column', position:'fixed',  bottom: '10%', right:'0%'}}>
+          <div onClick={() => {
+            setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
+        }} style={{fontSize:12, cursor: 'pointer'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+              <TYPE.main>Baby Trump</TYPE.main>
+            <StyledInput value={'0x99d36e97676a68313ffdc627fd6b56382a2a08b6'} /> 
+            </AutoColumn>
+            <AutoColumn>
+            <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          <div onClick={() => {
+            setClip('0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013')
+            alert(`Successfully copied Stimulus Check (0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013) to clipboard`)
+          }} style={{fontSize:12, paddingTop:5, cursor: 'pointer'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+            <TYPE.main>Stimulus Check</TYPE.main>
+            <StyledInput value={'0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'} /> 
+            </AutoColumn>
+            <AutoColumn>
+              <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          <div onClick={() => {
+            alert(`Trump Gold is coming soon to a place near you.`)
+          }} style={{fontSize:12, paddingTop:5, cursor: 'not-allowed'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+            <TYPE.main>Trump Gold</TYPE.main>
+            <StyledInput value={'COMING SOON'} /> 
+            </AutoColumn>
+            <AutoColumn>
+              <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          </Row>
+    )}
     </ErrorBoundary>
   )
 }
