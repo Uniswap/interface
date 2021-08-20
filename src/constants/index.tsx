@@ -62,24 +62,18 @@ export const USDT: { [key: number]: Token } = {
 }
 
 export const WBTC: { [key: number]: Token } = {
-  [ChainId.MAINNET]: new Token(
-    ChainId.MAINNET,
-    '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-    18,
-    'WBTC',
-    'Wrapped BTC'
-  ),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC'),
   [ChainId.ARBITRUM_ONE]: new Token(
     ChainId.ARBITRUM_ONE,
     '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
-    18,
+    8,
     'WBTC',
     'Wrapped BTC'
   ),
   [ChainId.XDAI]: new Token(
     ChainId.XDAI,
     '0x8e5bBbb09Ed1ebdE8674Cda39A0c169401db4252',
-    18,
+    8,
     'WBTC',
     'Wrapped BTC from Ethereum'
   )
