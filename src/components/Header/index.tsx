@@ -398,7 +398,6 @@ export default function Header() {
         <IconWrapper  onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setShowContracts(!showContracts)
         }} id={'contract-nav-link'} >
           
            <Tooltip text="Community members will be able to vote on propositions proposed by Trump Gold holders when Trump Gold is released" show={showTip} >
