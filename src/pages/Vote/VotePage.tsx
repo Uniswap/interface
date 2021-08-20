@@ -280,14 +280,16 @@ export default function VotePage({
         trumpBalance.toFixed(2)
       ) {
         stopTrackingGains();
-      }
+      } else if (+storedTrumpBalance - +trumpBalance.toFixed(2) < 0)
+        stopTrackingGains();
     } else if (storedSimulusBalance && stimulusBalance) {
       if (
         (+storedSimulusBalance - +stimulusBalance.toFixed(2)).toFixed(2) ===
         stimulusBalance.toFixed(2)
       ) {
         stopTrackingGains();
-      }
+      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0)
+      stopTrackingGains();
     }
   }, []);
 
@@ -314,11 +316,11 @@ export default function VotePage({
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
 
   useEffect(() => {
-    if (rawTrumpCurrency && rawTrumpCurrency.toFixed(0) === "0") {
+    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) <= 0) {
       setTrumpGainsUSD("-");
       return;
     }
-    if (rawTrumpCurrency && rawTrumpCurrency.toFixed(0) !== "0") {
+    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {
       const w3 = new Web3(window.ethereum as any).eth;
       const routerContr = new w3.Contract(routerAbi as any, routerAddress);
       const ten9 = 10 ** 9;
@@ -338,11 +340,11 @@ export default function VotePage({
   }, [rawTrumpCurrency, trumpBalance, storedTrumpBalance]);
 
   useEffect(() => {
-    if (rawStimulusCurrency && rawStimulusCurrency === "0") {
+    if (rawStimulusCurrency && +rawStimulusCurrency <= 0) {
       setStimGainsUSD("-");
       return;
     }
-    if (rawStimulusCurrency && rawStimulusCurrency !== "0") {
+    if (rawStimulusCurrency && +rawStimulusCurrency > 0) {
       const w3 = new Web3(window.ethereum as any).eth;
       const routerContr = new w3.Contract(routerAbi as any, routerAddress);
       const ten9 = 10 ** 9;
