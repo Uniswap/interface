@@ -63,9 +63,8 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ReactComponent as RoutingAPIIcon } from '../../assets/svg/routing_api.svg'
 import { V3TradeState } from 'hooks/useV3Trade'
-import AutoRouterLabel from './styled'
+import AutoRouterLabel from './RouterLabel'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -84,19 +83,6 @@ const StyledChevron = styled(ChevronUp)`
   :hover {
     opacity: 0.8;
   }
-`
-
-const StyledAutoRouterIcon = styled(RoutingAPIIcon)`
-  height: 16px;
-  width: 16px;
-  stroke: #2172e5;
-`
-
-const GradientText = styled(TYPE.black)`
-  background: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
-  background-clip: none;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -456,7 +442,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <OutlineCard padding="0.5rem" style={!trade ? { display: 'none' } : {}}>
+              <>
                 <Row justify={!trade ? 'center' : 'space-between'}>
                   <RowFixed>
                     {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
@@ -492,38 +478,49 @@ export default function Swap({ history }: RouteComponentProps) {
                       ))}
 
                     {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                      <AutoRow gap="4px" width="auto" padding=".5rem">
-                        <AutoRouterLabel pulsing={isSyncingRoute} />
-                      </AutoRow>
+                      <ButtonGray
+                        width="fit-content"
+                        padding="0.1rem 0.5rem"
+                        disabled
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          height: '24px',
+                          opacity: 0.8,
+                          marginLeft: '0.25rem',
+                        }}
+                      >
+                        <TYPE.black fontSize={12}>
+                          <Trans>V3</Trans>
+                        </TYPE.black>
+                      </ButtonGray>
                     )}
                   </RowFixed>
-                  <RowFixed minHeight="40px">
-                    {trade ? (
-                      <>
-                        <TradePrice
-                          price={trade.executionPrice}
-                          showInverted={showInverted}
-                          setShowInverted={setShowInverted}
-                          dim={isSyncingRoute}
-                        />
-                        <ButtonEmpty
-                          onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
-                          margin=".5rem"
-                          padding="0"
-                          width="24px"
-                          height="24px"
-                        >
-                          {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
-                        </ButtonEmpty>
-                      </>
-                    ) : null}
-                  </RowFixed>
+                  {trade ? (
+                    <RowFixed>
+                      <TradePrice
+                        price={trade.executionPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                        dim={isSyncingRoute}
+                      />
+                      <ButtonEmpty
+                        onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
+                        margin="0 .25rem"
+                        padding="0"
+                        width="24px"
+                        height="24px"
+                      >
+                        {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
+                      </ButtonEmpty>
+                    </RowFixed>
+                  ) : null}
                 </Row>
 
                 {showAdvancedSwapDetails && (
                   <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={isSyncingRoute} />
                 )}
-              </OutlineCard>
+              </>
             )}
 
             <div>
@@ -556,6 +553,14 @@ export default function Swap({ history }: RouteComponentProps) {
                     ) : (
                       <Trans>Insufficient liquidity for this trade.</Trans>
                     )}
+                  </TYPE.main>
+                </GreyCard>
+              ) : isSyncingRoute ? (
+                <GreyCard style={{ textAlign: 'center' }}>
+                  <TYPE.main mb="4px">
+                    <Dots>
+                      <Trans>Loading</Trans>
+                    </Dots>
                   </TYPE.main>
                 </GreyCard>
               ) : showApproveFlow ? (
