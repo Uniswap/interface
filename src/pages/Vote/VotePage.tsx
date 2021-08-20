@@ -484,12 +484,13 @@ export default function VotePage({
                             <React.Fragment>
                               <ArrowUp /> &nbsp;
                               <Trans>
-                                {`STIMULUSGAINS`} &nbsp;
+                                {`STIMULUSGAINS`}
+                              </Trans>
+                                 &nbsp;
                                 {`${(
                                   +stimulusBalance.toFixed(2) -
                                   +storedSimulusBalance
                                 ).toFixed(2)}`}
-                              </Trans>
                               <span style={{ marginLeft: 50 }}>
                                 <Tooltip text={tiptext} show={showTool}>
                                   <Info
