@@ -1,8 +1,12 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
+import { AutoColumn } from 'components/Column'
+import Tooltip from 'components/Tooltip'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import { darken } from 'polished'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { ChevronDown, ChevronUp, Clipboard, Info } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
@@ -11,6 +15,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
+import { IconWrapper } from 'theme/components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -211,6 +216,25 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
+const StyledInput = styled.input`
+* {
+  display:flex;
+  max-width: 275px;
+  width: 100%;
+  cursor: pointer;
+  background-color: #eaeaeb;
+  border:none;
+  color:#222;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 15px 45px 15px 15px;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 3px 15px #b8c6db;
+  -moz-box-shadow: 0 3px 15px #b8c6db;
+  -webkit-box-shadow: 0 3px 15px #b8c6db;
+}
+  `
+
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName,
 })<{ isActive?: boolean }>`
@@ -256,9 +280,25 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const [showContracts, setShowContracts] = useState(false)
+  const [clip, setClip] = useCopyClipboard()
   const href = 'https://www.dextools.io/app/uniswap/pair-explorer/0x409de5926a8a6879a5ee3ff594ad76c11d88e921'
+  const [width, setWidth] = useState<number>(window.innerWidth);
+  function handleWindowSizeChange() {
+          setWidth(window.innerWidth);
+      }
+  React.useEffect(() => {
+          window.addEventListener('resize', handleWindowSizeChange);
+          return () => {
+              window.removeEventListener('resize', handleWindowSizeChange);
+          }
+      }, []);
+  
+  const isMobile: boolean = (width <= 768);
+  const [showTip, setShowTip] = useState(false)
   return (
-    <HeaderFrame showBackground={scrollY > 45}>
+   <>
+   <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
@@ -287,17 +327,89 @@ export default function Header() {
         </StyledNavLink>
         {chainId && chainId === SupportedChainId.MAINNET && (
           <StyledNavLink id={`stake-nav-link`} to={'/gains'}>
-            <Trans>TRUMPGAINS</Trans>
+            <Trans>Gains</Trans>
           </StyledNavLink>
         )}
         <StyledExternalLink id={`stake-nav-link`} href={href}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
         </StyledExternalLink>
+        
+        <StyledNavLink onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setShowContracts(!showContracts)
+        }} id={'contract-nav-link'} to='/'>
+          <React.Fragment>
+           <Trans> Contracts </Trans>{showContracts ? <ChevronUp /> :  <ChevronDown /> }
+         </React.Fragment>
+        </StyledNavLink>
+      
       </HeaderLinks>
-
+     
       <HeaderControls>
+{showContracts && (
+          <Row style={{ padding:5, borderRadius:6, background:'#fff',display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '70%', top: isMobile ? '50%' :'25%'}}>
+          <div onClick={() => {
+            setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
+        }} style={{fontSize:12, display:'block', cursor: 'pointer'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+              <TYPE.main>Baby Trump</TYPE.main>
+            <StyledInput value={'0x99d36e97676a68313ffdc627fd6b56382a2a08b6'} /> 
+            </AutoColumn>
+            <AutoColumn>
+            <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          <div onClick={() => {
+            setClip('0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013')
+          }} style={{fontSize:12, paddingTop:5, cursor: 'pointer'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+            <TYPE.main>Stimulus Check</TYPE.main>
+            <StyledInput value={'0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'} /> 
+            </AutoColumn>
+            <AutoColumn>
+              <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          <div onClick={() => {
+            alert(`Trump Gold is coming soon to a place near you.`)
+          }} style={{fontSize:12, paddingTop:5, cursor: 'not-allowed'}}>
+          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <Row >
+            <AutoColumn>
+            <TYPE.main>Trump Gold</TYPE.main>
+            <StyledInput value={'COMING SOON'} /> 
+            </AutoColumn>
+            <AutoColumn>
+              <Clipboard style={{marginTop:13}} />
+            </AutoColumn>
+          </Row>
+          </div>
+          </Row>
+)}
+ <HeaderElement style={{marginRight:15}}>
+        <IconWrapper  onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setShowContracts(!showContracts)
+        }} id={'contract-nav-link'} >
+          
+           <Tooltip text="Community members will be able to vote on propositions proposed by Trump Gold holders when Trump Gold is released" show={showTip} >
+            <small style={{cursor:'not-allowed', color:'#ccc'}}>vote</small><Info onMouseOver={() => setShowTip(true)}
+                     onMouseLeave={() => setShowTip(false) }/>
+                     
+              </Tooltip>
+        </IconWrapper>
+        </HeaderElement>
         <NetworkCard />
+       
         <HeaderElement>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
@@ -327,5 +439,8 @@ export default function Header() {
         </HeaderElement>
       </HeaderControls>
     </HeaderFrame>
+
+
+    </>
   )
 }
