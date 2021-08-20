@@ -240,6 +240,8 @@ export default function VotePage({
     localStorage.setItem("trumpBalance", "0");
     localStorage.setItem("stimulusBalance", "0");
     localStorage.setItem("trackingSince", "");
+    setTrumpGainsUSD('')
+    setStimGainsUSD('')
     setIsTrackingGains(false);
   };
 
