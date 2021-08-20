@@ -29,9 +29,13 @@ export function useV3TradeExactIn(
   // attempt to use multi-route trade
   const multiRouteTradeExactIn = useRouterTradeExactIn(debouncedAmountIn, currencyOut)
 
-  // consider trade debounced when input amount is the same as output amount
+  // consider trade debouncing when inputs/outputs do not match
   const debouncing =
-    multiRouteTradeExactIn.trade && amountIn && !multiRouteTradeExactIn.trade.inputAmount.equalTo(amountIn)
+    multiRouteTradeExactIn.trade &&
+    amountIn &&
+    (!multiRouteTradeExactIn.trade.inputAmount.equalTo(amountIn) ||
+      !amountIn.currency.equals(multiRouteTradeExactIn.trade.inputAmount.currency) ||
+      !currencyOut?.equals(multiRouteTradeExactIn.trade.outputAmount.currency))
 
   const useFallback = !debouncing && shouldUseFallback(multiRouteTradeExactIn.state)
 
@@ -59,12 +63,14 @@ export function useV3TradeExactOut(
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
   const debouncedAmountOut = useDebounce(amountOut, 250)
 
-  // attempt to use multi-route trade
   const multiRouteTradeExactOut = useRouterTradeExactOut(currencyIn, debouncedAmountOut)
 
-  // consider trade debounced when input amount is the same as output amount
   const debouncing =
-    multiRouteTradeExactOut.trade && amountOut && !multiRouteTradeExactOut.trade.outputAmount.equalTo(amountOut)
+    multiRouteTradeExactOut.trade &&
+    amountOut &&
+    (!multiRouteTradeExactOut.trade.outputAmount.equalTo(amountOut) ||
+      !currencyIn?.equals(multiRouteTradeExactOut.trade.inputAmount.currency) ||
+      !amountOut.currency.equals(multiRouteTradeExactOut.trade.outputAmount.currency))
 
   const useFallback = !debouncing && shouldUseFallback(multiRouteTradeExactOut.state)
 

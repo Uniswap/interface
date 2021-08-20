@@ -7,7 +7,7 @@ import { TYPE } from 'theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { AdvancedSwapDetailsContainer } from './styleds'
+import { AdvancedSwapDetailsContainer, DimmableText } from './styleds'
 import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
@@ -29,7 +29,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
   return !trade ? null : (
     <AdvancedSwapDetailsContainer gap="8px" dim={syncing}>
       <RowBetween>
-        <SwapRoute trade={trade} />
+        <SwapRoute trade={trade} dim={syncing} />
       </RowBetween>
 
       <RowBetween>
@@ -38,9 +38,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
+        <DimmableText textAlign="right" fontSize={14} dim={syncing}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-        </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -49,9 +49,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <Trans>Expected price Impact</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
+        <DimmableText textAlign="right" fontSize={14} dim={syncing}>
           <FormattedPriceImpact priceImpact={priceImpact} />
-        </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -60,9 +60,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             <Trans>Allowed Slippage</Trans>
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
+        <DimmableText textAlign="right" fontSize={14} dim={syncing}>
           {allowedSlippage.toFixed(2)}%
-        </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -75,11 +75,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             )}
           </TYPE.black>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
+        <DimmableText textAlign="right" fontSize={14} dim={syncing}>
           {trade.tradeType === TradeType.EXACT_INPUT
             ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
             : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-        </TYPE.black>
+        </DimmableText>
       </RowBetween>
     </AdvancedSwapDetailsContainer>
   )
