@@ -339,21 +339,21 @@ export default function Header() {
           e.preventDefault();
           e.stopPropagation();
           setShowContracts(!showContracts)
-        }} id={'contract-nav-link'} to='/'>
-          <React.Fragment>
+        }} id={'contract-nav-link'} to='//'>
+          <small style={{fontSize:10, display:'flex', alignItems:'center'}}>
            <Trans> Contracts </Trans>{showContracts ? <ChevronUp /> :  <ChevronDown /> }
-         </React.Fragment>
+         </small>
         </StyledNavLink>
       
       </HeaderLinks>
      
       <HeaderControls>
 {showContracts && (
-          <Row style={{ padding:5, borderRadius:6, background:'#fff',display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '70%', top: isMobile ? '50%' :'25%'}}>
+          <Row style={{ padding:5, borderRadius:6, background:'#fff',display:'flex', flexFlow:'column wrap', position: 'absolute', width: 'auto', left: isMobile ? '40%' : '69%', top: isMobile ? '100%' :'25%'}}>
           <div onClick={() => {
             setClip('0x99d36e97676a68313ffdc627fd6b56382a2a08b6')
         }} style={{fontSize:12, display:'block', cursor: 'pointer'}}>
-          <img width={'30px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
+          <img width={'40px'} src={'https://babytrumptoken.com/images/Baby_Trump_Transpa.png'} alt="logo" />
           <Row >
             <AutoColumn>
               <TYPE.main>Baby Trump</TYPE.main>
@@ -367,7 +367,7 @@ export default function Header() {
           <div onClick={() => {
             setClip('0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013')
           }} style={{fontSize:12, paddingTop:5, cursor: 'pointer'}}>
-          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <img width={'40px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
           <Row >
             <AutoColumn>
             <TYPE.main>Stimulus Check</TYPE.main>
@@ -381,7 +381,7 @@ export default function Header() {
           <div onClick={() => {
             alert(`Trump Gold is coming soon to a place near you.`)
           }} style={{fontSize:12, paddingTop:5, cursor: 'not-allowed'}}>
-          <img width={'30px'} src={'https://babytrumptoken.com/images/CoinGecko.png'} alt="logo" />
+          <img width={'40px'} src={'https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png'} alt="logo" />
           <Row >
             <AutoColumn>
             <TYPE.main>Trump Gold</TYPE.main>
