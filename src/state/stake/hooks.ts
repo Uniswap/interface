@@ -560,10 +560,10 @@ export function useTotalUbeEarned(): TokenAmount | undefined {
   return useMemo(() => {
     if (!ube) return undefined
     return (
-      stakingInfos?.reduce(
-        (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount),
-        new TokenAmount(ube, '0')
-      ) ?? new TokenAmount(ube, '0')
+      stakingInfos
+        ?.filter((stakingInfo) => stakingInfo.rewardToken == ube)
+        .reduce((accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount), new TokenAmount(ube, '0')) ??
+      new TokenAmount(ube, '0')
     )
   }, [stakingInfos, ube])
 }
