@@ -279,7 +279,6 @@ export default function VotePage({
         trumpBalance.toFixed(2)
       ) {
       } else if (+storedTrumpBalance - +trumpBalance.toFixed(2) < 0) {
-        alert("We have calculated negative gains meaning you have probably sold. It would be wise to restart the tracker, for proper gains tracking and numbers.")
       }
     } else if (storedSimulusBalance && stimulusBalance) {
       if (
@@ -288,7 +287,6 @@ export default function VotePage({
       ) {
         stopTrackingGains();
       } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0){
-        alert("We have calculated negative gains meaning you have probably sold. It would be wise to restart the tracker, for proper gains tracking and numbers.")
       }
     }
   }, []);
