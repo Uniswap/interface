@@ -98,9 +98,6 @@ function Route({
           <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
         </TransparentBadge>
       </AutoRow>
-      <Badge>
-        <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
-      </Badge>
     </StyledRow>
   )
 }

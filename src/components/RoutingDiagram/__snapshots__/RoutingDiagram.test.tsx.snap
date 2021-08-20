@@ -98,6 +98,15 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="Badge-sc-1mhw5si-0 gayll"
+        >
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            7.5%
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -228,6 +237,15 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="Badge-sc-1mhw5si-0 gayll"
+        >
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            2.5%
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -330,6 +348,15 @@ exports[`renders single route 1`] = `
             >
               DAI
             </div>
+          </div>
+        </div>
+        <div
+          class="Badge-sc-1mhw5si-0 gayll"
+        >
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+          >
+            10%
           </div>
         </div>
       </div>
