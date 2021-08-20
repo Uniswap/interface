@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, DXD } from 'dxswap-sdk'
+import { ChainId, Currency, Token, DXD, SWPR } from 'dxswap-sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
+import SWPRLogo from '../../assets/images/swpr-logo.png'
 import { useActiveWeb3React } from '../../hooks'
 import useHttpLocations from '../../hooks/useHttpLocations'
+import { useTokenInfoFromActiveListOnCurrentChain } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
 import Logo from '../Logo'
 
@@ -39,8 +41,8 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    ${({size}) => `width: calc(${size} - 1px)`};
-    ${({size}) => `height: calc(${size} - 1px)`};
+    ${({ size }) => `width: calc(${size} - 1px)`};
+    ${({ size }) => `height: calc(${size} - 1px)`};
     background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
     border-radius: 50%;
     z-index: -1;
@@ -74,13 +76,17 @@ export default function CurrencyLogo({
 }) {
   const { chainId } = useActiveWeb3React()
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
-  const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+  const wrappedTokenInfo = useTokenInfoFromActiveListOnCurrentChain(currency)
+  const uriLocations = useHttpLocations(
+    currency instanceof WrappedTokenInfo ? currency.logoURI : !!wrappedTokenInfo ? wrappedTokenInfo.logoURI : undefined
+  )
 
   const srcs: string[] = useMemo(() => {
     if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
       if (chainId && DXD[chainId] && DXD[chainId].address === currency.address) return [DXDLogo]
+      if (chainId && SWPR[chainId] && SWPR[chainId].address === currency.address) return [SWPRLogo]
       return [getTokenLogoURL(currency.address), ...uriLocations]
     }
     return []
