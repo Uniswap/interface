@@ -1,6 +1,18 @@
 import React, { ReactNode } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, CurrencyAmount, WETH, DXD, WXDAI, Token, Currency, RoutablePlatform } from 'dxswap-sdk'
+import {
+  ChainId,
+  JSBI,
+  Percent,
+  CurrencyAmount,
+  WETH,
+  DXD,
+  WXDAI,
+  Token,
+  Currency,
+  RoutablePlatform,
+  SWPR
+} from 'dxswap-sdk'
 import { authereum, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
@@ -22,6 +34,13 @@ export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC
 
 export const USDC: { [key: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
+  [ChainId.ARBITRUM_ONE]: new Token(
+    ChainId.ARBITRUM_ONE,
+    '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+    6,
+    'USDC',
+    'USD//C'
+  ),
   [ChainId.XDAI]: new Token(
     ChainId.XDAI,
     '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
@@ -46,6 +65,13 @@ export const WBTC: { [key: number]: Token } = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
     '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    18,
+    'WBTC',
+    'Wrapped BTC'
+  ),
+  [ChainId.ARBITRUM_ONE]: new Token(
+    ChainId.ARBITRUM_ONE,
+    '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
     18,
     'WBTC',
     'Wrapped BTC'
@@ -90,7 +116,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MAINNET]
   ],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [
+    WETH[ChainId.ARBITRUM_ONE],
+    DXD[ChainId.ARBITRUM_ONE],
+    USDC[ChainId.ARBITRUM_ONE],
+    WBTC[ChainId.ARBITRUM_ONE]
+  ],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [
     WXDAI[ChainId.XDAI],
@@ -109,9 +140,22 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 // used for display in the default list when adding liquidity (native currency is already shown
 // by default, so no need to add the wrapper to the list)
 export const SUGGESTED_BASES: ChainTokenList = {
-  [ChainId.MAINNET]: [DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
+  [ChainId.MAINNET]: [
+    DXD[ChainId.MAINNET],
+    DAI,
+    USDC[ChainId.MAINNET],
+    USDT[ChainId.MAINNET],
+    WBTC[ChainId.MAINNET],
+    SWPR[ChainId.MAINNET]
+  ],
   [ChainId.RINKEBY]: [],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [
+    WETH[ChainId.ARBITRUM_ONE],
+    DXD[ChainId.ARBITRUM_ONE],
+    SWPR[ChainId.ARBITRUM_ONE],
+    WBTC[ChainId.ARBITRUM_ONE],
+    USDC[ChainId.ARBITRUM_ONE]
+  ],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
 }
@@ -120,7 +164,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE]],
+  [ChainId.ARBITRUM_ONE]: [WETH[ChainId.ARBITRUM_ONE], DXD[ChainId.ARBITRUM_ONE], USDC[ChainId.ARBITRUM_ONE]],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [WXDAI[ChainId.XDAI], DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI], STAKE]
 }
@@ -210,7 +254,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmTMEKCAzZpL4zrz8zi1YQDqEZkKvNSAQs1zH8WVbhKpKX'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmYuv9sUoYk2QquQuWZW3JqCiZC4F5HR9tMgYgF7x5nKs5'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 

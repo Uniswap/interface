@@ -6,7 +6,7 @@ import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/swapr-unsupported
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { WrappedTokenInfo } from './wrapped-token-info'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId, Currency, Token } from 'dxswap-sdk'
 import { useActiveWeb3React } from '../../hooks'
 
 export type TokenAddressMap = Readonly<{
@@ -105,6 +105,21 @@ export function useAllTokensFromActiveListsOnCurrentChain(): Readonly<{
   const activeListUrls = useActiveListUrls()
   const combinedList = useCombinedTokenMapFromUrls(activeListUrls)
   return useMemo(() => combinedList[chainId || ChainId.MAINNET], [chainId, combinedList])
+}
+
+export function useTokenInfoFromActiveListOnCurrentChain(currency?: Currency): WrappedTokenInfo | undefined {
+  const { chainId } = useActiveWeb3React()
+  const activeListUrls = useActiveListUrls()
+  const combinedList = useCombinedTokenMapFromUrls(activeListUrls)
+
+  return useMemo(() => {
+    if (!currency || !(currency instanceof Token)) return undefined
+    const list = combinedList[chainId || ChainId.MAINNET]
+    if (!list) return undefined
+    const tokenFromList = list[currency.address]
+    if (!tokenFromList) return undefined
+    return tokenFromList.token
+  }, [chainId, combinedList, currency])
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
