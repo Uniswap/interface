@@ -214,7 +214,7 @@ export default function ClaimModal({
                 {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum One'}
               </StyledClaimButton>
             </BottomAutoColumn>
-            <ExternalLink href="https://daotalk.org/t/swpr-token-and-swapr-guild/3118/">
+            <ExternalLink href="https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45">
               <Row justifyContent="center" width="100%">
                 <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
                   Read about the airdrop
