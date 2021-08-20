@@ -173,7 +173,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
+      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>

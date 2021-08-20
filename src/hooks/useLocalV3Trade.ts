@@ -44,8 +44,8 @@ export function useLocalV3TradeExactIn(
     if (
       !amountIn ||
       !currencyOut ||
-      quotesResults.some(({ valid }) => !valid) ||
-      amountIn.currency.wrapped.address === currencyOut?.wrapped.address
+      // skip when tokens are the same
+      amountIn.currency.equals(currencyOut)
     ) {
       return {
         state: V3TradeState.INVALID,
@@ -134,7 +134,8 @@ export function useLocalV3TradeExactOut(
       !amountOut ||
       !currencyIn ||
       quotesResults.some(({ valid }) => !valid) ||
-      amountOut.currency.wrapped.address === currencyIn?.wrapped.address
+      // skip when tokens are the same
+      amountOut.currency.equals(currencyIn)
     ) {
       return {
         state: V3TradeState.INVALID,

@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
+"Last-Translator: \n"
+"Language: af_ZA\n"
+"Language-Team: Afrikaans\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: af\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: af\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Afrikaans\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(maak alles skoon)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(wysig)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Maak alles skoon"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Naby"
 
@@ -482,6 +479,10 @@ msgstr "Bevestig die ruil"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Bevestig hierdie transaksie in u beursie"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Bevestig transaksie in beursie"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "Voer geldige lysligging in"
 msgid "Enter valid token address"
 msgstr "Voer geldige tekenadres in"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1015,6 +1017,10 @@ msgstr "Maksimum:"
 msgid "Maximum sent"
 msgstr "Maksimum gestuur"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Spyskaart"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Oeps! 'N Onbekende fout het voorgekom. Verfris die bladsy of besoek 'n ander blaaier of toestel."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Optimisme Geskeduleerde stilstandtyd"
+msgid "Optimism Planned Downtime"
+msgstr "Optimisme beplan stilstand"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optimisme verwag in die nabye toekoms 'n bietjie stilstand. <0> Lees meer.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimisme verwag in die nabye toekoms beplande stilstand. Onbeplande stilstand kan ook voorkom. Terwyl die netwerk af is, word fooie nie gegenereer nie en kan u nie likiditeit verwyder nie. <0> Lees meer.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "In die ry staan"
 msgid "Rates"
 msgstr "Tariewe"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Lees meer"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Lees meer oor UNI"
@@ -1372,6 +1384,7 @@ msgstr "Verwyder {0} {1} en {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Beperk ruilings slegs vir direkte pare."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1496,10 @@ msgstr "Stemming indien"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Geslaag"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Sukses"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,9 +1659,11 @@ msgid "Total deposits"
 msgstr "Totale deposito's"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Transaksie-instellings"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1653,6 +1672,10 @@ msgstr "Transaksie-instellings"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transaksie ingedien"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transaksie voltooi in"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1852,7 @@ msgstr "Uitsig op Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Bekyk op Explorer"

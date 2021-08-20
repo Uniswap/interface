@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
+"Last-Translator: \n"
+"Language: pl_PL\n"
+"Language-Team: Polish\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: pl\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: pl\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Polish\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(wyczyść wszystkie)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(edytować)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Wyczyść wszystko"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Zamknij"
 
@@ -482,6 +479,10 @@ msgstr "Potwierdź zamianę"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Potwierdź tę transakcję w swoim portfelu"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Potwierdź transakcję w portfelu"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "Wprowadź poprawną lokalizację listy"
 msgid "Enter valid token address"
 msgstr "Wprowadź prawidłowy adres tokenu"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1015,6 +1017,10 @@ msgstr "Maks.:"
 msgid "Maximum sent"
 msgstr "Maksymalna wysłana"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Menu"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ups! Wystąpił nieznany błąd. Odśwież stronę lub odwiedź z innej przeglądarki lub urządzenia."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Zaplanowane przestoje"
+msgid "Optimism Planned Downtime"
+msgstr "Optymizm Planowany przestój"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Optymizm spodziewa się w najbliższej przyszłości zaplanowanego przestoju. <0>Czytaj więcej.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optymizm spodziewa się planowanego przestoju w najbliższej przyszłości. Mogą również wystąpić nieplanowane przestoje. Gdy sieć nie działa, opłaty nie będą generowane i nie będziesz w stanie usunąć płynności. <0>Czytaj więcej.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "W kolejce"
 msgid "Rates"
 msgstr "Stawki"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Czytaj więcej"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Dowiedz się więcej o UNI"
@@ -1372,6 +1384,7 @@ msgstr "Usuwanie {0} {1} i {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Ogranicza swapy tylko do par bezpośrednich."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1496,10 @@ msgstr "Wysyłanie głosu"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Udało się"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Sukces"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,9 +1659,11 @@ msgid "Total deposits"
 msgstr "Depozyty ogółem"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Ustawienia transakcji"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1653,6 +1672,10 @@ msgstr "Ustawienia transakcji"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transakcja przesłana"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Transakcja zakończona w"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1852,7 @@ msgstr "Zobacz na Etherscan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Zobacz w Eksploratorze"

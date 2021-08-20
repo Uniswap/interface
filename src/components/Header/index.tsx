@@ -192,14 +192,15 @@ const StyledNavLink = styled(NavLink).attrs({
   text-decoration: none;
   color: ${({ theme }) => theme.text2};
   font-size: 1rem;
-  width: fit-content;
   font-weight: 500;
   padding: 8px 12px;
   word-break: break-word;
-
+  overflow: hidden;
+  white-space: nowrap;
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
+    justify-content: center;
     color: ${({ theme }) => theme.text1};
     background-color: ${({ theme }) => theme.bg2};
   }
@@ -285,11 +286,11 @@ export default function Header() {
           <Trans>Pool</Trans>
         </StyledNavLink>
         {chainId && chainId === SupportedChainId.MAINNET && (
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+          <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
             <Trans>Vote</Trans>
           </StyledNavLink>
         )}
-        <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
+        <StyledExternalLink id={`charts-nav-link`} href={infoLink}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
         </StyledExternalLink>

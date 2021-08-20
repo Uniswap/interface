@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
+"Last-Translator: \n"
+"Language: ko_KR\n"
+"Language-Team: Korean\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: ko\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: ko\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Korean\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(모두 지우기)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(편집)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "모두 지우기"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "닫기"
 
@@ -482,6 +479,10 @@ msgstr "스왑 확인"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "지갑에서 이 거래를 확인하세요"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "지갑에서 거래 확인"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "유효한 목록 위치를 입력하세요."
 msgid "Enter valid token address"
 msgstr "유효한 토큰 주소를 입력하세요."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1015,6 +1017,10 @@ msgstr "최대 :"
 msgid "Maximum sent"
 msgstr "최대 이체"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "메뉴"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "낙관주의 예정된 다운타임"
+msgid "Optimism Planned Downtime"
+msgstr "낙관적 계획된 다운타임"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "낙관론은 가까운 장래에 예정된 가동 중지 시간을 예상합니다. <0>더 읽어보세요.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "낙관론은 가까운 장래에 계획된 다운타임을 예상합니다. 계획되지 않은 다운타임도 발생할 수 있습니다. 네트워크가 다운되는 동안 수수료가 생성되지 않으며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "대기 중"
 msgid "Rates"
 msgstr "요율"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "더 읽기"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "UNI에 대해 자세히 알아보기"
@@ -1372,6 +1384,7 @@ msgstr "{0} {1} 및 {2} {3} 제거 중"
 msgid "Restricts swaps to direct pairs only."
 msgstr "스왑을 직접 쌍으로만 제한합니다."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1482,6 +1495,10 @@ msgstr "투표 제출"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
+msgstr "성공"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
 msgstr "성공"
 
 #: src/pages/AddLiquidityV2/index.tsx
@@ -1642,9 +1659,11 @@ msgid "Total deposits"
 msgstr "총 입금"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "거래 설정"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1653,6 +1672,10 @@ msgstr "거래 설정"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "제출된 거래"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "거래 완료"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1852,7 @@ msgstr "Etherscan에서보기"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Explorer에서 보기"

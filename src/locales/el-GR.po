@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-15 14:47+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-16 23:05\n"
+"Last-Translator: \n"
+"Language: el_GR\n"
+"Language-Team: Greek\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: el\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: el\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Greek\n"
-"PO-Revision-Date: 2021-07-15 15:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -46,10 +46,6 @@ msgstr "(καθαρισμός όλων)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(επεξεργασία)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -413,6 +409,7 @@ msgid "Clear all"
 msgstr "Εκκαθάριση όλων"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -482,6 +479,10 @@ msgstr "Επιβεβαίωση ανταλλαγής"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Επιβεβαιώστε αυτή τη συναλλαγή στο πορτοφόλι σας"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "Επιβεβαίωση συναλλαγής στο πορτοφόλι"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -729,6 +730,7 @@ msgstr "Εισάγετε έγκυρη λίστα τοποθεσιών"
 msgid "Enter valid token address"
 msgstr "Εισάγετε μια διεύθυνση έγκυρης μάρκας"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
@@ -1015,6 +1017,10 @@ msgstr "Μέγιστο:"
 msgid "Maximum sent"
 msgstr "Απεστάλη το μέγιστο"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Μενού"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1135,12 +1141,12 @@ msgid "Oops! An unknown error occurred. Please refresh the page, or visit from a
 msgstr "Ωχ! Προέκυψε ένα άγνωστο σφάλμα. Παρακαλώ ανανεώστε τη σελίδα ή επισκεφθείτε από άλλο πρόγραμμα περιήγησης ή συσκευή."
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Scheduled Downtimes"
-msgstr "Προγραμματισμένος χρόνος διακοπής αισιοδοξίας"
+msgid "Optimism Planned Downtime"
+msgstr "Αισιοδοξία Προγραμματισμένος χρόνος διακοπής"
 
 #: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects some scheduled downtime in the near future. <0>Read more.</0>"
-msgstr "Η αισιοδοξία αναμένει κάποια προγραμματισμένη διακοπή λειτουργίας στο εγγύς μέλλον. <0> Διαβάστε περισσότερα.</0>"
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Η αισιοδοξία αναμένει προγραμματισμένο χρόνο διακοπής στο εγγύς μέλλον. Μπορεί επίσης να συμβεί μη προγραμματισμένος χρόνος διακοπής. Ενώ το δίκτυο είναι εκτός λειτουργίας, δεν θα δημιουργηθούν τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
 
 #: src/components/Header/NetworkCard.tsx
 msgid "Optimistic Etherscan"
@@ -1305,6 +1311,12 @@ msgstr "Σε ουρά"
 msgid "Rates"
 msgstr "Τιμές"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "Διαβάστε περισσότερα"
+
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Διαβάστε περισσότερα για UNI"
@@ -1372,6 +1384,7 @@ msgstr "Αφαίρεση των {0} {1} και {2} {3}"
 msgid "Restricts swaps to direct pairs only."
 msgstr "Περιορίζει τις ανταλλαγές μόνο σε απευθείας ζεύγη."
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
@@ -1483,6 +1496,10 @@ msgstr "Γίνεται υποβολή ψήφου"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "Επιτεύχθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "Επιτυχία"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1642,9 +1659,11 @@ msgid "Total deposits"
 msgstr "Συνολικές καταθέσεις"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Ρυθμίσεις Συναλλαγής"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1653,6 +1672,10 @@ msgstr "Ρυθμίσεις Συναλλαγής"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Συναλλαγή Υποβλήθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "Η συναλλαγή ολοκληρώθηκε στις"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1829,6 +1852,7 @@ msgstr "Θέα στο Ethercan"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "Προβολή στον Explorer"

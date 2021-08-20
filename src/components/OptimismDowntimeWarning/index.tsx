@@ -3,6 +3,7 @@ import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ExternalLink } from 'theme'
 
 const Root = styled.div`
   background-color: ${({ theme }) => theme.yellow3};
@@ -11,6 +12,7 @@ const Root = styled.div`
   margin-top: 16px;
   padding: 16px;
   width: 100%;
+  max-width: 880px;
 `
 const WarningIcon = styled(AlertOctagon)`
   margin: 0 8px 0 0;
@@ -30,8 +32,9 @@ const Body = styled.div`
   line-height: 15px;
   margin: 8px 0 0 0;
 `
-const LinkOutToNotion = styled.a`
+const ReadMoreLink = styled(ExternalLink)`
   color: black;
+  text-decoration: underline;
 `
 
 export default function OptimismDowntimeWarning() {
@@ -44,18 +47,15 @@ export default function OptimismDowntimeWarning() {
     <Root>
       <TitleRow>
         <WarningIcon />
-        <Trans>{'Optimism'} Scheduled Downtimes</Trans>
+        <Trans>Optimism Planned Downtime</Trans>
       </TitleRow>
       <Body>
         <Trans>
-          {'Optimism'} expects some scheduled downtime in the near future.&nbsp;
-          <LinkOutToNotion
-            href={`https://www.notion.so/Optimism-Regenesis-Schedule-8d14a34902ca4f5a8910762b3ec4b8da`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is
+          down, fees will not be generated and you will be unable to remove liquidity.{' '}
+          <ReadMoreLink href="https://help.uniswap.org/en/articles/5406082-what-happens-if-the-optimistic-ethereum-network-experiences-downtime">
             Read more.
-          </LinkOutToNotion>
+          </ReadMoreLink>
         </Trans>
       </Body>
     </Root>
