@@ -374,13 +374,15 @@ export default function VotePage({
           <Card>
             <CardSection>
               <TYPE.black>
-                <Trans> 
-                  <Info /> &nbsp;
-                  <small>
+              <small> 
+              <Info /> 
+              <Trans> 
                     {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
                      In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
-                  </small>
                 </Trans>
+                &nbsp;
+
+                </small>
               </TYPE.black>
               <br />
               {isTrackingGains && (
@@ -388,7 +390,7 @@ export default function VotePage({
                   <TYPE.main>
                     <small>
                       <Clock />
-                      &nbsp;Started tracking gains {trackingSince}
+                      &nbsp; <Trans>Started tracking gains {trackingSince} </Trans>
                     </small>
                   </TYPE.main>
                 </BlueCard>
@@ -424,20 +426,22 @@ export default function VotePage({
                           trumpBalance !== undefined &&
                           account !== undefined && (
                             <React.Fragment>
-                              <Trans>
-                                <ArrowUp /> &nbsp;
-                                {`TRUMPGAINS`} &nbsp;
+                               <ArrowUp /> 
+                           
+                               &nbsp;
+                                <Trans>{`TRUMPGAINS`} </Trans> &nbsp;
                                 {(
                                   +trumpBalance?.toFixed(2) -
                                   +storedTrumpBalance
                                 ).toFixed(2)}
-                              </Trans>
                               <br />
-                              {isTrackingGains && trumpGainsUSD &&  (
+                              {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ paddingTop: 5 }}>
-                                  <small>Total GAINS </small>&nbsp;
+                                  <small>
+                                       <Trans>Total GAINS </Trans>
+                                  </small>&nbsp;
                                   {rawTrumpCurrency && +rawTrumpCurrency?.toFixed(0) > 0 ? trumpGainsUSD : '-'}
-                                  <small>&nbsp;USD</small>
+                                  <small>&nbsp;<Trans>USD</Trans></small>
                                 </Badge>
                               )}
                             </React.Fragment>
@@ -517,7 +521,7 @@ export default function VotePage({
                           <AutoColumn style={{ display: isMobile ? 'block' : 'flex', paddingLeft: isMobile ? 0 : 10.2 }}>
                             <Badge>
                               {" "}
-                              <TYPE.blue>2X REDISTRIBUTION</TYPE.blue>
+                              <TYPE.blue><Trans>2X REDISTRIBUTION</Trans></TYPE.blue>
                             </Badge>
                           </AutoColumn>
                         </Row>
@@ -585,9 +589,9 @@ export default function VotePage({
                           <Column>
                             <Badge>
                                 <TYPE.black>
-                                  <small>Total GAINS</small>&nbsp;
+                                  <small><Trans>Total GAINS</Trans></small>&nbsp;
                                   -
-                                  <small>&nbsp;USD</small>
+                                  <small>&nbsp;<Trans>USD</Trans></small>
                                 </TYPE.black>
                             </Badge>
                           </Column>
@@ -599,7 +603,7 @@ export default function VotePage({
             </AutoColumn>
             <AutoColumn gap="50px">
               <ButtonPrimary onClick={trackGains}>
-                {trackingLabel}
+                <Trans>{trackingLabel}</Trans>
               </ButtonPrimary>
             </AutoColumn>
             <CardSection>
@@ -608,9 +612,9 @@ export default function VotePage({
                   <AlertCircle /> WANTING MORE GAINS? <br />
                 </div>
                 <small>
-                  Holding stimulus check while holding baby trump provides a
-                  total of &nbsp;
-                  <Badge>16%</Badge> redistribution
+                  <Trans>Holding stimulus check while holding baby trump provides a
+                  total of</Trans> &nbsp;
+                  <Badge>16%</Badge> <Trans>redistribution</Trans>
                 </small>
               </TYPE.blue>
             </CardSection>
