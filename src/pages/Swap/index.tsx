@@ -64,7 +64,6 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { V3TradeState } from 'hooks/useV3Trade'
-import AutoRouterLabel from './RouterLabel'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
