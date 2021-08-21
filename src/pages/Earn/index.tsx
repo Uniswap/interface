@@ -16,7 +16,6 @@ import {
   MOO_LP1,
   MOO_LP2,
   POOF_DUAL_LP,
-  POOF_DUAL_POOL,
   StakingInfo,
   useStakingInfo,
 } from '../../state/stake/hooks'
@@ -128,13 +127,14 @@ export default function Earn() {
             </ErrorBoundary>
           </PoolSection>
         )}
-        {poofUBELP && (
+        {/* Temporarily disable the POOF-UBE dual staking pool
+        poofUBELP && (
           <PoolSection>
             <ErrorBoundary>
               <DualPoolCard poolAddress={POOF_DUAL_POOL} underlyingPool={poofUBELP} />
             </ErrorBoundary>
           </PoolSection>
-        )}
+        )*/}
       </AutoColumn>
 
       {stakedPools.length > 0 && (
