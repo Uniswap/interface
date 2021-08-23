@@ -6078,12 +6078,6 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"dxswap-core@git://github.com/levelkdev/dxswap-core.git#v0.3.9":
-  version "0.3.9"
-  resolved "git://github.com/levelkdev/dxswap-core.git#45ce6d68534bf590fa32fcadebd9cb499ad98c12"
-  dependencies:
-    typescript "^3.9.5"
-
 "dxswap-core@https://github.com/levelkdev/dxswap-core.git#v0.3.1":
   version "0.3.0"
   resolved "https://github.com/levelkdev/dxswap-core.git#ea38ac67256e514eaf3acd0cfc84d7135e59e64e"
@@ -6096,28 +6090,21 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     typescript "^3.9.5"
 
-"dxswap-periphery@git://github.com/levelkdev/dxswap-periphery.git#v0.3.11":
-  version "0.3.11"
-  uid dfe8483d81f10eda4db04424d59f0eaa81b51438
-  resolved "git://github.com/levelkdev/dxswap-periphery.git#dfe8483d81f10eda4db04424d59f0eaa81b51438"
-  dependencies:
-    dxswap-core "https://github.com/levelkdev/dxswap-core.git#v0.3.1"
-
 "dxswap-periphery@https://github.com/levelkdev/dxswap-periphery.git#v0.3.11":
   version "0.3.11"
   resolved "https://github.com/levelkdev/dxswap-periphery.git#dfe8483d81f10eda4db04424d59f0eaa81b51438"
   dependencies:
     dxswap-core "https://github.com/levelkdev/dxswap-core.git#v0.3.1"
 
-"dxswap-sdk@https://github.com/levelkdev/dxswap-sdk.git#v0.10.2":
-  version "0.10.2"
-  resolved "https://github.com/levelkdev/dxswap-sdk.git#fc69da001455c872c1c742d8b7bf269d2b960153"
+"dxswap-sdk@https://github.com/levelkdev/dxswap-sdk.git#v0.10.3":
+  version "0.10.3"
+  resolved "https://github.com/levelkdev/dxswap-sdk.git#d6a8dd75639ec17adb367f1ba878706a53b32153"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
-    dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.9"
-    dxswap-periphery "git://github.com/levelkdev/dxswap-periphery.git#v0.3.11"
+    dxswap-core "https://github.com/levelkdev/dxswap-core.git#v0.3.9"
+    dxswap-periphery "https://github.com/levelkdev/dxswap-periphery.git#v0.3.11"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
