@@ -1,5 +1,5 @@
 {
-  "name": "dxswap-dapp",
+  "name": "@swapr/frontend",
   "version": "1.0.0-beta.4",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
