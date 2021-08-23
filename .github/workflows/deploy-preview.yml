@@ -29,9 +29,13 @@ jobs:
           env: ${{env.GITHUB_HEAD_REF_SLUG_URL || env.GITHUB_REF_SLUG_URL}}
           ref: ${{github.head_ref}}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install --frozen-lockfile
       - name: Build
-        run: yarn ipfs-build
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: ipfs-build
       - name: Deploy to IPFS
         uses: web3-storage/add-to-web3@v1
         id: web3
