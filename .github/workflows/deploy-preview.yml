@@ -31,9 +31,9 @@ jobs:
       - name: Remove dependencies
         run: rm -rf package-lock.json node_modules
       - name: Install dependencies
-        run: npm install
-      - name: Build Dapp
-        run: npm run ipfs-build
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn ipfs-build
       - name: Deploy to IPFS
         uses: web3-storage/add-to-web3@v1
         id: web3
