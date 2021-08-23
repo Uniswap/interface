@@ -6090,15 +6090,27 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     typescript "^3.9.5"
 
+"dxswap-core@https://github.com/levelkdev/dxswap-core.git#v0.3.9":
+  version "0.3.9"
+  resolved "https://github.com/levelkdev/dxswap-core.git#45ce6d68534bf590fa32fcadebd9cb499ad98c12"
+  dependencies:
+    typescript "^3.9.5"
+
 "dxswap-periphery@git://github.com/levelkdev/dxswap-periphery.git#v0.3.10":
   version "0.3.10"
   resolved "git://github.com/levelkdev/dxswap-periphery.git#e40b05ee0f103f6666535e12128eb2b865f3c403"
   dependencies:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.1"
 
-"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.10.1":
+"dxswap-periphery@https://github.com/levelkdev/dxswap-periphery.git#v0.3.10":
+  version "0.3.10"
+  resolved "https://github.com/levelkdev/dxswap-periphery.git#e40b05ee0f103f6666535e12128eb2b865f3c403"
+  dependencies:
+    dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.1"
+
+"dxswap-sdk@https://github.com/levelkdev/dxswap-sdk.git#v0.10.1":
   version "0.10.1"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#f00ba54e88b3a31f8c41571cabb7903a2847d0e9"
+  resolved "https://github.com/levelkdev/dxswap-sdk.git#f00ba54e88b3a31f8c41571cabb7903a2847d0e9"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
