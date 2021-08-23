@@ -15,7 +15,6 @@ const isValidAddressEnv = (value: string | undefined): boolean => {
   return !!value && !!isAddress(value)
 }
 
-console.log(process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH)
 new CID(process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH as string) // fails if the cid is either non-present or malformed
 if (
   !isValidAddressEnv(process.env.REACT_APP_FACTORY_ADDRESS_ARBITRUM_ONE) ||
