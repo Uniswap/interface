@@ -1,6 +1,6 @@
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import React from 'react'
-import { Token, Currency } from 'dxswap-sdk'
+import { Token, Currency } from '@swapr/sdk'
 import styled from 'styled-components/macro'
 import { TYPE, CloseIcon } from '../../theme'
 import { AutoColumn } from '../Column'

@@ -1,4 +1,4 @@
-import { PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
+import { PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { tryParseAmount } from '../../../../../../state/swap/hooks'

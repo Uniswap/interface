@@ -1,4 +1,4 @@
-import { Pair, Percent, PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
+import { Pair, Percent, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import { DateTime } from 'luxon'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'

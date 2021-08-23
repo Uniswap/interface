@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Pair, Token } from 'dxswap-sdk'
+import { Currency, Pair, Token } from '@swapr/sdk'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'

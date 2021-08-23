@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
-import { SWPR } from 'dxswap-sdk'
+import { SWPR } from '@swapr/sdk'
 
 import styled, { css } from 'styled-components'
 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Currency } from 'dxswap-sdk'
+import { Currency } from '@swapr/sdk'
 import { Text } from 'rebass'
 
 import { useRouter } from '../../hooks/useRouter'

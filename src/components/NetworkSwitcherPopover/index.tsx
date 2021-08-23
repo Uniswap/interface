@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useRef } from 'react'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId } from '@swapr/sdk'
 import styled from 'styled-components'
 import Option from './Option'
 import { ApplicationModal } from '../../state/application/actions'

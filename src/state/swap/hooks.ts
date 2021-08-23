@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, JSBI, RoutablePlatform, Token, TokenAmount, Trade } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, JSBI, RoutablePlatform, Token, TokenAmount, Trade } from '@swapr/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

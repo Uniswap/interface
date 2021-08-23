@@ -2,7 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { CustomNetworkConnector } from './CustomNetworkConnector'
 import { CustomWalletConnectConnector } from './CustomWalletConnectConnector'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId } from '@swapr/sdk'
 import { providers } from 'ethers'
 import getLibrary from '../utils/getLibrary'
 

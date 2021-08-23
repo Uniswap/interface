@@ -8,7 +8,7 @@ import {
   SWPR,
   RoutablePlatform,
   SWPR_CLAIMER_ADDRESS
-} from 'dxswap-sdk'
+} from '@swapr/sdk'
 import { isAddress } from './utils'
 
 const isValidAddressEnv = (value: string | undefined): boolean => {

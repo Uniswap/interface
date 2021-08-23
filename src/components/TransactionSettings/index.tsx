@@ -16,7 +16,7 @@ import { formatUnits } from 'ethers/lib/utils'
 import { GreenGasPriceOption, OrangeGasPriceOption, PurpleGasPriceOption } from '../GasBadges'
 import { BigNumber } from 'ethers'
 import Decimal from 'decimal.js-light'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId } from '@swapr/sdk'
 import { useActiveWeb3React } from '../../hooks'
 
 enum SlippageError {

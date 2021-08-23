@@ -1,4 +1,4 @@
-import { Trade } from 'dxswap-sdk'
+import { Trade } from '@swapr/sdk'
 import React from 'react'
 import { Settings } from 'react-feather'
 import styled from 'styled-components'

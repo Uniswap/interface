@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import { Pair, Token, TokenAmount } from '@swapr/sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'

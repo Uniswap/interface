@@ -1,4 +1,4 @@
-import { Pair, Percent, Token, TokenAmount } from 'dxswap-sdk'
+import { Pair, Percent, Token, TokenAmount } from '@swapr/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AutoColumn } from '../../../components/Column'

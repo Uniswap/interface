@@ -12,8 +12,8 @@ import {
   STAKING_REWARDS_DISTRIBUTION_ABI,
   SWPR_CLAIMER_ABI,
   SWPR_CLAIMER_ADDRESS
-} from 'dxswap-sdk'
-import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
+} from '@swapr/sdk'
+import { abi as IDXswapPairABI } from '@swapr/core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
   ARGENT_WALLET_DETECTOR_ABI,

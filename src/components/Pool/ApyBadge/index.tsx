@@ -1,4 +1,4 @@
-import { Percent } from 'dxswap-sdk'
+import { Percent } from '@swapr/sdk'
 import React from 'react'
 import styled from 'styled-components'
 

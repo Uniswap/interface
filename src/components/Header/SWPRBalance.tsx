@@ -1,4 +1,4 @@
-import { SWPR } from 'dxswap-sdk'
+import { SWPR } from '@swapr/sdk'
 import React from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
