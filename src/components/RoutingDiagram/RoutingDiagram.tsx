@@ -3,9 +3,10 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
-import useTheme from 'hooks/useTheme'
+import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
@@ -16,10 +17,38 @@ export interface RoutingDiagramEntry {
   path: [Currency, Currency, FeeAmount | undefined][]
 }
 
-const StyledRow = styled(Row)<{ gap: string }>`
-  display: flex;
+const MainRow = styled(Box)`
+  display: grid;
+  grid-template-columns: 60px 1fr 60px;
+  grid-gap: 8px;
   justify-content: space-between;
+  width: 100%;
+`
+
+const EdgeRow = styled(Box)`
+  align-items: center;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+`
+
+const RouteRow = styled(Row)`
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.bg2};
+  display: flex;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
   position: relative;
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.bg4};
+  }
+`
+
+const PoolBadge = styled(Badge)`
+  padding: 0.25rem 0.5rem;
+  display: flex;
 `
 
 const DottedLine = styled.div`
@@ -28,7 +57,7 @@ const DottedLine = styled.div`
   border-style: dashed;
   position: absolute;
   height: 0px;
-  width: calc(100% - 5px);
+  width: calc(100% - 1.5rem);
   z-index: 1;
 `
 
@@ -39,8 +68,9 @@ const StyledChevronRight = styled(ChevronRight).attrs({ size: 20 })`
   background-color: ${({ theme }) => theme.bg0};
 `
 
-const TransparentBadge = styled(Badge)`
+const OpaqueBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg0};
+  z-index: 2;
 `
 
 export default function RoutingDiagram({
@@ -53,19 +83,29 @@ export default function RoutingDiagram({
   routes: RoutingDiagramEntry[]
 }) {
   return (
-    <AutoColumn gap="4px">
-      {routes.map((route, index) => (
-        <AutoColumn key={index}>
-          <Route currencyIn={currencyIn} currencyOut={currencyOut} {...route} />
-        </AutoColumn>
-      ))}
-    </AutoColumn>
+    <MainRow>
+      <EdgeRow>
+        <CurrencyLogo currency={currencyIn} />
+        <StyledChevronRight />
+      </EdgeRow>
+
+      <Box>
+        {routes.map((route, index) => (
+          <AutoColumn key={index}>
+            <Route currencyIn={currencyIn} currencyOut={currencyOut} {...route} />
+          </AutoColumn>
+        ))}
+      </Box>
+
+      <EdgeRow>
+        <StyledChevronRight />
+        <CurrencyLogo currency={currencyOut} />
+      </EdgeRow>
+    </MainRow>
   )
 }
 
 function Route({
-  currencyIn,
-  currencyOut,
   percent,
   path,
 }: {
@@ -75,30 +115,18 @@ function Route({
   path: RoutingDiagramEntry['path']
 }) {
   return (
-    <StyledRow gap="8px">
+    <RouteRow>
       <DottedLine />
-      <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-between', zIndex: 2 }}>
-        <Box style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridGap: '5px' }}>
-          <TransparentBadge>
-            <TYPE.small fontSize={13}>{currencyIn.symbol}</TYPE.small>
-          </TransparentBadge>
+      <OpaqueBadge>
+        <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
+      </OpaqueBadge>
 
-          <TransparentBadge>
-            <TYPE.small fontSize={12}>{percent.toSignificant(2)}%</TYPE.small>
-          </TransparentBadge>
-        </Box>
-
-        {path.map(([currency0, currency1, feeAmount], index) => {
-          return <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
-        })}
-
-        <Pool currency0={currencyOut} />
-
-        <TransparentBadge>
-          <TYPE.small fontSize={13}>{currencyOut.symbol}</TYPE.small>
-        </TransparentBadge>
+      <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
+        {path.map(([currency0, currency1, feeAmount], index) => (
+          <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
+        ))}
       </AutoRow>
-    </StyledRow>
+    </RouteRow>
   )
 }
 
@@ -106,10 +134,12 @@ function MouseOverChevron({
   currency0,
   currency1,
   feeAmount,
+  children,
 }: {
   currency0: Currency
   currency1: Currency
   feeAmount: FeeAmount | undefined
+  children: ReactNode
 }) {
   const feeAmountLabel = feeAmount ? `${feeAmount / 10000}%` : ''
   return (
@@ -118,7 +148,7 @@ function MouseOverChevron({
       content={<TYPE.small fontSize={12}>{`${currency0.symbol}/${currency1.symbol} ${feeAmountLabel}`}</TYPE.small>}
       placement="top"
     >
-      <StyledChevronRight />
+      {children}
     </MouseoverTooltipContent>
   )
 }
@@ -129,16 +159,17 @@ function Pool({
   feeAmount,
 }: {
   currency0: Currency
-  currency1?: Currency | undefined
-  feeAmount?: FeeAmount | undefined
+  currency1: Currency
+  feeAmount: FeeAmount | undefined
 }) {
-  const theme = useTheme()
   return (
-    <>
-      <Box style={{ backgroundColor: theme.bg0 }}>
-        <CurrencyLogo currency={currency0} size="15px" style={{ margin: '0 10px' }} />
-      </Box>
-      {currency1 && <MouseOverChevron currency0={currency0} currency1={currency1} feeAmount={feeAmount} />}
-    </>
+    <MouseOverChevron currency0={currency0} currency1={currency1} feeAmount={feeAmount}>
+      <PoolBadge>
+        <Box margin="0 5px 0 10px">
+          <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} />
+        </Box>
+        {feeAmount && <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>}
+      </PoolBadge>
+    </MouseOverChevron>
   )
 }

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { AutoColumn } from 'components/Column'
 import { useMemo } from 'react'
 import { TYPE } from 'theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
@@ -28,10 +29,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
 
   return !trade ? null : (
     <AdvancedSwapDetailsContainer gap="8px" dim={syncing}>
-      <RowBetween>
-        <SwapRoute trade={trade} dim={syncing} />
-      </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={14} fontWeight={400}>
@@ -81,6 +78,13 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
             : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
         </DimmableText>
       </RowBetween>
+
+      <AutoColumn>
+        <TYPE.black fontSize={14} fontWeight={400}>
+          <Trans>Swap Route</Trans>
+        </TYPE.black>
+        <SwapRoute trade={trade} dim={syncing} />
+      </AutoColumn>
     </AdvancedSwapDetailsContainer>
   )
 }

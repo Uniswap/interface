@@ -170,9 +170,6 @@ export const LoadingPlaceholder = styled.div<{ width: number }>`
 `
 
 export const RoutingDiagramWrapper = styled(AutoColumn)`
-  border-top: 1px solid ${({ theme }) => theme.bg2};
-  border-bottom: 1px solid ${({ theme }) => theme.bg2};
-
   width: 100%;
   padding: 0.5rem 0;
 `
