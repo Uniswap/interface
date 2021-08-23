@@ -28,12 +28,14 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           env: ${{env.GITHUB_HEAD_REF_SLUG_URL || env.GITHUB_REF_SLUG_URL}}
           ref: ${{github.head_ref}}
-      - name: Create NPM lockfile
-        run: npm install
       - name: Install dependencies
-        run: npm ci
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install --frozen-lockfile
       - name: Build
-        run: npm run ipfs-build
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: ipfs-build
       - name: Deploy to IPFS
         uses: web3-storage/add-to-web3@v1
         id: web3
