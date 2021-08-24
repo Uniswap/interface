@@ -77,9 +77,9 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
             fee: positionInfo.fee,
           }
           const incentivesForTokenId = incentivesByPoolKey[toPoolKey(poolKey)] ?? []
-          return [...accum, ...incentivesForTokenId.map((incentive) => [tokenId, incentive.id])]
+          return accum.concat(incentivesForTokenId.map((incentive) => [tokenId, incentive.id]))
         } else {
-          return [...accum]
+          return accum
         }
       }, [])
     }
