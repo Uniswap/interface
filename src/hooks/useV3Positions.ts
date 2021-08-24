@@ -1,7 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { useSingleCallResult, useSingleContractMultipleData, Result } from 'state/multicall/hooks'
 import { useMemo } from 'react'
-import { PositionDetails } from 'types/position'
+import { PositionDetails, Stake } from 'types/position'
 import { Incentive, useAllIncentives } from './incentives/useAllIncentives'
 import { DepositedTokenIdsState, useDepositedTokenIds } from './incentives/useDepositedTokenIds'
 import { useV3NFTPositionManagerContract, useV3Staker } from './useContract'
@@ -13,12 +13,6 @@ interface UseV3PositionsResults {
   loading: boolean
   error: boolean
   positions: PositionDetails[] | undefined
-}
-
-export interface Stake {
-  incentive: Incentive
-  liquidity: BigNumber
-  secondsPerLiquidityInsideInitialX128: BigNumber
 }
 
 function toPoolKey(pool: Pool | { token0: string | Token; token1: string | Token; fee: number }): string {
@@ -104,8 +98,6 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     }
     return accum
   }, {})
-
-  console.log(stakesByTokenId)
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
