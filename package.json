@@ -122,7 +122,7 @@
     "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "1.6.2"
+    "@walletconnect/ethereum-provider": "1.6.4"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
