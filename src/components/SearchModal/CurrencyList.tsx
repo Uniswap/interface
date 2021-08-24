@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, currencyEquals, Token } from '@swapr/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useContext, useMemo, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'

@@ -1,4 +1,4 @@
-import { Pair, CurrencyAmount, Percent, Token } from 'dxswap-sdk'
+import { Pair, CurrencyAmount, Percent, Token } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'

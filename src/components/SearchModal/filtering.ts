@@ -1,5 +1,5 @@
 import { isAddress } from '../../utils'
-import { Pair, Token } from 'dxswap-sdk'
+import { Pair, Token } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { TokenInfo } from '@uniswap/token-lists'
 

@@ -12,7 +12,7 @@ import {
   PricedToken,
   PricedTokenAmount,
   TokenAmount
-} from 'dxswap-sdk'
+} from '@swapr/sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { ZERO_USD } from '../constants'

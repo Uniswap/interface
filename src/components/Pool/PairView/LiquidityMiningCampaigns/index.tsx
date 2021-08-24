@@ -1,4 +1,4 @@
-import { Pair } from 'dxswap-sdk'
+import { Pair } from '@swapr/sdk'
 import { DateTime, Duration } from 'luxon'
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'

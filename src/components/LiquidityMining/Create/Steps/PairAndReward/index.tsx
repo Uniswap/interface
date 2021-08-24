@@ -1,4 +1,4 @@
-import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import { Pair, Token, TokenAmount } from '@swapr/sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'

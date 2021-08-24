@@ -1,4 +1,4 @@
-import { ChainId, Token, Trade } from 'dxswap-sdk'
+import { ChainId, Token, Trade } from '@swapr/sdk'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useActiveWeb3React } from '.'

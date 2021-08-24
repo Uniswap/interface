@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId } from '@swapr/sdk'
 import React, { Suspense, useContext } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'

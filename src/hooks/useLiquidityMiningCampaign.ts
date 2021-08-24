@@ -1,4 +1,4 @@
-import { LiquidityMiningCampaign, Pair, PricedToken, PricedTokenAmount, Token, TokenAmount } from 'dxswap-sdk'
+import { LiquidityMiningCampaign, Pair, PricedToken, PricedTokenAmount, Token, TokenAmount } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { useNativeCurrencyPricedTokenAmounts } from './useTokensDerivedNativeCurrency'

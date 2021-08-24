@@ -1,4 +1,4 @@
-import { Pair } from 'dxswap-sdk'
+import { Pair } from '@swapr/sdk'
 import React from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { ApprovalState } from '../../../../../../hooks/useApproveCallback'

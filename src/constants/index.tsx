@@ -12,7 +12,7 @@ import {
   Currency,
   RoutablePlatform,
   SWPR
-} from 'dxswap-sdk'
+} from '@swapr/sdk'
 import { authereum, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'

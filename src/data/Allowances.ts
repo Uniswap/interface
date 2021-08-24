@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token, TokenAmount } from 'dxswap-sdk'
+import { CurrencyAmount, Token, TokenAmount } from '@swapr/sdk'
 import { BigNumber, constants } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../constants/abis/erc20'

@@ -1,4 +1,4 @@
-import { Currency, Token } from 'dxswap-sdk'
+import { Currency, Token } from '@swapr/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'

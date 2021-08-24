@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, JSBI, Percent, RoutablePlatform, Router, SwapParameters, Trade, TradeType } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, RoutablePlatform, Router, SwapParameters, Trade, TradeType } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'

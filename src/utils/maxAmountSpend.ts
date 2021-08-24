@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI } from 'dxswap-sdk'
+import { CurrencyAmount, ETHER, JSBI } from '@swapr/sdk'
 import { MIN_ETH } from '../constants'
 
 /**

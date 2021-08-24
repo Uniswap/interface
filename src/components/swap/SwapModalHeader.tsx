@@ -1,4 +1,4 @@
-import { Trade, TradeType } from 'dxswap-sdk'
+import { Trade, TradeType } from '@swapr/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

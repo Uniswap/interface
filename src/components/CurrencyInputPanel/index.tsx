@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair } from '@swapr/sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'

@@ -1,4 +1,4 @@
-import { LiquidityMiningCampaign, PricedTokenAmount } from 'dxswap-sdk'
+import { LiquidityMiningCampaign, PricedTokenAmount } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { useStakingRewardsDistributionContract } from './useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'

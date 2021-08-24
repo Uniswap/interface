@@ -1,4 +1,4 @@
-import { Pair, PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
+import { Pair, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import React, { useCallback, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
