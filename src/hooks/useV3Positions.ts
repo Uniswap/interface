@@ -15,6 +15,12 @@ interface UseV3PositionsResults {
   positions: PositionDetails[] | undefined
 }
 
+export interface Stake {
+  incentive: Incentive
+  liquidity: BigNumber
+  secondsPerLiquidityInsideInitialX128: BigNumber
+}
+
 function toPoolKey(pool: Pool | { token0: string | Token; token1: string | Token; fee: number }): string {
   return `${typeof pool.token0 === 'string' ? pool.token0 : pool.token0.address}-${
     typeof pool.token1 === 'string' ? pool.token1 : pool.token1.address
@@ -49,6 +55,57 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     )
   }, [incentives])
 
+  /**
+   * @todo
+   * weird thing here is that for a given tokenId, only want to check
+   * `stakes` for incentive in that pool
+   *
+   * so need to filter out relevant pools using the positionInfo results
+   *
+   * another option to doing this all here is making a useStakesForPosition hook
+   * that does the same thing
+   *
+   */
+  const stakesArgs = useMemo(() => {
+    if (tokenIds && incentives) {
+      return tokenIds.reduce((accum: (string | BigNumber)[][], tokenId, i) => {
+        const positionInfo = positionInfos[i].result
+        if (positionInfo) {
+          const poolKey = {
+            token0: positionInfo.token0,
+            token1: positionInfo.token1,
+            fee: positionInfo.fee,
+          }
+          const incentivesForTokenId = incentivesByPoolKey[toPoolKey(poolKey)] ?? []
+          return [...accum, ...incentivesForTokenId.map((incentive) => [tokenId, incentive.id])]
+        } else {
+          return [...accum]
+        }
+      }, [])
+    }
+    return []
+  }, [incentives, incentivesByPoolKey, positionInfos, tokenIds])
+
+  const stakesResult = useSingleContractMultipleData(staker, 'stakes', stakesArgs)
+
+  const stakesByTokenId = stakesArgs.reduce((accum: { [tokenIdString: string]: Stake[] }, arg, i) => {
+    const [tokenId, incentiveId] = arg
+    const liquidity = stakesResult[i].result?.[0]
+    const secondsPerLiquidityInsideInitialX128 = stakesResult[i].result?.[1]
+    const incentive = incentives?.find((incentive) => incentive.id === incentiveId)
+    if (liquidity && incentive && secondsPerLiquidityInsideInitialX128) {
+      accum[tokenId.toString()] = [
+        ...(accum[tokenId.toString()] ?? []),
+        {
+          liquidity,
+          secondsPerLiquidityInsideInitialX128,
+          incentive,
+        },
+      ]
+    }
+    return accum
+  }, {})
+
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
       return tokenIds
@@ -79,12 +136,13 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
             tokensOwed0: positionInfo.tokensOwed0,
             tokensOwed1: positionInfo.tokensOwed1,
             incentives: incentivesByPoolKey[toPoolKey(poolKey)] ?? [],
+            stakes: stakesByTokenId[tokenId.toString()],
           }
         })
         .filter((p): p is PositionDetails => Boolean(p))
     }
     return undefined
-  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners, incentivesByPoolKey])
+  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners, incentivesByPoolKey, stakesByTokenId])
 
   return {
     loading,

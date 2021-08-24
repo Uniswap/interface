@@ -9,6 +9,7 @@ import { PoolState, usePoolsByAddresses } from '../usePools'
 import { incentiveKeyToIncentiveId } from './incentiveKeyToIncentiveId'
 
 export interface Incentive {
+  id: string
   pool: Pool
   poolAddress: string
   startTime: number
@@ -94,7 +95,16 @@ export function useAllIncentives(): {
 
           const refundee = result.refundee
 
+          const id = incentiveKeyToIncentiveId({
+            rewardToken: result.rewardToken,
+            pool: result.pool,
+            startTime,
+            endTime,
+            refundee,
+          })
+
           return {
+            id,
             pool,
             poolAddress: result.pool,
             startTime,
@@ -110,6 +120,9 @@ export function useAllIncentives(): {
   }, [allTokens, incentiveStates, parsedLogs, poolMap])
 }
 
+/**
+ * Used for getting sorted list of all incentives broken down by pool
+ */
 export function useAllIncentivesByPool(): {
   loading: boolean
   incentives?: {
