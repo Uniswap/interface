@@ -53,7 +53,7 @@ export const UbeswapTradeDetails: React.FC<Props> = ({ trade, allowedSlippage }:
           <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
             Liquidity Provider Fee
           </TYPE.black>
-          <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
+          <QuestionHelper text="A portion of each trade (0.25%) goes to liquidity providers as a protocol incentive. Another portion of each trade (0.05%) buys back UBE and sends it to the community reserve." />
         </RowFixed>
         <TYPE.black fontSize={14} color={theme.text1}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
