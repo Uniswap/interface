@@ -94,17 +94,18 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     const secondsPerLiquidityInsideInitialX128 = stakesResult[i].result?.[1]
     const incentive = incentives?.find((incentive) => incentive.id === incentiveId)
     if (liquidity && incentive && secondsPerLiquidityInsideInitialX128) {
-      accum[tokenId.toString()] = [
-        ...(accum[tokenId.toString()] ?? []),
+      accum[tokenId.toString()] = (accum[tokenId.toString()] ?? []).concat([
         {
           liquidity,
           secondsPerLiquidityInsideInitialX128,
           incentive,
         },
-      ]
+      ])
     }
     return accum
   }, {})
+
+  console.log(stakesByTokenId)
 
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
