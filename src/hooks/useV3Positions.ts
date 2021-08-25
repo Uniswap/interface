@@ -8,6 +8,7 @@ import { useV3NFTPositionManagerContract, useV3Staker } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Pool } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
+import Stake from 'types/stake'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -49,6 +50,41 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     )
   }, [incentives])
 
+  const stakesArgs = useMemo(() => {
+    if (tokenIds && incentives) {
+      return tokenIds.reduce((accum: (string | BigNumber)[][], tokenId, i) => {
+        const positionInfo = positionInfos[i].result
+        if (positionInfo) {
+          const poolKey = {
+            token0: positionInfo.token0,
+            token1: positionInfo.token1,
+            fee: positionInfo.fee,
+          }
+          const incentivesForTokenId = incentivesByPoolKey[toPoolKey(poolKey)] ?? []
+          return accum.concat(incentivesForTokenId.map((incentive) => [tokenId, incentive.id]))
+        } else {
+          return accum
+        }
+      }, [])
+    }
+    return []
+  }, [incentives, incentivesByPoolKey, positionInfos, tokenIds])
+
+  const stakesResult = useSingleContractMultipleData(staker, 'stakes', stakesArgs)
+
+  const stakesByTokenId = stakesArgs.reduce((accum: { [tokenIdString: string]: Stake[] }, arg, i) => {
+    const [tokenId, incentiveId] = arg
+    const liquidity = stakesResult[i].result?.[0]
+    const secondsPerLiquidityInsideInitialX128 = stakesResult[i].result?.[1]
+    const incentive = incentives?.find((incentive) => incentive.id === incentiveId)
+    if (liquidity && incentive && secondsPerLiquidityInsideInitialX128) {
+      accum[tokenId.toString()] = (accum[tokenId.toString()] ?? []).concat([
+        new Stake(incentive, liquidity, secondsPerLiquidityInsideInitialX128),
+      ])
+    }
+    return accum
+  }, {})
+
   const positions = useMemo(() => {
     if (!loading && !error && tokenIds) {
       return tokenIds
@@ -79,12 +115,13 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
             tokensOwed0: positionInfo.tokensOwed0,
             tokensOwed1: positionInfo.tokensOwed1,
             incentives: incentivesByPoolKey[toPoolKey(poolKey)] ?? [],
+            stakes: stakesByTokenId[tokenId.toString()],
           }
         })
         .filter((p): p is PositionDetails => Boolean(p))
     }
     return undefined
-  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners, incentivesByPoolKey])
+  }, [loading, error, tokenIds, tokenIdOwners, positionInfos, depositOwners, incentivesByPoolKey, stakesByTokenId])
 
   return {
     loading,

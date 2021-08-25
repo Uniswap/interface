@@ -9,7 +9,6 @@ import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import AppleToggle from 'components/Toggle/AppleToggle'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { Incentive, useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
-import { useIsPositionDeposited } from 'hooks/incentives/useDepositedTokenIds'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
@@ -163,9 +162,6 @@ export default function PositionManageCard({ positionDetails, isPositionPage }: 
   // const amountAvailable = incentives ? incentives.length - amountBoosted : 0
   const amountAvailable = incentives ? incentives.length : 0
 
-  // check if position is deposited into staker contract
-  const isDeposited = useIsPositionDeposited(positionDetails)
-
   /**
    * @TODO
    */
@@ -269,7 +265,7 @@ export default function PositionManageCard({ positionDetails, isPositionPage }: 
         ) : (
           <AutoColumn gap="24px" style={{ marginTop: '20px' }}>
             <Break />
-            {isDeposited ? (
+            {positionDetails?.depositedInStaker ? (
               <RowBetween>
                 <AutoColumn gap="sm">
                   <TYPE.body fontSize="12px" color={theme.text3}>
@@ -296,7 +292,7 @@ export default function PositionManageCard({ positionDetails, isPositionPage }: 
                 </RowFixed>
               </ButtonPrimary>
             )}
-            <DynamicSection disabled={!isDeposited}>
+            <DynamicSection disabled={!positionDetails.depositedInStaker}>
               <AutoColumn gap="16px">
                 {incentives.map((incentive, i) => (
                   <BoostStatusRow key={'boost-status' + i} incentive={incentive} />

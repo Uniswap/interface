@@ -11,14 +11,11 @@ import { unwrappedToken } from 'utils/unwrappedToken'
 import useTheme from 'hooks/useTheme'
 import { EmptyBadge, GreenBadge } from 'components/Badge'
 import useCountdownTime from 'hooks/useCountdownTime'
-import Countdown from './Countdown'
+import { AutoColumn } from 'components/Column'
+import { Trans } from '@lingui/macro'
 
 const Wrapper = styled.div`
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1.4fr 3fr 188px 168px;
-  grid-column-gap: 24px;
-  align-items: center;
+  display: flex;
 `
 
 const BadgeText = styled(TYPE.body)`
@@ -47,6 +44,25 @@ const WrappedLogo = styled(CurrencyLogo)`
   border: 1px solid black;
 `
 
+const LogoSquare = styled.div`
+  background: rgba(243, 51, 143, 0.1);
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+`
+
+const TitleGrid = styled.div`
+  padding: 0px;
+  display: grid;
+  grid-template-columns: 3fr 168px 168px;
+  grid-column-gap: 24px;
+  align-items: center;
+  width: 100%;
+`
+
 interface IncentiveInfoBarProps {
   incentive: Incentive
 }
@@ -73,44 +89,60 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
 
   return (
     <Wrapper>
-      <RowFixed>
-        <CurrencyLogo currency={rewardToken} size="20px" />
-        <TYPE.body fontSize="20px" ml="12px" fontWeight={500}>
-          {rewardToken.symbol}
-        </TYPE.body>
-      </RowFixed>
-      {beginsInFuture ? (
-        <RowFixed>
-          <GreenBadge>
-            <TYPE.body fontWeight={700} color={theme.green2} fontSize="12px">
-              NEW
-            </TYPE.body>
-          </GreenBadge>
-          <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
-            {countdownTimeText}
-          </TYPE.main>
-        </RowFixed>
-      ) : (
-        <BarWrapper>
-          <Bar percent={percentageRemaining} color={theme.primary3}>
+      <LogoSquare>
+        <CurrencyLogo currency={rewardToken} size="24px" />
+      </LogoSquare>
+      <AutoColumn gap="8px" style={{ width: '100%' }}>
+        <TitleGrid>
+          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+            <Trans>REWARDS REMAINING</Trans>
+          </TYPE.body>
+          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+            <Trans>TOTAL DEPOSITS</Trans>
+          </TYPE.body>
+          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+            <Trans>REWARDS</Trans>
+          </TYPE.body>
+        </TitleGrid>
+        <TitleGrid>
+          {beginsInFuture ? (
             <RowFixed>
-              <WrappedLogo currency={rewardCurrency} size="14px" />
-              <TYPE.body fontSize="12px" fontWeight={600} ml="8px" mt="-2px">
-                {percentageRemaining}% remaining
-              </TYPE.body>
+              <GreenBadge>
+                <TYPE.body fontWeight={700} color={theme.green2} fontSize="12px">
+                  <Trans>NEW</Trans>
+                </TYPE.body>
+              </GreenBadge>
+              <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
+                {countdownTimeText}
+              </TYPE.main>
             </RowFixed>
-          </Bar>
-        </BarWrapper>
-      )}
-      <EmptyBadge>
-        <BadgeText fontWeight={700} fontSize="15px">
-          {usdPerWeek
-            ? `$${formatCurrencyAmount(usdPerWeek, 2)}`
-            : `${formatCurrencyAmount(rewardTokensPerWeek, 3)} ${rewardToken.symbol}`}{' '}
-          Weekly
-        </BadgeText>
-      </EmptyBadge>
-      <Countdown exactStart={startDate} exactEnd={endDate} />
+          ) : (
+            <BarWrapper>
+              <Bar percent={percentageRemaining} color={theme.primary3}>
+                <RowFixed>
+                  <WrappedLogo currency={rewardCurrency} size="14px" />
+                  <TYPE.body fontSize="12px" fontWeight={600} ml="8px" mt="-2px">
+                    {percentageRemaining}% remaining
+                  </TYPE.body>
+                </RowFixed>
+              </Bar>
+            </BarWrapper>
+          )}
+          <EmptyBadge style={{ borderRadius: '16px' }}>
+            <BadgeText fontWeight={700} fontSize="14px">
+              $58,022
+            </BadgeText>
+          </EmptyBadge>
+          <EmptyBadge style={{ borderRadius: '16px' }}>
+            <BadgeText fontWeight={700} fontSize="14px">
+              {usdPerWeek
+                ? `$${formatCurrencyAmount(usdPerWeek, 2)}`
+                : `${formatCurrencyAmount(rewardTokensPerWeek, 3)} ${rewardToken.symbol}`}{' '}
+              Weekly
+            </BadgeText>
+          </EmptyBadge>
+        </TitleGrid>
+      </AutoColumn>
     </Wrapper>
   )
 }

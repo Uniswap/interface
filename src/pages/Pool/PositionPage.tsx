@@ -45,7 +45,6 @@ import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { SupportedChainId } from 'constants/chains'
 import { useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
-import { useIsPositionDeposited } from 'hooks/incentives/useDepositedTokenIds'
 import { AlertCircle, Zap } from 'react-feather'
 import PositionManageCard from 'components/earn/PositionManageCard'
 
@@ -340,6 +339,7 @@ export function PositionPage({
     tickUpper,
     tokenId,
     owner,
+    depositedInStaker,
   } = positionDetails || {}
 
   const removed = liquidity?.eq(0)
@@ -408,7 +408,6 @@ export function PositionPage({
   // incentives for this pool
   const poolAddress = pool ? Pool.getAddress(pool.token0, pool.token1, pool.fee) : undefined
   const { incentives } = useIncentivesForPool(poolAddress)
-  const isDepositedInStaker = useIsPositionDeposited(positionDetails)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
@@ -603,7 +602,7 @@ export function PositionPage({
                     </ButtonGray>
                   ) : null}
                   {tokenId && !removed ? (
-                    <DynamicSpan disabled={isDepositedInStaker}>
+                    <DynamicSpan disabled={depositedInStaker}>
                       <ResponsiveButtonPrimary
                         as={Link}
                         to={`/remove/${tokenId}`}
@@ -619,7 +618,7 @@ export function PositionPage({
               )}
             </ResponsiveRow>
           </AutoColumn>
-          {incentives && !isDepositedInStaker ? (
+          {incentives && !depositedInStaker ? (
             <GreenBadge style={{ padding: '1rem', width: '100%' }}>
               <RowBetween>
                 <RowFixed>
@@ -643,7 +642,7 @@ export function PositionPage({
               </RowBetween>
             </GreenBadge>
           ) : null}
-          {incentives && isDepositedInStaker && positionDetails ? (
+          {incentives && depositedInStaker && positionDetails ? (
             <AutoColumn gap="md">
               <DarkCard padding="0">
                 <PositionManageCard positionDetails={positionDetails} isPositionPage={true} />
@@ -662,7 +661,7 @@ export function PositionPage({
               </DarkGreyCard>
             </AutoColumn>
           ) : null}
-          <DynamicSpan disabled={isDepositedInStaker}>
+          <DynamicSpan disabled={depositedInStaker}>
             <AutoColumn gap="md">
               <ResponsiveRow align="flex-start">
                 {'result' in metadata ? (

@@ -8,7 +8,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { GreenBadge, BlueBadge } from 'components/Badge'
 import { formattedFeeAmount } from 'utils'
-import { Break, CardWrapper } from './styled'
+import { CardWrapper } from './styled'
 import IncentiveInfoBar from './IncentiveInfoBar'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Trans } from '@lingui/macro'
@@ -16,12 +16,10 @@ import useTheme from 'hooks/useTheme'
 import { ButtonSmall } from 'components/Button'
 import { Link } from 'react-router-dom'
 
-const TitleGrid = styled.div`
-  padding: 0px;
-  display: grid;
-  grid-template-columns: 1.4fr 3fr 188px 168px;
-  grid-column-gap: 24px;
-  align-items: center;
+const ProgramsWrapper = styled.div`
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px;
+  border-radius: 12px;
 `
 
 interface ProgramCardProps {
@@ -30,6 +28,7 @@ interface ProgramCardProps {
   hideStake?: boolean // hide stake button on manage page
 }
 
+// Overview all all incentive programs for a given pool
 export default function ProgramCard({ poolAddress, incentives, hideStake = false }: ProgramCardProps) {
   const theme = useTheme()
   const [, pool] = usePoolsByAddresses([poolAddress])[0]
@@ -39,7 +38,7 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
 
   // dummy until real data from hooks
   const amountBoosted = 1
-  const amountavailable = 1
+  const amountavailable = 6
 
   return (
     <CardWrapper>
@@ -53,7 +52,7 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
             <RowFixed>
               <DoubleCurrencyLogo style={{ marginLeft: '8px' }} currency0={currency0} currency1={currency1} size={24} />
               <TYPE.body fontWeight={600} fontSize="24px" m="0 8px">
-                {`${currency0.symbol} / ${currency1.symbol} Pool`}
+                {`${currency0.symbol} / ${currency1.symbol}`}
               </TYPE.body>
               <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
             </RowFixed>
@@ -79,30 +78,23 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
               )}
             </AutoRow>
           </RowBetween>
-          <Break />
           <AutoColumn gap="12px">
-            <TitleGrid>
-              <TYPE.body fontSize="12px" fontWeight={400} color={theme.text3}>
-                <Trans> TOKEN BOOSTS</Trans>
-              </TYPE.body>
-              <TYPE.body fontSize="12px" fontWeight={400} color={theme.text3}>
-                <Trans>REWARDS REMAINING</Trans>
-              </TYPE.body>
-              <TYPE.body fontSize="12px" fontWeight={400} color={theme.text3}>
-                <Trans>REWARDS</Trans>
-              </TYPE.body>
-              <TYPE.body fontSize="12px" fontWeight={400} color={theme.text3}>
-                <Trans>TIME REMAINING</Trans>
-              </TYPE.body>
-            </TitleGrid>
-            {incentives.map((incentive, i) => (
-              <IncentiveInfoBar
-                incentive={incentive}
-                key={
-                  incentive.poolAddress + '-' + incentive.rewardAmountRemaining.currency.address + i + '-incentive-bar'
-                }
-              />
-            ))}
+            <ProgramsWrapper>
+              {incentives
+                .map((incentive, i) => (
+                  <IncentiveInfoBar
+                    incentive={incentive}
+                    key={
+                      incentive.poolAddress +
+                      '-' +
+                      incentive.rewardAmountRemaining.currency.address +
+                      i +
+                      '-incentive-bar'
+                    }
+                  />
+                ))
+                .slice(0, 1)}
+            </ProgramsWrapper>
           </AutoColumn>
         </AutoColumn>
       )}
