@@ -19,6 +19,7 @@ import { USDC } from 'constants/tokens'
 import { routerAbi, routerAddress } from 'pages/Vote/routerAbi'
 import Web3 from 'web3'
 import { BlueCard } from 'components/Card'
+import { TYPE } from 'theme'
 const DisabledMask = styled.div`
   position: relative;
   pointer-events: none;
@@ -210,12 +211,13 @@ export const GainsTracker = () => {
                     </p>
                   </BlueCard>
                 ))}
-              <small style={{ color: '#ccc' }}>
+             <TYPE.main><small >
                 Select a currency that you would like to track redistribution gains
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
               </small>
+              </TYPE.main> 
             </div>
           </CardSection>
           <CardSection>

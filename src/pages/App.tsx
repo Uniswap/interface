@@ -1,5 +1,4 @@
 import {  WETH9 } from '@uniswap/sdk-core'
-import { ChartsPage } from 'components/ChartsPage/Charts'
 import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { USDC } from 'constants/tokens'
@@ -149,7 +148,6 @@ React.useEffect(() => {
             <Switch>
               <Route exact strict path="/gains-tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
-              <Route exact strict path="/charts" component={ChartsPage} />
               <Route exact strict path="/gains" component={VotePage} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
               <Route exact strict path="/vote" component={Vote} />

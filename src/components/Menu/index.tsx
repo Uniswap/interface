@@ -12,6 +12,7 @@ import {
   Check,
   BarChart2,
   Twitter,
+  Monitor,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -31,6 +32,7 @@ import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useWeb3React } from '@web3-react/core'
 import { useTrumpBalance } from 'pages/Vote/VotePage'
+import { StyledInternalLink } from 'theme/components'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -225,7 +227,7 @@ export default function Menu() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
-
+const babyTrumpBalance = useTrumpBalance(account);
   useEffect(() => {
     setMenu('main')
   }, [open])
@@ -246,6 +248,13 @@ export default function Menu() {
             default:
               return (
                 <MenuFlyout>
+                 {babyTrumpBalance && +babyTrumpBalance?.toFixed(2) >0 && (<InternalLinkMenuItem to="/suite">
+                 <div>
+                   <Trans>TrumpTools </Trans>
+                   </div>
+                   <Monitor opacity={0.6} size={16} />
+                   </InternalLinkMenuItem>
+                 )}
                   <MenuItem href="https://babytrumptoken.com/">
                     <div>
                       <Trans>About</Trans>
