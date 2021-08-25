@@ -176,6 +176,45 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `;
 
+
+export const useTrumpBalance = (account?: string | null) => {
+  const trumpCoin = new Token(
+    1,
+    "0x99d36e97676A68313ffDc627fd6b56382a2a08B6",
+    9,
+    "BabyTrump",
+    "BabyTrump Token"
+  );
+ 
+  const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+    account ?? undefined,
+    trumpCoin
+  );
+
+  return React.useMemo(() => {
+    return trumpBalance
+  }, [trumpBalance, trumpCoin])
+}
+
+export const useStimulusBalance = (account?: string | null) => {
+  const stimulusCoin = new Token(
+    1,
+    "0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013",
+    9,
+    "StimulusCheck",
+    "StimulusCheck Token"
+  );
+
+  const stimulusBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
+    account ?? undefined,
+    stimulusCoin
+  );
+
+  return React.useMemo(() => {
+    return stimulusBalance ? stimulusBalance : undefined
+  }, [stimulusCoin, stimulusBalance])
+}
+
 export default function VotePage({
   match: {
     params: { governorIndex, id },

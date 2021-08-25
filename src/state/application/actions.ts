@@ -15,6 +15,7 @@ export enum ApplicationModal {
   ADDRESS_CLAIM,
   CLAIM_POPUP,
   MENU,
+  GAINS,
   DELEGATE,
   VOTE,
   POOL_OVERVIEW_OPTIONS,
