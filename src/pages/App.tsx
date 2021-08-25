@@ -1,5 +1,8 @@
+import {  WETH9 } from '@uniswap/sdk-core'
+import { ChartsPage } from 'components/ChartsPage/Charts'
 import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
+import { USDC } from 'constants/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import React, { useState } from 'react'
@@ -7,6 +10,8 @@ import { Clipboard } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+import { IconWrapper } from 'theme/components'
+import Web3 from 'web3'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -23,6 +28,7 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import CreateProposal from './CreateProposal'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import { GainsTracker } from './GainsTracker/GainsTracker'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -31,9 +37,11 @@ import PoolV2 from './Pool/v2'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import { Suite } from './Suite/Suite'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
+import { routerAbi, routerAddress } from './Vote/routerAbi'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 
@@ -98,6 +106,29 @@ function TopLevelModals() {
 export default function App() {
 const [showContracts ,setShowContracts ] =useState(false);
 const [clip, setClip] = useCopyClipboard(undefined)
+const [trumpUSD, setTrumpUSD] = useState('')
+React.useEffect(() => {
+  if (window.ethereum )  {
+  const w3 = new Web3(window.ethereum as any).eth;
+  const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+  const ten9 = 10 ** 9;
+  const amount = 1 * ten9;
+  const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+    '0x99d36e97676a68313ffdc627fd6b56382a2a08b6',
+    WETH9[1].address,
+    USDC.address,
+  ]);
+  amountsOut.call().then((response: any) => {
+    console.log(response)
+    const usdc = response[response.length - 1];
+    const ten6 = 10 ** 6;
+    
+    const usdcValue = usdc / ten6;
+    console.log(usdcValue)
+   setTrumpUSD((usdcValue).toFixed(18))
+  });
+}
+}, [window.ethereum])
 
   return (
     <ErrorBoundary>
@@ -108,7 +139,7 @@ const [clip, setClip] = useCopyClipboard(undefined)
         <AppWrapper>
           <HeaderWrapper>
             <Header />
-          
+            
           </HeaderWrapper>
           <BodyWrapper>
             
@@ -116,6 +147,9 @@ const [clip, setClip] = useCopyClipboard(undefined)
             <Polling />
             <TopLevelModals />
             <Switch>
+              <Route exact strict path="/gains-tracker" component={GainsTracker} />
+              <Route exact strict path="/suite" component={Suite} />
+              <Route exact strict path="/charts" component={ChartsPage} />
               <Route exact strict path="/gains" component={VotePage} />
               <Route exact strict path="/gains/:governorIndex/:id" component={VotePage} />
               <Route exact strict path="/vote" component={Vote} />

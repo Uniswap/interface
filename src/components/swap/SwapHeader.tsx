@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import SettingsTab from '../Settings'
 import { Percent } from '@uniswap/sdk-core'
-
+import React from 'react'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 
@@ -13,6 +13,7 @@ const StyledSwapHeader = styled.div`
 `
 
 export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+
   return (
     <StyledSwapHeader>
       <RowBetween>
@@ -25,6 +26,6 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
-    </StyledSwapHeader>
+               </StyledSwapHeader>
   )
 }
