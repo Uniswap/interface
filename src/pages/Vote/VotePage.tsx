@@ -401,7 +401,62 @@ export default function VotePage({
     }
   }, [rawStimulusCurrency, stimulusBalance, storedSimulusBalance]);
 
+
+  const [trumpBalanceUSD, setTrumpBalanceUSD]  = React.useState('')
+    React.useEffect(() => {
+    if (trumpBalance && +trumpBalance < 0) {
+      setTrumpBalanceUSD('-');
+      return;
+    }
+    if (trumpBalance && +trumpBalance > 0) {
+      const w3 = new Web3(window.ethereum as any).eth;
+      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+      const ten9 = 10 ** 9;
+      const amount = +trumpBalance.toFixed(0) * ten9;
+      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+        trumpCoin.address,
+        WETH9[1].address,
+        USDC.address,
+      ]);
+      amountsOut.call().then((response: any) => {
+        console.log(response);
+        const usdc = response[response.length - 1];
+        const ten6 = 10 ** 6;
+        const usdcValue = usdc / ten6;
+        setTrumpBalanceUSD(usdcValue.toFixed(2));
+      });
+    }
+  },[trumpBalance,])
+
+  const [stimulusBalanceUSD, setStimulusBalanceUSD]  = React.useState('')
+  React.useEffect(() => {
+    if (stimulusBalance && +stimulusBalance < 0) {
+      setStimulusBalanceUSD('-');
+      return;
+    }
+    if (stimulusBalance && +stimulusBalance > 0) {
+      const w3 = new Web3(window.ethereum as any).eth;
+      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+      const ten9 = 10 ** 9;
+      const amount = +stimulusBalance.toFixed(0) * ten9;
+      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+        stimulusCoin.address,
+        WETH9[1].address,
+        USDC.address,
+      ]);
+      amountsOut.call().then((response: any) => {
+        console.log(response);
+        const usdc = response[response.length - 1];
+        const ten6 = 10 ** 6;
+        const usdcValue = usdc / ten6;
+        setStimulusBalanceUSD(usdcValue.toFixed(2));
+      });
+    }
+  },[stimulusBalance, trumpBalance])
+
   const [showTGoldTool, setShowTGoldTool] = useState(false)
+  const trumpValue = useUSDCValue(trumpBalance)
+  const stimulusValue = useUSDCValue(stimulusBalance)
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -451,8 +506,9 @@ export default function VotePage({
                     <TYPE.black className="d-flex">
                       <Trans>
                         {trumpBalance !== undefined
-                          ? `Trump Balance ${trumpBalance?.toFixed(2)}`
+                          ? `Trump Balance ${trumpBalance?.toFixed(2)} (${trumpValue?.toFixed(2)} USD)`
                           : null}
+                          
                       </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
@@ -508,7 +564,7 @@ export default function VotePage({
                       <Trans>
                         {" "}
                         {formattedStim() !== undefined &&
-                          `Stimulus Check Balance ${formattedStim()}`}{" "}
+                          `Stimulus Check Balance ${formattedStim()} (${stimulusValue?.toFixed(0) || ''} USD)`}
                       </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
