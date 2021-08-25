@@ -31,7 +31,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97]
+  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.MATIC]
@@ -46,7 +46,9 @@ const NETWORK_URLS: {
   [ChainId.MUMBAI]: `https://peaceful-austin:boned-fruit-crave-feast-heat-boots@nd-526-681-843.p2pify.com/`,
   [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
-  [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`
+  [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`,
+  [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
+  [ChainId.AVAXMAINNET]: `https://api.avax.network/ext/bc/C/rpc`
 }
 
 export const walletconnect = new WalletConnectConnector({

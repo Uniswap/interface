@@ -25,6 +25,9 @@ const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.BSCMAINNET]: {
     chainId: '0x38'
+  },
+  [ChainId.AVAXMAINNET]: {
+    chainId: '0xA86A'
   }
 }
 
@@ -73,6 +76,17 @@ const ADD_NETWORK_PARAMS: {
     },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/']
+  },
+  [ChainId.AVAXMAINNET]: {
+    chainId: '0xA86A',
+    chainName: 'AVAX',
+    nativeCurrency: {
+      name: 'AVAX',
+      symbol: 'AVAX',
+      decimals: 18
+    },
+    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+    blockExplorerUrls: ['https://cchain.explorer.avax.network/']
   }
 }
 
@@ -177,7 +191,7 @@ export default function NetworkModal(): JSX.Element | null {
         </InstructionText>
 
         <NetworkList>
-          {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET].map((key: ChainId, i: number) => {
+          {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">

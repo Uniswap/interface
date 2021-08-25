@@ -26,6 +26,7 @@ import { TokenAddressMap } from '../state/lists/hooks'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
 import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
+import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -64,6 +65,10 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://testnet.bscscan.com'
     case ChainId.BSCMAINNET:
       return 'https://bscscan.com'
+    case ChainId.AVAXTESTNET:
+      return 'https://cchain.explorer.avax-test.network/'
+    case ChainId.AVAXMAINNET:
+      return 'https://cchain.explorer.avax.network/'
   }
 }
 
@@ -390,6 +395,14 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.BSCMAINNET:
       imageURL = `https://pancakeswap.finance/images/tokens/${isAddress(address)}.png`
       break
+    case ChainId.AVAXTESTNET:
+      imageURL = getAvaxTestnetTokenLogoURL(address)
+      break
+    case ChainId.AVAXMAINNET:
+      imageURL = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${isAddress(
+        address
+      )}/logo.png`
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address
@@ -411,6 +424,10 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'BNB'
       case ChainId.BSCMAINNET:
         return 'BNB'
+      case ChainId.AVAXTESTNET:
+        return 'AVAX'
+      case ChainId.AVAXMAINNET:
+        return 'AVAX'
       default:
         return 'ETH'
     }

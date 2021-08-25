@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import MaticLogo from '../../assets/images/matic-logo.png'
 import BnbLogo from '../../assets/images/bnb-logo.png'
+import AvaxLogo from '../../assets/networks/avax-network.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useActiveWeb3React } from 'hooks'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -33,8 +34,8 @@ const logo: { readonly [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: EthereumLogo,
   [ChainId.MATIC]: MaticLogo,
   [ChainId.MUMBAI]: MaticLogo,
-  [ChainId.BSCTESTNET]: BnbLogo,
-  [ChainId.BSCMAINNET]: BnbLogo
+  [ChainId.AVAXTESTNET]: AvaxLogo,
+  [ChainId.AVAXMAINNET]: AvaxLogo
 }
 
 export default function CurrencyLogo({
