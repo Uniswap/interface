@@ -11,7 +11,7 @@ import moment from 'moment'
 import { Wrapper } from 'pages/RemoveLiquidity/styled'
 import { useTrumpBalance } from 'pages/Vote/VotePage'
 import React, { useCallback } from 'react'
-import { Calendar, Info } from 'react-feather'
+import { Calendar, ChevronDown, Info } from 'react-feather'
 import { useCurrencyBalance, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import _ from 'lodash'
@@ -20,6 +20,7 @@ import { routerAbi, routerAddress } from 'pages/Vote/routerAbi'
 import Web3 from 'web3'
 import { BlueCard } from 'components/Card'
 import { TYPE } from 'theme'
+import { GreyCard } from 'components/Card'
 const DisabledMask = styled.div`
   position: relative;
   pointer-events: none;
@@ -212,7 +213,7 @@ export const GainsTracker = () => {
                   </BlueCard>
                 ))}
              <TYPE.main><small >
-                Select a currency that you would like to track redistribution gains
+                Select a currency that you would like to track redistribution gains. &nbsp;
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
@@ -238,9 +239,14 @@ export const GainsTracker = () => {
           </CardSection>
           {selectedCurrencyBalance && (
             <CardSection>
+                {isTrackingGains &&  <TYPE.blue style={{marginBottom:35}}>
+                    If you buy or sell, it is recommended to reset your gains tracker to see the most accurate results. 
+                </TYPE.blue>}
               <ButtonPrimary onClick={callback}>
                 {isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'}
               </ButtonPrimary>
+
+              
             </CardSection>
           )}
         </Wrapper>
