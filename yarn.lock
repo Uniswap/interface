@@ -19386,13 +19386,6 @@ workbox-expiration@^5.1.4:
   dependencies:
     workbox-core "^5.1.4"
 
-workbox-expiration@^6.1.0:
-  version "6.1.5"
-  resolved "https://registry.npmjs.org/workbox-expiration/-/workbox-expiration-6.1.5.tgz"
-  integrity sha512-6cN+FVbh8fNq56LFKPMchGNKCJeyboHsDuGBqmhDUPvD4uDjsegQpDQzn52VaE0cpywbSIsDF/BSq9E9Yjh5oQ==
-  dependencies:
-    workbox-core "^6.1.5"
-
 workbox-google-analytics@^5.1.4:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/workbox-google-analytics/-/workbox-google-analytics-5.1.4.tgz#b3376806b1ac7d7df8418304d379707195fa8517"
@@ -19455,7 +19448,7 @@ workbox-strategies@^5.1.4:
     workbox-core "^5.1.4"
     workbox-routing "^5.1.4"
 
-workbox-strategies@^6.1.0, workbox-strategies@^6.1.5:
+workbox-strategies@^6.1.5:
   version "6.1.5"
   resolved "https://registry.npmjs.org/workbox-strategies/-/workbox-strategies-6.1.5.tgz"
   integrity sha512-QhiOn9KT9YGBdbfWOmJT6pXZOIAxaVrs6J6AMYzRpkUegBTEcv36+ZhE/cfHoT0u2fxVtthHnskOQ/snEzaXQw==
