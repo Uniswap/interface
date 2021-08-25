@@ -19,7 +19,9 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956',
   [ChainId.BSCTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
   [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8' : ''
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8' : '',
+  [ChainId.AVAXTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
+  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -38,7 +40,9 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
   [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
   [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x10908C875D865C66f271F5d3949848971c9595C9' : ''
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x10908C875D865C66f271F5d3949848971c9595C9' : '',
+  [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
+  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -53,7 +57,9 @@ export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MATIC]: '',
   [ChainId.MUMBAI]: '',
   [ChainId.BSCTESTNET]: '',
-  [ChainId.BSCMAINNET]: ''
+  [ChainId.BSCMAINNET]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXMAINNET]: ''
 }
 
 export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
@@ -82,7 +88,9 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
       : 'https://polygon-info.dmm.exchange',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
-  [ChainId.BSCMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
+  [ChainId.BSCMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
 }
 
 // a list of tokens by chain
@@ -135,6 +143,20 @@ export const DAI: { [chainId in ChainId]: Token } = {
     18,
     'DAI',
     'Dai Stablecoin'
+  ),
+  [ChainId.AVAXTESTNET]: new Token(
+    ChainId.AVAXTESTNET,
+    '0xE50c0F38a1890Db49d64ac1C4A5B4fe2f02f819d',
+    18,
+    'DAI',
+    'Dai Stablecoin'
+  ),
+  [ChainId.AVAXMAINNET]: new Token(
+    ChainId.AVAXMAINNET,
+    '0x0000000000000000000000000000000000000000',
+    18,
+    'DAI',
+    'Dai Stablecoin'
   )
 }
 
@@ -156,7 +178,21 @@ export const USDC: { [chainId in ChainId]: Token } = {
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
     '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+    18,
+    'USDC',
+    'USD Coin'
+  ),
+  [ChainId.AVAXTESTNET]: new Token(
+    ChainId.AVAXTESTNET,
+    '0x5973774202E8b0ad563A69D502bb0e670e7d00Dd',
     6,
+    'USDC',
+    'USD Coin'
+  ),
+  [ChainId.AVAXMAINNET]: new Token(
+    ChainId.AVAXMAINNET,
+    '0x0000000000000000000000000000000000000000',
+    18,
     'USDC',
     'USD Coin'
   )
@@ -180,6 +216,20 @@ export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
     '0x55d398326f99059ff775485246999027b3197955',
+    18,
+    'USDT',
+    'Tether USD'
+  ),
+  [ChainId.AVAXTESTNET]: new Token(
+    ChainId.AVAXTESTNET,
+    '0xbd1eeaf651aeb210106e1c1afb3bc41c388ee577',
+    6,
+    'USDT',
+    'Tether USD'
+  ),
+  [ChainId.AVAXMAINNET]: new Token(
+    ChainId.AVAXMAINNET,
+    '0x0000000000000000000000000000000000000000',
     6,
     'USDT',
     'Tether USD'
@@ -202,7 +252,9 @@ export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
   [ChainId.MATIC]: 2.1,
   [ChainId.MUMBAI]: 2.1,
   [ChainId.BSCTESTNET]: 5,
-  [ChainId.BSCMAINNET]: 5
+  [ChainId.BSCMAINNET]: 5,
+  [ChainId.AVAXTESTNET]: 1.7,
+  [ChainId.AVAXMAINNET]: 1.7
 }
 
 export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
@@ -214,7 +266,9 @@ export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
   [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MATIC]) * 60 * 24 * 365),
   [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MUMBAI]) * 60 * 24 * 365),
   [ChainId.BSCTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCTESTNET]) * 60 * 24 * 365),
-  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCMAINNET]) * 60 * 24 * 365)
+  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCMAINNET]) * 60 * 24 * 365),
+  [ChainId.AVAXTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.AVAXTESTNET]) * 60 * 24 * 365),
+  [ChainId.AVAXMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.AVAXMAINNET]) * 60 * 24 * 365)
 }
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
@@ -227,7 +281,9 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MATIC]: new Token(ChainId.MATIC, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.MUMBAI]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.BSCTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.BSCMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.BSCMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.AVAXTESTNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.AVAXMAINNET]: new Token(ChainId.MUMBAI, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -239,7 +295,9 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.MATIC]: [WETH[ChainId.MATIC]],
   [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]],
   [ChainId.BSCTESTNET]: [WETH[ChainId.BSCTESTNET]],
-  [ChainId.BSCMAINNET]: [WETH[ChainId.BSCMAINNET]]
+  [ChainId.BSCMAINNET]: [WETH[ChainId.BSCMAINNET]],
+  [ChainId.AVAXTESTNET]: [WETH[ChainId.AVAXTESTNET]],
+  [ChainId.AVAXMAINNET]: [WETH[ChainId.AVAXMAINNET]]
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
@@ -303,6 +361,20 @@ export const KNC: { [chainId in ChainId]: Token } = {
     18,
     'KNC',
     'Kyber Network Crystal'
+  ),
+  [ChainId.AVAXTESTNET]: new Token(
+    ChainId.AVAXTESTNET,
+    '0x0000000000000000000000000000000000000000',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.AVAXMAINNET]: new Token(
+    ChainId.AVAXMAINNET,
+    '0x0000000000000000000000000000000000000000',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
   )
 }
 
@@ -347,6 +419,18 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDC[ChainId.BSCMAINNET],
     USDT[ChainId.BSCMAINNET],
     new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+  ],
+  [ChainId.AVAXTESTNET]: [
+    ...WETH_ONLY[ChainId.AVAXTESTNET],
+    DAI[ChainId.AVAXTESTNET],
+    USDC[ChainId.AVAXTESTNET],
+    USDT[ChainId.AVAXTESTNET]
+  ],
+  [ChainId.AVAXMAINNET]: [
+    ...WETH_ONLY[ChainId.AVAXMAINNET],
+    DAI[ChainId.AVAXMAINNET],
+    USDC[ChainId.AVAXMAINNET],
+    USDT[ChainId.AVAXMAINNET]
   ]
 }
 
@@ -563,8 +647,10 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB']
       : ['0x829c27fd3013b944cbE76E92c3D6c45767c0C789', '0x3aDd3034Fcf921F20c74c6149FB44921709595B1'],
   [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
-  [ChainId.BSCTESTNET]: ['0x98910F7f13496fcDE2ade93648F05b4854Fc99D9', '0x4BC18Ae212F798FD7b0eae94dfCA18c0333157c4'],
-  [ChainId.BSCMAINNET]: []
+  [ChainId.BSCTESTNET]: ['0x7B731e53B16694cF5dEb87d4C84bA2b4F4EcB4eB', '0x35D1b10fA26cd0FbC52Fd22dd58E2d9d22FC631F'],
+  [ChainId.BSCMAINNET]: [],
+  [ChainId.AVAXTESTNET]: [],
+  [ChainId.AVAXMAINNET]: []
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -581,8 +667,10 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
       ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
       : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
   [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
-  [ChainId.BSCTESTNET]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
-  [ChainId.BSCMAINNET]: ''
+  [ChainId.BSCTESTNET]: '0x08Db265fE1C49fDCfEb775971abc2EcD1164a12d',
+  [ChainId.BSCMAINNET]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXMAINNET]: ''
 }
 
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
@@ -632,5 +720,7 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
     '0xb09a1EA652962197f54B580812D153b1Cfd3274e',
     '0x30F2F907B014cB6520bfFe7FC715ad9c138dF7B0'
   ],
-  [ChainId.BSCMAINNET]: []
+  [ChainId.BSCMAINNET]: [],
+  [ChainId.AVAXTESTNET]: [],
+  [ChainId.AVAXMAINNET]: []
 }

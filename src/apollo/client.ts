@@ -46,6 +46,15 @@ export const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new
   cache: new InMemoryCache()
 })
 
+export const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij',
+  cache: new InMemoryCache()
+})
+export const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '',
+  cache: new InMemoryCache()
+})
+
 export const exchangeCient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
@@ -55,7 +64,9 @@ export const exchangeCient: { [chainId in ChainId]: ApolloClient<NormalizedCache
   [ChainId.MATIC]: maticExchangeClient,
   [ChainId.MUMBAI]: mumbaiExchangeClient,
   [ChainId.BSCTESTNET]: bscTestnetExchangeClient,
-  [ChainId.BSCMAINNET]: bscMainnetExchangeClient
+  [ChainId.BSCMAINNET]: bscMainnetExchangeClient,
+  [ChainId.AVAXTESTNET]: avaxTestnetExchangeClient,
+  [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient
 }
 
 export const ropstenBlockClient = new ApolloClient({
@@ -86,6 +97,16 @@ export const bscMainnetBlockClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+export const avaxTestnetBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji',
+  cache: new InMemoryCache()
+})
+
+export const avaxMainnetBlockClient = new ApolloClient({
+  uri: '',
+  cache: new InMemoryCache()
+})
+
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetBlockClient,
   [ChainId.ROPSTEN]: ropstenBlockClient,
@@ -95,5 +116,7 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.MATIC]: maticBlockClient,
   [ChainId.MUMBAI]: mumbaiBlockClient,
   [ChainId.BSCTESTNET]: bscTestnetBlockClient,
-  [ChainId.BSCMAINNET]: bscMainnetBlockClient
+  [ChainId.BSCMAINNET]: bscMainnetBlockClient,
+  [ChainId.AVAXTESTNET]: avaxTestnetBlockClient,
+  [ChainId.AVAXMAINNET]: avaxMainnetBlockClient
 }

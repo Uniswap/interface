@@ -282,6 +282,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/BNB`
     case ChainId.BSCMAINNET:
       return `/pools/BNB`
+    case ChainId.AVAXTESTNET:
+      return `/pools/AVAX`
+    case ChainId.AVAXMAINNET:
+      return `/pools/AVAX`
     default:
       return '/pools/ETH'
   }
@@ -385,6 +389,8 @@ export default function Header() {
                   ? `ETH`
                   : chainId && [137, 80001].includes(chainId)
                   ? `MATIC`
+                  : chainId && [43113, 43114].includes(chainId)
+                  ? `AVAX`
                   : `BNB`}
               </BalanceText>
             ) : null}

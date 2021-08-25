@@ -209,7 +209,6 @@ export function ManageLists({
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const lists = useAllListsByChainId()
-
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
   const [activeCopy, setActiveCopy] = useState<string[] | undefined>()
@@ -231,6 +230,7 @@ export function ManageLists({
 
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
+
     return listUrls
       .filter(listUrl => {
         // only show loaded lists, hide unsupported lists
