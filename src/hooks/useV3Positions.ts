@@ -1,13 +1,14 @@
 import { AddressZero } from '@ethersproject/constants'
 import { useSingleCallResult, useSingleContractMultipleData, Result } from 'state/multicall/hooks'
 import { useMemo } from 'react'
-import { PositionDetails, Stake } from 'types/position'
+import { PositionDetails } from 'types/position'
 import { Incentive, useAllIncentives } from './incentives/useAllIncentives'
 import { DepositedTokenIdsState, useDepositedTokenIds } from './incentives/useDepositedTokenIds'
 import { useV3NFTPositionManagerContract, useV3Staker } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Pool } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
+import Stake from 'types/stake'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -49,17 +50,6 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     )
   }, [incentives])
 
-  /**
-   * @todo
-   * weird thing here is that for a given tokenId, only want to check
-   * `stakes` for incentive in that pool
-   *
-   * so need to filter out relevant pools using the positionInfo results
-   *
-   * another option to doing this all here is making a useStakesForPosition hook
-   * that does the same thing
-   *
-   */
   const stakesArgs = useMemo(() => {
     if (tokenIds && incentives) {
       return tokenIds.reduce((accum: (string | BigNumber)[][], tokenId, i) => {
@@ -89,11 +79,7 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     const incentive = incentives?.find((incentive) => incentive.id === incentiveId)
     if (liquidity && incentive && secondsPerLiquidityInsideInitialX128) {
       accum[tokenId.toString()] = (accum[tokenId.toString()] ?? []).concat([
-        {
-          liquidity,
-          secondsPerLiquidityInsideInitialX128,
-          incentive,
-        },
+        new Stake(incentive, liquidity, secondsPerLiquidityInsideInitialX128),
       ])
     }
     return accum

@@ -21,9 +21,3 @@ export interface PositionDetails {
   incentives: Incentive[]
   stakes: Stake[]
 }
-
-export interface Stake {
-  incentive: Incentive
-  liquidity: BigNumber
-  secondsPerLiquidityInsideInitialX128: BigNumber
-}
