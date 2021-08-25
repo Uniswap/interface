@@ -15,6 +15,7 @@ import { TriangleIcon } from '../Icons'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { ApplicationModal } from '../../state/application/actions'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -161,7 +162,7 @@ export function AccountStatus({
           )}
         </Web3StatusConnected>
       )}
-      <NetworkSwitcherPopover>
+      <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusNetwork
           clickable={networkSwitchingActive}
           onClick={networkSwitchingActive ? toggleNetworkSwitcherPopover : undefined}
