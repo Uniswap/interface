@@ -444,7 +444,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <>
                 <Row justify={!trade ? 'center' : 'space-between'}>
                   <RowFixed>
-                    {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                    {[V3TradeState.VALID, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                       (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
                         <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
                       ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
@@ -476,24 +476,26 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))}
 
-                    {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                      <ButtonGray
-                        width="fit-content"
-                        padding="0.1rem 0.5rem"
-                        disabled
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          height: '24px',
-                          opacity: 0.8,
-                          marginLeft: '0.25rem',
-                        }}
-                      >
-                        <TYPE.black fontSize={12}>
-                          <Trans>V3</Trans>
-                        </TYPE.black>
-                      </ButtonGray>
-                    )}
+                    {toggledVersion === Version.v3 &&
+                      v3TradeState === V3TradeState.VALID &&
+                      isTradeBetter(v2Trade, v3Trade) && (
+                        <ButtonGray
+                          width="fit-content"
+                          padding="0.1rem 0.5rem"
+                          disabled
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            height: '24px',
+                            opacity: 0.8,
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          <TYPE.black fontSize={12}>
+                            <Trans>V3</Trans>
+                          </TYPE.black>
+                        </ButtonGray>
+                      )}
                   </RowFixed>
                   {trade ? (
                     <RowFixed>

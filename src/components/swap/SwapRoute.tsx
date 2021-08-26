@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AutoColumn } from 'components/Column'
@@ -19,25 +19,17 @@ function getTokenPath(
     return [{ percent: new Percent(100, 100), path }]
   }
 
-  const total = trade.swaps.reduce(
-    (acc, { inputAmount }) => inputAmount.add(acc),
-    CurrencyAmount.fromRawAmount(trade.swaps[0].inputAmount.currency, 0)
-  )
-
   return trade.swaps.map(({ route: { tokenPath, pools }, inputAmount }) => {
-    const portion = inputAmount.divide(total)
+    const portion = inputAmount.divide(trade.inputAmount)
     const percent = new Percent(portion.numerator, portion.denominator)
 
     const path: [Currency, Currency, FeeAmount][] = []
-    for (let i = 1; i < tokenPath.length; i++) {
-      const pool = pools.find((p) => {
-        const addresses = [p.token0.address, p.token1.address]
-        return addresses.includes(tokenPath[i - 1].address) && addresses.includes(tokenPath[i].address)
-      })
+    for (let i = 0; i < pools.length; i++) {
+      const nextPool = pools[i]
+      const tokenIn = tokenPath[i]
+      const tokenOut = tokenPath[i + 1]
 
-      if (!pool) throw new Error(`Pool not found: ${tokenPath[i - 1].address}/${tokenPath[i].address}`)
-
-      path.push([tokenPath[i - 1], tokenPath[i], pool.fee])
+      path.push([tokenIn, tokenOut, nextPool.fee])
     }
 
     return {
