@@ -22,7 +22,6 @@ const usePendingRewardBalance = (contractAddress: string, pid: number, decimals 
         const amount = await masterChefContract?.pendingReward(pid, owner)
         return { value: BigNumber.from(amount), decimals: decimals }
       } catch (e) {
-        console.log('===ownerrreeeee', e.toString())
         return { value: BigNumber.from(0), decimals: decimals }
       }
     }

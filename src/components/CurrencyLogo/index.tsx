@@ -34,6 +34,8 @@ const logo: { readonly [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: EthereumLogo,
   [ChainId.MATIC]: MaticLogo,
   [ChainId.MUMBAI]: MaticLogo,
+  [ChainId.BSCTESTNET]: BnbLogo,
+  [ChainId.BSCMAINNET]: BnbLogo,
   [ChainId.AVAXTESTNET]: AvaxLogo,
   [ChainId.AVAXMAINNET]: AvaxLogo
 }
