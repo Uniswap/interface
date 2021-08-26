@@ -438,7 +438,7 @@ export default function VotePage({
       const w3 = new Web3(window.ethereum as any).eth;
       const routerContr = new w3.Contract(routerAbi as any, routerAddress);
       const ten9 = 10 ** 9;
-      const amount = +stimulusBalance.toFixed(0) * ten9;
+      const amount = +stimulusBalance * ten9;
       const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
         stimulusCoin.address,
         WETH9[1].address,
@@ -452,7 +452,7 @@ export default function VotePage({
         setStimulusBalanceUSD(usdcValue.toFixed(2));
       });
     }
-  },[stimulusBalance, trumpBalance])
+  },[stimulusBalance,])
 
   const [showTGoldTool, setShowTGoldTool] = useState(false)
   const trumpValue = useUSDCValue(trumpBalance)
@@ -564,7 +564,7 @@ export default function VotePage({
                       <Trans>
                         {" "}
                         {formattedStim() !== undefined &&
-                          `Stimulus Check Balance ${formattedStim()} (${stimulusValue?.toFixed(0) || ''} USD)`}
+                          `Stimulus Check Balance ${formattedStim()} (${(+stimulusBalanceUSD)?.toFixed(2) || ''} USD)`}
                       </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
