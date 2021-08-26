@@ -1,5 +1,5 @@
 import CID from 'cids'
-import { getCodec, rmPrefix } from 'multicodec'
+import { getNameFromData, rmPrefix } from 'multicodec'
 import { decode, toB58String } from 'multihashes'
 
 export function hexToUint8Array(hex: string): Uint8Array {
@@ -19,17 +19,17 @@ const UTF_8_DECODER = new TextDecoder('utf-8')
  * @param contenthash to decode
  */
 export default function contenthashToUri(contenthash: string): string {
-  const buff = hexToUint8Array(contenthash)
-  const codec = getCodec(buff as Buffer) // the typing is wrong for @types/multicodec
+  const data = hexToUint8Array(contenthash)
+  const codec = getNameFromData(data)
   switch (codec) {
     case 'ipfs-ns': {
-      const data = rmPrefix(buff as Buffer)
-      const cid = new CID(data)
+      const unprefixedData = rmPrefix(data)
+      const cid = new CID(unprefixedData)
       return `ipfs://${toB58String(cid.multihash)}`
     }
     case 'ipns-ns': {
-      const data = rmPrefix(buff as Buffer)
-      const cid = new CID(data)
+      const unprefixedData = rmPrefix(data)
+      const cid = new CID(unprefixedData)
       const multihash = decode(cid.multihash)
       if (multihash.name === 'identity') {
         return `ipns://${UTF_8_DECODER.decode(multihash.digest).trim()}`
