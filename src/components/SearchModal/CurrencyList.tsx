@@ -59,7 +59,7 @@ const FixedContentRow = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(10)}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`

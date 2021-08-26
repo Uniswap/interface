@@ -1,6 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import { BYPASS_LIST } from 'constants/lists'
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'
@@ -54,7 +55,7 @@ export default async function getTokenList(
       continue
     }
     const json = await response.json()
-
+    if (BYPASS_LIST.indexOf(listUrl) >= 0) return json
     if (!tokenListValidator(json)) {
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {

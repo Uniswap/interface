@@ -104,6 +104,10 @@ export function getEtherscanLinkText(chainId: ChainId): string {
     return 'View on Bscscan'
   }
 
+  if ([ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
+    return 'View on C-Chain Explorer'
+  }
+
   return 'View on Etherscan'
 }
 

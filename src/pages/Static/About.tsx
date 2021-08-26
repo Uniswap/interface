@@ -33,6 +33,10 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/BNB`
     case ChainId.BSCMAINNET:
       return `/pools/BNB`
+    case ChainId.AVAXTESTNET:
+      return `/pools/AVAX`
+    case ChainId.AVAXMAINNET:
+      return `/pools/AVAX`
     default:
       return '/pools/ETH'
   }

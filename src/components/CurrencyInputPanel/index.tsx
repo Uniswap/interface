@@ -178,7 +178,7 @@ export default function CurrencyInputPanel({
               style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
             >
               {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
-                t`Balance: ${selectedCurrencyBalance?.toSignificant(6)}`}
+                t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
             </TYPE.body>
           </AutoColumn>
         </Card2>

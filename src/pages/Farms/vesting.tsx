@@ -154,7 +154,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting(rewardTokens)
   const onClaimAll = async () => {
     if (!chainId || !account) return
-    console.log('===claim all active')
     setPendingTx(true)
     const addresses = Object.keys(info).map(k => info[k].token.address)
     const indices = Object.keys(info).reduce<number[][]>((acc, k) => {
@@ -169,7 +168,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
 
   const onClaimAllFully = async () => {
     // if (!chainId || !account) return
-    // console.log('===claim all fully')
     // setPendingTx(true)
     // await vestAtIndex(KNC[chainId].address, fullyIndexes)
     // setPendingTx(false)
@@ -377,7 +375,6 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const { vestAtIndex } = useVesting(rewardTokens)
   const onVest = async () => {
     if (!chainId || !account) return
-    console.log('===vest', schedule[4].address, schedule[5])
     setPendingTx(true)
     await vestAtIndex(schedule[4].address, [schedule[5]])
     setPendingTx(false)

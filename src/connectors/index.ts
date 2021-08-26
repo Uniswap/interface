@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { InjectedConnector } from '@web3-react/injected-connector'
+// import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
@@ -8,6 +8,8 @@ import { LedgerConnector } from '@web3-react/ledger-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import { ChainId } from 'libs/sdk/src'
+
+import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -34,7 +36,16 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114]
 })
 
-const SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.MATIC]
+const SUPPORTED_CHAIN_IDS: ChainId[] = [
+  ChainId.MAINNET,
+  ChainId.ROPSTEN,
+  ChainId.MUMBAI,
+  ChainId.MATIC,
+  ChainId.BSCTESTNET,
+  ChainId.BSCMAINNET,
+  ChainId.AVAXTESTNET,
+  ChainId.AVAXTESTNET
+]
 const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {

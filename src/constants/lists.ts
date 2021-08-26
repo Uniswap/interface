@@ -19,7 +19,7 @@ const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.j
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
-
+export const BYPASS_LIST = [PANGOLIN]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COMPOUND_LIST,
