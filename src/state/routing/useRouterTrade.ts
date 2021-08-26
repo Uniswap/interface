@@ -6,7 +6,7 @@ import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { useUserRoutingAPIEnabled, useUserSlippageToleranceWithDefault, useUserTransactionTTL } from 'state/user/hooks'
+import { useIsLegacyRouter, useUserSlippageToleranceWithDefault, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 
@@ -18,14 +18,14 @@ function useRouterTradeArguments() {
   const userSlippageTolerance = useUserSlippageToleranceWithDefault(V3_SWAP_DEFAULT_SLIPPAGE)
   const [deadline] = useUserTransactionTTL()
 
-  const [routingAPIEnabled] = useUserRoutingAPIEnabled()
+  const [legacyRouter] = useIsLegacyRouter()
 
   return {
     recipient: account ?? undefined,
     slippageTolerance:
       typeof userSlippageTolerance === 'string' ? userSlippageTolerance : userSlippageTolerance.toSignificant(),
     deadline: deadline.toString(),
-    routingAPIEnabled,
+    routingAPIEnabled: !legacyRouter,
   }
 }
 

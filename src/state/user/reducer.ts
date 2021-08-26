@@ -17,7 +17,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
-  updateUserRoutingAPIEnabled,
+  updateUserLegacyRouter,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -36,7 +36,7 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userRoutingAPIEnabled: boolean // whether the user has enabled the routing API
+  userLegacyRouter: boolean // whether the user has disabled the routing API
 
   userShowAdvancedSwapDetails: boolean // whether the user has toggled the advanced swap details
 
@@ -77,7 +77,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userLocale: null,
-  userRoutingAPIEnabled: true,
+  userLegacyRouter: false,
   userShowAdvancedSwapDetails: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
@@ -151,8 +151,8 @@ export default createReducer(initialState, (builder) =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserRoutingAPIEnabled, (state, action) => {
-      state.userRoutingAPIEnabled = action.payload.userRoutingAPIEnabled
+    .addCase(updateUserLegacyRouter, (state, action) => {
+      state.userLegacyRouter = action.payload.userLegacyRouter
     })
     .addCase(updateShowUserAdvancedSwapDetails, (state, action) => {
       state.userShowAdvancedSwapDetails = action.payload.userShowAdvancedSwapDetails

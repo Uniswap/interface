@@ -21,9 +21,7 @@ export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAckno
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
-export const updateUserRoutingAPIEnabled = createAction<{ userRoutingAPIEnabled: boolean }>(
-  'user/updateUserRoutingAPIEnabled'
-)
+export const updateUserLegacyRouter = createAction<{ userLegacyRouter: boolean }>('user/updateUserLegacyRouter')
 export const updateUserShowAdvancedSwapDetails =
   createAction<{ userShowAdvancedSwapDetails: boolean }>('user/userAdvancedSwapDetails')
 export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')

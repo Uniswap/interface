@@ -24,8 +24,8 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserLegacyRouter,
   updateUserLocale,
-  updateUserRoutingAPIEnabled,
   updateUserShowAdvancedSwapDetails,
   updateUserSlippageTolerance,
 } from './actions'
@@ -106,21 +106,21 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useUserRoutingAPIEnabled(): [boolean, (newRoutingAPI: boolean) => void] {
+export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => void] {
   const { chainId } = useActiveWeb3React()
 
   const dispatch = useAppDispatch()
 
-  const routingAPI = useAppSelector((state) => state.user.userRoutingAPIEnabled)
+  const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
 
-  const setRoutingAPI = useCallback(
-    (newRoutingAPI: boolean) => {
-      dispatch(updateUserRoutingAPIEnabled({ userRoutingAPIEnabled: newRoutingAPI }))
+  const setLegacyRouter = useCallback(
+    (newLegacyRouter: boolean) => {
+      dispatch(updateUserLegacyRouter({ userLegacyRouter: newLegacyRouter }))
     },
     [dispatch]
   )
 
-  return [routingAPI && chainId === SupportedChainId.MAINNET, setRoutingAPI]
+  return [legacyRouter || chainId !== SupportedChainId.MAINNET, setLegacyRouter]
 }
 
 export function useUserShowAdvancedSwapDetails(): [boolean, (userAdvancedSwapDetails: boolean) => void] {

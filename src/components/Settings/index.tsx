@@ -7,7 +7,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserRoutingAPIEnabled } from '../../state/user/hooks'
+import { useExpertModeManager, useIsLegacyRouter } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -123,7 +123,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [routingAPIEnabled, setRoutingAPIEnabled] = useUserRoutingAPIEnabled()
+  const [legacyRouter, setLegacyRouter] = useIsLegacyRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -203,13 +203,13 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               </RowFixed>
               <Toggle
                 id="toggle-optimized-router-button"
-                isActive={routingAPIEnabled}
+                isActive={!legacyRouter}
                 toggle={() => {
                   ReactGA.event({
                     category: 'Routing',
-                    action: routingAPIEnabled ? 'disable routing API' : 'enable routing API',
+                    action: legacyRouter ? 'enable routing API' : 'disable routing API',
                   })
-                  setRoutingAPIEnabled(!routingAPIEnabled)
+                  setLegacyRouter(!legacyRouter)
                 }}
               />
             </RowBetween>
