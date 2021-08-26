@@ -1,9 +1,8 @@
 import React from 'react'
 import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
-import { Token, Percent } from '@uniswap/sdk-core'
+import { Token, Percent, Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { render } from 'test-utils'
-import useHttpLocations from 'hooks/useHttpLocations'
 
 const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 1000)
 
@@ -24,13 +23,21 @@ const multiRoute: RoutingDiagramEntry[] = [
   },
 ]
 
-// mock useHttpLocations to avoid having to load Web3
-jest.mock('hooks/useHttpLocations')
-const mockUseHttpLocation = useHttpLocations as jest.MockedFunction<typeof useHttpLocations>
+jest.mock(
+  'components/CurrencyLogo',
+  () =>
+    ({ currency }: { currency: Currency }) =>
+      `CurrencyLogo currency=${currency.symbol}`
+)
 
-beforeEach(() => {
-  mockUseHttpLocation.mockReturnValue([])
-})
+jest.mock(
+  'components/DoubleLogo',
+  () =>
+    ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) =>
+      `DoubleCurrencyLogo currency0=${currency0.symbol} currency1=${currency1.symbol}`
+)
+
+jest.mock('../Popover', () => () => 'Popover')
 
 it('renders when no routes are provided', () => {
   const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} routes={[]} />)
