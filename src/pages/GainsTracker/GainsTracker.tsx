@@ -197,7 +197,7 @@ export const GainsTracker = () => {
           <CardSection>
             <div style={{ paddingLeft: 15, paddingRight: 15 }}>
               <div>
-                <h1>GAINSTRACKER &trade;</h1>
+                <h1 style={{color:'#fff'}}>GAINSTRACKER &trade;</h1>
                 {isTrackingCustom && (
                   <div>
                     <Badge>
@@ -216,13 +216,13 @@ export const GainsTracker = () => {
                     </p>
                   </BlueCard>
                 ))}
-             <TYPE.main><small >
+             <TYPE.white><small >
                 Select a currency that you would like to track redistribution gains. &nbsp;
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
               </small>
-              </TYPE.main> 
+              </TYPE.white> 
             </div>
           </CardSection>
           <CardSection>
