@@ -47,7 +47,8 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
           </TYPE.black>
         </RowFixed>
         <DimmableText textAlign="right" fontSize={14} dim={syncing}>
-          <FormattedPriceImpact priceImpact={priceImpact} />
+          {/* insert placeholder when syncing to guarantee width/height */}
+          {syncing ? '---' : <FormattedPriceImpact priceImpact={priceImpact} />}
         </DimmableText>
       </RowBetween>
 

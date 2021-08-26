@@ -12,6 +12,10 @@ import { useRoutes } from './useRoutes'
 
 // todo(judo): validate block number for freshness
 
+function getAddress(currency: Currency): string {
+  return currency.isToken ? currency.address : currency.isNative ? 'ETH' : ''
+}
+
 function useRouterTradeArguments() {
   const { account } = useActiveWeb3React()
 
@@ -35,9 +39,9 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
   const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
       ? {
-          tokenInAddress: amountIn.currency.wrapped.address,
+          tokenInAddress: getAddress(amountIn.currency),
           tokenInChainId: amountIn.currency.chainId,
-          tokenOutAddress: currencyOut.wrapped.address,
+          tokenOutAddress: getAddress(currencyOut),
           tokenOutChainId: currencyOut.chainId,
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
@@ -95,9 +99,9 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
   const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
       ? {
-          tokenInAddress: currencyIn.wrapped.address,
+          tokenInAddress: getAddress(currencyIn),
           tokenInChainId: currencyIn.chainId,
-          tokenOutAddress: amountOut.currency.wrapped.address,
+          tokenOutAddress: getAddress(amountOut.currency),
           tokenOutChainId: amountOut.currency.chainId,
           amount: amountOut.quotient.toString(),
           type: 'exactOut',
