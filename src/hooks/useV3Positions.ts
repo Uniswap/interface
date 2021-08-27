@@ -115,7 +115,7 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
             tokensOwed0: positionInfo.tokensOwed0,
             tokensOwed1: positionInfo.tokensOwed1,
             incentives: incentivesByPoolKey[toPoolKey(poolKey)] ?? [],
-            stakes: stakesByTokenId[tokenId.toString()],
+            stakes: stakesByTokenId[tokenId.toString()] ?? [],
           }
         })
         .filter((p): p is PositionDetails => Boolean(p))

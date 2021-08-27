@@ -54,8 +54,8 @@ export default function Stake() {
               <GenericBadge style={{ backgroundColor: theme.blue4 }}>
                 <RowFixed>
                   <Zap stroke={theme.blue3} size="16px" strokeWidth={'3px'} />
-                  <TYPE.body fontWeight={700} color={theme.blue3} ml="4px">
-                    Boosted
+                  <TYPE.body fontWeight={700} fontSize="12px" color={theme.blue3} ml="4px">
+                    Liquidity Mining
                   </TYPE.body>
                 </RowFixed>
               </GenericBadge>
@@ -63,7 +63,7 @@ export default function Stake() {
                 <Trans>Earn more with boosts</Trans>
               </TYPE.body>
               <TYPE.body color={theme.blue3}>
-                <Trans>Learn about liquidity mining and staking rewards</Trans>
+                <Trans>Learn about boosted rewards on your liquidity positions ➞</Trans>
               </TYPE.body>
             </AutoColumn>
           </CardSection>

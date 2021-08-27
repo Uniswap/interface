@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Stake } from 'hooks/useV3Positions'
 import { Incentive } from '../hooks/incentives/useAllIncentives'
+import Stake from './stake'
 
 export interface PositionDetails {
   nonce: BigNumber

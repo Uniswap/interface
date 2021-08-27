@@ -1,4 +1,4 @@
-import { RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { Incentive } from 'hooks/incentives/useAllIncentives'
 import styled from 'styled-components/macro'
@@ -13,6 +13,7 @@ import { EmptyBadge, GreenBadge } from 'components/Badge'
 import useCountdownTime from 'hooks/useCountdownTime'
 import { AutoColumn } from 'components/Column'
 import { Trans } from '@lingui/macro'
+import Countdown from './Countdown'
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,9 +66,10 @@ const TitleGrid = styled.div`
 
 interface IncentiveInfoBarProps {
   incentive: Incentive
+  expanded?: boolean
 }
 
-export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
+export default function IncentiveInfoBar({ incentive, expanded }: IncentiveInfoBarProps) {
   const theme = useTheme()
 
   const rewardToken = incentive.initialRewardAmount.currency
@@ -89,59 +91,76 @@ export default function IncentiveInfoBar({ incentive }: IncentiveInfoBarProps) {
 
   return (
     <Wrapper>
-      <LogoSquare>
-        <CurrencyLogo currency={rewardToken} size="24px" />
-      </LogoSquare>
-      <AutoColumn gap="8px" style={{ width: '100%' }}>
-        <TitleGrid>
-          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
-            <Trans>REWARDS REMAINING</Trans>
-          </TYPE.body>
-          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
-            <Trans>TOTAL DEPOSITS</Trans>
-          </TYPE.body>
-          <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
-            <Trans>REWARDS</Trans>
-          </TYPE.body>
-        </TitleGrid>
-        <TitleGrid>
-          {beginsInFuture ? (
+      <AutoColumn gap="24px" style={{ width: '100%' }}>
+        {!expanded ? null : (
+          <RowBetween>
             <RowFixed>
-              <GreenBadge>
-                <TYPE.body fontWeight={700} color={theme.green2} fontSize="12px">
-                  <Trans>NEW</Trans>
-                </TYPE.body>
-              </GreenBadge>
-              <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
-                {countdownTimeText}
-              </TYPE.main>
+              <CurrencyLogo currency={rewardToken} size="24px" />
+              <TYPE.body fontWeight={500} fontSize="20px" m="0 8px">
+                {`${rewardCurrency.symbol} Boost`}
+              </TYPE.body>
             </RowFixed>
-          ) : (
-            <BarWrapper>
-              <Bar percent={percentageRemaining} color={theme.primary3}>
-                <RowFixed>
-                  <WrappedLogo currency={rewardCurrency} size="14px" />
-                  <TYPE.body fontSize="12px" fontWeight={600} ml="8px" mt="-2px">
-                    {percentageRemaining}% remaining
-                  </TYPE.body>
-                </RowFixed>
-              </Bar>
-            </BarWrapper>
+            <Countdown exactEnd={endDate} exactStart={startDate} />
+          </RowBetween>
+        )}
+        <Row width="100%">
+          {expanded ? null : (
+            <LogoSquare>
+              <CurrencyLogo currency={rewardToken} size="24px" />
+            </LogoSquare>
           )}
-          <EmptyBadge style={{ borderRadius: '16px' }}>
-            <BadgeText fontWeight={700} fontSize="14px">
-              $58,022
-            </BadgeText>
-          </EmptyBadge>
-          <EmptyBadge style={{ borderRadius: '16px' }}>
-            <BadgeText fontWeight={700} fontSize="14px">
-              {usdPerWeek
-                ? `$${formatCurrencyAmount(usdPerWeek, 2)}`
-                : `${formatCurrencyAmount(rewardTokensPerWeek, 3)} ${rewardToken.symbol}`}{' '}
-              Weekly
-            </BadgeText>
-          </EmptyBadge>
-        </TitleGrid>
+          <AutoColumn gap="8px" style={{ width: '100%' }}>
+            <TitleGrid>
+              <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+                <Trans>REWARDS REMAINING</Trans>
+              </TYPE.body>
+              <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+                <Trans>TOTAL DEPOSITS</Trans>
+              </TYPE.body>
+              <TYPE.body fontSize="11px" fontWeight={400} color={theme.text3}>
+                <Trans>REWARDS</Trans>
+              </TYPE.body>
+            </TitleGrid>
+            <TitleGrid>
+              {beginsInFuture ? (
+                <RowFixed>
+                  <GreenBadge>
+                    <TYPE.body fontWeight={700} color={theme.green2} fontSize="12px">
+                      <Trans>NEW</Trans>
+                    </TYPE.body>
+                  </GreenBadge>
+                  <TYPE.main fontSize="12px" fontStyle="italic" ml="8px">
+                    {countdownTimeText}
+                  </TYPE.main>
+                </RowFixed>
+              ) : (
+                <BarWrapper>
+                  <Bar percent={percentageRemaining} color={theme.primary3}>
+                    <RowFixed>
+                      <WrappedLogo currency={rewardCurrency} size="14px" />
+                      <TYPE.body fontSize="12px" fontWeight={600} ml="8px" mt="-2px">
+                        {percentageRemaining}% remaining
+                      </TYPE.body>
+                    </RowFixed>
+                  </Bar>
+                </BarWrapper>
+              )}
+              <EmptyBadge style={{ borderRadius: '16px' }}>
+                <BadgeText fontWeight={700} fontSize="14px">
+                  $58,022
+                </BadgeText>
+              </EmptyBadge>
+              <EmptyBadge style={{ borderRadius: '16px' }}>
+                <BadgeText fontWeight={700} fontSize="14px">
+                  {usdPerWeek
+                    ? `$${formatCurrencyAmount(usdPerWeek, 2)}`
+                    : `${formatCurrencyAmount(rewardTokensPerWeek, 3)} ${rewardToken.symbol}`}{' '}
+                  Weekly
+                </BadgeText>
+              </EmptyBadge>
+            </TitleGrid>
+          </AutoColumn>
+        </Row>
       </AutoColumn>
     </Wrapper>
   )

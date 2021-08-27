@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { ButtonSmall } from 'components/Button'
+import Badge from 'components/Badge'
+import { ButtonGreySmall } from 'components/Button'
 import { DarkGreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import IncentiveInfoBar from 'components/earn/IncentiveInfoBar'
 import PositionManageCard from 'components/earn/PositionManageCard'
-import ProgramCard from 'components/earn/ProgramCard'
 import Loader from 'components/Loader'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
@@ -17,7 +19,6 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HoverText, TYPE } from 'theme'
 import { formattedFeeAmount } from 'utils'
-import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const Wrapper = styled.div`
@@ -71,20 +72,36 @@ export default function Manage({
             {` >  ${currency0.symbol} / ${currency1.symbol} ${formattedFeeAmount(pool.fee)}%`}
           </TYPE.body>
         </RowFixed>
+        <RowBetween>
+          <RowFixed>
+            <DoubleCurrencyLogo margin={true} currency0={currency0} currency1={currency1} size={24} />
+            <TYPE.body fontWeight={600} fontSize="24px" m="0 8px">
+              {`${currency0.symbol} / ${currency1.symbol} Pool`}
+            </TYPE.body>
+            <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
+          </RowFixed>
+          <RowFixed>
+            <ButtonGreySmall>
+              <Trans>View Analytics ↗</Trans>
+            </ButtonGreySmall>
+            <ButtonGreySmall style={{ marginLeft: '8px' }}>
+              <Trans>Add Liquidity</Trans>
+            </ButtonGreySmall>
+          </RowFixed>
+        </RowBetween>
         {!incentives ? (
           <TYPE.body>No incentives on this pool yet </TYPE.body>
         ) : (
-          <ProgramCard poolAddress={poolAddress} incentives={incentives} hideStake={true} />
+          incentives.slice(0, 1).map((incentive) => (
+            <DarkGreyCard key={incentive.poolAddress} padding="24px">
+              <IncentiveInfoBar incentive={incentive} expanded={true} />
+            </DarkGreyCard>
+          ))
         )}
-        <AutoColumn gap="12px">
-          <RowBetween>
-            <TYPE.body fontWeight={600} fontSize="18px">
-              <Trans>Positions</Trans>
-            </TYPE.body>
-            <ButtonSmall padding="4px" as={Link} to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-              <Trans>+ Add position</Trans>
-            </ButtonSmall>
-          </RowBetween>
+        <AutoColumn gap="16px">
+          <TYPE.body fontWeight={600} fontSize="18px">
+            <Trans>Your Positions</Trans>
+          </TYPE.body>
           {loadingPositions ? (
             <Loader />
           ) : !positions ? (
