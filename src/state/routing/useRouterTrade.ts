@@ -5,12 +5,24 @@ import { V3_SWAP_DEFAULT_SLIPPAGE } from 'hooks/useSwapSlippageTolerance'
 import { V3TradeState } from 'hooks/useV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
+import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { useIsLegacyRouter, useUserSlippageToleranceWithDefault, useUserTransactionTTL } from 'state/user/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
+import ReactGA from 'react-ga'
 
-// todo(judo): validate block number for freshness
+function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
+  const localBlockNumber = useBlockNumber()
+
+  if (!localBlockNumber) return undefined
+  if (localBlockNumber - dataBlockNumber > maxBlockAge) {
+    ReactGA.exception({ description: `Routing API stale (app: ${localBlockNumber} api: ${dataBlockNumber}` })
+    return undefined
+  }
+
+  return data
+}
 
 function useRouterTradeArguments() {
   const { account } = useActiveWeb3React()
@@ -49,7 +61,9 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     { pollingInterval: ms`10s` }
   )
 
-  const routes = useRoutes(data)
+  const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
+
+  const routes = useRoutes(quoteResult)
 
   return useMemo(() => {
     if (!amountIn || !currencyOut) {
@@ -59,7 +73,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
-    if (isLoading && !data) {
+    if (isLoading && !quoteResult) {
       // only on first hook render
       return {
         state: V3TradeState.LOADING,
@@ -67,9 +81,10 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       }
     }
 
-    const amountOut = currencyOut && data ? CurrencyAmount.fromRawAmount(currencyOut, data.quote) : undefined
+    const amountOut =
+      currencyOut && quoteResult ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote) : undefined
 
-    if (isError || !amountOut || !routes || routes.length === 0) {
+    if (isError || !amountOut || !routes || routes.length === 0 || !routingAPIEnabled) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -86,7 +101,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       state: V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountIn, currencyOut, isLoading, data, isError, routes])
+  }, [amountIn, currencyOut, isLoading, quoteResult, isError, routes, routingAPIEnabled])
 }
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
@@ -109,7 +124,9 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
     { pollingInterval: ms`10s` }
   )
 
-  const routes = useRoutes(data)
+  const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
+
+  const routes = useRoutes(quoteResult)
 
   return useMemo(() => {
     if (!amountOut || !currencyIn) {
@@ -119,16 +136,16 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       }
     }
 
-    if (isLoading && !data) {
+    if (isLoading && !quoteResult) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
       }
     }
 
-    const amountIn = currencyIn && data ? CurrencyAmount.fromRawAmount(currencyIn, data.quote) : undefined
+    const amountIn = currencyIn && quoteResult ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote) : undefined
 
-    if (isError || !amountIn || !routes || routes.length === 0) {
+    if (isError || !amountIn || !routes || routes.length === 0 || !routingAPIEnabled) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -144,5 +161,5 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       state: V3TradeState.VALID,
       trade: trade,
     }
-  }, [amountOut, currencyIn, isLoading, data, isError, routes])
+  }, [amountOut, currencyIn, isLoading, quoteResult, isError, routes, routingAPIEnabled])
 }

@@ -37,9 +37,10 @@ export function useRoutes(quoteResult: Pick<GetQuoteResult, 'route'> | undefined
 
 const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Currency => {
   // TODO(judo): fails when input/output is WETH
-  return address === Ether.onChain(chainId).wrapped.address
-    ? Ether.onChain(SupportedChainId.MAINNET)
-    : new Token(chainId, address, parseInt(decimals.toString()), symbol)
+  // return address === Ether.onChain(chainId).wrapped.address
+  //   ? Ether.onChain(SupportedChainId.MAINNET)
+  //   :
+  return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 
 const parsePool = ({
