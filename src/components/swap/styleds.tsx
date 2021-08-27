@@ -153,20 +153,23 @@ const pulse = keyframes`
 `
 
 export const DimmableText = styled(TYPE.black)<{ dim: boolean }>`
-  color: ${({ theme, dim }) => (dim ? 'transparent' : theme.text1)};
   background-color: ${({ theme, dim }) => (dim ? theme.text2 : 'transparent')};
+  color: ${({ theme, dim }) => (dim ? 'transparent' : theme.text1)};
   opacity: 1;
 
   animation: ${pulse} infinite ease-in-out;
   animation-duration: ${({ dim }) => (dim ? '1s' : '0')};
 `
 
-export const LoadingPlaceholder = styled.div<{ width: number }>`
-  height: 15px;
-  width: ${({ width }) => `${width}px`};
-  opacity: 1;
-  animation: ${pulse} 1s infinite ease-in-out;
+export const LoadingPlaceholder = styled.div<{ width: number; visible: boolean }>`
   background-color: ${({ theme }) => theme.text2};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
+  height: 15px;
+  opacity: 1;
+  width: ${({ width }) => `${width}px`};
+
+  animation: ${pulse} infinite ease-in-out;
+  animation-duration: ${({ visible }) => (visible ? '1s' : '0')};
 `
 
 export const RoutingDiagramWrapper = styled(AutoColumn)`

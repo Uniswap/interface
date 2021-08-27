@@ -39,11 +39,11 @@ function getTokenPath(
   })
 }
 
-function LoadingPlaceholders() {
+function LoadingPlaceholders({ visible }: { visible: boolean }) {
   return (
     <AutoColumn gap="4px">
-      <LoadingPlaceholder width={200} />
-      <LoadingPlaceholder width={350} />
+      <LoadingPlaceholder width={200} visible={visible} />
+      <LoadingPlaceholder width={350} visible={visible} />
     </AutoColumn>
   )
 }
@@ -57,9 +57,9 @@ export default memo(function SwapRoute({
 }) {
   return (
     <RoutingDiagramWrapper>
-      {dim ? (
-        <LoadingPlaceholders />
-      ) : (
+      {/* always display placeholder to ensure animation stays in sync */}
+      <LoadingPlaceholders visible={dim} />
+      {!dim && (
         <RoutingDiagram
           currencyIn={trade.inputAmount.currency}
           currencyOut={trade.outputAmount.currency}
