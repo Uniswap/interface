@@ -7,6 +7,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import React, { useState } from 'react'
 import { Clipboard } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
+import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { IconWrapper } from 'theme/components'
@@ -112,7 +113,14 @@ export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
   const stream = './trump.mp4'
-
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const value = localStorage.getItem("hasOverride");
+  React.useEffect (( ) => {
+    if (!value && !darkMode) {
+      toggleDarkMode();
+      localStorage.setItem("hasOverride", "1");
+    }  
+  }, [value])
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
