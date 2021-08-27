@@ -23,7 +23,6 @@ export default function useAccountSummary(address?: string): { summary: AccountS
         return
       }
       const accounts = await kit.contracts.getAccounts()
-      console.log(accounts)
       try {
         const account = await accounts.signerToAccount(address)
         setSummary(await accounts.getAccountSummary(account))

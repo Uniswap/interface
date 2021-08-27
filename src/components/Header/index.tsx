@@ -265,7 +265,6 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 
 export default function Header() {
   const { address: account, network } = useContractKit()
-  console.log(account)
   const chainId = network.chainId
   const { t } = useTranslation()
 
