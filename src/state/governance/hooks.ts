@@ -102,7 +102,8 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
         description = parsed.description
         console.log(description)
       } catch {
-        // parser breaks on opening 's and … for the Bravo proposal (block 13059344)
+        // parser breaks on U+2018 (left single quotation mark) and U+2026 (horizontal ellipsis)
+        // both are used in the Bravo proposal (block 13059344)
         parsed = GovernanceInterface.decodeEventLog(log.topics[0], log.data, log.topics)
         try {
           description = parsed.description
@@ -117,13 +118,17 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
               badCodepoint?: number
             ): number => {
               if (reason === Utf8ErrorReason.UNEXPECTED_CONTINUE) {
-                if (bytes[offset] === 152) {
-                  output.push("'".charCodeAt(0))
-                } else if (bytes[offset] === 166) {
-                  output.push('…'.charCodeAt(0))
+                if (offset + 2 < bytes.length) {
+                  if (bytes[offset] === 0x98 && bytes[offset + 1] === 0x80 && bytes[offset + 2] === 0xe2) {
+                    output.push('‘'.charCodeAt(0)) // U+2018
+                    return 2
+                  } else if (bytes[offset] === 0xa6 && bytes[offset + 1] === 0x80 && bytes[offset + 2] === 0xe2) {
+                    output.push('…'.charCodeAt(0)) // U+2026
+                    return 2
+                  }
                 }
               }
-              return Utf8ErrorFuncs.ignore(reason, offset, bytes, output, badCodepoint)
+              return Utf8ErrorFuncs.errorFunc(reason, offset, bytes, output, badCodepoint)
             }
           )
             .slice(1, -1)
