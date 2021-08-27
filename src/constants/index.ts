@@ -1,8 +1,6 @@
 import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addresses.json'
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { celoExtensionWallet, injected, ledger, valora } from '../connectors'
 import { UBE } from './tokens'
 
 export { UBE } from './tokens'
@@ -116,65 +114,6 @@ export const PINNED_PAIRS: { [chainId: number]: [Token, Token][] } = {
     [MCUSD, CELO],
   ].map((el) => el.map((t) => t[ChainId.ALFAJORES]) as [Token, Token]),
   [ChainId.BAKLAVA]: [[cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]],
-}
-
-export interface WalletInfo {
-  connector?: AbstractConnector
-  name: string
-  iconName: string
-  description: string
-  href: string | null
-  color: string
-  primary?: true
-  mobile?: true
-  mobileOnly?: true
-}
-
-export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
-  INJECTED: {
-    connector: injected,
-    name: 'Injected',
-    description: 'Injected web3 provider.',
-    iconName: 'arrow-right.svg',
-    href: null,
-    color: '#010101',
-    primary: true,
-    mobile: true,
-  },
-  METAMASK: {
-    connector: injected,
-    name: 'MetaMask',
-    iconName: 'metamask.png',
-    description: 'Easy-to-use browser extension.',
-    href: null,
-    color: '#E8831D',
-  },
-  CELO_EXTENSION_WALLET: {
-    connector: celoExtensionWallet,
-    name: 'Celo Extension Wallet',
-    iconName: 'celo_logo.png',
-    description: 'Celo version of MetaMask.',
-    href: null,
-    color: '#35D07F',
-  },
-  LEDGER: {
-    connector: ledger,
-    name: 'Ledger',
-    iconName: 'ledger.svg',
-    description: 'Connect to Ledger device',
-    href: null,
-    color: '#fff',
-  },
-  VALORA_LINK: {
-    connector: valora,
-    name: 'Valora',
-    iconName: 'valoraIcon.png',
-    description: 'Connect to the Valora app.',
-    href: null,
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true,
-  },
 }
 
 export const NetworkContextName = 'NETWORK'

@@ -1,5 +1,6 @@
 import { CeloContract } from '@celo/contractkit'
 import { currencyEquals } from '@ubeswap/sdk'
+import { ContractTransaction } from 'ethers'
 import { AToken__factory } from 'generated/factories/AToken__factory'
 
 import { LendingPool__factory } from '../../../../generated'
@@ -27,7 +28,7 @@ export const executeMoolaDirectTrade: TradeExecutor<MoolaDirectTrade> = async ({
   const { inputAmount } = trade
   const token = inputAmount.token
 
-  const convert = async (): Promise<string> => {
+  const convert = async (): Promise<ContractTransaction> => {
     const symbol = currencyEquals(token, chainCfg[CeloContract.StableToken])
       ? 'cUSD'
       : currencyEquals(token, chainCfg[CeloContract.GoldToken])
@@ -63,5 +64,5 @@ export const executeMoolaDirectTrade: TradeExecutor<MoolaDirectTrade> = async ({
     throw new Error(`unknown currency: ${token.address}`)
   }
 
-  return { hash: await convert() }
+  return { hash: (await convert()).hash }
 }

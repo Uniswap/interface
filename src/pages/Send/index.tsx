@@ -1,10 +1,12 @@
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { TokenAmount } from '@ubeswap/sdk'
 import SendHeader from 'components/send/SendHeader'
+import { useDoTransaction } from 'components/swap/routing'
 import { ERC20_ABI } from 'constants/abis/erc20'
+import { Erc20 } from 'generated/Erc20'
 import useENS from 'hooks/useENS'
 import React, { useCallback } from 'react'
 import { Text } from 'rebass'
-import { useTransactionAdder } from 'state/transactions/hooks'
 import { getContract } from 'utils'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -13,7 +15,6 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { BottomGrouping, Wrapper } from '../../components/swap/styleds'
-import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
@@ -22,7 +23,8 @@ import AppBody from '../AppBody'
 
 export default function Send() {
   // dismiss warning if all imported tokens are in active lists
-  const { account, library } = useActiveWeb3React()
+  const { address: account } = useContractKit()
+  const library = useProvider()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -36,18 +38,17 @@ export default function Send() {
 
   const notEnoughFunds = parsedAmount && maxAmountInput && !parsedAmount.lessThan(maxAmountInput)
   const isValid = recipientAddress && parsedAmount && account && !notEnoughFunds
-  const addTransaction = useTransactionAdder()
+  const doTransaction = useDoTransaction()
   const handleSend = useCallback(async () => {
-    if (!isValid || !parsedAmount || !library || !account) {
+    if (!isValid || !parsedAmount || !library || !account || !recipientAddress) {
       return
     }
-    const token = getContract(parsedAmount.token.address, ERC20_ABI, library, account)
-    const response = await token.transfer(recipientAddress, parsedAmount.raw.toString())
-
-    addTransaction(response, {
+    const token = getContract(parsedAmount.token.address, ERC20_ABI, library, account) as Erc20
+    await doTransaction(token, 'transfer', {
+      args: [recipientAddress, parsedAmount.raw.toString()],
       summary: `Send ${parsedAmount.toSignificant(3)} ${parsedAmount.currency.symbol} to ${recipient}`,
     })
-  }, [isValid, library, parsedAmount, recipientAddress, account, addTransaction, recipient])
+  }, [isValid, parsedAmount, library, account, recipientAddress, doTransaction, recipient])
 
   const { onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 

@@ -1,8 +1,9 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { TransactionResponse } from '@ethersproject/providers'
+import { ChainId } from '@ubeswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
 import { TransactionDetails } from './reducer'
@@ -12,7 +13,8 @@ export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: { summary?: string; approval?: { tokenAddress: string; spender: string }; claim?: { recipient: string } }
 ) => void {
-  const { chainId, account } = useActiveWeb3React()
+  const { network, address: account } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
@@ -39,7 +41,8 @@ export function useTransactionAdder(): (
 
 // returns all the transactions for the current chain
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
 
   const state = useSelector<AppState, AppState['transactions']>((state) => state.transactions)
 

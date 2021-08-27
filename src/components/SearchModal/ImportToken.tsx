@@ -1,4 +1,5 @@
-import { getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -6,7 +7,6 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import ListLogo from 'components/ListLogo'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SectionBreak } from 'components/swap/styleds'
-import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
@@ -49,7 +49,8 @@ interface ImportProps {
 export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   const [confirmed, setConfirmed] = useState(false)
 

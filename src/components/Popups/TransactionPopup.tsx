@@ -1,9 +1,9 @@
-import { getBlockscoutLink } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { AutoColumn } from '../Column'
@@ -22,7 +22,8 @@ export default function TransactionPopup({
   success?: boolean
   summary?: string
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   const theme = useContext(ThemeContext)
 

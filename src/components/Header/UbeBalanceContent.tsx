@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { ChainId, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import React from 'react'
@@ -8,7 +9,6 @@ import useCUSDPrice from 'utils/useCUSDPrice'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UBE } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useActiveWeb3React } from '../../hooks'
 import { useTotalUbeEarned } from '../../state/stake/hooks'
 import { useAggregateUbeBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE, UbeTokenAnimated } from '../../theme'
@@ -41,7 +41,8 @@ const StyledClose = styled(X)`
  * Content for balance stats modal
  */
 export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowUbeBalanceModal: any }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { address: account, network } = useContractKit()
+  const chainId = network.chainId
   const ube = chainId ? UBE[chainId] : undefined
 
   const total = useAggregateUbeBalance()

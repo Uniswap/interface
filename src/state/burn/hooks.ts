@@ -1,10 +1,10 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { JSBI, Pair, Percent, Token, TokenAmount } from '@ubeswap/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
@@ -27,7 +27,7 @@ export function useDerivedBurnInfo(
   }
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   const { independentField, typedValue } = useBurnState()
 

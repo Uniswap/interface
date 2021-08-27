@@ -1,3 +1,4 @@
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { Contract } from '@ethersproject/contracts'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { ReleaseUbe } from 'generated/ReleaseUbe'
@@ -12,11 +13,11 @@ import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { Erc20, MoolaStakingRewards, PoolManager, StakingRewards } from '../generated'
 import { getContract } from '../utils'
-import { useActiveWeb3React } from './index'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
-  const { library, account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
+  const library = useProvider()
 
   return useMemo(() => {
     if (!address || !ABI || !library) return null
@@ -52,7 +53,8 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useMulticallContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   return useContract(chainId ? MULTICALL_NETWORKS[chainId] : undefined, MULTICALL_ABI, false)
 }
 

@@ -1,7 +1,8 @@
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { ChainId } from '@ubeswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -28,7 +29,9 @@ export function shouldCheck(
 }
 
 export default function Updater(): null {
-  const { chainId, library } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
+  const library = useProvider()
 
   const lastBlockNumber = useBlockNumber()
 

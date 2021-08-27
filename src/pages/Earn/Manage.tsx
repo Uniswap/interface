@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { cUSD, JSBI } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import React, { useCallback, useState } from 'react'
@@ -15,7 +16,6 @@ import UnstakingModal from '../../components/earn/UnstakingModal'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { BIG_INT_SECONDS_IN_WEEK, BIG_INT_ZERO } from '../../constants'
 import { usePair } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
@@ -91,7 +91,8 @@ export default function Manage({
     params: { currencyIdA, currencyIdB, stakingAddress },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stakingAddress: string }>) {
-  const { account, chainId } = useActiveWeb3React()
+  const { address: account, network } = useContractKit()
+  const { chainId } = network
   const location = useLocation()
 
   // get currencies and pair
@@ -106,6 +107,7 @@ export default function Manage({
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
+  console.log(isDualFarm, dualStakingInfo)
   const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
   // toggle for staking modal and unstaking modal

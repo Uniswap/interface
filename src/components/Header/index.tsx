@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { CELO, ChainId, TokenAmount } from '@ubeswap/sdk'
 import { CardNoise } from 'components/earn/styled'
 import Modal from 'components/Modal'
@@ -17,7 +18,6 @@ import { CountUp } from 'use-count-up'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo-dark.svg'
-import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { YellowCard } from '../Card'
 import Menu from '../Menu'
@@ -264,7 +264,9 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 }
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { address: account, network } = useContractKit()
+  console.log(account)
+  const chainId = network.chainId
   const { t } = useTranslation()
 
   const userCELOBalance = useTokenBalance(account ?? undefined, CELO[chainId])

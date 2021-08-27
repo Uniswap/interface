@@ -1,15 +1,14 @@
-import { TransactionResponse } from '@ethersproject/providers'
+import { useProvider } from '@celo-tools/use-contractkit'
 import { Pair, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
+import { useDoTransaction } from 'components/swap/routing'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { CloseIcon, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { ButtonConfirmed, ButtonError } from '../Button'
@@ -42,8 +41,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { library } = useActiveWeb3React()
-  const addTransaction = useTransactionAdder()
+  const library = useProvider()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
@@ -83,19 +81,20 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
+  const doTransaction = useDoTransaction()
 
   async function onStake() {
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        await stakingContract
-          .stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
-          .then((response: TransactionResponse) => {
-            addTransaction(response, {
-              summary: `Stake deposited liquidity`,
-            })
-            setHash(response.hash)
-          })
+        const response = await doTransaction(stakingContract, 'stake', {
+          args: [`0x${parsedAmount.raw.toString(16)}`],
+          overrides: {
+            gasLimit: 350000,
+          },
+          summary: `Stake deposited liquidity`,
+        })
+        setHash(response.hash)
       } else {
         setAttempting(false)
         throw new Error('Attempting to stake without approval or a signature. Please contact support.')

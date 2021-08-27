@@ -1,9 +1,9 @@
-import { getBlockscoutLink } from '@ubeswap/sdk'
-import useENS from 'hooks/useENS'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
+import useENS from '../../hooks/useENS'
 import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -77,7 +77,8 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const theme = useContext(ThemeContext)
 
   const { address, loading, name } = useENS(value)

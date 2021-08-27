@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { CELO, ChainId, currencyEquals, cUSD, Token } from '@ubeswap/sdk'
 import { CEUR, MCELO, MCEUR, MCUSD } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 
 import { LendingPool, LendingPool__factory } from '../../../../generated'
@@ -52,7 +52,8 @@ export type IMoolaChain = keyof typeof moolaLendingPools
 export type MoolaConfig = typeof moolaLendingPools[IMoolaChain]
 
 export const useMoolaConfig = () => {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   // TODO(igm): this breaks on baklava
   const chainCfg = moolaLendingPools[chainId as IMoolaChain]
   const { lendingPool, lendingPoolCore } = chainCfg
@@ -67,6 +68,6 @@ export const useLendingPool = (): LendingPool => {
   if (!cfg) {
     throw new Error('no cfg')
   }
-  const { library } = useActiveWeb3React()
+  const library = useProvider()
   return useMemo(() => LendingPool__factory.connect(cfg.lendingPool, library as any), [cfg.lendingPool, library])
 }

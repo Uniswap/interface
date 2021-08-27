@@ -1,10 +1,10 @@
+import { useProvider } from '@celo-tools/use-contractkit'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useAllInactiveTokens } from 'hooks/Tokens'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAllLists } from 'state/lists/hooks'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
@@ -13,7 +13,7 @@ import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
-  const { library } = useActiveWeb3React()
+  const library = useProvider()
   const dispatch = useDispatch<AppDispatch>()
   const isWindowVisible = useIsWindowVisible()
 

@@ -1,10 +1,10 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { JSBI, Pair, Percent, Price, Token, TokenAmount } from '@ubeswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
@@ -57,7 +57,7 @@ export function useDerivedMintInfo(
   poolTokenPercentage?: Percent
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 

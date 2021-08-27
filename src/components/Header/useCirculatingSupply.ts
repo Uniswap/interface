@@ -1,7 +1,7 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { JSBI, TokenAmount } from '@ubeswap/sdk'
 import { UBE } from 'constants/tokens'
-import { useActiveWeb3React } from 'hooks/index'
+import { BigNumber } from 'ethers'
 import { useReleaseUbeContract, useTokenContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
@@ -21,7 +21,8 @@ const nonCirculatingAddresses = {
  * Fetches the circulating supply
  */
 export const useCirculatingSupply = (): TokenAmount | undefined => {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const ube = chainId ? UBE[chainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
   const releaseUbe = useReleaseUbeContract()

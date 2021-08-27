@@ -1,11 +1,11 @@
-import { getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ExternalLink, TYPE } from 'theme'
@@ -44,7 +44,8 @@ export default function UnsupportedCurrencyFooter({
   show: boolean
   currencies: (Token | undefined)[]
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const [showDetails, setShowDetails] = useState(false)
 
   const tokens = currencies

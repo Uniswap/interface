@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
@@ -7,7 +8,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ROUTER_ADDRESS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
@@ -113,7 +113,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: UbeswapTrade | undefined
   inputError?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   const {
     independentField,
@@ -259,11 +259,13 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
 export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
-  const [result, setResult] =
-    useState<{ inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined>()
+  const [result, setResult] = useState<
+    { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
+  >()
 
   useEffect(() => {
     if (!chainId) return

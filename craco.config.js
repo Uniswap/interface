@@ -12,9 +12,9 @@ module.exports = {
               authToken: process.env.SENTRY_AUTH_TOKEN,
               org: process.env.SENTRY_ORG,
               project: process.env.SENTRY_PROJECT,
-              release: `${process.env.VERCEL_GIT_COMMIT_REF?.replace(/\//g, '--') ?? 'unknown'}-${
-                process.env.VERCEL_GIT_COMMIT_SHA ?? 'unknown'
-              }`,
+              release: `${
+                process.env.VERCEL_GIT_COMMIT_REF ? process.env.VERCEL_GIT_COMMIT_REF.replace(/\//g, '--') : 'unknown'
+              }-${process.env.VERCEL_GIT_COMMIT_SHA ? process.env.VERCEL_GIT_COMMIT_SHA : 'unknown'}`,
 
               // webpack specific configuration
               include: './build/',

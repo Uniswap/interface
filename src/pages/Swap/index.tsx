@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { describeTrade } from 'components/swap/routing/describeTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
@@ -28,7 +29,6 @@ import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
@@ -71,7 +71,8 @@ export default function Swap() {
       return !(token.address in defaultTokens)
     })
 
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected

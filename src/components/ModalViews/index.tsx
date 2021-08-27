@@ -1,10 +1,10 @@
-import { getBlockscoutLink } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useActiveWeb3React } from '../../hooks'
 import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -47,7 +47,8 @@ export function SubmittedView({
   hash: string | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   return (
     <ConfirmOrLoadingWrapper>

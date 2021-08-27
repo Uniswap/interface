@@ -1,10 +1,10 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { FunctionFragment, Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -51,7 +51,8 @@ export const NEVER_RELOAD: ListenerOptions = {
 
 // the lowest level call for subscribing to contract data
 function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): CallResult[] {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const callResults = useSelector<AppState, AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )

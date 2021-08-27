@@ -1,22 +1,19 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { Pair, Token } from '@ubeswap/sdk'
-import { IValoraAccount } from 'connectors/valora/valoraUtils'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  clearValoraAccount,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  setValoraAccount,
   toggleURLWarning,
   updateUserAllowMoolaWithdrawal,
   updateUserDarkMode,
@@ -46,29 +43,6 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
-}
-
-export const useValoraAccount = (): {
-  setValoraAccount: (acc: IValoraAccount) => void
-  clearValoraAccount: () => void
-  account: IValoraAccount | null
-} => {
-  const dispatch = useDispatch<AppDispatch>()
-  const doSetValoraAccount = useCallback(
-    (acc: IValoraAccount) => {
-      dispatch(setValoraAccount(acc))
-    },
-    [dispatch]
-  )
-  const doClearValoraAccount = useCallback(() => {
-    dispatch(clearValoraAccount())
-  }, [dispatch])
-  const account = useSelector<AppState, AppState['user']['valoraAccount']>((state) => state.user.valoraAccount)
-  return {
-    setValoraAccount: doSetValoraAccount,
-    clearValoraAccount: doClearValoraAccount,
-    account,
-  }
 }
 
 export function useIsDarkMode(): boolean {
@@ -226,7 +200,8 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 }
 
 export function useUserAddedTokens(): Token[] {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
@@ -275,7 +250,8 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const tokens = useAllTokens()
 
   // pinned pairs

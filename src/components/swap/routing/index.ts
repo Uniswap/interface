@@ -1,8 +1,8 @@
+import { useContractKit, useGetConnectedSigner } from '@celo-tools/use-contractkit'
 import { Signer } from '@ethersproject/abstract-signer'
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { CallOverrides, Contract, ContractTransaction, PayableOverrides } from '@ethersproject/contracts'
 import { ChainId, Trade } from '@ubeswap/sdk'
-import { useActiveWeb3React } from 'hooks'
+import { BigNumber, BigNumberish, CallOverrides, Contract, ContractTransaction, PayableOverrides } from 'ethers'
+import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
 
@@ -24,7 +24,7 @@ type DoTransactionFn = <
     approval?: { tokenAddress: string; spender: string }
     claim?: { recipient: string }
   }
-) => Promise<string>
+) => Promise<ContractTransaction>
 
 export interface TradeExecutor<T extends Trade> {
   (args: {
@@ -55,7 +55,7 @@ const estimateGas = async (call: ContractCall): Promise<BigNumber> => {
       const result = await contract.callStatic[methodName](...fullArgs)
       console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
       throw new Error('Unexpected issue with estimating the gas. Please try again.')
-    } catch (callError) {
+    } catch (callError: any) {
       console.debug('Call threw error', call, callError)
       let errorMessage: string
       switch (callError.reason) {
@@ -78,34 +78,40 @@ const estimateGas = async (call: ContractCall): Promise<BigNumber> => {
  */
 export const useDoTransaction = (): DoTransactionFn => {
   const addTransaction = useTransactionAdder()
-  const { chainId } = useActiveWeb3React()
-  return async (contract, methodName, args): Promise<string> => {
-    if (chainId === ChainId.BAKLAVA) {
-      throw new Error('baklava not supported')
-    }
-    const call = { contract, methodName, args: args.args, value: args.overrides?.value }
-    const gasEstimate = await estimateGas(call)
-
-    try {
-      const response: ContractTransaction = await contract[methodName](...args.args, {
-        gasLimit: calculateGasMargin(gasEstimate),
-        ...args.overrides,
-      })
-      addTransaction(response, {
-        summary: args.summary,
-        approval: args.approval,
-        claim: args.claim,
-      })
-      return response.hash
-    } catch (error) {
-      // if the user rejected the tx, pass this along
-      if (error?.code === 4001) {
-        throw new Error('Transaction rejected.')
-      } else {
-        // otherwise, the error was unexpected and we need to convey that
-        console.error(`Swap failed`, error, methodName, args, call.value)
-        throw new Error(`Swap failed: ${error.message}`)
+  const { network } = useContractKit()
+  const getConnectedSigner = useGetConnectedSigner()
+  const chainId = network.chainId as unknown as ChainId
+  return useCallback(
+    async (contractDisconnected, methodName, args): Promise<ContractTransaction> => {
+      if (chainId === ChainId.BAKLAVA) {
+        throw new Error('baklava not supported')
       }
-    }
-  }
+      const contract = contractDisconnected.connect(await getConnectedSigner())
+      const call = { contract, methodName, args: args.args, value: args.overrides?.value }
+      const gasEstimate = await estimateGas(call)
+
+      try {
+        const response: ContractTransaction = await contract[methodName](...args.args, {
+          gasLimit: calculateGasMargin(gasEstimate),
+          ...args.overrides,
+        })
+        addTransaction(response, {
+          summary: args.summary,
+          approval: args.approval,
+          claim: args.claim,
+        })
+        return response
+      } catch (error: any) {
+        // if the user rejected the tx, pass this along
+        if (error?.code === 4001) {
+          throw new Error('Transaction rejected.')
+        } else {
+          // otherwise, the error was unexpected and we need to convey that
+          console.error(`Transaction failed`, error, methodName, args, call.value)
+          throw new Error(`Transaction failed: ${error.message}`)
+        }
+      }
+    },
+    [addTransaction, chainId, getConnectedSigner]
+  )
 }

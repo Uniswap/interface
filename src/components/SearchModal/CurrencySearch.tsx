@@ -1,4 +1,5 @@
-import { cUSD, Token } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, cUSD, Token } from '@ubeswap/sdk'
 import { ButtonLight } from 'components/Button'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -12,7 +13,6 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useFoundOnInactiveList, useIsUserAddedToken, useToken } from '../../hooks/Tokens'
 import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
@@ -65,7 +65,8 @@ export function CurrencySearch({
   setImportToken,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const theme = useTheme()
 
   // refs for fixed size lists

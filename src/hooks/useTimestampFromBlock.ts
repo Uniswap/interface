@@ -1,9 +1,8 @@
+import { useProvider } from '@celo-tools/use-contractkit'
 import { useEffect, useState } from 'react'
 
-import { useActiveWeb3React } from '.'
-
 export function useTimestampFromBlock(block: number | undefined): number | undefined {
-  const { library } = useActiveWeb3React()
+  const library = useProvider()
   const [timestamp, setTimestamp] = useState<number>()
   useEffect(() => {
     async function fetchTimestamp() {

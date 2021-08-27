@@ -1,5 +1,6 @@
+import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { POOL_MANAGER } from 'constants/poolManager'
 import { UBE } from 'constants/tokens'
 import { PoolManager } from 'generated/'
@@ -14,7 +15,6 @@ import ERC_20_INTERFACE from '../../constants/abis/erc20'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 // Interfaces
 import { UNISWAP_V2_PAIR_INTERFACE } from '../../constants/abis/uniswap-v2-pair'
-import { useActiveWeb3React } from '../../hooks'
 import { usePoolManagerContract, useTokenContract } from '../../hooks/useContract'
 import {
   NEVER_RELOAD,
@@ -78,7 +78,7 @@ export const usePairStakingInfo = (pairToFilterBy?: Pair | null, stakingAddress?
 }
 
 export const usePairDualStakingInfo = (stakingInfo: StakingInfo | undefined): DualRewardsInfo | null => {
-  const { account } = useActiveWeb3React()
+  const { address } = useContractKit()
   let dualStakeAddress = ''
   if (stakingInfo?.poolInfo.stakingToken === POOF_DUAL_LP) {
     dualStakeAddress = POOF_DUAL_POOL
@@ -87,7 +87,7 @@ export const usePairDualStakingInfo = (stakingInfo: StakingInfo | undefined): Du
   } else if (stakingInfo?.poolInfo.stakingToken == MOO_LP2) {
     dualStakeAddress = MOO_DUAL_POOL2
   }
-  return useDualStakeRewards(dualStakeAddress, stakingInfo, account)
+  return useDualStakeRewards(dualStakeAddress, stakingInfo, address)
 }
 
 interface UnclaimedInfo {
@@ -106,10 +106,11 @@ interface UnclaimedInfo {
 }
 
 export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const { chainId } = network
   const ube = chainId ? UBE[chainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
-  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.BAKLAVA ? POOL_MANAGER[chainId] : undefined)
+  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.Baklava ? POOL_MANAGER[chainId] : undefined)
   const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
     | BigNumber
     | undefined
@@ -167,7 +168,8 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
 
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly StakingInfo[] {
-  const { chainId, account } = useActiveWeb3React()
+  const { network, address } = useContractKit()
+  const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
   const ubePrice = useCUSDPrice(ube)
 
@@ -179,7 +181,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: st
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
+  const accountArg = useMemo(() => [address ?? undefined], [address])
 
   // get all the info from the staking rewards contracts
   const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
@@ -335,10 +337,13 @@ interface IStakingPool {
 }
 
 export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly IStakingPool[] {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
 
-  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.BAKLAVA ? POOL_MANAGER[chainId] : undefined)
+  const poolManagerContract = usePoolManagerContract(
+    chainId !== UbeswapChainId.BAKLAVA ? POOL_MANAGER[chainId] : undefined
+  )
   const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
     | BigNumber
     | undefined
@@ -461,7 +466,8 @@ export function useStakingPoolsInfo(
 export function usePairDataFromAddresses(
   pairAddresses: readonly string[]
 ): readonly (readonly [Token, Token] | undefined)[] {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as UbeswapChainId
 
   const token0Data = useMultipleContractSingleData(
     pairAddresses,
@@ -553,7 +559,8 @@ export function usePairDataFromAddresses(
 }
 
 export function useTotalUbeEarned(): TokenAmount | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const { chainId } = network
   const ube = chainId ? UBE[chainId] : undefined
   const stakingInfos = useStakingInfo()
 
@@ -577,7 +584,7 @@ export function useDerivedStakeInfo(
   parsedAmount?: TokenAmount
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { address } = useContractKit()
 
   const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingToken)
 
@@ -587,7 +594,7 @@ export function useDerivedStakeInfo(
       : undefined
 
   let error: string | undefined
-  if (!account) {
+  if (!address) {
     error = 'Connect Wallet'
   }
   if (!parsedAmount) {
@@ -608,14 +615,14 @@ export function useDerivedUnstakeInfo(
   parsedAmount?: TokenAmount
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { address } = useContractKit()
 
   const parsedInput: TokenAmount | undefined = tryParseAmount(typedValue, stakingAmount.token)
 
   const parsedAmount = parsedInput && JSBI.lessThanOrEqual(parsedInput.raw, stakingAmount.raw) ? parsedInput : undefined
 
   let error: string | undefined
-  if (!account) {
+  if (!address) {
     error = 'Connect Wallet'
   }
   if (!parsedAmount) {

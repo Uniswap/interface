@@ -1,8 +1,8 @@
-import { getBlockscoutLink } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 
@@ -63,7 +63,8 @@ const Spinner = styled.div`
 `
 
 export default function Polling() {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   const blockNumber = useBlockNumber()
 

@@ -1,6 +1,7 @@
-import { arrayify } from '@ethersproject/bytes'
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { parseBytes32String } from '@ethersproject/strings'
 import { currencyEquals, Token } from '@ubeswap/sdk'
+import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 
 import { filterTokens } from '../components/SearchModal/filtering'
@@ -9,12 +10,12 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useDefaultTokenList, useUnsupportedTokenList } from './../state/lists/hooks'
-import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
@@ -92,7 +93,8 @@ export function useIsTokenActive(token: Token | undefined | null): boolean {
 
 // used to detect extra search results
 export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const inactiveTokens = useAllInactiveTokens()
 
   return useMemo(() => {
@@ -132,7 +134,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 // null if loading
 // otherwise returns the token
 export function useToken(tokenAddress?: string): Token | undefined | null {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId
   const tokens = useAllTokens()
 
   const address = isAddress(tokenAddress)

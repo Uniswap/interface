@@ -15,6 +15,7 @@ interface Window {
     autoRefreshOnNetworkChange?: boolean
   }
   web3?: unknown
+  MSStream: any
 }
 
 declare module 'content-hash' {

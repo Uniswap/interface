@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { Pair } from '@ubeswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -13,7 +14,6 @@ import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { usePairs } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { ExternalLink, HideSmall, StyledInternalLink, TYPE } from '../../theme'
@@ -72,7 +72,7 @@ const EmptyProposals = styled.div`
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()

@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
@@ -5,7 +6,6 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { useActiveWeb3React } from '../../hooks'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { ButtonPrimary } from '../Button'
@@ -171,7 +171,8 @@ export default function TransactionConfirmationModal({
   pendingText,
   content,
 }: ConfirmationModalProps) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   if (!chainId) return null
 

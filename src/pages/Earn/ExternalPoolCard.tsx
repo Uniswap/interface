@@ -1,6 +1,6 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { PoolCard } from 'components/earn/PoolCard'
 import Loader from 'components/Loader'
-import { useActiveWeb3React } from 'hooks'
 import React from 'react'
 import { StakingInfo } from 'state/stake/hooks'
 import { useDualStakeRewards } from 'state/stake/useDualStakeRewards'
@@ -11,8 +11,8 @@ interface Props {
 }
 
 export const ExternalPoolCard: React.FC<Props> = ({ poolAddress, underlyingPool }: Props) => {
-  const { account } = useActiveWeb3React()
-  const mooPool = useDualStakeRewards(poolAddress, underlyingPool, account ?? null)
+  const { address } = useContractKit()
+  const mooPool = useDualStakeRewards(poolAddress, underlyingPool, address ?? null)
 
   if (!mooPool) {
     return <Loader />

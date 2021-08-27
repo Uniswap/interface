@@ -1,10 +1,10 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { currencyEquals, Token, TokenAmount } from '@ubeswap/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useAllInactiveTokens, useIsUserAddedToken } from '../../hooks/Tokens'
 import { useCombinedActiveList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -94,7 +94,8 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
+
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)

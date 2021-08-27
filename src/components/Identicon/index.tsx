@@ -1,8 +1,7 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import Jazzicon from 'jazzicon'
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-
-import { useActiveWeb3React } from '../../hooks'
 
 const StyledIdenticonContainer = styled.div`
   height: 1rem;
@@ -14,7 +13,7 @@ const StyledIdenticonContainer = styled.div`
 export default function Identicon() {
   const ref = useRef<HTMLDivElement>()
 
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   useEffect(() => {
     if (account && ref.current) {

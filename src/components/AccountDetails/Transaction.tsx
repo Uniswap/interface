@@ -1,9 +1,9 @@
-import { getBlockscoutLink } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
 import React from 'react'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExternalLink } from '../../theme'
 import Loader from '../Loader'
@@ -37,7 +37,8 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 `
 
 export default function Transaction({ hash }: { hash: string }) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
   const allTransactions = useAllTransactions()
 
   const tx = allTransactions?.[hash]

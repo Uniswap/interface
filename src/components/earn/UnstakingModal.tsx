@@ -1,11 +1,10 @@
-import { TransactionResponse } from '@ethersproject/providers'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { useDoTransaction } from 'components/swap/routing'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useStakingContract } from '../../hooks/useContract'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { CloseIcon, TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -26,10 +25,10 @@ interface StakingModalProps {
 }
 
 export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
 
   // monitor call to help UI loading state
-  const addTransaction = useTransactionAdder()
+  const doTransaction = useDoTransaction()
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
@@ -44,17 +43,18 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   async function onWithdraw() {
     if (stakingContract && stakingInfo?.stakedAmount) {
       setAttempting(true)
-      await stakingContract
-        .exit({ gasLimit: 3000000 })
-        .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: `Withdraw deposited liquidity`,
-          })
+      await doTransaction(stakingContract, 'exit', {
+        args: [],
+        overrides: {
+          gasLimit: 300000,
+        },
+        summary: `Withdraw deposited liquidity`,
+      })
+        .then((response) => {
           setHash(response.hash)
         })
-        .catch((error: any) => {
+        .catch(() => {
           setAttempting(false)
-          console.log(error)
         })
     }
   }

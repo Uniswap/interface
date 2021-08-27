@@ -1,6 +1,9 @@
-import { getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
+import Card from 'components/Card'
+import Column from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import React, { RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
@@ -9,9 +12,6 @@ import { ButtonText, ExternalLink, ExternalLinkIcon, TrashIcon, TYPE } from 'the
 import { isAddress } from 'utils'
 
 import useTheme from '../../hooks/useTheme'
-import Card from '../Card'
-import Column from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
 import { CurrencyModalView } from './CurrencySearchModal'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
@@ -42,7 +42,8 @@ export default function ManageTokens({
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const theme = useTheme()

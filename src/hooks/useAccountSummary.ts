@@ -1,7 +1,6 @@
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { useEffect, useState } from 'react'
-
-import { network } from '../connectors'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (...args: any) => Promise<infer U>
   ? U
@@ -16,18 +15,15 @@ type AccountSummary = AsyncReturnType<AccountsWrapper['getAccountSummary']>
  */
 export default function useAccountSummary(address?: string): { summary: AccountSummary | null; loading: boolean } {
   const [summary, setSummary] = useState<AccountSummary | null>(null)
+  const { kit } = useContractKit()
 
   useEffect(() => {
     ;(async () => {
       if (!address) {
         return
       }
-      const provider = await network.getProvider()
-      if (!provider) {
-        return
-      }
-      const { kit } = provider
       const accounts = await kit.contracts.getAccounts()
+      console.log(accounts)
       try {
         const account = await accounts.signerToAccount(address)
         setSummary(await accounts.getAccountSummary(account))
@@ -35,7 +31,7 @@ export default function useAccountSummary(address?: string): { summary: AccountS
         console.error('Could not fetch account summary', e)
       }
     })()
-  }, [address])
+  }, [address, kit])
 
   return { summary, loading: summary === null }
 }

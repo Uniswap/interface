@@ -1,3 +1,4 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { Pair, Token } from '@ubeswap/sdk'
 import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
@@ -5,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useActiveWeb3React } from '../../hooks'
 import useTheme from '../../hooks/useTheme'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -152,7 +152,8 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
+  const { address: account } = useContractKit()
+
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 

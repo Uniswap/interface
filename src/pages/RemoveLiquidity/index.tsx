@@ -1,6 +1,7 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { Contract } from '@ethersproject/contracts'
 import { Percent, Token } from '@ubeswap/sdk'
+import { useDoTransaction } from 'components/swap/routing'
 import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -21,18 +22,15 @@ import Slider from '../../components/Slider'
 import { Dots } from '../../components/swap/styleds'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { ROUTER_ADDRESS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract } from '../../hooks/useContract'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import AppBody from '../AppBody'
@@ -45,13 +43,14 @@ export default function RemoveLiquidity({
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-  const { account, chainId, library } = useActiveWeb3React()
+  const { address: account, network, connect } = useContractKit()
+  const library = useProvider()
+  const chainId = network.chainId
   const [tokenA, tokenB] = [currencyA, currencyB]
 
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -122,7 +121,7 @@ export default function RemoveLiquidity({
   )
 
   // tx sending
-  const addTransaction = useTransactionAdder()
+  const doTransaction = useDoTransaction()
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -148,60 +147,40 @@ export default function RemoveLiquidity({
     }
 
     // removeLiquidity
-    const args = [
-      tokenA.address,
-      tokenB.address,
-      liquidityAmount.raw.toString(),
-      amountsMin[Field.CURRENCY_A].toString(),
-      amountsMin[Field.CURRENCY_B].toString(),
-      account,
-      deadline.toHexString(),
-    ] as const
-
-    const safeGasEstimate: BigNumber | undefined = await router.estimateGas
-      .removeLiquidity(...args)
-      .then(calculateGasMargin)
-      .catch((error) => {
-        console.error(`estimateGas failed`, args, error)
-        return undefined
+    setAttemptingTxn(true)
+    try {
+      const response = await doTransaction(router, 'removeLiquidity', {
+        args: [
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          account,
+          deadline.toHexString(),
+        ],
+        summary:
+          'Remove ' +
+          parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+          ' ' +
+          currencyA?.symbol +
+          ' and ' +
+          parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+          ' ' +
+          currencyB?.symbol,
       })
+      setAttemptingTxn(false)
+      setTxHash(response.hash)
 
-    // all estimations failed...
-    if (safeGasEstimate === undefined) {
-      console.error('This transaction would fail. Please contact support.')
-    } else {
-      setAttemptingTxn(true)
-      try {
-        const response = await router.removeLiquidity(...args, {
-          gasLimit: safeGasEstimate,
-        })
-
-        setAttemptingTxn(false)
-
-        addTransaction(response, {
-          summary:
-            'Remove ' +
-            parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-            ' ' +
-            currencyA?.symbol +
-            ' and ' +
-            parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-            ' ' +
-            currencyB?.symbol,
-        })
-
-        setTxHash(response.hash)
-
-        ReactGA.event({
-          category: 'Liquidity',
-          action: 'Remove',
-          label: [currencyA?.symbol, currencyB?.symbol].join('/'),
-        })
-      } catch (error) {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        console.error(error)
-      }
+      ReactGA.event({
+        category: 'Liquidity',
+        action: 'Remove',
+        label: [currencyA?.symbol, currencyB?.symbol].join('/'),
+      })
+    } catch (error) {
+      setAttemptingTxn(false)
+      // we only care if the error is something _other_ than the user rejected the tx
+      console.error(error)
     }
   }
 
@@ -495,7 +474,7 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                <ButtonLight onClick={connect}>Connect Wallet</ButtonLight>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed
