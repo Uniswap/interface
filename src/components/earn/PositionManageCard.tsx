@@ -32,7 +32,7 @@ const PositionWrapper = styled.div<{ staked?: boolean }>`
 interface BoostStatusRowProps {
   incentive: Incentive
   positionDetails: PositionDetails
-  unstaked?: boolean
+  unstaked?: boolean // show minimal UI on unstaked positions
   isPositionPage?: boolean
 }
 
@@ -49,79 +49,73 @@ function BoostStatusRow({ incentive, positionDetails, unstaked, isPositionPage }
   const [showClaimModal, setShowClaimModal] = useState(false)
   const [showUnstakeModal, setShowUnstakeModal] = useState(false)
 
-  // if unstaked - show minimal UI
-  if (unstaked) {
-    return (
-      <PositionWrapper>
-        <RowBetween>
-          <RangeStatus positionDetails={positionDetails} />
-          <ButtonSmall>
-            <Trans>Stake Position</Trans>
-          </ButtonSmall>
-        </RowBetween>
-      </PositionWrapper>
-    )
-  }
-
   return (
-    <PositionWrapper staked={true}>
-      <RowBetween>
-        <StakingModal
-          isOpen={showStakingModal}
-          onDismiss={() => setShowStakingModal(false)}
-          incentives={[incentive]}
-          positionDetails={positionDetails}
-        />
-        <ClaimModal isOpen={showClaimModal} onDismiss={() => setShowClaimModal(false)} incentives={[incentive]} />
-        <UnstakeModal isOpen={showUnstakeModal} onDismiss={() => setShowUnstakeModal(false)} incentives={[incentive]} />
-        <AutoColumn gap="16px" style={{ width: '100%' }}>
-          {isPositionPage ? (
-            <RowBetween>
-              <RowFixed>
-                <Zap strokeWidth="3px" color={theme.blue3} size="16px" />
-                <TYPE.body ml="8px" fontWeight={500} color={theme.blue3}>
-                  Position is Staked
-                </TYPE.body>
-              </RowFixed>
-              <ButtonSmall as={Link} to={'/stake/' + incentive.poolAddress}>
-                <Trans>Manage</Trans>
-              </ButtonSmall>
-            </RowBetween>
-          ) : null}
-          {isPositionPage ? null : <RangeStatus positionDetails={positionDetails} />}
-          <TYPE.body fontSize="11px" color={theme.text3}>
-            <Trans>UNCLAIMED REWARDS</Trans>
-          </TYPE.body>
+    <>
+      <StakingModal isOpen={showStakingModal} onDismiss={() => setShowStakingModal(false)} incentive={incentive} />
+      <ClaimModal isOpen={showClaimModal} onDismiss={() => setShowClaimModal(false)} incentives={[incentive]} />
+      <UnstakeModal isOpen={showUnstakeModal} onDismiss={() => setShowUnstakeModal(false)} incentives={[incentive]} />
+      {unstaked ? (
+        <PositionWrapper>
           <RowBetween>
-            <RowFixed>
-              <TYPE.body fontSize="24px" color={theme.green1} fontWeight={500}>
-                <Trans>
-                  {totalUnclaimedUSD
-                    ? '$' + totalUnclaimedUSD
-                    : `${formatCurrencyAmount(availableClaim, 5)} ${rewardCurrency.symbol}`}
-                </Trans>
-              </TYPE.body>
-              <Badge style={{ margin: '0 12px' }}>
-                <CurrencyLogo currency={rewardCurrency} size="20px" />
-                <TYPE.body m="0 12px" fontSize="15px" fontWeight={500}>
-                  {`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}
-                </TYPE.body>
-              </Badge>
-            </RowFixed>
-            <AutoRow gap="8px" width="fit-content">
-              {availableClaim.greaterThan(BIG_INT_ZERO) ? (
-                <ButtonSmall onClick={() => setShowClaimModal(true)}>
-                  <Trans>Claim</Trans>
-                </ButtonSmall>
-              ) : null}
-              <ButtonSmall onClick={() => setShowUnstakeModal(true)}>
-                <Trans>Unstake</Trans>
-              </ButtonSmall>
-            </AutoRow>
+            <RangeStatus positionDetails={positionDetails} />
+            <ButtonSmall onClick={() => setShowStakingModal(true)}>
+              <Trans>Stake Position</Trans>
+            </ButtonSmall>
           </RowBetween>
-        </AutoColumn>
-      </RowBetween>
-    </PositionWrapper>
+        </PositionWrapper>
+      ) : (
+        <PositionWrapper staked={true}>
+          <RowBetween>
+            <AutoColumn gap="16px" style={{ width: '100%' }}>
+              {isPositionPage ? (
+                <RowBetween>
+                  <RowFixed>
+                    <Zap strokeWidth="3px" color={theme.blue3} size="16px" />
+                    <TYPE.body ml="8px" fontWeight={500} color={theme.blue3}>
+                      Position is Staked
+                    </TYPE.body>
+                  </RowFixed>
+                  <ButtonSmall as={Link} to={'/stake/' + incentive.poolAddress}>
+                    <Trans>Manage</Trans>
+                  </ButtonSmall>
+                </RowBetween>
+              ) : null}
+              {isPositionPage ? null : <RangeStatus positionDetails={positionDetails} />}
+              <TYPE.body fontSize="11px" color={theme.text3}>
+                <Trans>UNCLAIMED REWARDS</Trans>
+              </TYPE.body>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.body fontSize="24px" color={theme.green1} fontWeight={500}>
+                    <Trans>
+                      {totalUnclaimedUSD
+                        ? '$' + totalUnclaimedUSD
+                        : `${formatCurrencyAmount(availableClaim, 5)} ${rewardCurrency.symbol}`}
+                    </Trans>
+                  </TYPE.body>
+                  <Badge style={{ margin: '0 12px' }}>
+                    <CurrencyLogo currency={rewardCurrency} size="20px" />
+                    <TYPE.body m="0 12px" fontSize="15px" fontWeight={500}>
+                      {`~ ${formatCurrencyAmount(weeklyRewards, 5)} ${rewardCurrency.symbol} / Week `}
+                    </TYPE.body>
+                  </Badge>
+                </RowFixed>
+                <AutoRow gap="8px" width="fit-content">
+                  {availableClaim.greaterThan(BIG_INT_ZERO) ? (
+                    <ButtonSmall onClick={() => setShowClaimModal(true)}>
+                      <Trans>Claim</Trans>
+                    </ButtonSmall>
+                  ) : null}
+                  <ButtonSmall onClick={() => setShowUnstakeModal(true)}>
+                    <Trans>Unstake</Trans>
+                  </ButtonSmall>
+                </AutoRow>
+              </RowBetween>
+            </AutoColumn>
+          </RowBetween>
+        </PositionWrapper>
+      )}
+    </>
   )
 }
 

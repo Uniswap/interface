@@ -15,7 +15,7 @@ import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
-import Badge, { GreenBadge } from 'components/Badge'
+import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray, ButtonSmall } from 'components/Button'
 import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -45,7 +45,7 @@ import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { SupportedChainId } from 'constants/chains'
 import { useIncentivesForPool } from 'hooks/incentives/useAllIncentives'
-import { AlertCircle, Zap } from 'react-feather'
+import { AlertCircle } from 'react-feather'
 import PositionManageCard from 'components/earn/PositionManageCard'
 
 const PageWrapper = styled.div`
@@ -619,14 +619,8 @@ export function PositionPage({
             </ResponsiveRow>
           </AutoColumn>
           {incentives && !depositedInStaker ? (
-            <GreenBadge style={{ padding: '1rem', width: '100%' }}>
+            <Badge style={{ padding: '1rem', width: '100%' }}>
               <RowBetween>
-                <RowFixed>
-                  <Zap strokeWidth="3px" stroke={theme.green2} size="16px" />
-                  <TYPE.body ml="8px" fontWeight={500} color={theme.green2}>
-                    <Trans>{`${incentives.length} Boost${incentives.length > 1 ? 's' : ''} Available`}</Trans>
-                  </TYPE.body>
-                </RowFixed>
                 <RowFixed>
                   {incentives.map((incentive, i) => (
                     <CurrencyLogo
@@ -635,12 +629,17 @@ export function PositionPage({
                       size="20px"
                     />
                   ))}
+                  <TYPE.body ml="8px" fontWeight={500}>
+                    <Trans>Stake this position to earn UNI with liquidity mining</Trans>
+                  </TYPE.body>
+                </RowFixed>
+                <RowFixed>
                   <ButtonSmall padding="2px 8px" as={Link} to={'/stake/' + poolAddress} style={{ marginLeft: '12px' }}>
-                    <Trans>Explore</Trans>
+                    <Trans>Stake</Trans>
                   </ButtonSmall>
                 </RowFixed>
               </RowBetween>
-            </GreenBadge>
+            </Badge>
           ) : null}
           {incentives && depositedInStaker && positionDetails ? (
             <AutoColumn gap="md">
