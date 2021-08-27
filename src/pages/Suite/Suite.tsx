@@ -64,7 +64,7 @@ export const Suite = () => {
                     <h3><TYPE.main>{route.label} </TYPE.main></h3>
                     <small style={{marginBottom: 25, display: 'flex'}}><TYPE.blue>{route.description}</TYPE.blue></small>
                     {!route.external && <StyledInternalLink style={{color: '#ff', alignItems:'center', display:'flex'}} to={route.route}>{route.label} <ChevronRight /></StyledInternalLink>}
-                    {!!route.external && <ExternalLink style={{color: '#ff', alignItems:'center', display:'flex'}} href={route.route}>{route.label} <ChevronRight /></ExternalLink>}
+                    {!!route.external && <a style={{color: '#ff', alignItems:'center', display:'flex'}} href={route.route}>{route.label} <ChevronRight /></a>}
 
                     </div>
                 </Wrapper>
