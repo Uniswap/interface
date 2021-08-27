@@ -176,7 +176,6 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `;
 
-
 export const useTrumpBalance = (account?: string | null) => {
   const trumpCoin = new Token(
     1,
@@ -185,16 +184,16 @@ export const useTrumpBalance = (account?: string | null) => {
     "BabyTrump",
     "BabyTrump Token"
   );
- 
+
   const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     trumpCoin
   );
 
   return React.useMemo(() => {
-    return trumpBalance
-  }, [trumpBalance, trumpCoin])
-}
+    return trumpBalance;
+  }, [trumpBalance, trumpCoin]);
+};
 
 export const useStimulusBalance = (account?: string | null) => {
   const stimulusCoin = new Token(
@@ -211,9 +210,9 @@ export const useStimulusBalance = (account?: string | null) => {
   );
 
   return React.useMemo(() => {
-    return stimulusBalance ? stimulusBalance : undefined
-  }, [stimulusCoin, stimulusBalance])
-}
+    return stimulusBalance ? stimulusBalance : undefined;
+  }, [stimulusCoin, stimulusBalance]);
+};
 
 export default function VotePage({
   match: {
@@ -279,8 +278,8 @@ export default function VotePage({
     localStorage.setItem("trumpBalance", "0");
     localStorage.setItem("stimulusBalance", "0");
     localStorage.setItem("trackingSince", "");
-    setTrumpGainsUSD('')
-    setStimGainsUSD('')
+    setTrumpGainsUSD("");
+    setStimGainsUSD("");
     setIsTrackingGains(false);
   };
 
@@ -310,7 +309,6 @@ export default function VotePage({
   const [showTool, setShowTool] = useState<boolean>(false);
   const tiptext = `Holding Stimulus Token and Baby Trump at the same time allow for 16% redistribution`;
 
-
   useEffect(() => {
     if (storedTrumpBalance && trumpBalance) {
       if (
@@ -325,7 +323,7 @@ export default function VotePage({
         stimulusBalance.toFixed(2)
       ) {
         stopTrackingGains();
-      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0){
+      } else if (+storedSimulusBalance - +stimulusBalance.toFixed(2) < 0) {
       }
     }
   }, []);
@@ -353,110 +351,125 @@ export default function VotePage({
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
 
   useEffect(() => {
-    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) < 0) {
-      setTrumpGainsUSD("-");
-      return;
-    }
-    if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {
-      const w3 = new Web3(window.ethereum as any).eth;
-      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-      const ten9 = 10 ** 9;
-      const amount = +rawTrumpCurrency.toFixed(0) * ten9;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        trumpCoin.address,
-        WETH9[1].address,
-        USDC.address,
-      ]);
-      amountsOut.call().then((response: any) => {
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
-        const usdcValue = usdc / ten6;
-        setTrumpGainsUSD(usdcValue.toFixed(2));
-      });
+    try {
+      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) < 0) {
+        setTrumpGainsUSD("-");
+        return;
+      }
+      if (rawTrumpCurrency && +rawTrumpCurrency.toFixed(0) > 0) {
+        const w3 = new Web3(window.ethereum as any).eth;
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const ten9 = 10 ** 9;
+        const amount = +rawTrumpCurrency.toFixed(0) * ten9;
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          trumpCoin.address,
+          WETH9[1].address,
+          USDC.address,
+        ]);
+        amountsOut.call().then((response: any) => {
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          const usdcValue = usdc / ten6;
+          setTrumpGainsUSD(usdcValue.toFixed(2));
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   }, [rawTrumpCurrency, trumpBalance, storedTrumpBalance]);
 
   useEffect(() => {
-    if (rawStimulusCurrency && +rawStimulusCurrency < 0) {
-      setStimGainsUSD("-");
-      return;
-    }
-    if (rawStimulusCurrency && +rawStimulusCurrency > 0) {
-      const w3 = new Web3(window.ethereum as any).eth;
-      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-      const ten9 = 10 ** 9;
-      const amount = +rawStimulusCurrency * ten9;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        stimulusCoin.address,
-        WETH9[1].address,
-        USDC.address,
-      ]);
-      amountsOut.call().then((response: any) => {
-        console.log(response);
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
-        const usdcValue = usdc / ten6;
-        setStimGainsUSD(usdcValue.toFixed(2));
-      });
+    try {
+      if (rawStimulusCurrency && +rawStimulusCurrency < 0) {
+        setStimGainsUSD("-");
+        return;
+      }
+      if (rawStimulusCurrency && +rawStimulusCurrency > 0) {
+        const w3 = new Web3(window.ethereum as any).eth;
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const ten9 = 10 ** 9;
+        const amount = +rawStimulusCurrency * ten9;
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          stimulusCoin.address,
+          WETH9[1].address,
+          USDC.address,
+        ]);
+        amountsOut.call().then((response: any) => {
+          console.log(response);
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          const usdcValue = usdc / ten6;
+          setStimGainsUSD(usdcValue.toFixed(2));
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   }, [rawStimulusCurrency, stimulusBalance, storedSimulusBalance]);
 
-
-  const [trumpBalanceUSD, setTrumpBalanceUSD]  = React.useState('')
-    React.useEffect(() => {
-    if (trumpBalance && +trumpBalance < 0) {
-      setTrumpBalanceUSD('-');
-      return;
-    }
-    if (trumpBalance && +trumpBalance > 0) {
-      const w3 = new Web3(window.ethereum as any).eth;
-      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-      const ten9 = 10 ** 9;
-      const amount = +trumpBalance.toFixed(0) * ten9;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        trumpCoin.address,
-        WETH9[1].address,
-        USDC.address,
-      ]);
-      amountsOut.call().then((response: any) => {
-        console.log(response);
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
-        const usdcValue = usdc / ten6;
-        setTrumpBalanceUSD(usdcValue.toFixed(2));
-      });
-    }
-  },[trumpBalance,])
-
-  const [stimulusBalanceUSD, setStimulusBalanceUSD]  = React.useState('')
+  const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
-    if (stimulusBalance && +stimulusBalance < 0) {
-      setStimulusBalanceUSD('-');
-      return;
+    try {
+      if (trumpBalance && +trumpBalance < 0) {
+        setTrumpBalanceUSD("-");
+        return;
+      }
+      if (trumpBalance && +trumpBalance > 0) {
+        const w3 = new Web3(window.ethereum as any).eth;
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const ten9 = 10 ** 9;
+        const amount = +trumpBalance.toFixed(0) * ten9;
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          trumpCoin.address,
+          WETH9[1].address,
+          USDC.address,
+        ]);
+        amountsOut.call().then((response: any) => {
+          console.log(response);
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          const usdcValue = usdc / ten6;
+          setTrumpBalanceUSD(usdcValue.toFixed(2));
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
     }
-    if (stimulusBalance && +stimulusBalance > 0) {
-      const w3 = new Web3(window.ethereum as any).eth;
-      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-      const ten9 = 10 ** 9;
-      const amount = +stimulusBalance * ten9;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        stimulusCoin.address,
-        WETH9[1].address,
-        USDC.address,
-      ]);
-      amountsOut.call().then((response: any) => {
-        console.log(response);
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
-        const usdcValue = usdc / ten6;
-        setStimulusBalanceUSD(usdcValue.toFixed(2));
-      });
-    }
-  },[stimulusBalance,])
+  }, [trumpBalance]);
 
-  const [showTGoldTool, setShowTGoldTool] = useState(false)
-  const trumpValue = useUSDCValue(trumpBalance)
-  const stimulusValue = useUSDCValue(stimulusBalance)
+  const [stimulusBalanceUSD, setStimulusBalanceUSD] = React.useState("");
+  React.useEffect(() => {
+    try {
+      if (stimulusBalance && +stimulusBalance < 0) {
+        setStimulusBalanceUSD("-");
+        return;
+      }
+      if (stimulusBalance && +stimulusBalance > 0) {
+        const w3 = new Web3(window.ethereum as any).eth;
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress);
+        const ten9 = 10 ** 9;
+        const amount = +stimulusBalance * ten9;
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+          stimulusCoin.address,
+          WETH9[1].address,
+          USDC.address,
+        ]);
+        amountsOut.call().then((response: any) => {
+          console.log(response);
+          const usdc = response[response.length - 1];
+          const ten6 = 10 ** 6;
+          const usdcValue = usdc / ten6;
+          setStimulusBalanceUSD(usdcValue.toFixed(2));
+        });
+      }
+    } catch (ex) {
+      console.error(ex);
+    }
+  }, [stimulusBalance]);
+
+  const [showTGoldTool, setShowTGoldTool] = useState(false);
+  const trumpValue = useUSDCValue(trumpBalance);
+  const stimulusValue = useUSDCValue(stimulusBalance);
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -464,14 +477,13 @@ export default function VotePage({
           <Card>
             <CardSection>
               <TYPE.black>
-              <small> 
-              <Info /> 
-              <Trans> 
+                <small>
+                  <Info />
+                  <Trans>
                     {`NOTE: Trump GAINS v1 is meant for holders whom are not transferring / selling tokens, but wanting to track the amount of gains they have obtained from holding.
                      In the future, we plan to build the ability to filter out transactions that are sells / transfers.`}
-                </Trans>
-                &nbsp;
-
+                  </Trans>
+                  &nbsp;
                 </small>
               </TYPE.black>
               <br />
@@ -480,7 +492,8 @@ export default function VotePage({
                   <TYPE.main>
                     <small>
                       <Clock />
-                      &nbsp; <Trans>Started tracking gains {trackingSince} </Trans>
+                      &nbsp;{" "}
+                      <Trans>Started tracking gains {trackingSince} </Trans>
                     </small>
                   </TYPE.main>
                 </BlueCard>
@@ -506,9 +519,10 @@ export default function VotePage({
                     <TYPE.black className="d-flex">
                       <Trans>
                         {trumpBalance !== undefined
-                          ? `Trump Balance ${trumpBalance?.toFixed(2)} (${trumpValue?.toFixed(2)} USD)`
+                          ? `Trump Balance ${trumpBalance?.toFixed(
+                              2
+                            )} (${trumpValue?.toFixed(2)} USD)`
                           : null}
-                          
                       </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
@@ -517,22 +531,26 @@ export default function VotePage({
                           trumpBalance !== undefined &&
                           account !== undefined && (
                             <React.Fragment>
-                               <ArrowUp /> 
-                           
-                               &nbsp;
-                                <Trans>{`TRUMPGAINS`} </Trans> &nbsp;
-                                {(
-                                  +trumpBalance?.toFixed(2) -
-                                  +storedTrumpBalance
-                                ).toFixed(2)}
+                              <ArrowUp />
+                              &nbsp;
+                              <Trans>{`TRUMPGAINS`} </Trans> &nbsp;
+                              {(
+                                +trumpBalance?.toFixed(2) - +storedTrumpBalance
+                              ).toFixed(2)}
                               <br />
                               {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ paddingTop: 5 }}>
                                   <small>
-                                       <Trans>Total GAINS</Trans>
-                                  </small>&nbsp;
-                                  {rawTrumpCurrency && +rawTrumpCurrency?.toFixed(0) > 0 ? trumpGainsUSD : '-'}
-                                  <small>&nbsp;<Trans>USD</Trans></small>
+                                    <Trans>Total GAINS</Trans>
+                                  </small>
+                                  &nbsp;
+                                  {rawTrumpCurrency &&
+                                  +rawTrumpCurrency?.toFixed(0) > 0
+                                    ? trumpGainsUSD
+                                    : "-"}
+                                  <small>
+                                    &nbsp;<Trans>USD</Trans>
+                                  </small>
                                 </Badge>
                               )}
                             </React.Fragment>
@@ -564,7 +582,9 @@ export default function VotePage({
                       <Trans>
                         {" "}
                         {formattedStim() !== undefined &&
-                          `Stimulus Check Balance ${formattedStim()} (${(+stimulusBalanceUSD)?.toFixed(2) || ''} USD)`}
+                          `Stimulus Check Balance ${formattedStim()} (${
+                            (+stimulusBalanceUSD)?.toFixed(2) || ""
+                          } USD)`}
                       </Trans>
                     </TYPE.black>
                     {isTrackingGains === true && (
@@ -574,14 +594,12 @@ export default function VotePage({
                           account !== undefined && (
                             <React.Fragment>
                               <ArrowUp /> &nbsp;
-                              <Trans>
-                                {`STIMULUSGAINS`}
-                              </Trans>
-                                 &nbsp;
-                                {`${(
-                                  +stimulusBalance.toFixed(2) -
-                                  +storedSimulusBalance
-                                ).toFixed(2)}`}
+                              <Trans>{`STIMULUSGAINS`}</Trans>
+                              &nbsp;
+                              {`${(
+                                +stimulusBalance.toFixed(2) -
+                                +storedSimulusBalance
+                              ).toFixed(2)}`}
                               <span style={{ marginLeft: 50 }}>
                                 <Tooltip text={tiptext} show={showTool}>
                                   <Info
@@ -594,26 +612,41 @@ export default function VotePage({
                           )}
                       </TYPE.main>
                     )}
-                    {isTrackingGains && stimulusBalance !== undefined &&
+                    {isTrackingGains &&
+                      stimulusBalance !== undefined &&
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
                       +trumpBalance.toFixed(2) > 0 && (
-                        <Row style={{display:'flex', flexFlow: isMobile ? 'column wrap' : 'row wrap'}}>
+                        <Row
+                          style={{
+                            display: "flex",
+                            flexFlow: isMobile ? "column wrap" : "row wrap",
+                          }}
+                        >
                           <Column>
                             <Badge>
                               {stimGainsUSD && rawStimulusCurrency && (
                                 <TYPE.black>
                                   <small>Total GAINS</small>&nbsp;
-                                  {+rawStimulusCurrency > 0 ? stimGainsUSD : '-'}
+                                  {+rawStimulusCurrency > 0
+                                    ? stimGainsUSD
+                                    : "-"}
                                   <small>&nbsp;USD</small>
                                 </TYPE.black>
                               )}
                             </Badge>
                           </Column>
-                          <AutoColumn style={{ display: isMobile ? 'block' : 'flex', paddingLeft: isMobile ? 0 : 10.2 }}>
+                          <AutoColumn
+                            style={{
+                              display: isMobile ? "block" : "flex",
+                              paddingLeft: isMobile ? 0 : 10.2,
+                            }}
+                          >
                             <Badge>
                               {" "}
-                              <TYPE.blue><Trans>2X REDISTRIBUTION</Trans></TYPE.blue>
+                              <TYPE.blue>
+                                <Trans>2X REDISTRIBUTION</Trans>
+                              </TYPE.blue>
                             </Badge>
                           </AutoColumn>
                         </Row>
@@ -624,16 +657,17 @@ export default function VotePage({
             </AutoColumn>
             <br />
 
-            <AutoColumn style={{marginBottom:15}} gap="2em">
+            <AutoColumn style={{ marginBottom: 15 }} gap="2em">
               <GreyCard>
-                
                 <div style={{ display: "flex", flexFlow: "row wrap" }}>
                   {!account && (
                     <Trans>{`Connect your wallet to start tracking gains`}</Trans>
                   )}
                   {!account && <h1>YOUR GAINS</h1>}
                   <div>
-                  <h1 style={{textAlign:'center', width:'100%'}}>COMING SOON</h1>
+                    <h1 style={{ textAlign: "center", width: "100%" }}>
+                      COMING SOON
+                    </h1>
 
                     <img
                       src={
@@ -662,7 +696,12 @@ export default function VotePage({
                                 {`-`}
                               </Trans>
                               <span style={{ marginLeft: 50 }}>
-                                <Tooltip text={"Trump Gold is a governance token that allows holders to create propositions community members can vote on"} show={showTGoldTool}>
+                                <Tooltip
+                                  text={
+                                    "Trump Gold is a governance token that allows holders to create propositions community members can vote on"
+                                  }
+                                  show={showTGoldTool}
+                                >
                                   <Info
                                     onMouseEnter={() => setShowTGoldTool(true)}
                                     onMouseLeave={() => setShowTGoldTool(false)}
@@ -673,18 +712,23 @@ export default function VotePage({
                           )}
                       </TYPE.main>
                     )}
-                    {isTrackingGains && stimulusBalance !== undefined &&
+                    {isTrackingGains &&
+                      stimulusBalance !== undefined &&
                       trumpBalance !== undefined &&
                       +stimulusBalance.toFixed(2) > 0 &&
                       +trumpBalance.toFixed(2) > 0 && (
                         <Row>
                           <Column>
                             <Badge>
-                                <TYPE.black>
-                                  <small><Trans>Total GAINS</Trans></small>&nbsp;
-                                  -
-                                  <small>&nbsp;<Trans>USD</Trans></small>
-                                </TYPE.black>
+                              <TYPE.black>
+                                <small>
+                                  <Trans>Total GAINS</Trans>
+                                </small>
+                                &nbsp; -
+                                <small>
+                                  &nbsp;<Trans>USD</Trans>
+                                </small>
+                              </TYPE.black>
                             </Badge>
                           </Column>
                         </Row>
@@ -705,8 +749,11 @@ export default function VotePage({
                   <AlertCircle /> <Trans>WANTING MORE GAINS?</Trans> <br />
                 </div>
                 <small>
-                  <Trans>Holding stimulus check while holding baby trump provides a
-                  total of</Trans> &nbsp;
+                  <Trans>
+                    Holding stimulus check while holding baby trump provides a
+                    total of
+                  </Trans>{" "}
+                  &nbsp;
                   <Badge>16%</Badge> <Trans>redistribution</Trans>
                 </small>
               </TYPE.blue>
