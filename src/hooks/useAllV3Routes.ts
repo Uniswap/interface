@@ -17,7 +17,7 @@ function computeAllRoutes(
 ): Route<Currency, Currency>[] {
   const tokenIn = currencyIn?.wrapped
   const tokenOut = currencyOut?.wrapped
-  if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
+  if (!tokenIn || !tokenOut) return [];
 
   for (const pool of pools) {
     if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
