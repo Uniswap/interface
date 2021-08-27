@@ -1,10 +1,13 @@
-import { Currency, CurrencyAmount, Token, Ether } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
-import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { GetQuoteResult } from 'state/routing/slice'
 
-export function useRoutes(quoteResult: Pick<GetQuoteResult, 'route'> | undefined):
+export function useRoutes(
+  currencyIn: Currency | undefined,
+  currencyOut: Currency | undefined,
+  quoteResult: Pick<GetQuoteResult, 'route'> | undefined
+):
   | {
       route: Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -12,34 +15,36 @@ export function useRoutes(quoteResult: Pick<GetQuoteResult, 'route'> | undefined
     }[]
   | undefined {
   return useMemo(() => {
-    return (
-      quoteResult &&
-      quoteResult['route'].map((route) => {
-        const rawAmountIn = route[0].amountIn
-        const rawAmountOut = route[route.length - 1].amountOut
+    if (!quoteResult || !quoteResult.route) return undefined
 
-        if (!rawAmountIn || !rawAmountOut) {
-          throw new Error('Expected both amountIn and amountOut to be present')
-        }
+    if (quoteResult.route.length === 0) return []
 
-        // extract currency[In|Out] from route[first|last]
-        const [currencyIn, currencyOut] = [parseToken(route[0].tokenIn), parseToken(route[route.length - 1].tokenOut)]
+    const parsedCurrencyIn = currencyIn?.isNative
+      ? Ether.onChain(currencyIn.chainId)
+      : parseToken(quoteResult.route[0][0].tokenIn)
 
-        return {
-          route: new Route(route.map(parsePool), currencyIn, currencyOut),
-          inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
-          outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
-        }
-      })
-    )
-  }, [quoteResult])
+    const parsedCurrencyOut = currencyOut?.isNative
+      ? Ether.onChain(currencyOut.chainId)
+      : parseToken(quoteResult.route[0][0].tokenOut)
+
+    return quoteResult.route.map((route) => {
+      const rawAmountIn = route[0].amountIn
+      const rawAmountOut = route[route.length - 1].amountOut
+
+      if (!rawAmountIn || !rawAmountOut) {
+        throw new Error('Expected both amountIn and amountOut to be present')
+      }
+
+      return {
+        route: new Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut),
+        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+      }
+    })
+  }, [currencyIn, currencyOut, quoteResult])
 }
 
 const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Currency => {
-  // TODO(judo): fails when input/output is WETH
-  // return address === Ether.onChain(chainId).wrapped.address
-  //   ? Ether.onChain(SupportedChainId.MAINNET)
-  //   :
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 

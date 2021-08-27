@@ -63,7 +63,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
-  const routes = useRoutes(quoteResult)
+  const routes = useRoutes(amountIn?.currency, currencyOut, quoteResult)
 
   return useMemo(() => {
     if (!amountIn || !currencyOut) {
@@ -126,7 +126,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
-  const routes = useRoutes(quoteResult)
+  const routes = useRoutes(currencyIn, amountOut?.currency, quoteResult)
 
   return useMemo(() => {
     if (!amountOut || !currencyIn) {
