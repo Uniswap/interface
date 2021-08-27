@@ -45,9 +45,6 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       setAttempting(true)
       await doTransaction(stakingContract, 'exit', {
         args: [],
-        overrides: {
-          gasLimit: 300000,
-        },
         summary: `Withdraw deposited liquidity`,
       })
         .then((response) => {
