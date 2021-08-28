@@ -1,6 +1,4 @@
-import { AutoColumn } from 'components/Column'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import styled from 'styled-components/macro'
+import { RowFixed } from 'components/Row'
 import { TYPE } from 'theme'
 import { Incentive } from '../../hooks/incentives/useAllIncentives'
 import { usePoolsByAddresses } from 'hooks/usePools'
@@ -9,7 +7,6 @@ import { LoadingRows } from 'pages/Pool/styleds'
 import Badge, { GreenBadge, BlueBadge } from 'components/Badge'
 import { formattedFeeAmount } from 'utils'
 import { CardWrapper } from './styled'
-import IncentiveInfoBar from './IncentiveInfoBar'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
@@ -19,12 +16,11 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useV3PositionsForPool } from 'hooks/useV3Positions'
 import { useMemo } from 'react'
 import { BigNumber } from 'ethers'
-
-const ProgramsWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.04);
-  padding: 8px;
-  border-radius: 12px;
-`
+import { OverviewGrid } from './styled'
+import { BIG_INT_SECONDS_IN_WEEK } from 'constants/misc'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import CurrencyLogo from 'components/CurrencyLogo'
 
 interface ProgramCardProps {
   poolAddress: string
@@ -33,7 +29,7 @@ interface ProgramCardProps {
 }
 
 // Overview all all incentive programs for a given pool
-export default function ProgramCard({ poolAddress, incentives, hideStake = false }: ProgramCardProps) {
+export default function ProgramCard({ poolAddress, incentives }: ProgramCardProps) {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const [, pool] = usePoolsByAddresses([poolAddress])[0]
@@ -63,6 +59,14 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
     )
   }, [incentives, positions])
 
+  /**
+   * @todo
+   */
+  const rewardCurrency = incentives[0].initialRewardAmount.currency
+  const activeLiquidity = incentives[0].initialRewardAmount
+  const activeLiquidityUSD = useUSDCValue(activeLiquidity)
+  const rewardPerDay = incentives[0].rewardRatePerSecond.multiply(BIG_INT_SECONDS_IN_WEEK)
+
   return (
     <CardWrapper>
       {!pool || !currency0 || !currency1 ? (
@@ -70,16 +74,14 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
           <div />
         </LoadingRows>
       ) : (
-        <AutoColumn gap="24px">
-          <RowBetween>
+        <OverviewGrid>
+          <RowFixed justifySelf="flex-start">
+            <DoubleCurrencyLogo margin={true} currency0={currency0} currency1={currency1} size={20} />
+            <TYPE.body fontWeight={600} fontSize="20px" m="0 8px">
+              {`${currency0.symbol} / ${currency1.symbol}`}
+            </TYPE.body>
+            <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
             <RowFixed>
-              <DoubleCurrencyLogo margin={true} currency0={currency0} currency1={currency1} size={24} />
-              <TYPE.body fontWeight={600} fontSize="24px" m="0 8px">
-                {`${currency0.symbol} / ${currency1.symbol}`}
-              </TYPE.body>
-              <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
-            </RowFixed>
-            <AutoRow gap="6px" width="fit-content">
               {amountBoosted > 0 ? (
                 <BlueBadge>
                   <TYPE.body fontWeight={700} fontSize="12px" color={theme.blue3}>
@@ -88,38 +90,29 @@ export default function ProgramCard({ poolAddress, incentives, hideStake = false
                 </BlueBadge>
               ) : null}
               {amountAvailable > 0 ? (
-                <GreenBadge>
+                <GreenBadge style={{ marginLeft: '8px' }}>
                   <TYPE.body fontWeight={700} fontSize="12px" color={theme.green2}>
                     {amountAvailable} <Trans>Available</Trans>
                   </TYPE.body>
                 </GreenBadge>
               ) : null}
-              {hideStake ? null : (
-                <ButtonSmall as={Link} to={'/stake/' + poolAddress}>
-                  <Trans>Manage</Trans>
-                </ButtonSmall>
-              )}
-            </AutoRow>
-          </RowBetween>
-          <AutoColumn gap="12px">
-            <ProgramsWrapper>
-              {incentives
-                .map((incentive, i) => (
-                  <IncentiveInfoBar
-                    incentive={incentive}
-                    key={
-                      incentive.poolAddress +
-                      '-' +
-                      incentive.rewardAmountRemaining.currency.address +
-                      i +
-                      '-incentive-bar'
-                    }
-                  />
-                ))
-                .slice(0, 1)}
-            </ProgramsWrapper>
-          </AutoColumn>
-        </AutoColumn>
+            </RowFixed>
+          </RowFixed>
+          <TYPE.body fontWeight={600}>
+            {activeLiquidityUSD
+              ? `$${formatCurrencyAmount(activeLiquidityUSD, 2)}`
+              : `${formatCurrencyAmount(activeLiquidity, 4)} ${rewardCurrency.symbol}`}
+          </TYPE.body>
+          <RowFixed>
+            <CurrencyLogo currency={rewardCurrency} size={'16px'} />
+            <TYPE.body fontWeight={600} ml="6px">{`${formatCurrencyAmount(rewardPerDay, 4)} ${
+              rewardCurrency.symbol
+            } / day`}</TYPE.body>
+          </RowFixed>
+          <ButtonSmall as={Link} to={'/stake/' + poolAddress}>
+            <Trans>Manage</Trans>
+          </ButtonSmall>
+        </OverviewGrid>
       )}
     </CardWrapper>
   )

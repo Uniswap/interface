@@ -19,6 +19,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HoverText, TYPE } from 'theme'
 import { formattedFeeAmount } from 'utils'
+import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const Wrapper = styled.div`
@@ -32,7 +33,7 @@ export default function Manage({
   },
 }: RouteComponentProps<{ poolAddress: string }>) {
   const theme = useTheme()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const [, pool] = usePoolsByAddresses([poolAddress])[0]
 
@@ -81,10 +82,16 @@ export default function Manage({
             <Badge>{formattedFeeAmount(pool.fee)}%</Badge>
           </RowFixed>
           <RowFixed>
-            <ButtonGreySmall>
-              <Trans>View Analytics ↗</Trans>
-            </ButtonGreySmall>
-            <ButtonGreySmall style={{ marginLeft: '8px' }}>
+            {chainId === 1 ? (
+              <ButtonGreySmall>
+                <Trans>View Analytics ↗</Trans>
+              </ButtonGreySmall>
+            ) : null}
+            <ButtonGreySmall
+              style={{ marginLeft: '8px' }}
+              as={Link}
+              to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.fee}`}
+            >
               <Trans>Add Liquidity</Trans>
             </ButtonGreySmall>
           </RowFixed>

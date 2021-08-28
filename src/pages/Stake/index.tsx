@@ -2,7 +2,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { CardSection, DataCard, CardBGImage } from '../../components/earn/styled'
+import { CardSection, DataCard, CardBGImage, OverviewGrid } from '../../components/earn/styled'
 import { DarkCard } from '../../components/Card'
 import { Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
@@ -26,7 +26,7 @@ const ProgramSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   column-gap: 10px;
-  row-gap: 24px;
+  row-gap: 12px;
   width: 100%;
   justify-self: center;
 `
@@ -71,7 +71,18 @@ export default function Stake() {
         </DataCard>
       </TopSection>
       <DarkCard padding="24px">
-        <AutoColumn gap="lg" style={{ width: '100%' }}>
+        <AutoColumn gap="16px">
+          <OverviewGrid style={{ padding: '0' }}>
+            <TYPE.body justifySelf="flex-start" fontSize="14px">
+              <Trans>Active Programs</Trans>
+            </TYPE.body>
+            <TYPE.body fontSize="14px" style={{ whiteSpace: 'nowrap' }}>
+              <Trans>7D Active Liquidity</Trans>
+            </TYPE.body>
+            <TYPE.body fontSize="14px">
+              <Trans>Rewards Rate</Trans>
+            </TYPE.body>
+          </OverviewGrid>
           <ProgramSection>
             {loading ? (
               <Loader />

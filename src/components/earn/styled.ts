@@ -74,3 +74,12 @@ export const Break = styled.div`
   height: 1px;
   border-radius: 1px;
 `
+
+export const OverviewGrid = styled.div`
+  display: grid;
+  grid-template-columns: auto 160px 180px 80px;
+  grid-column-gap: 16px;
+  align-items: center;
+  justify-items: flex-end;
+  width: 100%;
+`
