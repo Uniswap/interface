@@ -95,7 +95,7 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
   return useMemo(() => {
     return useLogsResult?.logs?.map((log) => {
       const parsed = GovernanceInterface.parseLog(log).args
-      let description: string | undefined = undefined
+      let description!: string
       try {
         description = parsed.description
       } catch (error) {
@@ -122,7 +122,12 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
           }
         }
 
-        description = toUtf8String(error.error.value, onError).slice(1, -1).replaceAll('  ', '\n')
+        description = JSON.parse(toUtf8String(error.error.value, onError)) || ''
+
+        // Bravo proposal omits newlines
+        if (startBlock === BRAVO_START_BLOCK) {
+          description = description.replaceAll(/  /g, '\n').replaceAll(/\d\. /g, '\n$&')
+        }
       }
       return {
         description: description || parsed.description,
