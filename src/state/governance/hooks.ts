@@ -130,7 +130,7 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
         }
       }
       return {
-        description: description || parsed.description,
+        description,
         details: parsed.targets.map((target: string, i: number) => {
           const signature = parsed.signatures[i]
           const [name, types] = signature.substr(0, signature.length - 1).split('(')
