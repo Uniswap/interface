@@ -115,7 +115,7 @@ const VideoWrapper = styled.video`
 export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
-  const [theme, setTheme] = React.useState(localStorage.getItem(THEME_BG_KEY) || 'trumpblue')
+  const [theme, setTheme] = React.useState(localStorage.getItem(THEME_BG_KEY) || './trump.mp4')
   
   const setThemeCb = (newTheme: string) => {
       localStorage.setItem(THEME_BG_KEY, newTheme)
