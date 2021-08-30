@@ -25,6 +25,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import { Calculator } from './Calculator/Calculator'
 import CreateProposal from './CreateProposal'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
@@ -40,10 +41,12 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { Suite } from './Suite/Suite'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { ThemedBg } from './ThemedBg/ThemedBg'
 import Vote from './Vote'
 import { routerAbi, routerAddress } from './Vote/routerAbi'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
+const THEME_BG_KEY = 'themedBG';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -112,7 +115,15 @@ const VideoWrapper = styled.video`
 export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
-  const stream = './trump.mp4'
+  const [theme, setTheme] = React.useState(localStorage.getItem(THEME_BG_KEY) || 'trumpblue')
+  
+  const setThemeCb = (newTheme: string) => {
+      localStorage.setItem(THEME_BG_KEY, newTheme)
+      setTheme(newTheme)
+  }
+  const themeSource = React.useMemo(() => {
+    return  theme;
+  }, [theme, localStorage.getItem('themedBG')])
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const value = localStorage.getItem("hasOverride");
   React.useEffect (( ) => {
@@ -121,6 +132,13 @@ export default function App() {
       localStorage.setItem("hasOverride", "1");
     }  
   }, [value])
+  const Video = React.useMemo(() => {
+    return (
+    <VideoWrapper key={themeSource} loop autoPlay muted>
+      <source src={themeSource} type={'video/mp4'}></source>
+    </VideoWrapper>
+  )
+  }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -129,9 +147,7 @@ export default function App() {
 
       <Web3ReactManager>
         <AppWrapper>
-          <VideoWrapper loop autoPlay muted>
-            <source src={stream} type={'video/mp4'}></source>
-          </VideoWrapper>
+        {Video}
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
@@ -140,6 +156,9 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Switch>
+              <Route exact strict path="/themed-background" render={(props) => (
+                <ThemedBg theme={theme} setTheme={setThemeCb} />
+              )} />
               <Route exact strict path="/gains-tracker" component={GainsTracker} />
               <Route exact strict path="/suite" component={Suite} />
               <Route exact strict path="/gains" component={VotePage} />
