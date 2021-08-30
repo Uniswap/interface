@@ -112,6 +112,7 @@ ReactDOM.render(
         description:
           'The interface for Ubeswap, a decentralized exchange and automated market maker protocol for Celo assets.',
         url: 'https://app.ubeswap.org',
+        icon: 'https://info.ubeswap.org/favicon.png',
       }}
       connectModal={{
         reactModalProps: {
