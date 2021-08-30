@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
