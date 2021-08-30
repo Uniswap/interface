@@ -1,4 +1,13 @@
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
+
 describe('Add Liquidity', () => {
+  beforeEach(() => {
+    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
+      aliasQuery(req, 'feeTierDistribution')
+    })
+  })
+
   it('loads the two correct tokens', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')

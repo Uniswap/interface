@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-07-08 18:32+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-08-17 11:04\n"
+"Last-Translator: \n"
+"Language: zh_CN\n"
+"Language-Team: Chinese Simplified\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: zh\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: zh-CN\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-07-09 12:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -26,10 +26,6 @@ msgstr "$-"
 #: src/pages/Pool/PositionPage.tsx
 msgid "${0}"
 msgstr "${0}"
-
-#: src/components/earn/PoolCard.tsx
-msgid "${0} ETH"
-msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
@@ -50,10 +46,6 @@ msgstr "(全部清除)"
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
 msgstr "(编辑)"
-
-#: src/components/RangeSelector/PresetsButtons.tsx
-msgid "+/- {label}%"
-msgstr "+/- {label}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
@@ -158,6 +150,7 @@ msgstr "已激活"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "添加"
 
@@ -166,6 +159,7 @@ msgid "Add Delegate +"
 msgstr "添加委托 +"
 
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add Liquidity"
 msgstr "注入流动资金"
 
@@ -415,6 +409,7 @@ msgid "Clear all"
 msgstr "全部清除"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "关闭"
 
@@ -422,10 +417,6 @@ msgstr "关闭"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "已关闭"
-
-#: src/pages/Pool/index.tsx
-msgid "Closed positions"
-msgstr "已关闭的仓位"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -468,6 +459,10 @@ msgstr "常用代币"
 msgid "Confirm"
 msgstr "确认"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Confirm Create"
+msgstr "确认创建"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "确认供应"
@@ -484,6 +479,10 @@ msgstr "确认兑换"
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "在您的钱包中确认这笔交易"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm transaction in wallet"
+msgstr "在钱包中确认交易"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -584,6 +583,10 @@ msgstr "当前兑换率"
 msgid "Current {0} Price:"
 msgstr "当前 {0} 兑换率："
 
+#: src/components/Menu/index.tsx
+msgid "Dark Theme"
+msgstr "深色"
+
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
 msgstr "未通过"
@@ -623,6 +626,7 @@ msgstr "充入 UNI-V2 流动池代币"
 msgid "Deposit liquidity"
 msgstr "充入流动资金"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit to {0}"
@@ -727,6 +731,7 @@ msgid "Enter valid token address"
 msgstr "输入有效的代币合约地址"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "错误"
@@ -793,12 +798,15 @@ msgstr "来源 (最多为)"
 msgid "Full Range"
 msgstr "全范围"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
+msgstr "全范围仓位可能比集中仓位赚取更少的费用。在<0>此处</0>了解更多。"
+
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "在Discord上寻求支持"
 
 #: src/components/FeeSelector/index.tsx
-#: src/pages/Pool/index.tsx
 msgid "Hide"
 msgstr "隐藏"
 
@@ -907,13 +915,25 @@ msgstr "选择的范围无效。最小兑换率必须低于最大兑换率。"
 msgid "Invalid recipient"
 msgstr "无效的接收方"
 
+#: src/components/Menu/index.tsx
+msgid "Language"
+msgstr "语言"
+
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "学习"
 
+#: src/pages/Pool/CTACards.tsx
+msgid "Learn about providing liquidity"
+msgstr "了解提供流动性的相关信息"
+
 #: src/components/Header/NetworkCard.tsx
 msgid "Learn more"
 msgstr "了解更多"
+
+#: src/components/Menu/index.tsx
+msgid "Light Theme"
+msgstr "浅色"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -997,6 +1017,10 @@ msgstr "最大值："
 msgid "Maximum sent"
 msgstr "发送的最大值"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "菜单"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1017,10 +1041,6 @@ msgstr "将流动资金迁移到V3"
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
 msgstr "迁移V2 流动资金"
-
-#: src/pages/Pool/index.tsx
-msgid "Migrate V2 liquidity"
-msgstr "迁移V2流动资金"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
@@ -1108,10 +1128,6 @@ msgstr "关闭"
 msgid "On"
 msgstr "开启"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "On Uniswap V3, setting a range across all prices like V2 is less capital efficient than a concentrated one. Learn more <0>here</0>."
-msgstr "在 Uniswap V3 上，像 V2 一样设置兑换率全范围的资本效率将比集中兑换率范围低。 <0>在此</0>了解更多信息。"
-
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "对费率感到满意的话，请点击“供应”键，到审查步骤。"
@@ -1123,6 +1139,22 @@ msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区�
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "糟糕！出现未知错误。请刷新页面，或从其他浏览器或设备访问。"
+
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism Planned Downtime"
+msgstr "Optimism 预定的下线时间段"
+
+#: src/components/OptimismDowntimeWarning/index.tsx
+msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimism 预期在不久的将来进行停机维护。也可能发生计划外停机。当网络关闭时，不会产生费用收入，您将暂时无法移除流动性。 <0>阅读更多。</0>"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic Etherscan"
+msgstr "Optimistic Etherscan"
+
+#: src/components/Header/NetworkCard.tsx
+msgid "Optimistic L2 Gateway"
+msgstr "Optimistic L2 网关"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1152,6 +1184,10 @@ msgstr "参与的流动池"
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "待办"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Please confirm you would like to remove this list by typing REMOVE"
+msgstr "请输入 REMOVE 以确认您要删除此列表"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
@@ -1227,7 +1263,6 @@ msgstr "太过影响兑换率"
 msgid "Price Updated"
 msgstr "兑换率已更新"
 
-#: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
 msgstr "兑换率范围"
@@ -1275,6 +1310,12 @@ msgstr "待执行"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "费率"
+
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
+#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Read more"
+msgstr "阅读更多"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
@@ -1344,6 +1385,7 @@ msgid "Restricts swaps to direct pairs only."
 msgstr "将交易限制为只针对直接币对。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "返回"
@@ -1388,6 +1430,8 @@ msgstr "自我"
 msgid "Self Delegate"
 msgstr "自我代表"
 
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
 msgstr "设置兑换率范围"
@@ -1395,10 +1439,6 @@ msgstr "设置兑换率范围"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "设置起始兑换率"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Set your Price Range"
-msgstr "设置兑换率范围"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1408,13 +1448,13 @@ msgstr "流动池份额"
 msgid "Share of Pool:"
 msgstr "流动池份额："
 
-#: src/pages/Pool/index.tsx
-msgid "Show"
-msgstr "显示"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
 msgstr "显示 Portis"
+
+#: src/pages/Pool/index.tsx
+msgid "Show closed positions"
+msgstr "显示已关闭的仓位"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1432,6 +1472,10 @@ msgstr "有些代币无法通过此界面使用，因为它们可能无法很好
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "出错了"
+
+#: src/components/PositionList/index.tsx
+msgid "Status"
+msgstr "状态"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1452,6 +1496,10 @@ msgstr "提交投票"
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
 msgstr "投票通过"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Success"
+msgstr "成功"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1479,8 +1527,8 @@ msgid "Swapping {0} {1} for {2} {3}"
 msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Header/NetworkCard.tsx
-msgid "Switch to Ethereum"
-msgstr "切换到以太坊"
+msgid "Switch to L1 (Mainnet)"
+msgstr "切换到 L1 (主网)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1534,6 +1582,7 @@ msgstr "没有流动性数据。"
 msgid "These tokens are commonly paired with other tokens."
 msgstr "这些代币通常与其他代币配对。"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network."
 msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。"
@@ -1541,6 +1590,14 @@ msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
 msgstr "这是 Uniswap 在 {0} 网络上的 alpha 版本。您必须将 L1 资产桥接到网络后才能进行兑换。"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "需要先初始化，然后再添加流动性。初始化时，请先选择起始价格，然后输入您的流动性价格范围和存款金额。因需进行初始化相关操作，Gas 费将比平时高一些。"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
+msgstr "在您添加流动性之前， {0} 池需要先初始化。请先选择起始价格，然后输入您的流动性价格范围和存款金额。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1602,9 +1659,11 @@ msgid "Total deposits"
 msgstr "存入总额"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "交易设置"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1613,6 +1672,10 @@ msgstr "交易设置"
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "已提交交易"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction completed in"
+msgstr "交易完成于"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1678,10 +1741,6 @@ msgstr "未定"
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
-
-#: src/pages/Pool/CTACards.tsx
-msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3已发布！"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1794,6 +1853,7 @@ msgstr "在 Etherscan 上查看"
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "在以太坊资源浏览器上查看"
 
@@ -1905,10 +1965,6 @@ msgstr "您正在创建一个流动池"
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
 msgstr "您是此 Uniswap V3 流动池的第一个流动资金提供者。您的流动资金将以当前的 {0} 兑换率迁移。"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "You are the first liquidity provider for this Uniswap V3 pool.The transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "您是这个 Uniswap V3 池的第一个流动性提供者。由于需包括创建池的 gas 费用，交易成本会高出许多。"
-
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
 msgstr "您是第一个流动资金提供者。"
@@ -1929,9 +1985,10 @@ msgstr "您没有足够的票数来提交提案"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "您在此流动池中还未有流动资金。"
 
+#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to swap them."
-msgstr "您必须将 L1 资产桥接到网络后才能进行兑换。"
+msgid "You must bridge L1 assets to the network to use them."
+msgstr "您必须将 L1 资产桥接到网络后才能使用它们。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2111,6 +2168,7 @@ msgid "{0} Deposited"
 msgstr "注入 {0}"
 
 #: src/components/Header/index.tsx
+#: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
 
@@ -2170,7 +2228,6 @@ msgstr "{0} 每 {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
-#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
@@ -2221,6 +2278,10 @@ msgstr "{SOCKS_AMOUNT} UNI 代币"
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI 代币"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{activeTokensOnThisChain} tokens"
+msgstr "{activeTokensOnThisChain} 代币"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

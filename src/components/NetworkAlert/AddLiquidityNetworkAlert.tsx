@@ -5,12 +5,13 @@ import {
   OptimismWrapperBackgroundDarkMode,
   OptimismWrapperBackgroundLightMode,
 } from 'components/NetworkAlert/NetworkAlert'
-import { CHAIN_INFO, L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { ArrowDownCircle } from 'react-feather'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
   display: none;
@@ -116,11 +117,14 @@ export function AddLiquidityNetworkAlert() {
     <Wrapper darkMode={darkMode} chainId={chainId} logoUrl={info.logoUrl}>
       <L2Icon src={info.logoUrl} />
       <Body>
-        <Trans>This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network.</Trans>
-        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>
+        <Trans>This is an alpha release of Uniswap on the {info.label} network.</Trans>
+        <DesktopTextBreak /> <Trans>You must bridge L1 assets to the network to use them.</Trans>{' '}
+        <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+          <Trans>Read more</Trans>
+        </ReadMoreLink>
       </Body>
       <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
+        <Trans>Deposit to {info.label}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
     </Wrapper>

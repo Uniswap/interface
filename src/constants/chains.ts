@@ -14,30 +14,18 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
-export type SupportedL2ChainId =
-  | SupportedChainId.ARBITRUM_ONE
-  | SupportedChainId.ARBITRUM_RINKEBY
-  | SupportedChainId.OPTIMISM
-  | SupportedChainId.OPTIMISTIC_KOVAN
+export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
 
-export type SupportedL1ChainId =
-  | SupportedChainId.MAINNET
-  | SupportedChainId.ROPSTEN
-  | SupportedChainId.RINKEBY
-  | SupportedChainId.GOERLI
-  | SupportedChainId.KOVAN
-
-export const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } = {
-  [SupportedChainId.MAINNET]: 'Mainnet',
-  [SupportedChainId.RINKEBY]: 'Rinkeby',
-  [SupportedChainId.ROPSTEN]: 'Ropsten',
-  [SupportedChainId.GOERLI]: 'Görli',
-  [SupportedChainId.KOVAN]: 'Kovan',
-  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum',
-  [SupportedChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [SupportedChainId.OPTIMISM]: 'Optimism',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'Optimistic Kovan',
-} as const
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+]
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
@@ -45,27 +33,34 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
-]
+] as const
+
+export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
 
 export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
-]
+] as const
+
+export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+
 interface L1ChainInfo {
-  docs: string
-  explorer: string
-  infoLink: string
-  label: string
+  readonly docs: string
+  readonly explorer: string
+  readonly infoLink: string
+  readonly label: string
 }
-interface L2ChainInfo extends L1ChainInfo {
-  bridge: string
-  logoUrl: string
+export interface L2ChainInfo extends L1ChainInfo {
+  readonly bridge: string
+  readonly logoUrl: string
 }
 
-type ChainInfo = { [chainId in SupportedL2ChainId]: L2ChainInfo } &
-  { [chainId in SupportedL1ChainId]: L1ChainInfo } & { [chainId: number]: L1ChainInfo | L2ChainInfo }
+type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
+  readonly [chainId in SupportedL2ChainId]: L2ChainInfo
+} &
+  { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {
@@ -73,7 +68,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: NETWORK_LABELS[SupportedChainId.ARBITRUM_ONE],
+    label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
@@ -81,45 +76,45 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: NETWORK_LABELS[SupportedChainId.ARBITRUM_RINKEBY],
+    label: 'Arbitrum Rinkeby',
     logoUrl: arbitrumLogoUrl,
   },
   [SupportedChainId.MAINNET]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.MAINNET],
+    label: 'Mainnet',
   },
   [SupportedChainId.RINKEBY]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.RINKEBY],
+    label: 'Rinkeby',
   },
   [SupportedChainId.ROPSTEN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.ROPSTEN],
+    label: 'Ropsten',
   },
   [SupportedChainId.KOVAN]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.KOVAN],
+    label: 'Kovan',
   },
   [SupportedChainId.GOERLI]: {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: NETWORK_LABELS[SupportedChainId.GOERLI],
+    label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: NETWORK_LABELS[SupportedChainId.OPTIMISM],
+    label: 'Optimism',
     logoUrl: optimismLogoUrl,
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
@@ -127,7 +122,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
-    label: NETWORK_LABELS[SupportedChainId.OPTIMISTIC_KOVAN],
+    label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
   },
 }

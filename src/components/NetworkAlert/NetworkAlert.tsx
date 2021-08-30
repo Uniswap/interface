@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, NETWORK_LABELS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
@@ -8,6 +8,7 @@ import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
+import { ReadMoreLink } from './styles'
 
 const L2Icon = styled.img`
   width: 40px;
@@ -139,23 +140,27 @@ export function NetworkAlert() {
   const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
     ? `${info.bridge}?chainId=1`
     : info.bridge
+
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
       <ContentWrapper>
         <L2Icon src={info.logoUrl} />
         <Header>
-          <Trans>Uniswap on {NETWORK_LABELS[chainId]}</Trans>
+          <Trans>Uniswap on {info.label}</Trans>
         </Header>
         <Body>
           <Trans>
-            This is an alpha release of Uniswap on the {NETWORK_LABELS[chainId]} network. You must bridge L1 assets to
-            the network to swap them.
-          </Trans>
+            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
+            swap them.
+          </Trans>{' '}
+          <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+            <Trans>Read more</Trans>
+          </ReadMoreLink>
         </Body>
       </ContentWrapper>
       <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {NETWORK_LABELS[chainId]}</Trans>
+        <Trans>Deposit to {info.label}</Trans>
         <LinkOutCircle />
       </LinkOutToBridge>
     </RootWrapper>
