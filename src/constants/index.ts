@@ -652,7 +652,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
       : [],
-  [ChainId.AVAXTESTNET]: [],
+  [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
   [ChainId.AVAXMAINNET]: []
 }
 
@@ -673,7 +673,7 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSCTESTNET]: '0x08Db265fE1C49fDCfEb775971abc2EcD1164a12d',
   [ChainId.BSCMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x51E8D106C646cA58Caf32A47812e95887C071a62' : '',
-  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXTESTNET]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
   [ChainId.AVAXMAINNET]: ''
 }
 
@@ -732,6 +732,6 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0x8BcBc65Ce330BC019D87409C2949A2471Bef1E5C'
         ]
       : [],
-  [ChainId.AVAXTESTNET]: [],
+  [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
   [ChainId.AVAXMAINNET]: []
 }
