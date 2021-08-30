@@ -50,6 +50,7 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  showOnlyTrumpCoins?:boolean;
   showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
@@ -67,6 +68,7 @@ export function CurrencySearch({
   showManageView,
   showImportView,
   setImportToken,
+  showOnlyTrumpCoins
 }: CurrencySearchProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
@@ -108,7 +110,7 @@ export function CurrencySearch({
     return filteredTokens.sort(tokenComparator)
   }, [filteredTokens, tokenComparator])
 
-  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
+  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery, showOnlyTrumpCoins)
 
   const ether = useMemo(() => chainId && ExtendedEther.onChain(chainId), [chainId])
 
