@@ -1,21 +1,23 @@
-import { useState } from 'react'
-import styled from 'styled-components/macro'
-import { TYPE, CloseIcon, ExternalLink } from 'theme'
+import { Trans } from '@lingui/macro'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { ButtonEmpty } from 'components/Button'
-import Modal from 'components/Modal'
 import Card, { OutlineCard } from 'components/Card'
-import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import Modal from 'components/Modal'
+import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
+import { CloseIcon, ExternalLink, TYPE, Z_INDEX } from 'theme'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { Trans } from '@lingui/macro'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
   padding-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: -2rem;
   width: 100%;
   max-width: 400px;
@@ -23,7 +25,7 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
-  z-index: -1;
+  z-index: ${Z_INDEX.zero};
 
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
   transition: transform 300ms ease-in-out;
@@ -100,7 +102,7 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <ButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
+      <ButtonEmpty padding={'0'} style={{ textDecoration: 'none' }} onClick={() => setShowDetails(true)}>
         <TYPE.blue>
           <Trans>Read more about unsupported assets</Trans>
         </TYPE.blue>

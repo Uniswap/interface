@@ -20,6 +20,14 @@ export const MEDIA_WIDTHS = {
   upToLarge: 1280,
 }
 
+export enum Z_INDEX {
+  background = -1,
+  zero = 0,
+  content = 1,
+  foreground = 10,
+  modal = 20,
+}
+
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
     ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
