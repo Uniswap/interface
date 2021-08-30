@@ -301,6 +301,12 @@ export default function Header() {
   const isMobile: boolean = width <= 768
   const [showTip, setShowTip] = useState(false)
   const [darkmode] = useDarkModeManager()
+
+  const [coinGeckoData, setCGData] = React.useState<any>({})
+  React.useEffect(() => {
+      fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=baby-trump&order=market_cap_desc&per_page=100&page=1&sparkline=false`, {method: "GET"}).then((res) => res.json()) 
+      .then(response => setCGData(response[0]))
+  }, [])
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
@@ -443,6 +449,27 @@ export default function Header() {
               </Row>
             </Card>
           )}
+          <HeaderElement style={{position:'fixed', bottom:10, left :'1%'}}>
+            <div style={{display:'flex', alignItems:'center'}}>
+            <img width="40px" src="https://babytrumptoken.com/images/Baby_Trump_Transpa.png" alt="logo" />
+                  {coinGeckoData && coinGeckoData?.price_change_percentage_24h > 0 && (
+                    <>
+                    <div style={{color:'green', display:'flex'}}>
+                        <ChevronUp style={{color:'#fff', fontSize:32}} />
+                    </div>
+                    {coinGeckoData.price_change_percentage_24h}% (24hrs)
+                  </>
+                  )}
+                  {coinGeckoData && coinGeckoData?.price_change_percentage_24h < 0 && (
+                    <>
+                    <div style={{color:'green', display:'flex'}}>
+                        <ChevronDown style={{color:'#fff', fontSize:32}} />
+                    </div>
+                    {coinGeckoData.price_change_percentage_24h}%
+                  </>
+                  )}
+                  </div>
+                 </HeaderElement>
           <HeaderElement style={{ marginRight: 15 }}>
             <IconWrapper
               onClick={(e) => {
