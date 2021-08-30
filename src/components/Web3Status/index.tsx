@@ -6,6 +6,7 @@ import React, { useEffect, useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
+import { isAddress } from 'web3-utils'
 
 import { NETWORK_CHAIN_NAME } from '../../connectors'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -120,9 +121,7 @@ const StatusIcon: React.FC = () => {
 
 function Web3StatusInner() {
   const { t } = useTranslation()
-  const { connect, address } = useContractKit()
-  // TODO(bl): Figure out why summary.name is empty
-  // const { summary } = useAccountSummary(address ?? undefined)
+  const { connect, address, account } = useContractKit()
   const error = null
 
   const allTransactions = useAllTransactions()
@@ -136,8 +135,14 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
-  if (address) {
-    const accountName = shortenAddress(address)
+  let accountName
+  if (account) {
+    // Phone numbers show up under `account`, so we need to check if it is an address
+    accountName = isAddress(account) ? shortenAddress(account) : account
+  } else if (address) {
+    accountName = shortenAddress(address)
+  }
+  if (accountName) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
