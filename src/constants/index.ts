@@ -648,7 +648,10 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
       : ['0x829c27fd3013b944cbE76E92c3D6c45767c0C789', '0x3aDd3034Fcf921F20c74c6149FB44921709595B1'],
   [ChainId.MUMBAI]: ['0x882233B197F9e50b1d41F510fD803a510470d7a6'],
   [ChainId.BSCTESTNET]: ['0x7B731e53B16694cF5dEb87d4C84bA2b4F4EcB4eB', '0x35D1b10fA26cd0FbC52Fd22dd58E2d9d22FC631F'],
-  [ChainId.BSCMAINNET]: [],
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
+      : [],
   [ChainId.AVAXTESTNET]: [],
   [ChainId.AVAXMAINNET]: []
 }
@@ -668,7 +671,8 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
       : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
   [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
   [ChainId.BSCTESTNET]: '0x08Db265fE1C49fDCfEb775971abc2EcD1164a12d',
-  [ChainId.BSCMAINNET]: '',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x51E8D106C646cA58Caf32A47812e95887C071a62' : '',
   [ChainId.AVAXTESTNET]: '',
   [ChainId.AVAXMAINNET]: ''
 }
@@ -720,7 +724,14 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
     '0xb09a1EA652962197f54B580812D153b1Cfd3274e',
     '0x30F2F907B014cB6520bfFe7FC715ad9c138dF7B0'
   ],
-  [ChainId.BSCMAINNET]: [],
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? [
+          '0x706eF64b3842a8a6D31d7DC6669e521cCA9f5Ce1',
+          '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
+          '0x8BcBc65Ce330BC019D87409C2949A2471Bef1E5C'
+        ]
+      : [],
   [ChainId.AVAXTESTNET]: [],
   [ChainId.AVAXMAINNET]: []
 }

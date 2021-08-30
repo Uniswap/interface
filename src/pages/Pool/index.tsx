@@ -72,7 +72,7 @@ const EmptyProposals = styled.div`
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const liquidityPositionTokenPairs = useLiquidityPositionTokenPairs()
 
@@ -141,6 +141,18 @@ export default function Pool() {
     transformedUserLiquidityPositions[position.pool.id] = position
   })
 
+  let newPoolLink = `/create/`
+  if (chainId) {
+    newPoolLink += [1, 3, 4, 5, 42].includes(chainId)
+      ? 'ETH'
+      : [80001, 137].includes(chainId)
+      ? 'MATIC'
+      : [56, 97].includes(chainId)
+      ? 'BNB'
+      : [43113, 43114].includes(chainId)
+      ? 'AVAX'
+      : ''
+  }
   return (
     <>
       <PageWrapper>
@@ -167,13 +179,7 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ButtonOutlined
-                  width="148px"
-                  padding="12px 18px"
-                  as={Link}
-                  to={`/create/ETH`}
-                  style={{ float: 'right' }}
-                >
+                <ButtonOutlined width="148px" padding="12px 18px" as={Link} to={newPoolLink} style={{ float: 'right' }}>
                   <Trans>+ Create New Pool</Trans>
                 </ButtonOutlined>
                 {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
