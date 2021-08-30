@@ -32,14 +32,16 @@ export function computeRealizedLPFeePercent(
     percent = new Percent(0, 0)
     for (const swap of trade.swaps) {
       const overallPercent = new Percent(swap.inputAmount.toSignificant(), trade.inputAmount.toSignificant())
-      overallPercent.subtract(
+
+      const routeRealizedLPFeePercent = ONE_HUNDRED_PERCENT.subtract(
         swap.route.pools.reduce<Percent>(
           (currentFee: Percent, pool): Percent =>
             currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
           ONE_HUNDRED_PERCENT
         )
       )
-      percent.add(overallPercent)
+
+      percent.add(overallPercent.subtract(routeRealizedLPFeePercent))
     }
   }
 

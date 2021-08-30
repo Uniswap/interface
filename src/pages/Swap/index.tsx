@@ -57,6 +57,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -65,6 +66,23 @@ const StyledInfo = styled(Info)`
   width: 16px;
   :hover {
     opacity: 0.8;
+  }
+`
+
+const StyledAutoRouterIcon = styled(AutoRouterIcon)`
+  height: 16px;
+  width: 16px;
+  stroke: #2172e5;
+`
+
+const GradientText = styled(TYPE.black)`
+  /* fallback color */
+  color: ${({ theme }) => theme.green1};
+
+  @supports (background-clip: text) and (-webkit-text-fill-color: transparent) {
+    background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 `
 
@@ -459,22 +477,10 @@ export default function Swap({ history }: RouteComponentProps) {
                       ))}
 
                     {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
-                      <ButtonGray
-                        width="fit-content"
-                        padding="0.1rem 0.5rem"
-                        disabled
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          height: '24px',
-                          opacity: 0.8,
-                          marginLeft: '0.25rem',
-                        }}
-                      >
-                        <TYPE.black fontSize={12}>
-                          <Trans>V3</Trans>
-                        </TYPE.black>
-                      </ButtonGray>
+                      <AutoRow gap="4px" width="auto" padding=".5rem">
+                        <StyledAutoRouterIcon />
+                        <GradientText fontSize={14}>Uniswap API</GradientText>
+                      </AutoRow>
                     )}
                   </RowFixed>
                   {trade ? (
