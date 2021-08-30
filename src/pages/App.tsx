@@ -136,7 +136,7 @@ export default function App() {
   const Video = React.useMemo(() => {
     return (
     <VideoWrapper key={themeSource} loop autoPlay muted>
-      <sourfce src={themeSource} type={'video/mp4'}></source>
+      <source src={themeSource} type={'video/mp4'}></source>
     </VideoWrapper>
   )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
