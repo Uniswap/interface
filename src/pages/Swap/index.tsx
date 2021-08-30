@@ -5,24 +5,17 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, ChevronUp, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import {
-  ButtonConfirmed,
-  ButtonEmpty,
-  ButtonError,
-  ButtonGray,
-  ButtonLight,
-  ButtonPrimary,
-} from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -56,7 +49,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserShowAdvancedSwapDetails } from '../../state/user/hooks'
+import { useExpertModeManager } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -70,15 +63,6 @@ const StyledInfo = styled(Info)`
   color: ${({ theme }) => theme.text1};
   height: 16px;
   width: 16px;
-  :hover {
-    opacity: 0.8;
-  }
-`
-
-const StyledChevron = styled(ChevronUp)`
-  color: ${({ theme }) => theme.text2};
-  height: 24px;
-  width: 24px;
   :hover {
     opacity: 0.8;
   }
@@ -197,9 +181,6 @@ export default function Swap({ history }: RouteComponentProps) {
     swapErrorMessage: undefined,
     txHash: undefined,
   })
-
-  // advanced swap details
-  const [showAdvancedSwapDetails, setShowAdvancedSwapDetails] = useUserShowAdvancedSwapDetails()
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -417,6 +398,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
+                // TODO(judo): keep?
                 priceImpact={isSyncingRoute ? undefined : priceImpact}
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
@@ -476,26 +458,24 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))}
 
-                    {toggledVersion === Version.v3 &&
-                      v3TradeState === V3TradeState.VALID &&
-                      isTradeBetter(v2Trade, v3Trade) && (
-                        <ButtonGray
-                          width="fit-content"
-                          padding="0.1rem 0.5rem"
-                          disabled
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            height: '24px',
-                            opacity: 0.8,
-                            marginLeft: '0.25rem',
-                          }}
-                        >
-                          <TYPE.black fontSize={12}>
-                            <Trans>V3</Trans>
-                          </TYPE.black>
-                        </ButtonGray>
-                      )}
+                    {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
+                      <ButtonGray
+                        width="fit-content"
+                        padding="0.1rem 0.5rem"
+                        disabled
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          height: '24px',
+                          opacity: 0.8,
+                          marginLeft: '0.25rem',
+                        }}
+                      >
+                        <TYPE.black fontSize={12}>
+                          <Trans>V3</Trans>
+                        </TYPE.black>
+                      </ButtonGray>
+                    )}
                   </RowFixed>
                   {trade ? (
                     <RowFixed>
@@ -503,24 +483,15 @@ export default function Swap({ history }: RouteComponentProps) {
                         price={trade.executionPrice}
                         showInverted={showInverted}
                         setShowInverted={setShowInverted}
-                        dim={isSyncingRoute}
                       />
-                      <ButtonEmpty
-                        onClick={() => setShowAdvancedSwapDetails(!showAdvancedSwapDetails)}
-                        margin="0 .25rem"
-                        padding="0"
-                        width="24px"
-                        height="24px"
+                      <MouseoverTooltipContent
+                        content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
                       >
-                        {showAdvancedSwapDetails ? <StyledChevron /> : <StyledInfo />}
-                      </ButtonEmpty>
+                        <StyledInfo />
+                      </MouseoverTooltipContent>
                     </RowFixed>
                   ) : null}
                 </Row>
-
-                {showAdvancedSwapDetails && (
-                  <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={isSyncingRoute} />
-                )}
               </>
             )}
 
@@ -556,7 +527,8 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </TYPE.main>
                 </GreyCard>
-              ) : isSyncingRoute ? (
+              ) : // TODO(judo): needed?
+              isSyncingRoute ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     <Dots>

@@ -2,10 +2,9 @@ import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 
 import { AlertTriangle } from 'react-feather'
-import styled, { css, keyframes } from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
-import { TYPE } from 'theme'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -128,51 +127,4 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
-`
-
-export const AdvancedSwapDetailsContainer = styled(AutoColumn)<{ dim: boolean }>`
-  padding: 0 0.5rem 0.5rem 0.5rem;
-  position: relative;
-
-  opacity: ${({ dim }) => (dim ? '0.5' : '1')};
-  filter: ${({ dim }) => (dim ? 'grayscale(100%)' : '')};
-  transition: opacity 0.2s ease, filter 0.2s ease;
-  will-change: opacity filter;
-`
-
-const pulse = keyframes`
-  0% {
-    opacity: 0.1;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0.1;
-  }
-`
-
-export const DimmableText = styled(TYPE.black)<{ dim: boolean }>`
-  background-color: ${({ theme, dim }) => (dim ? theme.text2 : 'transparent')};
-  color: ${({ theme, dim }) => (dim ? 'transparent' : theme.text1)};
-  opacity: 1;
-
-  animation: ${pulse} infinite ease-in-out;
-  animation-duration: ${({ dim }) => (dim ? '1s' : '0')};
-`
-
-export const LoadingPlaceholder = styled.div<{ width: number; visible: boolean }>`
-  background-color: ${({ theme }) => theme.text2};
-  display: ${({ visible }) => (visible ? 'block' : 'none')};
-  height: 15px;
-  opacity: 1;
-  width: ${({ width }) => `${width}px`};
-
-  animation: ${pulse} infinite ease-in-out;
-  animation-duration: ${({ visible }) => (visible ? '1s' : '0')};
-`
-
-export const RoutingDiagramWrapper = styled(AutoColumn)`
-  width: 100%;
-  padding: 0.5rem 0;
 `

@@ -1,10 +1,8 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { AutoColumn } from 'components/Column'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { memo } from 'react'
-import { LoadingPlaceholder, RoutingDiagramWrapper } from './styleds'
 
 function getTokenPath(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
@@ -39,33 +37,18 @@ function getTokenPath(
   })
 }
 
-function LoadingPlaceholders({ visible }: { visible: boolean }) {
-  return (
-    <AutoColumn gap="4px">
-      <LoadingPlaceholder width={200} visible={visible} />
-      <LoadingPlaceholder width={350} visible={visible} />
-    </AutoColumn>
-  )
-}
-
 export default memo(function SwapRoute({
   trade,
-  dim,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
-  dim: boolean
 }) {
   return (
-    <RoutingDiagramWrapper>
-      {/* always display placeholder to ensure animation stays in sync */}
-      <LoadingPlaceholders visible={dim} />
-      {!dim && (
-        <RoutingDiagram
-          currencyIn={trade.inputAmount.currency}
-          currencyOut={trade.outputAmount.currency}
-          routes={getTokenPath(trade)}
-        />
-      )}
-    </RoutingDiagramWrapper>
+    <div style={{ padding: '0.5rem 0' }}>
+      <RoutingDiagram
+        currencyIn={trade.inputAmount.currency}
+        currencyOut={trade.outputAmount.currency}
+        routes={getTokenPath(trade)}
+      />
+    </div>
   )
 })

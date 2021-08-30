@@ -18,7 +18,7 @@ export function isTradeBetter(
     !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
     !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency)
   ) {
-    throw new Error('Comparing incomparable trades')
+    return undefined
   }
 
   if (minimumDelta.equalTo(ZERO_PERCENT)) {
