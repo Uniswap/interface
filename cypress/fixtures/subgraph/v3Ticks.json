@@ -1,0 +1,48 @@
+{
+  "data": {
+    "ticks": [
+      {
+        "tickIdx": "-100",
+        "liquidityNet": "1500.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "-50",
+        "liquidityNet": "1200.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "-25",
+        "liquidityNet": "1000.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "-24",
+        "liquidityNet": "300.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "-23",
+        "liquidityNet": "200.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "-22",
+        "liquidityNet": "100.0",
+        "price0": "1000",
+        "price1": "0.01"
+      },
+      {
+        "tickIdx": "100",
+        "liquidityNet": "100.0",
+        "price0": "1000",
+        "price1": "0.01"
+      }
+    ]
+  }
+}
