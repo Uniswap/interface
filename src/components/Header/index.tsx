@@ -449,7 +449,7 @@ export default function Header() {
               </Row>
             </Card>
           )}
-          <HeaderElement style={{position:'fixed', bottom:10, left :'1%'}}>
+        {!isMobile &&   <HeaderElement style={{position:'fixed', bottom:10, left :'1%'}}>
             <div style={{display:'flex', alignItems:'center'}}>
             <img width="40px" src="https://babytrumptoken.com/images/Baby_Trump_Transpa.png" alt="logo" />
                   {coinGeckoData && coinGeckoData?.price_change_percentage_24h > 0 && (
@@ -469,7 +469,7 @@ export default function Header() {
                   </>
                   )}
                   </div>
-                 </HeaderElement>
+                 </HeaderElement>}
           <HeaderElement style={{ marginRight: 15 }}>
             <IconWrapper
               onClick={(e) => {
