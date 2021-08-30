@@ -28,14 +28,19 @@ export function computeRealizedLPFeePercent(
       )
     )
   } else {
-    percent = ONE_HUNDRED_PERCENT.subtract(
-      // TODO(judo): compute across all swaps
-      trade.swaps[0].route.pools.reduce<Percent>(
-        (currentFee: Percent, pool): Percent =>
-          currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
-        ONE_HUNDRED_PERCENT
+    //TODO(judo): validate this
+    percent = new Percent(0, 0)
+    for (const swap of trade.swaps) {
+      const overallPercent = new Percent(swap.inputAmount.toSignificant(), trade.inputAmount.toSignificant())
+      overallPercent.subtract(
+        swap.route.pools.reduce<Percent>(
+          (currentFee: Percent, pool): Percent =>
+            currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
+          ONE_HUNDRED_PERCENT
+        )
       )
-    )
+      percent.add(overallPercent)
+    }
   }
 
   return new Percent(percent.numerator, percent.denominator)
