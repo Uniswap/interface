@@ -39,6 +39,8 @@ jobs:
 
       - run: yarn cypress install
       - run: yarn build
+        env:
+          CI: false
 
       - run: yarn integration-test:ci
         env:
