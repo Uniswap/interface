@@ -41,6 +41,7 @@ jobs:
       - run: yarn build
         env:
           CI: false
+          REACT_APP_SERVICE_WORKER: false
 
       - run: yarn integration-test:ci
         env:

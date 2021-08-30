@@ -7,9 +7,3 @@
 
 // Import commands.ts using ES2015 syntax:
 import './commands'
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.ready.then((registration) => {
-    registration.unregister()
-  })
-}
