@@ -111,7 +111,7 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
-    "@celo-tools/use-contractkit": "npm:@poofcash/use-contractkit@^1.0.0-poof.20",
+    "@celo-tools/use-contractkit": "npm:@poofcash/use-contractkit@^1.0.0-poof.21",
     "@celo/base": "^1.2.1",
     "@celo/connect": "^1.2.0",
     "@celo/contractkit": "^1.2.0",
