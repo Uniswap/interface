@@ -259,7 +259,7 @@ const Farms = () => {
                 ) : (
                   <span>
                     <span style={{ marginRight: '4px' }}>
-                      <Trans>{remainingBlocks} blocks</Trans>
+                      <Trans>{!remainingBlocks ? <Loader /> : remainingBlocks} blocks</Trans>
                     </span>
                     <span>(~ {formattedEstimatedRemainingTime})</span>
                   </span>

@@ -24,6 +24,7 @@ import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
+import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
 import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
@@ -397,7 +398,7 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       imageURL = getBscTestnetTokenLogoURL(address)
       break
     case ChainId.BSCMAINNET:
-      imageURL = `https://pancakeswap.finance/images/tokens/${isAddress(address)}.png`
+      imageURL = getBscMainnetTokenLogoURL(address)
       break
     case ChainId.AVAXTESTNET:
       imageURL = getAvaxTestnetTokenLogoURL(address)
