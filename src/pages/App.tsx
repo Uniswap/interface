@@ -110,6 +110,7 @@ const VideoWrapper = styled.video`
   left: 0;
   min-width: 100%;
   min-height: 100%;
+  height: 100%;
 `
 
 export default function App() {
@@ -135,7 +136,7 @@ export default function App() {
   const Video = React.useMemo(() => {
     return (
     <VideoWrapper key={themeSource} loop autoPlay muted>
-      <source src={themeSource} type={'video/mp4'}></source>
+      <sourfce src={themeSource} type={'video/mp4'}></source>
     </VideoWrapper>
   )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
