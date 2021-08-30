@@ -131,7 +131,7 @@
     "i18n:extract": "lingui extract --locale en-US",
     "postinstall": "yarn compile-contract-types",
     "prestart": "yarn graphql:generate && yarn prei18n:extract",
-    "prebuild": "yarn graphql:generate && yarn prei18n:extract",
+    "prebuild": "yarn compile-contract-types && yarn prestart",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "integration-test:open": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress open'",
