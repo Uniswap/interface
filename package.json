@@ -78,6 +78,7 @@
     "ethers": "^5.4.6",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
+    "hardhat": "^2.6.2",
     "inter-ui": "^3.13.1",
     "jest-styled-components": "^7.0.5",
     "lodash.flatmap": "^4.5.0",
