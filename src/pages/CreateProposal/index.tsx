@@ -87,7 +87,7 @@ export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
-  const latestProposalData = useProposalData(0, latestProposalId)
+  const latestProposalData = useProposalData(2, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
