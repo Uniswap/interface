@@ -3,20 +3,20 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 VFhDj css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
   >
-    CurrencyLogo currency=USDC
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
     >
+      CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-1 lmTMKd itvFNV dCwSIG"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-3 acKtR"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
         />
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-4 gayll hYHsBq"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -31,7 +31,7 @@ exports[`renders multi route 1`] = `
           width="100%"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-2 gayll gRbWxl"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
           >
             <div
               class="css-1t7xebc"
@@ -46,18 +46,20 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
       </div>
+      CurrencyLogo currency=DAI
     </div>
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
     >
+      CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-1 lmTMKd itvFNV dCwSIG"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-3 acKtR"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
         />
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-4 gayll hYHsBq"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -72,7 +74,7 @@ exports[`renders multi route 1`] = `
           width="100%"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-2 gayll gRbWxl"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
           >
             <div
               class="css-1t7xebc"
@@ -86,7 +88,7 @@ exports[`renders multi route 1`] = `
             </div>
           </div>
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-2 gayll gRbWxl"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
           >
             <div
               class="css-1t7xebc"
@@ -101,8 +103,8 @@ exports[`renders multi route 1`] = `
           </div>
         </div>
       </div>
+      CurrencyLogo currency=DAI
     </div>
-    CurrencyLogo currency=DAI
   </div>
 </DocumentFragment>
 `;
@@ -110,20 +112,20 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 VFhDj css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
   >
-    CurrencyLogo currency=USDC
     <div
-      class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
     >
+      CurrencyLogo currency=USDC
       <div
-        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-1 lmTMKd itvFNV dCwSIG"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-3 acKtR"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
         />
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-4 gayll hYHsBq"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -138,7 +140,7 @@ exports[`renders single route 1`] = `
           width="100%"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-2 gayll gRbWxl"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
           >
             <div
               class="css-1t7xebc"
@@ -153,8 +155,8 @@ exports[`renders single route 1`] = `
           </div>
         </div>
       </div>
+      CurrencyLogo currency=DAI
     </div>
-    CurrencyLogo currency=DAI
   </div>
 </DocumentFragment>
 `;
@@ -162,9 +164,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 VFhDj css-vurnku"
-  >
-    CurrencyLogo currency=DAICurrencyLogo currency=USDC
-  </div>
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+  />
 </DocumentFragment>
 `;

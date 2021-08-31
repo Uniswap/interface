@@ -1,7 +1,6 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
@@ -14,14 +13,16 @@ export interface RoutingDiagramEntry {
   path: [Currency, Currency, FeeAmount | undefined][]
 }
 
-const MainRow = styled(Box)`
+const Wrapper = styled(Box)`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
+  width: 400px;
+`
+
+const RouteContainerRow = styled(Row)`
   display: grid;
   grid-gap: 8px;
   grid-template-columns: 24px 1fr 24px;
-  justify-content: space-between;
-  width: 400px;
 `
 
 const RouteRow = styled(Row)`
@@ -62,27 +63,19 @@ export default function RoutingDiagram({
   routes: RoutingDiagramEntry[]
 }) {
   return (
-    <MainRow>
-      <CurrencyLogo currency={currencyIn} />
+    <Wrapper>
       {routes.map((route, index) => (
-        <AutoColumn key={index}>
-          <Route currencyIn={currencyIn} currencyOut={currencyOut} {...route} />
-        </AutoColumn>
+        <RouteContainerRow key={index}>
+          <CurrencyLogo currency={currencyIn} />
+          <Route {...route} />
+          <CurrencyLogo currency={currencyOut} />
+        </RouteContainerRow>
       ))}
-      <CurrencyLogo currency={currencyOut} />
-    </MainRow>
+    </Wrapper>
   )
 }
 
-function Route({
-  percent,
-  path,
-}: {
-  currencyIn: Currency
-  currencyOut: Currency
-  percent: RoutingDiagramEntry['percent']
-  path: RoutingDiagramEntry['path']
-}) {
+function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; path: RoutingDiagramEntry['path'] }) {
   return (
     <RouteRow>
       <DottedLine />
