@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResizableTextArea renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  font-size: 12;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 0;
+  resize: none;
+  background-color: #F7F8FA;
+  -webkit-transition: color 300ms step-start;
+  transition: color 300ms step-start;
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  width: 100%;
+  line-height: 1.2;
+  padding: 0px;
+  -webkit-appearance: textfield;
+}
+
+.c0::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-outer-spin-button,
+.c0::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-input-placeholder {
+  color: #C3C5CB;
+}
+
+.c0::-moz-placeholder {
+  color: #C3C5CB;
+}
+
+.c0:-ms-input-placeholder {
+  color: #C3C5CB;
+}
+
+.c0::placeholder {
+  color: #C3C5CB;
+}
+
+<textarea
+    autocapitalize="off"
+    autocomplete="off"
+    autocorrect="off"
+    class="c0 testing"
+    font-size="12"
+    placeholder="Test Placeholder"
+    spellcheck="false"
+    style="height: auto; min-height: 500px;"
+  >
+    My test input
+  </textarea>
+</DocumentFragment>
+`;
+
+exports[`TextInput renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  font-size: 12;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 0;
+  background-color: #F7F8FA;
+  -webkit-transition: color 300ms step-start;
+  transition: color 300ms step-start;
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  width: 100%;
+  padding: 0px;
+  -webkit-appearance: textfield;
+}
+
+.c0::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-outer-spin-button,
+.c0::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-input-placeholder {
+  color: #C3C5CB;
+}
+
+.c0::-moz-placeholder {
+  color: #C3C5CB;
+}
+
+.c0:-ms-input-placeholder {
+  color: #C3C5CB;
+}
+
+.c0::placeholder {
+  color: #C3C5CB;
+}
+
+<div
+    class="testing"
+  >
+    <input
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      class="c0"
+      font-size="12"
+      placeholder="Test Placeholder"
+      spellcheck="false"
+      type="text"
+      value="My test input"
+    />
+  </div>
+</DocumentFragment>
+`;

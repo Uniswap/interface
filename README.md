@@ -1,18 +1,24 @@
 # Uniswap Interface
 
-[![Tests](https://github.com/Uniswap/uniswap-interface/workflows/Tests/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions?query=workflow%3ATests)
-[![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
+[![Unit Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml)
+[![Integration Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml)
+[![Lint](https://github.com/Uniswap/uniswap-interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/lint.yml)
+[![Release](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/release.yaml)
+[![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
 
 An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
 - Website: [uniswap.org](https://uniswap.org/)
 - Interface: [app.uniswap.org](https://app.uniswap.org)
 - Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
-- Twitter: [@UniswapProtocol](https://twitter.com/UniswapProtocol)
+- Twitter: [@Uniswap](https://twitter.com/Uniswap)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
 - Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/Y7TF6QA)
-- Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+- Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
+- Whitepapers:
+  - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+  - [V2](https://uniswap.org/whitepaper.pdf)
+  - [V3](https://uniswap.org/whitepaper-v3.pdf)
 
 ## Accessing the Uniswap Interface
 
@@ -20,6 +26,7 @@ To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
 
+<<<<<<< HEAD
 ## Listing a token
 
 Please see the
@@ -52,16 +59,35 @@ Note that the interface only works on testnets where both
 [Uniswap V2](https://uniswap.org/docs/v2/smart-contracts/factory/) and
 [multicall](https://github.com/makerdao/multicall) are deployed.
 The interface will not work on other networks.
-
+=======
 ## Contributions
 
+For steps on local deployment, development, and code contribution, please see [CONTRIBUTING](./CONTRIBUTING.md).
+>>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
+
+## Accessing Uniswap V2
+
+<<<<<<< HEAD
 **Please open all pull requests against the `master` branch.**
 CI checks will run against all PRs.
+=======
+The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for 
+Uniswap protocol V2.
+>>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
 
-## Accessing Uniswap Interface V1
+- Swap on Uniswap V2: https://app.uniswap.org/#/swap?use=v2
+- View V2 liquidity: https://app.uniswap.org/#/pool/v2
+- Add V2 liquidity: https://app.uniswap.org/#/add/v2
+- Migrate V2 liquidity to V3: https://app.uniswap.org/#/migrate/v2
 
+<<<<<<< HEAD
 The Uniswap Interface supports swapping against, and migrating or removing liquidity from Uniswap V1. However,
 if you would like to use Uniswap V1, the Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
+=======
+## Accessing Uniswap V1
+ 
+The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways 
+>>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
 linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
 
 ## Roll Updates

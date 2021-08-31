@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { SupportedLocale } from 'constants/locales'
 
 export interface SerializedToken {
   chainId: number
@@ -13,18 +14,21 @@ export interface SerializedPair {
   token1: SerializedToken
 }
 
-export const updateVersion = createAction<void>('updateVersion')
-export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('updateMatchesDarkMode')
-export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('updateUserDarkMode')
-export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('updateUserExpertMode')
-export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
-  'updateUserSlippageTolerance'
+export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
+export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAcknowledged: boolean }>(
+  'user/updateArbitrumAlphaAcknowledged'
 )
-export const updateUserDeadline = createAction<{ userDeadline: number }>('updateUserDeadline')
-export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('addSerializedToken')
-export const removeSerializedToken = createAction<{ chainId: number; address: string }>('removeSerializedToken')
-export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('addSerializedPair')
-export const removeSerializedPair = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(
-  'removeSerializedPair'
+export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
+export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
+export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
+export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')
+export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')
+export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
+  'user/updateUserSlippageTolerance'
 )
-export const dismissTokenWarning = createAction<{ chainId: number; tokenAddress: string }>('dismissTokenWarning')
+export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
+export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
+export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
+export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
+export const removeSerializedPair =
+  createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>('user/removeSerializedPair')

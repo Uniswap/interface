@@ -8,9 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": [
-    "node_modules/**/*"
-  ],
+  "ignorePatterns": ["node_modules/**/*"],
   "settings": {
     "react": {
       "version": "detect"
@@ -26,6 +24,22 @@
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": "error",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "styled-components",
+            "message": "Please import from styled-components/macro."
+          }
+        ],
+        "patterns": ["!styled-components/macro"]
+      }
+    ]
   }
 }

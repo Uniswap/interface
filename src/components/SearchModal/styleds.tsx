@@ -1,28 +1,39 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween } from '../Row'
 
-export const ModalInfo = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  padding: 1rem 1rem;
-  margin: 0.25rem 0.5rem;
-  justify-content: center;
-  flex: 1;
-  user-select: none;
+export const TextDot = styled.div`
+  height: 3px;
+  width: 3px;
+  background-color: ${({ theme }) => theme.text2};
+  border-radius: 50%;
 `
 
-export const FadedSpan = styled(RowFixed)`
-  color: ${({ theme }) => theme.primary1};
-  font-size: 14px;
+export const Checkbox = styled.input`
+  border: 1px solid ${({ theme }) => theme.red3};
+  height: 20px;
+  margin: 0;
 `
 
-export const GreySpan = styled.span`
-  color: ${({ theme }) => theme.text3};
-  font-weight: 400;
+export const PaddedColumn = styled(AutoColumn)`
+  padding: 20px;
 `
 
-export const Input = styled.input`
+export const MenuItem = styled(RowBetween)`
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+  grid-gap: 16px;
+  cursor: ${({ disabled }) => !disabled && 'pointer'};
+  pointer-events: ${({ disabled }) => disabled && 'none'};
+  :hover {
+    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+  }
+  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+`
+
+export const SearchInput = styled.input`
   position: relative;
   display: flex;
   padding: 16px;
@@ -43,28 +54,20 @@ export const Input = styled.input`
   ::placeholder {
     color: ${({ theme }) => theme.text3};
   }
-`
-
-export const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
-  padding-bottom: 12px;
-`
-
-export const MenuItem = styled(RowBetween)`
-  padding: 4px 20px;
-  height: 56px;
-  cursor: ${({ disabled }) => !disabled && 'pointer'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-  :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
-  }
-  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
-`
-
-export const SearchInput = styled(Input)`
   transition: border 100ms;
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
+`
+export const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg2};
+`
+
+export const SeparatorDark = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg3};
 `

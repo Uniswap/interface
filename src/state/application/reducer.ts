@@ -3,29 +3,35 @@ import {
   addPopup,
   PopupContent,
   removePopup,
-  toggleWalletModal,
-  toggleSettingsMenu,
-  updateBlockNumber
+  updateBlockNumber,
+  ApplicationModal,
+  setOpenModal,
+  updateChainId,
 } from './actions'
 
-type PopupList = Array<{ key: string; show: boolean; content: PopupContent }>
+type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
-  blockNumber: { [chainId: number]: number }
-  popupList: PopupList
-  walletModalOpen: boolean
-  settingsMenuOpen: boolean
+  // used by RTK-Query to build dynamic subgraph urls
+  readonly chainId: number | null
+  readonly blockNumber: { readonly [chainId: number]: number }
+  readonly popupList: PopupList
+  readonly openModal: ApplicationModal | null
 }
 
 const initialState: ApplicationState = {
+  chainId: null,
   blockNumber: {},
   popupList: [],
-  walletModalOpen: false,
-  settingsMenuOpen: false
+  openModal: null,
 }
 
-export default createReducer(initialState, builder =>
+export default createReducer(initialState, (builder) =>
   builder
+    .addCase(updateChainId, (state, action) => {
+      const { chainId } = action.payload
+      state.chainId = chainId
+    })
     .addCase(updateBlockNumber, (state, action) => {
       const { chainId, blockNumber } = action.payload
       if (typeof state.blockNumber[chainId] !== 'number') {
@@ -34,23 +40,21 @@ export default createReducer(initialState, builder =>
         state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId])
       }
     })
-    .addCase(toggleWalletModal, state => {
-      state.walletModalOpen = !state.walletModalOpen
+    .addCase(setOpenModal, (state, action) => {
+      state.openModal = action.payload
     })
-    .addCase(toggleSettingsMenu, state => {
-      state.settingsMenuOpen = !state.settingsMenuOpen
-    })
-    .addCase(addPopup, (state, { payload: { content, key } }) => {
-      state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([
+    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 25000 } }) => {
+      state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
         {
           key: key || nanoid(),
           show: true,
-          content
-        }
+          content,
+          removeAfterMs,
+        },
       ])
     })
     .addCase(removePopup, (state, { payload: { key } }) => {
-      state.popupList.forEach(p => {
+      state.popupList.forEach((p) => {
         if (p.key === key) {
           p.show = false
         }

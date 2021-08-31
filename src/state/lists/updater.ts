@@ -1,40 +1,67 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
-import { addPopup } from '../application/actions'
-import { AppDispatch, AppState } from '../index'
-import { acceptListUpdate, addList, fetchTokenList } from './actions'
+import { SupportedChainId } from 'constants/chains'
+import { ARBITRUM_LIST, OPTIMISM_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { useCallback, useEffect } from 'react'
+import { useAppDispatch } from 'state/hooks'
+import { useAllLists } from 'state/lists/hooks'
+import { useFetchListCallback } from '../../hooks/useFetchListCallback'
+import useInterval from '../../hooks/useInterval'
+import useIsWindowVisible from '../../hooks/useIsWindowVisible'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { acceptListUpdate, enableList } from './actions'
+import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
-  const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const { chainId, library } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
+  const isWindowVisible = useIsWindowVisible()
 
-  // we should always fetch the default token list, so add it
-  useEffect(() => {
-    if (!lists[DEFAULT_TOKEN_LIST_URL]) dispatch(addList(DEFAULT_TOKEN_LIST_URL))
-  }, [dispatch, lists])
+  // get all loaded lists, and the active urls
+  const lists = useAllLists()
+  const activeListUrls = useActiveListUrls()
 
-  // on initial mount, refetch all the lists in storage
+  const fetchList = useFetchListCallback()
+  const fetchAllListsCallback = useCallback(() => {
+    if (!isWindowVisible) return
+    Object.keys(lists).forEach((url) =>
+      fetchList(url).catch((error) => console.debug('interval list fetching error', error))
+    )
+  }, [fetchList, isWindowVisible, lists])
+
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => dispatch(fetchTokenList(listUrl) as any))
-    // we only do this once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)) {
+      dispatch(enableList(OPTIMISM_LIST))
+    }
+    if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
+      dispatch(enableList(ARBITRUM_LIST))
+    }
+  }, [chainId, dispatch])
+  // fetch all lists every 10 minutes, but only after we initialize library
+  useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => {
+    Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
-        dispatch(fetchTokenList(listUrl) as any)
+        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, lists])
+  }, [dispatch, fetchList, library, lists])
+
+  // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
+  useEffect(() => {
+    UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
+      const list = lists[listUrl]
+      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
+        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+      }
+    })
+  }, [dispatch, fetchList, library, lists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => {
+    Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (list.current && list.pendingUpdate) {
         const bump = getVersionUpgrade(list.current.version, list.pendingUpdate.version)
@@ -43,24 +70,10 @@ export default function Updater(): null {
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
           case VersionUpgrade.MINOR:
-          case VersionUpgrade.MAJOR:
             const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
-              dispatch(
-                addPopup({
-                  key: listUrl,
-                  content: {
-                    listUpdate: {
-                      listUrl,
-                      oldList: list.current,
-                      newList: list.pendingUpdate,
-                      auto: true
-                    }
-                  }
-                })
-              )
             } else {
               console.error(
                 `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
@@ -68,25 +81,13 @@ export default function Updater(): null {
             }
             break
 
-          // this will be turned on later
-          // case VersionUpgrade.MAJOR:
-          // dispatch(
-          //   addPopup({
-          //     key: listUrl,
-          //     content: {
-          //       listUpdate: {
-          //         listUrl,
-          //         auto: false,
-          //         oldList: list.current,
-          //         newList: list.pendingUpdate
-          //       }
-          //     }
-          //   })
-          // )
+          // update any active or inactive lists
+          case VersionUpgrade.MAJOR:
+            dispatch(acceptListUpdate(listUrl))
         }
       }
     })
-  }, [dispatch, lists])
+  }, [dispatch, lists, activeListUrls])
 
   return null
 }

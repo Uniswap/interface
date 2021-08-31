@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import styled from 'styled-components'
-import { useTranslation } from 'react-i18next'
+import styled from 'styled-components/macro'
+import { Trans } from '@lingui/macro'
 
 import { network } from '../../connectors'
-import { useEagerConnect, useInactiveListener } from '../../hooks'
-import { NetworkContextName } from '../../constants'
+import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
+import { NetworkContextName } from '../../constants/misc'
 import Loader from '../Loader'
 
 const MessageWrapper = styled.div`
@@ -19,8 +19,7 @@ const Message = styled.h2`
   color: ${({ theme }) => theme.secondary1};
 `
 
-export default function Web3ReactManager({ children }) {
-  const { t } = useTranslation()
+export default function Web3ReactManager({ children }: { children: JSX.Element }) {
   const { active } = useWeb3React()
   const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
@@ -58,7 +57,11 @@ export default function Web3ReactManager({ children }) {
   if (!active && networkError) {
     return (
       <MessageWrapper>
-        <Message>{t('unknownError')}</Message>
+        <Message>
+          <Trans>
+            Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device.
+          </Trans>
+        </Message>
       </MessageWrapper>
     )
   }

@@ -1,13 +1,13 @@
-import React, { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components'
-import useInterval from '../../hooks/useInterval'
+import { useSpring } from 'react-spring/web'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { animated } from 'react-spring'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
-import ListUpdatePopup from './ListUpdatePopup'
-import TxnPopup from './TxnPopup'
+import TransactionPopup from './TransactionPopup'
 
-export const StyledClose = styled(X)`
+const StyledClose = styled(X)`
   position: absolute;
   right: 10px;
   top: 10px;
@@ -16,71 +16,79 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
-export const Popup = styled.div`
+const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg0};
   position: relative;
   border-radius: 10px;
   padding: 20px;
   padding-right: 35px;
-  z-index: 2;
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
+    &:not(:last-of-type) {
+      margin-right: 20px;
+    }
   `}
 `
-const DELAY = 100
-const Fader = styled.div<{ count: number }>`
+const Fader = styled.div`
   position: absolute;
   bottom: 0px;
   left: 0px;
-  width: ${({ count }) => `calc(100% - (100% / ${150 / count}))`};
+  width: 100%;
   height: 2px;
   background-color: ${({ theme }) => theme.bg3};
-  transition: width 100ms linear;
 `
 
-export default function PopupItem({ content, popKey }: { content: PopupContent; popKey: string }) {
-  const [count, setCount] = useState(1)
+const AnimatedFader = animated(Fader)
 
-  const [isRunning, setIsRunning] = useState(true)
+export default function PopupItem({
+  removeAfterMs,
+  content,
+  popKey,
+}: {
+  removeAfterMs: number | null
+  content: PopupContent
+  popKey: string
+}) {
   const removePopup = useRemovePopup()
-
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+  useEffect(() => {
+    if (removeAfterMs === null) return undefined
 
-  useInterval(
-    () => {
-      count > 150 ? removeThisPopup() : setCount(count + 1)
-    },
-    isRunning ? DELAY : null
-  )
+    const timeout = setTimeout(() => {
+      removeThisPopup()
+    }, removeAfterMs)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [removeAfterMs, removeThisPopup])
 
   const theme = useContext(ThemeContext)
-
-  const handleMouseEnter = useCallback(() => setIsRunning(false), [])
-  const handleMouseLeave = useCallback(() => setIsRunning(true), [])
 
   let popupContent
   if ('txn' in content) {
     const {
-      txn: { hash, success, summary }
+      txn: { hash, success, summary },
     } = content
-    popupContent = <TxnPopup hash={hash} success={success} summary={summary} />
-  } else if ('listUpdate' in content) {
-    const {
-      listUpdate: { listUrl, oldList, newList, auto }
-    } = content
-    popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
+    popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
   }
 
+  const faderStyle = useSpring({
+    from: { width: '100%' },
+    to: { width: '0%' },
+    config: { duration: removeAfterMs ?? undefined },
+  })
+
   return (
-    <Popup onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <StyledClose color={theme.text2} onClick={() => removePopup(popKey)} />
+    <Popup>
+      <StyledClose color={theme.text2} onClick={removeThisPopup} />
       {popupContent}
-      <Fader count={count} />
+      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
   )
 }

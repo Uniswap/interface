@@ -1,40 +1,56 @@
-import React from 'react'
-import styled from 'styled-components'
+import { Trans } from '@lingui/macro'
+import { darken } from 'polished'
+import { ReactNode } from 'react'
+import styled from 'styled-components/macro'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
-  padding: 0.25rem 0.5rem;
-  border-radius: 14px;
-  background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.text4) : 'none')};
-  color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3)};
-  font-size: 0.825rem;
-  font-weight: 400;
-`
-
-const StyledToggle = styled.a<{ isActive?: boolean; activeElement?: boolean }>`
-  border-radius: 16px;
-  border: 1px solid ${({ theme, isActive }) => (isActive ? theme.primary5 : theme.text4)};
-  display: flex;
-  width: fit-content;
-  cursor: pointer;
-  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9px;
+  background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.bg4) : 'none')};
+  color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
+  font-size: 14px;
+  font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
   :hover {
-    text-decoration: none;
+    user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
+    background: ${({ theme, isActive, isOnSwitch }) =>
+      isActive ? (isOnSwitch ? darken(0.05, theme.primary1) : darken(0.05, theme.bg4)) : 'none'};
+    color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.white) : theme.text3)};
   }
 `
 
-export interface ToggleProps {
+const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+  border-radius: 12px;
+  border: none;
+  background: ${({ theme }) => theme.bg0};
+  display: flex;
+  width: fit-content;
+  cursor: pointer;
+  outline: none;
+  padding: 2px;
+`
+
+interface ToggleProps {
+  id?: string
   isActive: boolean
   toggle: () => void
+  checked?: ReactNode
+  unchecked?: ReactNode
 }
 
-export default function Toggle({ isActive, toggle }: ToggleProps) {
+export default function Toggle({
+  id,
+  isActive,
+  toggle,
+  checked = <Trans>On</Trans>,
+  unchecked = <Trans>Off</Trans>,
+}: ToggleProps) {
   return (
-    <StyledToggle isActive={isActive} target="_self" onClick={toggle}>
+    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
-        On
+        {checked}
       </ToggleElement>
       <ToggleElement isActive={!isActive} isOnSwitch={false}>
-        Off
+        {unchecked}
       </ToggleElement>
     </StyledToggle>
   )

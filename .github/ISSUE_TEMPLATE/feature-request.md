@@ -1,10 +1,9 @@
 ---
 name: Feature Request
-about: Suggest an idea for this project
+about: Suggest an idea for improving the UX of the Uniswap Interface
 title: ''
-labels: ''
+labels: 'improvement'
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.**

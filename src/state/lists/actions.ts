@@ -1,9 +1,7 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { TokenList, Version } from '@uniswap/token-lists'
-import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
-import Ajv from 'ajv'
-import uriToHttp from '../../utils/uriToHttp'
+import { ActionCreatorWithPayload, createAction } from '@reduxjs/toolkit'
+import { TokenList } from '@uniswap/token-lists'
 
+<<<<<<< HEAD
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 
 /**
@@ -51,8 +49,22 @@ async function getTokenList(listUrl: string): Promise<TokenList> {
     // return json
   }
   throw new Error('Unrecognized list URL protocol.')
+=======
+export const fetchTokenList: Readonly<{
+  pending: ActionCreatorWithPayload<{ url: string; requestId: string }>
+  fulfilled: ActionCreatorWithPayload<{ url: string; tokenList: TokenList; requestId: string }>
+  rejected: ActionCreatorWithPayload<{ url: string; errorMessage: string; requestId: string }>
+}> = {
+  pending: createAction('lists/fetchTokenList/pending'),
+  fulfilled: createAction('lists/fetchTokenList/fulfilled'),
+  rejected: createAction('lists/fetchTokenList/rejected'),
+>>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
 }
+// add and remove from list options
+export const addList = createAction<string>('lists/addList')
+export const removeList = createAction<string>('lists/removeList')
 
+<<<<<<< HEAD
 const fetchCache: { [url: string]: Promise<TokenList> } = {}
 export const fetchTokenList = createAsyncThunk<TokenList, string>('lists/fetchTokenList', (url: string) => {
   // this makes it so we only ever fetch a list a single time concurrently
@@ -65,7 +77,11 @@ export const fetchTokenList = createAsyncThunk<TokenList, string>('lists/fetchTo
 
   return value
 })
+=======
+// select which lists to search across from loaded lists
+export const enableList = createAction<string>('lists/enableList')
+export const disableList = createAction<string>('lists/disableList')
+>>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
 
+// versioning
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
-export const addList = createAction<string>('lists/addList')
-export const rejectVersionUpdate = createAction<Version>('lists/rejectVersionUpdate')

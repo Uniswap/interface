@@ -1,6 +1,4 @@
-import React from 'react'
-
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components/macro'
 
 const rotate = keyframes`
   from {
@@ -24,7 +22,15 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string }>`
  * Takes in custom size and stroke for circle color, default to primary color as fill,
  * need ...rest for layered styles on top
  */
-export default function Loader({ size = '16px', stroke = null, ...rest }: { size?: string; stroke?: string }) {
+export default function Loader({
+  size = '16px',
+  stroke,
+  ...rest
+}: {
+  size?: string
+  stroke?: string
+  [k: string]: any
+}) {
   return (
     <StyledSVG viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" size={size} stroke={stroke} {...rest}>
       <path

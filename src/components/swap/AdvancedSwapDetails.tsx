@@ -1,97 +1,91 @@
-import { Trade, TradeType } from '@uniswap/sdk'
-import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components'
-import { Field } from '../../state/swap/actions'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
+import { Trans } from '@lingui/macro'
+import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useContext, useMemo } from 'react'
+import { ThemeContext } from 'styled-components/macro'
 import { TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
+import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
 
-function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
+interface AdvancedSwapDetailsProps {
+  trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  allowedSlippage: Percent
+}
+
+export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
-  const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
-  return (
-    <>
-      <AutoColumn style={{ padding: '0 20px' }}>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {isExactIn ? 'Minimum received' : 'Maximum sold'}
-            </TYPE.black>
-            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
-          </RowFixed>
-          <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
-              {isExactIn
-                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
-                  '-'
-                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
-                  '-'}
-            </TYPE.black>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              Price Impact
-            </TYPE.black>
-            <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-          </RowFixed>
-          <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-        </RowBetween>
+  const { realizedLPFee, priceImpact } = useMemo(() => {
+    if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
 
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              Liquidity Provider Fee
-            </TYPE.black>
-            <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
-          </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
+    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
+    const realizedLPFee = trade.inputAmount.multiply(realizedLpFeePercent)
+    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
+    return { priceImpact, realizedLPFee }
+  }, [trade])
+
+  return !trade ? null : (
+    <AutoColumn gap="8px">
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            <Trans>Liquidity Provider Fee</Trans>
           </TYPE.black>
-        </RowBetween>
-      </AutoColumn>
-    </>
-  )
-}
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
+        </TYPE.black>
+      </RowBetween>
 
-export interface AdvancedSwapDetailsProps {
-  trade?: Trade
-}
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            <Trans>Route</Trans>
+          </TYPE.black>
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          <SwapRoute trade={trade} />
+        </TYPE.black>
+      </RowBetween>
 
-export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            <Trans>Price Impact</Trans>
+          </TYPE.black>
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          <FormattedPriceImpact priceImpact={priceImpact} />
+        </TYPE.black>
+      </RowBetween>
 
-  const [allowedSlippage] = useUserSlippageTolerance()
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
+          </TYPE.black>
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          {trade.tradeType === TradeType.EXACT_INPUT
+            ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+            : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+        </TYPE.black>
+      </RowBetween>
 
-  const showRoute = trade?.route?.path?.length > 2
-
-  return (
-    <AutoColumn gap="md">
-      {trade && <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />}
-      {showRoute && (
-        <>
-          <SectionBreak />
-          <AutoColumn style={{ padding: '0 24px' }}>
-            <RowFixed>
-              <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                Route
-              </TYPE.black>
-              <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-            </RowFixed>
-            <SwapRoute trade={trade} />
-          </AutoColumn>
-        </>
-      )}
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            <Trans>Slippage tolerance</Trans>
+          </TYPE.black>
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          {allowedSlippage.toFixed(2)}%
+        </TYPE.black>
+      </RowBetween>
     </AutoColumn>
   )
 }
