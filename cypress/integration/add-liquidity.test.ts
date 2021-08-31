@@ -1,4 +1,13 @@
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
+
 describe('Add Liquidity', () => {
+  beforeEach(() => {
+    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
+      aliasQuery(req, 'feeTierDistribution')
+    })
+  })
+
   it('loads the two correct tokens', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
@@ -24,31 +33,31 @@ describe('Add Liquidity', () => {
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
   })
 
-  describe('with subgraph', () => {
-    it('loads fee tier distribution', () => {
-      cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', { fixture: 'subgraph/feeTierDistribution.json' }).as(
-        'getFeeTierDistributionQuery'
-      )
+  it('loads fee tier distribution', () => {
+    cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
+      cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req: CyHttpMessages.IncomingHttpRequest) => {
+        if (hasQuery(req, 'feeTierDistribution')) {
+          req.alias = 'feeTierDistributionQuery'
+
+          req.reply({
+            body: {
+              data: {
+                ...feeTierDistribution,
+              },
+            },
+            headers: {
+              'access-control-allow-origin': '*',
+            },
+          })
+        }
+      })
 
       cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab')
 
-      cy.wait('@getFeeTierDistributionQuery')
+      cy.wait('@feeTierDistributionQuery')
 
-      cy.get('[data-test-id=selected-fee-label]').should('contain.text', '0.3% fee tier')
-      cy.get('[data-test-id=selected-fee-percentage]').should('contain.text', '70%')
-    })
-
-    it('loads ticks data', () => {
-      cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', { fixture: 'subgraph/v3Ticks.json' }).as(
-        'getV3TicksQuery'
-      )
-
-      cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/3000')
-
-      cy.wait('@getV3TicksQuery')
-
-      // TODO: test ticks data (requires stubbing infura pool.tickCurrent)
-      cy.get('[data-test-id=liquidity-chart-loader]').should('exist')
+      cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.3% fee tier')
+      cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '70%')
     })
   })
 })
