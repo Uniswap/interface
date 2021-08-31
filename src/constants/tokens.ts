@@ -100,6 +100,13 @@ export const renBTC = new Token(
   'renBTC',
   'renBTC'
 )
+export const oneUNI = new Token(
+  SupportedChainId.MAINNET,
+  '0x8290D7a64F25e6b5002d98367E8367c1b532b534',
+  18,
+  'oneUNI',
+  'Stable UNI'
+)
 export const ETH2X_FLI = new Token(
   SupportedChainId.MAINNET,
   '0xAa6E8127831c9DE45ae56bB1b0d4D4Da6e5665BD',
