@@ -47,8 +47,12 @@ const initialState: ListsState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
+      const current = state.byUrl[url]?.current ?? null
+      const pendingUpdate = state.byUrl[url]?.pendingUpdate ?? null
+
       state.byUrl[url] = {
-        ...state.byUrl[url],
+        current: current,
+        pendingUpdate: pendingUpdate,
         loadingRequestId: requestId,
         error: null,
       }
@@ -64,11 +68,10 @@ export default createReducer(initialState, (builder) =>
         if (upgradeType === VersionUpgrade.NONE) return
         if (loadingRequestId === null || loadingRequestId === requestId) {
           state.byUrl[url] = {
-            ...state.byUrl[url],
-            loadingRequestId: null,
-            error: null,
             current: current,
             pendingUpdate: tokenList,
+            loadingRequestId: null,
+            error: null,
           }
         }
       } else {
@@ -78,11 +81,10 @@ export default createReducer(initialState, (builder) =>
         }
 
         state.byUrl[url] = {
-          ...state.byUrl[url],
-          loadingRequestId: null,
-          error: null,
           current: tokenList,
           pendingUpdate: null,
+          loadingRequestId: null,
+          error: null,
         }
       }
     })
@@ -93,11 +95,10 @@ export default createReducer(initialState, (builder) =>
       }
 
       state.byUrl[url] = {
-        ...state.byUrl[url],
-        loadingRequestId: null,
-        error: errorMessage,
         current: null,
         pendingUpdate: null,
+        loadingRequestId: null,
+        error: errorMessage,
       }
     })
     .addCase(addList, (state, { payload: url }) => {
@@ -138,8 +139,8 @@ export default createReducer(initialState, (builder) =>
       }
       state.byUrl[url] = {
         ...state.byUrl[url],
-        pendingUpdate: null,
         current: state.byUrl[url].pendingUpdate,
+        pendingUpdate: null,
       }
     })
     .addCase(updateVersion, (state) => {
