@@ -1,3 +1,8 @@
+import * as feeTierDistributionJson from '../fixtures/subgraph/feeTierDistribution.json'
+import * as allV3TicksJson from '../fixtures/subgraph/allV3Ticks.json'
+
+import { hasQuery } from '../utils/graphql-test-utils'
+
 describe('Add Liquidity', () => {
   it('loads the two correct tokens', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab/500')
@@ -25,18 +30,14 @@ describe('Add Liquidity', () => {
   })
 
   describe('with subgraph', () => {
-    const TEST_HEADER = 'x-test'
-    const FEE_TIER_DISTRIBUTION = 'feeTierDistribution'
-    const ALL_V3_TICKS = 'allV3Ticks'
-
     beforeEach(() => {
       cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
-        if (/feeTierDistribution/.test(req.body.query)) {
+        if (hasQuery(req, 'feeTierDistribution')) {
           req.alias = 'queryFeeTierDistribution'
-          req.reply({ fixture: 'subgraph/feeTierDistribution.json' })
-        } else if (/allV3Ticks/.test(req.body.query)) {
+          req.reply(feeTierDistributionJson)
+        } else if (hasQuery(req, 'allV3Ticks')) {
           req.alias = 'queryAllV3Ticks'
-          req.reply({ fixture: 'subgraph/allV3Ticks.json' })
+          req.reply(allV3TicksJson)
         }
       })
     })
