@@ -1,6 +1,6 @@
 import { useActiveWeb3React } from 'hooks/web3'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
@@ -11,27 +11,29 @@ import { WETH9_EXTENDED } from 'constants/tokens'
 import isZero from 'utils/isZero'
 
 /**
- * Computes a gas adjusted quote from a V2 trade, then compares it to a gas adjusted V3 quote from the smart order router.
+ * Computes a gas adjusted quote from a V2 trade, considering both swap gas cost and approval cost.
+ * Takes a gas adjusted V3 quote and further adjusts it considering approval cost.
+ * Compares the 2 trades, and returns true if the V3 trade is better.
  *
- * This is a temporary solution while the smart order router does not consider V2 routes. Long term the smart order router
- * will return the best route considering both V2 and V3.
+ * This is a temporary solution while the smart order router does not consider V2 routes.
  *
  * @param v2Trade The V2 trade to compare against.
- * @param tradeType The type of trade.
+ * @param v3TradeGasAdjusted The V3 trade where the quote amount is a gas adjusted value.
  * @param gasPrice The gas price to use for computing gas adjusted quotes.
- * @param v3QuoteGasAdjusted The gas adjusted quote returned by the smart order router.
  * @returns True if the V3 trade is better. False otherwise.
  */
 export async function useCompareGasAdjustedV2TradeandV3Trade(
   v2Trade: V2Trade<Currency, Currency, TradeType>,
-  tradeType: TradeType,
-  gasPrice: BigNumber,
-  v3QuoteGasAdjusted: CurrencyAmount<Currency>
+  v3TradeGasAdjusted: V3Trade<Currency, Currency, TradeType>,
+  gasPrice: BigNumber
 ): Promise<boolean | undefined> {
   const { chainId, library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
+  const v2TradeApprovalGasEstimate = BigNumber.from(10000) // TODO
+  const v3TradeApprovalGasEstimate = BigNumber.from(10000) // TODO
 
+  const tradeType = v2Trade.tradeType
   const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade.outputAmount.currency : v2Trade.inputAmount.currency
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
 
@@ -69,12 +71,24 @@ export async function useCompareGasAdjustedV2TradeandV3Trade(
           value,
         }
 
-  const gasEstimate = await library.estimateGas(tx)
-  console.log({ gasEstimate: gasEstimate.toString() }, 'Got gas estimate for V2 trade')
+  const v2SwapGasEstimate = await library.estimateGas(tx)
+  const v2GasEstimate = v2SwapGasEstimate.add(v2TradeApprovalGasEstimate)
+  console.log(
+    { swapGasEstimate: v2SwapGasEstimate.toString(), approvalGasEstimate: v2TradeApprovalGasEstimate.toString() },
+    'Got gas estimates for V2 trade'
+  )
 
-  let gasCostInTermsOfQuoteToken
+  let v2TradeAndApprovalGasCostInQuoteToken
+  let v3ApprovalGasCostInQuoteToken
   if (weth && (quoteToken.equals(weth) || quoteToken.isNative)) {
-    gasCostInTermsOfQuoteToken = CurrencyAmount.fromRawAmount(quoteToken, gasEstimate.mul(gasPrice).toString())
+    v2TradeAndApprovalGasCostInQuoteToken = CurrencyAmount.fromRawAmount(
+      quoteToken,
+      v2GasEstimate.mul(gasPrice).toString()
+    )
+    v3ApprovalGasCostInQuoteToken = CurrencyAmount.fromRawAmount(
+      quoteToken,
+      v3TradeApprovalGasEstimate.mul(gasPrice).toString()
+    )
   } else {
     let ethPool: Pool | null = null
     for (const [, pool] of pools) {
@@ -92,15 +106,22 @@ export async function useCompareGasAdjustedV2TradeandV3Trade(
 
     const ethToken0 = ethPool.token0.address == weth?.address
     const ethTokenPrice = ethToken0 ? ethPool.token0Price : ethPool.token1Price
-    const gasCostInEth = CurrencyAmount.fromRawAmount(weth, gasEstimate.mul(gasPrice).toString())
-    gasCostInTermsOfQuoteToken = ethTokenPrice.quote(gasCostInEth)
+    const v2TradeGasCostInEth = CurrencyAmount.fromRawAmount(weth, v2SwapGasEstimate.mul(gasPrice).toString())
+    const v3TradeApprovalCostInEth = CurrencyAmount.fromRawAmount(
+      weth,
+      v3TradeApprovalGasEstimate.mul(gasPrice).toString()
+    )
+    v2TradeAndApprovalGasCostInQuoteToken = ethTokenPrice.quote(v2TradeGasCostInEth)
+    v3ApprovalGasCostInQuoteToken = ethTokenPrice.quote(v3TradeApprovalCostInEth)
   }
 
   if (tradeType == TradeType.EXACT_INPUT) {
-    const v2QuoteGasAdjusted = v2Trade.outputAmount.subtract(gasCostInTermsOfQuoteToken)
+    const v3QuoteGasAdjusted = v3TradeGasAdjusted.outputAmount.subtract(v3ApprovalGasCostInQuoteToken)
+    const v2QuoteGasAdjusted = v2Trade.outputAmount.subtract(v2TradeAndApprovalGasCostInQuoteToken)
     return v3QuoteGasAdjusted.greaterThan(v2QuoteGasAdjusted)
   } else {
-    const v2QuoteGasAdjusted = v2Trade.inputAmount.add(gasCostInTermsOfQuoteToken)
+    const v3QuoteGasAdjusted = v3TradeGasAdjusted.inputAmount.add(v3ApprovalGasCostInQuoteToken)
+    const v2QuoteGasAdjusted = v2Trade.inputAmount.add(v2TradeAndApprovalGasCostInQuoteToken)
     return v2QuoteGasAdjusted.greaterThan(v3QuoteGasAdjusted)
   }
 }
