@@ -5,6 +5,7 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import { TYPE } from 'theme'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -127,4 +128,9 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
+`
+
+export const TransactionDetailsLabel = styled(TYPE.black)`
+  border-bottom: 1px solid ${({ theme }) => theme.bg2};
+  padding-bottom: 0.5rem;
 `

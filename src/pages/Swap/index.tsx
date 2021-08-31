@@ -4,25 +4,26 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
+import { RouterLabel } from 'components/swap/RouterLabel'
+import SwapRoute from 'components/swap/SwapRoute'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import { V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
@@ -50,14 +51,12 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
-import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
-import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import SwapRoute from 'components/swap/SwapRoute'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -459,7 +458,17 @@ export default function Swap({ history }: RouteComponentProps) {
                         )
                       ))} */}
 
-                    {trade && <SwapRoute trade={trade} />}
+                    {/*TODO can merge condition */}
+                    {trade ? (
+                      <MouseoverTooltipContent
+                        width="auto"
+                        content={<SwapRoute trade={trade} />}
+                        placement="top"
+                        showArrow={false}
+                      >
+                        <RouterLabel />
+                      </MouseoverTooltipContent>
+                    ) : null}
                   </RowFixed>
                   {trade ? (
                     <RowFixed>
@@ -469,7 +478,10 @@ export default function Swap({ history }: RouteComponentProps) {
                         setShowInverted={setShowInverted}
                       />
                       <MouseoverTooltipContent
+                        width="295px"
                         content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                        placement="top"
+                        showArrow={false}
                       >
                         <StyledInfo />
                       </MouseoverTooltipContent>
