@@ -22,8 +22,6 @@ export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserLegacyRouter = createAction<{ userLegacyRouter: boolean }>('user/updateUserLegacyRouter')
-export const updateUserShowAdvancedSwapDetails =
-  createAction<{ userShowAdvancedSwapDetails: boolean }>('user/userAdvancedSwapDetails')
 export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(
   'user/updateUserSlippageTolerance'

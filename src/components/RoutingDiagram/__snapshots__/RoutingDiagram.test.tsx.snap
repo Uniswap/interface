@@ -3,106 +3,106 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 dvSulK css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
   >
     <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
     >
       CurrencyLogo currency=USDC
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
-    </div>
-    <div
-      class="css-vurnku"
-    >
       <div
-        class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV jYUaCo"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
+        />
+        <div
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
-            class="RoutingDiagram__DottedLine-sc-o1ook0-4 iCOEgL"
-          />
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll bnrVWn"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+            style="word-break: normal;"
           >
+            7.5%
+          </div>
+        </div>
+        <div
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          style="justify-content: space-evenly; z-index: 2;"
+          width="100%"
+        >
+          <div
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
+          >
+            <div
+              class="css-1t7xebc"
+            >
+              DoubleCurrencyLogo currency0=DAI currency1=USDC
+            </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
             >
-              7.5%
+              0.05%
             </div>
-          </div>
-          <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
-            style="justify-content: space-evenly; z-index: 2;"
-            width="100%"
-          >
-            Popover
           </div>
         </div>
       </div>
+      CurrencyLogo currency=DAI
+    </div>
+    <div
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
+    >
+      CurrencyLogo currency=USDC
       <div
-        class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV jYUaCo"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
+        />
+        <div
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
-            class="RoutingDiagram__DottedLine-sc-o1ook0-4 iCOEgL"
-          />
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll bnrVWn"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+            style="word-break: normal;"
           >
+            2.5%
+          </div>
+        </div>
+        <div
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          style="justify-content: space-evenly; z-index: 2;"
+          width="100%"
+        >
+          <div
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
+          >
+            <div
+              class="css-1t7xebc"
+            >
+              DoubleCurrencyLogo currency0=MKR currency1=USDC
+            </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
             >
-              2.5%
+              0.3%
             </div>
           </div>
           <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
-            style="justify-content: space-evenly; z-index: 2;"
-            width="100%"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
           >
-            PopoverPopover
+            <div
+              class="css-1t7xebc"
+            >
+              DoubleCurrencyLogo currency0=DAI currency1=MKR
+            </div>
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+            >
+              1%
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
-    >
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
       CurrencyLogo currency=DAI
     </div>
   </div>
@@ -112,79 +112,49 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 dvSulK css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
   >
     <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
+      class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
     >
       CurrencyLogo currency=USDC
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
-    </div>
-    <div
-      class="css-vurnku"
-    >
       <div
-        class="Column__AutoColumn-sc-1kykgp9-2 iNjnaZ"
+        class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV jYUaCo"
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kHIEgO"
+        />
+        <div
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
         >
           <div
-            class="RoutingDiagram__DottedLine-sc-o1ook0-4 iCOEgL"
-          />
-          <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll bnrVWn"
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
+            style="word-break: normal;"
           >
+            10%
+          </div>
+        </div>
+        <div
+          class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
+          style="justify-content: space-evenly; z-index: 2;"
+          width="100%"
+        >
+          <div
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__PoolBadge-sc-o1ook0-3 gayll bRJvWg"
+          >
+            <div
+              class="css-1t7xebc"
+            >
+              DoubleCurrencyLogo currency0=DAI currency1=USDC
+            </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
             >
-              10%
+              0.05%
             </div>
-          </div>
-          <div
-            class="sc-bdnxRM Row-sc-nrd8cx-0 Row__AutoRow-sc-nrd8cx-3 iqvZFe itvFNV kkMfuq"
-            style="justify-content: space-evenly; z-index: 2;"
-            width="100%"
-          >
-            Popover
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
-    >
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
       CurrencyLogo currency=DAI
     </div>
   </div>
@@ -194,53 +164,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__MainRow-sc-o1ook0-0 dvSulK css-vurnku"
-  >
-    <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
-    >
-      CurrencyLogo currency=DAI
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
-    </div>
-    <div
-      class="css-vurnku"
-    />
-    <div
-      class="RoutingDiagram__EdgeRow-sc-o1ook0-1 dyzDCt css-vurnku"
-    >
-      <svg
-        class="RoutingDiagram__StyledChevronRight-sc-o1ook0-5 gqqmAm"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline
-          points="9 18 15 12 9 6"
-        />
-      </svg>
-      CurrencyLogo currency=USDC
-    </div>
-  </div>
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+  />
 </DocumentFragment>
 `;

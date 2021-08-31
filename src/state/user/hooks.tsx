@@ -26,7 +26,6 @@ import {
   updateUserExpertMode,
   updateUserLegacyRouter,
   updateUserLocale,
-  updateUserShowAdvancedSwapDetails,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -121,21 +120,6 @@ export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => vo
   )
 
   return [legacyRouter || chainId !== SupportedChainId.MAINNET, setLegacyRouter]
-}
-
-export function useUserShowAdvancedSwapDetails(): [boolean, (userAdvancedSwapDetails: boolean) => void] {
-  const dispatch = useAppDispatch()
-
-  const showAdvancedSwapDetails = useAppSelector((state) => state.user.userShowAdvancedSwapDetails)
-
-  const setUserShowAdvancedSwapDetails = useCallback(
-    (newShowAdvancedSwapDetails: boolean) => {
-      dispatch(updateUserShowAdvancedSwapDetails({ userShowAdvancedSwapDetails: newShowAdvancedSwapDetails }))
-    },
-    [dispatch]
-  )
-
-  return [showAdvancedSwapDetails, setUserShowAdvancedSwapDetails]
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
