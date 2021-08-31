@@ -1,6 +1,7 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { OutlineCard } from 'components/Card'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { memo } from 'react'
 
@@ -43,12 +44,12 @@ export default memo(function SwapRoute({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
 }) {
   return (
-    <div style={{ padding: '0.5rem 0' }}>
+    <OutlineCard>
       <RoutingDiagram
         currencyIn={trade.inputAmount.currency}
         currencyOut={trade.outputAmount.currency}
         routes={getTokenPath(trade)}
       />
-    </div>
+    </OutlineCard>
   )
 })

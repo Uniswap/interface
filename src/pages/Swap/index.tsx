@@ -79,9 +79,9 @@ const GradientText = styled(TYPE.black)`
   /* fallback color */
   color: ${({ theme }) => theme.green1};
 
-  @supports (background-clip: text) and (-webkit-text-fill-color: transparent) {
+  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
     background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
-    background-clip: text;
+    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 `
@@ -479,7 +479,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
                       <AutoRow gap="4px" width="auto" padding=".5rem">
                         <StyledAutoRouterIcon />
-                        <GradientText fontSize={14}>Uniswap API</GradientText>
+                        <GradientText fontSize={14}>Auto Router</GradientText>
                       </AutoRow>
                     )}
                   </RowFixed>
