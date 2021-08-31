@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AutoRow } from 'components/Row'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
@@ -16,7 +16,6 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
-import { Trans } from '@lingui/macro'
 
 import Modal from '../Modal'
 import Option from './Option'
@@ -240,7 +239,7 @@ export default function WalletModal({
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={<Trans>Install Metamask</Trans>}
+                header={'Install Metamask'}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
@@ -291,16 +290,12 @@ export default function WalletModal({
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>
-            {error instanceof UnsupportedChainIdError ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}
-          </HeaderRow>
+          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>
-                <Trans>Please connect to the appropriate Ethereum network.</Trans>
-              </h5>
+              <h5>Please connect to the appropriate Ethereum network.</h5>
             ) : (
-              <Trans>Error connecting. Try refreshing the page.</Trans>
+              'Error connecting. Try refreshing the page.'
             )}
           </ContentWrapper>
         </UpperSection>
@@ -330,14 +325,12 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              <Trans>Back</Trans>
+              Back
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>
-              <Trans>Connect to a wallet</Trans>
-            </HoverText>
+            <HoverText>Connect to a wallet</HoverText>
           </HeaderRow>
         )}
 
@@ -345,12 +338,10 @@ export default function WalletModal({
           <LightCard style={{ marginBottom: '16px' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={14}>
-                <Trans>
-                  By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                  acknowledge that you have read and understand the{' '}
-                  <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
-                </Trans>
+                By connecting a wallet, you agree to Uniswap Labs’{' '}
+                <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                acknowledge that you have read and understand the{' '}
+                <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
               </TYPE.main>
             </AutoRow>
           </LightCard>

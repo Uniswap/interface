@@ -1,7 +1,6 @@
-import { t, Trans } from '@lingui/macro'
-import { useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Percent } from '@uniswap/sdk-core'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { ThemeContext } from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -10,8 +9,6 @@ import { RowBetween, RowFixed } from '../Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { darken } from 'polished'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
-import { L2_CHAIN_IDS } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -89,12 +86,11 @@ const SlippageEmojiContainer = styled.span`
   `}
 `
 
-interface TransactionSettingsProps {
+export interface TransactionSettingsProps {
   placeholderSlippage: Percent // varies according to the context in which the settings dialog is placed
 }
 
 export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
-  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const userSlippageTolerance = useUserSlippageTolerance()
@@ -154,20 +150,14 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     }
   }
 
-  const showCustomDeadlineRow = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
-
   return (
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-            <Trans>Slippage tolerance</Trans>
+            Slippage tolerance
           </TYPE.black>
-          <QuestionHelper
-            text={
-              <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-            }
-          />
+          <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
           <Option
@@ -176,7 +166,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             }}
             active={userSlippageTolerance === 'auto'}
           >
-            <Trans>Auto</Trans>
+            Auto
           </Option>
           <OptionCustom active={userSlippageTolerance !== 'auto'} warning={!!slippageError} tabIndex={-1}>
             <RowBetween>
@@ -215,52 +205,46 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
               color: slippageError ? 'red' : '#F3841E',
             }}
           >
-            {slippageError ? (
-              <Trans>Enter a valid slippage percentage</Trans>
-            ) : tooLow ? (
-              <Trans>Your transaction may fail</Trans>
-            ) : (
-              <Trans>Your transaction may be frontrun</Trans>
-            )}
+            {slippageError
+              ? 'Enter a valid slippage percentage'
+              : tooLow
+              ? 'Your transaction may fail'
+              : 'Your transaction may be frontrun'}
           </RowBetween>
         ) : null}
       </AutoColumn>
 
-      {showCustomDeadlineRow && (
-        <AutoColumn gap="sm">
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              <Trans>Transaction deadline</Trans>
-            </TYPE.black>
-            <QuestionHelper
-              text={t`Your transaction will revert if it is pending for more than this period of time.`}
+      <AutoColumn gap="sm">
+        <RowFixed>
+          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            Transaction deadline
+          </TYPE.black>
+          <QuestionHelper text="Your transaction will revert if it is pending for more than this period of time." />
+        </RowFixed>
+        <RowFixed>
+          <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
+            <Input
+              placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
+              value={
+                deadlineInput.length > 0
+                  ? deadlineInput
+                  : deadline === DEFAULT_DEADLINE_FROM_NOW
+                  ? ''
+                  : (deadline / 60).toString()
+              }
+              onChange={(e) => parseCustomDeadline(e.target.value)}
+              onBlur={() => {
+                setDeadlineInput('')
+                setDeadlineError(false)
+              }}
+              color={deadlineError ? 'red' : ''}
             />
-          </RowFixed>
-          <RowFixed>
-            <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
-              <Input
-                placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
-                value={
-                  deadlineInput.length > 0
-                    ? deadlineInput
-                    : deadline === DEFAULT_DEADLINE_FROM_NOW
-                    ? ''
-                    : (deadline / 60).toString()
-                }
-                onChange={(e) => parseCustomDeadline(e.target.value)}
-                onBlur={() => {
-                  setDeadlineInput('')
-                  setDeadlineError(false)
-                }}
-                color={deadlineError ? 'red' : ''}
-              />
-            </OptionCustom>
-            <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-              <Trans>minutes</Trans>
-            </TYPE.body>
-          </RowFixed>
-        </AutoColumn>
-      )}
+          </OptionCustom>
+          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+            minutes
+          </TYPE.body>
+        </RowFixed>
+      </AutoColumn>
     </AutoColumn>
   )
 }

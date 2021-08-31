@@ -1,8 +1,10 @@
+import React from 'react'
+
 import Badge, { BadgeVariant } from 'components/Badge'
 import styled from 'styled-components/macro'
 
 import { MouseoverTooltip } from '../../components/Tooltip'
-import { Trans } from '@lingui/macro'
+import { useTranslation } from 'react-i18next'
 import { AlertCircle } from 'react-feather'
 
 const BadgeWrapper = styled.div`
@@ -24,6 +26,13 @@ const ActiveDot = styled.span`
   margin-right: 4px;
 `
 
+export const DarkBadge = styled.div`
+  width: fit-content;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 4px 6px;
+`
+
 export default function RangeBadge({
   removed,
   inRange,
@@ -31,47 +40,35 @@ export default function RangeBadge({
   removed: boolean | undefined
   inRange: boolean | undefined
 }) {
+  const { t } = useTranslation()
+
   return (
     <BadgeWrapper>
       {removed ? (
-        <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees.</Trans>}>
+        <MouseoverTooltip text={`Your position has 0 liquidity, and is not earning fees.`}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
-            <BadgeText>
-              <Trans>Closed</Trans>
-            </BadgeText>
+            <BadgeText>{t('Inactive')}</BadgeText>
           </Badge>
         </MouseoverTooltip>
       ) : inRange ? (
         <MouseoverTooltip
-          text={
-            <Trans>
-              The price of this pool is within your selected range. Your position is currently earning fees.
-            </Trans>
-          }
+          text={`The price of this pool is within your selected range. Your position is currently earning fees.`}
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
-            <BadgeText>
-              <Trans>In range</Trans>
-            </BadgeText>
+            <BadgeText>{t('In range')}</BadgeText>
           </Badge>
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={
-            <Trans>
-              The price of this pool is outside of your selected range. Your position is not currently earning fees.
-            </Trans>
-          }
+          text={`The price of this pool is outside of your selected range. Your position is not currently earning fees.`}
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
             &nbsp;
-            <BadgeText>
-              <Trans>Out of range</Trans>
-            </BadgeText>
+            <BadgeText>{t('Out of range')}</BadgeText>
           </Badge>
         </MouseoverTooltip>
       )}

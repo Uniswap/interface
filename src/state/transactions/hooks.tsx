@@ -1,8 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { useCallback, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks/web3'
+import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
 import { TransactionDetails } from './reducer'
 
@@ -12,7 +13,7 @@ export function useTransactionAdder(): (
   customData?: { summary?: string; approval?: { tokenAddress: string; spender: string }; claim?: { recipient: string } }
 ) => void {
   const { chainId, account } = useActiveWeb3React()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
     (
@@ -40,19 +41,9 @@ export function useTransactionAdder(): (
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useActiveWeb3React()
 
-  const state = useAppSelector((state) => state.transactions)
+  const state = useSelector<AppState, AppState['transactions']>((state) => state.transactions)
 
   return chainId ? state[chainId] ?? {} : {}
-}
-
-export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
-  const allTransactions = useAllTransactions()
-
-  if (!transactionHash) {
-    return undefined
-  }
-
-  return allTransactions[transactionHash]
 }
 
 export function useIsTransactionPending(transactionHash?: string): boolean {
@@ -61,14 +52,6 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
   if (!transactionHash || !transactions[transactionHash]) return false
 
   return !transactions[transactionHash].receipt
-}
-
-export function useIsTransactionConfirmed(transactionHash?: string): boolean {
-  const transactions = useAllTransactions()
-
-  if (!transactionHash || !transactions[transactionHash]) return false
-
-  return Boolean(transactions[transactionHash].receipt)
 }
 
 /**
@@ -103,10 +86,9 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
 
 // watch for submissions to claim
 // return null if not done loading, return undefined if not found
-export function useUserHasSubmittedClaim(account?: string): {
-  claimSubmitted: boolean
-  claimTxn: TransactionDetails | undefined
-} {
+export function useUserHasSubmittedClaim(
+  account?: string
+): { claimSubmitted: boolean; claimTxn: TransactionDetails | undefined } {
   const allTransactions = useAllTransactions()
 
   // get the txn if it has been submitted

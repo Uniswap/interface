@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import styled, { keyframes } from 'styled-components/macro'
+import React, { useEffect, useState } from 'react'
+import styled, { keyframes } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks/web3'
 
 import { useBlockNumber } from '../../state/application/hooks'
@@ -21,7 +21,7 @@ const StyledPolling = styled.div`
 `
 const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
-  opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
+  opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.2)};
   :hover {
     opacity: 1;
   }

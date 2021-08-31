@@ -1,4 +1,5 @@
 import { TokenList } from '@uniswap/token-lists/dist/types'
+import React from 'react'
 import { Token, Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 import { TYPE, CloseIcon } from 'theme'
@@ -17,7 +18,6 @@ import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn } from './styleds'
-import { Plural, Trans } from '@lingui/macro'
 
 const Wrapper = styled.div`
   position: relative;
@@ -33,11 +33,10 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
 
 const AddressText = styled(TYPE.blue)`
   font-size: 12px;
-  word-break: break-all;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 10px;
-  `}
+`}
 `
 
 interface ImportProps {
@@ -60,9 +59,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-          <TYPE.mediumHeader>
-            <Plural value={tokens.length} one="Import token" other="Import tokens" />
-          </TYPE.mediumHeader>
+          <TYPE.mediumHeader>Import {tokens.length > 1 ? 'Tokens' : 'Token'}</TYPE.mediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>
       </PaddedColumn>
@@ -71,10 +68,9 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
-            <Trans>
-              This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to
-              trade.
-            </Trans>
+            {
+              "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+            }
           </TYPE.body>
         </AutoColumn>
         {tokens.map((token) => {
@@ -105,15 +101,15 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                   <RowFixed>
                     {list.logoURI && <ListLogo logoURI={list.logoURI} size="16px" />}
                     <TYPE.small ml="6px" fontSize={14} color={theme.text3}>
-                      <Trans>via {list.name} token list</Trans>
+                      via {list.name} token list
                     </TYPE.small>
                   </RowFixed>
                 ) : (
-                  <WarningWrapper $borderRadius="4px" padding="4px" highWarning={true}>
+                  <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
                     <RowFixed>
                       <AlertCircle stroke={theme.red1} size="10px" />
                       <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
-                        <Trans>Unknown Source</Trans>
+                        Unknown Source
                       </TYPE.body>
                     </RowFixed>
                   </WarningWrapper>
@@ -125,7 +121,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
 
         <ButtonPrimary
           altDisabledStyle={true}
-          $borderRadius="20px"
+          borderRadius="20px"
           padding="10px 1rem"
           onClick={() => {
             tokens.map((token) => addToken(token))
@@ -133,7 +129,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
           }}
           className=".token-dismiss-button"
         >
-          <Trans>Import</Trans>
+          Import
         </ButtonPrimary>
       </AutoColumn>
     </Wrapper>

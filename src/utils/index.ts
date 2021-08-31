@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -25,12 +25,12 @@ export function shortenAddress(address: string, chars = 4): string {
 }
 
 // account is not optional
-function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
+export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
   return library.getSigner(account).connectUnchecked()
 }
 
 // account is optional
-function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
+export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
   return account ? getSigner(library, account) : library
 }
 
@@ -48,7 +48,7 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): boolean {
-  return Boolean(token?.isToken && tokenAddressMap[token.chainId]?.[token.address])
+  return Boolean(token?.isToken && tokenAddressMap[token.chainId as ChainId]?.[token.address])
 }
 
 export function formattedFeeAmount(feeAmount: FeeAmount): number {

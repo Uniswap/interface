@@ -1,110 +1,34 @@
 <!DOCTYPE html>
-<html translate="no">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-<<<<<<< HEAD
     <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.ico" />
-=======
-
-    <title>Uniswap Interface</title>
-    <meta name="description" content="Uniswap Interface" />
-
-    <!--
-      %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
-      Only files inside the `public` folder can be referenced from the HTML.
-    -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
->>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
     <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#ff007a" />
     <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
-
     <!--
-      manifest.json provides metadata used when the app is installed as a PWA.
-      See https://developers.google.com/web/fundamentals/web-app-manifest/
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-    <link rel="preconnect" href="https://www.google-analytics.com/">
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
 
-<<<<<<< HEAD
     <title>Roll - Exchange</title>
-=======
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-        }
-
-        @supports (font-variation-settings: normal) {
-            * {
-                font-family: 'Inter var', sans-serif;
-            }
-        }
-
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        button {
-            user-select: none;
-        }
-
-        html {
-            font-size: 16px;
-            font-variant: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
-        }
-
-        #background-radial-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            pointer-events: none;
-            width: 200vw;
-            height: 200vh;
-            background: radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%);
-            transform: translate(-50vw, -100vh);
-            z-index: -1;
-        }
-
-        html {
-            min-height: 100%;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            html {
-                background-color: #212429;
-            }
-        }
-        @media (prefers-color-scheme: light) {
-            html {
-                background-color: #F7F8FA;
-            }
-        }
-    </style>
->>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-
-    <!-- The root is the container of the app -->
-    <div id="root">
-      <!-- Triggers the font to load immediately and then is replaced by the app -->
-      <div style="visibility: hidden">X</div>
-    </div>
-
-    <div id="background-radial-gradient"></div>
-
+    <div id="root"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

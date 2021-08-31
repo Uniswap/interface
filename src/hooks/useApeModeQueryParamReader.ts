@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-
-import { useAppDispatch } from 'state/hooks'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 import { updateUserExpertMode } from '../state/user/actions'
 import useParsedQueryString from './useParsedQueryString'
 
@@ -10,7 +10,7 @@ export default function ApeModeQueryParamReader(): null {
 }
 
 function useApeModeQueryParamReader() {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const { ape } = useParsedQueryString()
 
   useEffect(() => {

@@ -1,6 +1,5 @@
-import { t, Trans } from '@lingui/macro'
-import { useContext, useCallback, ReactNode } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
+import React, { useContext, useCallback } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
@@ -41,7 +40,7 @@ const Input = styled.input<{ error?: boolean }>`
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.primary1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -68,16 +67,10 @@ const Input = styled.input<{ error?: boolean }>`
 
 export default function AddressInputPanel({
   id,
-  className = 'recipient-address-input',
-  label,
-  placeholder,
   value,
   onChange,
 }: {
   id?: string
-  className?: string
-  label?: ReactNode
-  placeholder?: string
   // the typed string value
   value: string
   // triggers whenever the typed value changes
@@ -106,25 +99,25 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
-                {label ?? <Trans>Recipient</Trans>}
+                Recipient
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
                 >
-                  <Trans>(View on Explorer)</Trans>
+                  (View on Etherscan)
                 </ExternalLink>
               )}
             </RowBetween>
             <Input
-              className={className}
+              className="recipient-address-input"
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`Wallet Address or ENS name`}
+              placeholder="Wallet Address or ENS name"
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

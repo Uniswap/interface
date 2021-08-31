@@ -1,10 +1,8 @@
-import React from 'react'
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
-import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
@@ -22,31 +20,12 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 
   return useMemo(() => {
     if (!chainId) return {}
-<<<<<<< HEAD
-    const value = userAddedTokens
-      // reduce into all ALL_TOKENS filtered by the current chain
-      .reduce<{ [address: string]: Token }>(
-        (tokenMap, token) => {
-          tokenMap[token.address] = token
-          return tokenMap
-        },
-        // must make a copy because reduce modifies the map, and we do not
-        // want to make a copy in every iteration
-        { ...allTokens[chainId] }
-      )
-
-    return value
-  }, [chainId, userAddedTokens, allTokens])
-=======
 
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: Token }>(
-      (newMap, address) => {
-        newMap[address] = tokenMap[chainId][address].token
-        return newMap
-      },
-      {}
-    )
+    const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
+      newMap[address] = tokenMap[chainId][address].token
+      return newMap
+    }, {})
 
     if (includeUserAdded) {
       return (
@@ -124,8 +103,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
     return false
   }
 
-  return !!userAddedTokens.find((token) => currency.equals(token))
->>>>>>> 13a289f6f1ce47a1c6238833449f8615e2083e17
+  return !!userAddedTokens.find((token) => currencyEquals(currency, token))
 }
 
 // parse a name or symbol from a token response
@@ -194,11 +172,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
-  const extendedEther = useMemo(() => (chainId ? ExtendedEther.onChain(chainId) : undefined), [chainId])
-  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-  if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
-  return isETH ? extendedEther : token
+  return isETH ? ETHER : token
 }

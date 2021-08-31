@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -8,27 +8,19 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
-import { Price, Token, Percent } from '@uniswap/sdk-core'
-import { formatTickPrice } from 'utils/formatTickPrice'
+import { WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
+import { formatPrice } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
-import { unwrappedToken } from 'utils/unwrappedToken'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { RowBetween } from 'components/Row'
+import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
-import { DAI, USDC, USDT, WBTC, WETH9_EXTENDED } from '../../constants/tokens'
-import { Trans } from '@lingui/macro'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
-import { Bound } from 'state/mint/v3/actions'
+import { DAI, USDC, USDT, WBTC } from '../../constants/tokens'
 
-const LinkRow = styled(Link)`
+const Row = styled(Link)`
   align-items: center;
   border-radius: 20px;
   display: flex;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-
   justify-content: space-between;
   color: ${({ theme }) => theme.text1};
   margin: 8px 0;
@@ -37,26 +29,27 @@ const LinkRow = styled(Link)`
   font-weight: 500;
   background-color: ${({ theme }) => theme.bg1};
 
+  &:first-of-type {
+    margin: 0 0 8px 0;
+  }
   &:last-of-type {
     margin: 8px 0 0 0;
   }
   & > div:not(:first-child) {
-    text-align: center;
+    text-align: right;
   }
   :hover {
     background-color: ${({ theme }) => theme.bg2};
   }
-
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    /* flex-direction: row; */
+    flex-direction: row;
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-    row-gap: 12px;
+    row-gap: 24px;
   `};
 `
-
 const BadgeText = styled.div`
   font-weight: 500;
   font-size: 14px;
@@ -72,15 +65,13 @@ const DataLineItem = styled.div`
 const RangeLineItem = styled(DataLineItem)`
   display: flex;
   flex-direction: row;
+  cursor: pointer;
   align-items: center;
-
-  margin-top: 4px;
-  width: 100%;
+  justify-self: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  background-color: ${({ theme }) => theme.bg2};
-    border-radius: 12px;
-    padding: 8px 0;
+  flex-direction: column;
+  row-gap: 4px;
 `};
 `
 
@@ -103,9 +94,6 @@ const ExtentsText = styled.span`
   color: ${({ theme }) => theme.text3};
   font-size: 14px;
   margin-right: 4px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
 `
 
 const PrimaryPositionIdData = styled.div`
@@ -126,11 +114,13 @@ const DataText = styled.div`
   `};
 `
 
-interface PositionListItemProps {
+export interface PositionListItemProps {
   positionDetails: PositionDetails
 }
 
-export function getPriceOrderingFromPositionForUI(position?: Position): {
+export function getPriceOrderingFromPositionForUI(
+  position?: Position
+): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token
@@ -155,7 +145,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 
   // if token1 is an ETH-/BTC-stable asset, set it as the base token
-  const bases = [...Object.values(WETH9_EXTENDED), WBTC]
+  const bases = [...Object.values(WETH9), WBTC]
   if (bases.some((base) => base.equals(token1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
@@ -210,24 +200,27 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-
   // prices
-  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
-
-  const currencyQuote = quote && unwrappedToken(quote)
-  const currencyBase = base && unwrappedToken(base)
+  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
+  const inverted = token1 ? base?.equals(token1) : undefined
+  const currencyQuote = inverted ? currency1 : currency0
+  const currencyBase = inverted ? currency0 : currency1
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
+  const [manuallyInverted, setManuallyInverted] = useState(true)
+  if (manuallyInverted) {
+    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
+  }
+
   const removed = liquidity?.eq(0)
 
   return (
-    <LinkRow to={positionSummaryLink}>
-      <RowBetween>
+    <Row to={positionSummaryLink}>
+      <RowFixed>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
           <DataText>
@@ -235,44 +228,49 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </DataText>
           &nbsp;
           <Badge>
-            <BadgeText>
-              <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
-            </BadgeText>
+            <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
           </Badge>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
-      </RowBetween>
+      </RowFixed>
 
       {priceLower && priceUpper ? (
-        <RangeLineItem>
-          <RangeText>
-            <ExtentsText>
-              <Trans>Min: </Trans>
-            </ExtentsText>
-            <Trans>
-              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText text={currencyBase?.symbol ?? ''} />
-            </Trans>
-          </RangeText>{' '}
-          <HideSmall>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
-          </HideSmall>
-          <SmallOnly>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
-          </SmallOnly>
-          <RangeText>
-            <ExtentsText>
-              <Trans>Max:</Trans>
-            </ExtentsText>
-            <Trans>
-              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-            </Trans>
-          </RangeText>
-        </RangeLineItem>
+        <>
+          <RangeLineItem
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setManuallyInverted(!manuallyInverted)
+            }}
+          >
+            <RangeText>
+              <ExtentsText>Min: </ExtentsText>
+              {formatPrice(priceLower, 5)}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
+              {' per '}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''} />
+            </RangeText>{' '}
+            <HideSmall>
+              <DoubleArrow>⟷</DoubleArrow>{' '}
+            </HideSmall>
+            <SmallOnly>
+              <DoubleArrow>↕</DoubleArrow>{' '}
+            </SmallOnly>
+            <RangeText>
+              <ExtentsText>Max:</ExtentsText>
+              {formatPrice(priceUpper, 5)}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
+              {' per '}{' '}
+              <HoverInlineText
+                maxCharacters={10}
+                text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''}
+              />
+            </RangeText>{' '}
+          </RangeLineItem>
+        </>
       ) : (
         <Loader />
       )}
-    </LinkRow>
+    </Row>
   )
 }

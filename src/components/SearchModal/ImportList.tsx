@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
 import { TYPE, CloseIcon } from 'theme'
@@ -14,13 +14,12 @@ import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn, Checkbox, TextDot } from './styleds'
 import { TokenList } from '@uniswap/token-lists'
-
-import { useAppDispatch } from 'state/hooks'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 import { useFetchListCallback } from 'hooks/useFetchListCallback'
 import { removeList, enableList } from 'state/lists/actions'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { useAllLists } from 'state/lists/hooks'
-import { Trans } from '@lingui/macro'
 
 const Wrapper = styled.div`
   position: relative;
@@ -37,7 +36,7 @@ interface ImportProps {
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
   const theme = useTheme()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   // user must accept
   const [confirmed, setConfirmed] = useState(false)
@@ -81,9 +80,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
-          <TYPE.mediumHeader>
-            <Trans>Import List</Trans>
-          </TYPE.mediumHeader>
+          <TYPE.mediumHeader>Import List</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
@@ -101,7 +98,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                     </TYPE.body>
                     <TextDot />
                     <TYPE.main fontSize={'16px'} ml="6px">
-                      <Trans>{list.tokens.length} tokens</Trans>
+                      {list.tokens.length} tokens
                     </TYPE.main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
@@ -117,20 +114,18 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
               <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
-                <Trans>Import at your own risk</Trans>
+                Import at your own risk{' '}
               </TYPE.body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <TYPE.body fontWeight={500} color={theme.red1}>
-                <Trans>
-                  By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
-                  including creating fake versions of existing lists and lists that claim to represent projects that do
-                  not have one.
-                </Trans>
+                By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
+                including creating fake versions of existing lists and lists that claim to represent projects that do
+                not have one.
               </TYPE.body>
               <TYPE.body fontWeight={600} color={theme.red1}>
-                <Trans>If you purchase a token from this list, you may not be able to sell it back.</Trans>
+                If you purchase a token from this list, you may not be able to sell it back.
               </TYPE.body>
             </AutoColumn>
             <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
@@ -141,7 +136,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 onChange={() => setConfirmed(!confirmed)}
               />
               <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
-                <Trans>I understand</Trans>
+                I understand
               </TYPE.body>
             </AutoRow>
           </Card>
@@ -149,11 +144,11 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
           <ButtonPrimary
             disabled={!confirmed}
             altDisabledStyle={true}
-            $borderRadius="20px"
+            borderRadius="20px"
             padding="10px 1rem"
             onClick={handleAddList}
           >
-            <Trans>Import</Trans>
+            Import
           </ButtonPrimary>
           {addError ? (
             <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>

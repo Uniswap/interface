@@ -1,6 +1,6 @@
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
-import styled, { DefaultTheme } from 'styled-components/macro'
+import styled, { DefaultTheme } from 'styled-components'
 import { Color } from 'theme/styled'
 
 export enum BadgeVariant {
@@ -13,7 +13,7 @@ export enum BadgeVariant {
   WARNING_OUTLINE = 'WARNING_OUTLINE',
 }
 
-interface BadgeProps {
+export interface BadgeProps {
   variant?: BadgeVariant
 }
 

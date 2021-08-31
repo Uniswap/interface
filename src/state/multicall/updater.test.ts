@@ -128,9 +128,9 @@ describe('multicall updater', () => {
       expect(outdatedListeningKeys({}, { abc: 2, def: 3 }, 1, 1)).toEqual(['abc', 'def'])
     })
     it('returns only outdated keys', () => {
-      expect(outdatedListeningKeys({ [1]: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2)).toEqual(
-        ['def']
-      )
+      expect(
+        outdatedListeningKeys({ [1]: { abc: { data: '0x', blockNumber: 2 } } }, { abc: 1, def: 1 }, 1, 2)
+      ).toEqual(['def'])
     })
     it('returns only keys not being fetched', () => {
       expect(

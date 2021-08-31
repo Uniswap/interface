@@ -55,15 +55,31 @@ export default async function getTokenList(
     }
 
     const json = await response.json()
-    if (!tokenListValidator(json)) {
-      const validationErrors: string =
-        tokenListValidator.errors?.reduce<string>((memo, error) => {
-          const add = `${error.dataPath} ${error.message ?? ''}`
-          return memo.length > 0 ? `${memo}; ${add}` : `${add}`
-        }, '') ?? 'unknown error'
-      throw new Error(`Token list failed validation: ${validationErrors}`)
+    // @dev: this is removed because roll list is not well formated. We should patch the list in the future
+    // if (!tokenListValidator(json)) {
+    //   const validationErrors: string =
+    //     tokenListValidator.errors?.reduce<string>((memo, error) => {
+    //       const add = `${error.dataPath} ${error.message ?? ''}`
+    //       return memo.length > 0 ? `${memo}; ${add}` : `${add}`
+    //     }, '') ?? 'unknown error'
+    //   throw new Error(`Token list failed validation: ${validationErrors}`)
+    // }
+
+    // return json
+    const OBJ = {
+      name: 'Roll Default List',
+      timestamp: '2020-07-28T20:33:38+00:00',
+      version: {
+        major: 1,
+        minor: 0,
+        patch: 2,
+      },
+      tags: {},
+      logoURI: '',
+      keywords: ['roll', 'default'],
+      tokens: json.tokens,
     }
-    return json
+    return OBJ
   }
   throw new Error('Unrecognized list URL protocol.')
 }

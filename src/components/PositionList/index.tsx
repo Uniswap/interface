@@ -1,6 +1,6 @@
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
-import { Trans } from '@lingui/macro'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
@@ -34,25 +34,23 @@ const MobileHeader = styled.div`
   }
 `
 
-type PositionListProps = React.PropsWithChildren<{
+export type PositionListProps = React.PropsWithChildren<{
   positions: PositionDetails[]
 }>
 
 export default function PositionList({ positions }: PositionListProps) {
+  const { t } = useTranslation()
+
   return (
     <>
       <DesktopHeader>
         <div>
-          <Trans>Your positions</Trans>
+          {t('Your positions')}
           {positions && ' (' + positions.length + ')'}
         </div>
-        <div>
-          <Trans>Status</Trans>
-        </div>
+        <div>{t('Price range')}</div>
       </DesktopHeader>
-      <MobileHeader>
-        <Trans>Your positions</Trans>
-      </MobileHeader>
+      <MobileHeader>Your positions</MobileHeader>
       {positions.map((p) => {
         return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
       })}

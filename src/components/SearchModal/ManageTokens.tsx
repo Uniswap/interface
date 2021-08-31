@@ -1,4 +1,4 @@
-import { useRef, RefObject, useCallback, useState, useMemo } from 'react'
+import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import Column from 'components/Column'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
@@ -14,7 +14,6 @@ import { useActiveWeb3React } from 'hooks/web3'
 import Card from 'components/Card'
 import ImportRow from './ImportRow'
 import useTheme from '../../hooks/useTheme'
-import { Trans } from '@lingui/macro'
 
 import { CurrencyModalView } from './CurrencySearchModal'
 
@@ -110,11 +109,7 @@ export default function ManageTokens({
               onChange={handleInput}
             />
           </Row>
-          {searchQuery !== '' && !isAddressSearch && (
-            <TYPE.error error={true}>
-              <Trans>Enter valid token address</Trans>
-            </TYPE.error>
-          )}
+          {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
           {searchToken && (
             <Card backgroundColor={theme.bg2} padding="10px 0">
               <ImportRow
@@ -130,13 +125,11 @@ export default function ManageTokens({
         <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
             <TYPE.main fontWeight={600}>
-              <Trans>{userAddedTokens?.length} Custom Tokens</Trans>
+              {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
             </TYPE.main>
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
-                <TYPE.blue>
-                  <Trans>Clear all</Trans>
-                </TYPE.blue>
+                <TYPE.blue>Clear all</TYPE.blue>
               </ButtonText>
             )}
           </RowBetween>
@@ -144,9 +137,7 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <TYPE.darkGray>
-          <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
-        </TYPE.darkGray>
+        <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
       </Footer>
     </Wrapper>
   )

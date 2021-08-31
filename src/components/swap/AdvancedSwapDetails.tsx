@@ -1,9 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useContext, useMemo } from 'react'
-import { ThemeContext } from 'styled-components/macro'
+import React, { useContext, useMemo } from 'react'
+import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
@@ -11,7 +10,7 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
-interface AdvancedSwapDetailsProps {
+export interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
 }
@@ -33,7 +32,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Liquidity Provider Fee</Trans>
+            Liquidity Provider Fee
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -44,7 +43,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Route</Trans>
+            Route
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -55,7 +54,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Price Impact</Trans>
+            Price Impact
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -66,7 +65,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
+            {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sent'}
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -79,7 +78,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Slippage tolerance</Trans>
+            Slippage tolerance
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>

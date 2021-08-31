@@ -1,8 +1,7 @@
-import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ReactNode, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
@@ -22,9 +21,9 @@ function tradeMeaningfullyDiffers(
   const [tradeA, tradeB] = args
   return (
     tradeA.tradeType !== tradeB.tradeType ||
-    !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
+    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
     !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !tradeA.outputAmount.currency.equals(tradeB.outputAmount.currency) ||
+    !currencyEquals(tradeA.outputAmount.currency, tradeB.outputAmount.currency) ||
     !tradeA.outputAmount.equalTo(tradeB.outputAmount)
   )
 }
@@ -51,7 +50,7 @@ export default function ConfirmSwapModal({
   allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage: string | undefined
   onDismiss: () => void
 }) {
   const showAcceptChanges = useMemo(
@@ -91,12 +90,9 @@ export default function ConfirmSwapModal({
   }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
-  const pendingText = (
-    <Trans>
-      Swapping {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {trade?.outputAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
-    </Trans>
-  )
+  const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
+    trade?.inputAmount?.currency?.symbol
+  } for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
 
   const confirmationContent = useCallback(
     () =>
@@ -104,7 +100,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm Swap</Trans>}
+          title="Confirm Swap"
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

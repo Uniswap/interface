@@ -1,9 +1,8 @@
-import { t, Trans } from '@lingui/macro'
-import { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { ThemeContext } from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -139,41 +138,38 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={500} fontSize={20}>
-                <Trans>Are you sure?</Trans>
+                Are you sure?
               </Text>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
               <Text fontWeight={500} fontSize={20}>
-                <Trans>
-                  Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
-                  in bad rates and lost funds.
-                </Trans>
+                Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
+                in bad rates and lost funds.
               </Text>
               <Text fontWeight={600} fontSize={20}>
-                <Trans>ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.</Trans>
+                ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
               </Text>
               <ButtonError
                 error={true}
                 padding={'12px'}
                 onClick={() => {
-                  const confirmWord = t`confirm`
-                  if (window.prompt(t`Please type the word "${confirmWord}" to enable expert mode.`) === confirmWord) {
+                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
                     toggleExpertMode()
                     setShowConfirmation(false)
                   }
                 }}
               >
                 <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  <Trans>Turn On Expert Mode</Trans>
+                  Turn On Expert Mode
                 </Text>
               </ButtonError>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
+      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
@@ -187,22 +183,18 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Transaction Settings</Trans>
+              Transaction Settings
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Interface Settings</Trans>
+              Interface Settings
             </Text>
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Toggle Expert Mode</Trans>
+                  Toggle Expert Mode
                 </TYPE.black>
-                <QuestionHelper
-                  text={
-                    <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>
-                  }
-                />
+                <QuestionHelper text="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
@@ -223,9 +215,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Disable Multihops</Trans>
+                  Disable Multihops
                 </TYPE.black>
-                <QuestionHelper text={<Trans>Restricts swaps to direct pairs only.</Trans>} />
+                <QuestionHelper text="Restricts swaps to direct pairs only." />
               </RowFixed>
               <Toggle
                 id="toggle-disable-multihop-button"

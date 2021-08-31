@@ -1,13 +1,11 @@
-import { L1_CHAIN_IDS, SupportedChainId } from '../constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 
-export function constructSameAddressMap<T extends string>(
-  address: T,
-  additionalNetworks: SupportedChainId[] = []
-): { [chainId: number]: T } {
-  return (L1_CHAIN_IDS as readonly SupportedChainId[])
-    .concat(additionalNetworks)
-    .reduce<{ [chainId: number]: T }>((memo, chainId) => {
-      memo[chainId] = address
-      return memo
-    }, {})
+export function constructSameAddressMap<T extends string>(address: T): { [chainId in ChainId]: T } {
+  return {
+    [ChainId.MAINNET]: address,
+    [ChainId.ROPSTEN]: address,
+    [ChainId.KOVAN]: address,
+    [ChainId.RINKEBY]: address,
+    [ChainId.GÖRLI]: address,
+  }
 }

@@ -2,12 +2,15 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants/routing'
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './web3'
 
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
 
-  const [tokenA, tokenB] = chainId ? [currencyA?.wrapped, currencyB?.wrapped] : [undefined, undefined]
+  const [tokenA, tokenB] = chainId
+    ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+    : [undefined, undefined]
 
   const bases: Token[] = useMemo(() => {
     if (!chainId) return []

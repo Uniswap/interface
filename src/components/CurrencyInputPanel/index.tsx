@@ -1,6 +1,6 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { useState, useCallback, ReactNode } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -13,12 +13,12 @@ import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { Trans } from '@lingui/macro'
+import { useTranslation } from 'react-i18next'
 import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -130,7 +130,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   font-weight: 500;
   cursor: pointer;
   padding: 0;
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
@@ -149,7 +149,7 @@ interface CurrencyInputPanelProps {
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
-  label?: ReactNode
+  label?: string
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
   hideBalance?: boolean
@@ -160,9 +160,7 @@ interface CurrencyInputPanelProps {
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
-  showCurrencyAmount?: boolean
-  disableNonToken?: boolean
-  renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
+  customBalanceText?: string
   locked?: boolean
 }
 
@@ -176,9 +174,7 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  showCurrencyAmount,
-  disableNonToken,
-  renderBalance,
+  customBalanceText,
   fiatValue,
   priceImpact,
   hideBalance = false,
@@ -187,6 +183,8 @@ export default function CurrencyInputPanel({
   locked = false,
   ...rest
 }: CurrencyInputPanelProps) {
+  const { t } = useTranslation()
+
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
@@ -202,8 +200,8 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <TYPE.label fontSize="12px" textAlign="center" padding="0 12px">
-              <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
+            <TYPE.label fontSize="12px" textAlign="center">
+              The market price is outside your specified price range. Single-asset deposit only.
             </TYPE.label>
           </AutoColumn>
         </FixedContainer>
@@ -239,7 +237,7 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select a token</Trans>}
+                      : currency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}
               </RowFixed>
@@ -270,24 +268,19 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && currency && selectedCurrencyBalance ? (
-                      renderBalance ? (
-                        renderBalance(selectedCurrencyBalance)
-                      ) : (
-                        <Trans>
-                          Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)} {currency.symbol}
-                        </Trans>
-                      )
-                    ) : null}
+                    {!hideBalance && !!currency && selectedCurrencyBalance
+                      ? (customBalanceText ?? 'Balance: ') +
+                        formatTokenAmount(selectedCurrencyBalance, 4) +
+                        ' ' +
+                        currency.symbol
+                      : '-'}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax onClick={onMax}>
-                      <Trans>(Max)</Trans>
-                    </StyledBalanceMax>
+                    <StyledBalanceMax onClick={onMax}>(Max)</StyledBalanceMax>
                   ) : null}
                 </RowFixed>
               ) : (
-                <span />
+                '-'
               )}
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
@@ -302,8 +295,6 @@ export default function CurrencyInputPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
-          showCurrencyAmount={showCurrencyAmount}
-          disableNonToken={disableNonToken}
         />
       )}
     </InputPanel>

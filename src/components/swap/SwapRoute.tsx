@@ -1,12 +1,12 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade, FeeAmount } from '@uniswap/v3-sdk'
-import { Fragment, memo, useContext } from 'react'
+import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
-import { unwrappedToken } from 'utils/unwrappedToken'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 function LabeledArrow({}: { fee: FeeAmount }) {
   const theme = useContext(ThemeContext)

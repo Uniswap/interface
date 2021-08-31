@@ -1,2 +1,6 @@
-export const UNISWAP_GRANTS_START_BLOCK = 11473815
-export const BRAVO_START_BLOCK = 13059344
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from './uniswap_grants_proposal_description'
+
+// Proposals are 0-indexed
+export const PROPOSAL_DESCRIPTION_TEXT: { [proposalId: number]: string } = {
+  [2]: UNISWAP_GRANTS_PROPOSAL_DESCRIPTION,
+}

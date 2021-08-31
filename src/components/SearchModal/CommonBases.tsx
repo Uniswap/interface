@@ -1,20 +1,13 @@
-import { Trans } from '@lingui/macro'
+import React from 'react'
 import { Text } from 'rebass'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
-import { COMMON_BASES } from '../../constants/routing'
-import { currencyId } from '../../utils/currencyId'
+import { SUGGESTED_BASES } from '../../constants/routing'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-
-const MobileWrapper = styled(AutoColumn)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -28,9 +21,8 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
     background-color: ${({ theme, disable }) => !disable && theme.bg2};
   }
 
-  color: ${({ theme, disable }) => disable && theme.text3};
   background-color: ${({ theme, disable }) => disable && theme.bg3};
-  filter: ${({ disable }) => disable && 'grayscale(1)'};
+  opacity: ${({ disable }) => disable && '0.4'};
 `
 
 export default function CommonBases({
@@ -38,37 +30,44 @@ export default function CommonBases({
   onSelect,
   selectedCurrency,
 }: {
-  chainId?: number
+  chainId?: ChainId
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
-  const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
-
-  return bases.length > 0 ? (
-    <MobileWrapper gap="md">
+  return (
+    <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
-          <Trans>Common bases</Trans>
+          Common bases
         </Text>
-        <QuestionHelper text={<Trans>These tokens are commonly paired with other tokens.</Trans>} />
+        <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        {bases.map((currency: Currency) => {
-          const isSelected = selectedCurrency?.equals(currency)
+        <BaseWrapper
+          onClick={() => {
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
+              onSelect(ETHER)
+            }
+          }}
+          disable={selectedCurrency?.isEther}
+        >
+          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+          <Text fontWeight={500} fontSize={16}>
+            ETH
+          </Text>
+        </BaseWrapper>
+        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {
+          const selected = selectedCurrency?.isToken && selectedCurrency.address === token.address
           return (
-            <BaseWrapper
-              onClick={() => !isSelected && onSelect(currency)}
-              disable={isSelected}
-              key={currencyId(currency)}
-            >
-              <CurrencyLogo currency={currency} style={{ marginRight: 8 }} />
+            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
+              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
               <Text fontWeight={500} fontSize={16}>
-                {currency.symbol}
+                {token.symbol}
               </Text>
             </BaseWrapper>
           )
         })}
       </AutoRow>
-    </MobileWrapper>
-  ) : null
+    </AutoColumn>
+  )
 }

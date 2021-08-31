@@ -1,18 +1,13 @@
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { SupportedChainId } from '../constants/chains'
-import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
+import { USDC } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
-import { useBestV3TradeExactOut } from './useBestV3Trade'
+import { useBestV3TradeExactOut, V3TradeState } from './useBestV3Trade'
 import { useActiveWeb3React } from './web3'
 
-// Stablecoin amounts used when calculating spot price for a given currency.
+// USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-  [SupportedChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
-}
+const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
 
 /**
  * Returns the price in USDC of the input currency
@@ -21,35 +16,38 @@ const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
-  const stablecoin = amountOut?.currency
-
-  const v2USDCTrade = useV2TradeExactOut(currency, amountOut, {
+  const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined, {
     maxHops: 2,
   })
-  const v3USDCTrade = useBestV3TradeExactOut(currency, amountOut)
+  const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
 
   return useMemo(() => {
-    if (!currency || !stablecoin) {
+    if (!currency || !chainId) {
       return undefined
     }
 
-    // handle usdc
-    if (currency?.wrapped.equals(stablecoin)) {
-      return new Price(stablecoin, stablecoin, '1', '1')
+    // return some fake price data for non-mainnet
+    if (chainId !== ChainId.MAINNET) {
+      const fakeUSDC = new Token(chainId, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'fUSDC', 'Fake USDC')
+      return new Price(
+        currency,
+        fakeUSDC,
+        10 ** Math.max(0, currency.decimals - 6),
+        15 * 10 ** Math.max(6 - currency.decimals, 0)
+      )
     }
 
     // use v2 price if available, v3 as fallback
     if (v2USDCTrade) {
       const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
-    } else if (v3USDCTrade.trade) {
+      return new Price(currency, USDC, denominator, numerator)
+    } else if (v3USDCTrade.state === V3TradeState.VALID && v3USDCTrade.trade) {
       const { numerator, denominator } = v3USDCTrade.trade.route.midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
+      return new Price(currency, USDC, denominator, numerator)
     }
 
     return undefined
-  }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
+  }, [chainId, currency, v2USDCTrade, v3USDCTrade])
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {

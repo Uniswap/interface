@@ -1,13 +1,11 @@
-import { SupportedChainId } from '../constants/chains'
+import { ChainId } from '@uniswap/sdk-core'
 
-const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
-  [SupportedChainId.MAINNET]: '',
-  [SupportedChainId.ROPSTEN]: 'ropsten.',
-  [SupportedChainId.RINKEBY]: 'rinkeby.',
-  [SupportedChainId.GOERLI]: 'goerli.',
-  [SupportedChainId.KOVAN]: 'kovan.',
-  [SupportedChainId.OPTIMISM]: 'optimistic.',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'kovan-optimistic.',
+const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  5: 'goerli.',
+  42: 'kovan.',
 }
 
 export enum ExplorerDataType {
@@ -23,53 +21,22 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(chainId: number, data: string, type: ExplorerDataType): string {
-  if (chainId === SupportedChainId.ARBITRUM_ONE) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://explorer.arbitrum.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://explorer.arbitrum.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://explorer.arbitrum.io/block/${data}`
-      default:
-        return `https://explorer.arbitrum.io/`
-    }
-  }
-
-  if (chainId === SupportedChainId.ARBITRUM_RINKEBY) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://rinkeby-explorer.arbitrum.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://rinkeby-explorer.arbitrum.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://rinkeby-explorer.arbitrum.io/block/${data}`
-      default:
-        return `https://rinkeby-explorer.arbitrum.io/`
-    }
-  }
-
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] ?? ''}etherscan.io`
+export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDataType): string {
+  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
-    case ExplorerDataType.TRANSACTION:
+    case ExplorerDataType.TRANSACTION: {
       return `${prefix}/tx/${data}`
-
-    case ExplorerDataType.TOKEN:
+    }
+    case ExplorerDataType.TOKEN: {
       return `${prefix}/token/${data}`
-
-    case ExplorerDataType.BLOCK:
-      if (chainId === SupportedChainId.OPTIMISM || chainId === SupportedChainId.OPTIMISTIC_KOVAN) {
-        return `${prefix}/tx/${data}`
-      }
+    }
+    case ExplorerDataType.BLOCK: {
       return `${prefix}/block/${data}`
-
+    }
     case ExplorerDataType.ADDRESS:
+    default: {
       return `${prefix}/address/${data}`
-    default:
-      return `${prefix}`
+    }
   }
 }

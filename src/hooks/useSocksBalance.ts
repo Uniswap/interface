@@ -1,17 +1,19 @@
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useActiveWeb3React } from './web3'
-import { useTokenBalance } from 'state/wallet/hooks'
-import { SOCKS_CONTROLLER_ADDRESSES } from 'constants/addresses'
-import { Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { useSocksController } from './useContract'
 
-// technically a 721, not an ERC20, but suffices for our purposes
-const SOCKS = new Token(SupportedChainId.MAINNET, SOCKS_CONTROLLER_ADDRESSES[SupportedChainId.MAINNET], 0)
+export default function useSocksBalance(): JSBI | undefined {
+  const { account } = useActiveWeb3React()
+  const socksContract = useSocksController()
+
+  const { result } = useSingleCallResult(socksContract, 'balanceOf', [account ?? undefined], NEVER_RELOAD)
+  const data = result?.[0]
+  return data ? JSBI.BigInt(data.toString()) : undefined
+}
 
 export function useHasSocks(): boolean | undefined {
-  const { account, chainId } = useActiveWeb3React()
-
-  const balance = useTokenBalance(account ?? undefined, chainId === SupportedChainId.MAINNET ? SOCKS : undefined)
-
-  return useMemo(() => Boolean(balance?.greaterThan(0)), [balance])
+  const balance = useSocksBalance()
+  return useMemo(() => balance && JSBI.greaterThan(balance, JSBI.BigInt(0)), [balance])
 }

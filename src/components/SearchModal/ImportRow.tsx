@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import React, { CSSProperties } from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { AutoRow, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'
@@ -11,7 +11,6 @@ import styled from 'styled-components/macro'
 import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
-import { Trans } from '@lingui/macro'
 
 const TokenSection = styled.div<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -74,7 +73,7 @@ export default function ImportRow({
         {list && list.logoURI && (
           <RowFixed>
             <TYPE.small mr="4px" color={theme.text3}>
-              <Trans>via {list.name} </Trans>
+              via {list.name}
             </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
           </RowFixed>
@@ -91,14 +90,12 @@ export default function ImportRow({
             showImportView()
           }}
         >
-          <Trans>Import</Trans>
+          Import
         </ButtonPrimary>
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <TYPE.main color={theme.green1}>
-            <Trans>Active</Trans>
-          </TYPE.main>
+          <TYPE.main color={theme.green1}>Active</TYPE.main>
         </RowFixed>
       )}
     </TokenSection>

@@ -1,14 +1,15 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { FortmaticConnector as FortmaticConnectorCore } from '@web3-react/fortmatic-connector'
 
 export const OVERLAY_READY = 'OVERLAY_READY'
 
-type FormaticSupportedChains = 1 | 3 | 4 | 42
+type FormaticSupportedChains = Extract<ChainId, ChainId.MAINNET | ChainId.ROPSTEN | ChainId.RINKEBY | ChainId.KOVAN>
 
 const CHAIN_ID_NETWORK_ARGUMENT: { readonly [chainId in FormaticSupportedChains]: string | undefined } = {
-  [1]: undefined,
-  [3]: 'ropsten',
-  [4]: 'rinkeby',
-  [42]: 'kovan',
+  [ChainId.MAINNET]: undefined,
+  [ChainId.ROPSTEN]: 'ropsten',
+  [ChainId.RINKEBY]: 'rinkeby',
+  [ChainId.KOVAN]: 'kovan',
 }
 
 export class FortmaticConnector extends FortmaticConnectorCore {

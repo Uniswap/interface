@@ -1,18 +1,16 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ArrowDown, CheckCircle, HelpCircle, Info, ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -24,23 +22,22 @@ import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -69,7 +66,6 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -94,6 +90,7 @@ export default function Swap({ history }: RouteComponentProps) {
       return !Boolean(token.address in defaultTokens)
     })
 
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -118,11 +115,11 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
 
-  const {
-    wrapType,
-    execute: onWrap,
-    inputError: wrapInputError,
-  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
+  const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
+    currencies[Field.INPUT],
+    currencies[Field.OUTPUT],
+    typedValue
+  )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
@@ -197,11 +194,10 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
-  const {
-    state: signatureState,
-    signatureData,
-    gatherPermitSignature,
-  } = useERC20PermitFromTrade(trade, allowedSlippage)
+  const { state: signatureState, signatureData, gatherPermitSignature } = useERC20PermitFromTrade(
+    trade,
+    allowedSlippage
+  )
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -252,6 +248,7 @@ export default function Swap({ history }: RouteComponentProps) {
     swapCallback()
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+
         ReactGA.event({
           category: 'Swap',
           action:
@@ -278,8 +275,8 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [
-    swapCallback,
     priceImpact,
+    swapCallback,
     tradeToConfirm,
     showConfirm,
     recipient,
@@ -304,12 +301,9 @@ export default function Swap({ history }: RouteComponentProps) {
     )
   }, [priceImpact, trade])
 
-  const isArgentWallet = useIsArgentWallet()
-
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
-    !isArgentWallet &&
     !swapInputError &&
     (approvalState === ApprovalState.NOT_APPROVED ||
       approvalState === ApprovalState.PENDING ||
@@ -340,10 +334,9 @@ export default function Swap({ history }: RouteComponentProps) {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
-  const handleOutputSelect = useCallback(
-    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
-    [onCurrencySelection]
-  )
+  const handleOutputSelect = useCallback((outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency), [
+    onCurrencySelection,
+  ])
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
@@ -357,7 +350,6 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-      <NetworkAlert />
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
@@ -378,9 +370,7 @@ export default function Swap({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                label={
-                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
-                }
+                label={independentField === Field.OUTPUT && !showWrap ? 'From (at most)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
@@ -405,7 +395,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <CurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
                 onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+                label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
@@ -425,115 +415,97 @@ export default function Swap({ history }: RouteComponentProps) {
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    <Trans>- Remove send</Trans>
+                    - Remove send
                   </LinkStyledButton>
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
 
-            {showWrap ? null : (
-              <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+            <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+              <RowFixed>
+                {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                  (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                    <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+                  ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                    <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+                  ) : (
+                    toggledVersion === Version.v2 && (
+                      <ButtonGray
+                        width="fit-content"
+                        padding="0.1rem 0.5rem 0.1rem 0.35rem"
+                        as={Link}
+                        to="/swap"
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          height: '24px',
+                          opacity: 0.8,
+                          lineHeight: '120%',
+                          marginLeft: '0.75rem',
+                        }}
+                      >
+                        <ArrowLeft color={theme.text3} size={12} /> &nbsp;
+                        <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
+                          <HideSmall>Back to </HideSmall>V3
+                        </TYPE.main>
+                      </ButtonGray>
+                    )
+                  ))}
+
+                {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
+                  <ButtonGray
+                    width="fit-content"
+                    padding="0.1rem 0.5rem"
+                    disabled
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      height: '24px',
+                      opacity: 0.4,
+                      marginLeft: '0.25rem',
+                    }}
+                  >
+                    <TYPE.black fontSize={12}>V3</TYPE.black>
+                  </ButtonGray>
+                )}
+              </RowFixed>
+              {trade ? (
                 <RowFixed>
-                  {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
-                    (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                      <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                    ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                      <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-                    ) : (
-                      toggledVersion === Version.v2 && (
-                        <ButtonGray
-                          width="fit-content"
-                          padding="0.1rem 0.5rem 0.1rem 0.35rem"
-                          as={Link}
-                          to="/swap"
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            height: '24px',
-                            lineHeight: '120%',
-                            marginLeft: '0.75rem',
-                          }}
-                        >
-                          <ArrowLeft color={theme.text3} size={12} /> &nbsp;
-                          <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                            <Trans>
-                              <HideSmall>Back to </HideSmall>
-                              V3
-                            </Trans>
-                          </TYPE.main>
-                        </ButtonGray>
-                      )
-                    ))}
-
-                  {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
-                    <ButtonGray
-                      width="fit-content"
-                      padding="0.1rem 0.5rem"
-                      disabled
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        height: '24px',
-                        opacity: 0.8,
-                        marginLeft: '0.25rem',
-                      }}
-                    >
-                      <TYPE.black fontSize={12}>
-                        <Trans>V3</Trans>
-                      </TYPE.black>
-                    </ButtonGray>
-                  )}
+                  <TradePrice
+                    price={trade.executionPrice}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
+                  <MouseoverTooltipContent
+                    content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                  >
+                    <StyledInfo />
+                  </MouseoverTooltipContent>
                 </RowFixed>
-                {trade ? (
-                  <RowFixed>
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                    <MouseoverTooltipContent
-                      content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
-                    >
-                      <StyledInfo />
-                    </MouseoverTooltipContent>
-                  </RowFixed>
-                ) : null}
-              </Row>
-            )}
+              ) : null}
+            </Row>
 
-            <div>
+            <BottomGrouping>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
-                  <TYPE.main mb="4px">
-                    <Trans>Unsupported Asset</Trans>
-                  </TYPE.main>
+                  <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
-                <ButtonLight onClick={toggleWalletModal}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
+                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
               ) : showWrap ? (
                 <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
-                    (wrapType === WrapType.WRAP ? (
-                      <Trans>Wrap</Trans>
-                    ) : wrapType === WrapType.UNWRAP ? (
-                      <Trans>Unwrap</Trans>
-                    ) : null)}
+                    (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                 </ButtonPrimary>
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     {isLoadingRoute ? (
-                      <Dots>
-                        <Trans>Loading</Trans>
-                      </Dots>
-                    ) : singleHopOnly ? (
-                      <Trans>Insufficient liquidity for this trade. Try enabling multi-hop trades.</Trans>
+                      <Dots>Loading</Dots>
                     ) : (
-                      <Trans>Insufficient liquidity for this trade.</Trans>
+                      `Insufficient liquidity for this trade.${singleHopOnly ? ' Try enabling multi-hop trades.' : ''}`
                     )}
                   </TYPE.main>
                 </GreyCard>
@@ -561,11 +533,9 @@ export default function Swap({ history }: RouteComponentProps) {
                             style={{ marginRight: '8px', flexShrink: 0 }}
                           />
                           {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
-                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                          ) : (
-                            <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                          )}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                            ? 'You can now trade ' + currencies[Field.INPUT]?.symbol
+                            : 'Allow the Uniswap Protocol to use your ' + currencies[Field.INPUT]?.symbol}
                         </span>
                         {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
@@ -575,10 +545,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <MouseoverTooltip
                             text={
-                              <Trans>
-                                You must give the Uniswap smart contracts permission to use your{' '}
-                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                              </Trans>
+                              'You must give the Uniswap smart contracts permission to use your ' +
+                              currencies[Field.INPUT]?.symbol +
+                              '. You only have to do this once per token.'
                             }
                           >
                             <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
@@ -610,13 +579,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       error={isValid && priceImpactSeverity > 2}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? (
-                          <Trans>High Price Impact</Trans>
-                        ) : priceImpactSeverity > 2 ? (
-                          <Trans>Swap Anyway</Trans>
-                        ) : (
-                          <Trans>Swap</Trans>
-                        )}
+                        {priceImpactTooHigh ? `High Price Impact` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -641,24 +604,19 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {swapInputError ? (
-                      swapInputError
-                    ) : priceImpactTooHigh ? (
-                      <Trans>Price Impact Too High</Trans>
-                    ) : priceImpactSeverity > 2 ? (
-                      <Trans>Swap Anyway</Trans>
-                    ) : (
-                      <Trans>Swap</Trans>
-                    )}
+                    {swapInputError
+                      ? swapInputError
+                      : priceImpactTooHigh
+                      ? `Price Impact Too High`
+                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            </div>
+            </BottomGrouping>
           </AutoColumn>
         </Wrapper>
       </AppBody>
-      <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}

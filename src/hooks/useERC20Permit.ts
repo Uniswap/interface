@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { splitSignature } from 'ethers/lib/utils'
@@ -29,28 +29,28 @@ interface PermitInfo {
 
 // todo: read this information from extensions on token lists or elsewhere (permit registry?)
 const PERMITTABLE_TOKENS: {
-  [chainId: number]: {
+  [chainId in ChainId]: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  [1]: {
+  [ChainId.MAINNET]: {
     [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[1].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [4]: {
+  [ChainId.RINKEBY]: {
     ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[4].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[ChainId.RINKEBY].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [3]: {
-    [UNI[3].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.ROPSTEN]: {
+    [UNI[ChainId.ROPSTEN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
     ['0x07865c6E87B9F70255377e024ace6630C1Eaa37F']: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
   },
-  [5]: {
-    [UNI[5].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.GÖRLI]: {
+    [UNI[ChainId.GÖRLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [42]: {
-    [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.KOVAN]: {
+    [UNI[ChainId.KOVAN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }
 
@@ -70,16 +70,16 @@ interface BaseSignatureData {
   nonce: number
   owner: string
   spender: string
-  chainId: number
+  chainId: ChainId | number
   tokenAddress: string
   permitType: PermitType
 }
 
-interface StandardSignatureData extends BaseSignatureData {
+export interface StandardSignatureData extends BaseSignatureData {
   amount: string
 }
 
-interface AllowedSignatureData extends BaseSignatureData {
+export interface AllowedSignatureData extends BaseSignatureData {
   allowed: true
 }
 
@@ -114,7 +114,7 @@ const PERMIT_ALLOWED_TYPE = [
   { name: 'allowed', type: 'bool' },
 ]
 
-function useERC20Permit(
+export function useERC20Permit(
   currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
   overridePermitInfo: PermitInfo | undefined | null
@@ -131,7 +131,7 @@ function useERC20Permit(
   const nonceInputs = useMemo(() => [account ?? undefined], [account])
   const tokenNonceState = useSingleCallResult(eip2612Contract, 'nonces', nonceInputs)
   const permitInfo =
-    overridePermitInfo ?? (chainId && tokenAddress ? PERMITTABLE_TOKENS[chainId]?.[tokenAddress] : undefined)
+    overridePermitInfo ?? (chainId && tokenAddress ? PERMITTABLE_TOKENS[chainId][tokenAddress] : undefined)
 
   const [signatureData, setSignatureData] = useState<SignatureData | null>(null)
 
@@ -275,11 +275,11 @@ export function useERC20PermitFromTrade(
   allowedSlippage: Percent
 ) {
   const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-  const amountToApprove = useMemo(
-    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
+  const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
+  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
+    trade,
+    allowedSlippage,
+  ])
 
   return useERC20Permit(
     amountToApprove,

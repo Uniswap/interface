@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Slash } from 'react-feather'
 import { ImageProps } from 'rebass'
 import useTheme from '../../hooks/useTheme'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
-interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
+export interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
   srcs: string[]
 }
 

@@ -1,20 +1,19 @@
-import { CurrencyAmount, Percent, Currency } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, Percent, Ether, currencyEquals, ETHER } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { PositionDetails } from 'types/position'
 
-import { AppState } from '../../index'
+import { AppDispatch, AppState } from '../../index'
 import { selectPercent } from './actions'
-import { unwrappedToken } from 'utils/unwrappedToken'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { t } from '@lingui/macro'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export function useBurnV3State(): AppState['burnV3'] {
-  return useAppSelector((state) => state.burnV3)
+  return useSelector<AppState, AppState['burnV3']>((state) => state.burnV3)
 }
 
 export function useDerivedV3BurnInfo(
@@ -23,10 +22,10 @@ export function useDerivedV3BurnInfo(
 ): {
   position?: Position
   liquidityPercentage?: Percent
-  liquidityValue0?: CurrencyAmount<Currency>
-  liquidityValue1?: CurrencyAmount<Currency>
-  feeValue0?: CurrencyAmount<Currency>
-  feeValue1?: CurrencyAmount<Currency>
+  liquidityValue0?: CurrencyAmount<Token | Ether>
+  liquidityValue1?: CurrencyAmount<Token | Ether>
+  feeValue0?: CurrencyAmount<Token | Ether>
+  feeValue1?: CurrencyAmount<Token | Ether>
   outOfRange: boolean
   error?: string
 } {
@@ -62,11 +61,15 @@ export function useDerivedV3BurnInfo(
 
   const liquidityValue0 =
     token0 && discountedAmount0
-      ? CurrencyAmount.fromRawAmount(asWETH ? token0 : unwrappedToken(token0), discountedAmount0)
+      ? currencyEquals(unwrappedToken(token0), ETHER) && !asWETH
+        ? CurrencyAmount.ether(discountedAmount0)
+        : CurrencyAmount.fromRawAmount(token0, discountedAmount0)
       : undefined
   const liquidityValue1 =
     token1 && discountedAmount1
-      ? CurrencyAmount.fromRawAmount(asWETH ? token1 : unwrappedToken(token1), discountedAmount1)
+      ? currencyEquals(unwrappedToken(token1), ETHER) && !asWETH
+        ? CurrencyAmount.ether(discountedAmount1)
+        : CurrencyAmount.fromRawAmount(token1, discountedAmount1)
       : undefined
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position?.tokenId, asWETH)
@@ -76,10 +79,10 @@ export function useDerivedV3BurnInfo(
 
   let error: string | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = 'Connect Wallet'
   }
   if (percent === 0) {
-    error = error ?? t`Enter a percent`
+    error = error ?? 'Enter a percent'
   }
   return {
     position: positionSDK,
@@ -96,7 +99,7 @@ export function useDerivedV3BurnInfo(
 export function useBurnV3ActionHandlers(): {
   onPercentSelect: (percent: number) => void
 } {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
   const onPercentSelect = useCallback(
     (percent: number) => {

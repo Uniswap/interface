@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { SupportedChainId } from '../../constants/chains'
+import { useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { retry, RetryableError, RetryOptions } from '../../utils/retry'
-import { updateBlockNumber } from '../application/actions'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
 
 interface TxInterface {
@@ -31,54 +29,27 @@ export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
   }
 }
 
-const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
-  [SupportedChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.ARBITRUM_RINKEBY]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.OPTIMISTIC_KOVAN]: { n: 10, minWait: 250, maxWait: 1000 },
-  [SupportedChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
-}
-const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
-
 export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
 
-  const dispatch = useAppDispatch()
-  const state = useAppSelector((state) => state.transactions)
+  const dispatch = useDispatch<AppDispatch>()
+  const state = useSelector<AppState, AppState['transactions']>((state) => state.transactions)
 
   const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   // show popup on confirm
   const addPopup = useAddPopup()
 
-  const getReceipt = useCallback(
-    (hash: string) => {
-      if (!library || !chainId) throw new Error('No library or chainId')
-      const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
-      return retry(
-        () =>
-          library.getTransactionReceipt(hash).then((receipt) => {
-            if (receipt === null) {
-              console.debug('Retrying for hash', hash)
-              throw new RetryableError()
-            }
-            return receipt
-          }),
-        retryOptions
-      )
-    },
-    [chainId, library]
-  )
-
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
 
-    const cancels = Object.keys(transactions)
+    Object.keys(transactions)
       .filter((hash) => shouldCheck(lastBlockNumber, transactions[hash]))
-      .map((hash) => {
-        const { promise, cancel } = getReceipt(hash)
-        promise
+      .forEach((hash) => {
+        library
+          .getTransactionReceipt(hash)
           .then((receipt) => {
             if (receipt) {
               dispatch(
@@ -108,27 +79,15 @@ export default function Updater(): null {
                 },
                 hash
               )
-
-              // the receipt was fetched before the block, fast forward to that block to trigger balance updates
-              if (receipt.blockNumber > lastBlockNumber) {
-                dispatch(updateBlockNumber({ chainId, blockNumber: receipt.blockNumber }))
-              }
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
           })
           .catch((error) => {
-            if (!error.isCancelledError) {
-              console.error(`Failed to check transaction hash: ${hash}`, error)
-            }
+            console.error(`failed to check transaction hash: ${hash}`, error)
           })
-        return cancel
       })
-
-    return () => {
-      cancels.forEach((cancel) => cancel())
-    }
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup])
 
   return null
 }

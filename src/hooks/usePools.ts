@@ -5,7 +5,7 @@ import { Token, Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from './web3'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
-
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { Pool, FeeAmount } from '@uniswap/v3-sdk'
 import { abi as IUniswapV3PoolStateABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Interface } from '@ethersproject/abi'
@@ -28,8 +28,8 @@ export function usePools(
     return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
       if (!chainId || !currencyA || !currencyB || !feeAmount) return null
 
-      const tokenA = currencyA?.wrapped
-      const tokenB = currencyB?.wrapped
+      const tokenA = wrappedCurrency(currencyA, chainId)
+      const tokenB = wrappedCurrency(currencyB, chainId)
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [token0, token1, feeAmount]

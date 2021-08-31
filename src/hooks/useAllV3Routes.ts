@@ -1,38 +1,27 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useUserSingleHopOnly } from '../state/user/hooks'
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './web3'
 import { useV3SwapPools } from './useV3SwapPools'
-
-/**
- * Returns true if poolA is equivalent to poolB
- * @param poolA one of the two pools
- * @param poolB the other pool
- */
-function poolEquals(poolA: Pool, poolB: Pool): boolean {
-  return (
-    poolA === poolB ||
-    (poolA.token0.equals(poolB.token0) && poolA.token1.equals(poolB.token1) && poolA.fee === poolB.fee)
-  )
-}
 
 function computeAllRoutes(
   currencyIn: Currency,
   currencyOut: Currency,
   pools: Pool[],
-  chainId: number,
+  chainId: ChainId,
   currentPath: Pool[] = [],
   allPaths: Route<Currency, Currency>[] = [],
   startCurrencyIn: Currency = currencyIn,
   maxHops = 2
 ): Route<Currency, Currency>[] {
-  const tokenIn = currencyIn?.wrapped
-  const tokenOut = currencyOut?.wrapped
+  const tokenIn = wrappedCurrency(currencyIn, chainId)
+  const tokenOut = wrappedCurrency(currencyOut, chainId)
   if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
 
   for (const pool of pools) {
-    if (!pool.involvesToken(tokenIn) || currentPath.find((pathPool) => poolEquals(pool, pathPool))) continue
+    if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {

@@ -1,11 +1,11 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import React from 'react'
 import styled from 'styled-components/macro'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import Option from './Option'
 import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
-import { Trans } from '@lingui/macro'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -82,22 +82,20 @@ export default function PendingView({
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              <div>
-                <Trans>Error connecting</Trans>
-              </div>
+              <div>Error connecting.</div>
               <ErrorButton
                 onClick={() => {
                   setPendingError(false)
                   connector && tryActivation(connector)
                 }}
               >
-                <Trans>Try Again</Trans>
+                Try Again
               </ErrorButton>
             </ErrorGroup>
           ) : (
             <>
               <StyledLoader />
-              <Trans>Initializing...</Trans>
+              Initializing...
             </>
           )}
         </LoadingWrapper>

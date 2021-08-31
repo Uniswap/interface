@@ -1,18 +1,17 @@
-import { Trans } from '@lingui/macro'
-import { AutoColumn } from 'components/Column'
-import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
+import React from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import Texture from '../../assets/images/sandtexture.webp'
+import { useTranslation } from 'react-i18next'
 import { ExternalLink } from '../../theme'
+import { AutoColumn } from 'components/Column'
+import Squiggle from '../../assets/images/squiggle.png'
+import Texture from '../../assets/images/sandtexture.webp'
+import { RowBetween } from 'components/Row'
 
 const CTASection = styled.section`
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 8px;
-  margin-top: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: auto;
@@ -21,22 +20,17 @@ const CTASection = styled.section`
 `
 
 const CTA1 = styled(ExternalLink)`
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, ${({ theme }) => theme.bg3} 1px, transparent 1px),
+    linear-gradient(to bottom, ${({ theme }) => theme.bg3} 1px, transparent 1px);
   background-color: ${({ theme }) => theme.bg2};
-  background: radial-gradient(
-      92.78% 103.09% at 50.06% 7.22%,
-      rgba(255, 58, 212, 0.072) 0%,
-      rgba(255, 255, 255, 0.042) 100%
-    ),
-    radial-gradient(100% 97.16% at 0% 12.22%, rgba(235, 0, 255, 0.2) 0%, rgba(243, 19, 19, 0.2) 100%);
-  padding: 2rem;
+  padding: 32px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
-  border: 1px solid transparent;
+  border: 1px solid ${({ theme }) => theme.bg3};
 
   * {
     color: ${({ theme }) => theme.text1};
@@ -44,25 +38,17 @@ const CTA1 = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg0};
+    border: 1px solid ${({ theme }) => theme.bg5};
+    background-color: ${({ theme }) => theme.bg2};
     text-decoration: none;
     * {
       text-decoration: none !important;
     }
   }
 
-  :before {
-    content: '';
-    position: absolute;
-    width: 800%;
-    height: 480%;
-    top: -390px;
-    left: -310px;
-    z-index: -1;
-    opacity: 0.4;
-    background: url(${Texture}) 0 0 repeat;
-    transform: rotate(-4deg);
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+   padding: 1rem;
+  `};
 `
 
 const CTA2 = styled(ExternalLink)`
@@ -73,7 +59,7 @@ const CTA2 = styled(ExternalLink)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid transparent;
+  border: 1px solid ${({ theme }) => theme.bg4};
 
   * {
     color: ${({ theme }) => theme.text1};
@@ -81,7 +67,8 @@ const CTA2 = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg0};
+    border: 1px solid ${({ theme }) => theme.bg5};
+    opacity: 0.7;
     text-decoration: none !important;
     * {
       text-decoration: none !important;
@@ -93,9 +80,8 @@ const CTA2 = styled(ExternalLink)`
     position: absolute;
     width: 340%;
     height: 280%;
-    top: -170%;
+    top: -130%;
     left: -134%;
-    opacity: 0.4;
     z-index: -1;
     background: url(${Texture}) 0 0 repeat;
     transform: rotate(-4deg);
@@ -115,7 +101,6 @@ const HeaderText = styled(TYPE.label)`
 
 const ResponsiveColumn = styled(AutoColumn)`
   grid-template-columns: 1fr;
-  width: 100%;
   gap: 12px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     gap: 8px;
@@ -123,34 +108,41 @@ const ResponsiveColumn = styled(AutoColumn)`
   justify-content: space-between;
 `
 
+const StyledImage = styled.img`
+  height: 114px;
+  margin-top: -28px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    height: 80px;
+    padding-right: 1rem;
+  `};
+`
+
 export default function CTACards() {
-  const { chainId } = useActiveWeb3React()
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const { t } = useTranslation()
+
   return (
-    <div>
-      <MinimalNetworkAlert />
-      <CTASection>
-        <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
-          <ResponsiveColumn>
-            <HeaderText>
-              <Trans>Learn about providing liquidity</Trans> ↗
-            </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-              <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-            </TYPE.body>
-          </ResponsiveColumn>
-        </CTA1>
-        <CTA2 href={infoLink + 'pools'}>
-          <ResponsiveColumn>
-            <HeaderText style={{ alignSelf: 'flex-start' }}>
-              <Trans>Top pools</Trans> ↗
-            </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-              <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-            </TYPE.body>
-          </ResponsiveColumn>
-        </CTA2>
-      </CTASection>
-    </div>
+    <CTASection>
+      <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
+        <ResponsiveColumn>
+          <HeaderText>{t('Uniswap V3 is here!')}</HeaderText>
+          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+            {t('Check out our v3 LP walkthrough and migration guides.')}
+          </TYPE.body>
+          <RowBetween align="flex-end">
+            <HeaderText>{t('↗')}</HeaderText>
+            <StyledImage src={Squiggle} />
+          </RowBetween>
+        </ResponsiveColumn>
+      </CTA1>
+      <CTA2 href={'https://info.uniswap.org/#/pools'}>
+        <ResponsiveColumn>
+          <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
+          <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+            {t('Explore popular pools on Uniswap Analytics.')}
+          </TYPE.body>
+          <HeaderText style={{ alignSelf: 'flex-end' }}>{t('↗')}</HeaderText>
+        </ResponsiveColumn>
+      </CTA2>
+    </CTASection>
   )
 }

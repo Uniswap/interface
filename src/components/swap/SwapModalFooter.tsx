@@ -1,9 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
-import { ReactNode } from 'react'
+import React from 'react'
 import { Text } from 'rebass'
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
@@ -16,7 +15,7 @@ export default function SwapModalFooter({
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage: string | undefined
   disabledConfirm: boolean
 }) {
   return (
@@ -29,7 +28,7 @@ export default function SwapModalFooter({
           id="confirm-swap-or-send"
         >
           <Text fontSize={20} fontWeight={500}>
-            <Trans>Confirm Swap</Trans>
+            Confirm Swap
           </Text>
         </ButtonError>
 

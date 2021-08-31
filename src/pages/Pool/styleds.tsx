@@ -1,5 +1,5 @@
 import { Text } from 'rebass'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components'
 
 export const Wrapper = styled.div`
   position: relative;

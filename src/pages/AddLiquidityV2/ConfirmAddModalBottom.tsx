@@ -1,11 +1,11 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import { Trans } from '@lingui/macro'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -25,27 +25,21 @@ export function ConfirmAddModalBottom({
   return (
     <>
       <RowBetween>
-        <TYPE.body>
-          <Trans>{currencies[Field.CURRENCY_A]?.symbol} Deposited</Trans>
-        </TYPE.body>
+        <TYPE.body>{currencies[Field.CURRENCY_A]?.symbol} Deposited</TYPE.body>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
-          <Trans>{currencies[Field.CURRENCY_B]?.symbol} Deposited</Trans>
-        </TYPE.body>
+        <TYPE.body>{currencies[Field.CURRENCY_B]?.symbol} Deposited</TYPE.body>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
-          <Trans>Rates</Trans>
-        </TYPE.body>
+        <TYPE.body>Rates</TYPE.body>
         <TYPE.body>
           {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
             currencies[Field.CURRENCY_B]?.symbol
@@ -60,16 +54,12 @@ export function ConfirmAddModalBottom({
         </TYPE.body>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>
-          <Trans>Share of Pool:</Trans>
-        </TYPE.body>
-        <TYPE.body>
-          <Trans>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</Trans>
-        </TYPE.body>
+        <TYPE.body>Share of Pool:</TYPE.body>
+        <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={500} fontSize={20}>
-          {noLiquidity ? <Trans>Create Pool & Supply</Trans> : <Trans>Confirm Supply</Trans>}
+          {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
         </Text>
       </ButtonPrimary>
     </>

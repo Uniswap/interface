@@ -1,22 +1,15 @@
-import { t } from '@lingui/macro'
-import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun, Globe, ChevronLeft, Check } from 'react-feather'
+import React, { useRef } from 'react'
+import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-import { Trans } from '@lingui/macro'
+
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { useDarkModeManager } from 'state/user/hooks'
-
-import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
-import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -36,18 +29,17 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 38px;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg0};
+  height: 35px;
+  background-color: ${({ theme }) => theme.bg2};
 
   padding: 0.15rem 0.5rem;
-  border-radius: 12px;
+  border-radius: 0.5rem;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.bg3};
   }
 
   svg {
@@ -72,22 +64,18 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 196px;
-  max-height: 350px;
-  overflow: auto;
-  background-color: ${({ theme }) => theme.bg1};
+  min-width: 8.125rem;
+  background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  font-size: 16px;
+  font-size: 1rem;
   position: absolute;
   top: 3rem;
   z-index: 100;
-
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
@@ -97,9 +85,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
           left: 0rem;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
+    top: -17.25rem;
   `};
 `
 
@@ -109,12 +95,14 @@ const MenuItem = styled(ExternalLink)`
   flex-direction: row;
   align-items: center;
   padding: 0.5rem 0.5rem;
-  justify-content: space-between;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
   }
 `
 
@@ -132,161 +120,53 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const InternalLinkMenuItem = styled(InternalMenuItem)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0.5rem 0.5rem;
-  justify-content: space-between;
-  text-decoration: none;
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    cursor: pointer;
-    text-decoration: none;
-  }
-`
-
-const ToggleMenuItem = styled.button`
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  border: none;
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  padding: 0.5rem 0.5rem;
-  justify-content: space-between;
-  font-size: 1rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text2};
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    cursor: pointer;
-    text-decoration: none;
-  }
-`
-
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
-function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
-  const { to, onClick } = useLocationLinkProps(locale)
-
-  if (!to) return null
-
-  return (
-    <InternalLinkMenuItem onClick={onClick} key={key} to={to}>
-      <div>{LOCALE_LABEL[locale]}</div>
-      {active && <Check opacity={0.6} size={16} />}
-    </InternalLinkMenuItem>
-  )
-}
-
-function LanguageMenu({ close }: { close: () => void }) {
-  const activeLocale = useActiveLocale()
-
-  return (
-    <MenuFlyout>
-      <ToggleMenuItem onClick={close}>
-        <ChevronLeft size={16} />
-      </ToggleMenuItem>
-      {SUPPORTED_LOCALES.map((locale) => (
-        <LanguageMenuItem locale={locale} active={activeLocale === locale} key={locale} />
-      ))}
-    </MenuFlyout>
-  )
-}
-
 export default function Menu() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
-  const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
-
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-
-  const [menu, setMenu] = useState<'main' | 'lang'>('main')
-
-  useEffect(() => {
-    setMenu('main')
-  }, [open])
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle} aria-label={t`Menu`}>
+      <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
-      {open &&
-        (() => {
-          switch (menu) {
-            case 'lang':
-              return <LanguageMenu close={() => setMenu('main')} />
-            case 'main':
-            default:
-              return (
-                <MenuFlyout>
-                  <MenuItem href="https://uniswap.org/">
-                    <div>
-                      <Trans>About</Trans>
-                    </div>
-                    <Info opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://docs.uniswap.org/">
-                    <div>
-                      <Trans>Docs</Trans>
-                    </div>
-                    <BookOpen opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={CODE_LINK}>
-                    <div>
-                      <Trans>Code</Trans>
-                    </div>
-                    <Code opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://discord.gg/FCfyBSbCU5">
-                    <div>
-                      <Trans>Discord</Trans>
-                    </div>
-                    <MessageCircle opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={infoLink}>
-                    <div>
-                      <Trans>Analytics</Trans>
-                    </div>
-                    <PieChart opacity={0.6} size={16} />
-                  </MenuItem>
-                  <ToggleMenuItem onClick={() => setMenu('lang')}>
-                    <div>
-                      <Trans>Language</Trans>
-                    </div>
-                    <Globe opacity={0.6} size={16} />
-                  </ToggleMenuItem>
-                  <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
-                  </ToggleMenuItem>
-                  {showUNIClaimOption && (
-                    <UNIbutton
-                      onClick={openClaimModal}
-                      padding="8px 16px"
-                      width="100%"
-                      $borderRadius="12px"
-                      mt="0.5rem"
-                    >
-                      <Trans>Claim UNI</Trans>
-                    </UNIbutton>
-                  )}
-                </MenuFlyout>
-              )
-          }
-        })()}
+      {open && (
+        <MenuFlyout>
+          <MenuItem href="https://uniswap.org/">
+            <Info size={14} />
+            <div>About</div>
+          </MenuItem>
+          <MenuItem href="https://docs.uniswap.org/">
+            <BookOpen size={14} />
+            <div>Docs</div>
+          </MenuItem>
+          <MenuItem href={CODE_LINK}>
+            <Code size={14} />
+            <div>Code</div>
+          </MenuItem>
+          <MenuItem href="https://discord.gg/FCfyBSbCU5">
+            <MessageCircle size={14} />
+            <div>Discord</div>
+          </MenuItem>
+          <MenuItem href="https://info.uniswap.org/">
+            <PieChart size={14} />
+            <div>Analytics</div>
+          </MenuItem>
+          {account && (
+            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+              Claim UNI
+            </UNIbutton>
+          )}
+        </MenuFlyout>
+      )}
     </StyledMenu>
   )
 }
@@ -327,11 +207,11 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>
             external ? (
-              <ExternalMenuItem href={link} key={i}>
+              <ExternalMenuItem id="link" href={link} key={link + i}>
                 {content}
               </ExternalMenuItem>
             ) : (
-              <NewMenuItem to={link} key={i}>
+              <NewMenuItem id="link" to={link} key={link + i}>
                 {content}
               </NewMenuItem>
             )

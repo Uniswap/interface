@@ -1,5 +1,4 @@
-import { Trans } from '@lingui/macro'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { PaddedColumn, Separator } from './styleds'
 import { RowBetween } from 'components/Row'
 import { ArrowLeft } from 'react-feather'
@@ -64,7 +63,7 @@ export default function Manage({
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.search)} />
           <Text fontWeight={500} fontSize={20}>
-            <Trans>Manage</Trans>
+            Manage
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -73,10 +72,10 @@ export default function Manage({
       <PaddedColumn style={{ paddingBottom: 0 }}>
         <ToggleWrapper>
           <ToggleOption onClick={() => setShowLists(!showLists)} active={showLists}>
-            <Trans>Lists</Trans>
+            Lists
           </ToggleOption>
           <ToggleOption onClick={() => setShowLists(!showLists)} active={!showLists}>
-            <Trans>Tokens</Trans>
+            Tokens
           </ToggleOption>
         </ToggleWrapper>
       </PaddedColumn>

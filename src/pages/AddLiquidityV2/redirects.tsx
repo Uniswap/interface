@@ -1,3 +1,4 @@
+import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AddLiquidityV2 from './index'
 

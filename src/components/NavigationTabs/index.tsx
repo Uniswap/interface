@@ -1,20 +1,19 @@
+import React from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
-import { Trans } from '@lingui/macro'
-import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { NavLink, Link as HistoryLink } from 'react-router-dom'
 import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
-import Row, { RowBetween } from '../Row'
+import { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
-
-import { useAppDispatch } from 'state/hooks'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
-import { ReactNode } from 'react'
-import { Box } from 'rebass'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -51,15 +50,6 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
-  flex: ${({ flex }) => flex ?? 'none'};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex: none;
-    margin-right: 10px;
-  `};
-`
-
 const ActiveText = styled.div`
   font-weight: 500;
   font-size: 20px;
@@ -70,13 +60,14 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
+  const { t } = useTranslation()
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        <Trans>Swap</Trans>
+        {t('swap')}
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        <Trans>Pool</Trans>
+        {t('pool')}
       </StyledNavLink>
     </Tabs>
   )
@@ -85,13 +76,11 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <HistoryLink to={origin}>
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <Trans>Import V2 Pool</Trans>
-        </ActiveText>
+        <ActiveText>Import Pool</ActiveText>
       </RowBetween>
     </Tabs>
   )
@@ -100,32 +89,24 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 export function AddRemoveTabs({
   adding,
   creating,
-  defaultSlippage,
   positionID,
-  children,
+  defaultSlippage,
 }: {
   adding: boolean
   creating: boolean
-  defaultSlippage: Percent
   positionID?: string | undefined
-  showBackLink?: boolean
-  children?: ReactNode | undefined
+  defaultSlippage: Percent
 }) {
   const theme = useTheme()
-  // reset states on back
-  const dispatch = useAppDispatch()
-  const location = useLocation()
 
-  // detect if back should redirect to v3 or v2 pool page
-  const poolLink = location.pathname.includes('add/v2')
-    ? '/pool/v2'
-    : '/pool' + (!!positionID ? `/${positionID.toString()}` : '')
+  // reset states on back
+  const dispatch = useDispatch<AppDispatch>()
 
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <StyledHistoryLink
-          to={poolLink}
+        <HistoryLink
+          to={'/pool' + (!!positionID ? `/${positionID.toString()}` : '')}
           onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
@@ -133,39 +114,14 @@ export function AddRemoveTabs({
               dispatch(resetMintV3State())
             }
           }}
-          flex={children ? '1' : undefined}
         >
           <StyledArrowLeft stroke={theme.text2} />
-        </StyledHistoryLink>
-        <TYPE.mediumHeader
-          fontWeight={500}
-          fontSize={20}
-          style={{ flex: '1', margin: 'auto', textAlign: children ? 'start' : 'center' }}
-        >
-          {creating ? (
-            <Trans>Create a pair</Trans>
-          ) : adding ? (
-            <Trans>Add Liquidity</Trans>
-          ) : (
-            <Trans>Remove Liquidity</Trans>
-          )}
+        </HistoryLink>
+        <TYPE.mediumHeader fontWeight={500} fontSize={20}>
+          {creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}
         </TYPE.mediumHeader>
-        <Box style={{ marginRight: '.5rem' }}>{children}</Box>
         <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
-    </Tabs>
-  )
-}
-
-export function CreateProposalTabs() {
-  return (
-    <Tabs>
-      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink to="/vote">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
-      </Row>
     </Tabs>
   )
 }
