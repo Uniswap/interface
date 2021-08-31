@@ -166,7 +166,7 @@ export default function LiquidityChartRangeInput({
           icon={<Inbox size={56} stroke={theme.text1} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.text4} data-test-id="liquidity-chart-loader" />} />
+        <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
       ) : isError ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
