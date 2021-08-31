@@ -86,6 +86,6 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
+if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
   serviceWorkerRegistration.register()
 }
