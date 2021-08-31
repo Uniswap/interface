@@ -57,7 +57,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
+import SwapRoute from 'components/swap/SwapRoute'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -66,23 +66,6 @@ const StyledInfo = styled(Info)`
   width: 16px;
   :hover {
     opacity: 0.8;
-  }
-`
-
-const StyledAutoRouterIcon = styled(AutoRouterIcon)`
-  height: 16px;
-  width: 16px;
-  stroke: #2172e5;
-`
-
-const GradientText = styled(TYPE.black)`
-  /* fallback color */
-  color: ${({ theme }) => theme.green1};
-
-  @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
-    background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 `
 
@@ -443,8 +426,8 @@ export default function Swap({ history }: RouteComponentProps) {
             {showWrap ? null : (
               <>
                 <Row justify={!trade ? 'center' : 'space-between'}>
-                  <RowFixed>
-                    {[V3TradeState.VALID, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                  <RowFixed style={{ position: 'relative' }}>
+                    {/* {[V3TradeState.VALID, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                       (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
                         <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
                       ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
@@ -474,14 +457,9 @@ export default function Swap({ history }: RouteComponentProps) {
                             </TYPE.main>
                           </ButtonGray>
                         )
-                      ))}
+                      ))} */}
 
-                    {toggledVersion === Version.v3 && isTradeBetter(v2Trade, v3Trade) && (
-                      <AutoRow gap="4px" width="auto" padding=".5rem">
-                        <StyledAutoRouterIcon />
-                        <GradientText fontSize={14}>Auto Router</GradientText>
-                      </AutoRow>
-                    )}
+                    {trade && <SwapRoute trade={trade} />}
                   </RowFixed>
                   {trade ? (
                     <RowFixed>

@@ -9,7 +9,6 @@ import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import SwapRoute from './SwapRoute'
 
 interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
@@ -38,17 +37,6 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-        </TYPE.black>
-      </RowBetween>
-
-      <RowBetween>
-        <RowFixed>
-          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            <Trans>Route</Trans>
-          </TYPE.black>
-        </RowFixed>
-        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
-          <SwapRoute trade={trade} />
         </TYPE.black>
       </RowBetween>
 
