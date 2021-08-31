@@ -1201,10 +1201,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@celo-tools/use-contractkit@npm:@poofcash/use-contractkit@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@poofcash/use-contractkit/-/use-contractkit-1.0.0.tgz#89959edc27ac305a3a78b4705b927b0a41b84695"
-  integrity sha512-sksqz/4I20mGaMghh3SbMaUHA+FMSUYehSTPxBpkOsHtYI+3jltSQuvsykqNjhMYVyWEB0toJc4g0taPZPjBUw==
+"@celo-tools/use-contractkit@npm:@poofcash/use-contractkit@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@poofcash/use-contractkit/-/use-contractkit-1.0.1.tgz#e7239a1572c8adb791706804ac9416739e61771d"
+  integrity sha512-KTkFichvG/PK4n7unM0/x/1kZavFO8wi+Cm5A/qR0k1jPMQ6Kk48rV1ZGZNc0lMLcSNke270cMaIG2W1N5xpXw==
   dependencies:
     "@celo/contractkit" "1.2.4"
     "@celo/utils" "1.2.4"
