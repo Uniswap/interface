@@ -7,6 +7,7 @@ import {
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
+  ZERO_PERCENT,
 } from '../constants/misc'
 
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
@@ -29,7 +30,7 @@ export function computeRealizedLPFeePercent(
     )
   } else {
     //TODO(judo): validate this
-    percent = new Percent(0, 0)
+    percent = ZERO_PERCENT
     for (const swap of trade.swaps) {
       const overallPercent = new Percent(swap.inputAmount.toSignificant(), trade.inputAmount.toSignificant())
 
@@ -41,7 +42,7 @@ export function computeRealizedLPFeePercent(
         )
       )
 
-      percent.add(overallPercent.subtract(routeRealizedLPFeePercent))
+      percent = percent.add(overallPercent.multiply(routeRealizedLPFeePercent))
     }
   }
 
