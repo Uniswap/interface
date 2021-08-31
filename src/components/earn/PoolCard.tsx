@@ -1,11 +1,13 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { Percent } from '@ubeswap/sdk'
 import QuestionHelper, { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
+import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
 import { DualRewardsInfo } from 'state/stake/useDualStakeRewards'
 import styled from 'styled-components'
 
-import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { BIG_INT_SECONDS_IN_WEEK, UBE } from '../../constants'
 import { useColor } from '../../hooks/useColor'
 import { StakingInfo } from '../../state/stake/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -14,6 +16,7 @@ import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
+import PoolStatRow from './PoolStats/PoolStatRow'
 import { Break, CardNoise } from './styled'
 
 const StatContainer = styled.div`
@@ -78,6 +81,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
   // get the color of the token
   const token = token0.symbol?.startsWith('m') ? token1 : token0
   const backgroundColor = useColor(token)
+  const { network } = useContractKit()
+  const { chainId } = network
+  const ube = chainId ? UBE[chainId] : undefined
 
   // get the USD value of staked WETH
   const {
@@ -86,9 +92,15 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
     userAmountTokenA,
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
+  let dollarRewardPerYear = useAnnualRewardDollars(stakingInfo.rewardToken, stakingInfo.totalRewardRate)
+  const ubeRewardPerYear = useAnnualRewardDollars(ube, stakingInfo.totalUBERewardRate)
+  dollarRewardPerYear =
+    dualRewards && dollarRewardPerYear && ubeRewardPerYear
+      ? dollarRewardPerYear.add(ubeRewardPerYear)
+      : dollarRewardPerYear
   const apyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
-      ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
+      ? dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
 
@@ -152,59 +164,49 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
       </TopSection>
 
       <StatContainer>
-        <RowBetween>
-          <TYPE.white>Total deposited</TYPE.white>
-          <TYPE.white>
-            {valueOfTotalStakedAmountInCUSD
+        <PoolStatRow
+          statName="Total deposited"
+          statValue={
+            valueOfTotalStakedAmountInCUSD
               ? `$${valueOfTotalStakedAmountInCUSD.toFixed(0, {
                   groupSeparator: ',',
                 })}`
-              : '-'}
-          </TYPE.white>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.white>{dualRewards ? dualRewards.totalRewardRate.token.symbol : 'Pool'} rate</TYPE.white>
-          <TYPE.white>
-            {stakingInfo
-              ? stakingInfo.active
-                ? `${stakingInfo.totalRewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.totalRewardRate.token.symbol} / week`
-                : `0 ${stakingInfo.totalRewardRate.token.symbol} / week`
-              : '-'}
-          </TYPE.white>
-        </RowBetween>
+              : '-'
+          }
+        />
+        <PoolStatRow
+          statName={(dualRewards ? dualRewards.totalRewardRate.token.symbol : 'Pool') + ' rate'}
+          statValue={
+            stakingInfo.active
+              ? `${stakingInfo.totalRewardRate
+                  ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                  ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.totalRewardRate.token.symbol} / week`
+              : `0 ${stakingInfo.totalRewardRate.token.symbol} / week`
+          }
+        />
         {dualRewards && (
-          <RowBetween>
-            <TYPE.white>{dualRewards.totalUBERewardRate.token.symbol} rate</TYPE.white>
-            <TYPE.white>
-              {stakingInfo
-                ? stakingInfo.active
-                  ? `${dualRewards.totalUBERewardRate
-                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                      ?.toFixed(0, { groupSeparator: ',' })} ${dualRewards.totalUBERewardRate.token.symbol} / week`
-                  : `0 ${dualRewards.totalUBERewardRate.token.symbol} / week`
-                : '-'}
-            </TYPE.white>
-          </RowBetween>
+          <PoolStatRow
+            statName={dualRewards.totalUBERewardRate.token.symbol + ' rate'}
+            statValue={
+              stakingInfo.active
+                ? `${dualRewards.totalUBERewardRate
+                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                    ?.toFixed(0, { groupSeparator: ',' })} ${dualRewards.totalUBERewardRate.token.symbol} / week`
+                : `0 ${dualRewards.totalUBERewardRate.token.symbol} / week`
+            }
+          />
         )}
         {apy && apy.greaterThan('0') && (
-          <RowBetween>
-            <RowFixed>
-              <TYPE.white>{dualRewards ? 'Combined APR' : 'APR'}</TYPE.white>
-              <LightQuestionHelper
-                text={
-                  <>
-                    Yield/day: {dpy?.toSignificant(4)}%<br />
-                    APY (weekly compounded): {weeklyAPY}%
-                  </>
-                }
-              />
-            </RowFixed>
-            <TYPE.white>
-              {apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
-            </TYPE.white>
-          </RowBetween>
+          <PoolStatRow
+            helperText={
+              <>
+                Yield/day: {dpy?.toSignificant(4)}%<br />
+                APY (weekly compounded): {weeklyAPY}%
+              </>
+            }
+            statName={dualRewards ? 'Combined APR' : 'APR'}
+            statValue={apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
+          />
         )}
 
         {showNextPoolRate && (
