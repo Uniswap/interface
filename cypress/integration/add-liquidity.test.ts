@@ -33,10 +33,10 @@ describe('Add Liquidity', () => {
       cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req) => {
         if (/feeTierDistribution/.test(req.body.query)) {
           req.alias = 'queryFeeTierDistribution'
-          req.reply({fixture: 'subgraph/feeTierDistribution.json'})
+          req.reply({ fixture: 'subgraph/feeTierDistribution.json' })
         } else if (/allV3Ticks/.test(req.body.query)) {
           req.alias = 'queryAllV3Ticks'
-          req.reply({fixture: 'subgraph/allV3Ticks.json'})
+          req.reply({ fixture: 'subgraph/allV3Ticks.json' })
         }
       })
     })
