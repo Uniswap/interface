@@ -76,7 +76,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
       if (!list) continue
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-          const wrapped = new WrappedTokenInfo(tokenInfo, list)
+          const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
           if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
             addressSet[wrapped.address] = true
             result.push(wrapped)

@@ -18,6 +18,7 @@
     "noImplicitReturns": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "downlevelIteration": true,
