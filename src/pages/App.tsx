@@ -56,7 +56,7 @@ const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
   position: relative;
   flex-direction: column;
   width: 100%;
-  padding-top: 32px;
+  padding-top: 20px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
