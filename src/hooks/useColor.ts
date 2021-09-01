@@ -7,49 +7,61 @@ import Logger from 'utils/Logger'
 import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
 
+function URIForEthToken(address: string) {
+  return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+}
+
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (!(token instanceof WrappedTokenInfo)) {
     return null
   }
 
+  const wrappedToken = token as WrappedTokenInfo
+  const { address } = wrappedToken
+  let { logoURI } = wrappedToken
+  if (!logoURI) {
+    if (token.chainId !== 1) {
+      return null
+    } else {
+      logoURI = URIForEthToken(address)
+    }
+  }
+
   try {
-    const wrappedToken = token as WrappedTokenInfo
-    const { logoURI } = wrappedToken
-    if (!logoURI) {
-      return null
-    }
-
-    const palette = await Vibrant.from(logoURI).getPalette()
-    if (!palette?.Vibrant) {
-      return null
-    }
-
-    let detectedHex = palette.Vibrant.hex
-    let AAscore = hex(detectedHex, '#FFF')
-    while (AAscore < 3) {
-      detectedHex = shade(0.005, detectedHex)
-      AAscore = hex(detectedHex, '#FFF')
-    }
-
-    return detectedHex
+    return await getColorFromUriPath(logoURI)
   } catch (e) {
     Logger.error(e)
-    return null
+    if (logoURI === URIForEthToken(address)) {
+      return null
+    }
+
+    try {
+      logoURI = URIForEthToken(address)
+      return await getColorFromUriPath(logoURI)
+    } catch (e) {
+      Logger.error(e)
+    }
   }
+
+  return null
 }
 
 async function getColorFromUriPath(uri: string): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
-  return Vibrant.from(formattedPath)
-    .getPalette()
-    .then((palette) => {
-      if (palette?.Vibrant) {
-        return palette.Vibrant.hex
-      }
-      return null
-    })
-    .catch(() => null)
+  const palette = await Vibrant.from(formattedPath).getPalette()
+  if (!palette?.Vibrant) {
+    return null
+  }
+
+  let detectedHex = palette.Vibrant.hex
+  let AAscore = hex(detectedHex, '#FFF')
+  while (AAscore < 3) {
+    detectedHex = shade(0.005, detectedHex)
+    AAscore = hex(detectedHex, '#FFF')
+  }
+
+  return detectedHex
 }
 
 export function useColor(token?: Token) {
