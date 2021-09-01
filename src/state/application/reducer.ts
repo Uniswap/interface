@@ -1,4 +1,5 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import { Fees } from '@alchemist-coin/mistx-connect'
 import {
   addPopup,
   PopupContent,
@@ -7,6 +8,7 @@ import {
   ApplicationModal,
   setOpenModal,
   updateChainId,
+  updatePrivateTransactionFees,
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
@@ -17,6 +19,7 @@ export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
+  readonly privateTransactionFees: Fees | null
 }
 
 const initialState: ApplicationState = {
@@ -24,6 +27,7 @@ const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
   openModal: null,
+  privateTransactionFees: null,
 }
 
 export default createReducer(initialState, (builder) =>
@@ -59,5 +63,9 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(updatePrivateTransactionFees, (state, action) => {
+      const { privateTransactionFees } = action.payload
+      state.privateTransactionFees = privateTransactionFees
     })
 )

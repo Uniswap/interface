@@ -77,3 +77,8 @@ export function useActivePopups(): AppState['application']['popupList'] {
   const list = useAppSelector((state: AppState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
 }
+
+// get private transaction fees
+export function usePrivateTransactionFees(): AppState['application']['privateTransactionFees'] {
+  return useAppSelector((state: AppState) => state.application.privateTransactionFees)
+}

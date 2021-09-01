@@ -176,8 +176,14 @@ function Web3StatusInner() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-
+  const pending = sortedRecentTransactions
+    .filter((tx) => {
+      if (tx.privateTransaction) {
+        return !tx.privateTransactionDetails || tx.privateTransactionDetails.status === `PENDING_BUNDLE`
+      }
+      return !tx.receipt
+    })
+    .map((tx) => tx.hash)
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()

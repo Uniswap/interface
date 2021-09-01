@@ -6,15 +6,24 @@ import { retry, RetryableError, RetryOptions } from '../../utils/retry'
 import { updateBlockNumber } from '../application/actions'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './actions'
-
+import { PrivateTransactionDetails } from '../transactions/actions'
+import { Status as PrivateTransactionStatus } from '../../websocket/mistxConnect'
 interface TxInterface {
   addedTime: number
   receipt?: Record<string, any>
   lastCheckedBlockNumber?: number
+  privateTransaction?: boolean
+  privateTransactionDetails?: PrivateTransactionDetails
 }
 
 export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
   if (tx.receipt) return false
+  if (
+    tx.privateTransactionDetails &&
+    tx.privateTransactionDetails.status !== PrivateTransactionStatus.SUCCESSFUL_BUNDLE
+  ) {
+    return false
+  }
   if (!tx.lastCheckedBlockNumber) return true
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
   if (blocksSinceCheck < 1) return false

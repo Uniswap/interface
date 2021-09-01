@@ -1,10 +1,14 @@
 import { createAction } from '@reduxjs/toolkit'
+import { Fees } from '@alchemist-coin/mistx-connect'
+import { PrivateTransactionDetails } from '../transactions/actions'
 
 export type PopupContent = {
   txn: {
     hash: string
     success: boolean
     summary?: string
+    privateTransaction?: boolean
+    privateTransactionDetails?: PrivateTransactionDetails
   }
 }
 
@@ -21,6 +25,9 @@ export enum ApplicationModal {
   ARBITRUM_OPTIONS,
 }
 
+export const updatePrivateTransactionFees = createAction<{ privateTransactionFees: Fees | null }>(
+  'application/updatePrivateTransactionFees'
+)
 export const updateChainId = createAction<{ chainId: number | null }>('application/updateChainId')
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
