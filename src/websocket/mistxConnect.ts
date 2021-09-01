@@ -120,20 +120,7 @@ export default function Sockets(): null {
         socket = new MistxSocket(serverUrl)
       }
       disconnect = socket.init({
-        onConnect: () => {
-          console.log('websocket connected')
-          // dispatch(updateSocketStatus(true))
-        },
-        onConnectError: (err) => {
-          console.log('websocket connect error', err)
-          // dispatch(updateSocketStatus(false))
-        },
-        onDisconnect: (err) => {
-          console.log('websocket disconnect', err)
-          // dispatch(updateSocketStatus(false))
-        },
         onError: (err) => {
-          console.log('websocket err', err)
           if (err.event === Event.MISTX_BUNDLE_REQUEST) {
             const bundleResponse = err.data as BundleRes
             const hash = bundleResponse.bundle.id
@@ -152,12 +139,9 @@ export default function Sockets(): null {
           dispatch(updatePrivateTransactionFees({ privateTransactionFees: fees }))
         },
         onTransactionResponse: (response) => {
-          console.log('on tx response', response, chainId)
           const id = response.bundle.id
           const tx = allTransactions?.[id]
-          console.log('id', id, allTransactions)
           const summary = tx?.summary
-          // 0x7c5c7859d9cd920b4a7ffdbf8c3a50a13f9e89d23420910ce64b95fee7bab81d
           const hash = tx?.hash
           const previouslyCompleted =
             tx?.privateTransaction &&
