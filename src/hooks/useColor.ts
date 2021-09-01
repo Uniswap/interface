@@ -1,32 +1,41 @@
-import { useState, useLayoutEffect } from 'react'
-import { shade } from 'polished'
-import Vibrant from 'node-vibrant'
-import { hex } from 'wcag-contrast'
 import { Token } from '@uniswap/sdk-core'
+import Vibrant from 'node-vibrant'
+import { shade } from 'polished'
+import { useLayoutEffect, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import Logger from 'utils/Logger'
 import uriToHttp from 'utils/uriToHttp'
+import { hex } from 'wcag-contrast'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
-  if (token.chainId !== 1) {
-    return Promise.resolve('#FAAB14')
+  if (!(token instanceof WrappedTokenInfo)) {
+    return null
   }
 
-  const path = `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
-
-  return Vibrant.from(path)
-    .getPalette()
-    .then((palette) => {
-      if (palette?.Vibrant) {
-        let detectedHex = palette.Vibrant.hex
-        let AAscore = hex(detectedHex, '#FFF')
-        while (AAscore < 3) {
-          detectedHex = shade(0.005, detectedHex)
-          AAscore = hex(detectedHex, '#FFF')
-        }
-        return detectedHex
-      }
+  try {
+    const wrappedToken = token as WrappedTokenInfo
+    const { logoURI } = wrappedToken
+    if (!logoURI) {
       return null
-    })
-    .catch(() => null)
+    }
+
+    const palette = await Vibrant.from(logoURI).getPalette()
+    if (!palette?.Vibrant) {
+      return null
+    }
+
+    let detectedHex = palette.Vibrant.hex
+    let AAscore = hex(detectedHex, '#FFF')
+    while (AAscore < 3) {
+      detectedHex = shade(0.005, detectedHex)
+      AAscore = hex(detectedHex, '#FFF')
+    }
+
+    return detectedHex
+  } catch (e) {
+    Logger.error(e)
+    return null
+  }
 }
 
 async function getColorFromUriPath(uri: string): Promise<string | null> {
