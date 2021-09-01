@@ -45,3 +45,4 @@ jobs:
           eslint: true
           eslint_extensions: js,jsx,ts,tsx,json
           auto_fix: true
+          prettier: true
