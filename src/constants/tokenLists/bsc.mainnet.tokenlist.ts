@@ -5,7 +5,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
   tokens: [
     {
       chainId: 56,
-      address: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b' : '',
+      address: '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
       decimals: 18

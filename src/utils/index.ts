@@ -28,6 +28,7 @@ import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
 import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
+import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -404,9 +405,7 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
       imageURL = getAvaxTestnetTokenLogoURL(address)
       break
     case ChainId.AVAXMAINNET:
-      imageURL = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${isAddress(
-        address
-      )}/logo.png`
+      imageURL = getAvaxMainnetTokenLogoURL(address)
       break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
