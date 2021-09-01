@@ -215,7 +215,7 @@ export default function CurrencyInputPanel({
                 {hideLogo ? null : pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                 ) : currency ? (
-                  <CurrencyLogo currency={nativeCurrency || undefined} size={'24px'} />
+                  <CurrencyLogo currency={currency || undefined} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">

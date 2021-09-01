@@ -12,6 +12,7 @@ import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
 import { BSC_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.testnet.tokenlist'
 import { BSC_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.mainnet.tokenlist'
 import { AVAX_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/avax.testnet.tokenlist'
+import { AVAX_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/avax.mainnet.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
@@ -117,6 +118,8 @@ export function useDMMTokenList(): TokenAddressMap {
       return listToTokenMap(BSC_MAINNET_TOKEN_LIST)
     case ChainId.AVAXTESTNET:
       return listToTokenMap(AVAX_TESTNET_TOKEN_LIST)
+    case ChainId.AVAXMAINNET:
+      return listToTokenMap(AVAX_MAINNET_TOKEN_LIST)
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }

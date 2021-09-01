@@ -19,9 +19,12 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956',
   [ChainId.BSCTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
   [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8' : '',
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
+      : '0x78df70615ffc8066cc0887917f2Cd72092C86409',
   [ChainId.AVAXTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
-  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
+  [ChainId.AVAXMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -40,9 +43,12 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
   [ChainId.BSCTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
   [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x10908C875D865C66f271F5d3949848971c9595C9' : '',
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x878dFE971d44e9122048308301F540910Bbd934c',
   [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
-  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
+  [ChainId.AVAXMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x10908C875D865C66f271F5d3949848971c9595C9'
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
@@ -88,9 +94,12 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
       : 'https://polygon-info.dmm.exchange',
   [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com',
   [ChainId.BSCTESTNET]: 'https://mumbai-dmm-info.knstats.com',
-  [ChainId.BSCMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://staging-bsc-dmm-info.knstats.com'
+      : 'https://bsc-info.dmm.exchange',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
+  [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://avax-info.dmm.exchange'
 }
 
 // a list of tokens by chain
@@ -153,7 +162,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0x0000000000000000000000000000000000000000',
+    '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
     18,
     'DAI',
     'Dai Stablecoin'
@@ -191,8 +200,8 @@ export const USDC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0x0000000000000000000000000000000000000000',
-    18,
+    '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
+    6,
     'USDC',
     'USD Coin'
   )
@@ -229,7 +238,7 @@ export const USDT: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0x0000000000000000000000000000000000000000',
+    '0xc7198437980c041c805a1edcba50c1ce5db95118',
     6,
     'USDT',
     'Tether USD'
