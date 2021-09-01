@@ -10,7 +10,7 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
-import { useEffect } from '@testing-library/react-hooks/node_modules/@types/react'
+import { useEffect } from 'react'
 import { BigNumber } from 'ethers'
 
 export enum ApprovalState {
