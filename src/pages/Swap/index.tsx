@@ -122,11 +122,11 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const toggleToBestVersionCallback = useToggleVersionCallback(bestTrade instanceof V2Trade ? Version.v2 : Version.v3)
 
+  // automatically toggle best version
   useEffect(() => {
     if (!bestTrade || !trade) return
 
     if (bestTrade !== trade) {
-      console.log('toggling to better version')
       toggleToBestVersionCallback()
     }
   }, [bestTrade, toggleToBestVersionCallback, trade])

@@ -165,7 +165,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const bestTrade = useBetterTrade(
     v2Trade ?? undefined,
-    v3Trade.trade ?? undefined,
+    v3Trade.state === V3TradeState.VALID ? v3Trade.trade ?? undefined : undefined,
     v3Trade.gasPriceWei,
     v3Trade.gasUseEstimate
   )
