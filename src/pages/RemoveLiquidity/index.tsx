@@ -474,7 +474,7 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={connect}>Connect Wallet</ButtonLight>
+                <ButtonLight onClick={() => connect().catch(console.warn)}>Connect Wallet</ButtonLight>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed

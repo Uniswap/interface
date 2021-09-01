@@ -159,14 +159,14 @@ function Web3StatusInner() {
     )
   } else if (error) {
     return (
-      <Web3StatusError onClick={connect}>
+      <Web3StatusError onClick={() => connect().catch(console.warn)}>
         <NetworkIcon />
         <Text>{error === 'unsupported' ? 'Wrong Network' : 'Error'}</Text>
       </Web3StatusError>
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={connect} faded={!address}>
+      <Web3StatusConnect id="connect-wallet" onClick={() => connect().catch(console.warn)} faded={!address}>
         <Text>{t('Connect to a wallet')}</Text>
       </Web3StatusConnect>
     )
