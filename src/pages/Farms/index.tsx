@@ -202,7 +202,7 @@ const Farms = () => {
                   <Trans>Stake your DMM Liquidity Provider tokens to earn token rewards.</Trans>
                 </LearnMoreInstruction>
                 <LearnMoreLinkContainer>
-                  <ExternalLink href="https://blog.kyber.network/rainmaker-kyber-dmm-liquidity-mining-is-live-e64e977baffc">
+                  <ExternalLink href="https://blog.kyber.network/kyberdmm-launches-on-binance-smart-chain-with-4m-in-liquidity-mining-rewards-6e0dddab3c6f">
                     <Trans>Learn More →</Trans>
                   </ExternalLink>
                 </LearnMoreLinkContainer>
