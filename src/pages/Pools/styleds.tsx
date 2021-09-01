@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Flex } from 'rebass'
 
 export const PageWrapper = styled.div`
-  padding: 0 17em;
+  padding: 0 20rem;
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`

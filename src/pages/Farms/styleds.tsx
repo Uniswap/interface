@@ -4,7 +4,7 @@ import { Switch } from '@rebass/forms'
 import { ButtonEmpty } from 'components/Button'
 
 export const PageWrapper = styled.div`
-  padding: 0 17em;
+  padding: 0 20rem;
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -22,7 +22,7 @@ export const PageWrapper = styled.div`
 
 export const KNCPriceContainer = styled.div`
   position: absolute;
-  top: 14px;
+  top: 20px;
   left: 28px;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.bg13};
