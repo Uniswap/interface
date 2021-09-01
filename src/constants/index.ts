@@ -366,7 +366,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
-    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
+    '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -478,7 +478,20 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDT[ChainId.MATIC],
     KNC[ChainId.MATIC]
   ],
-  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], KNC[ChainId.MUMBAI]]
+  [ChainId.MUMBAI]: [...WETH_ONLY[ChainId.MUMBAI], KNC[ChainId.MUMBAI]],
+  [ChainId.BSCMAINNET]: [
+    ...WETH_ONLY[ChainId.BSCMAINNET],
+    DAI[ChainId.BSCMAINNET],
+    USDC[ChainId.BSCMAINNET],
+    USDT[ChainId.BSCMAINNET],
+    new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+  ],
+  [ChainId.AVAXMAINNET]: [
+    ...WETH_ONLY[ChainId.AVAXMAINNET],
+    DAI[ChainId.AVAXMAINNET],
+    USDC[ChainId.AVAXMAINNET],
+    USDT[ChainId.AVAXMAINNET]
+  ]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -660,7 +673,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.BSCMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : [],
+      : ['0x31De05f28568e3d3D612BFA6A78B356676367470'],
   [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
   [ChainId.AVAXMAINNET]: []
 }
@@ -681,7 +694,9 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
   [ChainId.BSCTESTNET]: '0x08Db265fE1C49fDCfEb775971abc2EcD1164a12d',
   [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x51E8D106C646cA58Caf32A47812e95887C071a62' : '',
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x51E8D106C646cA58Caf32A47812e95887C071a62'
+      : '0xfab5186A194588F5AD5074Bd52659302906B4522',
   [ChainId.AVAXTESTNET]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
   [ChainId.AVAXMAINNET]: ''
 }
@@ -740,7 +755,11 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525',
           '0x8BcBc65Ce330BC019D87409C2949A2471Bef1E5C'
         ]
-      : [],
+      : [
+          '0x6170b6d96167346896169b35e1e9585feab873bb',
+          '0xec303ce1edbebf7e71fc7b350341bb6a6a7a6381',
+          '0xc3daC2049616326E7D596cE52062789d96373b55'
+        ],
   [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
   [ChainId.AVAXMAINNET]: []
 }
