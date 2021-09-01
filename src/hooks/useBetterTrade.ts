@@ -26,17 +26,18 @@ import { useGasEstimateForApproval } from './useApproveCallback'
  */
 export function useBetterTrade(
   v2Trade: V2Trade<Currency, Currency, TradeType>,
-  v3TradeGasAdjusted: V3Trade<Currency, Currency, TradeType>,
+  v3Trade: V3Trade<Currency, Currency, TradeType>,
+  v3SwapGasEstimateWei: BigNumber,
   gasPrice: BigNumber
 ): boolean | undefined {
   const { chainId, library, account } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
 
-  const [v2TradeApprovalGasEstimate] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
-  const [v3TradeApprovalGasEstimate] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+  const [v2TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+  const [v3TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
 
-  const [v2SwapGasEstimate, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
+  const [v2SwapGasEstimateWei, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
 
   const tradeType = v2Trade.tradeType
   const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade.outputAmount.currency : v2Trade.inputAmount.currency
@@ -79,26 +80,29 @@ export function useBetterTrade(
   }, [deadline, library, routerContract, v2Trade])
 
   return useMemo(() => {
-    if (!v2Trade || !weth || !v2SwapGasEstimate || !v2TradeApprovalGasEstimate || !v3TradeApprovalGasEstimate) {
+    if (
+      !v2Trade ||
+      !weth ||
+      !v2SwapGasEstimateWei ||
+      !v2TradeApprovalGasEstimateWei ||
+      !v3TradeApprovalGasEstimateWei
+    ) {
       return undefined
     }
 
-    const v2GasEstimate = v2SwapGasEstimate.add(v2TradeApprovalGasEstimate)
-    console.log(
-      { swapGasEstimate: v2SwapGasEstimate.toString(), approvalGasEstimate: v2TradeApprovalGasEstimate.toString() },
-      'Got gas estimates for V2 trade'
-    )
+    const v2GasEstimate = v2SwapGasEstimateWei.add(v2TradeApprovalGasEstimateWei)
+    const v3GasEstimate = v3SwapGasEstimateWei.add(v3TradeApprovalGasEstimateWei)
 
     let v2TradeAndApprovalGasCostInQuoteToken
-    let v3ApprovalGasCostInQuoteToken
+    let v3TradeAndApprovalGasCostInQuoteToken
     if (weth && (quoteToken.equals(weth) || quoteToken.isNative)) {
       v2TradeAndApprovalGasCostInQuoteToken = CurrencyAmount.fromRawAmount(
         quoteToken,
         v2GasEstimate.mul(gasPrice).toString()
       )
-      v3ApprovalGasCostInQuoteToken = CurrencyAmount.fromRawAmount(
+      v3TradeAndApprovalGasCostInQuoteToken = CurrencyAmount.fromRawAmount(
         quoteToken,
-        v3TradeApprovalGasEstimate.mul(gasPrice).toString()
+        v3GasEstimate.mul(gasPrice).toString()
       )
     } else {
       let ethPool: Pool | null = null
@@ -117,22 +121,47 @@ export function useBetterTrade(
 
       const ethToken0 = ethPool.token0.address == weth?.address
       const ethTokenPrice = ethToken0 ? ethPool.token0Price : ethPool.token1Price
-      const v2TradeGasCostInEth = CurrencyAmount.fromRawAmount(weth, v2SwapGasEstimate.mul(gasPrice).toString())
-      const v3TradeApprovalCostInEth = CurrencyAmount.fromRawAmount(
-        weth,
-        v3TradeApprovalGasEstimate.mul(gasPrice).toString()
-      )
+      const v2TradeGasCostInEth = CurrencyAmount.fromRawAmount(weth, v2GasEstimate.mul(gasPrice).toString())
+      const v3TradeGasCostInEth = CurrencyAmount.fromRawAmount(weth, v3GasEstimate.mul(gasPrice).toString())
       v2TradeAndApprovalGasCostInQuoteToken = ethTokenPrice.quote(v2TradeGasCostInEth)
-      v3ApprovalGasCostInQuoteToken = ethTokenPrice.quote(v3TradeApprovalCostInEth)
+      v3TradeAndApprovalGasCostInQuoteToken = ethTokenPrice.quote(v3TradeGasCostInEth)
     }
 
     if (tradeType == TradeType.EXACT_INPUT) {
-      const v3QuoteGasAdjusted = v3TradeGasAdjusted.outputAmount.subtract(v3ApprovalGasCostInQuoteToken)
+      const v3QuoteGasAdjusted = v3Trade.outputAmount.subtract(v3TradeAndApprovalGasCostInQuoteToken)
       const v2QuoteGasAdjusted = v2Trade.outputAmount.subtract(v2TradeAndApprovalGasCostInQuoteToken)
+      console.debug(
+        {
+          v2SwapGasEstimate: v2SwapGasEstimateWei.toString(),
+          v2ApprovalGasEstimate: v2TradeApprovalGasEstimateWei.toString(),
+          v3SwapGasEstimate: v2GasEstimate.toString(),
+          v3ApprovalGasEstimate: v3TradeApprovalGasEstimateWei.toString(),
+          v3QuoteGasAdjusted: v3QuoteGasAdjusted.toString(),
+          v3Quote: v3Trade.outputAmount.toString(),
+          v2QuoteGasAdjusted: v2QuoteGasAdjusted.toString(),
+          v2Quote: v2Trade.outputAmount.toString(),
+        },
+        `Swap and approval estimates ${tradeType.toString()} for V2 vs V3 trade`
+      )
+
       return v3QuoteGasAdjusted.greaterThan(v2QuoteGasAdjusted)
     } else {
-      const v3QuoteGasAdjusted = v3TradeGasAdjusted.inputAmount.add(v3ApprovalGasCostInQuoteToken)
+      const v3QuoteGasAdjusted = v3Trade.inputAmount.add(v3TradeAndApprovalGasCostInQuoteToken)
       const v2QuoteGasAdjusted = v2Trade.inputAmount.add(v2TradeAndApprovalGasCostInQuoteToken)
+      console.debug(
+        {
+          v2SwapGasEstimate: v2SwapGasEstimateWei.toString(),
+          v2ApprovalGasEstimate: v2TradeApprovalGasEstimateWei.toString(),
+          v3SwapGasEstimate: v2GasEstimate.toString(),
+          v3ApprovalGasEstimate: v3TradeApprovalGasEstimateWei.toString(),
+          v3QuoteGasAdjusted: v3QuoteGasAdjusted.toString(),
+          v3Quote: v3Trade.outputAmount.toString(),
+          v2QuoteGasAdjusted: v2QuoteGasAdjusted.toString(),
+          v2Quote: v2Trade.outputAmount.toString(),
+        },
+        `Swap and approval estimates ${tradeType.toString()} for V2 vs V3 trade`
+      )
+
       return v2QuoteGasAdjusted.greaterThan(v3QuoteGasAdjusted)
     }
   }, [
@@ -140,12 +169,13 @@ export function useBetterTrade(
     pools,
     quoteToken,
     tradeType,
-    v2SwapGasEstimate,
+    v2SwapGasEstimateWei,
     v2Trade,
-    v2TradeApprovalGasEstimate,
-    v3TradeApprovalGasEstimate,
-    v3TradeGasAdjusted.inputAmount,
-    v3TradeGasAdjusted.outputAmount,
+    v2TradeApprovalGasEstimateWei,
+    v3TradeApprovalGasEstimateWei,
+    v3Trade.inputAmount,
+    v3Trade.outputAmount,
+    v3SwapGasEstimateWei,
     weth,
   ])
 }
