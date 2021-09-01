@@ -113,7 +113,7 @@ export default function PoolFinder() {
         >
           {native0 ? (
             <Row>
-              <CurrencyLogo currency={currency0} />
+              <CurrencyLogo currency={currency0 || undefined} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {native0?.symbol}
               </Text>
@@ -137,7 +137,7 @@ export default function PoolFinder() {
         >
           {native1 ? (
             <Row>
-              <CurrencyLogo currency={currency1} />
+              <CurrencyLogo currency={currency1 || undefined} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {native1?.symbol}
               </Text>

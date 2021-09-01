@@ -260,8 +260,8 @@ export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
   [ChainId.KOVAN]: 13.13,
   [ChainId.MATIC]: 2.1,
   [ChainId.MUMBAI]: 2.1,
-  [ChainId.BSCTESTNET]: 5,
-  [ChainId.BSCMAINNET]: 5,
+  [ChainId.BSCTESTNET]: 3,
+  [ChainId.BSCMAINNET]: 3,
   [ChainId.AVAXTESTNET]: 1.7,
   [ChainId.AVAXMAINNET]: 1.7
 }

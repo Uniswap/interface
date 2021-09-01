@@ -206,6 +206,8 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
     </div>
   )
 
+  const lockedTime = chainId && [96, 56, 43113, 43114].includes(chainId) ? '14' : '30'
+
   const claimedBlock = (
     <div>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
@@ -254,7 +256,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
         <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 10px 0">
           <Trans>TOTAL HARVESTED REWARDS</Trans>
           <InfoHelper
-            text={t`Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).`}
+            text={t`Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~${lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).`}
           />
         </TYPE.body>
         {above1400 ? (

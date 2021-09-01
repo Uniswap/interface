@@ -137,6 +137,7 @@ const Farms = () => {
 
   const rewardTokens = useRewardTokensFullInfo()
 
+  const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
   return (
     <>
       <PageWrapper>
@@ -213,7 +214,7 @@ const Farms = () => {
                       <Trans>My Total Rewards</Trans>
                     </TotalRewardsTitle>
                     <InfoHelper
-                      text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days.`}
+                      text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over ~${lockedTime} days.`}
                     />
                   </TotalRewardsTitleWrapper>
                   <RewardNumberContainer>
@@ -228,7 +229,7 @@ const Farms = () => {
                       )
                     })}
                   </RewardNumberContainer>
-                  <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
+                  <RewardUSD>{totalRewardsUSD ? formattedNum(totalRewardsUSD.toString(), true) : '$0'}</RewardUSD>
                 </TotalRewardsContainer>
                 {shouldShowHarvestAllButton() ? (
                   <HarvestAllButtonContainer>
