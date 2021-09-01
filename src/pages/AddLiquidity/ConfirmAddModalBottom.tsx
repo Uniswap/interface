@@ -52,7 +52,7 @@ export function ConfirmAddModalBottom({
           <Trans>Pooled {tokenA?.symbol}</Trans>
         </TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={tokenA} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
@@ -63,7 +63,7 @@ export function ConfirmAddModalBottom({
           </TYPE.body>
         </TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={tokenB} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
