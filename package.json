@@ -87,6 +87,7 @@
     "multihashes": "^4.0.2",
     "node-vibrant": "^3.1.5",
     "polished": "^3.3.2",
+    "polyfill-object.fromentries": "^1.0.1",
     "prettier": "^2.2.1",
     "qs": "^6.9.4",
     "react": "^17.0.1",
