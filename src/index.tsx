@@ -1,5 +1,6 @@
 import 'inter-ui'
 import '@reach/dialog/styles.css'
+import 'polyfills'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'

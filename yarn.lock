@@ -14776,6 +14776,11 @@ polished@^3.3.2:
   dependencies:
     "@babel/runtime" "^7.12.5"
 
+polyfill-object.fromentries@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/polyfill-object.fromentries/download/polyfill-object.fromentries-1.0.1.tgz#1a5d89e3777684a852c9b6a6a1d2c3f9c262fc86"
+  integrity sha1-Gl2J43d2hKhSybamodLD+cJi/IY=
+
 portfinder@^1.0.26:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"
