@@ -18,17 +18,17 @@ import useTransactionDeadline from './useTransactionDeadline'
  * Not required for V3 as the routing API returns the estimates.
  */
 function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType> | undefined) {
-  const { library, account } = useActiveWeb3React()
+  const { library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
 
   const [v2SwapGasEstimateWei, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
 
   useEffect(() => {
-    if (!library || !routerContract || !trade || !account) return
+    if (!library || !routerContract || !trade) return
 
     const sampleSlippage = new Percent(5, 100)
-    const sampleRecipient = account
+    const sampleRecipient = '0xab5801a7d398351b8be11c439e05c5b3259aec9b'
     const sampleDeadline = deadline?.toNumber() ?? 60
 
     const { methodName, args, value } = Router.swapCallParameters(trade, {
@@ -54,7 +54,7 @@ function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType> | un
     library.estimateGas(tx).then((gasEstimate) => {
       setV2SwapGasEstimate(gasEstimate)
     })
-  }, [account, deadline, library, routerContract, trade])
+  }, [deadline, library, routerContract, trade])
 
   return v2SwapGasEstimateWei
 }
