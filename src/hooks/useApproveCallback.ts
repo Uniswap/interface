@@ -3,19 +3,47 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
+import { useEffect } from '@testing-library/react-hooks/node_modules/@types/react'
+import { BigNumber } from 'ethers'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
   NOT_APPROVED = 'NOT_APPROVED',
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
+}
+
+export function useGasEstimateForApproval(
+  amountToApprove?: CurrencyAmount<Currency>,
+  spender?: string
+): [BigNumber | undefined, boolean] {
+  const [estimatedGas, setEstimatedGas] = useState<BigNumber | undefined>(undefined)
+  const [useExact, setUseExact] = useState<boolean>(false)
+
+  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+  const tokenContract = useTokenContract(token?.address)
+
+  useEffect(() => {
+    if (!tokenContract || !spender || !amountToApprove) return
+
+    tokenContract.estimateGas
+      .approve(spender, MaxUint256)
+      .then((estimatedGas) => setEstimatedGas(estimatedGas))
+      .catch(() => {
+        // general fallback for tokens who restrict approval amounts
+        setUseExact(true)
+        return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
+      })
+  }, [amountToApprove, spender, tokenContract])
+
+  return [estimatedGas, useExact]
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
@@ -46,6 +74,8 @@ export function useApproveCallback(
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
+  const [estimatedGas, useExact] = useGasEstimateForApproval(amountToApprove, spender)
+
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       console.error('approve was called unnecessarily')
@@ -75,13 +105,9 @@ export function useApproveCallback(
       console.error('no spender')
       return
     }
-
-    let useExact = false
-    const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
-      // general fallback for tokens who restrict approval amounts
-      useExact = true
-      return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
-    })
+    if (!estimatedGas) {
+      return
+    }
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
@@ -97,7 +123,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction, chainId])
+  }, [approvalState, chainId, token, tokenContract, amountToApprove, spender, estimatedGas, useExact, addTransaction])
 
   return [approvalState, approve]
 }

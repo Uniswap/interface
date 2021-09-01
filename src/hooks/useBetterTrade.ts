@@ -10,6 +10,7 @@ import { useV2RouterContract } from './useContract'
 import { usePools } from './usePools'
 import { WETH9_EXTENDED } from 'constants/tokens'
 import isZero from 'utils/isZero'
+import { useGasEstimateForApproval } from './useApproveCallback'
 
 /**
  * Computes a gas adjusted quote from a V2 trade, considering both swap gas cost and approval cost.
@@ -28,11 +29,12 @@ export function useBetterTrade(
   v3TradeGasAdjusted: V3Trade<Currency, Currency, TradeType>,
   gasPrice: BigNumber
 ): boolean | undefined {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, library, account } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
-  const v2TradeApprovalGasEstimate = BigNumber.from(10000) // TODO
-  const v3TradeApprovalGasEstimate = BigNumber.from(10000) // TODO
+
+  const [v2TradeApprovalGasEstimate] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+  const [v3TradeApprovalGasEstimate] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
 
   const [v2SwapGasEstimate, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
 
@@ -77,7 +79,7 @@ export function useBetterTrade(
   }, [deadline, library, routerContract, v2Trade])
 
   return useMemo(() => {
-    if (!v2Trade || !weth || !v2SwapGasEstimate) {
+    if (!v2Trade || !weth || !v2SwapGasEstimate || !v2TradeApprovalGasEstimate || !v3TradeApprovalGasEstimate) {
       return undefined
     }
 
