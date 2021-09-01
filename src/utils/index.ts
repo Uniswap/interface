@@ -24,7 +24,11 @@ import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getMaticTokenLogoURL } from './maticTokenMapping'
+import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
 import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
+import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
+import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
+import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -58,7 +62,15 @@ function getEtherscanDomain(chainId: ChainId): string {
     case ChainId.MATIC:
       return 'https://polygonscan.com'
     case ChainId.MUMBAI:
-      return 'https://explorer-mumbai.maticvigil.com'
+      return 'https://mumbai.polygonscan.com'
+    case ChainId.BSCTESTNET:
+      return 'https://testnet.bscscan.com'
+    case ChainId.BSCMAINNET:
+      return 'https://bscscan.com'
+    case ChainId.AVAXTESTNET:
+      return 'https://cchain.explorer.avax-test.network/'
+    case ChainId.AVAXMAINNET:
+      return 'https://cchain.explorer.avax.network/'
   }
 }
 
@@ -89,6 +101,13 @@ export function getEtherscanLink(
 export function getEtherscanLinkText(chainId: ChainId): string {
   if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
     return 'View on Explorer'
+  }
+  if ([ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
+    return 'View on Bscscan'
+  }
+
+  if ([ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
+    return 'View on C-Chain Explorer'
   }
 
   return 'View on Etherscan'
@@ -376,6 +395,18 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.MUMBAI:
       imageURL = getMumbaiTokenLogoURL(address)
       break
+    case ChainId.BSCTESTNET:
+      imageURL = getBscTestnetTokenLogoURL(address)
+      break
+    case ChainId.BSCMAINNET:
+      imageURL = getBscMainnetTokenLogoURL(address)
+      break
+    case ChainId.AVAXTESTNET:
+      imageURL = getAvaxTestnetTokenLogoURL(address)
+      break
+    case ChainId.AVAXMAINNET:
+      imageURL = getAvaxMainnetTokenLogoURL(address)
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address
@@ -393,6 +424,14 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'MATIC'
       case ChainId.MUMBAI:
         return 'MATIC'
+      case ChainId.BSCTESTNET:
+        return 'BNB'
+      case ChainId.BSCMAINNET:
+        return 'BNB'
+      case ChainId.AVAXTESTNET:
+        return 'AVAX'
+      case ChainId.AVAXMAINNET:
+        return 'AVAX'
       default:
         return 'ETH'
     }

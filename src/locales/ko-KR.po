@@ -1,0 +1,1571 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-07-16 09:50+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Language: ko_KR\n"
+"Project-Id-Version: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Report-Msgid-Bugs-To: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Static/About.tsx
+msgid "*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade"
+msgstr "*슬립페이지 발생: 백만달러 유동성에서 십억달러만큼의 토큰 거래가 발생하였을 때"
+
+#: src/pages/Swap/index.tsx
+msgid "+ Add a send (optional)"
+msgstr "+ 보내기 추가 (선택 사항)"
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pools/index.tsx
+#: src/pages/Pools/index.tsx
+msgid "+ Create New Pool"
+msgstr "+ 새 풀 만들기"
+
+#: src/pages/Swap/index.tsx
+msgid "- Remove send"
+msgstr "- 보내기 제거"
+
+#: src/components/PoolList/index.tsx
+msgid "1Yr Fees Collected/Liquidity based on 24H volume annualized"
+msgstr "1년동안 모여진 수수료/24H 거래량기준 유동성"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
+msgstr "<0>팁:</0> 이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 토큰 쌍을 찾을 수 잇습니다."
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "A portion of each trade ({0}%) goes to liquidity providers as a protocol incentive."
+msgstr "각 거래량의 일부가({0}%) 프로토콜 인센티브로써 유동성 공급자에게 전달됩니다."
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "AMP"
+msgstr "AMP"
+
+#: src/components/FarmsList/index.tsx
+msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
+msgstr "AMP = 증폭 계수. 증폭된 풀은 높은 자본 효율성을 제공합니다. 높은 AMP는 높은 자본 효율성을 제공하기 위해서 정해진 가격 범위 안에서 유동성을 증폭시킵니다."
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "AMP Liquidity"
+msgstr "증폭된 유동성"
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
+msgstr "AMP 계수와 풀에 있는 유동성을 곱한 값."
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/index.tsx
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "APY"
+msgstr "APY"
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+msgid "About"
+msgstr "About"
+
+#: src/components/WalletModal/index.tsx
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Accept"
+msgstr "승인"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "Accept update"
+msgstr "업데이트 수락"
+
+#: src/pages/Static/About.tsx
+msgid "Access DMM Liquidity for your Blockchain Platform"
+msgstr "블록체인 플랫폼을 위한 DMM 유동성을 사용할 수 있습니다"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Account"
+msgstr "계정"
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "Active"
+msgstr "활성"
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Active Price Range"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Add"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Static/About.tsx
+msgid "Add Liquidity"
+msgstr "유동성 추가"
+
+#: src/components/PoolList/index.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Add liquidity"
+msgstr "유동성 추가"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
+msgstr "유동성을 추가하고 해당 풀 토큰을 보상으로 받을 수 있습니다. 자신의 풀 점유율에 비례하여 해당 토큰 거래가 이루어 질때마다 다이나믹 수수료를 받게 됩니다. 얻은 수수료는 유동성을 인출할 때 자동으로 인출됩니다."
+
+#: src/pages/Pools/index.tsx
+msgid "Add liquidity:"
+msgstr "유동성 추가:"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Add {0} to Metamask"
+msgstr "메타마스크에 {0} 추가"
+
+#: src/components/Settings/index.tsx
+msgid "Advanced Mode"
+msgstr "고급 모드"
+
+#: src/pages/Static/About.tsx
+msgid "All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing."
+msgstr "개발자가 Dapp을 손쉽게 DMM 유동성에 연결하여 토큰 스왑, 플래시 대출, 온체인 청산 및 포트폴리오 재조정과 같은 DeFi 기능을 수행하는 데 필요한 모든 문서 및 도구가 준비되어 있습니다."
+
+#: src/components/Header/URLWarning.tsx
+msgid "Always make sure the URL is<0>dmm.exchange</0> - bookmark it to be safe."
+msgstr "URL이 <0>dmm.exchange인지 항상 확인하십시오.</0> - 안전을 위해 북마크하세요."
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
+msgstr "증폭 계수. 증폭된 풀은 높은 자본 효율성을 제공합니다. 높은 AMP는 높은 자본 효율성을 제공하기 위해서 정해진 가격 범위 안에서 유동성을 증폭시킵니다. 스테이블 토큰같이 안정적인 토큰 쌍에 더 높은 AMP를 사용할 수 있고 가격 변동이 심한 쌍에는 낮은 AMP가 권장됩니다."
+
+#: src/pages/Static/About.tsx
+msgid "Amplified Liquidity Pools"
+msgstr "증폭된 유동성 풀"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "An update is available for the token list \"{0}\" ({1} to {2})."
+msgstr "토큰 목록 \"{0}\"({1}에서 {2}까지)에 대한 업데이트가 있습니다."
+
+#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
+#: src/pages/Static/About.tsx
+msgid "Analytics"
+msgstr "애널리틱스"
+
+#: src/pages/Static/About.tsx
+msgid "Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps, aggregators, end users) can source liquidity from the DMM."
+msgstr "누구나 토큰 인벤토리에 다양한 토큰 유동성을 제공할 수 있으며 모든 테이커(예: Dapp, 애그리게이터, 일반 사용자)는 DMM 유동성을 손쉽게 사용할 수 있습니다."
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Approve"
+msgstr "승인"
+
+#: src/pages/Swap/index.tsx
+msgid "Approve {0}"
+msgstr "승인{0}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approved"
+msgstr "승인됨"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+msgid "Approving"
+msgstr "승인 중"
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Available for yield farming"
+msgstr "유동성 마이닝 지정 풀"
+
+#: src/components/WalletModal/index.tsx
+msgid "Back"
+msgstr "뒤로"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0}"
+msgstr "잔액: {0}"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+msgid "Balance: {0} {1}-{2} LP"
+msgstr "잔액: {0} {1}-{2} LP"
+
+#: src/components/Header/index.tsx
+msgid "Bridge Assets"
+msgstr "브릿지 애셋"
+
+#: src/pages/Static/About.tsx
+msgid "Bug Bounty"
+msgstr "버그 바운티"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
+msgstr "유동성을 추가하면 자신의 풀 비율에 비례하여 수수료를 얻게 됩니다. 수수료는 유동성이 풀에 추가 된 후로 실시간으로 모이하며 유동성을 인출할때 동시에 인출됩니다."
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
+msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하는 것입니다."
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "CLAIM"
+msgstr ""
+
+#: src/pages/Farms/vesting.tsx
+msgid "CLAIMED"
+msgstr "청구됨"
+
+#: src/pages/Static/About.tsx
+msgid "Capital Amp Factor = 10"
+msgstr "자본 AMP 계수 = 10"
+
+#: src/pages/Static/About.tsx
+msgid "Capital Amp Factor = 5"
+msgstr "자본 AMP 계수 = 5"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Change"
+msgstr "변경"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Claim"
+msgstr "클레임하기"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Claim All"
+msgstr "모두 클레임하기"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Claimed Rewards"
+msgstr "클레임된 보상"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Clear all"
+msgstr "초기화"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Close"
+msgstr "닫기"
+
+#: src/pages/Static/About.tsx
+msgid "Code Audited"
+msgstr "코드 감사"
+
+#: src/pages/Static/About.tsx
+msgid "Committed to Security"
+msgstr "보안에 전념"
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "공통 기지"
+
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Confirm"
+msgstr "확인"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "스왑 확인하기"
+
+#: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Confirm this transaction in your wallet"
+msgstr "지갑에서 이 거래를 승인하세요"
+
+#: src/components/Web3Status/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/Swap/index.tsx
+msgid "Connect Wallet"
+msgstr "지갑 연결"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Connect to a wallet to find pools"
+msgstr "지갑에 연결하여 풀 찾기"
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Connect to a wallet to view your liquidity."
+msgstr "지갑에 연결하여 유동성을 확인하세요."
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Connect wallet"
+msgstr "지갑 연결"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Connected with {name}"
+msgstr "{name}에 연결됨"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address."
+msgstr "Sushiswap의 유동성을 DMM으로 가져올 수 있습니다. 동일 한 토큰으로 AMP=1 기본 풀로 예치될것이며 예치 후에는 DMM-LP 토큰이 제공됩니다. 두 플랫폼 간에 토큰 비율이 다른 경우 일부 토큰은 귀하의 주소로 환불될 수 있습니다."
+
+#: src/components/AccountDetails/Copy.tsx
+msgid "Copied"
+msgstr "복사됨"
+
+#: src/components/AccountDetails/index.tsx
+#: src/components/AccountDetails/index.tsx
+msgid "Copy Address"
+msgstr "주소 복사"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Create a new pool"
+msgstr "새 풀 만들기"
+
+#: src/pages/Pools/index.tsx
+msgid "Create a new pool or select another pair of tokens to view the available pools."
+msgstr "새 풀을 생성하거나 다른 토큰 쌍을 선택하시면 현재 예치가 가능한 풀을 확인 할 수 있습니다."
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
+msgstr "풀의 현재 토큰 쌍 비율입니다. 풀 거래에 따라 비율이 변경됩니다. 이 비율에 따라 유동성을 추가합니다."
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Custom"
+msgstr "사용자 정의"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "DEPOSIT"
+msgstr ""
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "DMM Exchange available in: <0>{0}</0>"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+msgid "DMM Litepaper"
+msgstr "DMM 라이트페이퍼"
+
+#: src/pages/Static/About.tsx
+msgid "DMM can be up to 100x more capital efficient than typical AMMs"
+msgstr "DMM은 일반적인 AMM보다 자본 효율성이 최대 100배 더 높을 수 있습니다"
+
+#: src/components/Menu/index.tsx
+msgid "Dashboard"
+msgstr "대시보드"
+
+#: src/pages/Static/About.tsx
+msgid "DeFi's First"
+msgstr "DeFi의 첫 번째"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+msgid "Deposit: {0} {1}-{2} LP"
+msgstr "예치: {0} {1}-{2} LP"
+
+#: src/pages/Static/About.tsx
+msgid "DevPortal"
+msgstr "개발자 포털"
+
+#: src/pages/Static/About.tsx
+msgid "Developer Support"
+msgstr "개발자 지원"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr "연결 해제"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Dismiss"
+msgstr "무시"
+
+#: src/components/Menu/index.tsx
+msgid "Docs"
+msgstr "문서"
+
+#: src/pages/Static/About.tsx
+msgid "Documentation"
+msgstr "문서"
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Don't see a pool you joined?"
+msgstr "예치한 풀이 보이지 않습니까?"
+
+#: src/pages/Static/About.tsx
+msgid "Dynamic"
+msgstr "동적"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Dynamic Fee Range"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+msgid "Dynamic Fees"
+msgstr "동적 수수료"
+
+#: src/pages/Farms/index.tsx
+msgid "ENDING IN"
+msgstr "종료"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
+
+#: src/pages/Farms/index.tsx
+msgid "Eligible Pools"
+msgstr "지정 풀"
+
+#: src/components/Settings/index.tsx
+msgid "Enables high slippage trades. Use at your own risk."
+msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. 자신의 책임하에 사용하십시오."
+
+#: src/pages/Static/About.tsx
+msgid "Encourage trading"
+msgstr "거래 장려"
+
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "받는 사람을 입력하세요"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "유효한 슬립페지 비율을 입력하십시오"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks_sushi.ts
+#: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/swap/hooks.ts
+msgid "Enter an amount"
+msgstr "금액을 입력"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Enter valid token address"
+msgstr "유효한 토큰 주소를 입력하세요"
+
+#: src/pages/Static/About.tsx
+msgid "Equivalent TVL when compared to typical AMMs"
+msgstr "일반적인 AMM과 비교할 때와 동일한 TVL"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/Web3Status/index.tsx
+msgid "Error"
+msgstr "오류"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Error connecting."
+msgstr "연결하는 동안 오류가 발생했습니다."
+
+#: src/components/WalletModal/index.tsx
+msgid "Error connecting. Try refreshing the page."
+msgstr "연결하는 동안 오류가 발생했습니다. 페이지를 새로고침해 보세요."
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Estimated Refund"
+msgstr "예상 환불"
+
+#: src/components/FarmsList/index.tsx
+msgid "Estimated total annualized yield from fees + rewards"
+msgstr "수수료 + 보상에서 추정된 총 연간 수익률"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "비활성 토큰 목록 확장하기"
+
+#: src/pages/Static/About.tsx
+msgid "Explore pools"
+msgstr "풀 둘러보기"
+
+#: src/pages/Farms/vesting.tsx
+msgid "FULL UNLOCK"
+msgstr "전체 잠금 해제"
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "Fee (24h)"
+msgstr "수수료(24시간)"
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Fee Range"
+msgstr "수수료 범위"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
+msgstr "수수료는 유동성 공급자의 수익을 극대화하기 위해 시장 상황에 따라 동적으로 조정됩니다."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Find a token by searching for its name or symbol or by pasting its address below."
+msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 아래에 주소를 붙여넣주세요."
+
+#: src/pages/Static/About.tsx
+msgid "Forum"
+msgstr "포럼"
+
+#: src/pages/Swap/index.tsx
+msgid "From"
+msgstr "발신자"
+
+#: src/pages/Swap/index.tsx
+msgid "From (estimated)"
+msgstr "부터(예상)"
+
+#: src/pages/Static/About.tsx
+msgid "Fully On-chain; <0/> Straightforward Integration"
+msgstr "완전한 온체인; <0/> 간단한 연동"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Fully Vested"
+msgstr "베스팅 완료됨"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+msgid "Get {0}-{1} LP ↗"
+msgstr "{0}-{1} LP 받기 ↗"
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "Github"
+msgstr "Github"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "HARVEST"
+msgstr ""
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+msgid "Harvest"
+msgstr "수확하다"
+
+#: src/pages/Farms/index.tsx
+msgid "Harvest All"
+msgstr "모두 수확하기"
+
+#: src/pages/Farms/index.tsx
+msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
+msgstr "아래 목록에서 자신이 예치한 풀을 클릭하여 보상을 받으십시오."
+
+#: src/pages/Pool/index.tsx
+msgid "Here you can view all your liquidity positions and remove/add more liquidity."
+msgstr "여기에서 자신의 모든 유동성 포지션을 확인하고 유동성을 제거/추가할 수 있습니다."
+
+#: src/pages/Static/About.tsx
+msgid "Higher earnings potential for liquidity providers, reducing the impact of IL"
+msgstr "유동성 공급자를 위한 더 높은 수익을 창출할 수 있으며 IL의 영향을 감소시킵니다"
+
+#: src/components/FarmHistoryModal/index.tsx
+#: src/pages/Farms/index.tsx
+msgid "History"
+msgstr "기록"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "I understand"
+msgstr "이해했습니다"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "If you purchase a token from this list, you may not be able to sell it back."
+msgstr "이 목록에서 구매된 토큰은 되팔지 못할 수도 있습니다."
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Import"
+msgstr "가져오기"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import List"
+msgstr "목록 가져오기"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import Pool"
+msgstr "풀 가져오기"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Import Token"
+msgstr "토큰 가져오기"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Import Tokens"
+msgstr "토큰 가져오기"
+
+#: src/components/SearchModal/ImportList.tsx
+msgid "Import at your own risk"
+msgstr "자신의 책임하에 가져오기"
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "Import it."
+msgstr "가져오기."
+
+#: src/components/WalletModal/index.tsx
+msgid "Import your Wallet"
+msgstr "지갑 가져오기"
+
+#: src/components/Settings/index.tsx
+msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
+msgstr "고급 모드에서는 '트랜잭션 확인' 하기 버튼이 비활성화되어 있습니다. 높은 슬립피지거래를 허용함으로써 좋지 못한 결과를 초래할수있습니다."
+
+#: src/pages/Static/About.tsx
+msgid "Increase LP Profit"
+msgstr "LP 수익 증대"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Initial ratio"
+msgstr ""
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Initializing..."
+msgstr "초기화..."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Input is estimated. You will sell at most"
+msgstr "예상된 입력값입니다"
+
+#: src/hooks/useWrapCallback.ts
+msgid "Insufficient W{0} balance"
+msgstr ""
+
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
+
+#: src/hooks/useWrapCallback.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/mint/hooks_for_migration.ts
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+msgid "Insured by"
+msgstr "보험 제공"
+
+#: src/state/mint/hooks_for_migration.ts
+msgid "Invalid pair"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Invalid pair."
+msgstr "잘못된 쌍입니다."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "잘못된 수신자"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Inventory ratio:"
+msgstr "재고 비율:"
+
+#: src/pages/Static/About.tsx
+msgid "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
+msgstr "카이버DMM 거래 수수료는 <0>동적으로 조정됩니다.</0> 온체인 시장 상황에 따라서 변동성이 큰 시장(평소보다 높은 거래량)에서 수수료는 자동으로 최적의 수준으로 증가하여 비영구적 손실의 영향을 줄입니다. 변동성이 낮은 기간에는 더 많은 거래를 장려하기 위해 수수료가 감소합니다."
+
+#: src/pages/Static/About.tsx
+msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
+msgstr "카이버DMM의 프로그래밍 가능한 가격 곡선을 통해 유동성 풀 생성자는 적절한 가격 곡선을 설정하고 사전에 증폭된 풀을 생성하여"
+
+#: src/pages/Farms/vesting.tsx
+msgid "LOCKED"
+msgstr "잠김"
+
+#: src/pages/Farms/index.tsx
+msgid "Learn More →"
+msgstr "더 알아보기 →"
+
+#: src/pages/Static/About.tsx
+msgid "Less tokens required for high liquidity"
+msgstr "높은 유동성에 필요한 토큰 감소"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Liquidity Provider Fee"
+msgstr "유동성 공급자 수수료"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "목록"
+
+#: src/pages/Static/About.tsx
+msgid "Litepaper"
+msgstr "라이트페이퍼"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Loaded"
+msgstr "불러움"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Loading"
+msgstr "로딩중"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Locked Rewards"
+msgstr "잠긴 보상"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "최대"
+
+#: src/components/Header/URLWarning.tsx
+msgid "Make sure the URL is<0>dmm.exchange</0>"
+msgstr "URL이<0>dmm.exchange인지 확인하십시오.</0>"
+
+#: src/pages/Static/About.tsx
+msgid "Maker"
+msgstr "메이커"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Manage"
+msgstr "관리"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Manage Liquidity in Rewards Pool"
+msgstr "보상 풀의 유동성 관리"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Manage Token Lists"
+msgstr "토큰 목록 관리"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Manage this pool."
+msgstr "풀 관리하기."
+
+#: src/pages/PoolFinder/index.tsx
+msgid "Manage your pools."
+msgstr "자신의 풀 관리하기."
+
+#: src/pages/Static/About.tsx
+msgid "Market"
+msgstr "마켓"
+
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Max"
+msgstr "최대"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Maximum sold"
+msgstr "최대 판매"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/V1.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Migrate"
+msgstr "이전"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+msgid "Migrate Liquidity"
+msgstr "유동성 마이그레이션"
+
+#: src/components/Menu/index.tsx
+msgid "Migrate     Liquidity"
+msgstr "마이그레이션 유동성"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Minimum received"
+msgstr "최소 수령"
+
+#: src/components/Header/index.tsx
+msgid "My Dashboard"
+msgstr "대시보드"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/index.tsx
+msgid "My Deposit"
+msgstr "내 예치금"
+
+#: src/pages/Pool/index.tsx
+msgid "My Liquidity Pools"
+msgstr "내 유동성 풀"
+
+#: src/pages/Pool/lp.tsx
+msgid "My Pools on External Platforms"
+msgstr "외부 플랫폼의 내 풀"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/index.tsx
+msgid "My Rewards"
+msgstr "내 보상"
+
+#: src/pages/Farms/index.tsx
+msgid "My Total Rewards"
+msgstr "내 총 보상"
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "My liquidity"
+msgstr "나의 유동성"
+
+#: src/components/Header/index.tsx
+msgid "New"
+msgstr "신규"
+
+#: src/pages/Static/About.tsx
+msgid "No external and <0/> centralized oracle risk"
+msgstr "외부 및 <0/> 중앙 집중식 Oracle 위험 없음"
+
+#: src/pages/Pool/index.tsx
+#: src/pages/Pool/lp.tsx
+msgid "No liquidity found."
+msgstr "유동성이 없습니다."
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "No records found."
+msgstr "기록이 없습니다."
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "No results found."
+msgstr "결과를 발견하지 못했습니다."
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "No {type} pool found."
+msgstr "{type} 풀을 찾을 수 없습니다."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Note: There are existing pools for this token pair. Please check"
+msgstr ""
+
+#: src/components/PositionCard/index.tsx
+msgid "Note: {warningToken} is now <10% of the pool. Pool might become inactive if {warningToken} reaches 0%"
+msgstr "참고: {warningToken}은 이제 풀의 <10% 입니다. {warningToken}가 0%에 도달하면 풀이 비활성화될 수 있습니다"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "꺼짐"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "켜짐"
+
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
+msgstr "위험을 알고 있는 경우에만 이 모드를 사용하십시오"
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "끄기"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "켜기"
+
+#: src/pages/Static/About.tsx
+msgid "On-chain and Open Source"
+msgstr "온체인 및 오픈 소스"
+
+#: src/components/Web3ReactManager/index.tsx
+msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고침하거나 다른 브라우저나 기기에서 방문하세요."
+
+#: src/pages/Static/About.tsx
+msgid "Open Access to <0/> Liquidity"
+msgstr "<0/> 유동성에 대한 공개 액세스"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
+msgstr "예상된 가격입니다. 가격이 {0}% 이상 변경되면 거래가 취소됩니다."
+
+#: src/components/swap/SwapModalHeader.tsx
+msgid "Output is estimated. You will receive at least"
+msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
+
+#: src/pages/Static/About.tsx
+msgid "Permissionless and Frictionless Liquidity for DeFi"
+msgstr "DeFi를 위한 무허가 및 풍부한 유동성"
+
+#: src/components/Settings/index.tsx
+msgid "Please Confirm"
+msgstr "확인해주세요"
+
+#: src/components/WalletModal/index.tsx
+msgid "Please connect to the appropriate Ethereum network."
+msgstr "이더리움 네트워크에 연결하십시오."
+
+#: src/components/NavigationTabs/index.tsx
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool"
+msgstr "풀"
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool Address"
+msgstr "풀 주소"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Pool Found!"
+msgstr "풀 발견!"
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pool share"
+msgstr "풀 비율"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Pool tokens in rewards pool:"
+msgstr "보상 된 풀 토큰:"
+
+#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
+#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "Pooled {0}"
+msgstr "풀링된 {0}"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Pooled {0}:"
+msgstr "풀링된 {0}:"
+
+#: src/components/Header/index.tsx
+msgid "Pools"
+msgstr "풀"
+
+#: src/components/FarmsList/index.tsx
+msgid "Pools | AMP"
+msgstr "Pools | AMP"
+
+#: src/pages/Static/About.tsx
+msgid "Powered by"
+msgstr "Powered by"
+
+#: src/components/Settings/index.tsx
+msgid "Preferences"
+msgstr "기본 설정"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Price"
+msgstr "가격"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "가격 영향"
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact High"
+msgstr "높은 가격 변동"
+
+#: src/pages/Swap/index.tsx
+msgid "Price Impact Too High"
+msgstr "가격 변동이 너무 큼"
+
+#: src/components/PoolList/ListItem.tsx
+msgid "Price Range"
+msgstr "가격대"
+
+#: src/components/PositionCard/index.tsx
+msgid "Price range {0}/{1}"
+msgstr "가격대 {0}/{1}"
+
+#: src/pages/Swap/index.tsx
+msgid "Price:"
+msgstr "가격:"
+
+#: src/pages/Static/About.tsx
+msgid "Privacy"
+msgstr "프라이버시"
+
+#: src/components/WalletModal/index.tsx
+msgid "Privacy Policy"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+msgid "Protocol"
+msgstr "프로토콜"
+
+#: src/pages/Static/About.tsx
+msgid "Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency"
+msgstr "더 큰 유연성과 매우 높은 자본 효율성으로 마찰 없는 암호화 유동성 제공"
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Ratio"
+msgstr "비율"
+
+#: src/components/PositionCard/index.tsx
+msgid "Ratio:"
+msgstr "비율:"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Receive Native Token"
+msgstr "네이티브 토큰 받기"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Receive Wrapped Token"
+msgstr "래핑된 토큰 받기"
+
+#: src/pages/Pools/index.tsx
+msgid "Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees are automatically claimed when you withdraw your liquidity."
+msgstr "귀하의 포지션을 나타내는 유동성 풀 토큰을 받고 풀 점유율에 비례하는 수수료를 받으십시오. 유동성을 인출하면 수수료가 자동으로 청구됩니다."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Recent Transactions"
+msgstr "최근 거래"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Recipient"
+msgstr "수신자"
+
+#: src/pages/Static/About.tsx
+msgid "Reduce the impact of IL"
+msgstr "IL의 영향 감소"
+
+#: src/components/PositionCard/V1.tsx
+#: src/components/PositionCard/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Remove"
+msgstr "제거"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Remove Liquidity"
+msgstr "유동성 제거"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Remove list"
+msgstr "목록 삭제"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
+msgstr "풀 토큰을 제거하면 풀 지분에 비례하는 현재 비율로 포지션이 기본 토큰으로 다시 전환됩니다. 발생한 수수료는 귀하가 받는 금액에 포함됩니다."
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+msgid "Removing {0} {1} and {2} {3}"
+msgstr "{0} {1} 및 {2} {3} 제거"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/ListItem.tsx
+msgid "Reward"
+msgstr "보상"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Rewards: {0} {1}"
+msgstr "보상: {0} {1}"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr "경로"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Routing through these tokens resulted in the best price for your trade."
+msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수 있습니다."
+
+#: src/pages/Farms/index.tsx
+msgid "START IN"
+msgstr "에서 시작"
+
+#: src/components/Search/index.tsx
+msgid "Search by pool address"
+msgstr "풀 주소로 검색"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Search name or paste address"
+msgstr "이름 검색 또는 주소 붙여넣기"
+
+#: src/pages/Pools/index.tsx
+#: src/pages/Pools/index.tsx
+msgid "Select Pair"
+msgstr "토큰 페어 선택"
+
+#: src/components/NetworkModal/index.tsx
+msgid "Select a Network"
+msgstr ""
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "Select a Token"
+msgstr "토큰 선택"
+
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/PoolsCurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/state/swap/hooks.ts
+msgid "Select a token"
+msgstr "토큰 선택"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+#: src/pages/PoolFinder/index.tsx
+msgid "Select a token to find your liquidity."
+msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr ""
+
+#: src/components/PoolList/index.tsx
+msgid "Show More Pools"
+msgstr "더 많은 풀 보기"
+
+#: src/components/AccountDetails/index.tsx
+msgid "Show Portis"
+msgstr "Show Portis"
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "Slippage"
+msgstr "슬립피지"
+
+#: src/pages/Swap/index.tsx
+msgid "Slippage Tolerance:"
+msgstr "슬립피지 범위:"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "슬립피지 범위"
+
+#: src/pages/Farms/index.tsx
+msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
+msgstr "DMM 유동성 공급자 토큰을 스테이킹하여 토큰 보상을 받으세요."
+
+#: src/pages/Farms/index.tsx
+msgid "Staked Only"
+msgstr "스테이킹 풀만 보기"
+
+#: src/components/FarmsList/ListItem.tsx
+#: src/components/FarmsList/index.tsx
+msgid "Staked TVL"
+msgstr "스테이킹된 TVL"
+
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap"
+msgstr "토큰 스왑"
+
+#: src/components/swap/SwapModalFooter.tsx
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+msgid "Swap Anyway"
+msgstr "스왑하기"
+
+#: src/pages/Farms/vesting.tsx
+msgid "TOTAL HARVESTED REWARDS"
+msgstr "총 수확된 보상"
+
+#: src/components/Menu/index.tsx
+#: src/pages/Static/About.tsx
+msgid "Terms"
+msgstr "약관"
+
+#: src/components/WalletModal/index.tsx
+msgid "Terms of Use"
+msgstr ""
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
+msgstr "거래 규모로 인한 시장 가격과 귀하의 가격 간의 차이입니다. 오른쪽 상단 구성에서 슬립피지 가격 영향 허용 범위를 조정합니다."
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
+msgstr "토큰 목록 \"{0}\"이(가) <0>{1}(으)로 업데이트되었습니다.</0> ."
+
+#: src/pages/Pools/index.tsx
+msgid "There are no pools for this token pair."
+msgstr "이 토큰 쌍에 대한 풀이 없습니다."
+
+#: src/pages/RemoveLiquidity/migrate_sushi.tsx
+msgid "There is no existing pool for this token pair. You will be creating a new pool with AMP=1 and migrating tokens from Sushiswap to DMM."
+msgstr "이 토큰 쌍에 대한 기존 풀이 없습니다. AMP=1인 새 풀을 만들고 Sushiswap에서 DMM으로 토큰을 마이그레이션합니다."
+
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "There is no existing pool for this token pair. You will be creating a new pool with AMP=1 and migrating tokens from Uniswap to DMM."
+msgstr "이 토큰 쌍에 대한 기존 풀이 없습니다. AMP=1로 새 풀을 만들고 Uniswap에서 DMM으로 토큰을 마이그레이션합니다."
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "이 토큰은 활성 토큰 목록에 표시되지 않습니다. 거래하려는 토큰이 맞는지 확인하십시오."
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tip: Custom tokens are stored locally in your browser"
+msgstr "팁: 사용자 지정 토큰은 브라우저에 로컬로 저장됩니다"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Token"
+msgstr "토큰"
+
+#: src/components/NumericalInput/index.tsx
+msgid "Token Amount"
+msgstr "토큰 금액"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Token Name"
+msgstr "토큰 이름"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Token pool analytics →"
+msgstr "토큰 풀 분석 →"
+
+#: src/components/SearchModal/Manage.tsx
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "Tokens"
+msgstr "토큰"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "비활성 목록의 토큰. 아래에서 특정 토큰을 가져오거나 '관리'를 클릭하여 더 많은 목록을 활성화하십시오."
+
+#: src/pages/Static/About.tsx
+msgid "Total AMP Liquidity"
+msgstr "총 AMP 유동성"
+
+#: src/pages/Pools/index.tsx
+msgid "Total AMP Liquidity:"
+msgstr "총 AMP 유동성:"
+
+#: src/pages/Static/About.tsx
+msgid "Total Trading Volume"
+msgstr "총 거래량"
+
+#: src/pages/Pools/index.tsx
+msgid "Total Trading Volume:"
+msgstr "총 거래량:"
+
+#: src/pages/Static/About.tsx
+msgid "Total Value Locked"
+msgstr "예치된 자산 가치"
+
+#: src/pages/Pools/index.tsx
+msgid "Total Value Locked:"
+msgstr "예치된 자산 가치:"
+
+#: src/pages/Farms/index.tsx
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
+
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
+msgstr "AMP를 기반으로 한 이 쌍의 거래 가능한 가격대. 가격이 이 범위보다 낮거나 높으면 풀이 비활성화될 수 있습니다."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
+msgstr ""
+
+#: src/components/PoolList/ListItem.tsx
+#: src/pages/Pools/index.tsx
+msgid "Trade"
+msgstr "거래"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction Submitted"
+msgstr "제출된 거래"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction time limit"
+msgstr "거래 시간 제한"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction will revert if it is pending for longer than the indicated time"
+msgstr "표시된 시간보다 오래 보류 중인 경우 트랜잭션이 거절됩니다"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction will revert if there is an adverse rate change that is higher than this %"
+msgstr "이 %보다 높은 비율 변경이 있는 경우 거래가 거절됩니다"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Try Again"
+msgstr "다시 시도"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Advanced Mode"
+msgstr "고급 모드 켜기"
+
+#: src/pages/Static/About.tsx
+msgid "Typical AMM"
+msgstr "일반적인 AMM"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "UNKNOWN"
+msgstr ""
+
+#: src/pages/Farms/vesting.tsx
+msgid "UNLOCKED"
+msgstr "잠금 해제"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "Unknown"
+msgstr "알 수 없음"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr "불분명 한 출처"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Unlocked Rewards"
+msgstr "잠금 해제된 보상"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Unlocked: {0} {1}"
+msgstr "잠금 해제: {0} {1}"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "Update list"
+msgstr "목록 업데이트"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Use this tool to find pairs that don't automatically appear in the interface."
+msgstr "이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 토큰 쌍을 찾을 수 잇습니다."
+
+#: src/components/PositionCard/V1.tsx
+msgid "V1"
+msgstr "V1"
+
+#: src/pages/Farms/vesting.tsx
+msgid "VESTING SCHEDULES"
+msgstr "베스팅 일정"
+
+#: src/pages/Farms/index.tsx
+msgid "Vesting"
+msgstr "베스팅"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Vesting started: {0}"
+msgstr "베스팅 시작됨: {0}"
+
+#: src/components/PositionCard/index.tsx
+msgid "View accrued fees and analytics"
+msgstr "발생한 수수료 및 분석 보기"
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "View list"
+msgstr "목록 보기"
+
+#: src/components/ModalViews/index.tsx
+msgid "View transaction on Etherscan"
+msgstr "Etherscan에서 거래 보기"
+
+#: src/components/PoolList/ListItem.tsx
+#: src/components/PoolList/index.tsx
+msgid "Volume (24h)"
+msgstr "볼륨(24시간)"
+
+#: src/components/FarmHistoryModal/index.tsx
+msgid "WITHDRAW"
+msgstr ""
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting For Confirmation"
+msgstr "확인 대기 중"
+
+#: src/components/AddressInputPanel/index.tsx
+msgid "Wallet Address or ENS name"
+msgstr "지갑 주소 또는 ENS 이름"
+
+#: src/components/Web3Status/index.tsx
+msgid "Wrong Network"
+msgstr "잘못된 네트워크"
+
+#: src/components/Header/index.tsx
+msgid "Yield"
+msgstr "유동성 마이닝"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "You are creating a pool"
+msgstr ""
+
+#: src/components/NetworkModal/index.tsx
+msgid "You are currently browsing DMM on the {0} network"
+msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다"
+
+#: src/pages/PoolFinder/PoolFinderExternal.tsx
+msgid "You don’t have liquidity in this {type} pool yet."
+msgstr "이 {type} 풀에는 아직 유동성이 없습니다."
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/migrate_uni.tsx
+msgid "You will receive"
+msgstr "다음 금액 만큼 받을 것입니다"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your pool share:"
+msgstr "풀 비중:"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your position"
+msgstr "당신의 위치"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
+
+#: src/components/PositionCard/PositionCardSUSHI.tsx
+#: src/components/PositionCard/PositionCardUNI.tsx
+#: src/components/PositionCard/index.tsx
+msgid "Your total pool tokens:"
+msgstr "총 풀 토큰:"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "당신의 거래는 frontrun을 당할 수 있습니다"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "거래가 실패할 수 있습니다"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
+msgstr "거래 승인 버튼을 누르기 전에 큰 가격 변동이 있는 경우 거래가 거절됩니다."
+
+#: src/components/AccountDetails/index.tsx
+msgid "Your transactions will appear here..."
+msgstr "거래가 여기에 표시됩니다..."
+
+#: src/components/WalletModal/index.tsx
+msgid "and"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "and Pool share"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+msgid "better slippage"
+msgstr "더 나은 슬립피지"
+
+#: src/pages/Static/About.tsx
+msgid "for providers and"
+msgstr "제공자 및"
+
+#: src/pages/Static/About.tsx
+msgid "for users compared to AMMs."
+msgstr "다른 AMM에 비해서는"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "here"
+msgstr ""
+
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "분"
+
+#: src/pages/Static/About.tsx
+msgid "much higher capital efficiency"
+msgstr "훨씬 더 높은 자본 효율성"
+
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalHeader.tsx
+#: src/components/swap/SwapModalHeader.tsx
+msgid "or the transaction will revert."
+msgstr "그렇지 않으면 거래가 거절될것입니다."
+
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/pages/AddLiquidity/PoolPriceBar.tsx
+msgid "per"
+msgstr ""
+
+#: src/components/SearchModal/ImportRow.tsx
+msgid "via {0}"
+msgstr "{0}을(를) 통해"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr "{0} 토큰 목록을 통해"
+
+#: src/components/Web3Status/index.tsx
+msgid "{0} Pending"
+msgstr "{0} 보류 중"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{0} added"
+msgstr "{0} 추가됨"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{0} removed"
+msgstr "{0} 삭제됨"
+
+#: src/components/SearchModal/ImportList.tsx
+#: src/components/SearchModal/ManageLists.tsx
+msgid "{0} tokens"
+msgstr "{0} 토큰"
+
+#: src/components/Popups/ListUpdatePopup.tsx
+msgid "{numTokensChanged} tokens updated"
+msgstr "{numTokensChanged} 토큰이 업데이트되었습니다"
+
+#: src/pages/Farms/index.tsx
+msgid "{remainingBlocks} blocks"
+msgstr "{remainingBlocks} 블록"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "• Added by user"
+msgstr "• 사용자가 추가함"

@@ -1,10 +1,10 @@
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Edit } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { t, Trans } from '@lingui/macro'
 
 import { Currency, ETHER, Token } from 'libs/sdk/src'
 import ImportRow from './ImportRow'
@@ -65,7 +65,6 @@ export function CurrencySearch({
   showImportView,
   setImportToken
 }: CurrencySearchProps) {
-  const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
@@ -167,15 +166,17 @@ export function CurrencySearch({
       <PaddedColumn gap="14px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
-            Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
+            <Trans>Select a token</Trans>
+            <QuestionHelper
+              text={t`Find a token by searching for its name or symbol or by pasting its address below.`}
+            />
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <SearchInput
           type="text"
           id="token-search-input"
-          placeholder={t('tokenSearchPlaceholder')}
+          placeholder={t`Search name or paste address`}
           value={searchQuery}
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={handleInput}
@@ -186,7 +187,7 @@ export function CurrencySearch({
         )}
         <RowBetween>
           <Text fontSize={14} fontWeight={500}>
-            Token Name
+            <Trans>Token Name</Trans>
           </Text>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
@@ -222,7 +223,7 @@ export function CurrencySearch({
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            No results found.
+            <Trans>No results found.</Trans>
           </TYPE.main>
         </Column>
       )}
@@ -234,7 +235,9 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
+              <TYPE.main color={theme.blue1}>
+                <Trans>Manage Token Lists</Trans>
+              </TYPE.main>
             </RowFixed>
           </ButtonText>
         </Row>

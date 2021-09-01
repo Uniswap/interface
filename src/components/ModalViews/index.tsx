@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useActiveWeb3React } from '../../hooks'
-
+import { Trans } from '@lingui/macro'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled, { ThemeContext } from 'styled-components'
 import { RowBetween } from '../Row'
@@ -32,7 +32,9 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify={'center'}>
         {children}
-        <TYPE.subHeader>Confirm this transaction in your wallet</TYPE.subHeader>
+        <TYPE.subHeader>
+          <Trans>Confirm this transaction in your wallet</Trans>
+        </TYPE.subHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -63,7 +65,9 @@ export function SubmittedView({
         {children}
         {chainId && hash && (
           <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ marginLeft: '4px' }}>
-            <TYPE.subHeader>View transaction on Etherscan</TYPE.subHeader>
+            <TYPE.subHeader>
+              <Trans>View transaction on Etherscan</Trans>
+            </TYPE.subHeader>
           </ExternalLink>
         )}
       </AutoColumn>

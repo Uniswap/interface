@@ -1,4 +1,5 @@
 import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
+import { t, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
 import Row, { RowBetween, RowFixed } from 'components/Row'
@@ -108,7 +109,11 @@ export default function ManageTokens({
               onChange={handleInput}
             />
           </Row>
-          {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
+          {searchQuery !== '' && !isAddressSearch && (
+            <TYPE.error error={true}>
+              <Trans>Enter valid token address</Trans>
+            </TYPE.error>
+          )}
           {searchToken && (
             <Card backgroundColor={theme.bg2} padding="10px 0">
               <ImportRow
@@ -124,11 +129,13 @@ export default function ManageTokens({
         <PaddedColumn gap="lg">
           <RowBetween>
             <TYPE.main fontWeight={600}>
-              {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
+              {userAddedTokens?.length} <Trans>Custom</Trans> {userAddedTokens.length === 1 ? t`Token` : t`Tokens`}
             </TYPE.main>
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
-                <TYPE.blue>Clear all</TYPE.blue>
+                <TYPE.blue>
+                  <Trans>Clear all</Trans>
+                </TYPE.blue>
               </ButtonText>
             )}
           </RowBetween>
@@ -136,7 +143,9 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
+        <TYPE.darkGray>
+          <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
+        </TYPE.darkGray>
       </Footer>
     </Wrapper>
   )

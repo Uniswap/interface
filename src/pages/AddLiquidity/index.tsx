@@ -6,6 +6,8 @@ import { Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
+import { t, Trans } from '@lingui/macro'
+
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard, OutlineCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -481,7 +483,7 @@ export default function AddLiquidity({
             content={() =>
               !linkToUnamplifiedPool ? (
                 <ConfirmationModalContent
-                  title={isCreate ? 'You are creating a pool' : 'You will receive'}
+                  title={isCreate ? t`You are creating a pool` : t`You will receive`}
                   onDismiss={handleDismissConfirmation}
                   topContent={modalHeader}
                   bottomContent={modalBottom}
@@ -519,14 +521,18 @@ export default function AddLiquidity({
                   <AutoColumn gap="10px">
                     {isPoolExisted && (
                       <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                        Note: There are existing pools for this token pair. Please check{' '}
-                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
+                        <Trans>Note: There are existing pools for this token pair. Please check</Trans>{' '}
+                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>
+                          <Trans>here</Trans>
+                        </Link>
                       </TYPE.link>
                     )}
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                      You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
-                      supply below will set the initial price of this pool. Once you are satisfied with the rate,
-                      proceed to supply liquidity.
+                      <Trans>
+                        You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
+                        supply below will set the initial price of this pool. Once you are satisfied with the rate,
+                        proceed to supply liquidity.
+                      </Trans>
                     </TYPE.link>
                   </AutoColumn>
                 </BlueCard>
@@ -575,13 +581,13 @@ export default function AddLiquidity({
                 <OutlineCard2 padding="0px" borderRadius={'20px'}>
                   <Row padding="4px 0 1rem 0" style={{ justifyContent: 'center' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                      {noLiquidity ? 'Initial ratio' : 'Ratio'} and Pool share
+                      {noLiquidity ? t`Initial ratio` : t`Ratio`} <Trans>and Pool share</Trans>
                     </TYPE.subHeader>
                   </Row>
 
                   <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                      Inventory ratio:
+                      <Trans>Inventory ratio:</Trans>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={500} fontSize={14}>
                       {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
@@ -605,9 +611,12 @@ export default function AddLiquidity({
                 {!!pair ? <>&nbsp;=&nbsp;{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
               </ActiveText>
               <QuestionHelper
-                text={
-                  'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
-                }
+                text={t({
+                  id:
+                    'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.',
+                  message:
+                    'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+                })}
               />
             </RowFlat2>
 
@@ -632,18 +641,22 @@ export default function AddLiquidity({
               <OutlineCard2>
                 <AutoRow>
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Dynamic Fee Range:{' '}
+                    <Trans>Dynamic Fee Range</Trans>:{' '}
                     {feeRangeCalc(
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
                   </Text>
-                  <QuestionHelper text="Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers." />
+                  <QuestionHelper
+                    text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
+                  />
                 </AutoRow>
               </OutlineCard2>
             )}
 
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>
+                <Trans>Connect Wallet</Trans>
+              </ButtonLight>
             ) : (
               <AutoColumn gap={'md'}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||

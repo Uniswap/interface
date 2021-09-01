@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
@@ -47,18 +48,22 @@ export function ConfirmAddModalBottom({
   return (
     <>
       <RowBetween>
-        <TYPE.body>Pooled {tokenA?.symbol}</TYPE.body>
+        <TYPE.body>
+          <Trans>Pooled {tokenA?.symbol}</Trans>
+        </TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={tokenA} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
         <TYPE.body>
-          <TYPE.body>Pooled {tokenB?.symbol}</TYPE.body>
+          <TYPE.body>
+            <Trans>Pooled {tokenB?.symbol}</Trans>
+          </TYPE.body>
         </TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={tokenB} style={{ marginRight: '8px' }} />
+          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
           <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>

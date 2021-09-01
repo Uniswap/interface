@@ -4,11 +4,15 @@ import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { MATIC_TOKEN_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
+import { AVAX_TOKEN_LISTS, BSC_TOKEN_LISTS, MATIC_TOKEN_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
 import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
 import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
+import { BSC_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.testnet.tokenlist'
+import { BSC_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/bsc.mainnet.tokenlist'
+import { AVAX_TESTNET_TOKEN_LIST } from '../../constants/tokenLists/avax.testnet.tokenlist'
+import { AVAX_MAINNET_TOKEN_LIST } from '../../constants/tokenLists/avax.mainnet.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
@@ -48,7 +52,11 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
   [ChainId.MATIC]: {},
-  [ChainId.MUMBAI]: {}
+  [ChainId.MUMBAI]: {},
+  [ChainId.BSCTESTNET]: {},
+  [ChainId.BSCMAINNET]: {},
+  [ChainId.AVAXTESTNET]: {},
+  [ChainId.AVAXMAINNET]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -104,6 +112,14 @@ export function useDMMTokenList(): TokenAddressMap {
       return listToTokenMap(MATIC_TOKEN_LIST)
     case ChainId.MUMBAI:
       return listToTokenMap(MUMBAI_TOKEN_LIST)
+    case ChainId.BSCTESTNET:
+      return listToTokenMap(BSC_TESTNET_TOKEN_LIST)
+    case ChainId.BSCMAINNET:
+      return listToTokenMap(BSC_MAINNET_TOKEN_LIST)
+    case ChainId.AVAXTESTNET:
+      return listToTokenMap(AVAX_TESTNET_TOKEN_LIST)
+    case ChainId.AVAXMAINNET:
+      return listToTokenMap(AVAX_MAINNET_TOKEN_LIST)
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }
@@ -151,9 +167,25 @@ export function useAllListsByChainId(): {
         obj[key] = allLists[key]
         return obj
       }, INITIAL_LISTS)
+  } else if (chainId && [ChainId.BSCTESTNET, ChainId.BSCMAINNET].includes(chainId)) {
+    lists = Object.keys(allLists)
+      .filter(key => BSC_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else if (chainId && [ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
+    lists = Object.keys(allLists)
+      .filter(key => AVAX_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
   } else {
     lists = Object.keys(allLists)
-      .filter(key => !MATIC_TOKEN_LISTS.includes(key))
+      .filter(
+        key => !MATIC_TOKEN_LISTS.includes(key) && !BSC_TOKEN_LISTS.includes(key) && !AVAX_TOKEN_LISTS.includes(key)
+      )
       .reduce((obj, key) => {
         obj[key] = allLists[key]
         return obj
@@ -171,7 +203,11 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
     [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
     [ChainId.MUMBAI]: { ...map1[ChainId.MUMBAI], ...map2[ChainId.MUMBAI] },
-    [ChainId.MATIC]: { ...map1[ChainId.MATIC], ...map2[ChainId.MATIC] }
+    [ChainId.MATIC]: { ...map1[ChainId.MATIC], ...map2[ChainId.MATIC] },
+    [ChainId.BSCTESTNET]: { ...map1[ChainId.BSCTESTNET], ...map2[ChainId.BSCTESTNET] },
+    [ChainId.BSCMAINNET]: { ...map1[ChainId.BSCMAINNET], ...map2[ChainId.BSCMAINNET] },
+    [ChainId.AVAXTESTNET]: { ...map1[ChainId.AVAXTESTNET], ...map2[ChainId.AVAXTESTNET] },
+    [ChainId.AVAXMAINNET]: { ...map1[ChainId.AVAXMAINNET], ...map2[ChainId.AVAXMAINNET] }
   }
 }
 

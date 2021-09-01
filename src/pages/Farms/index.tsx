@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useMedia } from 'react-use'
+import { t, Trans } from '@lingui/macro'
 
 import { ChainId } from 'libs/sdk/src'
 import { ButtonPrimary } from 'components/Button'
 import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useFarmsData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -60,7 +61,6 @@ import useFairLaunch from 'hooks/useFairLaunch'
 const FARM_ENDED = 'Ended'
 
 const Farms = () => {
-  const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
@@ -137,6 +137,7 @@ const Farms = () => {
 
   const rewardTokens = useRewardTokensFullInfo()
 
+  const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
   return (
     <>
       <PageWrapper>
@@ -158,12 +159,16 @@ const Farms = () => {
           <TabWrapper>
             <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
               <PoolTitleContainer>
-                <span style={{ marginRight: '4px' }}>{t('allPools')}</span>
+                <span style={{ marginRight: '4px' }}>
+                  <Trans>Eligible Pools</Trans>
+                </span>
                 {loading && <Loader />}
               </PoolTitleContainer>
             </Tab>
             <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
-              <div>{t('vesting')}</div>
+              <div>
+                <Trans>Vesting</Trans>
+              </div>
             </Tab>
             {activeTab === 0 && (
               <StakedOnlyToggleWrapper>
@@ -172,14 +177,16 @@ const Farms = () => {
                   checked={stakedOnly}
                   onClick={() => setStakedOnly(!stakedOnly)}
                 />
-                <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
+                <StakedOnlyToggleText>
+                  <Trans>Staked Only</Trans>
+                </StakedOnlyToggleText>
               </StakedOnlyToggleWrapper>
             )}
           </TabWrapper>
           <div>
             <HistoryButton onClick={toggleFarmHistoryModal}>
               <img src={HistoryImg} alt="HistoryImg" />
-              History
+              <Trans>History</Trans>
             </HistoryButton>
           </div>
         </TabContainer>
@@ -192,22 +199,22 @@ const Farms = () => {
             <HeadingContainer>
               <LearnMoreContainer>
                 <LearnMoreInstruction>
-                  Stake your DMM Liquidity Provider tokens to earn token rewards.
+                  <Trans>Stake your DMM Liquidity Provider tokens to earn token rewards.</Trans>
                 </LearnMoreInstruction>
                 <LearnMoreLinkContainer>
                   <ExternalLink href="https://blog.kyber.network/rainmaker-kyber-dmm-liquidity-mining-is-live-e64e977baffc">
-                    Learn More →
+                    <Trans>Learn More →</Trans>
                   </ExternalLink>
                 </LearnMoreLinkContainer>
               </LearnMoreContainer>
               <HarvestAllContainer>
                 <TotalRewardsContainer>
                   <TotalRewardsTitleWrapper>
-                    <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
+                    <TotalRewardsTitle>
+                      <Trans>My Total Rewards</Trans>
+                    </TotalRewardsTitle>
                     <InfoHelper
-                      text={
-                        'Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days.'
-                      }
+                      text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over ~${lockedTime} days.`}
                     />
                   </TotalRewardsTitleWrapper>
                   <RewardNumberContainer>
@@ -222,7 +229,7 @@ const Farms = () => {
                       )
                     })}
                   </RewardNumberContainer>
-                  <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
+                  <RewardUSD>{totalRewardsUSD ? formattedNum(totalRewardsUSD.toString(), true) : '$0'}</RewardUSD>
                 </TotalRewardsContainer>
                 {shouldShowHarvestAllButton() ? (
                   <HarvestAllButtonContainer>
@@ -232,19 +239,19 @@ const Farms = () => {
                       padding="10px 36px"
                       onClick={handleClickHarvestAll}
                     >
-                      Harvest All
+                      <Trans>Harvest All</Trans>
                     </ButtonPrimary>
                   </HarvestAllButtonContainer>
                 ) : (
                   <HarvestAllInstruction>
-                    Harvest your rewards by clicking your eligible pool/s in the list below.
+                    <Trans>Harvest your rewards by clicking your eligible pool/s in the list below.</Trans>
                   </HarvestAllInstruction>
                 )}
               </HarvestAllContainer>
             </HeadingContainer>
 
             <RemainingTimeContainer>
-              <EndInTitle>{!isFarmStarted ? 'START IN' : 'ENDING IN'}:</EndInTitle>
+              <EndInTitle>{!isFarmStarted ? t`START IN` : t`ENDING IN`}:</EndInTitle>
               <div>
                 {!blockNumber ? (
                   <Loader />
@@ -252,7 +259,9 @@ const Farms = () => {
                   `${FARM_ENDED}`
                 ) : (
                   <span>
-                    <span style={{ marginRight: '4px' }}>{remainingBlocks} blocks</span>
+                    <span style={{ marginRight: '4px' }}>
+                      <Trans>{!remainingBlocks ? <Loader /> : remainingBlocks} blocks</Trans>
+                    </span>
                     <span>(~ {formattedEstimatedRemainingTime})</span>
                   </span>
                 )}
@@ -268,6 +277,7 @@ const Farms = () => {
         )}
       </PageWrapper>
       <FarmHistoryModal farms={farms} />
+      <SwitchLocaleLink />
     </>
   )
 }

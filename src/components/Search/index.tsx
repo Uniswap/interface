@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import styled from 'styled-components'
 import { Search as SearchIcon } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 const Container = styled.div`
   z-index: 30;
@@ -66,14 +66,12 @@ interface SearchProps {
 }
 
 export const Search = ({ searchValue, setSearchValue }: SearchProps) => {
-  const { t } = useTranslation()
-
   return (
     <Container>
       <Wrapper>
         <Input
           type="text"
-          placeholder={t('searchByPoolAddress')}
+          placeholder={t`Search by pool address`}
           value={searchValue}
           onChange={e => {
             setSearchValue(e.target.value)

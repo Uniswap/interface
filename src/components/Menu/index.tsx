@@ -2,6 +2,7 @@ import React, { ReactNode, useRef } from 'react'
 import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
 
 import { ChainId } from 'libs/sdk/src'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -118,29 +119,29 @@ export default function Menu() {
         <MenuFlyout>
           <NavMenuItem to="/myPools">
             <Monitor size={14} />
-            Dashboard
+            <Trans>Dashboard</Trans>
           </NavMenuItem>
           <NavMenuItem to="/about">
             <Info size={14} />
-            About
+            <Trans>About</Trans>
           </NavMenuItem>
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <NavMenuItem to="/migration">
               <Zap size={14} />
-              Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
+              <Trans>Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity</Trans>
             </NavMenuItem>
           )}
           <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
             <PieChart size={14} />
-            Analytics
+            <Trans>Analytics</Trans>
           </MenuItem>
           <MenuItem id="link" href="https://docs.dmm.exchange">
             <BookOpen size={14} />
-            Docs
+            <Trans>Docs</Trans>
           </MenuItem>
           <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
             <FileText size={14} />
-            Terms
+            <Trans>Terms</Trans>
           </MenuItem>
         </MenuFlyout>
       )}

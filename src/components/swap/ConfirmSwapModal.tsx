@@ -1,5 +1,6 @@
 import { currencyEquals, Trade, Currency } from 'libs/sdk/src'
 import React, { useCallback, useMemo } from 'react'
+import { t } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -92,7 +93,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title="Confirm Swap"
+          title={t`Confirm Swap`}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

@@ -266,4 +266,10 @@ body {
 .staked-only-switch div {
   background:  ${({ theme }) => theme.primary1};
 }
+
+#language-selector {
+  &:focus-visible {
+    outline-width: 0;
+  }
+}
 `

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
-import { useTranslation } from 'react-i18next'
 import { JSBI, Pair } from 'libs/sdk/src'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import { useMedia } from 'react-use'
+import { t, Trans } from '@lingui/macro'
 
 import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
@@ -71,7 +71,6 @@ const SORT_FIELD = {
 }
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
-  const { t } = useTranslation()
   const above1400 = useMedia('(min-width: 1400px)') // Wide desktop screen
 
   const transformedSubgraphPoolsData: {
@@ -181,14 +180,16 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     return above1400 ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
-          <ClickableText>Pool</ClickableText>
+          <ClickableText>
+            <Trans>Pool</Trans>
+          </ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>AMP</ClickableText>
+          <ClickableText>
+            <Trans>AMP</Trans>
+          </ClickableText>
           <InfoHelper
-            text={
-              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
-            }
+            text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
           />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
@@ -198,7 +199,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection)
             }}
           >
-            AMP Liquidity
+            <Trans>AMP Liquidity</Trans>
             {sortedColumn === SORT_FIELD.LIQ ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -210,7 +211,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
           <InfoHelper
-            text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+            text={t`AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.`}
           />
         </Flex>
         <Flex alignItems="center">
@@ -220,7 +221,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection)
             }}
           >
-            Volume (24h)
+            <Trans>Volume (24h)</Trans>
             {sortedColumn === SORT_FIELD.VOL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -239,7 +240,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.FEES ? true : !sortDirection)
             }}
           >
-            Fee (24h)
+            <Trans>Fee (24h)</Trans>
             {sortedColumn === SORT_FIELD.FEES ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -258,7 +259,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
             }}
           >
-            APY
+            <Trans>APY</Trans>
             {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -269,23 +270,27 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
-          <InfoHelper text={'1Yr Fees Collected/Liquidity based on 24H volume annualized'} />
+          <InfoHelper text={t`1Yr Fees Collected/Liquidity based on 24H volume annualized`} />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Ratio</ClickableText>
+          <ClickableText>
+            <Trans>Ratio</Trans>
+          </ClickableText>
           <InfoHelper
-            text={
-              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
-            }
+            text={t`Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.`}
           />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>My liquidity</ClickableText>
+          <ClickableText>
+            <Trans>My liquidity</Trans>
+          </ClickableText>
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Add liquidity</ClickableText>
+          <ClickableText>
+            <Trans>Add liquidity</Trans>
+          </ClickableText>
         </Flex>
       </TableHeader>
     ) : null
@@ -345,7 +350,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           }}
           disabled={page >= maxPage}
         >
-          {t('showMorePools')}
+          <Trans>Show More Pools</Trans>
         </ButtonEmpty>
       </LoadMoreButtonContainer>
       <PoolDetailModal />

@@ -1,5 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# generated i18n
+/src/locales/**/*.js
+
 # dependencies
 /node_modules
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
@@ -21,6 +22,12 @@ const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.MATIC]: {
     chainId: '0x89'
+  },
+  [ChainId.BSCMAINNET]: {
+    chainId: '0x38'
+  },
+  [ChainId.AVAXMAINNET]: {
+    chainId: '0xA86A'
   }
 }
 
@@ -58,6 +65,28 @@ const ADD_NETWORK_PARAMS: {
     },
     rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
     blockExplorerUrls: ['https://polygonscan.com/']
+  },
+  [ChainId.BSCMAINNET]: {
+    chainId: '0x38',
+    chainName: 'BSC',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18
+    },
+    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com/']
+  },
+  [ChainId.AVAXMAINNET]: {
+    chainId: '0xA86A',
+    chainName: 'AVAX',
+    nativeCurrency: {
+      name: 'AVAX',
+      symbol: 'AVAX',
+      decimals: 18
+    },
+    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+    blockExplorerUrls: ['https://cchain.explorer.avax.network/']
   }
 }
 
@@ -155,12 +184,14 @@ export default function NetworkModal(): JSX.Element | null {
   return (
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
       <ModalContentWrapper>
-        <ModalHeader onClose={toggleNetworkModal} title="Select a Network" />
+        <ModalHeader onClose={toggleNetworkModal} title={t`Select a Network`} />
 
-        <InstructionText>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</InstructionText>
+        <InstructionText>
+          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
+        </InstructionText>
 
         <NetworkList>
-          {[ChainId.MAINNET, ChainId.MATIC].map((key: ChainId, i: number) => {
+          {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">

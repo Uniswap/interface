@@ -15,6 +15,10 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
     opacity: 1;
   }
 
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
+
   ${({ theme }) => theme.mediaWidth.upToLarge`
     z-index: 99;
   `}

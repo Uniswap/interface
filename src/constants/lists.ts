@@ -14,9 +14,12 @@ const KLEROS_LIST = 't2crtokens.eth'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 const QUICK_SWAP = 'https://unpkg.com/quickswap-default-token-list@1.0.67/build/quickswap-default.tokenlist.json'
+const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
+const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
+const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
-
+export const BYPASS_LIST = [PANGOLIN]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COMPOUND_LIST,
@@ -32,10 +35,15 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   KLEROS_LIST,
   GEMINI_LIST,
   QUICK_SWAP,
+  PANCAKE_TOP100,
+  PANCAKE_EXTENDED,
+  PANGOLIN,
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 
 export const MATIC_TOKEN_LISTS: string[] = [QUICK_SWAP]
+export const BSC_TOKEN_LISTS: string[] = [PANCAKE_TOP100, PANCAKE_EXTENDED]
+export const AVAX_TOKEN_LISTS: string[] = [PANGOLIN]
 
 // default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = []

@@ -1,9 +1,9 @@
-import { ChainId, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, ETHER } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -160,6 +160,7 @@ const BridgeExternalLink = styled(ExternalLink)`
   font-size: 16px;
   color: inherit;
   border: 1px solid ${({ theme }) => theme.bg3};
+  white-space: nowrap;
   :hover {
     text-decoration: none;
   }
@@ -277,6 +278,14 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/${KNC[chainId as ChainId].address}`
     case ChainId.MUMBAI:
       return `/pools/0x19395624C030A11f58e820C3AeFb1f5960d9742a/${KNC[chainId as ChainId].address}`
+    case ChainId.BSCTESTNET:
+      return `/pools/BNB`
+    case ChainId.BSCMAINNET:
+      return `/pools/BNB`
+    case ChainId.AVAXTESTNET:
+      return `/pools/AVAX`
+    case ChainId.AVAXMAINNET:
+      return `/pools/AVAX`
     default:
       return '/pools/ETH'
   }
@@ -284,7 +293,6 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 
 export default function Header() {
   const { account, chainId, library } = useActiveWeb3React()
-  const { t } = useTranslation()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
@@ -300,16 +308,18 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
+            <Trans>Swap</Trans>
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
-            {t('pools')}
+            <Trans>Pools</Trans>
           </StyledNavLink>
 
           <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
             <YieldMenuWrapper>
-              {t('yield')}
-              <NewText>{t('new')}</NewText>
+              <Trans>Yield</Trans>
+              <NewText>
+                <Trans>New</Trans>
+              </NewText>
             </YieldMenuWrapper>
           </StyledNavLink>
 
@@ -325,11 +335,13 @@ export default function Header() {
                 (pathname.startsWith('/find') && pathname.endsWith('find'))
               }
             >
-              {t('My Dashboard')}
+              <Trans>My Dashboard</Trans>
             </StyledNavLink>
           </HideSmall>
 
-          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
+          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+            <Trans>Analytics</Trans>
+          </StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <MigrateLiquidityWrapper>
@@ -340,14 +352,14 @@ export default function Header() {
                   Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
                 }
               >
-                Migrate Liquidity
+                <Trans>Migrate Liquidity</Trans>
               </StyledNavLink>
             </MigrateLiquidityWrapper>
           )}
 
           <AboutWrapper>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
-              {t('About')}
+              <Trans>About</Trans>
             </StyledNavLink>
           </AboutWrapper>
         </HeaderLinks>
@@ -356,7 +368,10 @@ export default function Header() {
         <HeaderElement>
           {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
             <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
-              <HideText>Bridge&nbsp;Assets&nbsp;</HideText>↗
+              <HideText>
+                <Trans>Bridge Assets</Trans>
+              </HideText>
+              ↗
             </BridgeExternalLink>
           )}
           <HideSmall>
@@ -369,7 +384,14 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} {chainId && [1, 3, 4, 5, 42].includes(chainId) ? `ETH` : `MATIC`}
+                {userEthBalance?.toSignificant(4)}{' '}
+                {chainId && [1, 3, 4, 5, 42].includes(chainId)
+                  ? `ETH`
+                  : chainId && [137, 80001].includes(chainId)
+                  ? `MATIC`
+                  : chainId && [43113, 43114].includes(chainId)
+                  ? `AVAX`
+                  : `BNB`}
               </BalanceText>
             ) : null}
             <Web3Status />

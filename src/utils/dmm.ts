@@ -145,6 +145,14 @@ export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
       return ChainIdSUSHI.MATIC
     case ChainIdDMM.MUMBAI:
       return ChainIdSUSHI.MATIC_TESTNET
+    case ChainIdDMM.BSCTESTNET:
+      return ChainIdSUSHI.BSC_TESTNET
+    case ChainIdDMM.BSCMAINNET:
+      return ChainIdSUSHI.BSC
+    case ChainIdDMM.AVAXTESTNET:
+      return ChainIdSUSHI.FUJI
+    case ChainIdDMM.AVAXMAINNET:
+      return ChainIdSUSHI.AVALANCHE
   }
 }
 
@@ -302,8 +310,10 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
 }
 
 export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainIdDMM): Currency {
-  if (chainId && [137, 80001].includes(chainId) && currency === Currency.ETHER) {
-    return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
+  if (chainId && currency === Currency.ETHER) {
+    if ([137, 80001].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
+    if ([97, 56].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BNB', 'BNB')
+    if ([43113, 43114].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'AVAX', 'AVAX')
   }
 
   return currency
@@ -410,7 +420,14 @@ export function useRewardTokensFullInfo(): Token[] {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokens()
   const allTokens = useAllTokens()
-  const nativeName = chainId && [137, 80001].includes(chainId) ? 'MATIC' : 'ETH'
+  const nativeName =
+    chainId && [137, 80001].includes(chainId)
+      ? 'MATIC'
+      : chainId && [97, 56].includes(chainId)
+      ? 'BNB'
+      : chainId && [43113, 43114].includes(chainId)
+      ? 'AVAX'
+      : 'ETH'
   return !!rewardTokens
     ? rewardTokens.map(address =>
         address.toLowerCase() === ZERO_ADDRESS.toLowerCase()

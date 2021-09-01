@@ -1,17 +1,16 @@
 import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
 import { ExpandedContent } from 'components/FarmsList/ListItem'
 import { AutoRow } from 'components/Row'
 import useVesting from 'hooks/useVesting'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-
+import { t, Trans } from '@lingui/macro'
 import { TYPE } from 'theme'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
-import { useBlockNumber, useKNCPrice, useTokensPrice } from 'state/application/hooks'
+import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
 import { Fraction, JSBI, Token } from 'libs/sdk/src'
-import { AVERAGE_BLOCK_TIME_IN_SECSS, KNC } from 'constants/index'
+import { AVERAGE_BLOCK_TIME_IN_SECSS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import InfoHelper from 'components/InfoHelper'
@@ -20,13 +19,6 @@ import { useFarmRewardsUSD } from 'utils/dmm'
 import { Reward } from 'state/farms/types'
 
 import { useMedia } from 'react-use'
-
-const VestAllGroup = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
-  grid-template-areas: 'total vestable vest';
-  margin-bottom: 32px;
-`
 
 const VestSchedule = styled.div`
   display: grid;
@@ -70,7 +62,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const { schedules } = useVesting(rewardTokens)
-  console.log('==schedules', schedules)
 
   const info = schedules.reduce<{
     [key: string]: {
@@ -163,7 +154,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting(rewardTokens)
   const onClaimAll = async () => {
     if (!chainId || !account) return
-    console.log('===claim all active')
     setPendingTx(true)
     const addresses = Object.keys(info).map(k => info[k].token.address)
     const indices = Object.keys(info).reduce<number[][]>((acc, k) => {
@@ -178,7 +168,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
 
   const onClaimAllFully = async () => {
     // if (!chainId || !account) return
-    // console.log('===claim all fully')
     // setPendingTx(true)
     // await vestAtIndex(KNC[chainId].address, fullyIndexes)
     // setPendingTx(false)
@@ -203,7 +192,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   const lockedBlock = (
     <div>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-        Locked Rewards
+        <Trans>Locked Rewards</Trans>
       </TYPE.body>
       {Object.keys(info).map(k => (
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -217,10 +206,12 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
     </div>
   )
 
+  const lockedTime = chainId && [96, 56, 43113, 43114].includes(chainId) ? '14' : '30'
+
   const claimedBlock = (
     <div>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-        Claimed Rewards
+        <Trans>Claimed Rewards</Trans>
       </TYPE.body>
       {Object.keys(info).map(k => (
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -238,7 +229,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
     <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
       <div>
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-          Unlocked Rewards
+          <Trans>Unlocked Rewards</Trans>
         </TYPE.body>
         {Object.keys(info).map(k => (
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -250,22 +241,22 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
           {formattedNum(unlockedUSD.toString(), true)}
         </TYPE.body>
       </div>
-      <div>
-        <ButtonPrimary height="30px" onClick={onClaimAll}>
-          Claim All
-        </ButtonPrimary>
-      </div>
+      {Object.keys(info).length > 0 && (
+        <div>
+          <ButtonPrimary height="30px" onClick={onClaimAll}>
+            <Trans>Claim All</Trans>
+          </ButtonPrimary>
+        </div>
+      )}
     </Tag>
   )
   return (
     <>
       <ExpandedContent>
         <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 10px 0">
-          TOTAL HARVESTED REWARDS
+          <Trans>TOTAL HARVESTED REWARDS</Trans>
           <InfoHelper
-            text={
-              'Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).'
-            }
+            text={t`Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~${lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).`}
           />
         </TYPE.body>
         {above1400 ? (
@@ -294,11 +285,9 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
         <VestSchedule style={{ padding: ' 0 0 20px 0', margin: '0 0 20px 0', borderBottom: '1px solid #404b51' }}>
           <AutoRow>
             <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 10px 0 0">
-              VESTING SCHEDULES
+              <Trans>VESTING SCHEDULES</Trans>
               <InfoHelper
-                text={
-                  'Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).'
-                }
+                text={t`Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).`}
               />
             </TYPE.body>
           </AutoRow>
@@ -388,7 +377,6 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const { vestAtIndex } = useVesting(rewardTokens)
   const onVest = async () => {
     if (!chainId || !account) return
-    console.log('===vest', schedule[4].address, schedule[5])
     setPendingTx(true)
     await vestAtIndex(schedule[4].address, [schedule[5]])
     setPendingTx(false)
@@ -396,7 +384,9 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const rewardBlock = (
     <AutoRow gap={'5px'} style={{ flex: '2' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16}>
-        Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
+        <Trans>
+          Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
+        </Trans>
       </TYPE.body>
 
       <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
@@ -404,7 +394,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
       </TYPE.body>
       {vestedAndVestablePercent == 100 && !fullyVestedAlready && (
         <Tag tag={'active'} style={{ color: '#1f292e', fontSize: '14px', padding: '6px 20px' }}>
-          Fully Vested
+          <Trans>Fully Vested</Trans>
         </Tag>
       )}
     </AutoRow>
@@ -412,18 +402,20 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
   const claimBlock = !fullyVestedAlready && (
     <AutoRow gap={'5px'} style={{ flex: '1' }}>
       <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
-        Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
+        <Trans>
+          Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
+        </Trans>
       </Tag>
 
       <ButtonPrimary height="30px" onClick={onVest} style={{ flex: '1' }}>
-        Claim
+        <Trans>Claim</Trans>
       </ButtonPrimary>
     </AutoRow>
   )
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
-        Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}
+        <Trans>Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}</Trans>
       </TYPE.body>
 
       {above1400 ? (
@@ -456,7 +448,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
                 top: '-35px'
               }}
             >
-              CLAIMED <br />
+              <Trans>CLAIMED</Trans> <br />
               {fixedFormatting(BigNumber.from(schedule[3]), 18)}
             </TYPE.body>
             {/* <TYPE.body
@@ -517,7 +509,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
                     left: `${vestedPercent < 10 ? '10' : vestedPercent > 80 ? '80' : vestedPercent}%`
                   }}
                 >
-                  UNLOCKED <br />
+                  <Trans>UNLOCKED</Trans> <br />
                   {fixedFormatting(vestableAmount, 18)}
                 </TYPE.body>
               </>
@@ -537,7 +529,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
                     left: `${vestedAndVestablePercent}%`
                   }}
                 >
-                  {fixedFormatting(unvestableAmount, 18)} LOCKED
+                  {fixedFormatting(unvestableAmount, 18)} <Trans>LOCKED</Trans>
                 </TYPE.body>
 
                 {/* <TYPE.body
@@ -573,7 +565,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
                 right: '0'
               }}
             >
-              FULL UNLOCK <br />
+              <Trans>FULL UNLOCK</Trans> <br />
               {endTimestamp &&
                 `${new Date(endTimestamp * 1000).toLocaleDateString()}${
                   !!endIn ? `(${getFormattedTimeFromSecond(endIn)} left)` : ''

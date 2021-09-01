@@ -2,8 +2,9 @@ import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 're
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { t, Trans } from '@lingui/macro'
 
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token, WETH } from 'libs/sdk/src'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'libs/sdk/src'
 import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -58,7 +59,7 @@ const FixedContentRow = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(10)}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`
@@ -112,7 +113,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { chainId, account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
@@ -130,13 +131,13 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={nativeCurrency} size={'24px'} />
+      <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
           {nativeCurrency?.symbol}
         </Text>
         <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {nativeCurrency?.name} {!isOnSelectedList && customAdded && '• Added by user'}
+          {nativeCurrency?.name} {!isOnSelectedList && customAdded && t`• Added by user`}
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
@@ -203,10 +204,12 @@ export default function CurrencyList({
                 <RowFixed>
                   <TokenListLogoWrapper src={TokenListLogo} />
                   <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
-                    Expanded results from inactive Token Lists
+                    <Trans>Expanded results from inactive Token Lists</Trans>
                   </TYPE.main>
                 </RowFixed>
-                <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
+                <QuestionHelper
+                  text={t`Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists.`}
+                />
               </RowBetween>
             </LightGreyCard>
           </FixedContentRow>

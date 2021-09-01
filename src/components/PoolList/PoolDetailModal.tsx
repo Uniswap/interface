@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Modal from 'components/Modal'
-import LocalLoader from 'components/LocalLoader'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, usePoolDetailModalToggle } from 'state/application/hooks'
 import { useSelectedPool } from 'state/pools/hooks'
