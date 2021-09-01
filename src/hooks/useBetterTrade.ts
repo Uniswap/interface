@@ -13,41 +13,15 @@ import isZero from 'utils/isZero'
 import { useGasEstimateForApproval } from './useApproveCallback'
 
 /**
- * Computes a gas adjusted quote from a V2 trade, considering both swap gas cost and approval cost.
- * Takes a gas adjusted V3 quote and further adjusts it considering approval cost.
- * Compares the 2 trades, and returns true if the V3 trade is better.
- *
- * This is a temporary solution while the smart order router does not consider V2 routes.
- *
- * @param v2Trade The V2 trade to compare against.
- * @param v3TradeGasAdjusted The V3 trade where the quote amount is a gas adjusted value.
- * @param gasPrice The gas price to use for computing gas adjusted quotes.
- * @returns True if the V3 trade is better. False otherwise.
+ * Return V2 Router swap gas estimate.
+ * Not required for V3 as the routing API returns the estimates.
  */
-export function useBetterTrade(
-  v2Trade: V2Trade<Currency, Currency, TradeType>,
-  v3Trade: V3Trade<Currency, Currency, TradeType>,
-  v3SwapGasEstimateWei: BigNumber,
-  gasPrice: BigNumber
-): boolean | undefined {
-  const { chainId, library, account } = useActiveWeb3React()
+function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType>) {
+  const { library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
 
-  const [v2TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
-  const [v3TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
-
   const [v2SwapGasEstimateWei, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
-
-  const tradeType = v2Trade.tradeType
-  const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade.outputAmount.currency : v2Trade.inputAmount.currency
-  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-
-  const pools = usePools([
-    [quoteToken, weth, FeeAmount.HIGH],
-    [quoteToken, weth, FeeAmount.MEDIUM],
-    [quoteToken, weth, FeeAmount.LOW],
-  ])
 
   useEffect(() => {
     if (!library || !routerContract) return
@@ -56,7 +30,7 @@ export function useBetterTrade(
     const sampleRecipient = '0x0'
     const sampleDeadline = deadline?.toNumber() ?? 60
 
-    const { methodName, args, value } = Router.swapCallParameters(v2Trade, {
+    const { methodName, args, value } = Router.swapCallParameters(trade, {
       feeOnTransfer: false,
       allowedSlippage: sampleSlippage,
       recipient: sampleRecipient,
@@ -77,7 +51,47 @@ export function useBetterTrade(
           }
 
     library.estimateGas(tx).then((gasEstimate) => setV2SwapGasEstimate(gasEstimate))
-  }, [deadline, library, routerContract, v2Trade])
+  }, [deadline, library, routerContract, trade])
+
+  return v2SwapGasEstimateWei
+}
+
+/**
+ * Computes a gas adjusted quote from a V2 trade, considering both swap gas cost and approval cost.
+ * Takes a gas adjusted V3 quote and further adjusts it considering approval cost.
+ * Compares the 2 trades, and returns true if the V3 trade is better.
+ *
+ * This is a temporary solution while the smart order router does not consider V2 routes.
+ *
+ * @param v2Trade The V2 trade to compare against.
+ * @param v3TradeGasAdjusted The V3 trade where the quote amount is a gas adjusted value.
+ * @param gasPrice The gas price to use for computing gas adjusted quotes.
+ * @returns True if the V3 trade is better. False otherwise.
+ */
+export function useBetterTrade(
+  v2Trade: V2Trade<Currency, Currency, TradeType>,
+  v3Trade: V3Trade<Currency, Currency, TradeType>,
+  v3SwapGasEstimateWei: BigNumber,
+  gasPrice: BigNumber
+): boolean | undefined {
+  const { chainId, account } = useActiveWeb3React()
+
+  // accounts for trade approval in case either router isn't approved yet
+  const [v2TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+  const [v3TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+
+  // only estimate V2 swap gas since routing api returns v3 gas estimates
+  const v2SwapGasEstimateWei = useV2SwapGasEstimate(v2Trade)
+
+  const tradeType = v2Trade.tradeType
+  const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade.outputAmount.currency : v2Trade.inputAmount.currency
+  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
+
+  const pools = usePools([
+    [quoteToken, weth, FeeAmount.HIGH],
+    [quoteToken, weth, FeeAmount.MEDIUM],
+    [quoteToken, weth, FeeAmount.LOW],
+  ])
 
   return useMemo(() => {
     if (

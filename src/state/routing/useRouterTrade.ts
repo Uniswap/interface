@@ -11,6 +11,7 @@ import { useIsLegacyRouter, useUserSlippageToleranceWithDefault, useUserTransact
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useRoutes } from './useRoutes'
 import ReactGA from 'react-ga'
+import { BigNumber } from 'ethers'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
   const localBlockNumber = useBlockNumber()
@@ -96,10 +97,15 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       tradeType: TradeType.EXACT_INPUT,
     })
 
+    const gasPriceWei = BigNumber.from(quoteResult?.gasPriceWei)
+    const gasUseEstimate = BigNumber.from(quoteResult?.gasUseEstimate)
+
     return {
       // always return VALID regardless of isFetching status
       state: V3TradeState.VALID,
       trade: trade,
+      gasPriceWei,
+      gasUseEstimate,
     }
   }, [amountIn, currencyOut, isLoading, quoteResult, isError, routes, routingAPIEnabled])
 }
@@ -157,9 +163,14 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       tradeType: TradeType.EXACT_OUTPUT,
     })
 
+    const gasPriceWei = BigNumber.from(quoteResult?.gasPriceWei)
+    const gasUseEstimate = BigNumber.from(quoteResult?.gasUseEstimate)
+
     return {
       state: V3TradeState.VALID,
       trade: trade,
+      gasPriceWei,
+      gasUseEstimate,
     }
   }, [amountOut, currencyIn, isLoading, quoteResult, isError, routes, routingAPIEnabled])
 }
