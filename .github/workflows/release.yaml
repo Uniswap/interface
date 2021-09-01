@@ -56,7 +56,7 @@ jobs:
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
       - name: Pin to Crust
-        uses: crustio/ipfs-crust-action@v1.0.8
+        uses: crustio/ipfs-crust-action@v2.0.3
         continue-on-error: true
         timeout-minutes: 2
         with:
