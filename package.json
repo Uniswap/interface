@@ -89,6 +89,7 @@
     "polished": "^3.3.2",
     "polyfill-object.fromentries": "^1.0.1",
     "prettier": "^2.2.1",
+    "prettier-plugin-organize-imports": "^2.3.3",
     "qs": "^6.9.4",
     "react": "^17.0.1",
     "react-confetti": "^6.0.0",
