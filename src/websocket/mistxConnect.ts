@@ -86,7 +86,7 @@ export interface SwapReq {
   to: string
 }
 
-const serverUrl = (process.env.REACT_APP_SERVER_URL as string) || 'http://localhost:4000'
+const serverUrl = 'http://localhost:4000'
 
 let socket: MistxSocket | null = null
 
