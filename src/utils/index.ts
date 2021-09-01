@@ -30,7 +30,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
 const getExplorerPrefix = (chainId: ChainId) => {
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
-      return 'https://explorer.arbitrum.io/#'
+      return 'https://arbiscan.io'
     case ChainId.ARBITRUM_RINKEBY:
       return 'https://rinkeby-explorer.arbitrum.io/#'
     case ChainId.XDAI:
