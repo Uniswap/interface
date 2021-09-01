@@ -7,6 +7,14 @@ const TooltipContainer = styled.div<{ width?: string }>`
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;
+
+  background: ${({ theme }) => theme.bg2};
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.bg3};
+
+  /* make TooltipContainer customizable either through styles or ReactNode */
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg2};
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

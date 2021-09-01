@@ -25,7 +25,7 @@ export function useRoutes(
 
     const parsedCurrencyOut = currencyOut?.isNative
       ? Ether.onChain(currencyOut.chainId)
-      : parseToken(quoteResult.route[0][0].tokenOut)
+      : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
     return quoteResult.route.map((route) => {
       const rawAmountIn = route[0].amountIn
