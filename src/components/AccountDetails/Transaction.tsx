@@ -1,12 +1,11 @@
-import styled from 'styled-components/macro'
 import { CheckCircle, Triangle } from 'react-feather'
-
+import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
+import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { RowFixed } from '../Row'
 import Loader from '../Loader'
+import { RowFixed } from '../Row'
 
 const TransactionWrapper = styled.div``
 

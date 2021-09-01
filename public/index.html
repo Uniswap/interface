@@ -24,66 +24,66 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preconnect" href="https://www.google-analytics.com/">
+    <link rel="preconnect" href="https://www.google-analytics.com/" />
 
     <style>
+      * {
+        font-family: 'Inter', sans-serif;
+        box-sizing: border-box;
+      }
+
+      @supports (font-variation-settings: normal) {
         * {
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
+          font-family: 'Inter var', sans-serif;
         }
+      }
 
-        @supports (font-variation-settings: normal) {
-            * {
-                font-family: 'Inter var', sans-serif;
-            }
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-        }
+      button {
+        user-select: none;
+      }
 
-        button {
-            user-select: none;
-        }
+      html {
+        font-size: 16px;
+        font-variant: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+      }
 
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        background: radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%);
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
         html {
-            font-size: 16px;
-            font-variant: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+          background-color: #212429;
         }
-
-        #background-radial-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            pointer-events: none;
-            width: 200vw;
-            height: 200vh;
-            background: radial-gradient(50% 50% at 50% 50%, #fc077d10 0%, rgba(255, 255, 255, 0) 100%);
-            transform: translate(-50vw, -100vh);
-            z-index: -1;
-        }
-
+      }
+      @media (prefers-color-scheme: light) {
         html {
-            min-height: 100%;
+          background-color: #f7f8fa;
         }
-
-        @media (prefers-color-scheme: dark) {
-            html {
-                background-color: #212429;
-            }
-        }
-        @media (prefers-color-scheme: light) {
-            html {
-                background-color: #F7F8FA;
-            }
-        }
+      }
     </style>
   </head>
   <body>

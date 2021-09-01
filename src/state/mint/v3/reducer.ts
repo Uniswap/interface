@@ -4,9 +4,9 @@ import {
   resetMintState,
   setFullRange,
   typeInput,
-  typeStartPriceInput,
   typeLeftRangeInput,
   typeRightRangeInput,
+  typeStartPriceInput,
 } from './actions'
 
 export type FullRange = true

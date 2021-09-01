@@ -1,5 +1,4 @@
 import { createStore, Store } from 'redux'
-
 import { Field, typeInput } from './actions'
 import reducer, { initialState, MintState } from './reducer'
 

@@ -37,7 +37,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Extract translations
-        run: "yarn i18n:extract"
+        run: 'yarn i18n:extract'
 
       - name: Synchronize
         uses: crowdin/github-action@1.1.0

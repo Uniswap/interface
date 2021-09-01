@@ -1,13 +1,13 @@
-import JSBI from 'jsbi'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { UNI } from '../../constants/tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult } from '../multicall/hooks'
-import { isAddress } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
 
 interface UserClaimData {

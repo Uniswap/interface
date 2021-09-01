@@ -1,14 +1,13 @@
 import { stringify } from 'qs'
 import { useMemo } from 'react'
+import { Zap } from 'react-feather'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
-
+import styled from 'styled-components/macro'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
-import { HideSmall, TYPE, SmallOnly } from '../../theme'
+import { HideSmall, SmallOnly, TYPE } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import styled from 'styled-components/macro'
-import { Zap } from 'react-feather'
 
 const ResponsiveButton = styled(ButtonPrimary)`
   width: fit-content;

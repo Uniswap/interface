@@ -39,7 +39,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Extract translations
-        run: "yarn i18n:extract"
+        run: 'yarn i18n:extract'
 
       - name: Synchronize
         uses: crowdin/github-action@1.1.0
@@ -52,6 +52,6 @@ jobs:
           translation: 'src/locales/%locale%.po'
           create_pull_request: false
           localization_branch_name: main
-          commit_message: "chore(i18n): synchronize translations from crowdin [skip ci]"
+          commit_message: 'chore(i18n): synchronize translations from crowdin [skip ci]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

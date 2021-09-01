@@ -4,6 +4,8 @@ import { SupportedChainId } from './chains'
 import {
   AMPL,
   DAI,
+  DAI_OPTIMISM,
+  ETH2X_FLI,
   ExtendedEther,
   FEI,
   FRAX,
@@ -12,12 +14,10 @@ import {
   TRIBE,
   USDC,
   USDT,
-  WBTC,
-  ETH2X_FLI,
-  WETH9_EXTENDED,
-  DAI_OPTIMISM,
   USDT_OPTIMISM,
+  WBTC,
   WBTC_OPTIMISM,
+  WETH9_EXTENDED,
 } from './tokens'
 
 type ChainTokenList = {

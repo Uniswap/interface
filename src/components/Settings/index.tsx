@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -16,7 +17,6 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Percent } from '@uniswap/sdk-core'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;

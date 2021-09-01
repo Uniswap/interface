@@ -1,7 +1,7 @@
+import { Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { isAddress } from '../../utils'
-import { Token } from '@uniswap/sdk-core'
 
 const alwaysTrue = () => true
 

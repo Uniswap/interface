@@ -1,10 +1,10 @@
-import React from 'react'
+import { Trans } from '@lingui/macro'
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
-import { TYPE } from 'theme'
-import styled from 'styled-components/macro'
-import { Trans } from '@lingui/macro'
+import React from 'react'
 import ReactGA from 'react-ga'
+import styled from 'styled-components/macro'
+import { TYPE } from 'theme'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '8px',

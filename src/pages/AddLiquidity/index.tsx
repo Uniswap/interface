@@ -1,78 +1,78 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { AlertTriangle } from 'react-feather'
-import ReactGA from 'react-ga'
-import { ZERO_PERCENT } from '../../constants/misc'
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
-import { WETH9_EXTENDED } from '../../constants/tokens'
-import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
-import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import Row, { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
-import approveAmountCalldata from '../../utils/approveAmountCalldata'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { Review } from './Review'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { Field, Bound } from '../../state/mint/v3/actions'
-import { AddLiquidityNetworkAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { Dots } from '../Pool/styleds'
-import { currencyId } from '../../utils/currencyId'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import {
-  DynamicSection,
-  CurrencyDropdown,
-  StyledInput,
-  Wrapper,
-  ScrollablePage,
-  ResponsiveTwoColumns,
-  PageWrapper,
-  StackedContainer,
-  StackedItem,
-  RightContainer,
-  MediumOnly,
-  HideMedium,
-} from './styled'
-import { Trans, t } from '@lingui/macro'
-import {
-  useV3MintState,
-  useV3MintActionHandlers,
-  useRangeHopCallbacks,
-  useV3DerivedMintInfo,
-} from 'state/mint/v3/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
-import { PositionPreview } from 'components/PositionPreview'
 import FeeSelector from 'components/FeeSelector'
+import HoverInlineText from 'components/HoverInlineText'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import { AddLiquidityNetworkAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
+import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
+import { PositionPreview } from 'components/PositionPreview'
 import RangeSelector from 'components/RangeSelector'
 import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import RateToggle from 'components/RateToggle'
-import { BigNumber } from '@ethersproject/bignumber'
-import { AddRemoveTabs } from 'components/NavigationTabs'
-import HoverInlineText from 'components/HoverInlineText'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { SupportedChainId } from 'constants/chains'
-import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
+import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
+import ReactGA from 'react-ga'
+import { RouteComponentProps } from 'react-router-dom'
+import { Text } from 'rebass'
+import {
+  useRangeHopCallbacks,
+  useV3DerivedMintInfo,
+  useV3MintActionHandlers,
+  useV3MintState,
+} from 'state/mint/v3/hooks'
+import { ThemeContext } from 'styled-components/macro'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
+import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
 import { CHAIN_INFO } from '../../constants/chains'
+import { ZERO_PERCENT } from '../../constants/misc'
+import { WETH9_EXTENDED } from '../../constants/tokens'
+import { useCurrency } from '../../hooks/Tokens'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
+import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
+import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { Bound, Field } from '../../state/mint/v3/actions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
+import { ExternalLink, TYPE } from '../../theme'
+import approveAmountCalldata from '../../utils/approveAmountCalldata'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { currencyId } from '../../utils/currencyId'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { Dots } from '../Pool/styleds'
+import { Review } from './Review'
+import {
+  CurrencyDropdown,
+  DynamicSection,
+  HideMedium,
+  MediumOnly,
+  PageWrapper,
+  ResponsiveTwoColumns,
+  RightContainer,
+  ScrollablePage,
+  StackedContainer,
+  StackedItem,
+  StyledInput,
+  Wrapper,
+} from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 

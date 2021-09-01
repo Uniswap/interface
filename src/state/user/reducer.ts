@@ -1,5 +1,6 @@
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { createReducer } from '@reduxjs/toolkit'
+import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -8,17 +9,16 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  updateArbitrumAlphaAcknowledged,
+  updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserDeadline,
-  updateUserSingleHopOnly,
-  updateHideClosedPositions,
+  updateUserExpertMode,
   updateUserLocale,
-  updateArbitrumAlphaAcknowledged,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance,
 } from './actions'
-import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 

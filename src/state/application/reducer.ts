@@ -1,11 +1,11 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import {
   addPopup,
+  ApplicationModal,
   PopupContent,
   removePopup,
-  updateBlockNumber,
-  ApplicationModal,
   setOpenModal,
+  updateBlockNumber,
   updateChainId,
 } from './actions'
 
