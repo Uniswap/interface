@@ -51,8 +51,8 @@ export default createReducer(initialState, (builder) =>
       const pendingUpdate = state.byUrl[url]?.pendingUpdate ?? null
 
       state.byUrl[url] = {
-        current: current,
-        pendingUpdate: pendingUpdate,
+        current,
+        pendingUpdate,
         loadingRequestId: requestId,
         error: null,
       }
@@ -68,7 +68,7 @@ export default createReducer(initialState, (builder) =>
         if (upgradeType === VersionUpgrade.NONE) return
         if (loadingRequestId === null || loadingRequestId === requestId) {
           state.byUrl[url] = {
-            current: current,
+            current,
             pendingUpdate: tokenList,
             loadingRequestId: null,
             error: null,
