@@ -1,4 +1,2 @@
-import { UNISWAP_GRANTS } from './uniswap_grants'
-
-// Proposals are 0-indexed
-export const PRELOADED_PROPOSALS = new Map([[2, UNISWAP_GRANTS]])
+export const UNISWAP_GRANTS_START_BLOCK = 11473815
+export const BRAVO_START_BLOCK = 13059344

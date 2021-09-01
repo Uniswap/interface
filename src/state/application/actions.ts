@@ -1,22 +1,12 @@
 import { createAction } from '@reduxjs/toolkit'
-import { TokenList } from '@uniswap/token-lists'
 
-export type PopupContent =
-  | {
-      txn: {
-        hash: string
-        success: boolean
-        summary?: string
-      }
-    }
-  | {
-      listUpdate: {
-        listUrl: string
-        oldList: TokenList
-        newList: TokenList
-        auto: boolean
-      }
-    }
+export type PopupContent = {
+  txn: {
+    hash: string
+    success: boolean
+    summary?: string
+  }
+}
 
 export enum ApplicationModal {
   WALLET,
@@ -26,12 +16,14 @@ export enum ApplicationModal {
   CLAIM_POPUP,
   MENU,
   DELEGATE,
-  VOTE
+  VOTE,
+  POOL_OVERVIEW_OPTIONS,
+  ARBITRUM_OPTIONS,
 }
 
+export const updateChainId = createAction<{ chainId: number | null }>('application/updateChainId')
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
-export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
-  'application/addPopup'
-)
+export const addPopup =
+  createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>('application/addPopup')
 export const removePopup = createAction<{ key: string }>('application/removePopup')

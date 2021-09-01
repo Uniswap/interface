@@ -1,29 +1,49 @@
-import styled from 'styled-components'
+import { Trans } from '@lingui/macro'
+import styled, { DefaultTheme } from 'styled-components/macro'
+import { ProposalState } from '../../state/governance/hooks'
 
-const handleColorType = (status?: any, theme?: any) => {
+const handleColorType = (status: ProposalState, theme: DefaultTheme) => {
   switch (status) {
-    case 'pending':
+    case ProposalState.PENDING:
+    case ProposalState.ACTIVE:
       return theme.blue1
-    case 'active':
-      return theme.blue1
-    case 'succeeded':
+    case ProposalState.SUCCEEDED:
+    case ProposalState.EXECUTED:
       return theme.green1
-    case 'defeated':
+    case ProposalState.DEFEATED:
       return theme.red1
-    case 'queued':
-      return theme.text3
-    case 'executed':
-      return theme.green1
-    case 'canceled':
-      return theme.text3
-    case 'expired':
-      return theme.text3
+    case ProposalState.QUEUED:
+    case ProposalState.CANCELED:
+    case ProposalState.EXPIRED:
     default:
       return theme.text3
   }
 }
 
-export const ProposalStatus = styled.span<{ status: string }>`
+function StatusText({ status }: { status: ProposalState }) {
+  switch (status) {
+    case ProposalState.PENDING:
+      return <Trans>Pending</Trans>
+    case ProposalState.ACTIVE:
+      return <Trans>Active</Trans>
+    case ProposalState.SUCCEEDED:
+      return <Trans>Succeeded</Trans>
+    case ProposalState.EXECUTED:
+      return <Trans>Executed</Trans>
+    case ProposalState.DEFEATED:
+      return <Trans>Defeated</Trans>
+    case ProposalState.QUEUED:
+      return <Trans>Queued</Trans>
+    case ProposalState.CANCELED:
+      return <Trans>Canceled</Trans>
+    case ProposalState.EXPIRED:
+      return <Trans>Expired</Trans>
+    default:
+      return <Trans>Undetermined</Trans>
+  }
+}
+
+const StyledProposalContainer = styled.span<{ status: ProposalState }>`
   font-size: 0.825rem;
   font-weight: 600;
   padding: 0.5rem;
@@ -34,3 +54,11 @@ export const ProposalStatus = styled.span<{ status: string }>`
   justify-self: flex-end;
   text-transform: uppercase;
 `
+
+export function ProposalStatus({ status }: { status: ProposalState }) {
+  return (
+    <StyledProposalContainer status={status}>
+      <StatusText status={status} />
+    </StyledProposalContainer>
+  )
+}

@@ -1,11 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { CheckCircle, Triangle } from 'react-feather'
 
-import { useActiveWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { RowFixed } from '../Row'
 import Loader from '../Loader'
 
@@ -49,7 +48,11 @@ export default function Transaction({ hash }: { hash: string }) {
 
   return (
     <TransactionWrapper>
-      <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
+      <TransactionState
+        href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
+        pending={pending}
+        success={success}
+      >
         <RowFixed>
           <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         </RowFixed>

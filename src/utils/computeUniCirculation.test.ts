@@ -1,17 +1,18 @@
-import { ChainId, JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import JSBI from 'jsbi'
+import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import { ZERO_ADDRESS } from '../constants'
+import { ZERO_ADDRESS } from '../constants/misc'
 import { computeUniCirculation } from './computeUniCirculation'
 
 describe('computeUniCirculation', () => {
-  const token = new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18)
+  const token = new Token(4, ZERO_ADDRESS, 18)
 
   function expandTo18Decimals(num: JSBI | string | number) {
     return JSBI.multiply(JSBI.BigInt(num), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
   }
 
   function tokenAmount(num: JSBI | string | number) {
-    return new TokenAmount(token, expandTo18Decimals(num))
+    return CurrencyAmount.fromRawAmount(token, expandTo18Decimals(num))
   }
 
   it('before staking', () => {

@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
-declare module 'jazzicon' {
-  export default function(diameter: number, seed: number): HTMLElement
+declare module '@metamask/jazzicon' {
+  export default function (diameter: number, seed: number): HTMLElement
 }
 
 declare module 'fortmatic'
@@ -13,7 +13,7 @@ interface Window {
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
   }
-  web3?: {}
+  web3?: Record<string, unknown>
 }
 
 declare module 'content-hash' {

@@ -11,23 +11,11 @@ export default function useLast<T>(
 ): T | null | undefined {
   const [last, setLast] = useState<T | null | undefined>(filterFn && filterFn(value) ? value : undefined)
   useEffect(() => {
-    setLast(last => {
+    setLast((last) => {
       const shouldUse: boolean = filterFn ? filterFn(value) : true
       if (shouldUse) return value
       return last
     })
   }, [filterFn, value])
   return last
-}
-
-function isDefined<T>(x: T | null | undefined): x is T {
-  return x !== null && x !== undefined
-}
-
-/**
- * Returns the last truthy value of type T
- * @param value changing value
- */
-export function useLastTruthy<T>(value: T | undefined | null): T | null | undefined {
-  return useLast(value, isDefined)
 }

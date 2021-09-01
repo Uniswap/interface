@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactConfetti from 'react-confetti'
 import { useWindowSize } from '../../hooks/useWindowSize'
 
@@ -20,7 +19,7 @@ export default function Confetti({ start, variant }: { start: boolean; variant?:
         h: height,
         w: width,
         x: 0,
-        y: _variant === 'top' ? height * 0.25 : _variant === 'bottom' ? height * 0.75 : height * 0.5
+        y: _variant === 'top' ? height * 0.25 : _variant === 'bottom' ? height * 0.75 : height * 0.5,
       }}
       initialVelocityX={15}
       initialVelocityY={30}

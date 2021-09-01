@@ -30,6 +30,6 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
   const changed = debouncedName !== ensName
   return {
     address: changed ? null : addr.result?.[0] ?? null,
-    loading: changed || resolverAddress.loading || addr.loading
+    loading: changed || resolverAddress.loading || addr.loading,
   }
 }

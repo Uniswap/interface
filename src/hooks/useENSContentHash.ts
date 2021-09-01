@@ -27,6 +27,6 @@ export default function useENSContentHash(ensName?: string | null): { loading: b
 
   return {
     contenthash: contenthash.result?.[0] ?? null,
-    loading: resolverAddressResult.loading || contenthash.loading
+    loading: resolverAddressResult.loading || contenthash.loading,
   }
 }

@@ -15,14 +15,15 @@ jobs:
       changelog: ${{ steps.github_tag_action.outputs.changelog }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Bump version and push tag
         id: github_tag_action
-        uses: mathieudutour/github-tag-action@v4.5
+        uses: mathieudutour/github-tag-action@331898d5052eedac9b15fec867b5ba66ebf9b692
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
+          default_bump: false
 
   create_release:
     name: Create Release
@@ -31,12 +32,12 @@ jobs:
     if: ${{ needs.bump_version.outputs.new_tag != null }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v1
+      - name: Set up node
+        uses: actions/setup-node@v2
         with:
-          node-version: '12'
-          always-auth: true
+          node-version: 14
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -94,19 +95,13 @@ jobs:
             The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.uniswap.org](https://app.uniswap.org).
 
             You can also access the Uniswap Interface directly from an IPFS gateway.
-            The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
-            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
-            The preferred URLs below are safe to use to access this specific release.
+            **BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+            **You should always use an IPFS gateway that enforces origin separation**, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
+            Your Uniswap settings are never remembered across different URLs.
 
-            Preferred URLs:
+            IPFS gateways:
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
-
-            Other IPFS gateways:
-            - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
-            - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
-            - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
 
             ${{ needs.bump_version.outputs.changelog }}

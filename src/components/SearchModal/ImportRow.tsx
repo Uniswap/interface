@@ -1,17 +1,17 @@
-import React, { CSSProperties } from 'react'
-import { Token } from '@uniswap/sdk'
+import { CSSProperties } from 'react'
+import { Token } from '@uniswap/sdk-core'
 import { AutoRow, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { TYPE } from 'theme'
 import ListLogo from 'components/ListLogo'
-import { useActiveWeb3React } from 'hooks'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
+import { Trans } from '@lingui/macro'
 
 const TokenSection = styled.div<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -45,7 +45,7 @@ export default function ImportRow({
   style,
   dim,
   showImportView,
-  setImportToken
+  setImportToken,
 }: {
   token: Token
   style?: CSSProperties
@@ -53,17 +53,13 @@ export default function ImportRow({
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  // gloabls
-  const { chainId } = useActiveWeb3React()
   const theme = useTheme()
-
-  // check if token comes from list
-  const inactiveTokenList = useCombinedInactiveList()
-  const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
 
   // check if already active on list or local storage tokens
   const isAdded = useIsUserAddedToken(token)
   const isActive = useIsTokenActive(token)
+
+  const list = token instanceof WrappedTokenInfo ? token.list : undefined
 
   return (
     <TokenSection style={style}>
@@ -78,7 +74,7 @@ export default function ImportRow({
         {list && list.logoURI && (
           <RowFixed>
             <TYPE.small mr="4px" color={theme.text3}>
-              via {list.name}
+              <Trans>via {list.name} </Trans>
             </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
           </RowFixed>
@@ -95,12 +91,14 @@ export default function ImportRow({
             showImportView()
           }}
         >
-          Import
+          <Trans>Import</Trans>
         </ButtonPrimary>
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <TYPE.main color={theme.green1}>Active</TYPE.main>
+          <TYPE.main color={theme.green1}>
+            <Trans>Active</Trans>
+          </TYPE.main>
         </RowFixed>
       )}
     </TokenSection>

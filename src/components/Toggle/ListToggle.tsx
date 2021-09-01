@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
@@ -30,7 +30,7 @@ const StatusText = styled(TYPE.main)<{ isActive?: boolean }>`
   color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
 `
 
-export interface ToggleProps {
+interface ToggleProps {
   id?: string
   isActive: boolean
   bgColor: string
@@ -42,13 +42,13 @@ export default function ListToggle({ id, isActive, bgColor, toggle }: ToggleProp
     <Wrapper id={id} isActive={isActive} onClick={toggle}>
       {isActive && (
         <StatusText fontWeight="600" margin="0 6px" isActive={true}>
-          ON
+          <Trans>ON</Trans>
         </StatusText>
       )}
       <ToggleElement isActive={isActive} bgColor={bgColor} />
       {!isActive && (
         <StatusText fontWeight="600" margin="0 6px" isActive={false}>
-          OFF
+          <Trans>OFF</Trans>
         </StatusText>
       )}
     </Wrapper>

@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import styled from 'styled-components'
+import { useCallback } from 'react'
+import styled from 'styled-components/macro'
 
 const StyledRangeInput = styled.input<{ size: number }>`
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
@@ -19,7 +19,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: ${({ theme }) => theme.blue1};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
@@ -62,7 +62,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.blue1}, ${({ theme }) => theme.blue2});
     height: 2px;
   }
 
@@ -96,9 +96,17 @@ interface InputSliderProps {
   size?: number
 }
 
-export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = 28 }: InputSliderProps) {
+export default function Slider({
+  value,
+  onChange,
+  min = 0,
+  step = 1,
+  max = 100,
+  size = 28,
+  ...rest
+}: InputSliderProps) {
   const changeCallback = useCallback(
-    e => {
+    (e) => {
       onChange(parseInt(e.target.value))
     },
     [onChange]
@@ -107,9 +115,10 @@ export default function Slider({ value, onChange, min = 0, step = 1, max = 100, 
   return (
     <StyledRangeInput
       size={size}
+      {...rest}
       type="range"
       value={value}
-      style={{ width: '90%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}
+      style={{ padding: '15px 0' }}
       onChange={changeCallback}
       aria-labelledby="input slider"
       step={step}

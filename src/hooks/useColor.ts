@@ -2,19 +2,19 @@ import { useState, useLayoutEffect } from 'react'
 import { shade } from 'polished'
 import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
-import { Token, ChainId } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk-core'
 import uriToHttp from 'utils/uriToHttp'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
-  if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
+  if (token.chainId !== 1) {
     return Promise.resolve('#FAAB14')
   }
 
-  const path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
+  const path = `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
 
   return Vibrant.from(path)
     .getPalette()
-    .then(palette => {
+    .then((palette) => {
       if (palette?.Vibrant) {
         let detectedHex = palette.Vibrant.hex
         let AAscore = hex(detectedHex, '#FFF')
@@ -34,7 +34,7 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 
   return Vibrant.from(formattedPath)
     .getPalette()
-    .then(palette => {
+    .then((palette) => {
       if (palette?.Vibrant) {
         return palette.Vibrant.hex
       }
@@ -50,7 +50,7 @@ export function useColor(token?: Token) {
     let stale = false
 
     if (token) {
-      getColorFromToken(token).then(tokenColor => {
+      getColorFromToken(token).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }
@@ -73,7 +73,7 @@ export function useListColor(listImageUri?: string) {
     let stale = false
 
     if (listImageUri) {
-      getColorFromUriPath(listImageUri).then(color => {
+      getColorFromUriPath(listImageUri).then((color) => {
         if (!stale && color !== null) {
           setColor(color)
         }

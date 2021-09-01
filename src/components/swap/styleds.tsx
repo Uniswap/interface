@@ -1,18 +1,29 @@
 import { transparentize } from 'polished'
-import React from 'react'
+import { ReactNode } from 'react'
+
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
+import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
-  padding: 1rem;
+  padding: 8px;
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
-  padding: 2px;
-
+  padding: 4px;
+  border-radius: 12px;
+  height: 32px;
+  width: 32px;
+  position: relative;
+  margin-top: -14px;
+  margin-bottom: -14px;
+  left: calc(50% - 16px);
+  /* transform: rotate(90deg); */
+  background-color: ${({ theme }) => theme.bg1};
+  border: 4px solid ${({ theme }) => theme.bg0};
+  z-index: 2;
   ${({ clickable }) =>
     clickable
       ? css`
@@ -30,10 +41,6 @@ export const SectionBreak = styled.div`
   background-color: ${({ theme }) => theme.bg3};
 `
 
-export const BottomGrouping = styled.div`
-  margin-top: 1rem;
-`
-
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
@@ -42,39 +49,14 @@ export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
       ? theme.yellow2
       : severity === 1
       ? theme.text1
-      : theme.green1};
-`
-
-export const StyledBalanceMaxMini = styled.button`
-  height: 22px;
-  width: 22px;
-  background-color: ${({ theme }) => theme.bg2};
-  border: none;
-  border-radius: 50%;
-  padding: 0.2rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  margin-left: 0.4rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text2};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  float: right;
-
-  :hover {
-    background-color: ${({ theme }) => theme.bg3};
-  }
-  :focus {
-    background-color: ${({ theme }) => theme.bg3};
-    outline: none;
-  }
+      : theme.text2};
 `
 
 export const TruncatedText = styled(Text)`
   text-overflow: ellipsis;
-  width: 220px;
+  max-width: 220px;
   overflow: hidden;
+  text-align: right;
 `
 
 // styles
@@ -128,26 +110,21 @@ const SwapCallbackErrorInnerAlertTriangle = styled.div`
   height: 48px;
 `
 
-export function SwapCallbackError({ error }: { error: string }) {
+export function SwapCallbackError({ error }: { error: ReactNode }) {
   return (
     <SwapCallbackErrorInner>
       <SwapCallbackErrorInnerAlertTriangle>
         <AlertTriangle size={24} />
       </SwapCallbackErrorInnerAlertTriangle>
-      <p>{error}</p>
+      <p style={{ wordBreak: 'break-word' }}>{error}</p>
     </SwapCallbackErrorInner>
   )
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
-  color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => transparentize(0.95, theme.primary3)};
+  color: ${({ theme }) => theme.primaryText1};
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
-`
-export const Separator = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
 `

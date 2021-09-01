@@ -1,6 +1,4 @@
-import { Percent } from '@uniswap/sdk'
-import React from 'react'
-import { ONE_BIPS } from '../../constants'
+import { Percent } from '@uniswap/sdk-core'
 import { warningSeverity } from '../../utils/prices'
 import { ErrorText } from './styleds'
 
@@ -9,8 +7,8 @@ import { ErrorText } from './styleds'
  */
 export default function FormattedPriceImpact({ priceImpact }: { priceImpact?: Percent }) {
   return (
-    <ErrorText fontWeight={500} fontSize={14} severity={warningSeverity(priceImpact)}>
-      {priceImpact ? (priceImpact.lessThan(ONE_BIPS) ? '<0.01%' : `${priceImpact.toFixed(2)}%`) : '-'}
+    <ErrorText fontWeight={500} fontSize={12} severity={warningSeverity(priceImpact)}>
+      {priceImpact ? `${priceImpact.multiply(-1).toFixed(2)}%` : '-'}
     </ErrorText>
   )
 }
