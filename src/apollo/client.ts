@@ -26,7 +26,7 @@ export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new Apol
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'
-      : 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
+      : 'https://polygon-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
   cache: new InMemoryCache()
 })
 
@@ -42,7 +42,7 @@ export const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'
-      : 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-bsc',
+      : 'https://bsc-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-bsc',
   cache: new InMemoryCache()
 })
 
@@ -54,7 +54,7 @@ export const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = ne
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ''
-      : 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-avax',
+      : 'https://avax-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-avax',
   cache: new InMemoryCache()
 })
 
