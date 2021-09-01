@@ -287,7 +287,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
             <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 10px 0 0">
               <Trans>VESTING SCHEDULES</Trans>
               <InfoHelper
-                text={t`Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).`}
+                text={t`Each time you harvest rewards, a new vesting period of ~${lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).`}
               />
             </TYPE.body>
           </AutoRow>
