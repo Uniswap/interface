@@ -38,7 +38,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import useToggledVersion, { useToggleVersionCallback, Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -108,8 +108,10 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
+    //TODO: remove v2 and v3 trade, add states
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
+    bestTrade,
     toggledTrade: trade,
     allowedSlippage,
     currencyBalances,
@@ -117,6 +119,17 @@ export default function Swap({ history }: RouteComponentProps) {
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
+
+  const toggleToBestVersionCallback = useToggleVersionCallback(bestTrade instanceof V2Trade ? Version.v2 : Version.v3)
+
+  useEffect(() => {
+    if (!bestTrade || !trade) return
+
+    if (bestTrade !== trade) {
+      console.log('toggling to better version')
+      toggleToBestVersionCallback()
+    }
+  }, [bestTrade, toggleToBestVersionCallback, trade])
 
   const {
     wrapType,

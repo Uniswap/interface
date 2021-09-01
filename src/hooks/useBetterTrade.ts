@@ -1,33 +1,34 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useActiveWeb3React } from 'hooks/web3'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
-import JSBI from 'jsbi'
-import useTransactionDeadline from './useTransactionDeadline'
-import { useV2RouterContract } from './useContract'
-import { usePools } from './usePools'
 import { WETH9_EXTENDED } from 'constants/tokens'
+import { BigNumber } from 'ethers'
+import { useActiveWeb3React } from 'hooks/web3'
+import JSBI from 'jsbi'
+import { useEffect, useMemo, useState } from 'react'
+import { isTradeBetter } from 'utils/isTradeBetter'
 import isZero from 'utils/isZero'
 import { useGasEstimateForApproval } from './useApproveCallback'
+import { useV2RouterContract } from './useContract'
+import { usePools } from './usePools'
+import useTransactionDeadline from './useTransactionDeadline'
 
 /**
  * Return V2 Router swap gas estimate.
  * Not required for V3 as the routing API returns the estimates.
  */
-function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType>) {
-  const { library } = useActiveWeb3React()
+function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType> | undefined) {
+  const { library, account } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
 
   const [v2SwapGasEstimateWei, setV2SwapGasEstimate] = useState<BigNumber | undefined>()
 
   useEffect(() => {
-    if (!library || !routerContract) return
+    if (!library || !routerContract || !trade || !account) return
 
     const sampleSlippage = new Percent(5, 100)
-    const sampleRecipient = '0x0'
+    const sampleRecipient = account
     const sampleDeadline = deadline?.toNumber() ?? 60
 
     const { methodName, args, value } = Router.swapCallParameters(trade, {
@@ -50,8 +51,10 @@ function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType>) {
             value,
           }
 
-    library.estimateGas(tx).then((gasEstimate) => setV2SwapGasEstimate(gasEstimate))
-  }, [deadline, library, routerContract, trade])
+    library.estimateGas(tx).then((gasEstimate) => {
+      setV2SwapGasEstimate(gasEstimate)
+    })
+  }, [account, deadline, library, routerContract, trade])
 
   return v2SwapGasEstimateWei
 }
@@ -69,22 +72,22 @@ function useV2SwapGasEstimate(trade: V2Trade<Currency, Currency, TradeType>) {
  * @returns True if the V3 trade is better. False otherwise.
  */
 export function useBetterTrade(
-  v2Trade: V2Trade<Currency, Currency, TradeType>,
-  v3Trade: V3Trade<Currency, Currency, TradeType>,
-  v3SwapGasEstimateWei: BigNumber,
-  gasPrice: BigNumber
-): boolean | undefined {
+  v2Trade: V2Trade<Currency, Currency, TradeType> | undefined,
+  v3Trade: V3Trade<Currency, Currency, TradeType> | undefined,
+  v3SwapGasEstimateWei: BigNumber | undefined,
+  gasPrice: BigNumber | undefined
+): V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined {
   const { chainId, account } = useActiveWeb3React()
 
   // accounts for trade approval in case either router isn't approved yet
-  const [v2TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
-  const [v3TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade.inputAmount, account ?? undefined)
+  const [v2TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade?.inputAmount, account ?? undefined)
+  const [v3TradeApprovalGasEstimateWei] = useGasEstimateForApproval(v2Trade?.inputAmount, account ?? undefined)
 
   // only estimate V2 swap gas since routing api returns v3 gas estimates
   const v2SwapGasEstimateWei = useV2SwapGasEstimate(v2Trade)
 
-  const tradeType = v2Trade.tradeType
-  const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade.outputAmount.currency : v2Trade.inputAmount.currency
+  const tradeType = v2Trade?.tradeType
+  const quoteToken = tradeType == TradeType.EXACT_INPUT ? v2Trade?.outputAmount.currency : v2Trade?.inputAmount.currency
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
 
   const pools = usePools([
@@ -93,15 +96,24 @@ export function useBetterTrade(
     [quoteToken, weth, FeeAmount.LOW],
   ])
 
-  return useMemo(() => {
+  // when gas information is not available (e.g. routing API unavailable)
+  const betterTradeWithoutGasEstimates = useMemo(() => {
+    return !gasPrice || !v3SwapGasEstimateWei ? (isTradeBetter(v2Trade, v3Trade) ? v3Trade : v2Trade) : undefined
+  }, [gasPrice, v2Trade, v3SwapGasEstimateWei, v3Trade])
+
+  const isV3TradeBetterWithGasEstimates = useMemo(() => {
     if (
       !v2Trade ||
+      !v3Trade ||
       !weth ||
+      !quoteToken ||
+      !gasPrice ||
       !v2SwapGasEstimateWei ||
+      !v3SwapGasEstimateWei ||
       !v2TradeApprovalGasEstimateWei ||
       !v3TradeApprovalGasEstimateWei
     ) {
-      return undefined
+      return null
     }
 
     const v2GasEstimate = v2SwapGasEstimateWei.add(v2TradeApprovalGasEstimateWei)
@@ -173,23 +185,28 @@ export function useBetterTrade(
           v2QuoteGasAdjusted: v2QuoteGasAdjusted.toString(),
           v2Quote: v2Trade.outputAmount.toString(),
         },
-        `Swap and approval estimates ${tradeType.toString()} for V2 vs V3 trade`
+        `Swap and approval estimates ${tradeType?.toString()} for V2 vs V3 trade`
       )
 
       return v2QuoteGasAdjusted.greaterThan(v3QuoteGasAdjusted)
     }
   }, [
-    gasPrice,
-    pools,
-    quoteToken,
-    tradeType,
-    v2SwapGasEstimateWei,
     v2Trade,
+    v3Trade,
+    weth,
+    quoteToken,
+    gasPrice,
+    v2SwapGasEstimateWei,
+    v3SwapGasEstimateWei,
     v2TradeApprovalGasEstimateWei,
     v3TradeApprovalGasEstimateWei,
-    v3Trade.inputAmount,
-    v3Trade.outputAmount,
-    v3SwapGasEstimateWei,
-    weth,
+    tradeType,
+    pools,
   ])
+
+  return isV3TradeBetterWithGasEstimates === null
+    ? betterTradeWithoutGasEstimates
+    : isV3TradeBetterWithGasEstimates
+    ? v3Trade
+    : v2Trade
 }

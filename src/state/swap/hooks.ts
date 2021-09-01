@@ -3,6 +3,7 @@ import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useBetterTrade } from 'hooks/useBetterTrade'
 import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
@@ -123,6 +124,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
   }
+  bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
@@ -160,6 +162,13 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
   const v3Trade = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
+
+  const bestTrade = useBetterTrade(
+    v2Trade ?? undefined,
+    v3Trade.trade ?? undefined,
+    v3Trade.gasPriceWei,
+    v3Trade.gasUseEstimate
+  )
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -214,6 +223,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     inputError,
     v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
+    bestTrade,
     toggledTrade,
     allowedSlippage,
   }

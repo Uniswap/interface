@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
 import { useRouterTradeExactIn, useRouterTradeExactOut } from 'state/routing/useRouterTrade'
@@ -23,7 +24,12 @@ const shouldUseFallback = (state: V3TradeState) => [V3TradeState.NO_ROUTE_FOUND]
 export function useV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
+): {
+  state: V3TradeState
+  trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null
+  gasPriceWei?: BigNumber
+  gasUseEstimate?: BigNumber
+} {
   const debouncedAmountIn = useDebounce(amountIn, 250)
 
   // attempt to use multi-route trade
@@ -48,6 +54,8 @@ export function useV3TradeExactIn(
   return {
     ...(useFallback ? bestV3TradeExactIn : multiRouteTradeExactIn),
     ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+    gasPriceWei: multiRouteTradeExactIn?.gasPriceWei,
+    gasUseEstimate: multiRouteTradeExactIn?.gasUseEstimate,
   }
 }
 
@@ -60,7 +68,12 @@ export function useV3TradeExactIn(
 export function useV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
+): {
+  state: V3TradeState
+  trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null
+  gasPriceWei?: BigNumber
+  gasUseEstimate?: BigNumber
+} {
   const debouncedAmountOut = useDebounce(amountOut, 250)
 
   const multiRouteTradeExactOut = useRouterTradeExactOut(currencyIn, debouncedAmountOut)
@@ -83,5 +96,7 @@ export function useV3TradeExactOut(
   return {
     ...(useFallback ? bestV3TradeExactOut : multiRouteTradeExactOut),
     ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+    gasPriceWei: multiRouteTradeExactOut?.gasPriceWei,
+    gasUseEstimate: multiRouteTradeExactOut?.gasUseEstimate,
   }
 }

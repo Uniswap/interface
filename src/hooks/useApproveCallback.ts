@@ -31,6 +31,8 @@ export function useGasEstimateForApproval(
   const tokenContract = useTokenContract(token?.address)
 
   useEffect(() => {
+    if (amountToApprove?.currency?.isNative) setEstimatedGas(BigNumber.from('0'))
+
     if (!tokenContract || !spender || !amountToApprove) return
 
     tokenContract.estimateGas
