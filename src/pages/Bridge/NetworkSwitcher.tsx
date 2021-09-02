@@ -1,31 +1,29 @@
 import React from 'react'
-import styled from 'styled-components';
-import { ButtonPrimary } from '../../components/Button';
-import { RowBetween } from '../../components/Row';
+import styled from 'styled-components'
+import { ButtonPrimary } from '../../components/Button'
+import { RowBetween } from '../../components/Row'
 import { transparentize } from 'polished'
+import { useActiveWeb3React } from '../../hooks'
+import { ChainLabel } from '../../constants'
 
 interface NetworkSwitcherProps {
-  isEthereumConnected: boolean;
-  onSwitchClick: () => void;
-  onCollectClick: () => void;
+  sendToId: number
+  onCollectClick: () => void
 }
 
-export const NetworkSwitcher = ({isEthereumConnected, onSwitchClick, onCollectClick}: NetworkSwitcherProps) => {
-  const isActiveClassName = isEthereumConnected ? 'active' : '';
-  
+export const NetworkSwitcher = ({ sendToId, onCollectClick }: NetworkSwitcherProps) => {
+  const { chainId: networkConnectorChainId } = useActiveWeb3React()
+  if (!networkConnectorChainId) return null
+
+  const isActiveClassName = networkConnectorChainId === sendToId ? 'active' : ''
+
   return (
     <>
       <RowBetween mt="22px">
-        <SwitchButton
-          onClick={onSwitchClick}
-          disabled={isEthereumConnected}
-        >
-          Switch to ethereum
+        <SwitchButton onClick={() => null} disabled={networkConnectorChainId === sendToId}>
+          Switch to {ChainLabel[sendToId]}
         </SwitchButton>
-        <CollectButton
-          onClick={onCollectClick}
-          disabled={!isEthereumConnected}
-        >
+        <CollectButton onClick={onCollectClick} disabled={networkConnectorChainId !== sendToId}>
           Collect
         </CollectButton>
       </RowBetween>
@@ -42,9 +40,9 @@ const SwitchButton = styled(ButtonPrimary)`
 
   &:disabled {
     background: rgba(14, 159, 110, 0.2);
-    color: ${({theme}) => transparentize(0.6, theme.green2)};
+    color: ${({ theme }) => transparentize(0.6, theme.green2)};
   }
-`;
+`
 
 const CollectButton = styled(ButtonPrimary)`
   height: 58px;
@@ -55,7 +53,7 @@ const CollectButton = styled(ButtonPrimary)`
     color: ${({ theme }) => theme.white};
     opacity: 0.3;
   }
-`;
+`
 
 const Row = styled(RowBetween)`
   position: relative;
@@ -70,15 +68,14 @@ const Row = styled(RowBetween)`
     width: 100%;
     height: 1px;
     transform: translateY(-50%);
-    background: linear-gradient(-90deg, #2E17F2 -3.41%, rgba(46, 23, 242, 0.2) 29.26%, rgba(46, 23, 242, 0.6) 29.26%);
+    background: linear-gradient(-90deg, #2e17f2 -3.41%, rgba(46, 23, 242, 0.2) 29.26%, rgba(46, 23, 242, 0.6) 29.26%);
     z-index: -1;
   }
 
   &.active::before {
-    background: linear-gradient(90deg, #0E9F6E 0.85%, #2E17F2 101.42%);
+    background: linear-gradient(90deg, #0e9f6e 0.85%, #2e17f2 101.42%);
   }
-`;
-
+`
 
 const Number = styled.div`
   display: flex;
@@ -96,6 +93,4 @@ const Number = styled.div`
   &.active {
     background: #163430;
   }
-`;
-
-
+`

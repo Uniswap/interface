@@ -16,6 +16,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { ApplicationModal } from '../../state/application/actions'
+import { ChainLabel } from '../../constants'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -23,14 +24,6 @@ const ChainLogo: any = {
   [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
   [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
-}
-
-const ChainLabel: any = {
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
-  [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [ChainId.XDAI]: 'xDai'
 }
 
 const View = styled.div`

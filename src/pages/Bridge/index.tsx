@@ -14,6 +14,7 @@ import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
+import { useActiveWeb3React } from '../../hooks'
 
 const Title = styled.p`
   margin: 0;
@@ -46,20 +47,24 @@ enum Step {
 }
 
 export interface Network {
+  chainId: number
   name: string
   icon: string
 }
 
 const networks: Network[] = [
   {
+    chainId: 42161,
     name: 'Arbitrum',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/10273.png'
   },
   {
+    chainId: 1,
     name: 'Ethereum',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
   },
   {
+    chainId: 100,
     name: 'xDai',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5601.png'
   }
@@ -69,8 +74,8 @@ export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
 
   const [amount, setAmount] = useState('')
-  const [connectedNetwork, setConnectedNetwork] = useState(networks[0].name)
-  const [isEthereumConnected, setIsEthereumConnected] = useState(false)
+  const { chainId: networkConnectorChainId } = useActiveWeb3React()
+  const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
 
   const [sendFrom, setSendFrom] = useState(networks[0])
   const [sendTo, setSendTo] = useState(networks[1])
@@ -100,7 +105,6 @@ export default function Bridge() {
   const resetBridge = () => {
     setAmount('')
     setStep(Step.Initial)
-    setIsEthereumConnected(false)
   }
 
   const [bridge, setBridge] = useState('Swapr Fast Exit')
@@ -117,7 +121,7 @@ export default function Bridge() {
           <AssetSelector
             modal={ApplicationModal.NETWORK_SWITCHER_FROM}
             label="from"
-            connected={connectedNetwork === sendFrom.name}
+            connected={connectedNetwork === sendFrom.chainId}
             onNetworkClick={onSendFromSelect}
             networks={networks}
             selectedNetwork={sendFrom}
@@ -128,7 +132,7 @@ export default function Bridge() {
           <AssetSelector
             modal={ApplicationModal.NETWORK_SWITCHER_TO}
             label="to"
-            connected={connectedNetwork === sendTo.name}
+            connected={connectedNetwork === sendTo.chainId}
             onNetworkClick={onSendToSelect}
             networks={networks}
             selectedNetwork={sendTo}
@@ -145,16 +149,12 @@ export default function Bridge() {
           disabled={step !== Step.Initial}
           id="brdige-currency-input"
         />
-        {sendFrom.name !== connectedNetwork ? (
-          <ButtonPrimary mt="12px" onClick={() => setConnectedNetwork(sendFrom.name)}>
+        {sendFrom.chainId !== connectedNetwork ? (
+          <ButtonPrimary mt="12px" onClick={() => setConnectedNetwork(sendFrom.chainId)}>
             Connect to {sendFrom.name}
           </ButtonPrimary>
         ) : step === Step.Collect ? (
-          <NetworkSwitcher
-            isEthereumConnected={isEthereumConnected}
-            onSwitchClick={() => setIsEthereumConnected(true)}
-            onCollectClick={() => setStep(Step.Success)}
-          />
+          <NetworkSwitcher sendToId={sendTo.chainId} onCollectClick={() => setStep(Step.Success)} />
         ) : (
           <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!amount ? 'Enter ETH amount' : `Brigde to ${sendTo.name}`}
