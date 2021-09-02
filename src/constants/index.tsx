@@ -171,6 +171,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
 }
 
 export const ARBITRUM_ONE_PROVIDER = new providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc')
+export const ARBITRUM_RINKEBY_PROVIDER = new providers.JsonRpcProvider('https://rinkeby.arbitrum.io/rpc')
 
 export interface WalletInfo {
   connector?: AbstractConnector
@@ -319,4 +320,28 @@ export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode
   [RoutablePlatform.HONEYSWAP.name]: <img width={16} height={16} src={HoneyswapLogo} alt="honeyswap" />,
   [RoutablePlatform.BAOSWAP.name]: <img width={16} height={16} src={BaoswapLogo} alt="baoswap" />,
   [RoutablePlatform.LEVINSWAP.name]: <img width={16} height={16} src={LevinswapLogo} alt="levinswap" />
+}
+
+export const OLD_SWPR: { [key: number]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xe54942077Df7b8EEf8D4e6bCe2f7B58B0082b0cd', 18, 'SWPR', 'Swapr'),
+  [ChainId.ARBITRUM_ONE]: new Token(
+    ChainId.ARBITRUM_ONE,
+    '0x955b9fe60a5b5093df9Dc4B1B18ec8e934e77162',
+    18,
+    'SWPR',
+    'Swapr'
+  ),
+  [ChainId.ARBITRUM_RINKEBY]: new Token(
+    ChainId.ARBITRUM_RINKEBY,
+    '0x6C423f8BEb6713Fd075EA09Fd90a7A736bc80e81',
+    18,
+    'SWPR',
+    'Swapr'
+  )
+}
+
+export const CONVERTER_ADDRESS: { [key: number]: string } = {
+  // set in envs
+  [ChainId.ARBITRUM_ONE]: ZERO_ADDRESS,
+  [ChainId.ARBITRUM_RINKEBY]: ZERO_ADDRESS
 }

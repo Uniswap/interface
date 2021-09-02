@@ -8,7 +8,7 @@ import useHasClaimed from './useHasClaimed'
 export default function useUnclaimedSWPRBalance(
   account: string | null | undefined
 ): { loading: boolean; unclaimedBalance: TokenAmount | null } {
-  const swpr = SWPR[ChainId.ARBITRUM_ONE]
+  const swpr = SWPR[ChainId.ARBITRUM_RINKEBY] // TODO: change to Arb1 before going live
   const whitelist = useClaimWhitelist()
   const { loading: loadingHasClaimed, claimed } = useHasClaimed(account)
 

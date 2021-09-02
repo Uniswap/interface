@@ -13,6 +13,7 @@ import {
   SWPR_CLAIMER_ABI,
   SWPR_CLAIMER_ADDRESS
 } from '@swapr/sdk'
+import SWPR_CONVERTER_ABI from '../constants/abis/swpr-converter.json'
 import { abi as IDXswapPairABI } from '@swapr/core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -28,7 +29,7 @@ import WXDAI_ABI from '../constants/abis/wxdai.json'
 import { getContract, getProviderOrSigner, isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
-import { ARBITRUM_ONE_PROVIDER } from '../constants'
+import { ARBITRUM_RINKEBY_PROVIDER, CONVERTER_ADDRESS } from '../constants'
 import { constants } from 'ethers'
 
 // returns null on errors
@@ -135,7 +136,7 @@ export function useStakingRewardsDistributionContract(
 export function useSWPRClaimerContract(): Contract | null {
   const { library, chainId, account } = useActiveWeb3React()
   return useMemo(() => {
-    const address = SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE]
+    const address = SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_RINKEBY] // TODO: change to Arb1 before going live
     const ABI = SWPR_CLAIMER_ABI
     if (!address || !isAddress(address) || address === constants.AddressZero || !ABI || !library) return null
     try {
@@ -143,7 +144,10 @@ export function useSWPRClaimerContract(): Contract | null {
         address,
         ABI,
         account
-          ? (getProviderOrSigner(chainId === ChainId.ARBITRUM_ONE ? library : ARBITRUM_ONE_PROVIDER, account) as any)
+          ? (getProviderOrSigner(
+              chainId === ChainId.ARBITRUM_RINKEBY ? library : ARBITRUM_RINKEBY_PROVIDER, // TODO: change to Arb1 before going live
+              account
+            ) as any)
           : account
       )
     } catch (error) {
@@ -151,4 +155,10 @@ export function useSWPRClaimerContract(): Contract | null {
       return null
     }
   }, [library, chainId, account])
+}
+
+export function useSWPRConverterContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = useMemo(() => (chainId ? CONVERTER_ADDRESS[chainId] : undefined), [chainId])
+  return useContract(address, SWPR_CONVERTER_ABI, withSignerIfPossible)
 }

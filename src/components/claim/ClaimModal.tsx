@@ -20,6 +20,9 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useNativeCurrencyBalance } from '../../state/wallet/hooks'
 import { useClaimTxConfirmedUpdater } from '../../state/claim/hooks'
+import { ActionButton } from './ActionButton'
+import { useIsOldSwaprLp } from '../../hooks/swpr/useIsOldSwaprLp'
+import { ConvertFlow } from './ConvertFlow'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -37,14 +40,6 @@ const BottomAutoColumn = styled(AutoColumn)`
   border: 1px solid ${props => props.theme.bg3};
   border-radius: 8px;
   padding: 26px;
-`
-
-const StyledClaimButton = styled(ButtonPrimary)`
-  color: ${props => props.theme.white} !important;
-  background: linear-gradient(90deg, ${props => props.theme.primary1} -24.77%, #fb52a1 186.93%);
-  :disabled {
-    opacity: 0.5;
-  }
 `
 
 const NetworkWarning = styled.div`
@@ -77,10 +72,12 @@ const SpacedExternalLinkIcon = styled(ExternalLinkIcon)`
 
 export default function ClaimModal({
   onDismiss,
-  swprBalance
+  oldSwprBalance,
+  newSwprBalance
 }: {
   onDismiss: () => void
-  swprBalance: TokenAmount | undefined
+  oldSwprBalance?: TokenAmount
+  newSwprBalance?: TokenAmount
 }) {
   const { account, chainId, connector } = useActiveWeb3React()
 
@@ -92,6 +89,7 @@ export default function ClaimModal({
 
   const addTransaction = useTransactionAdder()
   const nativeCurrencyBalance = useNativeCurrencyBalance()
+  const { isOldSwprLp } = useIsOldSwaprLp(account || undefined)
   const claimCallback = useClaimCallback(account || undefined)
   const updateClaimTxConfirmed = useClaimTxConfirmedUpdater()
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
@@ -100,7 +98,7 @@ export default function ClaimModal({
   const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
   useEffect(() => {
-    setCorrectNetwork(chainId === ChainId.ARBITRUM_ONE)
+    setCorrectNetwork(chainId === ChainId.ARBITRUM_RINKEBY) // TODO: change to Arb1 before going live
   }, [chainId])
 
   const onClaim = useCallback(() => {
@@ -124,6 +122,10 @@ export default function ClaimModal({
       })
   }, [addTransaction, claimCallback, unclaimedBalance, updateClaimTxConfirmed])
 
+  const handleConversionError = useCallback(() => {
+    setError(true)
+  }, [])
+
   const wrappedOnDismiss = useCallback(() => {
     setAttempting(false)
     setError(false)
@@ -133,7 +135,7 @@ export default function ClaimModal({
 
   const onSwitchToArbitrum = useCallback(() => {
     if (connector instanceof InjectedConnector)
-      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_ONE], account || undefined)
+      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_RINKEBY], account || undefined) // TODO: change to Arb1 before going live
   }, [account, connector])
 
   const onConnectWallet = useCallback(() => {
@@ -141,19 +143,9 @@ export default function ClaimModal({
     toggleWalletConnectionModal()
   }, [closeModals, toggleWalletConnectionModal])
 
-  const onClick = useCallback(() => {
-    if (!account) {
-      onConnectWallet()
-    } else if (!correctNetwork && connector instanceof InjectedConnector) {
-      onSwitchToArbitrum()
-    } else if (availableClaim) {
-      onClaim()
-    }
-  }, [account, availableClaim, connector, correctNetwork, onClaim, onConnectWallet, onSwitchToArbitrum])
-
   const content = () => {
     if (error) {
-      return <TransactionErrorContent onDismiss={wrappedOnDismiss} message="The claim wasn't successful" />
+      return <TransactionErrorContent onDismiss={wrappedOnDismiss} message="The operation wasn't successful" />
     } else
       return (
         <ContentWrapper gap="lg">
@@ -165,30 +157,44 @@ export default function ClaimModal({
               <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} />
             </RowBetween>
             <TYPE.white fontWeight={700} fontSize={36}>
-              {swprBalance?.toFixed(3) || '0.000'}
+              {newSwprBalance?.toFixed(3) || '0.000'}
             </TYPE.white>
             <TYPE.white fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text4">
               TOTAL SWPR ON CURRENT NETWORK
             </TYPE.white>
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            {availableClaim && chainId !== ChainId.ARBITRUM_ONE && (
+            {availableClaim && !correctNetwork && (
               <NetworkWarning>
                 Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
               </NetworkWarning>
             )}
             <BottomAutoColumn gap="8px">
-              <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                UNCLAIMED SWPR
-              </TYPE.small>
-              <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                {unclaimedBalance?.toFixed(3) || '0'} SWPR
-              </TYPE.white>
-              {chainId === ChainId.ARBITRUM_ONE && nativeCurrencyBalance?.equalTo('0') && (
+              <RowBetween>
+                <div>
+                  <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
+                    UNCLAIMED SWPR
+                  </TYPE.small>
+                  <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
+                    {unclaimedBalance?.toFixed(3) || '0'}
+                  </TYPE.white>
+                </div>
+                {oldSwprBalance?.greaterThan('0') && (
+                  <div>
+                    <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
+                      UNCONVERTED SWPR
+                    </TYPE.small>
+                    <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
+                      {oldSwprBalance?.toFixed(3) || '0'}
+                    </TYPE.white>
+                  </div>
+                )}
+              </RowBetween>
+              {!isOldSwprLp && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
                 <>
                   <NativeCurrencyWarning>
-                    You have no Arbitrum ETH to claim your SWPR. Please make sure to transfer enough ETH to Arbitrum
-                    using the official bridge in order to complete the transaction.
+                    You have no Arbitrum ETH to perform the operation. Please make sure to transfer enough ETH to
+                    Arbitrum using the official bridge in order to complete the transaction.
                   </NativeCurrencyWarning>
                   <ButtonPrimary
                     as="a"
@@ -201,18 +207,20 @@ export default function ClaimModal({
                   </ButtonPrimary>
                 </>
               )}
-              <StyledClaimButton
-                disabled={
-                  (!!account && !availableClaim) ||
-                  (chainId === ChainId.ARBITRUM_ONE && nativeCurrencyBalance?.equalTo('0'))
-                }
-                padding="16px 16px"
-                width="100%"
-                mt="1rem"
-                onClick={onClick}
-              >
-                {!account ? 'Connect wallet' : correctNetwork ? 'Claim SWPR' : 'Switch to Arbitrum One'}
-              </StyledClaimButton>
+              {isOldSwprLp && 'Static text telling the user to pull the liquidity'}
+              {!availableClaim && correctNetwork && oldSwprBalance?.greaterThan('0') && !isOldSwprLp && (
+                <ConvertFlow oldSwprBalance={oldSwprBalance} onError={handleConversionError} />
+              )}
+              {(availableClaim || !correctNetwork) && !isOldSwprLp && (
+                <ActionButton
+                  availableClaim={availableClaim}
+                  nativeCurrencyBalance={nativeCurrencyBalance}
+                  correctNetwork={correctNetwork}
+                  onConnectWallet={onConnectWallet}
+                  onSwitchToArbitrum={onSwitchToArbitrum}
+                  onClaim={onClaim}
+                />
+              )}
             </BottomAutoColumn>
             <ExternalLink href="https://medium.com/swapr/announcing-swpr-token-e8ab12dbad45">
               <Row justifyContent="center" width="100%">
