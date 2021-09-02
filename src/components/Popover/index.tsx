@@ -88,6 +88,7 @@ export default function Popover({ content, show, children, placement = 'auto', s
     modifiers: [
       { name: 'offset', options: { offset: [8, 8] } },
       { name: 'arrow', options: { element: arrowElement } },
+      { name: 'preventOverflow', options: { padding: 8 } },
     ],
   })
   const updateCallback = useCallback(() => {

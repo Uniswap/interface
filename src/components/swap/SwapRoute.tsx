@@ -5,9 +5,11 @@ import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AutoColumn } from 'components/Column'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
+import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+import { getTradeVersion } from 'utils/getTradeVersion'
 import { RouterLabel } from './RouterLabel'
 
 const Separator = styled.div`
@@ -26,7 +28,7 @@ export default memo(function SwapRoute({
       <RowBetween>
         <RouterLabel />
         <TYPE.black fontSize={14}>
-          {trade instanceof V2Trade ? <Trans>Best route via V2</Trans> : <Trans>Best route via V3</Trans>}
+          {getTradeVersion(trade) === Version.v2 ? <Trans>Best route via V2</Trans> : <Trans>Best route via V3</Trans>}
         </TYPE.black>
       </RowBetween>
       <Separator />

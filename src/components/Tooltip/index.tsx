@@ -1,8 +1,8 @@
-import { ReactNode, useCallback, useState } from 'react'
+import { cloneElement, ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
 
-const TooltipContainer = styled.div<{ width?: string }>`
+export const TooltipContainer = styled.div<{ width?: string }>`
   width: ${({ width }) => width ?? '256px'};
   padding: 0.6rem 1rem;
   font-weight: 400;
@@ -19,21 +19,18 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
-  width?: string
-  containerStyles?: React.CSSProperties
+  container?: JSX.Element
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
-function TooltipContent({ content, width, containerStyles, ...rest }: TooltipContentProps) {
+function TooltipContent({ content, container, ...rest }: TooltipContentProps) {
   return (
     <Popover
       content={
-        <TooltipContainer width={width} style={containerStyles}>
-          {content}
-        </TooltipContainer>
+        container ? cloneElement(container, { children: content }) : <TooltipContainer>{content}</TooltipContainer>
       }
       {...rest}
     />

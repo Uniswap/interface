@@ -17,6 +17,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { routeToString } from 'utils/routes'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -27,7 +28,13 @@ import Loader from '../../components/Loader'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import {
+  ArrowWrapper,
+  Dots,
+  ResponsiveTooltipContainer,
+  SwapCallbackError,
+  Wrapper,
+} from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
@@ -129,8 +136,20 @@ export default function Swap({ history }: RouteComponentProps) {
 
     if (bestTrade !== trade) {
       toggleVersionCallback()
+
+      ReactGA.event({
+        category: 'Swap',
+        action: 'Automatic Version Toggle',
+        label: [
+          trade?.inputAmount?.currency?.symbol,
+          trade?.outputAmount?.currency?.symbol,
+          v2Trade?.route.path.map((t) => t.symbol).join('-'),
+          v3Trade?.swaps.map(({ route }) => routeToString(route)).join(';'),
+          getTradeVersion(trade),
+        ].join('/'),
+      })
     }
-  }, [bestTrade, toggleVersionCallback, trade])
+  }, [bestTrade, toggleVersionCallback, trade, v2Trade?.route.path, v3Trade?.swaps])
 
   const {
     wrapType,
@@ -441,8 +460,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Row justify={!trade ? 'center' : 'space-between'}>
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
-                    width="auto"
-                    containerStyles={{ backgroundColor: theme.bg0, border: `1px solid ${theme.bg2}` }}
+                    container={<ResponsiveTooltipContainer />}
                     content={<SwapRoute trade={trade} />}
                     placement="top"
                     showArrow={false}
@@ -461,8 +479,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         setShowInverted={setShowInverted}
                       />
                       <MouseoverTooltipContent
-                        width="295px"
-                        containerStyles={{ backgroundColor: theme.bg0, border: `1px solid ${theme.bg2}` }}
+                        container={<ResponsiveTooltipContainer origin="bottom right" width={'295px'} />}
                         content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
                         placement="top"
                         showArrow={false}

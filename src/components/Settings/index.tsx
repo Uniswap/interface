@@ -199,7 +199,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Optimized Router</Trans>
                 </TYPE.black>
-                <QuestionHelper text={<Trans>Optimizes trade routes with the Uniswap API.</Trans>} />
+                <QuestionHelper text={<Trans>Optimize trades with split routes and gas estimation.</Trans>} />
               </RowFixed>
               <Toggle
                 id="toggle-optimized-router-button"

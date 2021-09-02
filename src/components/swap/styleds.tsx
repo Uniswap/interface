@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 import { TYPE } from 'theme'
+import { TooltipContainer } from 'components/Tooltip'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -133,4 +134,15 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
 export const TransactionDetailsLabel = styled(TYPE.black)`
   border-bottom: 1px solid ${({ theme }) => theme.bg2};
   padding-bottom: 0.5rem;
+`
+
+export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg2};
+  width: ${({ width }) => width ?? 'auto'};
+
+  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+    transform: scale(0.8);
+    transform-origin: ${origin ?? 'bottom left'};
+  `}
 `
