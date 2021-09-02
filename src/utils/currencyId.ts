@@ -22,5 +22,19 @@ export function currencyIdFromAddress(address: string, chainId?: ChainId): strin
     return 'MATIC'
   }
 
+  if (
+    (chainId === ChainId.BSCMAINNET || chainId === ChainId.BSCTESTNET) &&
+    WETH[chainId].address.toLowerCase() === address.toLowerCase()
+  ) {
+    return 'BNB'
+  }
+
+  if (
+    (chainId === ChainId.AVAXMAINNET || chainId === ChainId.AVAXTESTNET) &&
+    WETH[chainId].address.toLowerCase() === address.toLowerCase()
+  ) {
+    return 'AVAX'
+  }
+
   return address
 }
