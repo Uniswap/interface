@@ -31,7 +31,6 @@ const StyledPollingDot = styled.div`
   height: 8px;
   min-height: 8px;
   min-width: 8px;
-  margin-left: 0.5rem;
   border-radius: 50%;
   position: relative;
   background-color: ${({ theme }) => theme.green1};
@@ -96,7 +95,7 @@ export default function Polling() {
     >
       <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <StyledPollingNumber breathe={isMounting} hovering={isHover}>
-          {blockNumber}
+          {blockNumber}&ensp;
         </StyledPollingNumber>
         <StyledPollingDot>{isMounting && <Spinner />}</StyledPollingDot>
       </StyledPolling>
