@@ -86,7 +86,7 @@ export interface SwapReq {
   to: string
 }
 
-const serverUrl = 'http://localhost:4000'
+const serverUrl = 'https://api-staging.mistx.io/'
 
 let socket: MistxSocket | null = null
 
