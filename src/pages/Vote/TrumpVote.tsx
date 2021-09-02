@@ -76,7 +76,7 @@ export const TrumpVote = ( ) => {
                 </Body>
 
                 <div style={{width:'100%', padding: '15px 0px'}}>
-                <ButtonPrimary> <StyledInternalLink style={{color: '#fff'}} to="/proposal/create">Create a proposal now.</StyledInternalLink></ButtonPrimary>
+                <ButtonPrimary onClick={e => document.getElementById("idA")?.click()}> <StyledInternalLink id="idA" style={{width: '100%',color: '#fff'}} to="/proposal/create">Create a proposal now.</StyledInternalLink></ButtonPrimary>
 
                 </div>
             </OutlineCard>
