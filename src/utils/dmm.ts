@@ -444,5 +444,5 @@ export function checkIsFarmingPool(address: string, chainId?: ChainId): boolean 
 
   const farmingPools = FARMING_POOLS[chainId]
 
-  return farmingPools.includes(address)
+  return farmingPools.includes(address) || farmingPools.includes(address.toLowerCase())
 }
