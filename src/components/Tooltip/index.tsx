@@ -11,10 +11,6 @@ const TooltipContainer = styled.div<{ width?: string }>`
   background: ${({ theme }) => theme.bg2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.bg3};
-
-  /* make TooltipContainer customizable either through styles or ReactNode */
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg2};
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
@@ -24,14 +20,24 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
   width?: string
+  containerStyles?: React.CSSProperties
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
-function TooltipContent({ content, width, ...rest }: TooltipContentProps) {
-  return <Popover content={<TooltipContainer width={width}>{content}</TooltipContainer>} {...rest} />
+function TooltipContent({ content, width, containerStyles, ...rest }: TooltipContentProps) {
+  return (
+    <Popover
+      content={
+        <TooltipContainer width={width} style={containerStyles}>
+          {content}
+        </TooltipContainer>
+      }
+      {...rest}
+    />
+  )
 }
 
 export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {

@@ -442,6 +442,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     width="auto"
+                    containerStyles={{ backgroundColor: theme.bg0, border: `1px solid ${theme.bg2}` }}
                     content={<SwapRoute trade={trade} />}
                     placement="top"
                     showArrow={false}
@@ -461,6 +462,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       />
                       <MouseoverTooltipContent
                         width="295px"
+                        containerStyles={{ backgroundColor: theme.bg0, border: `1px solid ${theme.bg2}` }}
                         content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
                         placement="top"
                         showArrow={false}
