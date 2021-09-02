@@ -103,7 +103,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     return {
       // always return VALID regardless of isFetching status
       state: V3TradeState.VALID,
-      trade: trade,
+      trade,
       gasPriceWei,
       gasUseEstimate,
     }
@@ -168,7 +168,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
     return {
       state: V3TradeState.VALID,
-      trade: trade,
+      trade,
       gasPriceWei,
       gasUseEstimate,
     }

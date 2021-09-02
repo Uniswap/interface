@@ -25,21 +25,25 @@ export default function useToggledVersion(): Version {
   }
 }
 
-/** Returns a callback to toggle to `target` version. */
-export function useToggleVersionCallback(target: Version) {
+export function useToggleVersionCallback() {
   const location = useLocation()
   const search = useParsedQueryString()
   const history = useHistory()
+  const version = useToggledVersion()
 
   const linkDestination = useMemo(() => {
+    // pluck `use` out of object
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { use, ...rest } = search
+    const newUse = version === DEFAULT_VERSION ? { use: Version.v2 } : {}
     return {
       ...location,
-      search: `${stringify({
-        ...search,
-        use: target !== DEFAULT_VERSION ? target : undefined,
+      search: `?${stringify({
+        ...rest,
+        ...newUse,
       })}`,
     }
-  }, [location, search, target])
+  }, [location, search, version])
 
   return useCallback(() => {
     history.replace(linkDestination)

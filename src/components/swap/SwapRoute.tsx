@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -25,11 +26,7 @@ export default memo(function SwapRoute({
       <RowBetween>
         <RouterLabel />
         <TYPE.black fontSize={14}>
-          {trade instanceof V2Trade
-            ? `Best route via V2`
-            : trade.swaps.length === 1
-            ? `Best route via V3`
-            : `Best route via ${trade.swaps.length} hops on V3`}
+          {trade instanceof V2Trade ? <Trans>Best route via V2</Trans> : <Trans>Best route via V3</Trans>}
         </TYPE.black>
       </RowBetween>
       <Separator />
@@ -69,7 +66,7 @@ function getTokenPath(
     }
 
     return {
-      percent: percent,
+      percent,
       path,
     }
   })

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { LoadingBar } from 'components/Loader/LoadingBar'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { RouterLabel } from 'components/swap/RouterLabel'
@@ -120,16 +121,16 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
 
-  const toggleToBestVersionCallback = useToggleVersionCallback(bestTrade instanceof V2Trade ? Version.v2 : Version.v3)
+  const toggleVersionCallback = useToggleVersionCallback()
 
   // automatically toggle best version
   useEffect(() => {
     if (!bestTrade || !trade) return
 
     if (bestTrade !== trade) {
-      toggleToBestVersionCallback()
+      toggleVersionCallback()
     }
-  }, [bestTrade, toggleToBestVersionCallback, trade])
+  }, [bestTrade, toggleVersionCallback, trade])
 
   const {
     wrapType,
@@ -206,8 +207,8 @@ export default function Swap({ history }: RouteComponentProps) {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
   const routeNotFound = toggledVersion === Version.v3 ? !v3Trade?.swaps : !trade?.route
-  const isLoadingRoute = toggledVersion === Version.v3 && V3TradeState.LOADING === v3TradeState
-  const isSyncingRoute = toggledVersion === Version.v3 && V3TradeState.SYNCING === v3TradeState
+  const isLoadingRoute = V3TradeState.LOADING === v3TradeState
+  const isSyncingRoute = V3TradeState.SYNCING === v3TradeState
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
@@ -393,6 +394,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
                 id="swap-currency-input"
+                loading={independentField === Field.OUTPUT && isSyncingRoute}
               />
               <ArrowWrapper clickable>
                 <ArrowDown
@@ -411,13 +413,13 @@ export default function Swap({ history }: RouteComponentProps) {
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
-                // TODO(judo): keep?
                 priceImpact={isSyncingRoute ? undefined : priceImpact}
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
+                loading={independentField === Field.INPUT && isSyncingRoute}
               />
             </div>
 
@@ -435,56 +437,23 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
 
-            {showWrap ? null : (
-              <>
-                <Row justify={!trade ? 'center' : 'space-between'}>
-                  <RowFixed style={{ position: 'relative' }}>
-                    {/* {[V3TradeState.VALID, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
-                      (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                        <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                      ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                        <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-                      ) : (
-                        toggledVersion === Version.v2 && (
-                          <ButtonGray
-                            width="fit-content"
-                            padding="0.1rem 0.5rem 0.1rem 0.35rem"
-                            as={Link}
-                            to="/swap"
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              height: '24px',
-                              lineHeight: '120%',
-                              marginLeft: '0.75rem',
-                            }}
-                          >
-                            <ArrowLeft color={theme.text3} size={12} /> &nbsp;
-                            <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                              <Trans>
-                                <HideSmall>Back to </HideSmall>
-                                V3
-                              </Trans>
-                            </TYPE.main>
-                          </ButtonGray>
-                        )
-                      ))} */}
-
-                    {/*TODO can merge condition */}
-                    {trade ? (
-                      <MouseoverTooltipContent
-                        width="auto"
-                        content={<SwapRoute trade={trade} />}
-                        placement="top"
-                        showArrow={false}
-                      >
-                        <RouterLabel />
-                      </MouseoverTooltipContent>
-                    ) : null}
-                  </RowFixed>
-                  {trade ? (
-                    <RowFixed>
+            {!showWrap && trade && (
+              <Row justify={!trade ? 'center' : 'space-between'}>
+                <RowFixed style={{ position: 'relative' }}>
+                  <MouseoverTooltipContent
+                    width="auto"
+                    content={<SwapRoute trade={trade} />}
+                    placement="top"
+                    showArrow={false}
+                  >
+                    <RouterLabel syncing={isSyncingRoute} />
+                  </MouseoverTooltipContent>
+                </RowFixed>
+                <RowFixed>
+                  {isSyncingRoute ? (
+                    <LoadingBar width={125} height={17} style={{ marginRight: '1rem' }} />
+                  ) : (
+                    <>
                       <TradePrice
                         price={trade.executionPrice}
                         showInverted={showInverted}
@@ -498,10 +467,10 @@ export default function Swap({ history }: RouteComponentProps) {
                       >
                         <StyledInfo />
                       </MouseoverTooltipContent>
-                    </RowFixed>
-                  ) : null}
-                </Row>
-              </>
+                    </>
+                  )}
+                </RowFixed>
+              </Row>
             )}
 
             <div>
@@ -536,8 +505,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </TYPE.main>
                 </GreyCard>
-              ) : // TODO(judo): needed?
-              isSyncingRoute ? (
+              ) : isSyncingRoute ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     <Dots>

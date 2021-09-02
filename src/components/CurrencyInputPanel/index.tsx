@@ -19,6 +19,7 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { LoadingBar } from 'components/Loader/LoadingBar'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -80,6 +81,7 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
+  justify-content: space-between;
   padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
 `
 
@@ -164,6 +166,7 @@ interface CurrencyInputPanelProps {
   disableNonToken?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
+  loading?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -185,6 +188,7 @@ export default function CurrencyInputPanel({
   pair = null, // used for double token logo
   hideInput = false,
   locked = false,
+  loading = false,
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -246,8 +250,10 @@ export default function CurrencyInputPanel({
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
-          {!hideInput && (
-            <>
+          {!hideInput &&
+            (loading ? (
+              <LoadingBar width={150} height={25} />
+            ) : (
               <NumericalInput
                 className="token-amount-input"
                 value={value}
@@ -255,8 +261,7 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-            </>
-          )}
+            ))}
         </InputRow>
         {!hideInput && !hideBalance && (
           <FiatRow>
@@ -289,7 +294,11 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              {loading ? (
+                <LoadingBar width={115} height={17} />
+              ) : (
+                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              )}
             </RowBetween>
           </FiatRow>
         )}
