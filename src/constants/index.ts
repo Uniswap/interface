@@ -758,7 +758,8 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
       : [
           '0x6170B6d96167346896169b35e1E9585feAB873bb',
           '0xec303cE1eDbEbF7e71fc7B350341bB6A6A7a6381',
-          '0xc3daC2049616326E7D596cE52062789d96373b55'
+          '0xc3daC2049616326E7D596cE52062789d96373b55',
+          '0xd26fa4D47Ab61C03259F0CBC9054890DF5C3B7aD'
         ],
   [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
   [ChainId.AVAXMAINNET]: []
