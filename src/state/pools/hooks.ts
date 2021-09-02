@@ -122,6 +122,26 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
     }
   }
 
+  if (chainId === ChainId.BSCMAINNET) {
+    if (data?.token0?.id === '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c') {
+      data.token0 = { ...data.token0, name: 'BNB (Wrapped)', symbol: 'BNB' }
+    }
+
+    if (data?.token1?.id === '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c') {
+      data.token1 = { ...data.token1, name: 'BNB (Wrapped)', symbol: 'BNB' }
+    }
+  }
+
+  if (chainId === ChainId.AVAXMAINNET) {
+    if (data?.token0?.id === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
+      data.token0 = { ...data.token0, name: 'AVAX (Wrapped)', symbol: 'AVAX' }
+    }
+
+    if (data?.token1?.id === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
+      data.token1 = { ...data.token1, name: 'AVAX (Wrapped)', symbol: 'AVAX' }
+    }
+  }
+
   return data
 }
 
