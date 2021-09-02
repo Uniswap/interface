@@ -1,7 +1,7 @@
 import { ButtonPrimary } from 'components/Button'
 import { DarkCard, OutlineCard } from 'components/Card'
 import React from 'react'
-import { ChevronLeft, ThumbsDown, ThumbsUp } from 'react-feather'
+import { ChevronLeft, ExternalLink, ThumbsDown, ThumbsUp } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -97,7 +97,7 @@ export const ProposalDetails = () => {
                 {data && (
                 <>
                 <Header style={{alignItems:'center'}}>{data.title} &nbsp;
-                <small style={{fontSize:10}}>(proposed by <i>{data.proposedBy}</i> )</small></Header>
+               <small><a style={{fontSize:12}}  href={`https://etherscan.io/address/${data.proposedBy}`}>(proposed by <i>{data.proposedBy}</i> )</a></small> </Header>
                 <Body>
                     {proposalExpired && <BlueCard><TYPE.main>The proposal expired. Proposals only last for 7 days, which after they are closed and the votes are final.</TYPE.main></BlueCard>}
                     <div style={{display:'block', marginBottom: 15, width: '100%;' }}>
