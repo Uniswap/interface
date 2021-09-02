@@ -16,10 +16,12 @@
   },
   "extends": [
     "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
+    "prettier"
   ],
+  "plugins": ["prettier", "@typescript-eslint"],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": "error",
