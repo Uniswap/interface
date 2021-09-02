@@ -12,6 +12,13 @@ export const BSC_MAINNET_TOKEN_LIST = {
     },
     {
       chainId: 56,
+      address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+      symbol: 'ETH',
+      name: 'Ether',
+      decimals: 18
+    },
+    {
+      chainId: 56,
       address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
       symbol: 'USDC',
       name: 'USDC',
