@@ -429,7 +429,7 @@ export default function Header() {
                 </div>
                 <div
                   onClick={() => {
-                    alert(`Trump Gold is coming soon to a place near you.`)
+                    setClip('0x29699C8485302cd2857043FaB8bd885bA08Cf268')
                   }}
                   style={{ fontSize: 12, paddingTop: 5, cursor: 'not-allowed' }}
                 >
@@ -437,7 +437,7 @@ export default function Header() {
                   <Row>
                     <AutoColumn>
                       <TYPE.main>Trump Gold</TYPE.main>
-                      <StyledInput value={'COMING SOON'} />
+                      <StyledInput value={'0x29699C8485302cd2857043FaB8bd885bA08Cf268'} />
                     </AutoColumn>
                     <AutoColumn>
                       <Clipboard style={{ marginTop: 13 }} />
