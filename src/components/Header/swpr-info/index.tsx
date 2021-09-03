@@ -32,9 +32,9 @@ interface SwprInfoProps {
 
 export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }: SwprInfoProps) {
   const { account } = useActiveWeb3React()
-  const { loading: loadingClaimAvailable, available: claimAvailable } = useIsClaimAvailable(account)
+  const { available: claimAvailable } = useIsClaimAvailable(account)
 
-  if (!loadingClaimAvailable && claimAvailable)
+  if (claimAvailable)
     return (
       <AirdropSign onClick={onToggleClaimPopup}>
         <span role="img" aria-label="Airdrop emoji">
