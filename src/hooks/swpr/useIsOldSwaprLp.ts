@@ -1,9 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
-import { ChainId } from '@swapr/sdk'
 import { getAddress } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../'
-import { subgraphClients } from '../../apollo/client'
+import { oldBuildClient } from '../../apollo/client'
 import { OLD_SWPR } from '../../constants'
 
 // Only fetches liquidity and liquidity mining positions in which the user
@@ -57,7 +56,7 @@ export function useIsOldSwaprLp(
     return oldSwpr ? getAddress(oldSwpr.address) : undefined
   }, [chainId])
   const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
-    client: subgraphClients[ChainId.ARBITRUM_RINKEBY], // TODO: change to Arb1 before going live
+    client: oldBuildClient, // TODO: change to Arb1 before going live
     fetchPolicy: 'network-only',
     pollInterval: 3000,
     variables: {

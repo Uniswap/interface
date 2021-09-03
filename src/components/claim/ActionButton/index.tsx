@@ -66,7 +66,7 @@ export function ActionButton({
       const anchor = document.createElement('a')
       Object.assign(anchor, {
         target: '_blank',
-        href: 'https://dxdao.eth.link',
+        href: 'https://ipfs.io/ipfs/Qmd2pFBCgLoGErcaWMKX6wL7wdf8h6faDMxswfYFCQQCwu',
         rel: 'noopener noreferrer'
       }).click()
       anchor.remove()
