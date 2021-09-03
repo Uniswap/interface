@@ -100,7 +100,7 @@ export const useMultiStakeRewards = (
     const totalStakedAmount = new TokenAmount(stakingToken, totalSupplyRaw.toString())
     const totalRewardRates = [
       new TokenAmount(rewardsToken, totalRewardRateRaw.toString()),
-      ...underlyingPool.totalRewardRates,
+      ...underlyingPool.totalRewardRates.reverse(), // TODO: Hardcode reverse
     ]
 
     const rewardRates = stakedAmount
