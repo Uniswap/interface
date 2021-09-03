@@ -7,14 +7,14 @@ export const defaultSubgraphClient = new ApolloClient({
 })
 
 export const oldBuildClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby', // TODO: change to Arb1 once going live
+  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr_rinkeby', // TODO: change to Arb1 once going live
   cache: new InMemoryCache()
 })
 
 export const subgraphClients: { [chainId in ChainId]?: ApolloClient<NormalizedCacheObject> | undefined } = {
   [ChainId.MAINNET]: defaultSubgraphClient,
   [ChainId.RINKEBY]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr_rinkeby',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-rinkeby-new',
     cache: new InMemoryCache()
   }),
   [ChainId.XDAI]: new ApolloClient({

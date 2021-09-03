@@ -17,8 +17,32 @@
   },
   {
     "inputs": [],
+    "name": "NothingToConvert",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "ZeroAddressInput",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Convert",
+    "type": "event"
   },
   {
     "anonymous": false,

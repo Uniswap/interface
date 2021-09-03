@@ -56,7 +56,7 @@ export function useIsOldSwaprLp(
     return oldSwpr ? getAddress(oldSwpr.address) : undefined
   }, [chainId])
   const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
-    client: oldBuildClient, // TODO: change to Arb1 before going live
+    client: oldBuildClient,
     fetchPolicy: 'network-only',
     pollInterval: 3000,
     variables: {
