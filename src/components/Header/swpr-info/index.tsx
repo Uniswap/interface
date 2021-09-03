@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../../hooks'
 import useIsClaimAvailable from '../../../hooks/swpr/useIsClaimAvailable'
+import { useIsOldSwaprLp } from '../../../hooks/swpr/useIsOldSwaprLp'
 import useDebounce from '../../../hooks/useDebounce'
 import { Amount } from '../index'
 
@@ -34,9 +35,11 @@ interface SwprInfoProps {
 export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }: SwprInfoProps) {
   const { account } = useActiveWeb3React()
   const { available: claimAvailable } = useIsClaimAvailable(account)
+  const { isOldSwprLp } = useIsOldSwaprLp()
 
   const debouncedClaimAvailable = useDebounce(claimAvailable, 1000)
   const debouncedOldSwprBalance = useDebounce(oldSwprBalance, 1000)
+  const debouncedIsOldSwprLp = useDebounce(isOldSwprLp, 1000)
 
   if (debouncedClaimAvailable)
     return (
@@ -47,7 +50,7 @@ export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }:
         Claim SWPR airdrop and convert
       </AirdropSign>
     )
-  if (debouncedOldSwprBalance && debouncedOldSwprBalance.greaterThan('0'))
+  if (debouncedIsOldSwprLp || debouncedOldSwprBalance?.greaterThan('0'))
     return (
       <AirdropSign onClick={onToggleClaimPopup}>
         <span role="img" aria-label="Convert SWPR emoji">
