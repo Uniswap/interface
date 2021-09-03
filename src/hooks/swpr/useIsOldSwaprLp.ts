@@ -59,6 +59,7 @@ export function useIsOldSwaprLp(
   const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
     client: subgraphClients[ChainId.RINKEBY], // TODO: change to Arb1 before going live
     fetchPolicy: 'network-only',
+    pollInterval: 3000,
     variables: {
       account: account?.toLowerCase() || ''
     }
