@@ -2411,10 +2411,10 @@
   dependencies:
     "@swapr/core" "^0.3.11"
 
-"@swapr/sdk@^0.10.4":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.4.tgz#75fbf82c9476f14e8ef027257028b52ba04921d6"
-  integrity sha512-ZFgnTBuRCnJ553GkqQR1xoPsebUE2HpHCL/afv/ZGNI27thO8zL5vnn6ZhZ9gKUeRP28cq4unYQltoR+RyKGGA==
+"@swapr/sdk@^0.10.6-rc.1":
+  version "0.10.6-rc.1"
+  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.6-rc.1.tgz#022a80858684db9076ea2a5eb3b0915e6f5912f4"
+  integrity sha512-sP9TbyYKsu9CrSh3IygMdLa+qgRZ/EJXaRBQog4FnkEdhRJfadPuL4xRUdFs6JBtppILJAkXt+RS14IjjONt7g==
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     "@swapr/core" "^0.3.11"

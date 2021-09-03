@@ -40,7 +40,7 @@ export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }:
         <span role="img" aria-label="Airdrop emoji">
           ✨
         </span>{' '}
-        Claim airdrop
+        Claim SWPR airdrop and convert
       </AirdropSign>
     )
   if (oldSwprBalance && oldSwprBalance.greaterThan('0'))

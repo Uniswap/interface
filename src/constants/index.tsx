@@ -333,7 +333,7 @@ export const OLD_SWPR: { [key: number]: Token } = {
   ),
   [ChainId.ARBITRUM_RINKEBY]: new Token(
     ChainId.ARBITRUM_RINKEBY,
-    '0x6C423f8BEb6713Fd075EA09Fd90a7A736bc80e81',
+    '0x0103fc84eAd421Ee4d438E280B32B90a22eAfcCB',
     18,
     'SWPR',
     'Swapr'

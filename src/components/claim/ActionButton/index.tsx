@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../../hooks'
 import { ButtonPrimary } from '../../Button'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { AutoColumn } from '../../Column'
 
 const StyledClaimButton = styled(ButtonPrimary)`
   color: ${props => props.theme.white} !important;
@@ -17,6 +18,7 @@ interface ActionButtonProps {
   availableClaim: boolean
   nativeCurrencyBalance?: CurrencyAmount
   correctNetwork: boolean
+  isOldSwprLp: boolean
   onConnectWallet: () => void
   onSwitchToArbitrum: () => void
   onClaim: () => void
@@ -26,6 +28,7 @@ export function ActionButton({
   availableClaim,
   nativeCurrencyBalance,
   correctNetwork,
+  isOldSwprLp,
   onConnectWallet,
   onSwitchToArbitrum,
   onClaim
@@ -41,28 +44,41 @@ export function ActionButton({
     // this else if handles cases where no airdrop nor conversion is available,
     // or when the user is in the correct network but no native currency
     // balance is there
+    else if (correctNetwork && isOldSwprLp) localDisabled = false
     else if (!availableClaim || (correctNetwork && nativeCurrencyBalance?.equalTo('0'))) localDisabled = true
     else localDisabled = false
     setDisabled(localDisabled)
-  }, [account, availableClaim, chainId, correctNetwork, nativeCurrencyBalance])
+  }, [account, availableClaim, chainId, correctNetwork, isOldSwprLp, nativeCurrencyBalance])
 
   useEffect(() => {
     let buttonText = 'Claim SWPR'
     if (!!!account) buttonText = 'Connect wallet'
     else if (!correctNetwork) buttonText = 'Switch to Arbitrum'
     else if (availableClaim) buttonText = 'Claim SWPR'
+    else if (isOldSwprLp) buttonText = 'Pull liquidity'
     setText(buttonText)
-  }, [account, availableClaim, correctNetwork])
+  }, [account, availableClaim, correctNetwork, isOldSwprLp])
 
   const handleLocalClick = useCallback(() => {
     if (!account) onConnectWallet()
     else if (!correctNetwork && connector instanceof InjectedConnector) onSwitchToArbitrum()
-    else if (availableClaim) onClaim()
-  }, [account, onConnectWallet, correctNetwork, connector, onSwitchToArbitrum, availableClaim, onClaim])
+    else if (isOldSwprLp) {
+      const anchor = document.createElement('a')
+      Object.assign(anchor, {
+        target: '_blank',
+        href: 'https://dxdao.eth.link',
+        rel: 'noopener noreferrer'
+      }).click()
+      anchor.remove()
+    } else if (availableClaim) onClaim()
+  }, [account, onConnectWallet, correctNetwork, connector, onSwitchToArbitrum, isOldSwprLp, availableClaim, onClaim])
 
   return (
-    <StyledClaimButton disabled={disabled} padding="16px 16px" width="100%" mt="1rem" onClick={handleLocalClick}>
-      {text}
-    </StyledClaimButton>
+    <AutoColumn gap="16px">
+      <StyledClaimButton disabled={disabled} padding="16px 16px" width="100%" mt="1rem" onClick={handleLocalClick}>
+        {text}
+      </StyledClaimButton>
+      {availableClaim && 'The claimed tokens will need to be converted in the next step'}
+    </AutoColumn>
   )
 }

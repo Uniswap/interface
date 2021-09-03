@@ -9,13 +9,19 @@ import { ButtonPrimary } from '../../Button'
 import ProgressCircles from '../../ProgressSteps'
 import { useConvertSwprCallback } from '../../../hooks/swpr/useConvertSwprCallback'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
+import styled from 'styled-components'
+
+const StyledAutoColumn = styled(AutoColumn)<{ disabled: boolean }>`
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
+`
 
 interface ConvertFlowProps {
   oldSwprBalance: TokenAmount
+  disabled: boolean
   onError: () => void
 }
 
-export function ConvertFlow({ oldSwprBalance, onError }: ConvertFlowProps) {
+export function ConvertFlow({ oldSwprBalance, disabled, onError }: ConvertFlowProps) {
   const { chainId, account } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
@@ -38,16 +44,24 @@ export function ConvertFlow({ oldSwprBalance, onError }: ConvertFlowProps) {
   }, [addTransaction, convertSwprCallback, oldSwprBalance, onError])
 
   return (
-    <AutoColumn>
+    <StyledAutoColumn disabled={disabled}>
       <RowBetween mt="1rem" mb="1rem">
-        <ButtonPrimary width="48%" onClick={approveCallback} disabled={approvalState !== ApprovalState.NOT_APPROVED}>
+        <ButtonPrimary
+          width="48%"
+          onClick={approveCallback}
+          disabled={disabled || approvalState !== ApprovalState.NOT_APPROVED}
+        >
           Approve
         </ButtonPrimary>
-        <ButtonPrimary width="48%" onClick={handleConvert} disabled={approvalState !== ApprovalState.APPROVED}>
+        <ButtonPrimary
+          width="48%"
+          onClick={handleConvert}
+          disabled={disabled || approvalState !== ApprovalState.APPROVED}
+        >
           Convert
         </ButtonPrimary>
       </RowBetween>
       <ProgressCircles steps={[approvalState === ApprovalState.APPROVED]} />
-    </AutoColumn>
+    </StyledAutoColumn>
   )
 }

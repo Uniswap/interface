@@ -89,7 +89,7 @@ export default function ClaimModal({
 
   const addTransaction = useTransactionAdder()
   const nativeCurrencyBalance = useNativeCurrencyBalance()
-  const { isOldSwprLp } = useIsOldSwaprLp(account || undefined)
+  const { loading: loadingIsOldSwaprLp, isOldSwprLp } = useIsOldSwaprLp(account || undefined)
   const claimCallback = useClaimCallback(account || undefined)
   const updateClaimTxConfirmed = useClaimTxConfirmedUpdater()
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
@@ -169,6 +169,12 @@ export default function ClaimModal({
                 Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
               </NetworkWarning>
             )}
+            {correctNetwork && isOldSwprLp && (
+              <NativeCurrencyWarning>
+                Seems like you have provided liquidity for an old SWPR pair. Please pull all the provided liquidity
+                before proceeding.
+              </NativeCurrencyWarning>
+            )}
             <BottomAutoColumn gap="8px">
               <RowBetween>
                 <div>
@@ -179,16 +185,14 @@ export default function ClaimModal({
                     {unclaimedBalance?.toFixed(3) || '0'}
                   </TYPE.white>
                 </div>
-                {oldSwprBalance?.greaterThan('0') && (
-                  <div>
-                    <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                      UNCONVERTED SWPR
-                    </TYPE.small>
-                    <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                      {oldSwprBalance?.toFixed(3) || '0'}
-                    </TYPE.white>
-                  </div>
-                )}
+                <div>
+                  <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
+                    UNCONVERTED SWPR
+                  </TYPE.small>
+                  <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
+                    {oldSwprBalance?.toFixed(3) || '0'}
+                  </TYPE.white>
+                </div>
               </RowBetween>
               {!isOldSwprLp && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
                 <>
@@ -207,18 +211,22 @@ export default function ClaimModal({
                   </ButtonPrimary>
                 </>
               )}
-              {isOldSwprLp && 'Static text telling the user to pull the liquidity'}
-              {!availableClaim && correctNetwork && oldSwprBalance?.greaterThan('0') && !isOldSwprLp && (
-                <ConvertFlow oldSwprBalance={oldSwprBalance} onError={handleConversionError} />
-              )}
-              {(availableClaim || !correctNetwork) && !isOldSwprLp && (
+              {(availableClaim || !correctNetwork || isOldSwprLp) && (
                 <ActionButton
                   availableClaim={availableClaim}
                   nativeCurrencyBalance={nativeCurrencyBalance}
                   correctNetwork={correctNetwork}
+                  isOldSwprLp={isOldSwprLp}
                   onConnectWallet={onConnectWallet}
                   onSwitchToArbitrum={onSwitchToArbitrum}
                   onClaim={onClaim}
+                />
+              )}
+              {correctNetwork && oldSwprBalance?.greaterThan('0') && (
+                <ConvertFlow
+                  disabled={loadingIsOldSwaprLp || isOldSwprLp}
+                  oldSwprBalance={oldSwprBalance}
+                  onError={handleConversionError}
                 />
               )}
             </BottomAutoColumn>

@@ -64,28 +64,26 @@ export function useIsOldSwaprLp(
     }
   })
 
-  return useMemo(() => {
-    if (loadingMyPairs) return { loading: true, isOldSwprLp: false }
-    if (
-      !data ||
-      !data.liquidityPositions ||
-      !data.liquidityMiningPositions ||
-      (data.liquidityPositions.length === 0 && data.liquidityMiningPositions.length === 0) ||
-      error ||
-      !chainId ||
-      !oldSwprTokenAddress
-    )
-      return { loading: false, isOldSwprLp: false }
-
-    const liquidityPositions = data.liquidityMiningPositions.concat(data.liquidityPositions)
-    for (let i = 0; i < liquidityPositions.length; i++) {
-      const position = liquidityPositions[i]
-      if (
-        getAddress(position.pair.token0.address) === oldSwprTokenAddress ||
-        getAddress(position.pair.token1.address) === oldSwprTokenAddress
-      )
-        return { loading: false, isOldSwprLp: true }
-    }
+  if (loadingMyPairs) return { loading: true, isOldSwprLp: false }
+  if (
+    !data ||
+    !data.liquidityPositions ||
+    !data.liquidityMiningPositions ||
+    (data.liquidityPositions.length === 0 && data.liquidityMiningPositions.length === 0) ||
+    error ||
+    !chainId ||
+    !oldSwprTokenAddress
+  )
     return { loading: false, isOldSwprLp: false }
-  }, [chainId, data, error, loadingMyPairs, oldSwprTokenAddress])
+
+  const liquidityPositions = data.liquidityMiningPositions.concat(data.liquidityPositions)
+  for (let i = 0; i < liquidityPositions.length; i++) {
+    const position = liquidityPositions[i]
+    if (
+      getAddress(position.pair.token0.address) === oldSwprTokenAddress ||
+      getAddress(position.pair.token1.address) === oldSwprTokenAddress
+    )
+      return { loading: false, isOldSwprLp: true }
+  }
+  return { loading: false, isOldSwprLp: false }
 }
