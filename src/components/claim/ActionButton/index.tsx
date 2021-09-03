@@ -54,8 +54,8 @@ export function ActionButton({
     let buttonText = 'Claim SWPR'
     if (!!!account) buttonText = 'Connect wallet'
     else if (!correctNetwork) buttonText = 'Switch to Arbitrum'
-    else if (availableClaim) buttonText = 'Claim SWPR'
     else if (isOldSwprLp) buttonText = 'Pull liquidity'
+    else if (availableClaim) buttonText = 'Claim SWPR'
     setText(buttonText)
   }, [account, availableClaim, correctNetwork, isOldSwprLp])
 
