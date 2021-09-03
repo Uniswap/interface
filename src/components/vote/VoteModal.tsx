@@ -10,7 +10,7 @@ import { TYPE, CustomLightSpinner } from '../../theme'
 import { X, ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import Circle from '../../assets/images/blue-loader.svg'
-import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
+import { useVoteCallback, useUserVotes, VoteOption } from '../../state/governance/hooks'
 import { ExternalLink } from '../../theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { Trans } from '@lingui/macro'
@@ -38,17 +38,13 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface VoteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  support: boolean // if user is for or against proposal
+  voteOption: VoteOption | undefined
   proposalId: string | undefined // id for the proposal to vote on
 }
 
-export default function VoteModal({ isOpen, onDismiss, proposalId, support }: VoteModalProps) {
+export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
   const { chainId } = useActiveWeb3React()
-  const {
-    voteCallback,
-  }: {
-    voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
-  } = useVoteCallback()
+  const { voteCallback } = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
 
   // monitor call to help UI loading state
@@ -69,10 +65,10 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!voteCallback) return
+    if (!voteCallback || voteOption === undefined) return
 
     // try delegation and store hash
-    const hash = await voteCallback(proposalId, support)?.catch((error) => {
+    const hash = await voteCallback(proposalId, voteOption)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -89,10 +85,12 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <TYPE.mediumHeader fontWeight={500}>
-                {support ? (
+                {voteOption === VoteOption.Against ? (
+                  <Trans>Vote against proposal {proposalId}</Trans>
+                ) : voteOption === VoteOption.For ? (
                   <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
@@ -102,10 +100,12 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
             </TYPE.largeHeader>
             <ButtonPrimary onClick={onVote}>
               <TYPE.mediumHeader color="white">
-                {support ? (
+                {voteOption === VoteOption.Against ? (
+                  <Trans>Vote against proposal {proposalId}</Trans>
+                ) : voteOption === VoteOption.For ? (
                   <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
             </ButtonPrimary>
