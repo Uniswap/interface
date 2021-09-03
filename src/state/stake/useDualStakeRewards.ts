@@ -100,18 +100,18 @@ export const useMultiStakeRewards = (
     const totalStakedAmount = new TokenAmount(stakingToken, totalSupplyRaw.toString())
     const totalRewardRates = [
       new TokenAmount(rewardsToken, totalRewardRateRaw.toString()),
-      ...underlyingPool.totalRewardRates.reverse(), // TODO: Hardcode reverse
-    ]
+      ...underlyingPool.totalRewardRates,
+    ].sort((a, b) => (a.token?.symbol && b?.token?.symbol ? a.token.symbol.localeCompare(b.token.symbol) : 0))
 
     const rewardRates = stakedAmount
       ? getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRates)
       : totalRewardRates.map((totalRewardRate) => new TokenAmount(totalRewardRate.token, '0'))
 
-    const rewardTokens = [rewardsToken, ...underlyingPool.rewardTokens.reverse()] // TODO: Hardcode reverse
+    const rewardTokens = [rewardsToken, ...underlyingPool.rewardTokens.reverse()]
     const earnedAmounts = earned
-      ? zip<BigNumber, Token>(earned, rewardTokens).map(
-          ([amount, token]) => new TokenAmount(token as Token, amount?.toString() ?? '0')
-        )
+      ? zip<BigNumber, Token>(earned, rewardTokens)
+          .map(([amount, token]) => new TokenAmount(token as Token, amount?.toString() ?? '0'))
+          .sort((a, b) => (a?.token?.symbol && b?.token?.symbol ? a.token.symbol.localeCompare(b.token.symbol) : 0))
       : undefined
 
     return {

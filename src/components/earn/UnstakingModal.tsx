@@ -81,14 +81,14 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
             </AutoColumn>
           )}
           <AutoColumn justify="center" gap="md">
-            {stakingInfo?.earnedAmounts?.map((earnedAmount) => {
+            {stakingInfo?.earnedAmounts?.map((earnedAmount, idx) => {
               return (
-                <>
+                <React.Fragment key={idx}>
                   <TYPE.body fontWeight={600} fontSize={36}>
                     {<FormattedCurrencyAmount currencyAmount={earnedAmount} />}
                   </TYPE.body>
                   <TYPE.body>Unclaimed {earnedAmount.token.symbol}</TYPE.body>
-                </>
+                </React.Fragment>
               )
             })}
           </AutoColumn>
