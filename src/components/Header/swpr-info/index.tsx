@@ -35,7 +35,7 @@ interface SwprInfoProps {
 export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }: SwprInfoProps) {
   const { account } = useActiveWeb3React()
   const { available: claimAvailable } = useIsClaimAvailable(account)
-  const { isOldSwprLp } = useIsOldSwaprLp()
+  const { isOldSwprLp } = useIsOldSwaprLp(account || undefined)
 
   const debouncedClaimAvailable = useDebounce(claimAvailable, 1000)
   const debouncedOldSwprBalance = useDebounce(oldSwprBalance, 1000)

@@ -16,7 +16,7 @@ const StyledAutoColumn = styled(AutoColumn)<{ disabled: boolean }>`
 `
 
 interface ConvertFlowProps {
-  oldSwprBalance: TokenAmount
+  oldSwprBalance: TokenAmount | undefined
   disabled: boolean
   onError: () => void
 }
@@ -34,7 +34,7 @@ export function ConvertFlow({ oldSwprBalance, disabled, onError }: ConvertFlowPr
     convertSwprCallback()
       .then(transaction => {
         addTransaction(transaction, {
-          summary: `Convert ${oldSwprBalance.toFixed(3)} old SWPR to new SWPR`
+          summary: `Convert ${oldSwprBalance?.toFixed(3)} old SWPR to new SWPR`
         })
       })
       .catch(error => {
@@ -61,7 +61,7 @@ export function ConvertFlow({ oldSwprBalance, disabled, onError }: ConvertFlowPr
           Convert
         </ButtonPrimary>
       </RowBetween>
-      <ProgressCircles steps={[approvalState === ApprovalState.APPROVED]} />
+      <ProgressCircles steps={[!!!oldSwprBalance && approvalState === ApprovalState.APPROVED]} />
     </StyledAutoColumn>
   )
 }

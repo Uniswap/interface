@@ -228,7 +228,7 @@ export default function ClaimModal({
                   onClaim={onClaim}
                 />
               )}
-              {correctNetwork && oldSwprBalance?.greaterThan('0') && (
+              {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwprLp) && (
                 <ConvertFlow
                   disabled={debouncedLoadingIsOldSwprLP || debouncedIsOldSwprLP || debouncedAvailableClaim}
                   oldSwprBalance={oldSwprBalance}
