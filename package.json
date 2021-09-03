@@ -80,7 +80,6 @@
     "graphql-request": "^3.4.0",
     "inter-ui": "^3.13.1",
     "jest-styled-components": "^7.0.5",
-    "lodash.flatmap": "^4.5.0",
     "luxon": "^1.25.0",
     "ms.macro": "^2.0.0",
     "multicodec": "^3.0.1",
