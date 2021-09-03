@@ -1,13 +1,20 @@
-import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
-import useCUSDPrice from 'utils/useCUSDPrice'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
+import { useCUSDPrices } from 'utils/useCUSDPrice'
 
 import { BIG_INT_SECONDS_IN_YEAR } from '../../constants'
 
-export const useAnnualRewardDollars = (rewardToken: Token | undefined, rewardRate: TokenAmount | undefined) => {
-  const rewardPrice = useCUSDPrice(rewardToken)
-  if (!rewardToken || !rewardPrice || !rewardRate) {
+export const useAnnualRewardDollars = (rewardTokens: Token[], rewardRates: TokenAmount[]) => {
+  const { network } = useContractKit()
+  const chainId = network.chainId as unknown as ChainId
+  const rewardPrices = useCUSDPrices(rewardTokens)
+  if (!rewardPrices || !rewardRates) {
     return undefined
   }
-  const rewardTokenPerYear = new TokenAmount(rewardToken, JSBI.multiply(rewardRate.raw, BIG_INT_SECONDS_IN_YEAR))
-  return rewardPrice.quote(rewardTokenPerYear)
+  return rewardPrices.reduce((acc, rewardPrice, idx) => {
+    const rewardRate = rewardRates[idx]
+    const rewardToken = rewardTokens[idx]
+    const rewardTokenPerYear = new TokenAmount(rewardToken, JSBI.multiply(rewardRate.raw, BIG_INT_SECONDS_IN_YEAR))
+    return acc.add(rewardPrice?.quote(rewardTokenPerYear) ?? new TokenAmount(cUSD[chainId], '0'))
+  }, new TokenAmount(cUSD[chainId], '0'))
 }

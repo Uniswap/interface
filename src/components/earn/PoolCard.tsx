@@ -1,13 +1,11 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
 import { Percent } from '@ubeswap/sdk'
-import QuestionHelper, { LightQuestionHelper } from 'components/QuestionHelper'
+import QuestionHelper from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
 import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
-import { DualRewardsInfo } from 'state/stake/useDualStakeRewards'
 import styled from 'styled-components'
 
-import { BIG_INT_SECONDS_IN_WEEK, UBE } from '../../constants'
+import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { useColor } from '../../hooks/useColor'
 import { StakingInfo } from '../../state/stake/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -70,10 +68,9 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 
 interface Props {
   stakingInfo: StakingInfo
-  dualRewards?: DualRewardsInfo
 }
 
-export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) => {
+export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   const [token0, token1] = stakingInfo.tokens
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
@@ -81,9 +78,6 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
   // get the color of the token
   const token = token0.symbol?.startsWith('m') ? token1 : token0
   const backgroundColor = useColor(token)
-  const { network } = useContractKit()
-  const { chainId } = network
-  const ube = chainId ? UBE[chainId] : undefined
 
   // get the USD value of staked WETH
   const {
@@ -92,12 +86,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
     userAmountTokenA,
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
-  let dollarRewardPerYear = useAnnualRewardDollars(stakingInfo.rewardToken, stakingInfo.totalRewardRate)
-  const ubeRewardPerYear = useAnnualRewardDollars(ube, stakingInfo.totalUBERewardRate)
-  dollarRewardPerYear =
-    dualRewards && dollarRewardPerYear && ubeRewardPerYear
-      ? dollarRewardPerYear.add(ubeRewardPerYear)
-      : dollarRewardPerYear
+  const dollarRewardPerYear = useAnnualRewardDollars(stakingInfo.rewardTokens, stakingInfo.totalRewardRates)
   const apyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
       ? dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
@@ -120,19 +109,20 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
     console.error('Weekly apy overflow', e)
   }
 
-  const showNextPoolRate =
-    (stakingInfo.active && stakingInfo.nextPeriodRewards.equalTo('0')) ||
-    (stakingInfo.active &&
-      // If the next rate is >=1_000 change from previous rate, then show it
-      Math.abs(
-        parseFloat(
-          stakingInfo.totalRewardRate
-            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-            .subtract(stakingInfo.nextPeriodRewards)
-            .toFixed(0) ?? 0
-        )
-      ) >= 1_000) ||
-    (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0'))
+  // TODO: add back in
+  // const showNextPoolRate =
+  //   (stakingInfo.active && stakingInfo.nextPeriodRewards.equalTo('0')) ||
+  //   (stakingInfo.active &&
+  //     // If the next rate is >=1_000 change from previous rate, then show it
+  //     Math.abs(
+  //       parseFloat(
+  //         stakingInfo.totalRewardRate
+  //           ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+  //           .subtract(stakingInfo.nextPeriodRewards)
+  //           .toFixed(0) ?? 0
+  //       )
+  //     ) >= 1_000) ||
+  //   (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0'))
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -152,9 +142,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
         </PoolInfo>
 
         <StyledInternalLink
-          to={`/${dualRewards ? 'dualfarm' : 'farm'}/${currencyId(token0)}/${currencyId(token1)}/${
-            stakingInfo.poolInfo.poolAddress
-          }`}
+          to={`/farm/${currencyId(token0)}/${currencyId(token1)}/${stakingInfo.stakingRewardAddress}`}
           style={{ width: '100%' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
@@ -174,28 +162,22 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
               : '-'
           }
         />
-        <PoolStatRow
-          statName={(dualRewards ? dualRewards.totalRewardRate.token.symbol : 'Pool') + ' rate'}
-          statValue={
-            stakingInfo.active
-              ? `${stakingInfo.totalRewardRate
-                  ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                  ?.toFixed(0, { groupSeparator: ',' })} ${stakingInfo.totalRewardRate.token.symbol} / week`
-              : `0 ${stakingInfo.totalRewardRate.token.symbol} / week`
-          }
-        />
-        {dualRewards && (
-          <PoolStatRow
-            statName={dualRewards.totalUBERewardRate.token.symbol + ' rate'}
-            statValue={
-              stakingInfo.active
-                ? `${dualRewards.totalUBERewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' })} ${dualRewards.totalUBERewardRate.token.symbol} / week`
-                : `0 ${dualRewards.totalUBERewardRate.token.symbol} / week`
-            }
-          />
-        )}
+        {stakingInfo.totalRewardRates.map((totalRewardRate, idx) => {
+          return (
+            <React.Fragment key={idx}>
+              <PoolStatRow
+                statName={totalRewardRate.token.symbol + ' rate'}
+                statValue={
+                  stakingInfo.active
+                    ? `${totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })} ${
+                        totalRewardRate.token.symbol
+                      } / week`
+                    : `0 ${totalRewardRate.token.symbol} / week`
+                }
+              />
+            </React.Fragment>
+          )
+        })}
         {apy && apy.greaterThan('0') && (
           <PoolStatRow
             helperText={
@@ -204,12 +186,14 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
                 APY (weekly compounded): {weeklyAPY}%
               </>
             }
-            statName={dualRewards ? 'Combined APR' : 'APR'}
+            statName={stakingInfo.rewardTokens.length > 1 ? 'Combined APR' : 'APR'}
             statValue={apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
           />
         )}
 
-        {showNextPoolRate && (
+        {/*
+          TODO: Add back in
+          showNextPoolRate && (
           <RowBetween>
             <RowFixed>
               <TYPE.white>Next pool rate</TYPE.white>
@@ -221,7 +205,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
               })} ${stakingInfo.nextPeriodRewards.token.symbol} / week`}
             </TYPE.white>
           </RowBetween>
-        )}
+        )*/}
       </StatContainer>
 
       {isStaking && (
@@ -237,21 +221,16 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo, dualRewards }: Props) =
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   ⚡
                 </span>
-                {stakingInfo
-                  ? `${
-                      stakingInfo.active
-                        ? stakingInfo.ubeRewardRate
-                            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                            ?.toSignificant(4, { groupSeparator: ',' })
-                        : '0'
-                    } ${stakingInfo.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol}${
-                      stakingInfo.dualRewards
-                        ? ` + ${stakingInfo.rewardRate
-                            ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                            ?.toSignificant(4, { groupSeparator: ',' })} ${stakingInfo?.rewardToken?.symbol}`
-                        : ''
-                    } / week`
-                  : '-'}
+                {(stakingInfo.rewardRates
+                  ? stakingInfo.rewardRates
+                      .map(
+                        (rewardRate) =>
+                          `${rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toSignificant(4, { groupSeparator: ',' })} ${
+                            rewardRate.token.symbol
+                          }`
+                      )
+                      .join(' + ')
+                  : '-') + ' / week'}
               </TYPE.black>
             </RowBetween>
             {userValueCUSD && (

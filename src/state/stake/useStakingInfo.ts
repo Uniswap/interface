@@ -9,7 +9,7 @@ import { NEVER_RELOAD, useMultipleContractSingleData } from 'state/multicall/hoo
 import { StakingInfo, useStakingPools } from './hooks'
 
 // Gets the staking info from the network for the active chain id
-export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly StakingInfo[] {
+export default function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingInfo[] {
   const { network, address } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
@@ -17,7 +17,7 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
 
-  const info = useStakingPools(pairToFilterBy, stakingAddress)
+  const info = useStakingPools(pairToFilterBy)
 
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
@@ -99,17 +99,19 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
           const getHypotheticalRewardRate = (
             stakedAmount: TokenAmount,
             totalStakedAmount: TokenAmount,
-            totalRewardRate: TokenAmount
-          ): TokenAmount => {
-            return new TokenAmount(
-              rewardToken,
-              JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-                ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
-                : JSBI.BigInt(0)
-            )
+            totalRewardRates: TokenAmount[]
+          ): TokenAmount[] => {
+            return [
+              new TokenAmount(
+                rewardToken,
+                JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
+                  ? JSBI.divide(JSBI.multiply(totalRewardRates[0].raw, stakedAmount.raw), totalStakedAmount.raw)
+                  : JSBI.BigInt(0)
+              ),
+            ]
           }
 
-          const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
+          const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, [totalRewardRate])
 
           const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
           const periodFinishMs = periodFinishSeconds * 1000
@@ -128,21 +130,17 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
             stakingRewardAddress: rewardsAddress,
             stakingToken: totalStakedAmount.token,
             tokens,
+            stakedAmount,
+            totalStakedAmount,
+            earnedAmounts: [new TokenAmount(rewardToken, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0))],
+            rewardRates: individualRewardRate,
+            totalRewardRates: [totalRewardRate],
             periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-            earnedAmount: new TokenAmount(rewardToken, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
-            earnedAmountUbe: new TokenAmount(rewardToken, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
-            rewardRate: individualRewardRate,
-            ubeRewardRate: individualRewardRate,
-            totalRewardRate: totalRewardRate,
-            totalUBERewardRate: totalRewardRate,
-            nextPeriodRewards,
-            stakedAmount: stakedAmount,
-            totalStakedAmount: totalStakedAmount,
-            getHypotheticalRewardRate,
             active,
+            getHypotheticalRewardRate,
+            nextPeriodRewards,
             poolInfo,
-            rewardToken,
-            dualRewards: false,
+            rewardTokens: [rewardToken],
           })
         }
         return memo
@@ -152,6 +150,6 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
   }, [balances, chainId, currentBlockTimestamp, earnedAmounts, info, periodFinishes, rewardRates, totalSupplies, ube])
 }
 
-export const usePairStakingInfo = (pairToFilterBy?: Pair | null, stakingAddress?: string): StakingInfo | undefined => {
-  return useStakingInfo(pairToFilterBy, stakingAddress)[0] ?? undefined
+export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
+  return useStakingInfo(pairToFilterBy)[0] ?? undefined
 }

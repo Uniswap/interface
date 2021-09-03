@@ -22,16 +22,65 @@ import {
   useSingleContractMultipleData,
 } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import { DualRewardsInfo, useDualStakeRewards } from './useDualStakeRewards'
+import { useMultiStakeRewards } from './useDualStakeRewards'
 import useStakingInfo from './useStakingInfo'
 
-export const POOF_DUAL_POOL = '0x969D7653ddBAbb42589d73EfBC2051432332A940'
-export const POOF_DUAL_LP = '0x573bcEBD09Ff805eD32df2cb1A968418DC74DCf7'
+export type MultiRewardPool = {
+  address: string
+  underlyingPool: string
+  basePool: string
+  numRewards: number
+  active: boolean
+}
 
-export const MOO_DUAL_POOL1 = '0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0'
-export const MOO_LP1 = '0x27616d3DBa43f55279726c422daf644bc60128a8'
-export const MOO_DUAL_POOL2 = '0x84Bb1795b699Bf7a798C0d63e9Aad4c96B0830f4'
-export const MOO_LP2 = '0x69d5646e63C7cE63171F76EBA89348b52c1D552c'
+export const multiRewardPools: MultiRewardPool[] = [
+  // UBE-CELO
+  // {
+  //   address: '0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B',
+  //   underlyingPool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+  //   basePool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+  //   numRewards: 2,
+  // },
+  // rCELO-CELO
+  // {
+  //   address: '0x194478Aa91e4D7762c3E51EeE57376ea9ac72761',
+  //   underlyingPool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+  //   basePool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+  //   numRewards: 2,
+  // },
+  // mCUSD-mcEUR
+  {
+    address: '0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0',
+    underlyingPool: '0xaf13437122cd537C5D8942f17787cbDBd787fE94',
+    basePool: '0xaf13437122cd537C5D8942f17787cbDBd787fE94',
+    numRewards: 2,
+    active: false,
+  },
+  // MOO-mCELO
+  {
+    address: '0x84Bb1795b699Bf7a798C0d63e9Aad4c96B0830f4',
+    underlyingPool: '0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3',
+    basePool: '0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3',
+    numRewards: 2,
+    active: false,
+  },
+  // mCUSD-mcEUR
+  {
+    address: '0x3d823f7979bB3af846D8F1a7d98922514eA203fC',
+    underlyingPool: '0xb030882bfc44e223fd5e20d8645c961be9b30bb3',
+    basePool: '0xaf13437122cd537C5D8942f17787cbDBd787fE94',
+    numRewards: 3,
+    active: true,
+  },
+  // MOO-mCELO
+  {
+    address: '0x3c7beeA32A49D96d72ce45C7DeFb5b287479C2ba',
+    underlyingPool: '0x8f309df7527f16dff49065d3338ea3f3c12b5d09',
+    basePool: '0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3',
+    numRewards: 3,
+    active: true,
+  },
+]
 
 export const STAKING_GENESIS = 1619100000
 
@@ -44,18 +93,15 @@ export interface StakingInfo {
   readonly tokens: readonly [Token, Token]
   // the amount of token currently staked, or undefined if no account
   readonly stakedAmount?: TokenAmount
-  // the amount of reward token earned by the active account, or undefined if no account
-  readonly earnedAmount: TokenAmount
-  readonly earnedAmountUbe: TokenAmount
   // the total amount of token staked in the contract
   readonly totalStakedAmount: TokenAmount
-  // the amount of token distributed per second to all LPs, constant
-  readonly totalRewardRate: TokenAmount
-  readonly ubeRewardRate: TokenAmount
-  readonly totalUBERewardRate: TokenAmount
+  // the amount of reward tokens earned by the active account, or undefined if no account
+  readonly earnedAmounts?: TokenAmount[]
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
-  readonly rewardRate: TokenAmount
+  readonly rewardRates?: TokenAmount[]
+  // the amount of token distributed per second to all LPs, constant
+  readonly totalRewardRates: TokenAmount[]
   // when the period ends
   readonly periodFinish: Date | undefined
   // if pool is active
@@ -64,25 +110,32 @@ export interface StakingInfo {
   readonly getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
     totalStakedAmount: TokenAmount,
-    totalRewardRate: TokenAmount
-  ) => TokenAmount
+    totalRewardRates: TokenAmount[]
+  ) => TokenAmount[]
   readonly nextPeriodRewards: TokenAmount
   readonly poolInfo: IRawPool
-  readonly rewardToken: Token | undefined
-  readonly dualRewards: boolean
+  readonly rewardTokens: Token[]
 }
 
-export const usePairDualStakingInfo = (stakingInfo: StakingInfo | undefined): DualRewardsInfo | null => {
-  const { address } = useContractKit()
-  let dualStakeAddress = ''
-  if (stakingInfo?.poolInfo.stakingToken === POOF_DUAL_LP) {
-    dualStakeAddress = POOF_DUAL_POOL
-  } else if (stakingInfo?.poolInfo.stakingToken == MOO_LP1) {
-    dualStakeAddress = MOO_DUAL_POOL1
-  } else if (stakingInfo?.poolInfo.stakingToken == MOO_LP2) {
-    dualStakeAddress = MOO_DUAL_POOL2
-  }
-  return useDualStakeRewards(dualStakeAddress, stakingInfo, address)
+export const usePairDualStakingInfo = (
+  stakingInfo: StakingInfo | undefined,
+  stakingAddress: string
+): StakingInfo | null => {
+  const multiRewardPool = multiRewardPools
+    .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
+    .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
+  return useMultiStakeRewards(multiRewardPool?.address ?? '', stakingInfo, 2)
+}
+
+export const usePairTripleStakingInfo = (
+  stakingInfo: StakingInfo | undefined,
+  stakingAddress: string
+): StakingInfo | null => {
+  const multiRewardPool = multiRewardPools
+    .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
+    .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
+  const dualPool = useMultiStakeRewards(multiRewardPool?.underlyingPool ?? '', stakingInfo, 2)
+  return useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, 3)
 }
 
 interface UnclaimedInfo {
@@ -167,7 +220,7 @@ interface IStakingPool {
   poolInfo: IRawPool
 }
 
-export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly IStakingPool[] {
+export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStakingPool[] {
   const { network } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
@@ -208,9 +261,6 @@ export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: s
           if (pairToFilterBy === null) {
             return false
           }
-          if (stakingAddress) {
-            return stakingAddress.toLowerCase() === stakingRewardInfo.stakingRewardAddress.toLowerCase()
-          }
           return (
             stakingRewardInfo.tokens &&
             pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
@@ -218,7 +268,7 @@ export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: s
           )
         }) ?? []
     )
-  }, [ube, pools, poolPairs, pairToFilterBy, stakingAddress])
+  }, [ube, pools, poolPairs, pairToFilterBy])
 }
 
 export function useStakingPoolAddresses(
@@ -399,9 +449,14 @@ export function useTotalUbeEarned(): TokenAmount | undefined {
     if (!ube) return undefined
     return (
       stakingInfos
-        ?.filter((stakingInfo) => stakingInfo.rewardToken == ube)
-        .reduce((accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount), new TokenAmount(ube, '0')) ??
-      new TokenAmount(ube, '0')
+        ?.filter((stakingInfo) => stakingInfo.rewardTokens.includes(ube))
+        .reduce(
+          (accumulator, stakingInfo) =>
+            accumulator.add(
+              stakingInfo.earnedAmounts?.find((earnedAmount) => earnedAmount.token == ube) ?? new TokenAmount(ube, '0')
+            ),
+          new TokenAmount(ube, '0')
+        ) ?? new TokenAmount(ube, '0')
     )
   }, [stakingInfos, ube])
 }

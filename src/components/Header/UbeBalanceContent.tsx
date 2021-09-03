@@ -4,7 +4,7 @@ import Loader from 'components/Loader'
 import React from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import useCUSDPrice from 'utils/useCUSDPrice'
+import { useCUSDPrice } from 'utils/useCUSDPrice'
 
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UBE } from '../../constants'

@@ -77,7 +77,7 @@ export function useReleaseUbeContract(withSignerIfPossible?: boolean): ReleaseUb
   ) as ReleaseUbe | null
 }
 
-export function useDualStakingContract(
+export function useMultiStakingContract(
   stakingAddress?: string,
   withSignerIfPossible?: boolean
 ): MoolaStakingRewards | null {

@@ -1,7 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { useDoTransaction } from 'components/swap/routing'
 import React, { useState } from 'react'
-import { DualRewardsInfo } from 'state/stake/useDualStakeRewards'
 import styled from 'styled-components'
 
 import { useStakingContract } from '../../hooks/useContract'
@@ -21,7 +20,7 @@ const ContentWrapper = styled(AutoColumn)`
 interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
-  stakingInfo: StakingInfo | DualRewardsInfo
+  stakingInfo: StakingInfo
 }
 
 export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
@@ -45,9 +44,6 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       setAttempting(true)
       await doTransaction(stakingContract, 'getReward', {
         args: [],
-        overrides: {
-          gasLimit: 350000,
-        },
         summary: `Claim accumulated UBE rewards`,
       })
         .catch(console.error)
@@ -73,20 +69,16 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <TYPE.mediumHeader>Claim</TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
-          {stakingInfo?.earnedAmountUbe && (
-            <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {stakingInfo?.earnedAmountUbe?.toSignificant(6)}{' '}
-                {stakingInfo?.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol ?? 'UBE'}
-              </TYPE.body>
-              {stakingInfo?.dualRewards && (
-                <TYPE.body fontWeight={600} fontSize={36}>
-                  {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
+          <AutoColumn justify="center" gap="md">
+            {stakingInfo?.earnedAmounts?.map((earnedAmount, idx) => {
+              return (
+                <TYPE.body fontWeight={600} fontSize={36} key={idx}>
+                  {earnedAmount.toSignificant(4)} {earnedAmount.token.symbol}
                 </TYPE.body>
-              )}
-              <TYPE.body>Unclaimed rewards</TYPE.body>
-            </AutoColumn>
-          )}
+              )
+            })}
+            <TYPE.body>Unclaimed rewards</TYPE.body>
+          </AutoColumn>
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             When you claim without withdrawing your liquidity remains in the mining pool.
           </TYPE.subHeader>
@@ -99,7 +91,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>
-              Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
+              Claiming{' '}
+              {stakingInfo?.earnedAmounts
+                ?.map((earnedAmount) => `${earnedAmount.toSignificant(4)} ${earnedAmount?.token.symbol}`)
+                .join(' + ')}
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -108,7 +103,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Claimed {stakingInfo?.rewardToken?.symbol ?? 'UBE'}!</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Claimed {stakingInfo?.rewardTokens.map((rewardToken) => rewardToken.symbol).join(' + ')}!
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

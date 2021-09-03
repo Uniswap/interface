@@ -11,10 +11,11 @@ import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import { RowBetween } from '../../components/Row'
 import { BIG_INT_ZERO } from '../../constants'
-import { MOO_DUAL_POOL1, MOO_DUAL_POOL2, MOO_LP1, MOO_LP2, POOF_DUAL_LP, StakingInfo } from '../../state/stake/hooks'
+import { MultiRewardPool, multiRewardPools, StakingInfo } from '../../state/stake/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { DualPoolCard } from './DualPoolCard'
 import { COUNTDOWN_END, LaunchCountdown } from './LaunchCountdown'
+import { TriplePoolCard } from './TriplePoolCard'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -52,7 +53,7 @@ export default function Earn() {
     () =>
       // Sort staking info by highest rewards
       stakingInfos?.slice().sort((a: StakingInfo, b: StakingInfo) => {
-        return JSBI.toNumber(JSBI.subtract(b.totalRewardRate.raw, a.totalRewardRate.raw))
+        return JSBI.toNumber(JSBI.subtract(b.totalRewardRates[0].raw, a.totalRewardRates[0].raw)) // TODO: Hardcode only checking the first totalRewardRate
       }),
     [stakingInfos]
   )
@@ -65,9 +66,18 @@ export default function Earn() {
 
   const isGenesisOver = COUNTDOWN_END < new Date().getTime()
 
-  const poofUBELP = allPools.find((pool) => pool.stakingToken.address === POOF_DUAL_LP)
-  const mcUSDmcEURLP = allPools.find((pool) => pool.stakingToken.address === MOO_LP1)
-  const moomCELOLP = allPools.find((pool) => pool.stakingToken.address === MOO_LP2)
+  const multiRewards = multiRewardPools.map((multiPool) => {
+    return [multiPool, allPools.find((pool) => pool.poolInfo.poolAddress === multiPool.basePool)]
+  }) as [MultiRewardPool, StakingInfo][]
+
+  const [dualRewards, inactiveDualRewards] = partition(
+    multiRewards.filter(([pool]) => pool.numRewards === 2),
+    ([pool]) => pool.active
+  )
+  const [tripleRewards, inactiveTripleRewards] = partition(
+    multiRewards.filter(([pool]) => pool.numRewards === 3),
+    ([pool]) => pool.active
+  )
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -103,32 +113,45 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Dual Pools</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Triple Reward Pools</TYPE.mediumHeader>
         </DataRow>
-        {!(mcUSDmcEURLP && poofUBELP && moomCELOLP) && <Loader />}
-        {mcUSDmcEURLP && (
-          <PoolSection>
-            <ErrorBoundary>
-              <DualPoolCard poolAddress={MOO_DUAL_POOL1} underlyingPool={mcUSDmcEURLP} />
-            </ErrorBoundary>
-          </PoolSection>
-        )}
-        {moomCELOLP && (
-          <PoolSection>
-            <ErrorBoundary>
-              <DualPoolCard poolAddress={MOO_DUAL_POOL2} underlyingPool={moomCELOLP} />
-            </ErrorBoundary>
-          </PoolSection>
-        )}
-        {/* Temporarily disable the POOF-UBE dual staking pool
-        poofUBELP && (
-          <PoolSection>
-            <ErrorBoundary>
-              <DualPoolCard poolAddress={POOF_DUAL_POOL} underlyingPool={poofUBELP} />
-            </ErrorBoundary>
-          </PoolSection>
-        )*/}
+        {tripleRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
+        {tripleRewards.map((x) => {
+          return (
+            x[1] && (
+              <PoolSection>
+                <ErrorBoundary>
+                  <TriplePoolCard
+                    poolAddress={x[0].address}
+                    dualPoolAddress={x[0].underlyingPool}
+                    underlyingPool={x[1]}
+                  />
+                </ErrorBoundary>
+              </PoolSection>
+            )
+          )
+        })}
       </AutoColumn>
+
+      {dualRewards.length > 0 && (
+        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Dual Reward Pools</TYPE.mediumHeader>
+          </DataRow>
+          {dualRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
+          {dualRewards.map((x) => {
+            return (
+              x[1] && (
+                <PoolSection>
+                  <ErrorBoundary>
+                    <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} />
+                  </ErrorBoundary>
+                </PoolSection>
+              )
+            )
+          })}
+        </AutoColumn>
+      )}
 
       {stakedPools.length > 0 && (
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
@@ -188,6 +211,32 @@ export default function Earn() {
                 <PoolCard stakingInfo={pool} />
               </ErrorBoundary>
             ))}
+            {inactiveTripleRewards.map((x) => {
+              return (
+                x[1] && (
+                  <PoolSection>
+                    <ErrorBoundary>
+                      <TriplePoolCard
+                        poolAddress={x[0].address}
+                        dualPoolAddress={x[0].underlyingPool}
+                        underlyingPool={x[1]}
+                      />
+                    </ErrorBoundary>
+                  </PoolSection>
+                )
+              )
+            })}
+            {inactiveDualRewards.map((x) => {
+              return (
+                x[1] && (
+                  <PoolSection>
+                    <ErrorBoundary>
+                      <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} />
+                    </ErrorBoundary>
+                  </PoolSection>
+                )
+              )
+            })}
           </PoolSection>
         </AutoColumn>
       )}

@@ -77,25 +77,21 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
               <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
               </TYPE.body>
-              <TYPE.body>Deposited liquidity:</TYPE.body>
+              <TYPE.body>Deposited liquidity</TYPE.body>
             </AutoColumn>
           )}
-          {stakingInfo?.earnedAmountUbe && (
-            <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmountUbe} />}
-              </TYPE.body>
-              <TYPE.body>Unclaimed {stakingInfo?.dualRewards ? 'UBE' : stakingInfo?.rewardToken?.symbol}</TYPE.body>
-            </AutoColumn>
-          )}
-          {stakingInfo?.dualRewards && stakingInfo?.earnedAmount && (
-            <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
-              </TYPE.body>
-              <TYPE.body>Unclaimed {stakingInfo?.rewardToken?.symbol}</TYPE.body>
-            </AutoColumn>
-          )}
+          <AutoColumn justify="center" gap="md">
+            {stakingInfo?.earnedAmounts?.map((earnedAmount) => {
+              return (
+                <>
+                  <TYPE.body fontWeight={600} fontSize={36}>
+                    {<FormattedCurrencyAmount currencyAmount={earnedAmount} />}
+                  </TYPE.body>
+                  <TYPE.body>Unclaimed {earnedAmount.token.symbol}</TYPE.body>
+                </>
+              )
+            })}
+          </AutoColumn>
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             When you withdraw, your UBE is claimed and your liquidity is removed from the mining pool.
           </TYPE.subHeader>
@@ -109,7 +105,10 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UBE-LP</TYPE.body>
             <TYPE.body fontSize={20}>
-              Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} {stakingInfo?.rewardToken?.symbol ?? 'UBE'}
+              Claiming{' '}
+              {stakingInfo?.earnedAmounts
+                ?.map((earnedAmount) => `${earnedAmount.toSignificant(4)} ${earnedAmount.token.symbol}`)
+                .join(' + ')}
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -119,7 +118,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             <TYPE.body fontSize={20}>Withdrew UBE-LP!</TYPE.body>
-            <TYPE.body fontSize={20}>Claimed {stakingInfo?.rewardToken?.symbol ?? 'UBE'}!</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Claimed {stakingInfo?.rewardTokens.map((rewardToken) => rewardToken.symbol).join(' + ')}!
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

@@ -2,7 +2,7 @@ import { useContractKit } from '@celo-tools/use-contractkit'
 import { cUSD, JSBI } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import React, { useCallback, useState } from 'react'
-import { Link, RouteComponentProps, useLocation } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { usePairStakingInfo } from 'state/stake/useStakingInfo'
 import styled from 'styled-components'
 import { CountUp } from 'use-count-up'
@@ -21,7 +21,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { usePairDualStakingInfo } from '../../state/stake/hooks'
+import { usePairDualStakingInfo, usePairTripleStakingInfo } from '../../state/stake/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLinkIcon, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -94,17 +94,16 @@ export default function Manage({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stakingAddress: string }>) {
   const { address: account, network } = useContractKit()
   const { chainId } = network
-  const location = useLocation()
 
   // get currencies and pair
   const [tokenA, tokenB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const singleStakingInfo = usePairStakingInfo(stakingTokenPair, stakingAddress)
-  const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo)
-  const isDualFarm = location.pathname.includes('dualfarm')
+  const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
+  const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo, stakingAddress)
+  const tripleStakingInfo = usePairTripleStakingInfo(singleStakingInfo, stakingAddress)
 
-  const stakingInfo = isDualFarm ? dualStakingInfo : singleStakingInfo
+  const stakingInfo = tripleStakingInfo || dualStakingInfo || singleStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -129,10 +128,8 @@ export default function Manage({
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
 
-  const ubeCountUpAmount = stakingInfo?.earnedAmountUbe?.toFixed(6) ?? '0'
-  const ubeCountUpAmountPrevious = usePrevious(ubeCountUpAmount) ?? '0'
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
-  const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
+  const countUpAmounts = stakingInfo?.earnedAmounts?.map((earnedAmount) => earnedAmount.toFixed(6) ?? '0') || []
+  const countUpAmountsPrevious = usePrevious(countUpAmounts) ?? countUpAmounts
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -174,14 +171,19 @@ export default function Manage({
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo?.active
-                ? stakingInfo?.ubeRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ??
-                  '-'
-                : '0'}
-              {` ${stakingInfo?.rewardToken?.symbol ?? 'UBE'} / week`}
-            </TYPE.body>
+            {stakingInfo?.active && (
+              <>
+                <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
+                {stakingInfo?.rewardRates?.map((rewardRate, idx) => {
+                  return (
+                    <TYPE.body fontSize={24} fontWeight={500} key={idx}>
+                      {rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
+                      {` ${rewardRate.token.symbol} / week`}
+                    </TYPE.body>
+                  )
+                })}
+              </>
+            )}
           </AutoColumn>
         </PoolData>
       </DataRow>
@@ -246,7 +248,7 @@ export default function Manage({
                 <RowBetween>
                   <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
                 </RowBetween>
-                <RowBetween style={{ alignItems: 'baseline' }}>
+                <RowBetween style={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
@@ -290,8 +292,7 @@ export default function Manage({
                 <div>
                   <TYPE.black>Your unclaimed rewards</TYPE.black>
                 </div>
-                {((stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw)) ||
-                  (stakingInfo?.earnedAmountUbe && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmountUbe?.raw))) && (
+                {stakingInfo?.earnedAmounts?.some((earnedAmount) => JSBI.notEqual(BIG_INT_ZERO, earnedAmount?.raw)) && (
                   <ButtonEmpty
                     padding="8px"
                     borderRadius="8px"
@@ -302,39 +303,15 @@ export default function Manage({
                   </ButtonEmpty>
                 )}
               </RowBetween>
-              <RowBetween style={{ alignItems: 'baseline' }}>
-                <TYPE.largeHeader fontSize={36} fontWeight={600}>
-                  <CountUp
-                    key={ubeCountUpAmount}
-                    isCounting
-                    decimalPlaces={4}
-                    start={parseFloat(ubeCountUpAmountPrevious)}
-                    end={parseFloat(ubeCountUpAmount)}
-                    thousandsSeparator={','}
-                    duration={1}
-                  />
-                </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}>
-                  <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
-                    ⚡
-                  </span>
-                  {stakingInfo?.active
-                    ? stakingInfo?.ubeRewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
-                    : '0'}
-                  {` ${isDualFarm ? 'UBE' : stakingInfo?.rewardToken?.symbol ?? 'UBE'} / week`}
-                </TYPE.black>
-              </RowBetween>
-              {isDualFarm && (
-                <RowBetween style={{ alignItems: 'baseline' }}>
+              {stakingInfo?.rewardRates?.map((rewardRate, idx) => (
+                <RowBetween style={{ alignItems: 'baseline' }} key={idx}>
                   <TYPE.largeHeader fontSize={36} fontWeight={600}>
                     <CountUp
-                      key={countUpAmount}
+                      key={countUpAmounts[idx]}
                       isCounting
                       decimalPlaces={4}
-                      start={parseFloat(countUpAmountPrevious)}
-                      end={parseFloat(countUpAmount)}
+                      start={parseFloat(countUpAmountsPrevious[idx])}
+                      end={parseFloat(countUpAmounts[idx])}
                       thousandsSeparator={','}
                       duration={1}
                     />
@@ -343,15 +320,13 @@ export default function Manage({
                     <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                       ⚡
                     </span>
-                    {dualStakingInfo?.active
-                      ? dualStakingInfo?.rewardRate
-                          ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                          ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                    {stakingInfo?.active
+                      ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                       : '0'}
-                    {` ${dualStakingInfo?.rewardToken?.symbol} / week`}
+                    {` ${rewardRate.token.symbol} / week`}
                   </TYPE.black>
                 </RowBetween>
-              )}
+              ))}
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>

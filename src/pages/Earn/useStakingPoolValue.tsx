@@ -4,7 +4,7 @@ import { BIG_INT_ZERO } from 'constants/index'
 import { usePair } from 'data/Reserves'
 import { useTotalSupply } from 'data/TotalSupply'
 import { StakingInfo } from 'state/stake/hooks'
-import useCUSDPrice from 'utils/useCUSDPrice'
+import { useCUSDPrice } from 'utils/useCUSDPrice'
 
 interface IStakingPoolValue {
   valueCUSD?: TokenAmount

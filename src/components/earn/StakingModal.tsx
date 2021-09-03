@@ -48,18 +48,14 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingInfo.stakingToken, userLiquidityUnstaked)
   const parsedAmountWrapped = parsedAmount
 
-  let hypotheticalUbeRewardRate: TokenAmount = new TokenAmount(stakingInfo.ubeRewardRate.token, '0')
-  let hypotheticalRewardRate: TokenAmount = new TokenAmount(stakingInfo.rewardRate.token, '0')
+  let hypotheticalRewardRates: TokenAmount[] | undefined = stakingInfo?.totalRewardRates?.map(
+    (rewardRate) => new TokenAmount(rewardRate.token, '0')
+  )
   if (parsedAmountWrapped?.greaterThan('0')) {
-    hypotheticalUbeRewardRate = stakingInfo.getHypotheticalRewardRate(
+    hypotheticalRewardRates = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount ? parsedAmountWrapped.add(stakingInfo.stakedAmount) : parsedAmountWrapped,
       stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalUBERewardRate
-    )
-    hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
-      stakingInfo.stakedAmount ? parsedAmountWrapped.add(stakingInfo.stakedAmount) : parsedAmountWrapped,
-      stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalRewardRate
+      stakingInfo.totalRewardRates
     )
   }
 
@@ -89,9 +85,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       if (approval === ApprovalState.APPROVED) {
         const response = await doTransaction(stakingContract, 'stake', {
           args: [`0x${parsedAmount.raw.toString(16)}`],
-          overrides: {
-            gasLimit: 350000,
-          },
           summary: `Stake deposited liquidity`,
         })
         setHash(response.hash)
@@ -143,26 +136,22 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             id="stake-liquidity-token"
           />
 
-          <HypotheticalRewardRate dim={!hypotheticalUbeRewardRate.greaterThan('0')}>
+          <HypotheticalRewardRate dim={false}>
             <div>
               <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
             </div>
 
             <div>
-              <TYPE.black>
-                {hypotheticalUbeRewardRate
-                  .multiply((60 * 60 * 24 * 7).toString())
-                  .toSignificant(4, { groupSeparator: ',' })}{' '}
-                UBE / week
-              </TYPE.black>
-              {stakingInfo?.dualRewards && (
-                <TYPE.black>
-                  {hypotheticalRewardRate
-                    .multiply((60 * 60 * 24 * 7).toString())
-                    .toSignificant(4, { groupSeparator: ',' })}{' '}
-                  {stakingInfo?.rewardToken?.symbol} / week
-                </TYPE.black>
-              )}
+              {hypotheticalRewardRates &&
+                hypotheticalRewardRates.map((hypotheticalRewardRate, idx) => {
+                  return (
+                    <TYPE.black key={idx}>
+                      {hypotheticalRewardRate
+                        .multiply((60 * 60 * 24 * 7).toString())
+                        .toSignificant(4, { groupSeparator: ',' }) + ` ${hypotheticalRewardRate.token.symbol} / week`}
+                    </TYPE.black>
+                  )
+                })}
             </div>
           </HypotheticalRewardRate>
 
