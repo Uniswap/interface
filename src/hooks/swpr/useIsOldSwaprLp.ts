@@ -57,7 +57,7 @@ export function useIsOldSwaprLp(
     return oldSwpr ? getAddress(oldSwpr.address) : undefined
   }, [chainId])
   const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
-    client: subgraphClients[ChainId.RINKEBY], // TODO: change to Arb1 before going live
+    client: subgraphClients[ChainId.ARBITRUM_RINKEBY], // TODO: change to Arb1 before going live
     fetchPolicy: 'network-only',
     pollInterval: 3000,
     variables: {
