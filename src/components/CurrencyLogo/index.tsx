@@ -53,5 +53,13 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
   }
 
+  if (currency?.address?.toLowerCase() === '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase())
+  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/Baby_Trump_Transpa.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+
+  if (currency?.address?.toLowerCase() === '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase())
+  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/CoinGecko.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  if (currency?.address?.toLowerCase() === '0x29699C8485302cd2857043FaB8bd885bA08Cf268'.toLowerCase())
+  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }

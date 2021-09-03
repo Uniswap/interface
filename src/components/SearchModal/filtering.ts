@@ -72,9 +72,9 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     })
 
     const allowedContracts = [
-      '0x99d36e97676a68313ffdc627fd6b56382a2a08b6',
-      '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013',
-      '0x29699C8485302cd2857043FaB8bd885bA08Cf268',
+      '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase(),
+      '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase(),
+      '0x29699C8485302cd2857043FaB8bd885bA08Cf268'.toLowerCase(),
       WETH9[1].address,
       USDC.address,
       USDT.address,
