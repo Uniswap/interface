@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-17 11:04\n"
+"PO-Revision-Date: 2021-09-03 17:08\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1885,6 +1885,11 @@ msgstr "投票反对提案 {proposalId}"
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "投票赞成提案 {proposalId}"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "{proposalId}投弃权票"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
