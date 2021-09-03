@@ -25,7 +25,7 @@ export default function useHasClaimed(account: string | null | undefined): { loa
     }
     setLoading(true)
     swprClaimerContract
-      .claimed(account, { blockTag: latestBlockNumber })
+      .claimed(account)
       .then(setClaimed)
       .catch(console.error)
       .finally(() => {
