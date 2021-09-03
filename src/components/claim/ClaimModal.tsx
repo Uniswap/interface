@@ -23,6 +23,7 @@ import { useClaimTxConfirmedUpdater } from '../../state/claim/hooks'
 import { ActionButton } from './ActionButton'
 import { useIsOldSwaprLp } from '../../hooks/swpr/useIsOldSwaprLp'
 import { ConvertFlow } from './ConvertFlow'
+import useDebounce from '../../hooks/useDebounce'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -97,6 +98,11 @@ export default function ClaimModal({
   const closeModals = useCloseModals()
   const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
+  const debouncedUnclaimedBalance = useDebounce(unclaimedBalance, 1000)
+  const debouncedAvailableClaim = useDebounce(availableClaim, 1000)
+  const debouncedLoadingIsOldSwprLP = useDebounce(loadingIsOldSwaprLp, 1000)
+  const debouncedIsOldSwprLP = useDebounce(isOldSwprLp, 1000)
+
   useEffect(() => {
     setCorrectNetwork(chainId === ChainId.RINKEBY) // TODO: change to Arb1 before going live
   }, [chainId])
@@ -107,7 +113,7 @@ export default function ClaimModal({
       .then(transaction => {
         setHash(transaction.hash)
         addTransaction(transaction, {
-          summary: `Claim ${unclaimedBalance?.toFixed(3)} SWPR`
+          summary: `Claim ${debouncedUnclaimedBalance?.toFixed(3)} SWPR`
         })
         transaction.wait().then(() => {
           updateClaimTxConfirmed(true)
@@ -120,7 +126,7 @@ export default function ClaimModal({
       .finally(() => {
         setAttempting(false)
       })
-  }, [addTransaction, claimCallback, unclaimedBalance, updateClaimTxConfirmed])
+  }, [addTransaction, claimCallback, debouncedUnclaimedBalance, updateClaimTxConfirmed])
 
   const handleConversionError = useCallback(() => {
     setError(true)
@@ -164,12 +170,12 @@ export default function ClaimModal({
             </TYPE.white>
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            {availableClaim && !correctNetwork && (
+            {debouncedAvailableClaim && !correctNetwork && (
               <NetworkWarning>
                 Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
               </NetworkWarning>
             )}
-            {correctNetwork && isOldSwprLp && (
+            {correctNetwork && debouncedIsOldSwprLP && (
               <NativeCurrencyWarning>
                 Seems like you have provided liquidity for an old SWPR pair. Please pull all the provided liquidity
                 before proceeding.
@@ -182,7 +188,7 @@ export default function ClaimModal({
                     UNCLAIMED SWPR
                   </TYPE.small>
                   <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
-                    {unclaimedBalance?.toFixed(3) || '0'}
+                    {debouncedUnclaimedBalance?.toFixed(3) || '0'}
                   </TYPE.white>
                 </div>
                 <div>
@@ -194,7 +200,7 @@ export default function ClaimModal({
                   </TYPE.white>
                 </div>
               </RowBetween>
-              {!isOldSwprLp && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
+              {!debouncedIsOldSwprLP && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
                 <>
                   <NativeCurrencyWarning>
                     You have no Arbitrum ETH to perform the operation. Please make sure to transfer enough ETH to
@@ -211,12 +217,12 @@ export default function ClaimModal({
                   </ButtonPrimary>
                 </>
               )}
-              {(availableClaim || !correctNetwork || isOldSwprLp) && (
+              {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwprLP) && (
                 <ActionButton
-                  availableClaim={availableClaim}
+                  availableClaim={debouncedAvailableClaim}
                   nativeCurrencyBalance={nativeCurrencyBalance}
                   correctNetwork={correctNetwork}
-                  isOldSwprLp={isOldSwprLp}
+                  isOldSwprLp={debouncedIsOldSwprLP}
                   onConnectWallet={onConnectWallet}
                   onSwitchToArbitrum={onSwitchToArbitrum}
                   onClaim={onClaim}
@@ -224,7 +230,7 @@ export default function ClaimModal({
               )}
               {correctNetwork && oldSwprBalance?.greaterThan('0') && (
                 <ConvertFlow
-                  disabled={loadingIsOldSwaprLp || isOldSwprLp || availableClaim}
+                  disabled={debouncedLoadingIsOldSwprLP || debouncedIsOldSwprLP || debouncedAvailableClaim}
                   oldSwprBalance={oldSwprBalance}
                   onError={handleConversionError}
                 />
@@ -250,7 +256,7 @@ export default function ClaimModal({
       attemptingTxn={attempting}
       hash={hash}
       content={content}
-      pendingText={`Claiming ${unclaimedBalance?.toFixed(3)} SWPR`}
+      pendingText={`Claiming ${debouncedUnclaimedBalance?.toFixed(3)} SWPR`}
     />
   )
 }

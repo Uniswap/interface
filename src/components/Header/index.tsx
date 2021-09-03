@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
@@ -218,8 +218,14 @@ function Header() {
   const userNativeCurrencyBalance = useNativeCurrencyBalance()
   const [isDark] = useDarkModeManager()
   const toggleClaimPopup = useToggleShowClaimPopup()
-  const newSwprBalance = useTokenBalance(account || undefined, chainId ? SWPR[chainId] : undefined)
-  const oldSwprBalance = useTokenBalance(account || undefined, chainId ? OLD_SWPR[chainId] : undefined)
+  const accountOrUndefined = useMemo(() => account || undefined, [account])
+  const { newSwpr, oldSwpr } = useMemo(
+    () =>
+      chainId ? { newSwpr: SWPR[chainId], oldSwpr: OLD_SWPR[chainId] } : { newSwpr: undefined, oldSwpr: undefined },
+    [chainId]
+  )
+  const newSwprBalance = useTokenBalance(accountOrUndefined, newSwpr)
+  const oldSwprBalance = useTokenBalance(accountOrUndefined, oldSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
   const handleDisabledAnchorClick = useCallback(event => {
