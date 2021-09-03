@@ -137,10 +137,11 @@ export function NetworkAlert() {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-    ? `${info.bridge}?chainId=1`
-    : info.bridge
-
+  const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const depositUrl = isOptimism ? `${info.bridge}?chainId=1` : info.bridge
+  const readMoreLink = isOptimism
+    ? 'https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism'
+    : 'https://help.uniswap.org/en/articles/5538618-how-to-deposit-tokens-to-arbitrum'
   return (
     <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
       <CloseIcon onClick={dismiss} />
@@ -154,7 +155,7 @@ export function NetworkAlert() {
             This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
             swap them.
           </Trans>{' '}
-          <ReadMoreLink href="https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism">
+          <ReadMoreLink href={readMoreLink}>
             <Trans>Read more</Trans>
           </ReadMoreLink>
         </Body>

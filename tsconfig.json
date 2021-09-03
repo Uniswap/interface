@@ -16,6 +16,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
+    "useUnknownInCatchVariables": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,

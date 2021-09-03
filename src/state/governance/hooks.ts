@@ -4,7 +4,15 @@ import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { Contract } from 'ethers'
-import { defaultAbiCoder, formatUnits, Interface, isAddress } from 'ethers/lib/utils'
+import {
+  defaultAbiCoder,
+  formatUnits,
+  Interface,
+  isAddress,
+  toUtf8String,
+  Utf8ErrorFuncs,
+  Utf8ErrorReason,
+} from 'ethers/lib/utils'
 import {
   useGovernanceV0Contract,
   useGovernanceV1Contract,
@@ -15,7 +23,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { SupportedChainId } from '../../constants/chains'
-import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
+import { BRAVO_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -87,8 +95,42 @@ function useFormattedProposalCreatedLogs(contract: Contract | null): FormattedPr
   return useMemo(() => {
     return useLogsResult?.logs?.map((log) => {
       const parsed = GovernanceInterface.parseLog(log).args
+      let description!: string
+      try {
+        description = parsed.description
+      } catch (error) {
+        // replace invalid UTF-8 in the description with replacement characters
+        let onError = Utf8ErrorFuncs.replace
+
+        // Bravo proposal reverses the codepoints for U+2018 (‘) and U+2026 (…)
+        const startBlock = parseInt(parsed.startBlock?.toString())
+        if (startBlock === BRAVO_START_BLOCK) {
+          const U2018 = [0xe2, 0x80, 0x98].toString()
+          const U2026 = [0xe2, 0x80, 0xa6].toString()
+          onError = (reason, offset, bytes, output) => {
+            if (reason === Utf8ErrorReason.UNEXPECTED_CONTINUE) {
+              const charCode = [bytes[offset], bytes[offset + 1], bytes[offset + 2]].reverse().toString()
+              if (charCode === U2018) {
+                output.push(0x2018)
+                return 2
+              } else if (charCode === U2026) {
+                output.push(0x2026)
+                return 2
+              }
+            }
+            return Utf8ErrorFuncs.replace(reason, offset, bytes, output)
+          }
+        }
+
+        description = JSON.parse(toUtf8String(error.error.value, onError)) || ''
+
+        // Bravo proposal omits newlines
+        if (startBlock === BRAVO_START_BLOCK) {
+          description = description.replaceAll(/  /g, '\n').replaceAll(/\d\. /g, '\n$&')
+        }
+      }
       return {
-        description: parsed.description,
+        description,
         details: parsed.targets.map((target: string, i: number) => {
           const signature = parsed.signatures[i]
           const [name, types] = signature.substr(0, signature.length - 1).split('(')
