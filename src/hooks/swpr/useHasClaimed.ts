@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ARBITRUM_ONE_PROVIDER } from '../../constants'
+import { RINKEBY_PROVIDER } from '../../constants'
 import { useClaimTxConfirmed } from '../../state/claim/hooks'
 import { useSWPRClaimerContract } from '../useContract'
 
@@ -7,31 +7,31 @@ export default function useHasClaimed(account: string | null | undefined): { loa
   const swprClaimerContract = useSWPRClaimerContract()
   const [claimed, setClaimed] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [arbitrumOneBlockNumber, setArbitrumOneBlockNumber] = useState(0)
+  const [latestBlockNumber, setLatestBlockNumber] = useState(0)
   const claimTxConfirmed = useClaimTxConfirmed()
 
   useEffect(() => {
-    ARBITRUM_ONE_PROVIDER.on('block', setArbitrumOneBlockNumber)
+    RINKEBY_PROVIDER.on('block', setLatestBlockNumber) // TODO: change to Arb1 before going live
     return () => {
-      ARBITRUM_ONE_PROVIDER.removeListener('block', setArbitrumOneBlockNumber)
+      RINKEBY_PROVIDER.removeListener('block', setLatestBlockNumber) // TODO: change to Arb1 before going live
     }
   }, [])
 
   useEffect(() => {
-    if (!account || !swprClaimerContract || !arbitrumOneBlockNumber || claimTxConfirmed) {
+    if (!account || !swprClaimerContract || !latestBlockNumber || claimTxConfirmed) {
       setClaimed(true)
       setLoading(false)
       return
     }
     setLoading(true)
     swprClaimerContract
-      .claimed(account, { blockTag: arbitrumOneBlockNumber })
+      .claimed(account, { blockTag: latestBlockNumber })
       .then(setClaimed)
       .catch(console.error)
       .finally(() => {
         setLoading(false)
       })
-  }, [account, swprClaimerContract, arbitrumOneBlockNumber, claimTxConfirmed])
+  }, [account, swprClaimerContract, latestBlockNumber, claimTxConfirmed])
 
   return { loading, claimed }
 }

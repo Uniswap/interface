@@ -98,7 +98,7 @@ export default function ClaimModal({
   const toggleWalletConnectionModal = useToggleModal(ApplicationModal.WALLET_SWITCHER)
 
   useEffect(() => {
-    setCorrectNetwork(chainId === ChainId.ARBITRUM_RINKEBY) // TODO: change to Arb1 before going live
+    setCorrectNetwork(chainId === ChainId.RINKEBY) // TODO: change to Arb1 before going live
   }, [chainId])
 
   const onClaim = useCallback(() => {
@@ -135,7 +135,7 @@ export default function ClaimModal({
 
   const onSwitchToArbitrum = useCallback(() => {
     if (connector instanceof InjectedConnector)
-      switchOrAddNetwork(NETWORK_DETAIL[ChainId.ARBITRUM_RINKEBY], account || undefined) // TODO: change to Arb1 before going live
+      switchOrAddNetwork(NETWORK_DETAIL[ChainId.RINKEBY], account || undefined) // TODO: change to Arb1 before going live
   }, [account, connector])
 
   const onConnectWallet = useCallback(() => {

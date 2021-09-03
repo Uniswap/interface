@@ -13,7 +13,7 @@ import {
   RoutablePlatform,
   SWPR
 } from '@swapr/sdk'
-import { authereum, injected, walletConnect } from '../connectors'
+import { authereum, INFURA_PROJECT_ID, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
 import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
@@ -171,7 +171,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
 }
 
 export const ARBITRUM_ONE_PROVIDER = new providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc')
-export const ARBITRUM_RINKEBY_PROVIDER = new providers.JsonRpcProvider('https://rinkeby.arbitrum.io/rpc')
+export const RINKEBY_PROVIDER = new providers.JsonRpcProvider(`https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`)
 
 export interface WalletInfo {
   connector?: AbstractConnector
@@ -337,7 +337,8 @@ export const OLD_SWPR: { [key: number]: Token } = {
     18,
     'SWPR',
     'Swapr'
-  )
+  ),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0x56B338e9bd5A72e251ab1E122E0bC5C684f8b94C', 18, 'SWPR', 'Swapr')
 }
 
 export const CONVERTER_ADDRESS: { [key: number]: string } = {
