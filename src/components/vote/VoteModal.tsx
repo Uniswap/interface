@@ -38,7 +38,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 interface VoteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  voteOption: VoteOption
+  voteOption: VoteOption | undefined
   proposalId: string | undefined // id for the proposal to vote on
 }
 
@@ -65,7 +65,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!voteCallback) return
+    if (!voteCallback || voteOption === undefined) return
 
     // try delegation and store hash
     const hash = await voteCallback(proposalId, voteOption)?.catch((error) => {

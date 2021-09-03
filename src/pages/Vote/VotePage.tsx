@@ -132,7 +132,7 @@ export default function VotePage({
   const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
 
   // update vote option based on button interactions
-  const [voteOption, setVoteOption] = useState<VoteOption>(VoteOption.Abstain)
+  const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
 
   // modal for casting votes
   const showVoteModal = useModalOpen(ApplicationModal.VOTE)
