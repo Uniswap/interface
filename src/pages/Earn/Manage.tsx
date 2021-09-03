@@ -102,8 +102,10 @@ export default function Manage({
   const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
   const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo, stakingAddress)
   const tripleStakingInfo = usePairTripleStakingInfo(singleStakingInfo, stakingAddress)
+  const externalSingleStakingInfo = usePairStakingInfo(stakingTokenPair, stakingAddress)
 
-  const stakingInfo = tripleStakingInfo || dualStakingInfo || singleStakingInfo
+  // Check external before we check single staking
+  const stakingInfo = tripleStakingInfo || dualStakingInfo || externalSingleStakingInfo || singleStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)

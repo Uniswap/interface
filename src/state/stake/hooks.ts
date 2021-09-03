@@ -220,7 +220,7 @@ interface IStakingPool {
   poolInfo: IRawPool
 }
 
-export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStakingPool[] {
+export function useStakingPools(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly IStakingPool[] {
   const { network } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
@@ -261,6 +261,9 @@ export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStaking
           if (pairToFilterBy === null) {
             return false
           }
+          if (stakingAddress) {
+            return stakingAddress.toLowerCase() === stakingRewardInfo.stakingRewardAddress.toLowerCase()
+          }
           return (
             stakingRewardInfo.tokens &&
             pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
@@ -268,7 +271,7 @@ export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStaking
           )
         }) ?? []
     )
-  }, [ube, pools, poolPairs, pairToFilterBy])
+  }, [ube, pools, poolPairs, pairToFilterBy, stakingAddress])
 }
 
 export function useStakingPoolAddresses(

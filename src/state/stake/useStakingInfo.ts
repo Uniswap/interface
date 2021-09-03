@@ -9,7 +9,7 @@ import { NEVER_RELOAD, useMultipleContractSingleData } from 'state/multicall/hoo
 import { StakingInfo, useStakingPools } from './hooks'
 
 // Gets the staking info from the network for the active chain id
-export default function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingInfo[] {
+export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddress?: string): readonly StakingInfo[] {
   const { network, address } = useContractKit()
   const chainId = network.chainId as unknown as UbeswapChainId
   const ube = chainId ? UBE[chainId] : undefined
@@ -17,7 +17,7 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null): readonly S
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
 
-  const info = useStakingPools(pairToFilterBy)
+  const info = useStakingPools(pairToFilterBy, stakingAddress)
 
   // These are the staking pools
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
@@ -150,6 +150,7 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null): readonly S
   }, [balances, chainId, currentBlockTimestamp, earnedAmounts, info, periodFinishes, rewardRates, totalSupplies, ube])
 }
 
-export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
-  return useStakingInfo(pairToFilterBy)[0] ?? undefined
+// `stakingAddress` is used to differentiate when there are two different farms with the same LP
+export const usePairStakingInfo = (pairToFilterBy?: Pair | null, stakingAddress?: string): StakingInfo | undefined => {
+  return useStakingInfo(pairToFilterBy, stakingAddress)[0] ?? undefined
 }
