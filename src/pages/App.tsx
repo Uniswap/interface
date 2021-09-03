@@ -23,7 +23,6 @@ import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
 import { Slide, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { DisclaimerBar } from '../components/DisclaimerBar'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -72,7 +71,6 @@ export default function App() {
           <NetworkWarningModal />
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
-            <DisclaimerBar />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
