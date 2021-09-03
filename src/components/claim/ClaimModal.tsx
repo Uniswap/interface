@@ -224,7 +224,7 @@ export default function ClaimModal({
               )}
               {correctNetwork && oldSwprBalance?.greaterThan('0') && (
                 <ConvertFlow
-                  disabled={loadingIsOldSwaprLp || isOldSwprLp}
+                  disabled={loadingIsOldSwaprLp || isOldSwprLp || availableClaim}
                   oldSwprBalance={oldSwprBalance}
                   onError={handleConversionError}
                 />
