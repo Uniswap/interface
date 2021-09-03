@@ -23,7 +23,7 @@ export const ProposalDetails = () => {
     React.useEffect(() => {
         console.log(params)
         if (params && params['id']) {
-          axios.get('http://localhost:7777/proposal/' + params['id']).then((response) => setData(response.data))
+          axios.get('https://api.babytrumptoken.com/proposal/' + params['id']).then((response) => setData(response.data))
         }
     }, [params])
     const Header = styled.div`
@@ -65,7 +65,7 @@ export const ProposalDetails = () => {
            alert("Cannot vote on your own proposal!");
            return;
        }
-       axios.post("http://localhost:7777/proposal/" + data._id, {...data, votes: [...data.votes, { wallet: account, vote: vote }]}).then((response) => setData(response.data))
+       axios.post("https://api.babytrumptoken.com/proposal/" + data._id, {...data, votes: [...data.votes, { wallet: account, vote: vote }]}).then((response) => setData(response.data))
     }
 
     const isDark =useIsDarkMode()
