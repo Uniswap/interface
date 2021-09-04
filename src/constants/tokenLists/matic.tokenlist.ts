@@ -79,6 +79,14 @@ export const MATIC_TOKEN_LIST = {
       name: 'Jarvis Synthetic Swiss Franc',
       decimals: 18,
       logoURI: 'https://i.imgur.com/EknGhAl.png'
+    },
+    {
+      chainId: 137,
+      address: '0x00e5646f60AC6Fb446f621d146B6E1886f002905',
+      symbol: 'RAI',
+      name: 'Rai Reflex Index',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334'
     }
   ],
   version: {
