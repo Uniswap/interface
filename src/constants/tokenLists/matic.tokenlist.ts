@@ -86,7 +86,7 @@ export const MATIC_TOKEN_LIST = {
       symbol: 'RAI',
       name: 'Rai Reflex Index',
       decimals: 18,
-      logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334'
+      logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334' 
     }
   ],
   version: {
