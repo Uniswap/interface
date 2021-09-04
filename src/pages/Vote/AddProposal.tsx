@@ -95,8 +95,8 @@ export const AddProposal = () => {
     const trumpGoldBalance = useTrumpGoldBalance(account)
     const [isDisabled, setIsDisabled] = React.useState(false)
     React.useEffect(() => {
-    if (account && trumpGoldBalance && +trumpGoldBalance?.toFixed(0) < 200) setIsDisabled(true)
-    if (!account) setIsDisabled(true)
+        if (account && trumpGoldBalance && +trumpGoldBalance?.toFixed(0) < 2000) setIsDisabled(true)
+        if (!account) setIsDisabled(true)
     }, [account, trumpGoldBalance])
     
     const [added, setAdded] = React.useState<Proposal>({
@@ -129,7 +129,7 @@ export const AddProposal = () => {
                 <Body>
                     {isDisabled && 
                     (
-                        <BlueCard><AlertCircle /> <TYPE.main>You cannot create a proposal without owning atleast 200 TrumpGold tokens.</TYPE.main></BlueCard>
+                        <BlueCard><AlertCircle /> <TYPE.main>You cannot create a proposal without owning atleast 2000 TrumpGold tokens.</TYPE.main></BlueCard>
                     )}
                     
                     <FormGroup>
@@ -164,7 +164,7 @@ export const AddProposal = () => {
                     )}
                     <FormGroup>
                         {lastProposal && <small style={{color:'#ff7676', textAlign: 'center', paddingLeft:15, marginBottom: 15}}>You cannot submit more than one proposal within a week.</small>}
-                        <ButtonPrimary type="submit" disabled={isDisabled || lastProposal}>Add Proposal</ButtonPrimary>
+                        <ButtonPrimary type="submit" disabled={isDisabled || lastProposal || !account}>Add Proposal</ButtonPrimary>
                     </FormGroup>
                 </Body>
                 </form>
