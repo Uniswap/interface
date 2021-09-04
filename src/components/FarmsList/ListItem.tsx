@@ -32,6 +32,7 @@ import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, u
 import { ExternalLink } from 'theme'
 import { RewardToken } from 'pages/Farms/styleds'
 import { currencyIdFromAddress } from 'utils/currencyId'
+import { useBlockNumber } from 'state/application/hooks'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -215,6 +216,7 @@ const ListItem = ({ farm }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const [expand, setExpand] = useState<boolean>(false)
   const xxlBreakpoint = useMedia('(min-width: 1200px)')
+  const currentBlock = useBlockNumber()
 
   const currency0 = useToken(farm.token0?.id) as Token
   const currency1 = useToken(farm.token1?.id) as Token
@@ -227,6 +229,12 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const farmRewards = useFarmRewards([farm])
   const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
+
+  // Check if pool is active for liquidity mining
+  const isLiquidityMiningActive =
+    currentBlock && farm.startBlock && farm.endBlock
+      ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
+      : false
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -272,7 +280,7 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
-  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString())
+  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString(), isLiquidityMiningActive)
 
   const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
 
