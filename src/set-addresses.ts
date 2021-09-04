@@ -55,5 +55,5 @@ console.log('Arbitrum One SWPR address set to', SWPR[ChainId.ARBITRUM_ONE].addre
 SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_SWPR_CLAIMER_ADDRESS_ARBITRUM_ONE as string
 console.log('Arbitrum One SWPR claimer address set to', SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE])
 
-CONVERTER_ADDRESS[ChainId.RINKEBY] = process.env.REACT_APP_SWPR_CONVERTER_ADDRESS_ARBITRUM_ONE as string // TODO: change to Arb1 before deploying
-console.log('Arbitrum One SWPR converter address set to', CONVERTER_ADDRESS[ChainId.RINKEBY]) // TODO: change to Arb1 before deploying
+CONVERTER_ADDRESS[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_SWPR_CONVERTER_ADDRESS_ARBITRUM_ONE as string
+console.log('Arbitrum One SWPR converter address set to', CONVERTER_ADDRESS[ChainId.ARBITRUM_ONE])

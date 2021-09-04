@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { RINKEBY_PROVIDER } from '../../constants'
+import { ARBITRUM_ONE_PROVIDER } from '../../constants'
 import { useClaimTxConfirmed } from '../../state/claim/hooks'
 import { useSWPRClaimerContract } from '../useContract'
 
@@ -11,9 +11,9 @@ export default function useHasClaimed(account: string | null | undefined): { loa
   const claimTxConfirmed = useClaimTxConfirmed()
 
   useEffect(() => {
-    RINKEBY_PROVIDER.on('block', setLatestBlockNumber) // TODO: change to Arb1 before going live
+    ARBITRUM_ONE_PROVIDER.on('block', setLatestBlockNumber)
     return () => {
-      RINKEBY_PROVIDER.removeListener('block', setLatestBlockNumber) // TODO: change to Arb1 before going live
+      ARBITRUM_ONE_PROVIDER.removeListener('block', setLatestBlockNumber)
     }
   }, [])
 
