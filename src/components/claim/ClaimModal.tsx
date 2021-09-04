@@ -185,7 +185,7 @@ export default function ClaimModal({
               <RowBetween>
                 <div>
                   <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                    UNCLAIMED SWPR
+                    UNCLAIMED SWPR (OLD)
                   </TYPE.small>
                   <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
                     {debouncedUnclaimedBalance?.toFixed(3) || '0'}
@@ -193,7 +193,7 @@ export default function ClaimModal({
                 </div>
                 <div>
                   <TYPE.small fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text5">
-                    UNCONVERTED SWPR
+                    UNCONVERTED SWPR (OLD)
                   </TYPE.small>
                   <TYPE.white fontWeight={700} fontSize="22px" lineHeight="27px">
                     {oldSwprBalance?.toFixed(3) || '0'}

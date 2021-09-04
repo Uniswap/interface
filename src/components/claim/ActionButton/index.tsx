@@ -36,7 +36,7 @@ export function ActionButton({
   const { account, chainId, connector } = useActiveWeb3React()
 
   const [disabled, setDisabled] = useState(true)
-  const [text, setText] = useState('Claim SWPR')
+  const [text, setText] = useState('Claim SWPR (old)')
 
   useEffect(() => {
     let localDisabled = true
@@ -51,11 +51,11 @@ export function ActionButton({
   }, [account, availableClaim, chainId, correctNetwork, isOldSwaprLp, nativeCurrencyBalance])
 
   useEffect(() => {
-    let buttonText = 'Claim SWPR'
+    let buttonText = 'Claim SWPR (old)'
     if (!!!account) buttonText = 'Connect wallet'
     else if (!correctNetwork) buttonText = 'Switch to Arbitrum'
     else if (isOldSwaprLp) buttonText = 'Pull liquidity'
-    else if (availableClaim) buttonText = 'Claim SWPR'
+    else if (availableClaim) buttonText = 'Claim SWPR (old)'
     setText(buttonText)
   }, [account, availableClaim, correctNetwork, isOldSwaprLp])
 
