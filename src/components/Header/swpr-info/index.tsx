@@ -35,11 +35,11 @@ interface SwprInfoProps {
 export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }: SwprInfoProps) {
   const { account } = useActiveWeb3React()
   const { available: claimAvailable } = useIsClaimAvailable(account)
-  const { isOldSwprLp } = useIsOldSwaprLp(account || undefined)
+  const { isOldSwaprLp } = useIsOldSwaprLp(account || undefined)
 
   const debouncedClaimAvailable = useDebounce(claimAvailable, 1000)
   const debouncedOldSwprBalance = useDebounce(oldSwprBalance, 1000)
-  const debouncedIsOldSwprLp = useDebounce(isOldSwprLp, 1000)
+  const debouncedIsOldSwaprLp = useDebounce(isOldSwaprLp, 1000)
 
   if (debouncedClaimAvailable)
     return (
@@ -50,7 +50,7 @@ export function SwprInfo({ onToggleClaimPopup, oldSwprBalance, newSwprBalance }:
         Claim SWPR airdrop and convert
       </AirdropSign>
     )
-  if (debouncedIsOldSwprLp || debouncedOldSwprBalance?.greaterThan('0'))
+  if (debouncedIsOldSwaprLp || debouncedOldSwprBalance?.greaterThan('0'))
     return (
       <AirdropSign onClick={onToggleClaimPopup}>
         <span role="img" aria-label="Convert SWPR emoji">

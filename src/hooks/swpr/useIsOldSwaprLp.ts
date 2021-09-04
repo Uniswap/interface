@@ -47,7 +47,7 @@ export function useIsOldSwaprLp(
   account?: string
 ): {
   loading: boolean
-  isOldSwprLp: boolean
+  isOldSwaprLp: boolean
 } {
   const { chainId } = useActiveWeb3React()
   const oldSwprTokenAddress = useMemo(() => {
@@ -64,7 +64,7 @@ export function useIsOldSwaprLp(
     }
   })
 
-  if (loadingMyPairs) return { loading: true, isOldSwprLp: false }
+  if (loadingMyPairs) return { loading: true, isOldSwaprLp: false }
   if (
     !data ||
     !data.liquidityPositions ||
@@ -74,16 +74,9 @@ export function useIsOldSwaprLp(
     !chainId ||
     !oldSwprTokenAddress
   )
-    return { loading: false, isOldSwprLp: false }
-
-  const liquidityPositions = data.liquidityMiningPositions.concat(data.liquidityPositions)
-  for (let i = 0; i < liquidityPositions.length; i++) {
-    const position = liquidityPositions[i]
-    if (
-      getAddress(position.pair.token0.address) === oldSwprTokenAddress ||
-      getAddress(position.pair.token1.address) === oldSwprTokenAddress
-    )
-      return { loading: false, isOldSwprLp: true }
+    return { loading: false, isOldSwaprLp: false }
+  return {
+    loading: false,
+    isOldSwaprLp: data.liquidityMiningPositions.length > 0 || data.liquidityPositions.length > 0
   }
-  return { loading: false, isOldSwprLp: false }
 }

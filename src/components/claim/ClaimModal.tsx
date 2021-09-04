@@ -90,7 +90,7 @@ export default function ClaimModal({
 
   const addTransaction = useTransactionAdder()
   const nativeCurrencyBalance = useNativeCurrencyBalance()
-  const { loading: loadingIsOldSwaprLp, isOldSwprLp } = useIsOldSwaprLp(account || undefined)
+  const { loading: loadingIsOldSwaprLp, isOldSwaprLp } = useIsOldSwaprLp(account || undefined)
   const claimCallback = useClaimCallback(account || undefined)
   const updateClaimTxConfirmed = useClaimTxConfirmedUpdater()
   const { unclaimedBalance } = useUnclaimedSWPRBalance(account || undefined)
@@ -100,8 +100,8 @@ export default function ClaimModal({
 
   const debouncedUnclaimedBalance = useDebounce(unclaimedBalance, 1000)
   const debouncedAvailableClaim = useDebounce(availableClaim, 1000)
-  const debouncedLoadingIsOldSwprLP = useDebounce(loadingIsOldSwaprLp, 1000)
-  const debouncedIsOldSwprLP = useDebounce(isOldSwprLp, 1000)
+  const debouncedLoadingIsOldSwaprLP = useDebounce(loadingIsOldSwaprLp, 1000)
+  const debouncedIsOldSwaprLP = useDebounce(isOldSwaprLp, 1000)
 
   useEffect(() => {
     setCorrectNetwork(chainId === ChainId.RINKEBY) // TODO: change to Arb1 before going live
@@ -175,7 +175,7 @@ export default function ClaimModal({
                 Receive your SWPR airdrop on Arbitrum One. Please switch network to claim.
               </NetworkWarning>
             )}
-            {correctNetwork && debouncedIsOldSwprLP && (
+            {correctNetwork && debouncedIsOldSwaprLP && (
               <NativeCurrencyWarning>
                 Seems like you have provided liquidity for an old SWPR pair. Please pull all the provided liquidity
                 before proceeding.
@@ -200,7 +200,7 @@ export default function ClaimModal({
                   </TYPE.white>
                 </div>
               </RowBetween>
-              {!debouncedIsOldSwprLP && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
+              {!debouncedIsOldSwaprLP && correctNetwork && nativeCurrencyBalance?.equalTo('0') && (
                 <>
                   <NativeCurrencyWarning>
                     You have no Arbitrum ETH to perform the operation. Please make sure to transfer enough ETH to
@@ -217,20 +217,20 @@ export default function ClaimModal({
                   </ButtonPrimary>
                 </>
               )}
-              {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwprLP) && (
+              {(debouncedAvailableClaim || !correctNetwork || debouncedIsOldSwaprLP) && (
                 <ActionButton
                   availableClaim={debouncedAvailableClaim}
                   nativeCurrencyBalance={nativeCurrencyBalance}
                   correctNetwork={correctNetwork}
-                  isOldSwprLp={debouncedIsOldSwprLP}
+                  isOldSwaprLp={debouncedIsOldSwaprLP}
                   onConnectWallet={onConnectWallet}
                   onSwitchToArbitrum={onSwitchToArbitrum}
                   onClaim={onClaim}
                 />
               )}
-              {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwprLp) && (
+              {correctNetwork && (oldSwprBalance?.greaterThan('0') || isOldSwaprLp) && (
                 <ConvertFlow
-                  disabled={debouncedLoadingIsOldSwprLP || debouncedIsOldSwprLP || debouncedAvailableClaim}
+                  disabled={debouncedLoadingIsOldSwaprLP || debouncedIsOldSwaprLP || debouncedAvailableClaim}
                   oldSwprBalance={oldSwprBalance}
                   onError={handleConversionError}
                 />
