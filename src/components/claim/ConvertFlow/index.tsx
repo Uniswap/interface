@@ -61,7 +61,7 @@ export function ConvertFlow({ oldSwprBalance, disabled, onError }: ConvertFlowPr
           Convert
         </ButtonPrimary>
       </RowBetween>
-      <ProgressCircles steps={[!!!oldSwprBalance && approvalState === ApprovalState.APPROVED]} />
+      <ProgressCircles disabled={disabled} steps={[approvalState === ApprovalState.APPROVED]} />
     </StyledAutoColumn>
   )
 }
