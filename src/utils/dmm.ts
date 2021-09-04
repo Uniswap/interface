@@ -265,12 +265,16 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
  * @param poolLiquidityUsd Total pool liquidity in USD
  * @returns
  */
-export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: string): number {
+export function useFarmApr(
+  rewardPerBlocks: RewardPerBlock[],
+  poolLiquidityUsd: string,
+  isLiquidityMiningActive?: boolean
+): number {
   const { chainId } = useActiveWeb3React()
   const ethPrice = useETHPrice()
   const kncPrice = useKNCPrice()
 
-  if (parseFloat(poolLiquidityUsd) === 0) {
+  if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
     return 0
   }
 
