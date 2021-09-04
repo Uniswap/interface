@@ -5,7 +5,7 @@ import { useSWPRClaimerContract } from '../useContract'
 
 export default function useHasClaimed(account: string | null | undefined): { loading: boolean; claimed: boolean } {
   const swprClaimerContract = useSWPRClaimerContract()
-  const [claimed, setClaimed] = useState(false)
+  const [claimed, setClaimed] = useState(true)
   const [loading, setLoading] = useState(false)
   const [latestBlockNumber, setLatestBlockNumber] = useState(0)
   const claimTxConfirmed = useClaimTxConfirmed()
