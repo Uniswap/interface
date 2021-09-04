@@ -177,8 +177,8 @@ export default function ClaimModal({
             )}
             {correctNetwork && debouncedIsOldSwaprLP && (
               <NativeCurrencyWarning>
-                Seems like you have provided liquidity for an old SWPR pair. Please pull all the provided liquidity
-                before proceeding.
+                Seems like you have provided liquidity on the Swapr build. Please pull all the provided liquidity before
+                proceeding further.
               </NativeCurrencyWarning>
             )}
             <BottomAutoColumn gap="8px">
