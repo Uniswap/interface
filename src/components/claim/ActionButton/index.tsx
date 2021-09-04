@@ -66,7 +66,7 @@ export function ActionButton({
       const anchor = document.createElement('a')
       Object.assign(anchor, {
         target: '_blank',
-        href: 'https://ipfs.io/ipfs/Qmeg3BPGzBqitsEcm8dLaMrS44aD6EiGWPLtGMBjHbPyea',
+        href: 'https://ipfs.io/ipfs/Qmeg3BPGzBqitsEcm8dLaMrS44aD6EiGWPLtGMBjHbPyea/#/pools',
         rel: 'noopener noreferrer'
       }).click()
       anchor.remove()
