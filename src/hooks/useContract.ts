@@ -29,7 +29,8 @@ import WXDAI_ABI from '../constants/abis/wxdai.json'
 import { getContract, getProviderOrSigner, isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
-import { CONVERTER_ADDRESS, ARBITRUM_ONE_PROVIDER } from '../constants'
+import { ARBITRUM_ONE_PROVIDER } from '../constants'
+import { CONVERTER_ADDRESS } from '../constants/converter'
 import { constants } from 'ethers'
 
 // returns null on errors

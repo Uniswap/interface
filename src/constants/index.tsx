@@ -343,9 +343,3 @@ export const OLD_SWPR: { [key: number]: Token } = {
     'Swapr'
   )
 }
-
-export const CONVERTER_ADDRESS: { [key: number]: string } = {
-  // set in envs
-  [ChainId.ARBITRUM_ONE]: ZERO_ADDRESS,
-  [ChainId.ARBITRUM_RINKEBY]: ZERO_ADDRESS
-}

@@ -10,7 +10,7 @@ import {
   SWPR_CLAIMER_ADDRESS
 } from '@swapr/sdk'
 import { isAddress } from './utils'
-import { CONVERTER_ADDRESS } from './constants'
+import { CONVERTER_ADDRESS } from './constants/converter'
 
 const isValidAddressEnv = (value: string | undefined): boolean => {
   return !!value && !!isAddress(value)
@@ -22,6 +22,7 @@ if (
   !isValidAddressEnv(process.env.REACT_APP_ROUTER_ADDRESS_ARBITRUM_ONE) ||
   !isValidAddressEnv(process.env.REACT_APP_STAKING_REWARDS_FACTORY_ADDRESS_ARBITRUM_ONE) ||
   !isValidAddressEnv(process.env.REACT_APP_SWPR_ADDRESS_ARBITRUM_ONE) ||
+  !isValidAddressEnv(process.env.REACT_APP_SWPR_ADDRESS_MAINNET) ||
   !isValidAddressEnv(process.env.REACT_APP_SWPR_CLAIMER_ADDRESS_ARBITRUM_ONE) ||
   !isValidAddressEnv(process.env.REACT_APP_SWPR_CONVERTER_ADDRESS_ARBITRUM_ONE)
 )
@@ -51,6 +52,15 @@ SWPR[ChainId.ARBITRUM_ONE] = new Token(
   'Swapr'
 )
 console.log('Arbitrum One SWPR address set to', SWPR[ChainId.ARBITRUM_ONE].address)
+
+SWPR[ChainId.MAINNET] = new Token(
+  ChainId.MAINNET,
+  process.env.REACT_APP_SWPR_ADDRESS_MAINNET as string,
+  18,
+  'SWPR',
+  'Swapr'
+)
+console.log('Mainnet SWPR address set to', SWPR[ChainId.MAINNET].address)
 
 SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE] = process.env.REACT_APP_SWPR_CLAIMER_ADDRESS_ARBITRUM_ONE as string
 console.log('Arbitrum One SWPR claimer address set to', SWPR_CLAIMER_ADDRESS[ChainId.ARBITRUM_ONE])
