@@ -21,7 +21,8 @@ interface RawPoolData {
 export const useMultiStakeRewards = (
   address: Address,
   underlyingPool: StakingInfo | undefined | null,
-  numRewards: number
+  numRewards: number,
+  active: boolean
 ): StakingInfo | null => {
   const { address: owner } = useContractKit()
   const stakeRewards = useMultiStakingContract(address)
@@ -124,11 +125,11 @@ export const useMultiStakeRewards = (
       rewardRates,
       totalRewardRates,
       periodFinish: new Date(),
-      active: true,
+      active,
       getHypotheticalRewardRate,
       nextPeriodRewards: underlyingPool.nextPeriodRewards,
       poolInfo: underlyingPool.poolInfo,
       rewardTokens,
     }
-  }, [address, data, rewardsToken, underlyingPool])
+  }, [address, data, rewardsToken, underlyingPool, active])
 }

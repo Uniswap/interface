@@ -125,6 +125,7 @@ export default function Earn() {
                     poolAddress={x[0].address}
                     dualPoolAddress={x[0].underlyingPool}
                     underlyingPool={x[1]}
+                    active={x[0].active}
                   />
                 </ErrorBoundary>
               </PoolSection>
@@ -144,7 +145,7 @@ export default function Earn() {
               x[1] && (
                 <PoolSection>
                   <ErrorBoundary>
-                    <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} />
+                    <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
                   </ErrorBoundary>
                 </PoolSection>
               )
@@ -220,6 +221,7 @@ export default function Earn() {
                         poolAddress={x[0].address}
                         dualPoolAddress={x[0].underlyingPool}
                         underlyingPool={x[1]}
+                        active={x[0].active}
                       />
                     </ErrorBoundary>
                   </PoolSection>
@@ -231,7 +233,7 @@ export default function Earn() {
                 x[1] && (
                   <PoolSection>
                     <ErrorBoundary>
-                      <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} />
+                      <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
                     </ErrorBoundary>
                   </PoolSection>
                 )

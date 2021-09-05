@@ -162,22 +162,23 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
               : '-'
           }
         />
-        {stakingInfo.totalRewardRates.map((totalRewardRate, idx) => {
-          return (
-            <React.Fragment key={idx}>
-              <PoolStatRow
-                statName={totalRewardRate.token.symbol + ' rate'}
-                statValue={
-                  stakingInfo.active
-                    ? `${totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })} ${
-                        totalRewardRate.token.symbol
-                      } / week`
-                    : `0 ${totalRewardRate.token.symbol} / week`
-                }
-              />
-            </React.Fragment>
-          )
-        })}
+        {stakingInfo.active &&
+          stakingInfo.totalRewardRates.map((totalRewardRate, idx) => {
+            return (
+              <React.Fragment key={idx}>
+                <PoolStatRow
+                  statName={totalRewardRate.token.symbol + ' rate'}
+                  statValue={
+                    stakingInfo.active
+                      ? `${totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })} ${
+                          totalRewardRate.token.symbol
+                        } / week`
+                      : `0 ${totalRewardRate.token.symbol} / week`
+                  }
+                />
+              </React.Fragment>
+            )
+          })}
         {apy && apy.greaterThan('0') && (
           <PoolStatRow
             helperText={

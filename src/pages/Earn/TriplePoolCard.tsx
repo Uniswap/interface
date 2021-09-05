@@ -8,11 +8,12 @@ interface Props {
   poolAddress: string
   dualPoolAddress: string
   underlyingPool: StakingInfo
+  active: boolean
 }
 
-export const TriplePoolCard: React.FC<Props> = ({ poolAddress, dualPoolAddress, underlyingPool }: Props) => {
-  const dualPool = useMultiStakeRewards(dualPoolAddress, underlyingPool, 2)
-  const mooPool = useMultiStakeRewards(poolAddress, dualPool, 3)
+export const TriplePoolCard: React.FC<Props> = ({ poolAddress, dualPoolAddress, underlyingPool, active }: Props) => {
+  const dualPool = useMultiStakeRewards(dualPoolAddress, underlyingPool, 2, true)
+  const mooPool = useMultiStakeRewards(poolAddress, dualPool, 3, active)
 
   if (!mooPool) {
     return <Loader />
