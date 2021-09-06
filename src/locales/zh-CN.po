@@ -380,9 +380,13 @@ msgstr "DMM 的资本效率可以比典型的 AMM 高 100 倍"
 msgid "Dashboard"
 msgstr "仪表板"
 
+#: 
+#~ msgid "DeFi's First"
+#~ msgstr "DeFi 首个"
+
 #: src/pages/Static/About.tsx
-msgid "DeFi's First"
-msgstr "DeFi 首个"
+msgid "DeFi's First Multi-Chain"
+msgstr ""
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
@@ -435,9 +439,13 @@ msgstr "动态费用"
 msgid "ENDING IN"
 msgstr "截止"
 
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr "每次您收成奖励时，都会创建一个约 30 天的新释放期。多个释放期可以同时运行。每个释放期的解锁奖励可以随时领取（没有截止日期）。"
+
 #: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr "每次您收成奖励时，都会创建一个约 30 天的新释放期。多个释放期可以同时运行。每个释放期的解锁奖励可以随时领取（没有截止日期）。"
+msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -1292,9 +1300,13 @@ msgstr "Total Value Locked"
 msgid "Total Value Locked:"
 msgstr "总价值锁定："
 
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+#~ msgstr "可以收成的总奖励。 收成的奖励会在约 30 天内锁定和逐步释放。"
+
 #: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-msgstr "可以收成的总奖励。 收成的奖励会在约 30 天内锁定和逐步释放。"
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1459,9 +1471,13 @@ msgstr "您的池份额："
 msgid "Your position"
 msgstr "您的头寸"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr "您从一开始就收成的总奖励。 每次您收成新的奖励时，它们都会在大约 30 天内锁定并逐步释放，从收成日期算起。 可以随时领取解锁的奖励（没有截止日期）。"
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-msgstr "您从一开始就收成的总奖励。 每次您收成新的奖励时，它们都会在大约 30 天内锁定并逐步释放，从收成日期算起。 可以随时领取解锁的奖励（没有截止日期）。"
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -1549,6 +1565,10 @@ msgstr "{0} 待处理"
 msgid "{0} added"
 msgstr "{0} 添加"
 
+#: src/pages/Farms/index.tsx
+msgid "{0} blocks"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
 msgstr "{0} 移除"
@@ -1562,9 +1582,9 @@ msgstr "{0} 代币"
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} 代币更新"
 
-#: src/pages/Farms/index.tsx
-msgid "{remainingBlocks} blocks"
-msgstr "{remainingBlocks} 区块"
+#: 
+#~ msgid "{remainingBlocks} blocks"
+#~ msgstr "{remainingBlocks} 区块"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"

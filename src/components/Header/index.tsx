@@ -375,11 +375,9 @@ export default function Header() {
             </BridgeExternalLink>
           )}
           <HideSmall>
-            {library && library.provider.isMetaMask && (
-              <div className="hidden sm:inline-block">
-                <Web3Network />
-              </div>
-            )}
+            <div className="hidden sm:inline-block">
+              <Web3Network />
+            </div>
           </HideSmall>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (

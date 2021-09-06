@@ -380,9 +380,13 @@ msgstr "DMM, tipik AMM'lere kıyasla 100 kata kadar daha fazla sermaye verimli o
 msgid "Dashboard"
 msgstr "Kontrol Paneli"
 
+#: 
+#~ msgid "DeFi's First"
+#~ msgstr "DeFi’de İlk"
+
 #: src/pages/Static/About.tsx
-msgid "DeFi's First"
-msgstr "DeFi’de İlk"
+msgid "DeFi's First Multi-Chain"
+msgstr ""
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
@@ -435,9 +439,13 @@ msgstr "Dinamik Ücretler"
 msgid "ENDING IN"
 msgstr "BİTİYOR"
 
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr "Ödülleri her topladığınızda, ~30 günlük yeni bir vesting süresi oluşturulur. Birden fazla vesting dönemi aynı anda çalışabilir. Vesting süreci sonrası kilidi açılmış ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr "Ödülleri her topladığınızda, ~30 günlük yeni bir vesting süresi oluşturulur. Birden fazla vesting dönemi aynı anda çalışabilir. Vesting süreci sonrası kilidi açılmış ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
+msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -1292,9 +1300,13 @@ msgstr "Kilitli Toplam Değer"
 msgid "Total Value Locked:"
 msgstr "Kilitli Toplam Değer:"
 
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+#~ msgstr "Toplanabilecek toplam ödüllerdir. Hasat edilen ödüller kilitlenir ve ~30 gün boyunca vesting süreci işler."
+
 #: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-msgstr "Toplanabilecek toplam ödüllerdir. Hasat edilen ödüller kilitlenir ve ~30 gün boyunca vesting süreci işler."
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1459,9 +1471,13 @@ msgstr "Havuz paylaşımınız:"
 msgid "Your position"
 msgstr "Pozisyonun"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr "Başından beri toplam hasat ödüllerinizdir. Her yeni ödül toplamanızda, bunlar hasat tarihinden itibaren ~ 30 gün boyunca kilitlenir ve süre içinde kazanılır. Süreç ile birlikte kilidi açılan ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-msgstr "Başından beri toplam hasat ödüllerinizdir. Her yeni ödül toplamanızda, bunlar hasat tarihinden itibaren ~ 30 gün boyunca kilitlenir ve süre içinde kazanılır. Süreç ile birlikte kilidi açılan ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -1549,6 +1565,10 @@ msgstr "{0} Beklemede"
 msgid "{0} added"
 msgstr "{0} eklendi"
 
+#: src/pages/Farms/index.tsx
+msgid "{0} blocks"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
 msgstr "{0} kaldırıldı"
@@ -1562,9 +1582,9 @@ msgstr "{0} token varlıkları"
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} token güncellendi"
 
-#: src/pages/Farms/index.tsx
-msgid "{remainingBlocks} blocks"
-msgstr "{remainingBlocks} blok"
+#: 
+#~ msgid "{remainingBlocks} blocks"
+#~ msgstr "{remainingBlocks} blok"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"

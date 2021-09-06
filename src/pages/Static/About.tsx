@@ -57,7 +57,7 @@ export default function About() {
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
         <Text fontWeight={300} color={'#ffffff'}>
-          <Trans>DeFi's First</Trans>
+          <Trans>DeFi's First Multi-Chain</Trans>
         </Text>
         <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
