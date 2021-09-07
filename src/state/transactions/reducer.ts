@@ -86,7 +86,8 @@ export default createReducer(initialState, (builder) =>
       if (!tx) {
         return
       }
-      const { [hash]: any, ...txs } = transactions[chainId] ?? {}
+      const txs = { ...transactions[chainId] }
+      delete txs[hash]
       transactions[chainId] = txs
     })
 )

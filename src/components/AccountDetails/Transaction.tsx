@@ -1,6 +1,5 @@
 import styled from 'styled-components/macro'
 import { CheckCircle, Triangle } from 'react-feather'
-import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
