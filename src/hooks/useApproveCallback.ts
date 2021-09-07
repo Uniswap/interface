@@ -10,7 +10,6 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
-import ReactGA from 'react-ga'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -92,12 +91,6 @@ export function useApproveCallback(
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
           approval: { tokenAddress: token.address, spender },
-        })
-
-        ReactGA.event({
-          category: 'Swap',
-          action: 'Approve',
-          label: [amountToApprove.currency, spender].join('/'),
         })
       })
       .catch((error: Error) => {
