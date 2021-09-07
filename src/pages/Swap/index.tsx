@@ -663,7 +663,7 @@ export default function Swap({ history }: RouteComponentProps) {
         </Wrapper>
       </AppBody>
       <SwitchLocaleLink />
-      {frontrunningProtection ? <FrontrunningProtectionFooter /> : null}
+      {frontrunningProtection && !swapIsUnsupported ? <FrontrunningProtectionFooter /> : null}
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter
           show={swapIsUnsupported}

@@ -286,7 +286,10 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             </TYPE.black>
             <QuestionHelper
               text={
-                <Trans>Your transaction will be relayed to the network via a private transaction mining service.</Trans>
+                <>
+                  <Trans>Your transaction will be protected from frontrunning attacks. </Trans>
+                  <TYPE.italic marginTop={'4px'}>Powered by Flashbots & mistX</TYPE.italic>
+                </>
               }
             />
           </RowFixed>
