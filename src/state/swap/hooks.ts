@@ -173,8 +173,10 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   if (isV2TradeBetter !== undefined) {
     console.debug(
       {
-        v2Trade: v2Trade?.outputAmount.toExact(),
-        v3Trade: v3Trade?.outputAmount.toExact(),
+        v2TradeInput: v2Trade?.inputAmount.toExact(),
+        v3TradeInput: v3Trade?.inputAmount.toExact(),
+        v2TradeOutput: v2Trade?.outputAmount.toExact(),
+        v3TradeOutput: v3Trade?.outputAmount.toExact(),
         isV2TradeBetter,
       },
       'Debug v2 v3 comparison'

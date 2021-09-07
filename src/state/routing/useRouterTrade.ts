@@ -43,7 +43,7 @@ function useRouterTradeArguments() {
 }
 
 export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
-  const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
+  const { routingAPIEnabled } = useRouterTradeArguments()
 
   const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
@@ -54,13 +54,14 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
           tokenOutChainId: currencyOut.chainId,
           amount: amountIn.quotient.toString(),
           type: 'exactIn',
-          recipient,
-          slippageTolerance,
-          deadline,
         }
       : skipToken,
     { pollingInterval: ms`10s` }
   )
+
+  if (data) {
+    console.debug({ quoteId: data?.quoteId, quote: data?.quote }, 'Quote received from routing api')
+  }
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
@@ -111,7 +112,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
 }
 
 export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
-  const { recipient, slippageTolerance, deadline, routingAPIEnabled } = useRouterTradeArguments()
+  const { routingAPIEnabled } = useRouterTradeArguments()
 
   const { isLoading, isError, data } = useGetQuoteQuery(
     routingAPIEnabled && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
@@ -122,13 +123,14 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
           tokenOutChainId: amountOut.currency.chainId,
           amount: amountOut.quotient.toString(),
           type: 'exactOut',
-          recipient,
-          slippageTolerance,
-          deadline,
         }
       : skipToken,
     { pollingInterval: ms`10s` }
   )
+
+  if (data) {
+    console.debug({ quoteId: data?.quoteId, quote: data?.quote }, 'Quote received from routing api')
+  }
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
