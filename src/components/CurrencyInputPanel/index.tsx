@@ -250,18 +250,16 @@ export default function CurrencyInputPanel({
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
-          {!hideInput &&
-            (loading ? (
-              <LoadingBar width={150} height={25} />
-            ) : (
-              <NumericalInput
-                className="token-amount-input"
-                value={value}
-                onUserInput={(val) => {
-                  onUserInput(val)
-                }}
-              />
-            ))}
+          {!hideInput && (
+            <NumericalInput
+              className="token-amount-input"
+              value={value}
+              onUserInput={(val) => {
+                onUserInput(val)
+              }}
+              style={loading ? { opacity: '.3', transition: 'opacity 0.2s ease-in-out' } : {}}
+            />
+          )}
         </InputRow>
         {!hideInput && !hideBalance && (
           <FiatRow>
