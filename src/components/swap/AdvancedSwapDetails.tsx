@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { LoadingBar } from 'components/Loader/LoadingBar'
 import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components/macro'
 import { TYPE } from '../../theme'
@@ -14,9 +15,15 @@ import { TransactionDetailsLabel } from './styleds'
 interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
+  loading?: boolean
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDetailsProps) {
+/** Renders a loading placeholder if loading and the children otherwise. */
+function DimmableText({ dim, width, children }: { dim: boolean; width: number; children: React.ReactNode }) {
+  return dim ? <LoadingBar height={15} width={width} /> : <>{children}</>
+}
+
+export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const { realizedLPFee, priceImpact } = useMemo(() => {
@@ -39,9 +46,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
-          {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
-        </TYPE.black>
+        <DimmableText dim={loading} width={65}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
+          </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -50,9 +59,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
             <Trans>Price Impact</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
-          <FormattedPriceImpact priceImpact={priceImpact} />
-        </TYPE.black>
+        <DimmableText dim={loading} width={50}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            <FormattedPriceImpact priceImpact={priceImpact} />
+          </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -61,9 +72,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
             <Trans>Slippage tolerance</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
-          {allowedSlippage.toFixed(2)}%
-        </TYPE.black>
+        <DimmableText dim={loading} width={45}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {allowedSlippage.toFixed(2)}%
+          </TYPE.black>
+        </DimmableText>
       </RowBetween>
 
       <RowBetween>
@@ -72,11 +85,13 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
             {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
           </TYPE.subHeader>
         </RowFixed>
-        <TYPE.black textAlign="right" fontSize={14}>
-          {trade.tradeType === TradeType.EXACT_INPUT
-            ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-            : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-        </TYPE.black>
+        <DimmableText dim={loading} width={70}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {trade.tradeType === TradeType.EXACT_INPUT
+              ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+              : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+          </TYPE.black>
+        </DimmableText>
       </RowBetween>
     </AutoColumn>
   )

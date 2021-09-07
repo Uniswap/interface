@@ -15,7 +15,7 @@ const pulse = keyframes`
 export const LoadingBar = styled.div<{ width: number; height: number }>`
   animation: ${pulse} 1s ease-in-out infinite alternate;
   background-color: ${({ theme }) => theme.bg3};
-  border-radius: 0.125rem;
+  border-radius: 0.25rem;
   height: ${({ height }) => `${height}px`};
   width: ${({ width }) => `${width}px`};
 `

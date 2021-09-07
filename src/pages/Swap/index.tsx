@@ -461,7 +461,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     container={<ResponsiveTooltipContainer />}
-                    content={<SwapRoute trade={trade} />}
+                    content={<SwapRoute trade={trade} loading={isSyncingRoute} />}
                     placement="top"
                     showArrow={false}
                   >
@@ -470,24 +470,24 @@ export default function Swap({ history }: RouteComponentProps) {
                 </RowFixed>
                 <RowFixed>
                   {isSyncingRoute ? (
-                    <LoadingBar width={125} height={17} style={{ marginRight: '1rem' }} />
+                    <LoadingBar width={125} height={17} />
                   ) : (
-                    <>
-                      <TradePrice
-                        price={trade.executionPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                      />
-                      <MouseoverTooltipContent
-                        container={<ResponsiveTooltipContainer origin="bottom right" width={'295px'} />}
-                        content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
-                        placement="top"
-                        showArrow={false}
-                      >
-                        <StyledInfo />
-                      </MouseoverTooltipContent>
-                    </>
+                    <TradePrice
+                      price={trade.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
                   )}
+                  <MouseoverTooltipContent
+                    container={<ResponsiveTooltipContainer origin="bottom right" width={'295px'} />}
+                    content={
+                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} loading={isSyncingRoute} />
+                    }
+                    placement="top"
+                    showArrow={false}
+                  >
+                    <StyledInfo />
+                  </MouseoverTooltipContent>
                 </RowFixed>
               </Row>
             )}

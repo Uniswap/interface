@@ -3,6 +3,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AutoColumn } from 'components/Column'
+import { LoadingBar } from 'components/Loader/LoadingBar'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
@@ -20,8 +21,10 @@ const Separator = styled.div`
 
 export default memo(function SwapRoute({
   trade,
+  loading,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  loading: boolean
 }) {
   return (
     <AutoColumn gap="12px" style={{ padding: '0.5rem 0' }}>
@@ -32,11 +35,15 @@ export default memo(function SwapRoute({
         </TYPE.black>
       </RowBetween>
       <Separator />
-      <RoutingDiagram
-        currencyIn={trade.inputAmount.currency}
-        currencyOut={trade.outputAmount.currency}
-        routes={getTokenPath(trade)}
-      />
+      {loading ? (
+        <LoadingBar width={400} height={30} />
+      ) : (
+        <RoutingDiagram
+          currencyIn={trade.inputAmount.currency}
+          currencyOut={trade.outputAmount.currency}
+          routes={getTokenPath(trade)}
+        />
+      )}
     </AutoColumn>
   )
 })
@@ -49,7 +56,7 @@ function getTokenPath(
     const { path: tokenPath } = (trade as V2Trade<Currency, Currency, TradeType>).route
     const path = []
     for (let i = 1; i < tokenPath.length; i++) {
-      path.push([tokenPath[i - 1], tokenPath[i], undefined] as [Currency, Currency, FeeAmount | undefined])
+      path.push([tokenPath[i - 1], tokenPath[i], FeeAmount.MEDIUM] as [Currency, Currency, FeeAmount | undefined])
     }
     return [{ percent: new Percent(100, 100), path }]
   }
