@@ -5,6 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import FrontrunningProtectionFooter from 'components/swap/FrontrunningProtectionFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -49,7 +50,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly, useFrontrunningProtection } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -101,6 +102,9 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
+
+  // for frontrunning protection mode
+  const frontrunningProtection = useFrontrunningProtection()
 
   // get version from the url
   const toggledVersion = useToggledVersion()
@@ -659,6 +663,7 @@ export default function Swap({ history }: RouteComponentProps) {
         </Wrapper>
       </AppBody>
       <SwitchLocaleLink />
+      {frontrunningProtection ? <FrontrunningProtectionFooter /> : null}
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}

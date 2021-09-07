@@ -161,11 +161,17 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
  * Return whether the user has enabled frontrunning protection
  */
 export function useFrontrunningProtection(): boolean {
+  const { chainId, library } = useActiveWeb3React()
+  const isMetaMask: boolean | undefined = Boolean(library?.provider?.isMetaMask)
+  const isMainnet = chainId === 1
+
   const frontrunningProtection = useAppSelector((state) => {
     return state.user.frontrunningProtection
   })
 
-  return Boolean(frontrunningProtection)
+  return useMemo((): boolean => {
+    return Boolean(frontrunningProtection) && isMetaMask && isMainnet
+  }, [frontrunningProtection, isMetaMask, isMainnet])
 }
 
 /**
