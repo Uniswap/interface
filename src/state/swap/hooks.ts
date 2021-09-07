@@ -3,12 +3,13 @@ import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useBetterTrade } from 'hooks/useBetterTrade'
+import { TWO_PERCENT } from 'constants/misc'
 import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from 'hooks/useV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { isTradeBetter } from 'utils/isTradeBetter'
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
@@ -160,15 +161,25 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV3TradeExactIn = useV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
+  const v2TradeRaw = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
+  const v3TradeState = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
+  const v2Trade = v2TradeRaw ?? undefined
+  const v3Trade = v3TradeState.trade && v3TradeState.state == V3TradeState.VALID ? v3TradeState.trade : undefined
 
-  const bestTrade = useBetterTrade(
-    v2Trade ?? undefined,
-    v3Trade.state === V3TradeState.VALID ? v3Trade.trade ?? undefined : undefined,
-    v3Trade.gasPriceWei,
-    v3Trade.gasUseEstimate
-  )
+  const isV2TradeBetter = isTradeBetter(v3Trade, v2Trade, TWO_PERCENT)
+
+  const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade
+
+  if (isV2TradeBetter !== undefined) {
+    console.debug(
+      {
+        v2Trade: v2Trade?.outputAmount.toExact(),
+        v3Trade: v3Trade?.outputAmount.toExact(),
+        isV2TradeBetter,
+      },
+      'Debug v2 v3 comparison'
+    )
+  }
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -206,7 +217,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     }
   }
 
-  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined
+  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade) ?? undefined
   const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
@@ -222,7 +233,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     parsedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
-    v3TradeState: v3Trade,
+    v3TradeState: v3TradeState,
     bestTrade,
     toggledTrade,
     allowedSlippage,
