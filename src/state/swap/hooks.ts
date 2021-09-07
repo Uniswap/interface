@@ -161,22 +161,20 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const bestV3TradeExactIn = useV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestV3TradeExactOut = useV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2TradeRaw = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3TradeState = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
-  const v2Trade = v2TradeRaw ?? undefined
-  const v3Trade = v3TradeState.trade && v3TradeState.state == V3TradeState.VALID ? v3TradeState.trade : undefined
+  const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
+  const v3Trade = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
 
-  const isV2TradeBetter = isTradeBetter(v3Trade, v2Trade, TWO_PERCENT)
+  const isV2TradeBetter = useMemo(() => isTradeBetter(v3Trade.trade, v2Trade, TWO_PERCENT), [v2Trade, v3Trade.trade])
 
-  const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade
+  const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
   if (isV2TradeBetter !== undefined) {
     console.debug(
       {
         v2TradeInput: v2Trade?.inputAmount.toExact(),
-        v3TradeInput: v3Trade?.inputAmount.toExact(),
+        v3TradeInput: v3Trade?.trade?.inputAmount.toExact(),
         v2TradeOutput: v2Trade?.outputAmount.toExact(),
-        v3TradeOutput: v3Trade?.outputAmount.toExact(),
+        v3TradeOutput: v3Trade?.trade?.outputAmount.toExact(),
         isV2TradeBetter,
       },
       'Debug v2 v3 comparison'
@@ -219,7 +217,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     }
   }
 
-  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade) ?? undefined
+  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined
   const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
@@ -235,8 +233,8 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     parsedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
-    v3TradeState: v3TradeState,
-    bestTrade,
+    v3TradeState: v3Trade,
+    bestTrade: bestTrade ?? undefined,
     toggledTrade,
     allowedSlippage,
   }
