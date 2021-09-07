@@ -375,14 +375,16 @@ export default function About() {
           <img src={require('../../assets/svg/unslashed.svg')} />
         </div>
       </div>
+
+      <Text fontSize={[12, 18]} fontWeight={500} mt={5}>
+        <Trans>Powered by</Trans>
+      </Text>
       <div className={style.powered}>
-        <div>
-          <Text fontSize={[12, 18]} fontWeight={500} mb={4}>
-            <Trans>Powered by</Trans>
-          </Text>
-          <img src={require('../../assets/svg/about_icon_kyber.svg')} />
-        </div>
+        <img src={require('../../assets/svg/about_icon_kyber.svg')} />
         <img src={require('../../assets/svg/about_icon_ethereum.png')} />
+        <img src={require('../../assets/svg/about_icon_polygon.png')} />
+        <img src={require('../../assets/svg/about_icon_avalanche.png')} />
+        <img src={require('../../assets/svg/about_icon_bsc.png')} />
       </div>
       <div className={style.footer}>
         <div className={style.content}>
@@ -401,9 +403,9 @@ export default function About() {
               <ExternalLink href={`https://kyber.org`}>KyberDAO</ExternalLink>
             </Text>
             <Text>
-              <a>
+              <ExternalLink href={`https://gov.kyber.org`}>
                 <Trans>Forum</Trans>
-              </a>
+              </ExternalLink>
             </Text>
             <Text>
               <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>

@@ -2,9 +2,10 @@ import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
+import { Flex } from 'rebass'
 
-import { Currency } from 'libs/sdk/src'
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { Currency, Token } from 'libs/sdk/src'
+import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
@@ -12,12 +13,12 @@ import Search from 'components/Search'
 import LocalLoader from 'components/LocalLoader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useActiveWeb3React } from 'hooks'
-import { useCurrency } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { useETHPrice } from 'state/application/hooks'
 import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
 import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
-import { currencyId } from 'utils/currencyId'
+import { currencyId, currencyIdFromAddress } from 'utils/currencyId'
 import { useGlobalData } from 'state/about/hooks'
 import {
   PageWrapper,
@@ -35,6 +36,8 @@ import {
 } from './styleds'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import Loader from 'components/Loader'
+import { Farm } from 'state/farms/types'
+import { useFarmsData } from 'state/farms/hooks'
 
 const Pools = ({
   match: {
@@ -123,6 +126,7 @@ const Pools = ({
 
   const globalData = data && data.dmmFactories[0]
 
+  const { loading: loadingPoolFarm, data: farms } = useFarmsData()
   return (
     <>
       <PageWrapper>
@@ -277,9 +281,41 @@ const Pools = ({
             </SelectPairInstructionWrapper>
           )}
         </Panel>
+
+        <div style={{ marginTop: '16px' }}>
+          <Trans>Popular Pairs</Trans> &nbsp;
+          {loadingPoolFarm && <Loader />}
+        </div>
+        <Flex alignItems="center" justifyContent="flexStart">
+          {farms.map((farm, index) => (
+            <PoolFarm key={index} farm={farm} />
+          ))}
+        </Flex>
       </PageWrapper>
       <SwitchLocaleLink />
     </>
+  )
+}
+
+const PoolFarm = ({ key, farm }: { key: number; farm: Farm }) => {
+  const { chainId } = useActiveWeb3React()
+  return (
+    <ButtonGray
+      padding="8px 28px"
+      as={Link}
+      to={`/pools/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
+        farm.token1?.id,
+        chainId
+      )}`}
+      width="fit-content"
+      style={{ margin: '1rem 1rem 0 0', borderRadius: '8px' }}
+    >
+      <span>
+        <Trans>
+          {farm.token0?.symbol}-{farm.token1?.symbol}
+        </Trans>
+      </span>
+    </ButtonGray>
   )
 }
 

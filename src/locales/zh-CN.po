@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "余额：{0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "桥接资产"
 
@@ -423,6 +425,10 @@ msgstr "文挡"
 msgid "Don't see a pool you joined?"
 msgstr "没看到您加入的池吗?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "动态"
@@ -521,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "完全解锁"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "费用(24小时)"
 
@@ -540,6 +545,10 @@ msgstr "通過搜索其名稱或符號或在下方粘貼其地址來查找代币
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "论坛"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -990,6 +999,10 @@ msgstr "池"
 msgid "Pools | AMP"
 msgstr "池| 放大系数"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "驱动"
@@ -1427,6 +1440,10 @@ msgstr "等待确认"
 msgid "Wallet Address or ENS name"
 msgstr "钱包地址或 ENS 名称"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "错误的网络"
@@ -1577,6 +1594,10 @@ msgstr "{0} 移除"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 代币"
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"

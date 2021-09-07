@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Balance: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "Bridge Assets"
 
@@ -423,6 +425,10 @@ msgstr "Documentation"
 msgid "Don't see a pool you joined?"
 msgstr "Don't see a pool you joined?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr "Duration: ~{lockedTime} days"
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Dynamic"
@@ -521,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "FULL UNLOCK"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Fee (24h)"
 
@@ -540,6 +545,10 @@ msgstr "Find a token by searching for its name or symbol or by pasting its addre
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr "Forums"
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -990,6 +999,10 @@ msgstr "Pools"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr "Popular Pairs"
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1427,6 +1440,10 @@ msgstr "Waiting For Confirmation"
 msgid "Wallet Address or ENS name"
 msgstr "Wallet Address or ENS name"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr "What can KNC be used for?"
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Wrong Network"
@@ -1577,6 +1594,10 @@ msgstr "{0} removed"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} tokens"
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr "{0}-{1}"
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"

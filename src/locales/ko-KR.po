@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "잔액: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "브릿지 애셋"
 
@@ -423,6 +425,10 @@ msgstr "문서"
 msgid "Don't see a pool you joined?"
 msgstr "예치한 풀이 보이지 않습니까?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "동적"
@@ -521,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "전체 잠금 해제"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "수수료(24시간)"
 
@@ -540,6 +545,10 @@ msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "포럼"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -990,6 +999,10 @@ msgstr "풀"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1427,6 +1440,10 @@ msgstr "확인 대기 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
@@ -1577,6 +1594,10 @@ msgstr "{0} 삭제됨"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 토큰"
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"

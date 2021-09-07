@@ -374,6 +374,22 @@ export default function Header() {
               ↗
             </BridgeExternalLink>
           )}
+          {chainId && [ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId) && (
+            <BridgeExternalLink href={'https://www.binance.org/en/bridge'}>
+              <HideText>
+                <Trans>Bridge Assets</Trans>
+              </HideText>
+              ↗
+            </BridgeExternalLink>
+          )}
+          {chainId && [ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId) && (
+            <BridgeExternalLink href={'https://bridge.avax.network'}>
+              <HideText>
+                <Trans>Bridge Assets</Trans>
+              </HideText>
+              ↗
+            </BridgeExternalLink>
+          )}
           <HideSmall>
             <div className="hidden sm:inline-block">
               <Web3Network />

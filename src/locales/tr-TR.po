@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Bakiye: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "Köprü Varlıkları"
 
@@ -423,6 +425,10 @@ msgstr "Belgeler"
 msgid "Don't see a pool you joined?"
 msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Dinamik"
@@ -521,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "TAM KİLİT AÇMA"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Ücret (24s)"
 
@@ -540,6 +545,10 @@ msgstr "Adını ya da sembolünü arayarak veya adresini aşağıya yapıştıra
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -990,6 +999,10 @@ msgstr "Havuzlar"
 msgid "Pools | AMP"
 msgstr "Havuzlar | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Tarafından desteklenmektedir"
@@ -1427,6 +1440,10 @@ msgstr "Onay Bekliyor"
 msgid "Wallet Address or ENS name"
 msgstr "Cüzdan Adresi veya ENS Adı"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Yanlış Ağ"
@@ -1577,6 +1594,10 @@ msgstr "{0} kaldırıldı"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} token varlıkları"
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"

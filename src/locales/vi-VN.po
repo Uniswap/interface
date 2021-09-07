@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Số dư: {0} {1} - {2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "Cầu Nối"
 
@@ -423,6 +425,10 @@ msgstr "Văn bản"
 msgid "Don't see a pool you joined?"
 msgstr "Không thấy Pool mà bạn đã tham gia?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Linh Động"
@@ -521,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "MỞ KHÓA HOÀN TOÀN"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Phí (24h)"
 
@@ -540,6 +545,10 @@ msgstr "Tìm token bằng cách tìm kiếm tên hoặc biểu tượng của n�
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Diễn đàn"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -990,6 +999,10 @@ msgstr "Các Pool"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Được cung cấp bởi"
@@ -1427,6 +1440,10 @@ msgstr "Chờ xác nhận"
 msgid "Wallet Address or ENS name"
 msgstr "Địa chỉ Ví hoặc tên ENS"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Sai Mạng"
@@ -1577,6 +1594,10 @@ msgstr "{0} đã bị loại bỏ"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} tokens"
+
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
