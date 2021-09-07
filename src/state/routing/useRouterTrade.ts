@@ -67,7 +67,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     const amountOut =
       currencyOut && quoteResult ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote) : undefined
 
-    if (isError || !amountOut || !routes || routes.length === 0 || !legacyRouter) {
+    if (isError || !amountOut || !routes || routes.length === 0 || legacyRouter) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -134,7 +134,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
     const amountIn = currencyIn && quoteResult ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote) : undefined
 
-    if (isError || !amountIn || !routes || routes.length === 0 || !legacyRouter) {
+    if (isError || !amountIn || !routes || routes.length === 0 || legacyRouter) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
