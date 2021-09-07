@@ -349,7 +349,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
 
-  const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
+  const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
@@ -665,7 +665,10 @@ export default function Swap({ history }: RouteComponentProps) {
       <SwitchLocaleLink />
       {frontrunningProtection ? <FrontrunningProtectionFooter /> : null}
       {!swapIsUnsupported ? null : (
-        <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
+        <UnsupportedCurrencyFooter
+          show={swapIsUnsupported}
+          currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
+        />
       )}
     </>
   )

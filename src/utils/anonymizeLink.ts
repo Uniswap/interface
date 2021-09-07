@@ -7,7 +7,7 @@ const EXPLORER_HOSTNAMES: { [hostname: string]: true } = {
   'optimistic.etherscan.io': true,
   'kovan-optimistic.etherscan.io': true,
   'rinkeby-explorer.arbitrum.io': true,
-  'explorer.arbitrum.io': true,
+  'arbiscan.io': true,
 }
 
 /**

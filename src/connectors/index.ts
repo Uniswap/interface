@@ -13,7 +13,6 @@ import { NetworkConnector } from './NetworkConnector'
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
-const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
 
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
@@ -50,7 +49,6 @@ export const gnosisSafe = new SafeAppConnector()
 export const walletconnect = new WalletConnectConnector({
   supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
   rpc: NETWORK_URLS,
-  bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
 })
 

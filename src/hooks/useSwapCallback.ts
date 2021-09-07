@@ -108,7 +108,7 @@ export function useSwapCallArguments(
                 approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
                 {
                   to: routerContract.address,
-                  value: value,
+                  value,
                   data: routerContract.interface.encodeFunctionData(methodName, args),
                 },
               ],
@@ -162,7 +162,7 @@ export function useSwapCallArguments(
                 approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
                 {
                   to: swapRouterAddress,
-                  value: value,
+                  value,
                   data: calldata,
                 },
               ],

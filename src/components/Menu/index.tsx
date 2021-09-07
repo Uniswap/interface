@@ -1,17 +1,6 @@
 import { t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  BookOpen,
-  Code,
-  Info,
-  MessageCircle,
-  PieChart,
-  Moon,
-  Sun,
-  ChevronRight,
-  ChevronLeft,
-  Check,
-} from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun, Globe, ChevronLeft, Check } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -277,7 +266,7 @@ export default function Menu() {
                     <div>
                       <Trans>Language</Trans>
                     </div>
-                    <ChevronRight size={16} opacity={0.6} />
+                    <Globe opacity={0.6} size={16} />
                   </ToggleMenuItem>
                   <ToggleMenuItem onClick={() => toggleDarkMode()}>
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
