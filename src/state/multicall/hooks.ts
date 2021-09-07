@@ -193,7 +193,7 @@ export function useMultipleContractSingleData(
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: number }
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
@@ -237,29 +237,7 @@ export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: number }
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState {
-  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
-
-  const blocksPerFetch = options?.blocksPerFetch
-  const gasRequired = options?.gasRequired
-
-  const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
-      ? [
-          {
-            address: contract.address,
-            callData: contract.interface.encodeFunctionData(fragment, inputs),
-            ...(gasRequired ? { gasRequired } : {}),
-          },
-        ]
-      : []
-  }, [contract, fragment, inputs, gasRequired])
-
-  const result = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)[0]
-  const latestBlockNumber = useBlockNumber()
-
-  return useMemo(() => {
-    return toCallState(result, contract?.interface, fragment, latestBlockNumber)
-  }, [result, contract, fragment, latestBlockNumber])
+  return useSingleContractMultipleData(contract, methodName, [inputs], options)[0] ?? INVALID_CALL_STATE
 }
