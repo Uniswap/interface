@@ -82,7 +82,7 @@ export const initialState: UserState = {
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
-  frontrunningProtection: true,
+  frontrunningProtection: false,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
