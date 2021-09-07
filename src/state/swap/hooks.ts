@@ -121,7 +121,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
-  v3TradeState: {
+  v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
   }
@@ -233,7 +233,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     parsedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
-    v3TradeState: v3Trade,
+    v3Trade,
     bestTrade: bestTrade ?? undefined,
     toggledTrade,
     allowedSlippage,

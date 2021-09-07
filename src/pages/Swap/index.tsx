@@ -116,9 +116,8 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    //TODO: remove v2 and v3 trade, add states
     v2Trade,
-    v3TradeState: { trade: v3Trade, state: v3TradeState },
+    v3Trade: { trade: v3Trade, state: v3TradeState },
     bestTrade,
     toggledTrade: trade,
     allowedSlippage,
