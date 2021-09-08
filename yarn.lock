@@ -2397,28 +2397,28 @@
     "@svgr/plugin-svgo" "^4.3.1"
     loader-utils "^1.2.3"
 
-"@swapr/core@^0.3.14":
-  version "0.3.14"
-  resolved "https://registry.yarnpkg.com/@swapr/core/-/core-0.3.14.tgz#b82c8ba92036a6e417df334f4a35a6c763f38090"
-  integrity sha512-2t/+qzu0lRPRof3KrWyMEZnWSSDn8ePiXk1SfGAYPsVgeE99lbrr6nywNgtrndjfN3e3JUIrCtgKU2p6KcEjng==
+"@swapr/core@^0.3.17":
+  version "0.3.17"
+  resolved "https://registry.yarnpkg.com/@swapr/core/-/core-0.3.17.tgz#fe9d230675e6cb333185a87deb70ac1642404006"
+  integrity sha512-2jBDMVT+LCf/sAtP5LvT6EgCVHYbK/5OR6wrcmZ4KiSg4QhX8C3jtFwd0bpRdjzZ9NsGP+v4bBCpH54AT2QYIQ==
   dependencies:
     typescript "^3.9.5"
 
-"@swapr/periphery@^0.3.18":
-  version "0.3.18"
-  resolved "https://registry.yarnpkg.com/@swapr/periphery/-/periphery-0.3.18.tgz#732bec875bc7e87dabf748cf6191c58ca121ce1f"
-  integrity sha512-waTvaj1OzGDu1YadDCKvH1j1QLnXuSgth0ylkL/70F3DOj9519gT5uygCOMSOdw5zobMrqYpR6qlY9BK430ZSg==
+"@swapr/periphery@^0.3.19":
+  version "0.3.19"
+  resolved "https://registry.yarnpkg.com/@swapr/periphery/-/periphery-0.3.19.tgz#06a2da53089604595966e1a1bcf106e44cb1d420"
+  integrity sha512-PWs9raN5kENDeYA/NBduwfqT28KFeMrxcQFjOMq1jY5HkEp/pdH67+9sbud7wZZBpf/90iWfILfY4G6eKXGCgA==
   dependencies:
-    "@swapr/core" "^0.3.14"
+    "@swapr/core" "^0.3.17"
 
-"@swapr/sdk@^0.10.6-rc.7":
-  version "0.10.6-rc.7"
-  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.6-rc.7.tgz#7ae402b6e9c0d3be1be8d1bd2909bfe89159acdc"
-  integrity sha512-cqoS9o2MPoAeoVN63PHVLv5s1PrcIARl6QUL4RB4nSsuhhoogMsRX0DNyhnm2qCKIESpVLX3frME97bMV+Xr8Q==
+"@swapr/sdk@^0.10.6-rc.8":
+  version "0.10.6-rc.8"
+  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.6-rc.8.tgz#295828e8fdb07dcbc8213543fb5e0364b09dce56"
+  integrity sha512-gTXDNoKN/XVpBgBvhhXZEM8b6mHi7BGFP16b6LbCdjqfaibs5CD+hDmIKFBcxzfpv9s3QT2KO9w21noHdVFEoQ==
   dependencies:
     "@makerdao/multicall" "^0.11.0"
-    "@swapr/core" "^0.3.14"
-    "@swapr/periphery" "^0.3.18"
+    "@swapr/core" "^0.3.17"
+    "@swapr/periphery" "^0.3.19"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"

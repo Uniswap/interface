@@ -66,7 +66,7 @@ export function ActionButton({
       const anchor = document.createElement('a')
       Object.assign(anchor, {
         target: '_blank',
-        href: 'https://oldbuild.eth.link/#/pools?chainId=42161',
+        href: 'https://ipfs.io/ipfs/Qmc75yofgCdqHyFBnvoiHjrnE3Hw9u9y6n4f88HNSt8ZLv/#/pools?chainId=42161', // TODO: change to Arb1
         rel: 'noopener noreferrer'
       }).click()
       anchor.remove()
