@@ -5,7 +5,8 @@ import { useActiveWeb3React } from 'hooks'
 import { useNetworkModalToggle } from '../../state/application/hooks'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
-import { YellowCard } from 'components/Card'
+import Card from 'components/Card'
+import DropdownSVG from 'assets/svg/dropdown.svg'
 
 const NetworkSwitchContainer = styled.div`
   display: flex;
@@ -13,14 +14,16 @@ const NetworkSwitchContainer = styled.div`
   align-items: center;
 `
 
-const NetworkCard = styled(YellowCard)`
-  border-radius: 12px;
-  padding: 12px 20px;
+const NetworkCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg12};
+  color: ${({ theme }) => theme.primary1};
+  border-radius: 8px;
+  padding: 10px 12px;
   border: 1px solid transparent;
 
   &:hover {
     text-decoration: none;
-    border: 1px solid ${({ theme }) => theme.yellow2};
+    border: 1px solid ${({ theme }) => theme.primary1};
     border-radius: 8px;
     cursor: pointer;
   }
@@ -35,6 +38,11 @@ const NetworkCard = styled(YellowCard)`
   `};
 `
 
+const NetworkLabel = styled.div`
+  white-space: nowrap;
+  margin-right: 60px;
+`
+
 function Web3Network(): JSX.Element | null {
   const { chainId, library } = useActiveWeb3React()
 
@@ -45,8 +53,9 @@ function Web3Network(): JSX.Element | null {
   return (
     <NetworkCard onClick={() => toggleNetworkModal()}>
       <NetworkSwitchContainer>
-        <img src={NETWORK_ICON[chainId]} alt="Switch Network" style={{ width: 22, height: 22, marginRight: '1rem' }} />
-        <div>{NETWORK_LABEL[chainId]}</div>
+        <img src={NETWORK_ICON[chainId]} alt="Switch Network" style={{ width: 23, height: 23, marginRight: '12px' }} />
+        <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
+        <img src={DropdownSVG} />
       </NetworkSwitchContainer>
       <NetworkModal isNotConnected={!(library && library.provider && library.provider.isMetaMask)} />
     </NetworkCard>

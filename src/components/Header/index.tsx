@@ -137,19 +137,19 @@ const HideSmall = styled.span`
 `
 
 const HideText = styled.span`
-  @media (max-width: 1260px) {
+  @media (max-width: 1350px) {
     display: none;
   }
 `
 
 const MigrateLiquidityWrapper = styled.span`
-  @media (max-width: 1240px) {
+  @media (max-width: 1295px) {
     display: none;
   }
 `
 
 const AboutWrapper = styled.span`
-  @media (max-width: 1320px) {
+  @media (max-width: 1360px) {
     display: none;
   }
 `

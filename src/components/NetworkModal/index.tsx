@@ -97,8 +97,9 @@ const ModalContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 28px 36px 60px 36px;
+  padding: 24px;
   width: 100%;
+  background-color: ${({ theme }) => theme.bg2};
 `
 
 const InstructionText = styled.div`
@@ -109,13 +110,8 @@ const InstructionText = styled.div`
 const NetworkList = styled.div`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: space-between;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    grid-template-columns: 1fr;
-    width: 100%;
-  `};
+  grid-template-columns: 1fr;
+  width: 100%;
 `
 
 const ListItem = styled.div<{ selected?: boolean }>`
@@ -190,12 +186,12 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   }
 
   return (
-    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
+    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={272}>
       <ModalContentWrapper>
-        <ModalHeader onClose={toggleNetworkModal} title={t`Select a Network`} />
+        <ModalHeader title={t`Select a Network`} />
 
         <InstructionText>
-          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
+          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]}</Trans>
         </InstructionText>
 
         <NetworkList>

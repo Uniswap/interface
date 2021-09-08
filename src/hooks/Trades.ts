@@ -137,7 +137,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
             })[0] ?? null
           )
         } else setTrade(null)
-      }, 500)
+      }, 100)
     }
     fn()
     return () => {
@@ -174,7 +174,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
             })[0] ?? null
           )
         } else setTrade(null)
-      }, 500)
+      }, 100)
     }
     fn()
     return () => {
