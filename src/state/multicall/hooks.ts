@@ -154,7 +154,7 @@ function toCallState(
   }
 }
 
-// formats many calls to the same function on a single contract, with the function name and inputs specified
+// formats many calls to a single function on a single contract, with the function name and inputs specified
 export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
@@ -163,62 +163,30 @@ export function useSingleContractMultipleData(
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
+  // encode callDatas
   const callDatas = useMemo(
     () =>
       callInputs.every((callInput) => isValidMethodArgs(callInput)) && fragment
         ? callInputs.map<string>((callInput) =>
-            // this type assertion is ok, because if fragment is defined, we know contract is as well
+            // this type assertion is ok, because if fragment is defined, contract must be as well
             (contract as Contract).interface.encodeFunctionData(fragment, callInput)
           )
         : [],
     [callInputs, contract, fragment]
   )
 
-  const fragments = useMemo(() => new Array(callDatas.length).fill(fragment), [callDatas.length, fragment])
-
-  return useSingleContractMultipleDataShared(contract, callDatas, fragments, options)
-}
-
-// formats many calls to any number of functions on a single contract, with only the calldata specified
-export function useSingleContractMultipleDataFromCalldata(
-  contract: Contract | null | undefined,
-  callDatas: string[],
-  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
-): CallState[] {
-  const fragments = useMemo(
-    () =>
-      contract?.interface ? callDatas.map((callData) => contract.interface.getFunction(callData.substring(0, 10))) : [],
-    [callDatas, contract]
-  )
-
-  // the contract?.interface check is required because otherwise callDatas can be length > 0 while fragments is length 0
-  return useSingleContractMultipleDataShared(contract, contract?.interface ? callDatas : [], fragments, options)
-}
-
-function useSingleContractMultipleDataShared(
-  contract: Contract | null | undefined,
-  callDatas: string[],
-  fragments: FunctionFragment[],
-  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
-): CallState[] {
-  if (fragments.length !== callDatas.length) {
-    throw new Error('Mismatched lengths.')
-  }
-
-  const blocksPerFetch = options?.blocksPerFetch
   const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
 
+  // encode calls
   const calls = useMemo(
     () =>
-      contract
-        ? callDatas.map<Call>((callData) => {
-            return {
-              address: contract.address,
-              callData,
-              ...(gasRequired ? { gasRequired } : {}),
-            }
-          })
-        : [],
+      callDatas.map<Call>((callData) => ({
+        // this type assertion is ok, because for callDatas.length to be > 0, contract must be defined
+        address: (contract as Contract).address,
+        callData,
+        ...(gasRequired ? { gasRequired } : {}),
+      })),
     [contract, callDatas, gasRequired]
   )
 
@@ -227,8 +195,8 @@ function useSingleContractMultipleDataShared(
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
-    return results.map((result, i) => toCallState(result, contract?.interface, fragments[i], latestBlockNumber))
-  }, [results, contract, fragments, latestBlockNumber])
+    return results.map((result) => toCallState(result, contract?.interface, fragment, latestBlockNumber))
+  }, [results, contract, fragment, latestBlockNumber])
 }
 
 export function useMultipleContractSingleData(
@@ -283,4 +251,44 @@ export function useSingleCallResult(
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState {
   return useSingleContractMultipleData(contract, methodName, [inputs], options)[0] ?? INVALID_CALL_STATE
+}
+
+// formats many calls to any number of functions on a single contract, with only the calldata specified
+export function useSingleContractWithCallData(
+  contract: Contract | null | undefined,
+  callDatas: string[],
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
+): CallState[] {
+  const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
+
+  // encode calls
+  const calls = useMemo(
+    () =>
+      contract
+        ? callDatas.map<Call>((callData) => {
+            return {
+              address: contract.address,
+              callData,
+              ...(gasRequired ? { gasRequired } : {}),
+            }
+          })
+        : [],
+    [contract, callDatas, gasRequired]
+  )
+
+  const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
+
+  const latestBlockNumber = useBlockNumber()
+
+  return useMemo(() => {
+    return results.map((result, i) =>
+      toCallState(
+        result,
+        contract?.interface,
+        contract?.interface?.getFunction(callDatas[i].substring(0, 10)),
+        latestBlockNumber
+      )
+    )
+  }, [results, contract, callDatas, latestBlockNumber])
 }

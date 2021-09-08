@@ -3,7 +3,7 @@ import { Route, Trade, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
-import { useSingleContractMultipleDataFromCalldata } from '../state/multicall/hooks'
+import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
 import { useActiveWeb3React } from './web3'
@@ -32,11 +32,11 @@ export function useBestV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
-  const { chainId } = useActiveWeb3React()
-  const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(amountIn?.currency, currencyOut)
 
-  const quotesResults = useSingleContractMultipleDataFromCalldata(
+  const quoter = useV3Quoter()
+  const { chainId } = useActiveWeb3React()
+  const quotesResults = useSingleContractWithCallData(
     quoter,
     amountIn
       ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountIn, TradeType.EXACT_INPUT).calldata)
@@ -120,11 +120,11 @@ export function useBestV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
-  const { chainId } = useActiveWeb3React()
-  const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, amountOut?.currency)
 
-  const quotesResults = useSingleContractMultipleDataFromCalldata(
+  const quoter = useV3Quoter()
+  const { chainId } = useActiveWeb3React()
+  const quotesResults = useSingleContractWithCallData(
     quoter,
     amountOut
       ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountOut, TradeType.EXACT_OUTPUT).calldata)
