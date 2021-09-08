@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
+import { ChainId } from 'libs/sdk/src'
 
 export type PopupContent =
   | {
@@ -46,3 +47,5 @@ export const updateETHPrice = createAction<{
 }>('application/updateETHPrice')
 
 export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')
+
+export const updateChainIdWhenNotConnected = createAction<ChainId>('application/updateChainIdWhenNotConnected')

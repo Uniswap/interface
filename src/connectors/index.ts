@@ -46,7 +46,7 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.AVAXTESTNET,
   ChainId.AVAXTESTNET
 ]
-const NETWORK_URLS: {
+export const NETWORK_URLS: {
   [chainId in ChainId]: string
 } = {
   [ChainId.MAINNET]: `https://ethereum.kyber.network/v1/mainnet/geth?appId=prod-dmm-interface`,

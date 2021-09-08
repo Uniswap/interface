@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Số dư: {0} {1} - {2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "Cầu Nối"
 
@@ -380,9 +382,13 @@ msgstr "DMM có thể có hiệu quả sử dụng vốn vốn gấp 100 lần s
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
 
+#: 
+#~ msgid "DeFi's First"
+#~ msgstr "Đầu tiên của DeFi"
+
 #: src/pages/Static/About.tsx
-msgid "DeFi's First"
-msgstr "Đầu tiên của DeFi"
+msgid "DeFi's First Multi-Chain"
+msgstr ""
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
@@ -419,6 +425,10 @@ msgstr "Văn bản"
 msgid "Don't see a pool you joined?"
 msgstr "Không thấy Pool mà bạn đã tham gia?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Linh Động"
@@ -435,9 +445,13 @@ msgstr "Các Phí Linh Động"
 msgid "ENDING IN"
 msgstr "KẾT THÚC TRONG"
 
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr "Mỗi khi bạn thu hoạch phần thưởng, một khoảng thời gian vesting mới ~ 30 ngày sẽ được tạo ra. Nhiều giai đoạn vesting có thể chạy đồng thời. Phần thưởng đã mở cho mỗi lượt vesting có thể được nhận bất kỳ lúc nào (không có thời hạn)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr "Mỗi khi bạn thu hoạch phần thưởng, một khoảng thời gian vesting mới ~ 30 ngày sẽ được tạo ra. Nhiều giai đoạn vesting có thể chạy đồng thời. Phần thưởng đã mở cho mỗi lượt vesting có thể được nhận bất kỳ lúc nào (không có thời hạn)."
+msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -513,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "MỞ KHÓA HOÀN TOÀN"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Phí (24h)"
 
@@ -532,6 +545,10 @@ msgstr "Tìm token bằng cách tìm kiếm tên hoặc biểu tượng của n�
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Diễn đàn"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -982,6 +999,10 @@ msgstr "Các Pool"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Được cung cấp bởi"
@@ -1292,9 +1313,13 @@ msgstr "Tổng Giá trị Đã khóa"
 msgid "Total Value Locked:"
 msgstr "Tổng Giá trị Đã khóa:"
 
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+#~ msgstr "Tổng số phần thưởng có thể thu hoạch. Phần thưởng đã thu hoạch được khóa và trao vesting trong ~ 30 ngày."
+
 #: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-msgstr "Tổng số phần thưởng có thể thu hoạch. Phần thưởng đã thu hoạch được khóa và trao vesting trong ~ 30 ngày."
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1415,6 +1440,10 @@ msgstr "Chờ xác nhận"
 msgid "Wallet Address or ENS name"
 msgstr "Địa chỉ Ví hoặc tên ENS"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Sai Mạng"
@@ -1459,9 +1488,13 @@ msgstr "Tỷ lệ đóng góp nhóm của bạn:"
 msgid "Your position"
 msgstr "Vị trí của bạn"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr "Tổng số phần thưởng thu hoạch của bạn kể từ đầu. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và được cấp vesting trong ~ 30 ngày, bắt đầu từ ngày thu hoạch. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào (không có thời hạn)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-msgstr "Tổng số phần thưởng thu hoạch của bạn kể từ đầu. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và được cấp vesting trong ~ 30 ngày, bắt đầu từ ngày thu hoạch. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào (không có thời hạn)."
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -1549,6 +1582,10 @@ msgstr "{0} Đang chờ xử lý"
 msgid "{0} added"
 msgstr "{0} đã được thêm vào"
 
+#: src/pages/Farms/index.tsx
+msgid "{0} blocks"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
 msgstr "{0} đã bị loại bỏ"
@@ -1558,13 +1595,17 @@ msgstr "{0} đã bị loại bỏ"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
 msgstr "Đã cập nhật token {numTokensChanged}"
 
-#: src/pages/Farms/index.tsx
-msgid "{remainingBlocks} blocks"
-msgstr "{remainingBlocks} blocks"
+#: 
+#~ msgid "{remainingBlocks} blocks"
+#~ msgstr "{remainingBlocks} blocks"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"

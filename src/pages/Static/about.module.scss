@@ -421,20 +421,33 @@ img {
   display: flex;
   justify-content: space-around;
   width: 100%;
-  max-width: 500px;
-  margin: 90px auto;
+  max-width: 800px;
+  margin: 40px auto;
   align-items: flex-end;
+  flex-wrap: wrap;
   @include mobile() {
     margin: 40px auto;
   }
   > div {
     flex-basis: 50%;
   }
-  > img {
-    flex-basis: 50%;
-    height: 60px;
+  img {
+    // flex-basis: 50%;
+    height: 80px;
     margin: 0 20px;
+    padding-bottom: 20px;
     vertical-align: middle;
+    &:nth-child(1),
+    &:nth-child(2) {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    &:nth-child(3),
+    &:nth-child(4),
+    &:nth-child(5) {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
   }
 }
 .footer {

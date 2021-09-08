@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
@@ -138,6 +138,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://docs.dmm.exchange">
             <BookOpen size={14} />
             <Trans>Docs</Trans>
+          </MenuItem>
+          <MenuItem id="link" href="https://gov.kyber.org">
+            <User size={14} />
+            <Trans>Forums</Trans>
           </MenuItem>
           <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
             <FileText size={14} />

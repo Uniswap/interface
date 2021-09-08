@@ -1,4 +1,5 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import { ChainId } from 'libs/sdk/src'
 import {
   addPopup,
   PopupContent,
@@ -7,7 +8,8 @@ import {
   ApplicationModal,
   setOpenModal,
   updateETHPrice,
-  updateKNCPrice
+  updateKNCPrice,
+  updateChainIdWhenNotConnected
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
@@ -24,6 +26,7 @@ export interface ApplicationState {
   readonly openModal: ApplicationModal | null
   readonly ethPrice: ETHPrice
   readonly kncPrice?: string
+  readonly chainIdWhenNotConnected: ChainId
 }
 
 const initialState: ApplicationState = {
@@ -31,7 +34,8 @@ const initialState: ApplicationState = {
   popupList: [],
   openModal: null,
   ethPrice: {},
-  kncPrice: ''
+  kncPrice: '',
+  chainIdWhenNotConnected: 1
 }
 
 export default createReducer(initialState, builder =>
@@ -71,5 +75,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateKNCPrice, (state, { payload: kncPrice }) => {
       state.kncPrice = kncPrice
+    })
+    .addCase(updateChainIdWhenNotConnected, (state, { payload: kncPrice }) => {
+      state.chainIdWhenNotConnected = kncPrice
     })
 )

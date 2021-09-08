@@ -2,15 +2,34 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from 'libs/sdk/src'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { AppState } from '../state'
 import { isMobile } from 'react-device-detect'
-import { injected } from '../connectors'
+import { injected, NETWORK_URLS } from '../connectors'
 import { NetworkContextName } from '../constants'
+import { ethers } from 'ethers'
+
+const simpleRpcProvider = new ethers.providers.JsonRpcProvider(
+  'https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'
+)
+
+export const providers: {
+  [chainId in ChainId]?: ethers.providers.JsonRpcProvider
+} = {
+  [ChainId.MAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MAINNET]),
+  [ChainId.BSCMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.BSCMAINNET]),
+  [ChainId.AVAXMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.AVAXMAINNET]),
+  [ChainId.MATIC]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MATIC])
+}
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
-  const context = useWeb3ReactCore<Web3Provider>()
-  const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
-  return context.active ? context : contextNetwork
+  const context = useWeb3ReactCore()
+  const { library, chainId, ...web3React } = context
+  const chainIdWhenNotConnected = useSelector<AppState, ChainId>(state => state.application.chainIdWhenNotConnected)
+  return context.active
+    ? context
+    : { library: providers[chainIdWhenNotConnected], chainId: chainIdWhenNotConnected, ...web3React }
 }
 
 export function useEagerConnect() {

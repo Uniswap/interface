@@ -36,7 +36,7 @@ const NetworkCard = styled(YellowCard)`
 `
 
 function Web3Network(): JSX.Element | null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
 
   const toggleNetworkModal = useNetworkModalToggle()
 
@@ -48,7 +48,7 @@ function Web3Network(): JSX.Element | null {
         <img src={NETWORK_ICON[chainId]} alt="Switch Network" style={{ width: 22, height: 22, marginRight: '1rem' }} />
         <div>{NETWORK_LABEL[chainId]}</div>
       </NetworkSwitchContainer>
-      <NetworkModal />
+      <NetworkModal isNotConnected={!(library && library.provider && library.provider.isMetaMask)} />
     </NetworkCard>
   )
 }

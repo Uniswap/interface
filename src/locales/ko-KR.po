@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "잔액: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "브릿지 애셋"
 
@@ -380,9 +382,13 @@ msgstr "DMM은 일반적인 AMM보다 자본 효율성이 최대 100배 더 높�
 msgid "Dashboard"
 msgstr "대시보드"
 
+#: 
+#~ msgid "DeFi's First"
+#~ msgstr "DeFi의 첫 번째"
+
 #: src/pages/Static/About.tsx
-msgid "DeFi's First"
-msgstr "DeFi의 첫 번째"
+msgid "DeFi's First Multi-Chain"
+msgstr ""
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
@@ -419,6 +425,10 @@ msgstr "문서"
 msgid "Don't see a pool you joined?"
 msgstr "예치한 풀이 보이지 않습니까?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "동적"
@@ -435,9 +445,13 @@ msgstr "동적 수수료"
 msgid "ENDING IN"
 msgstr "종료"
 
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
+msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -513,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "전체 잠금 해제"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "수수료(24시간)"
 
@@ -532,6 +545,10 @@ msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "포럼"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -982,6 +999,10 @@ msgstr "풀"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1292,9 +1313,13 @@ msgstr "예치된 자산 가치"
 msgid "Total Value Locked:"
 msgstr "예치된 자산 가치:"
 
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+#~ msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
+
 #: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1415,6 +1440,10 @@ msgstr "확인 대기 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr ""
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
@@ -1459,9 +1488,13 @@ msgstr "풀 비중:"
 msgid "Your position"
 msgstr "당신의 위치"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -1549,6 +1582,10 @@ msgstr "{0} 보류 중"
 msgid "{0} added"
 msgstr "{0} 추가됨"
 
+#: src/pages/Farms/index.tsx
+msgid "{0} blocks"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
 msgstr "{0} 삭제됨"
@@ -1558,13 +1595,17 @@ msgstr "{0} 삭제됨"
 msgid "{0} tokens"
 msgstr "{0} 토큰"
 
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} 토큰이 업데이트되었습니다"
 
-#: src/pages/Farms/index.tsx
-msgid "{remainingBlocks} blocks"
-msgstr "{remainingBlocks} 블록"
+#: 
+#~ msgid "{remainingBlocks} blocks"
+#~ msgstr "{remainingBlocks} 블록"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"
