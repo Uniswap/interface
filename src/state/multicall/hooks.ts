@@ -208,22 +208,21 @@ export function useMultipleContractSingleData(
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
-  const blocksPerFetch = options?.blocksPerFetch
-  const gasRequired = options?.gasRequired
-
+  // encode callData
   const callData: string | undefined = useMemo(
-    () =>
-      fragment && isValidMethodArgs(callInputs)
-        ? contractInterface.encodeFunctionData(fragment, callInputs)
-        : undefined,
+    () => (isValidMethodArgs(callInputs) ? contractInterface.encodeFunctionData(fragment, callInputs) : undefined),
     [callInputs, contractInterface, fragment]
   )
 
+  const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
+
+  // encode calls
   const calls = useMemo(
     () =>
-      fragment && addresses && addresses.length > 0 && callData
+      callData
         ? addresses.map<Call | undefined>((address) => {
-            return address && callData
+            return address
               ? {
                   address,
                   callData,
@@ -232,7 +231,7 @@ export function useMultipleContractSingleData(
               : undefined
           })
         : [],
-    [addresses, callData, fragment, gasRequired]
+    [addresses, callData, gasRequired]
   )
 
   const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
