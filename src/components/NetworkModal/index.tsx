@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
 import styled from 'styled-components'
@@ -13,7 +13,6 @@ import { ChainId } from 'libs/sdk/src'
 import ModalHeader from '../ModalHeader'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const SWITCH_NETWORK_PARAMS: {
   [chainId in ChainId]?: {
@@ -168,8 +167,6 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   const { chainId, library, account } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
-  const node = useRef<HTMLDivElement>()
-  useOnClickOutside(node, networkModalOpen ? toggleNetworkModal : undefined)
 
   const dispatch = useDispatch<AppDispatch>()
   if (!chainId || !networkModalOpen) return null
@@ -200,7 +197,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   }
 
   return (
-    <ModalContentWrapper className="abv" ref={node as any}>
+    <ModalContentWrapper>
       <ModalHeader title={t`Select a Network`} />
 
       <InstructionText>
