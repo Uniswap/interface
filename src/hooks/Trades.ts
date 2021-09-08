@@ -126,24 +126,20 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
   const [trade, setTrade] = useState<Trade | null>(null)
   useEffect(() => {
     let timeout: any
-    const vt = async function() {
-      await new Promise((res, rej) => {
-        timeout = setTimeout(() => {
-          if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-            console.log('trade amount: ', currencyAmountIn.toSignificant(10))
-            setTrade(
-              Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
-                maxHops: 3,
-                maxNumResults: 1
-              })[0] ?? null
-            )
-          } else setTrade(null)
-        }, 500)
-      })
+    const fn = async function() {
+      timeout = setTimeout(() => {
+        if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+          console.log('trade amount: ', currencyAmountIn.toSignificant(10))
+          setTrade(
+            Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+              maxHops: 3,
+              maxNumResults: 1
+            })[0] ?? null
+          )
+        } else setTrade(null)
+      }, 500)
     }
-    const t = Date.now()
-    vt()
-
+    fn()
     return () => {
       clearTimeout(timeout)
     }
@@ -167,7 +163,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
   const [trade, setTrade] = useState<Trade | null>(null)
   useEffect(() => {
     let timeout: any
-    const vt = async function() {
+    const fn = async function() {
       timeout = setTimeout(() => {
         if (currencyAmountOut && currencyIn && allowedPairs.length > 0) {
           console.log('trade amount: ', currencyAmountOut.toSignificant(10))
@@ -180,7 +176,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         } else setTrade(null)
       }, 500)
     }
-    vt()
+    fn()
     return () => {
       clearTimeout(timeout)
     }
