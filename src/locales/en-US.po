@@ -212,6 +212,8 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "Balance: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "Bridge Assets"
 
@@ -380,9 +382,13 @@ msgstr "DMM can be up to 100x more capital efficient than typical AMMs"
 msgid "Dashboard"
 msgstr "Dashboard"
 
+#: 
+#~ msgid "DeFi's First"
+#~ msgstr "DeFi's First"
+
 #: src/pages/Static/About.tsx
-msgid "DeFi's First"
-msgstr "DeFi's First"
+msgid "DeFi's First Multi-Chain"
+msgstr "DeFi's First Multi-Chain"
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
@@ -419,6 +425,10 @@ msgstr "Documentation"
 msgid "Don't see a pool you joined?"
 msgstr "Don't see a pool you joined?"
 
+#: src/pages/Farms/vesting.tsx
+msgid "Duration: ~{lockedTime} days"
+msgstr "Duration: ~{lockedTime} days"
+
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Dynamic"
@@ -435,9 +445,13 @@ msgstr "Dynamic Fees"
 msgid "ENDING IN"
 msgstr "ENDING IN"
 
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+msgstr "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -513,7 +527,6 @@ msgid "FULL UNLOCK"
 msgstr "FULL UNLOCK"
 
 #: src/components/PoolList/ListItem.tsx
-#: src/components/PoolList/index.tsx
 msgid "Fee (24h)"
 msgstr "Fee (24h)"
 
@@ -532,6 +545,10 @@ msgstr "Find a token by searching for its name or symbol or by pasting its addre
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
+
+#: src/components/Menu/index.tsx
+msgid "Forums"
+msgstr "Forums"
 
 #: src/pages/Swap/index.tsx
 msgid "From"
@@ -982,6 +999,10 @@ msgstr "Pools"
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
+#: src/pages/Pools/index.tsx
+msgid "Popular Pairs"
+msgstr "Popular Pairs"
+
 #: src/pages/Static/About.tsx
 msgid "Powered by"
 msgstr "Powered by"
@@ -1292,9 +1313,13 @@ msgstr "Total Value Locked"
 msgid "Total Value Locked:"
 msgstr "Total Value Locked:"
 
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+#~ msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+
 #: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1415,6 +1440,10 @@ msgstr "Waiting For Confirmation"
 msgid "Wallet Address or ENS name"
 msgstr "Wallet Address or ENS name"
 
+#: src/pages/Farms/vesting.tsx
+msgid "What can KNC be used for?"
+msgstr "What can KNC be used for?"
+
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Wrong Network"
@@ -1459,9 +1488,13 @@ msgstr "Your pool share:"
 msgid "Your position"
 msgstr "Your position"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
@@ -1549,6 +1582,10 @@ msgstr "{0} Pending"
 msgid "{0} added"
 msgstr "{0} added"
 
+#: src/pages/Farms/index.tsx
+msgid "{0} blocks"
+msgstr "{0} blocks"
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
 msgstr "{0} removed"
@@ -1558,13 +1595,17 @@ msgstr "{0} removed"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/pages/Pools/index.tsx
+msgid "{0}-{1}"
+msgstr "{0}-{1}"
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} tokens updated"
 
-#: src/pages/Farms/index.tsx
-msgid "{remainingBlocks} blocks"
-msgstr "{remainingBlocks} blocks"
+#: 
+#~ msgid "{remainingBlocks} blocks"
+#~ msgstr "{remainingBlocks} blocks"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"

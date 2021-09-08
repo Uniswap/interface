@@ -5,7 +5,7 @@ import useVesting from 'hooks/useVesting'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-import { TYPE } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
@@ -18,6 +18,7 @@ import { formattedNum, getTokenSymbol } from 'utils'
 import { useFarmRewardsUSD } from 'utils/dmm'
 import { Reward } from 'state/farms/types'
 
+import { Flex } from 'rebass'
 import { useMedia } from 'react-use'
 
 const VestSchedule = styled.div`
@@ -160,19 +161,10 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
       acc.push(info[k].vestableIndexes)
       return acc
     }, [])
-    console.log('claim all', addresses, indices)
     await vestMultipleTokensAtIndices(addresses, indices)
     // await Promise.all(Object.keys(info).map(k => vestAtIndex(info[k].token.address, info[k].vestableIndexes)))
     setPendingTx(false)
   }
-
-  const onClaimAllFully = async () => {
-    // if (!chainId || !account) return
-    // setPendingTx(true)
-    // await vestAtIndex(KNC[chainId].address, fullyIndexes)
-    // setPendingTx(false)
-  }
-
   const totalBlock = (
     <div>
       {Object.keys(info).map(k => (
@@ -226,29 +218,31 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   )
 
   const unLockedBlock = (
-    <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
-      <div>
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
-          <Trans>Unlocked Rewards</Trans>
-        </TYPE.body>
-        {Object.keys(info).map(k => (
-          <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-            {fixedFormatting(info[k].vestableAmount, 18)} {k}
-          </TYPE.body>
-        ))}
-
-        <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-          {formattedNum(unlockedUSD.toString(), true)}
-        </TYPE.body>
-      </div>
-      {Object.keys(info).length > 0 && (
+    <div>
+      <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
         <div>
-          <ButtonPrimary height="30px" onClick={onClaimAll}>
-            <Trans>Claim All</Trans>
-          </ButtonPrimary>
+          <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+            <Trans>Unlocked Rewards</Trans>
+          </TYPE.body>
+          {Object.keys(info).map(k => (
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+              {fixedFormatting(info[k].vestableAmount, 18)} {k}
+            </TYPE.body>
+          ))}
+
+          <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
+            {formattedNum(unlockedUSD.toString(), true)}
+          </TYPE.body>
         </div>
-      )}
-    </Tag>
+        {Object.keys(info).length > 0 && (
+          <div>
+            <ButtonPrimary height="30px" onClick={onClaimAll}>
+              <Trans>Claim All</Trans>
+            </ButtonPrimary>
+          </div>
+        )}
+      </Tag>
+    </div>
   )
   return (
     <>
@@ -280,6 +274,23 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
             {unLockedBlock}
           </>
         )}
+
+        <ExternalLink href="https://kyber.network/about/knc" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Flex justifyContent="flex-end" style={{ marginTop: '10px' }}>
+            <Trans>What can KNC be used for? </Trans>
+            <Tag
+              style={{
+                padding: '2px 4px',
+                marginLeft: '10px',
+                color: '#08a1e7',
+                fontSize: '12px',
+                borderRadius: '4px'
+              }}
+            >
+              →
+            </Tag>
+          </Flex>
+        </ExternalLink>
       </ExpandedContent>
       <ExpandedContent style={{ margin: '20px 0' }}>
         <VestSchedule style={{ padding: ' 0 0 20px 0', margin: '0 0 20px 0', borderBottom: '1px solid #404b51' }}>
@@ -412,10 +423,13 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
       </ButtonPrimary>
     </AutoRow>
   )
+  const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
         <Trans>Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}</Trans>
+        <br />
+        <Trans>Duration: ~{lockedTime} days</Trans>
       </TYPE.body>
 
       {above1400 ? (

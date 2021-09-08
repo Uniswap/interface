@@ -17,24 +17,59 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
-  const basePairs: [Token, Token][] = useMemo(
+  // const basePairs: [Token, Token][] = useMemo(
+  //   () =>
+  //     flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
+  //       ([t0, t1]) => t0.address !== t1.address
+  //     ),
+  //   [bases]
+  // )
+
+  const basePairs: [Token, Token][] = useMemo(() => {
+    const res: [Token, Token][] = []
+    for (let i = 0; i < bases.length - 1; i++) {
+      for (let j = i + 1; j < bases.length; j++) {
+        res.push([bases[i], bases[j]])
+      }
+    }
+    return res
+  }, [bases])
+
+  const AAgainstAllBase = useMemo(
     () =>
-      flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
-        ([t0, t1]) => t0.address !== t1.address
-      ),
-    [bases]
+      tokenA && bases.filter(base => base.address == tokenA?.address).length <= 0
+        ? bases.map((base): [Token, Token] => [tokenA, base])
+        : [],
+    [bases, tokenA]
   )
 
+  const BAgainstAllBase = useMemo(
+    () =>
+      tokenB && bases.filter(base => base.address == tokenB?.address).length <= 0
+        ? bases.map((base): [Token, Token] => [tokenB, base])
+        : [],
+    [bases, tokenB]
+  )
+  const directPair = useMemo(
+    () =>
+      tokenA &&
+      tokenB &&
+      bases.filter(base => base.address == tokenA?.address).length <= 0 &&
+      bases.filter(base => base.address == tokenB?.address).length <= 0
+        ? [[tokenA, tokenB]]
+        : [],
+    [bases, tokenA, tokenB]
+  )
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
       tokenA && tokenB
         ? [
             // the direct pair
-            [tokenA, tokenB],
+            ...directPair,
             // token A against all bases
-            ...bases.map((base): [Token, Token] => [tokenA, base]),
+            ...AAgainstAllBase,
             // token B against all bases
-            ...bases.map((base): [Token, Token] => [tokenB, base]),
+            ...BAgainstAllBase,
             // each base against all bases
             ...basePairs
           ]

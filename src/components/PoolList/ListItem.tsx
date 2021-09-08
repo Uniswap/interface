@@ -11,6 +11,7 @@ import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import DropIcon from 'components/Icons/DropIcon'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
+import MinusCircle from 'components/Icons/MinusCircle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
@@ -27,7 +28,7 @@ import { useActiveWeb3React } from 'hooks'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 1.5fr 1fr 1.5fr repeat(5, 1fr) 1fr;
+  grid-template-columns: 1.5fr 1fr 2fr 1.5fr repeat(3, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -192,16 +193,28 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataText style={{ alignItems: 'flex-end' }}>
-            {
-              <ButtonEmpty
-                padding="0"
-                as={Link}
-                to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
-                width="fit-content"
-              >
-                <AddCircle />
-              </ButtonEmpty>
-            }
+            <PoolAddressContainer>
+              {
+                <ButtonEmpty
+                  padding="0"
+                  as={Link}
+                  to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
+                  width="fit-content"
+                >
+                  <AddCircle />
+                </ButtonEmpty>
+              }
+              {getMyLiquidity(myLiquidity) != '-' && (
+                <ButtonEmpty
+                  padding="0"
+                  as={Link}
+                  to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
+                  width="fit-content"
+                >
+                  <MinusCircle />
+                </ButtonEmpty>
+              )}
+            </PoolAddressContainer>
           </DataText>
         </GridItem>
 
@@ -385,7 +398,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
-      <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
+      {/* <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText> */}
       <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
@@ -401,6 +414,16 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         >
           <AddCircle />
         </ButtonEmpty>
+        {getMyLiquidity(myLiquidity) != '-' && (
+          <ButtonEmpty
+            padding="0"
+            as={Link}
+            to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
+            width="fit-content"
+          >
+            <MinusCircle />
+          </ButtonEmpty>
+        )}
 
         <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
           <StyledMoreHorizontal />
