@@ -15,32 +15,40 @@ export function useRoutes(
     }[]
   | undefined {
   return useMemo(() => {
-    if (!quoteResult || !quoteResult.route) return undefined
+    if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
     if (quoteResult.route.length === 0) return []
 
-    const parsedCurrencyIn = currencyIn?.isNative
+    const parsedCurrencyIn = currencyIn.isNative
       ? Ether.onChain(currencyIn.chainId)
       : parseToken(quoteResult.route[0][0].tokenIn)
 
-    const parsedCurrencyOut = currencyOut?.isNative
+    const parsedCurrencyOut = currencyOut.isNative
       ? Ether.onChain(currencyOut.chainId)
       : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
 
-    return quoteResult.route.map((route) => {
-      const rawAmountIn = route[0].amountIn
-      const rawAmountOut = route[route.length - 1].amountOut
+    try {
+      return quoteResult.route.map((route) => {
+        const rawAmountIn = route[0].amountIn
+        const rawAmountOut = route[route.length - 1].amountOut
 
-      if (!rawAmountIn || !rawAmountOut) {
-        throw new Error('Expected both amountIn and amountOut to be present')
-      }
+        if (!rawAmountIn || !rawAmountOut) {
+          throw new Error('Expected both amountIn and amountOut to be present')
+        }
 
-      return {
-        route: new Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut),
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
-      }
-    })
+        return {
+          route: new Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut),
+          inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
+          outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        }
+      })
+    } catch (e) {
+      // `Route` constructor may throw if inputs/outputs are temporarily out of sync
+      // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
+      // This is not fatal and will fix itself in future render cycles
+      console.debug(e)
+      return undefined
+    }
   }, [currencyIn, currencyOut, quoteResult])
 }
 
