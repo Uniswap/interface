@@ -191,7 +191,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
         <ModalHeader title={t`Select a Network`} />
 
         <InstructionText>
-          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]}</Trans>
+          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
         </InstructionText>
 
         <NetworkList>
