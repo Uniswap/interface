@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from 'hooks'
-import { useNetworkModalToggle } from '../../state/application/hooks'
+import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
 import DropdownSVG from 'assets/svg/dropdown.svg'
 import Row from 'components/Row'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { ApplicationModal } from 'state/application/actions'
 
 const NetworkSwitchContainer = styled.div`
   display: flex;
@@ -49,13 +51,15 @@ const NetworkLabel = styled.div`
 
 function Web3Network(): JSX.Element | null {
   const { chainId, library } = useActiveWeb3React()
-
+  const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
+  const node = useRef<HTMLDivElement>()
+  useOnClickOutside(node, networkModalOpen ? toggleNetworkModal : undefined)
 
   if (!chainId) return null
 
   return (
-    <NetworkCard onClick={() => toggleNetworkModal()}>
+    <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any}>
       <NetworkSwitchContainer>
         <Row>
           <img
