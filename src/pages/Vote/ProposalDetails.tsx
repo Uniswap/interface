@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { Proposal } from './AddProposal'
+import { isMobile } from 'react-device-detect'
 import axios from 'axios'
 import { IconWrapper } from 'theme/components'
 import { useWeb3React } from '@web3-react/core'
@@ -87,6 +88,7 @@ export const ProposalDetails = () => {
 
         return data.votes.some((a:any) => a.wallet === account && a.vote === true)
     }, [account, data])
+
     return (
         <DarkCard style={{maxWidth:900}}>
             <OutlineCard style={{padding: '9px 14px'}}>
@@ -96,8 +98,9 @@ export const ProposalDetails = () => {
                 </StyledInternalLink>
                 {data && (
                 <>
-                <Header style={{alignItems:'center'}}>{data.title} &nbsp;
+                <Header style={{flexFlow: isMobile ? 'column wrap' : 'row wrap', alignItems:'center'}}>{data.title} &nbsp;
                <small><a style={{fontSize:12}}  href={`https://etherscan.io/address/${data.proposedBy}`}>(proposed by <i>{data.proposedBy}</i> )</a></small> </Header>
+                <p style={{marginLeft:20}}><label>Created {moment(data.createdAt).fromNow()}</label></p>
                 <Body>
                     {proposalExpired && <BlueCard><TYPE.main>The proposal expired. Proposals only last for 7 days, which after they are closed and the votes are final.</TYPE.main></BlueCard>}
                     <div style={{display:'block', marginBottom: 15, width: '100%;' }}>
