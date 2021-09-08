@@ -40,7 +40,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
       tokenA && bases.filter(base => base.address == tokenA?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenA, base])
         : [],
-    [bases]
+    [bases, tokenA]
   )
 
   const BAgainstAllBase = useMemo(
@@ -48,7 +48,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
       tokenB && bases.filter(base => base.address == tokenB?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenB, base])
         : [],
-    [bases]
+    [bases, tokenB]
   )
   const directPair = useMemo(
     () =>
@@ -58,7 +58,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
       bases.filter(base => base.address == tokenB?.address).length <= 0
         ? [[tokenA, tokenB]]
         : [],
-    [bases]
+    [bases, tokenA, tokenB]
   )
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
