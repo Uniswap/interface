@@ -69,7 +69,7 @@ function colors(darkMode: boolean): Colors {
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#438BF0' : '#D50066',
+    primaryText1: darkMode ? '#5090ea' : '#D50066',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#E8006F',

@@ -9,6 +9,10 @@ export const NetworkContextName = 'NETWORK'
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30
 export const L2_DEADLINE_FROM_NOW = 60 * 5
 
+// transaction popup dismisal amounts
+export const DEFAULT_TXN_DISMISS_MS = 25000
+export const L2_TXN_DISMISS_MS = 5000
+
 // used for rewards deadlines
 export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
 
@@ -31,5 +35,3 @@ export const BETTER_TRADE_LESS_HOPS_THRESHOLD = new Percent(JSBI.BigInt(50), BIP
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-
-export const IS_ON_APP_URL = window && window.location.hostname === 'app.uniswap.org'

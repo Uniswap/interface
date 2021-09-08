@@ -1052,6 +1052,27 @@
       "name": "DYDX Token",
       "symbol": "DYDX",
       "decimals": 18
+    },
+    {
+      "chainId": 10,
+      "address": "0xE405de8F52ba7559f9df3C368500B6E6ae6Cee49",
+      "name": "sETH",
+      "symbol": "Synth Ether",
+      "decimals": 18
+    },
+    {
+      "chainId": 10,
+      "address": "0x298B9B95708152ff6968aafd889c6586e9169f1D",
+      "name": "sBTC",
+      "symbol": "Synth Bitcoin",
+      "decimals": 18
+    },
+    {
+      "chainId": 10,
+      "address": "0xc5Db22719A06418028A40A9B5E9A7c02959D0d08",
+      "name": "sLINK",
+      "symbol": "Synth Link",
+      "decimals": 18
     }
   ]
 }

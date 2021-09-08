@@ -5,10 +5,10 @@ export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
   readonly [Field.INPUT]: {
-    readonly currencyId: string | undefined
+    readonly currencyId: string | undefined | null
   }
   readonly [Field.OUTPUT]: {
-    readonly currencyId: string | undefined
+    readonly currencyId: string | undefined | null
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
@@ -18,10 +18,10 @@ const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    currencyId: '',
+    currencyId: null,
   },
   [Field.OUTPUT]: {
-    currencyId: '',
+    currencyId: null,
   },
   recipient: null,
 }
@@ -39,7 +39,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
             currencyId: outputCurrencyId,
           },
           independentField: field,
-          typedValue: typedValue,
+          typedValue,
           recipient,
         }
       }
@@ -51,14 +51,14 @@ export default createReducer<SwapState>(initialState, (builder) =>
         return {
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
           [otherField]: { currencyId: state[field].currencyId },
         }
       } else {
         // the normal case
         return {
           ...state,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
         }
       }
     })
