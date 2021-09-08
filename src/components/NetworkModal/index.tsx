@@ -10,7 +10,7 @@ import { updateChainIdWhenNotConnected } from '../../state/application/actions'
 
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainId } from 'libs/sdk/src'
-import Modal from '../Modal'
+import DropdownModal from '../DropdownModal'
 import ModalHeader from '../ModalHeader'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
@@ -186,7 +186,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   }
 
   return (
-    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={272}>
+    <DropdownModal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={272}>
       <ModalContentWrapper>
         <ModalHeader title={t`Select a Network`} />
 
@@ -225,6 +225,6 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
           })}
         </NetworkList>
       </ModalContentWrapper>
-    </Modal>
+    </DropdownModal>
   )
 }
