@@ -75,7 +75,6 @@ const HeaderElement = styled.div`
   gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
     align-items: center;
   `};
 `
@@ -143,13 +142,13 @@ const HideText = styled.span`
 `
 
 const MigrateLiquidityWrapper = styled.span`
-  @media (max-width: 1295px) {
+  @media (max-width: 1355px) {
     display: none;
   }
 `
 
 const AboutWrapper = styled.span`
-  @media (max-width: 1360px) {
+  @media (max-width: 1430px) {
     display: none;
   }
 `
