@@ -76,7 +76,7 @@ msgstr "APY"
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "Thông tin liên quan"
+msgstr "Giới thiệu"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
@@ -817,7 +817,7 @@ msgstr "Di chuyển"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
-msgstr "Di chuyển Thanh khoản"
+msgstr "Chuyển Thanh khoản"
 
 #: src/components/Menu/index.tsx
 msgid "Migrate     Liquidity"
@@ -830,7 +830,7 @@ msgstr "Đã nhận Tối thiểu"
 
 #: src/components/Header/index.tsx
 msgid "My Dashboard"
-msgstr "Trang Quản lý của tôi"
+msgstr "Quản lý"
 
 #: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/index.tsx
