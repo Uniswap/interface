@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Pair, Token, Trade } from 'libs/sdk/src'
 import flatMap from 'lodash.flatmap'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
@@ -123,14 +123,40 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][]
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut).filter(item => item.length > 0)
-  return useMemo(() => {
-    if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      return (
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-      )
+  const [trade, setTrade] = useState<Trade | null>(null)
+  useEffect(() => {
+    let timeout: any
+    const vt = async function() {
+      await new Promise((res, rej) => {
+        timeout = setTimeout(() => {
+          if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+            console.log('trade amount: ', currencyAmountIn.toSignificant(10))
+            setTrade(
+              Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+                maxHops: 3,
+                maxNumResults: 1
+              })[0] ?? null
+            )
+          } else setTrade(null)
+        }, 500)
+      })
     }
-    return null
-  }, [allowedPairs, currencyAmountIn, currencyOut])
+    const t = Date.now()
+    vt()
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [currencyAmountIn?.toSignificant(10), currencyAmountIn?.currency.symbol, currencyOut?.symbol, allowedPairs.length])
+  return trade
+  // return useMemo(() => {
+  //   if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+  //     return (
+  //       Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
+  //     )
+  //   }
+  //   return null
+  // }, [allowedPairs, currencyAmountIn, currencyOut])
 }
 
 /**
@@ -138,13 +164,40 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
  */
 export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency).filter(item => item.length > 0)
-  return useMemo(() => {
-    if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      return (
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
-      )
+  const [trade, setTrade] = useState<Trade | null>(null)
+  useEffect(() => {
+    let timeout: any
+    const vt = async function() {
+      timeout = setTimeout(() => {
+        if (currencyAmountOut && currencyIn && allowedPairs.length > 0) {
+          console.log('trade amount: ', currencyAmountOut.toSignificant(10))
+          setTrade(
+            Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
+              maxHops: 3,
+              maxNumResults: 1
+            })[0] ?? null
+          )
+        } else setTrade(null)
+      }, 500)
     }
-    return null
-  }, [allowedPairs, currencyIn, currencyAmountOut])
+    vt()
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [
+    currencyAmountOut?.toSignificant(10),
+    currencyAmountOut?.currency.symbol,
+    currencyIn?.symbol,
+    allowedPairs.length
+  ])
+  return trade
+  // return useMemo(() => {
+  //   if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+  //     return (
+  //       Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
+  //       null
+  //     )
+  //   }
+  //   return null
+  // }, [allowedPairs, currencyIn, currencyAmountOut])
 }
