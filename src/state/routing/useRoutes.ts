@@ -3,6 +3,10 @@ import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { GetQuoteResult } from 'state/routing/slice'
 
+/**
+ * Transforms a Routing API quote into an array of routes that
+ * can be used to create a V3 `Trade`.
+ */
 export function useRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,

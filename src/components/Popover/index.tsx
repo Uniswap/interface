@@ -1,10 +1,10 @@
-import { Placement } from '@popperjs/core'
+import { Options, Placement } from '@popperjs/core'
+import Portal from '@reach/portal'
 import { transparentize } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
 import useInterval from '../../hooks/useInterval'
-import Portal from '@reach/portal'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
@@ -75,22 +75,29 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement?: Placement
-  showArrow?: boolean
+  hideArrow?: boolean
 }
 
-export default function Popover({ content, show, children, placement = 'auto', showArrow = true }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto', hideArrow = false }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
-  const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
-    placement,
-    strategy: 'fixed',
-    modifiers: [
-      { name: 'offset', options: { offset: [8, 8] } },
-      { name: 'arrow', options: { element: arrowElement } },
-      { name: 'preventOverflow', options: { padding: 8 } },
-    ],
-  })
+
+  const options = useMemo(
+    (): Options => ({
+      placement,
+      strategy: 'fixed',
+      modifiers: [
+        { name: 'offset', options: { offset: [8, 8] } },
+        { name: 'arrow', options: { element: arrowElement } },
+        { name: 'preventOverflow', options: { padding: 8 } },
+      ],
+    }),
+    [arrowElement, placement]
+  )
+
+  const { styles, update, attributes } = usePopper(referenceElement, popperElement, options)
+
   const updateCallback = useCallback(() => {
     update && update()
   }, [update])
@@ -102,7 +109,7 @@ export default function Popover({ content, show, children, placement = 'auto', s
       <Portal>
         <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
-          {showArrow && (
+          {!hideArrow && (
             <Arrow
               className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
               ref={setArrowElement as any}

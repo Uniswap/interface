@@ -139,6 +139,7 @@ export const TransactionDetailsLabel = styled(TYPE.black)`
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg2};
+  padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 
   ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`

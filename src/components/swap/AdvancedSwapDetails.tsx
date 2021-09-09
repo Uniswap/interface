@@ -18,9 +18,16 @@ interface AdvancedSwapDetailsProps {
   loading?: boolean
 }
 
-/** Renders a loading placeholder if loading and the children otherwise. */
-function DimmableText({ dim, width, children }: { dim: boolean; width: number; children: React.ReactNode }) {
-  return dim ? <LoadingBar height={15} width={width} /> : <>{children}</>
+function TextWithLoadingPlaceholder({
+  loading,
+  width,
+  children,
+}: {
+  loading: boolean
+  width: number
+  children: React.ReactNode
+}) {
+  return loading ? <LoadingBar height={15} width={width} /> : <>{children}</>
 }
 
 export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }: AdvancedSwapDetailsProps) {
@@ -46,11 +53,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <DimmableText dim={loading} width={65}>
+        <TextWithLoadingPlaceholder loading={loading} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
           </TYPE.black>
-        </DimmableText>
+        </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
@@ -59,24 +66,24 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             <Trans>Price Impact</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <DimmableText dim={loading} width={50}>
+        <TextWithLoadingPlaceholder loading={loading} width={50}>
           <TYPE.black textAlign="right" fontSize={14}>
             <FormattedPriceImpact priceImpact={priceImpact} />
           </TYPE.black>
-        </DimmableText>
+        </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            <Trans>Slippage tolerance</Trans>
+            <Trans>Allowed Slippage</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <DimmableText dim={loading} width={45}>
+        <TextWithLoadingPlaceholder loading={loading} width={45}>
           <TYPE.black textAlign="right" fontSize={14}>
             {allowedSlippage.toFixed(2)}%
           </TYPE.black>
-        </DimmableText>
+        </TextWithLoadingPlaceholder>
       </RowBetween>
 
       <RowBetween>
@@ -85,13 +92,13 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
           </TYPE.subHeader>
         </RowFixed>
-        <DimmableText dim={loading} width={70}>
+        <TextWithLoadingPlaceholder loading={loading} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </TYPE.black>
-        </DimmableText>
+        </TextWithLoadingPlaceholder>
       </RowBetween>
     </AutoColumn>
   )

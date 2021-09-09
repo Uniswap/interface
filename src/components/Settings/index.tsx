@@ -197,9 +197,11 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Optimized Router</Trans>
+                  <Trans>Auto Router</Trans>
                 </TYPE.black>
-                <QuestionHelper text={<Trans>Optimize trades with split routes and gas estimation.</Trans>} />
+                <QuestionHelper
+                  text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
+                />
               </RowFixed>
               <Toggle
                 id="toggle-optimized-router-button"
@@ -217,7 +219,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Toggle Expert Mode</Trans>
+                  <Trans>Expert Mode</Trans>
                 </TYPE.black>
                 <QuestionHelper
                   text={

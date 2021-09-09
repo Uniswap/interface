@@ -1,4 +1,4 @@
-import { cloneElement, ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
 
@@ -19,19 +19,17 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
-  container?: JSX.Element
+  Container?: ({ children }: { children: ReactNode }) => JSX.Element
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
-function TooltipContent({ content, container, ...rest }: TooltipContentProps) {
+function TooltipContent({ content, Container, ...rest }: TooltipContentProps) {
   return (
     <Popover
-      content={
-        container ? cloneElement(container, { children: content }) : <TooltipContainer>{content}</TooltipContainer>
-      }
+      content={Container ? Container({ children: content }) : <TooltipContainer>{content}</TooltipContainer>}
       {...rest}
     />
   )

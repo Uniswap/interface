@@ -10,7 +10,7 @@ import { TYPE } from 'theme'
 
 export interface RoutingDiagramEntry {
   percent: Percent
-  path: [Currency, Currency, FeeAmount | undefined][]
+  path: [Currency, Currency, FeeAmount][]
 }
 
 const Wrapper = styled(Box)`
@@ -40,8 +40,8 @@ const PoolBadge = styled(Badge)`
 
 const DottedLine = styled.div`
   border-color: ${({ theme }) => theme.bg4};
-  border-style: dashed;
-  border-width: 1px;
+  border-top-style: dotted;
+  border-width: 4px;
   height: 0px;
   position: absolute;
   width: calc(100%);
@@ -64,10 +64,10 @@ export default function RoutingDiagram({
 }) {
   return (
     <Wrapper>
-      {routes.map((route, index) => (
+      {routes.map(({ percent, path }, index) => (
         <RouteContainerRow key={index}>
           <CurrencyLogo currency={currencyIn} />
-          <Route {...route} />
+          <Route percent={percent} path={path} />
           <CurrencyLogo currency={currencyOut} />
         </RouteContainerRow>
       ))}
@@ -94,21 +94,13 @@ function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; pat
   )
 }
 
-function Pool({
-  currency0,
-  currency1,
-  feeAmount,
-}: {
-  currency0: Currency
-  currency1: Currency
-  feeAmount: FeeAmount | undefined
-}) {
+function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
   return (
     <PoolBadge>
       <Box margin="0 5px 0 10px">
         <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} />
       </Box>
-      {feeAmount && <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>}
+      <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>
     </PoolBadge>
   )
 }

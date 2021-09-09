@@ -459,10 +459,10 @@ export default function Swap({ history }: RouteComponentProps) {
               <Row justify={!trade ? 'center' : 'space-between'}>
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
-                    container={<ResponsiveTooltipContainer />}
+                    Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
                     content={<SwapRoute trade={trade} loading={isSyncingRoute} />}
                     placement="top"
-                    showArrow={false}
+                    hideArrow={true}
                   >
                     <RouterLabel syncing={isSyncingRoute} />
                   </MouseoverTooltipContent>
@@ -478,12 +478,16 @@ export default function Swap({ history }: RouteComponentProps) {
                     />
                   )}
                   <MouseoverTooltipContent
-                    container={<ResponsiveTooltipContainer origin="bottom right" width={'295px'} />}
+                    Container={({ children }) => (
+                      <ResponsiveTooltipContainer origin="bottom right" width={'295px'}>
+                        {children}
+                      </ResponsiveTooltipContainer>
+                    )}
                     content={
                       <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} loading={isSyncingRoute} />
                     }
                     placement="top"
-                    showArrow={false}
+                    hideArrow={true}
                   >
                     <StyledInfo />
                   </MouseoverTooltipContent>

@@ -1,14 +1,11 @@
-import React from 'react'
-import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
-import { Token, Percent, Currency } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { DAI, USDC, WBTC } from 'constants/tokens'
+import React from 'react'
 import { render } from 'test-utils'
+import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
 
-const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 1000)
-
-const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
-const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 6, 'DAI')
-const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR')
+const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 100)
 
 const singleRoute: RoutingDiagramEntry = { percent: percent`100`, path: [[USDC, DAI, FeeAmount.LOW]] }
 
@@ -17,8 +14,8 @@ const multiRoute: RoutingDiagramEntry[] = [
   {
     percent: percent`25`,
     path: [
-      [USDC, MKR, FeeAmount.MEDIUM],
-      [MKR, DAI, FeeAmount.HIGH],
+      [USDC, WBTC, FeeAmount.MEDIUM],
+      [WBTC, DAI, FeeAmount.HIGH],
     ],
   },
 ]

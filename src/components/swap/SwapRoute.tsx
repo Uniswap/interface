@@ -19,6 +19,8 @@ const Separator = styled.div`
   height: 1px;
 `
 
+const V2_DEFAULT_FEE_TIER = 3000
+
 export default memo(function SwapRoute({
   trade,
   loading,
@@ -27,7 +29,7 @@ export default memo(function SwapRoute({
   loading: boolean
 }) {
   return (
-    <AutoColumn gap="12px" style={{ padding: '0.5rem 0' }}>
+    <AutoColumn gap="12px">
       <RowBetween>
         <RouterLabel />
         <TYPE.black fontSize={14}>
@@ -56,7 +58,7 @@ function getTokenPath(
     const { path: tokenPath } = (trade as V2Trade<Currency, Currency, TradeType>).route
     const path = []
     for (let i = 1; i < tokenPath.length; i++) {
-      path.push([tokenPath[i - 1], tokenPath[i], FeeAmount.MEDIUM] as [Currency, Currency, FeeAmount | undefined])
+      path.push([tokenPath[i - 1], tokenPath[i], V2_DEFAULT_FEE_TIER] as RoutingDiagramEntry['path'][0])
     }
     return [{ percent: new Percent(100, 100), path }]
   }
