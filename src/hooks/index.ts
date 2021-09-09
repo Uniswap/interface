@@ -20,15 +20,23 @@ export const providers: {
   [ChainId.MAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MAINNET]),
   [ChainId.BSCMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.BSCMAINNET]),
   [ChainId.AVAXMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.AVAXMAINNET]),
-  [ChainId.MATIC]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MATIC])
+  [ChainId.MATIC]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MATIC]),
+  [ChainId.ROPSTEN]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.ROPSTEN]),
+  [ChainId.MUMBAI]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MUMBAI]),
+  [ChainId.AVAXTESTNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.AVAXTESTNET]),
+  [ChainId.BSCTESTNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.BSCTESTNET])
 }
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore()
   const { library, chainId, ...web3React } = context
   const chainIdWhenNotConnected = useSelector<AppState, ChainId>(state => state.application.chainIdWhenNotConnected)
-  return context.active
-    ? context
+  return context.active && context.chainId
+    ? ({
+        library: providers[context.chainId as ChainId],
+        chainId: context.chainId as ChainId,
+        ...web3React
+      } as Web3ReactContextInterface)
     : { library: providers[chainIdWhenNotConnected], chainId: chainIdWhenNotConnected, ...web3React }
 }
 
