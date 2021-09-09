@@ -166,10 +166,9 @@ export function useSingleContractMultipleData(
   // encode callDatas
   const callDatas = useMemo(
     () =>
-      callInputs.every((callInput) => isValidMethodArgs(callInput)) && fragment
-        ? callInputs.map<string>((callInput) =>
-            // this type assertion is ok, because if fragment is defined, contract must be as well
-            (contract as Contract).interface.encodeFunctionData(fragment, callInput)
+      contract && fragment
+        ? callInputs.map<string | undefined>((callInput) =>
+            isValidMethodArgs(callInput) ? contract.interface.encodeFunctionData(fragment, callInput) : undefined
           )
         : [],
     [callInputs, contract, fragment]
@@ -181,12 +180,17 @@ export function useSingleContractMultipleData(
   // encode calls
   const calls = useMemo(
     () =>
-      callDatas.map<Call>((callData) => ({
-        // this type assertion is ok, because for callDatas.length to be > 0, contract must be defined
-        address: (contract as Contract).address,
-        callData,
-        ...(gasRequired ? { gasRequired } : {}),
-      })),
+      contract
+        ? callDatas.map<Call | undefined>((callData) =>
+            callData
+              ? {
+                  address: contract.address,
+                  callData,
+                  gasRequired,
+                }
+              : undefined
+          )
+        : [],
     [contract, callDatas, gasRequired]
   )
 
@@ -226,7 +230,7 @@ export function useMultipleContractSingleData(
               ? {
                   address,
                   callData,
-                  ...(gasRequired ? { gasRequired } : {}),
+                  gasRequired,
                 }
               : undefined
           })
@@ -269,7 +273,7 @@ export function useSingleContractWithCallData(
             return {
               address: contract.address,
               callData,
-              ...(gasRequired ? { gasRequired } : {}),
+              gasRequired,
             }
           })
         : [],
