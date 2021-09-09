@@ -12,15 +12,6 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import Utilities from 'components/Footer/Utilities'
 import PoweredBy from 'components/Footer/PoweredBy'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
-import {
-  RedirectDuplicateTokenIds,
-  RedirectOldAddLiquidityPathStructure,
-  RedirectToAddLiquidity
-} from './AddLiquidity/redirects'
-import Pools from './Pools'
-import Farms from './Farms'
-import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { BLACKLIST_WALLETS } from '../constants'
@@ -28,15 +19,22 @@ import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
 
 // Route-based code splitting
+const Pools = lazy(() => import('./Pools'))
 const Pool = lazy(() => import('./Pool'))
+const Farms = lazy(() => import('./Farms'))
 const PoolFinder = lazy(() => import('./PoolFinder'))
 const PoolFinderExternal = lazy(() => import('./PoolFinder/PoolFinderExternal'))
 const Vesting = lazy(() => import('./Farms/vesting'))
 const Migration = lazy(() => import('./Pool/lp'))
+const AddLiquidity = lazy(() => import('./AddLiquidity'))
 const RemoveLiquidity = lazy(() => import('./RemoveLiquidity'))
 const MigrateLiquidityUNI = lazy(() => import('./RemoveLiquidity/migrate_uni'))
 const MigrateLiquiditySUSHI = lazy(() => import('./RemoveLiquidity/migrate_sushi'))
 const About = lazy(() => import('./Static/About'))
+const RedirectToAddLiquidity = lazy(() => import('./AddLiquidity/redirects'))
+const RedirectDuplicateTokenIds = lazy(() => import('./AddLiquidity/RedirectDuplicateTokenIds'))
+const RedirectOldAddLiquidityPathStructure = lazy(() => import('./AddLiquidity/RedirectOldAddLiquidityPathStructure'))
+const RedirectOldRemoveLiquidityPathStructure = lazy(() => import('./RemoveLiquidity/redirects'))
 
 const AppWrapper = styled.div`
   display: flex;
