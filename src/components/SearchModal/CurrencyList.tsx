@@ -7,7 +7,7 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'libs/sdk/src'
 import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useCurrencyBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
 import Column from '../Column'
@@ -102,12 +102,14 @@ function TokenTags({ currency }: { currency: Currency }) {
 
 function CurrencyRow({
   currency,
+  currencyBalance,
   onSelect,
   isSelected,
   otherSelected,
   style
 }: {
   currency: Currency
+  currencyBalance: CurrencyAmount
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
@@ -118,7 +120,8 @@ function CurrencyRow({
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
+  // const balance = useCurrencyBalance(account ?? undefined, currency)
+  const balance = currencyBalance
 
   // const showCurrency = currency === ETHER && !!chainId && [137, 800001].includes(chainId) ? WETH[chainId] : currency
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
@@ -171,14 +174,17 @@ export default function CurrencyList({
   setImportToken: (token: Token) => void
   breakIndex: number | undefined
 }) {
-  const itemData: (Currency | undefined)[] = useMemo(() => {
+  const { chainId, account } = useActiveWeb3React()
+  const itemCurrencies: (Currency | undefined)[] = useMemo(() => {
     let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
   }, [breakIndex, currencies, showETH])
-  const { chainId } = useActiveWeb3React()
+  const itemCurrencyBalances = useCurrencyBalances(account || undefined, itemCurrencies)
+  const itemData = { currencies: itemCurrencies, currencyBalances: itemCurrencyBalances }
+
   const theme = useTheme()
 
   const inactiveTokens: {
@@ -187,7 +193,8 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
-      const currency: Currency = data[index]
+      const currency: Currency = data.currencies[index]
+      const currencyBalance: CurrencyAmount = data.currencyBalances[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => onCurrencySelect(currency)
@@ -231,6 +238,7 @@ export default function CurrencyList({
           <CurrencyRow
             style={style}
             currency={currency}
+            currencyBalance={currencyBalance}
             isSelected={isSelected}
             onSelect={handleSelect}
             otherSelected={otherSelected}
@@ -259,7 +267,7 @@ export default function CurrencyList({
       ref={fixedListRef as any}
       width="100%"
       itemData={itemData}
-      itemCount={itemData.length}
+      itemCount={itemData.currencies.length}
       itemSize={56}
       itemKey={itemKey}
     >

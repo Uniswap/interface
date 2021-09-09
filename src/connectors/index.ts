@@ -54,7 +54,7 @@ export const NETWORK_URLS: {
   [ChainId.ROPSTEN]: `https://dev-ethereum.knstats.com/v1/mainnet/geth?appId=dev-dmm`,
   [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-  [ChainId.MUMBAI]: `https://peaceful-austin:boned-fruit-crave-feast-heat-boots@nd-526-681-843.p2pify.com/`,
+  [ChainId.MUMBAI]: `https://rpc-mumbai.matic.today`,
   [ChainId.MATIC]: `https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm`,
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`,
