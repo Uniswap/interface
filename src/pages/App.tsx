@@ -19,22 +19,38 @@ import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
 
 // Route-based code splitting
-const Pools = lazy(() => import('./Pools'))
-const Pool = lazy(() => import('./Pool'))
-const Farms = lazy(() => import('./Farms'))
-const PoolFinder = lazy(() => import('./PoolFinder'))
-const PoolFinderExternal = lazy(() => import('./PoolFinder/PoolFinderExternal'))
-const Vesting = lazy(() => import('./Farms/vesting'))
-const Migration = lazy(() => import('./Pool/lp'))
-const AddLiquidity = lazy(() => import('./AddLiquidity'))
-const RemoveLiquidity = lazy(() => import('./RemoveLiquidity'))
-const MigrateLiquidityUNI = lazy(() => import('./RemoveLiquidity/migrate_uni'))
-const MigrateLiquiditySUSHI = lazy(() => import('./RemoveLiquidity/migrate_sushi'))
-const About = lazy(() => import('./Static/About'))
-const RedirectToAddLiquidity = lazy(() => import('./AddLiquidity/redirects'))
-const RedirectDuplicateTokenIds = lazy(() => import('./AddLiquidity/RedirectDuplicateTokenIds'))
-const RedirectOldAddLiquidityPathStructure = lazy(() => import('./AddLiquidity/RedirectOldAddLiquidityPathStructure'))
-const RedirectOldRemoveLiquidityPathStructure = lazy(() => import('./RemoveLiquidity/redirects'))
+const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
+const Pool = lazy(() => import(/* webpackChunkName: 'pool-page' */ './Pool'))
+const Farms = lazy(() => import(/* webpackChunkName: 'farms-page' */ './Farms'))
+const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ './PoolFinder'))
+const PoolFinderExternal = lazy(() =>
+  import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal')
+)
+const Vesting = lazy(() => import(/* webpackChunkName: 'vesting-page' */ './Farms/vesting'))
+const Migration = lazy(() => import(/* webpackChunkName: 'migration-page' */ './Pool/lp'))
+const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page' */ './AddLiquidity'))
+const RemoveLiquidity = lazy(() => import(/* webpackChunkName: 'remove-liquidity-page' */ './RemoveLiquidity'))
+const MigrateLiquidityUNI = lazy(() =>
+  import(/* webpackChunkName: 'migrate-uni-page' */ './RemoveLiquidity/migrate_uni')
+)
+const MigrateLiquiditySUSHI = lazy(() =>
+  import(/* webpackChunkName: 'migrate-sushi-page' */ './RemoveLiquidity/migrate_sushi')
+)
+const About = lazy(() => import(/* webpackChunkName: 'about-page' */ './Static/About'))
+const RedirectToAddLiquidity = lazy(() =>
+  import(/* webpackChunkName: 'redirect-add-liquidity-page' */ './AddLiquidity/redirects')
+)
+const RedirectDuplicateTokenIds = lazy(() =>
+  import(/* webpackChunkName: 'redirect-duplicate-token-ids-page' */ './AddLiquidity/RedirectDuplicateTokenIds')
+)
+const RedirectOldAddLiquidityPathStructure = lazy(() =>
+  import(
+    /* webpackChunkName: 'redirect-old-add-liquidity-path-structure-page' */ './AddLiquidity/RedirectOldAddLiquidityPathStructure'
+  )
+)
+const RedirectOldRemoveLiquidityPathStructure = lazy(() =>
+  import(/* webpackChunkName: 'redirect-old-remove-liquidity-path-structure-page' */ './RemoveLiquidity/redirects')
+)
 
 const AppWrapper = styled.div`
   display: flex;
