@@ -244,6 +244,14 @@ export default function ClaimModal({
                 <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
               </Row>
             </ExternalLink>
+            <ExternalLink href="https://medium.com/swapr/swpr-conversion-and-farming-plan-update-db8a13f6cd91">
+              <Row justifyContent="center" width="100%">
+                <TYPE.small fontSize="13px" fontWeight="400px" lineHeight="16px">
+                  Read about the conversion
+                </TYPE.small>
+                <ExternalLinkIcon style={{ marginLeft: 3 }} size="12px" />
+              </Row>
+            </ExternalLink>
           </AutoColumn>
         </ContentWrapper>
       )
