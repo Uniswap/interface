@@ -33,7 +33,7 @@ export default memo(function SwapRoute({
       <RowBetween>
         <RouterLabel />
         <TYPE.black fontSize={14}>
-          {getTradeVersion(trade) === Version.v2 ? <Trans>Via V2</Trans> : <Trans>Via V3</Trans>}
+          {getTradeVersion(trade) === Version.v2 ? <Trans>via V2</Trans> : <Trans>via V3</Trans>}
         </TYPE.black>
       </RowBetween>
       <Separator />

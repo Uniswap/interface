@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
-import { V3TradeState } from './useV3Trade'
+import { V3TradeState } from './useCombinedV3Trade'
 import { useActiveWeb3React } from './web3'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {

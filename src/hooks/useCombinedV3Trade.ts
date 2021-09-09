@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
-import { useRouterTradeExactIn, useRouterTradeExactOut } from 'state/routing/useRouterTrade'
+import { useRouterTradeExactIn, useRouterTradeExactOut } from 'state/routing/useRoutingAPITrade'
 import useDebounce from './useDebounce'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
 

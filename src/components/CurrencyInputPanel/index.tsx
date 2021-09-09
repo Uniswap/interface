@@ -254,9 +254,7 @@ export default function CurrencyInputPanel({
             <NumericalInput
               className="token-amount-input"
               value={value}
-              onUserInput={(val) => {
-                onUserInput(val)
-              }}
+              onUserInput={onUserInput}
               style={loading ? { opacity: '.3', transition: 'opacity 0.2s ease-in-out' } : {}}
             />
           )}

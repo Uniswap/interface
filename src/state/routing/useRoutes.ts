@@ -56,7 +56,7 @@ export function useRoutes(
   }, [currencyIn, currencyOut, quoteResult])
 }
 
-const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Currency => {
+const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token => {
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 
@@ -69,8 +69,8 @@ const parsePool = ({
   tokenOut,
 }: GetQuoteResult['route'][0][0]): Pool =>
   new Pool(
-    parseToken(tokenIn).wrapped,
-    parseToken(tokenOut).wrapped,
+    parseToken(tokenIn),
+    parseToken(tokenOut),
     parseInt(fee) as FeeAmount,
     sqrtRatioX96,
     liquidity,

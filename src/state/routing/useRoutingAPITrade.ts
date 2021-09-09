@@ -2,7 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import { V3TradeState } from 'hooks/useV3Trade'
+import { V3TradeState } from 'hooks/useCombinedV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import ReactGA from 'react-ga'
@@ -39,10 +39,6 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       : skipToken,
     { pollingInterval: ms`10s` }
   )
-
-  if (data) {
-    console.debug({ quoteId: data?.quoteId, quote: data?.quote }, 'Quote received from routing api')
-  }
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
@@ -108,10 +104,6 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       : skipToken,
     { pollingInterval: ms`10s` }
   )
-
-  if (data) {
-    console.debug({ quoteId: data?.quoteId, quote: data?.quote }, 'Quote received from routing api')
-  }
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
