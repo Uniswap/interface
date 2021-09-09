@@ -10,7 +10,6 @@ import { updateChainIdWhenNotConnected } from '../../state/application/actions'
 
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainId } from 'libs/sdk/src'
-import Modal from '../Modal'
 import ModalHeader from '../ModalHeader'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
@@ -94,12 +93,24 @@ const ADD_NETWORK_PARAMS: {
 }
 
 const ModalContentWrapper = styled.div`
+  position: absolute;
+  top: 50px;
+  left: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 24px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg19};
+  color: ${({ theme }) => theme.text1};
+  max-width: 272px;
+  border-radius: 16px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    top: auto;
+    bottom: 52px;
+    left: 0;
+  `};
 `
 
 const InstructionText = styled.div`
@@ -158,7 +169,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   const toggleNetworkModal = useNetworkModalToggle()
 
   const dispatch = useDispatch<AppDispatch>()
-  if (!chainId) return null
+  if (!chainId || !networkModalOpen) return null
 
   const changeNetwork = async (key: ChainId) => {
     if (isNotConnected) {
@@ -186,45 +197,43 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
   }
 
   return (
-    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={272}>
-      <ModalContentWrapper>
-        <ModalHeader title={t`Select a Network`} />
+    <ModalContentWrapper>
+      <ModalHeader title={t`Select a Network`} />
 
-        <InstructionText>
-          <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
-        </InstructionText>
+      <InstructionText>
+        <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
+      </InstructionText>
 
-        <NetworkList>
-          {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
-            if (chainId === key) {
-              return (
-                <SelectNetworkButton key={i} padding="0">
-                  <ListItem selected>
-                    <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '2rem', marginRight: '1rem' }} />
-                    <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
-                  </ListItem>
-                </SelectNetworkButton>
-              )
-            }
-
+      <NetworkList>
+        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
+          if (chainId === key) {
             return (
-              <SelectNetworkButton
-                key={i}
-                padding="0"
-                onClick={() => {
-                  toggleNetworkModal()
-                  changeNetwork(key)
-                }}
-              >
-                <ListItem>
+              <SelectNetworkButton key={i} padding="0">
+                <ListItem selected>
                   <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '2rem', marginRight: '1rem' }} />
                   <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
                 </ListItem>
               </SelectNetworkButton>
             )
-          })}
-        </NetworkList>
-      </ModalContentWrapper>
-    </Modal>
+          }
+
+          return (
+            <SelectNetworkButton
+              key={i}
+              padding="0"
+              onClick={() => {
+                toggleNetworkModal()
+                changeNetwork(key)
+              }}
+            >
+              <ListItem>
+                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '2rem', marginRight: '1rem' }} />
+                <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
+              </ListItem>
+            </SelectNetworkButton>
+          )
+        })}
+      </NetworkList>
+    </ModalContentWrapper>
   )
 }

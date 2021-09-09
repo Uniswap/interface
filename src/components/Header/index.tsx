@@ -75,7 +75,6 @@ const HeaderElement = styled.div`
   gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
     align-items: center;
   `};
 `
@@ -137,19 +136,25 @@ const HideSmall = styled.span`
 `
 
 const HideText = styled.span`
-  @media (max-width: 1350px) {
+  @media (max-width: 1380px) {
+    display: none;
+  }
+`
+
+const AnalyticsWrapper = styled.span`
+  @media (max-width: 1310px) {
     display: none;
   }
 `
 
 const MigrateLiquidityWrapper = styled.span`
-  @media (max-width: 1295px) {
+  @media (max-width: 1355px) {
     display: none;
   }
 `
 
 const AboutWrapper = styled.span`
-  @media (max-width: 1360px) {
+  @media (max-width: 1430px) {
     display: none;
   }
 `
@@ -339,9 +344,11 @@ export default function Header() {
             </StyledNavLink>
           </HideSmall>
 
-          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
-            <Trans>Analytics</Trans>
-          </StyledNavExternalLink>
+          <AnalyticsWrapper>
+            <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+              <Trans>Analytics</Trans>
+            </StyledNavExternalLink>
+          </AnalyticsWrapper>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <MigrateLiquidityWrapper>

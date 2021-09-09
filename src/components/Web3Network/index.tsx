@@ -1,25 +1,31 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from 'hooks'
-import { useNetworkModalToggle } from '../../state/application/hooks'
+import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
 import DropdownSVG from 'assets/svg/dropdown.svg'
+import Row from 'components/Row'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { ApplicationModal } from 'state/application/actions'
 
 const NetworkSwitchContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
 `
 
 const NetworkCard = styled(Card)`
+  position: relative;
   background-color: ${({ theme }) => theme.bg12};
   color: ${({ theme }) => theme.primary1};
   border-radius: 8px;
   padding: 10px 12px;
   border: 1px solid transparent;
+  min-width: 272px;
 
   &:hover {
     text-decoration: none;
@@ -45,16 +51,24 @@ const NetworkLabel = styled.div`
 
 function Web3Network(): JSX.Element | null {
   const { chainId, library } = useActiveWeb3React()
-
+  const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
+  const node = useRef<HTMLDivElement>()
+  useOnClickOutside(node, networkModalOpen ? toggleNetworkModal : undefined)
 
   if (!chainId) return null
 
   return (
-    <NetworkCard onClick={() => toggleNetworkModal()}>
+    <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any}>
       <NetworkSwitchContainer>
-        <img src={NETWORK_ICON[chainId]} alt="Switch Network" style={{ width: 23, height: 23, marginRight: '12px' }} />
-        <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
+        <Row>
+          <img
+            src={NETWORK_ICON[chainId]}
+            alt="Switch Network"
+            style={{ width: 23, height: 23, marginRight: '12px' }}
+          />
+          <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
+        </Row>
         <img src={DropdownSVG} />
       </NetworkSwitchContainer>
       <NetworkModal isNotConnected={!(library && library.provider && library.provider.isMetaMask)} />
