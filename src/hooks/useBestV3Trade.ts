@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { encodeRouteToPath, Route, Trade } from '@uniswap/v3-sdk'
+import { Route, Trade, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
-import { useSingleContractMultipleData } from '../state/multicall/hooks'
+import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
 import { useActiveWeb3React } from './web3'
@@ -32,20 +32,19 @@ export function useBestV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
-  const { chainId } = useActiveWeb3React()
-  const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(amountIn?.currency, currencyOut)
 
-  const quoteExactInInputs = useMemo(() => {
-    return routes.map((route) => [
-      encodeRouteToPath(route, false),
-      amountIn ? `0x${amountIn.quotient.toString(16)}` : undefined,
-    ])
-  }, [amountIn, routes])
-
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
-  })
+  const quoter = useV3Quoter()
+  const { chainId } = useActiveWeb3React()
+  const quotesResults = useSingleContractWithCallData(
+    quoter,
+    amountIn
+      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountIn, TradeType.EXACT_INPUT).calldata)
+      : [],
+    {
+      gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
+    }
+  )
 
   return useMemo(() => {
     if (
@@ -121,20 +120,19 @@ export function useBestV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
-  const { chainId } = useActiveWeb3React()
-  const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, amountOut?.currency)
 
-  const quoteExactOutInputs = useMemo(() => {
-    return routes.map((route) => [
-      encodeRouteToPath(route, true),
-      amountOut ? `0x${amountOut.quotient.toString(16)}` : undefined,
-    ])
-  }, [amountOut, routes])
-
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs, {
-    gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
-  })
+  const quoter = useV3Quoter()
+  const { chainId } = useActiveWeb3React()
+  const quotesResults = useSingleContractWithCallData(
+    quoter,
+    amountOut
+      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountOut, TradeType.EXACT_OUTPUT).calldata)
+      : [],
+    {
+      gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
+    }
+  )
 
   return useMemo(() => {
     if (

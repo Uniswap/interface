@@ -154,6 +154,7 @@ function toCallState(
   }
 }
 
+// formats many calls to a single function on a single contract, with the function name and inputs specified
 export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
@@ -162,21 +163,35 @@ export function useSingleContractMultipleData(
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
-  const blocksPerFetch = options?.blocksPerFetch
-  const gasRequired = options?.gasRequired
+  // encode callDatas
+  const callDatas = useMemo(
+    () =>
+      contract && fragment
+        ? callInputs.map<string | undefined>((callInput) =>
+            isValidMethodArgs(callInput) ? contract.interface.encodeFunctionData(fragment, callInput) : undefined
+          )
+        : [],
+    [callInputs, contract, fragment]
+  )
 
+  const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
+
+  // encode calls
   const calls = useMemo(
     () =>
-      contract && fragment && callInputs?.length > 0 && callInputs.every((inputs) => isValidMethodArgs(inputs))
-        ? callInputs.map<Call>((inputs) => {
-            return {
-              address: contract.address,
-              callData: contract.interface.encodeFunctionData(fragment, inputs),
-              ...(gasRequired ? { gasRequired } : {}),
-            }
-          })
+      contract
+        ? callDatas.map<Call | undefined>((callData) =>
+            callData
+              ? {
+                  address: contract.address,
+                  callData,
+                  gasRequired,
+                }
+              : undefined
+          )
         : [],
-    [contract, fragment, callInputs, gasRequired]
+    [contract, callDatas, gasRequired]
   )
 
   const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
@@ -185,7 +200,7 @@ export function useSingleContractMultipleData(
 
   return useMemo(() => {
     return results.map((result) => toCallState(result, contract?.interface, fragment, latestBlockNumber))
-  }, [fragment, contract, results, latestBlockNumber])
+  }, [results, contract, fragment, latestBlockNumber])
 }
 
 export function useMultipleContractSingleData(
@@ -193,35 +208,34 @@ export function useMultipleContractSingleData(
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: number }
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
-  const blocksPerFetch = options?.blocksPerFetch
-  const gasRequired = options?.gasRequired
-
+  // encode callData
   const callData: string | undefined = useMemo(
-    () =>
-      fragment && isValidMethodArgs(callInputs)
-        ? contractInterface.encodeFunctionData(fragment, callInputs)
-        : undefined,
+    () => (isValidMethodArgs(callInputs) ? contractInterface.encodeFunctionData(fragment, callInputs) : undefined),
     [callInputs, contractInterface, fragment]
   )
 
+  const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
+
+  // encode calls
   const calls = useMemo(
     () =>
-      fragment && addresses && addresses.length > 0 && callData
+      callData
         ? addresses.map<Call | undefined>((address) => {
-            return address && callData
+            return address
               ? {
                   address,
                   callData,
-                  ...(gasRequired ? { gasRequired } : {}),
+                  gasRequired,
                 }
               : undefined
           })
         : [],
-    [addresses, callData, fragment, gasRequired]
+    [addresses, callData, gasRequired]
   )
 
   const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
@@ -237,29 +251,47 @@ export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
-  options?: Partial<ListenerOptions> & { gasRequired?: number }
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState {
-  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
+  return useSingleContractMultipleData(contract, methodName, [inputs], options)[0] ?? INVALID_CALL_STATE
+}
 
-  const blocksPerFetch = options?.blocksPerFetch
+// formats many calls to any number of functions on a single contract, with only the calldata specified
+export function useSingleContractWithCallData(
+  contract: Contract | null | undefined,
+  callDatas: string[],
+  options: Partial<ListenerOptions> & { gasRequired?: number } = {}
+): CallState[] {
   const gasRequired = options?.gasRequired
+  const blocksPerFetch = options?.blocksPerFetch
 
-  const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
-      ? [
-          {
-            address: contract.address,
-            callData: contract.interface.encodeFunctionData(fragment, inputs),
-            ...(gasRequired ? { gasRequired } : {}),
-          },
-        ]
-      : []
-  }, [contract, fragment, inputs, gasRequired])
+  // encode calls
+  const calls = useMemo(
+    () =>
+      contract
+        ? callDatas.map<Call>((callData) => {
+            return {
+              address: contract.address,
+              callData,
+              gasRequired,
+            }
+          })
+        : [],
+    [contract, callDatas, gasRequired]
+  )
 
-  const result = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)[0]
+  const results = useCallsData(calls, blocksPerFetch ? { blocksPerFetch } : undefined)
+
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
-    return toCallState(result, contract?.interface, fragment, latestBlockNumber)
-  }, [result, contract, fragment, latestBlockNumber])
+    return results.map((result, i) =>
+      toCallState(
+        result,
+        contract?.interface,
+        contract?.interface?.getFunction(callDatas[i].substring(0, 10)),
+        latestBlockNumber
+      )
+    )
+  }, [results, contract, callDatas, latestBlockNumber])
 }
