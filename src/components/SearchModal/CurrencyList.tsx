@@ -86,7 +86,7 @@ function CurrencyRow({
       alignItems="center"
       style={style}
     >
-      <Box mr="12px">
+      <Box mr="6px">
         <CurrencyLogo currency={currency} size={'20px'} />
       </Box>
       <Box>

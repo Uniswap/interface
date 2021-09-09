@@ -19,8 +19,7 @@ export const ModalInfo = styled.div`
 `
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
-  padding-bottom: 12px;
+  padding:22px 18.5px 20px 18.5px; 
 `
 
 export const MenuItem = styled(RowBetween)`
@@ -38,7 +37,7 @@ export const MenuItem = styled(RowBetween)`
 `
 
 export const TokenPickerItem = styled(Flex)`
-  padding: 0 20px;
+  padding: 0 22.5px;
   height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};

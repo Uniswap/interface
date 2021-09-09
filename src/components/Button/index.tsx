@@ -7,6 +7,7 @@ import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import { Text } from 'rebass'
+import { Colors } from '../../theme/styled'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -49,15 +50,15 @@ const Base = styled(RebassButton)<{
   }
 `
 
-export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+export const ButtonPrimary = styled(Base)<{color?:keyof Colors}>`
+  background-color: ${({ theme,color }) => color ? (theme as any)[color] : theme.primary1};
   color: ${({ theme }) => theme.white};
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme,color }) => darken(0.05,  color ? (theme as any)[color] : theme.primary1)};
   }
   &:active {
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    background-color: ${({ theme,color }) => darken(0.1,  color ? (theme as any)[color] : theme.primary1)};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.purple5};

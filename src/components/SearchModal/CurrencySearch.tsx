@@ -2,7 +2,6 @@ import { Currency, Token } from '@swapr/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { useAllTokens, useToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
 import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
@@ -23,10 +22,11 @@ import { ButtonPrimary } from '../Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
+  border-radius: 12px;
   flex: 1;
   overflow: hidden;
   position: relative;
-  background-color: ${({ theme }) => theme.bg1And2};
+  background-color: ${({ theme }) => theme.dark2};
 `
 
 const Footer = styled.div`
@@ -164,11 +164,9 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="16px">
+      <PaddedColumn gap="15px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
-          </Text>
+          <TYPE.body fontWeight={500}>Select a token</TYPE.body>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>
@@ -188,6 +186,7 @@ export function CurrencySearch({
         )}
       </PaddedColumn>
       <Separator />
+
       {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
           currencies={filteredSortedTokensWithNativeCurrency}
@@ -208,7 +207,7 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonPrimary onClick={showManageView}>Manage token lists</ButtonPrimary>
+          <ButtonPrimary style={{border:'1px solid #3E4259'}} color={'dark2'} onClick={showManageView}>Manage token lists</ButtonPrimary>
         </Row>
       </Footer>
     </ContentWrapper>
