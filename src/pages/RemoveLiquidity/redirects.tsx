@@ -3,7 +3,7 @@ import { RouteComponentProps, Redirect } from 'react-router-dom'
 
 const OLD_PATH_STRUCTURE = /^(0x[a-fA-F0-9]{40})-(0x[a-fA-F0-9]{40})$/
 
-export function RedirectOldRemoveLiquidityPathStructure({
+export default function RedirectOldRemoveLiquidityPathStructure({
   match: {
     params: { tokens }
   }

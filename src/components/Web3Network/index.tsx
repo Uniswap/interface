@@ -38,15 +38,19 @@ const NetworkCard = styled(Card)`
     margin: 0;
     margin-right: 0.5rem;
     width: initial;
-    overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 1;
+    min-width: auto;
   `};
 `
 
 const NetworkLabel = styled.div`
   white-space: nowrap;
   margin-right: 60px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `};
 `
 
 function Web3Network(): JSX.Element | null {
