@@ -17,7 +17,6 @@ install:
   - yarn
   - npm rebuild node-sass
   - bash .travis/build.sh || true
-  - gzip -r build
   - ls build || true
 
 deploy:
