@@ -292,11 +292,10 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              {loading ? (
-                <LoadingBar width={115} height={17} />
-              ) : (
+              {/* TODO(judo): refactor and polish */}
+              <div style={loading ? { opacity: '.3', transition: 'opacity 0.2s ease-in-out' } : {}}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
-              )}
+              </div>
             </RowBetween>
           </FiatRow>
         )}
