@@ -136,7 +136,13 @@ const HideSmall = styled.span`
 `
 
 const HideText = styled.span`
-  @media (max-width: 1350px) {
+  @media (max-width: 1380px) {
+    display: none;
+  }
+`
+
+const AnalyticsWrapper = styled.span`
+  @media (max-width: 1310px) {
     display: none;
   }
 `
@@ -338,9 +344,11 @@ export default function Header() {
             </StyledNavLink>
           </HideSmall>
 
-          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
-            <Trans>Analytics</Trans>
-          </StyledNavExternalLink>
+          <AnalyticsWrapper>
+            <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>
+              <Trans>Analytics</Trans>
+            </StyledNavExternalLink>
+          </AnalyticsWrapper>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <MigrateLiquidityWrapper>
