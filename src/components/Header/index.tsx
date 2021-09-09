@@ -12,6 +12,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import Logo from '../../assets/svg/logo.svg'
+import { Moon, Sun } from 'react-feather'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
@@ -152,6 +153,27 @@ const UNIWrapper = styled.span`
   }
 `
 
+const ToggleMenuItem = styled.button`
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+`
+
 const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
@@ -243,7 +265,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [darkMode] = useDarkModeManager()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -315,6 +337,10 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
+
+          <ToggleMenuItem onClick={() => toggleDarkMode()}>
+            {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+          </ToggleMenuItem>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>

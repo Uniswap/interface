@@ -1,8 +1,8 @@
 import { t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun, Globe, ChevronLeft, Check } from 'react-feather'
+import { ChevronLeft, Check, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -11,12 +11,12 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { useDarkModeManager } from 'state/user/hooks'
 
 import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -72,35 +72,35 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 196px;
-  max-height: 350px;
-  overflow: auto;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  outline: transparent solid 2px;
+  outline-offset: 2px;
+  max-height: 100vh;
+  color: ${({ theme }) => theme.text2};
+  padding: 3rem 1rem;
+  width: 340px;
+  left: 100%;
+  top: 0px;
+  bottom: 0px;
+  transition: transform 0.25s ease 0s;
+  will-change: transform;
+  overflow-y: scroll;
+  z-index: 9999 !important;
+  transform: translateX(-100%);
+  box-shadow: rgb(0 0 0 / 60%) -0.125rem 0px 5rem 0px;
+  border: 1px solid ${({ theme }) => theme.bg0};
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
-  border-radius: 12px;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  position: absolute;
-  top: 3rem;
-  z-index: 100;
+`
 
-  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
-    flyoutAlignment === FlyoutAlignment.RIGHT
-      ? css`
-          right: 0rem;
-        `
-      : css`
-          left: 0rem;
-        `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
+const CloseMenuIcon = styled.div`
+  position: absolute;
+  top: 5%;
+  right: 6%;
+  cursor: pointer;
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -116,6 +116,21 @@ const MenuItem = styled(ExternalLink)`
     cursor: pointer;
     text-decoration: none;
   }
+`
+
+const MenuItems = styled.div`
+  display: block;
+  align-items: center;
+  padding: 0 0.5rem;
+  justify-content: space-between;
+  color: ${({ theme }) => theme.text2};
+`
+const MenuHeading = styled.h3`
+  font-size: 1.2rem;
+  font-weight: bolder;
+`
+const MenuParagraph = styled.p`
+  cursor: pointer;
 `
 
 const InternalMenuItem = styled(Link)`
@@ -208,9 +223,8 @@ export default function Menu() {
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
 
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
+  const toggleWalletModal = useWalletModalToggle()
 
   useEffect(() => {
     setMenu('main')
@@ -223,70 +237,34 @@ export default function Menu() {
         <StyledMenuIcon />
       </StyledMenuButton>
 
-      {open &&
-        (() => {
-          switch (menu) {
-            case 'lang':
-              return <LanguageMenu close={() => setMenu('main')} />
-            case 'main':
-            default:
-              return (
-                <MenuFlyout>
-                  <MenuItem href="https://uniswap.org/">
-                    <div>
-                      <Trans>About</Trans>
-                    </div>
-                    <Info opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://docs.uniswap.org/">
-                    <div>
-                      <Trans>Docs</Trans>
-                    </div>
-                    <BookOpen opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={CODE_LINK}>
-                    <div>
-                      <Trans>Code</Trans>
-                    </div>
-                    <Code opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://discord.gg/FCfyBSbCU5">
-                    <div>
-                      <Trans>Discord</Trans>
-                    </div>
-                    <MessageCircle opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={infoLink}>
-                    <div>
-                      <Trans>Analytics</Trans>
-                    </div>
-                    <PieChart opacity={0.6} size={16} />
-                  </MenuItem>
-                  <ToggleMenuItem onClick={() => setMenu('lang')}>
-                    <div>
-                      <Trans>Language</Trans>
-                    </div>
-                    <Globe opacity={0.6} size={16} />
-                  </ToggleMenuItem>
-                  <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
-                  </ToggleMenuItem>
-                  {showUNIClaimOption && (
-                    <UNIbutton
-                      onClick={openClaimModal}
-                      padding="8px 16px"
-                      width="100%"
-                      $borderRadius="12px"
-                      mt="0.5rem"
-                    >
-                      <Trans>Claim UNI</Trans>
-                    </UNIbutton>
-                  )}
-                </MenuFlyout>
-              )
-          }
-        })()}
+      {open && (
+        <MenuFlyout>
+          <CloseMenuIcon onClick={toggle}>
+            <X size={25} />
+          </CloseMenuIcon>
+          <MenuItems>
+            <div>
+              <MenuHeading>Balances</MenuHeading>
+            </div>
+            <MenuParagraph onClick={toggleWalletModal}>Connect to a wallet</MenuParagraph>
+          </MenuItems>
+          {ApplicationModal.WALLET ? (
+            <MenuItems>
+              <div>
+                <MenuHeading>Transactions</MenuHeading>
+              </div>
+              <MenuParagraph>No Transactions</MenuParagraph>
+            </MenuItems>
+          ) : (
+            ''
+          )}
+          {showUNIClaimOption && (
+            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" $borderRadius="12px" mt="0.5rem">
+              <Trans>Claim UNI</Trans>
+            </UNIbutton>
+          )}
+        </MenuFlyout>
+      )}
     </StyledMenu>
   )
 }
@@ -320,6 +298,7 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
   const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   useOnClickOutside(node, open ? toggle : undefined)
   const ToggleElement = ToggleUI || StyledMenuIcon
+
   return (
     <StyledMenu ref={node as any} {...rest}>
       <ToggleElement onClick={toggle} />
