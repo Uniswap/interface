@@ -78,7 +78,7 @@ export function ActionButton({
       <StyledClaimButton disabled={disabled} padding="16px 16px" width="100%" mt="1rem" onClick={handleLocalClick}>
         {text}
       </StyledClaimButton>
-      {availableClaim && 'The claimed tokens will need to be converted in the next step'}
+      {availableClaim && !isOldSwaprLp && 'The claimed tokens will need to be converted in the next step'}
     </AutoColumn>
   )
 }
