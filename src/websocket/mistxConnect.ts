@@ -86,7 +86,7 @@ export interface SwapReq {
   to: string
 }
 
-const serverUrl = 'https://api-staging.mistx.io/'
+const serverUrl = 'https://protection-staging.flashbots.net/'
 
 let socket: MistxSocket | null = null
 
