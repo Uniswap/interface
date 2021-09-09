@@ -19,15 +19,15 @@ export const NETWORK_ICON = {
 }
 
 export const NETWORK_LABEL: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.MAINNET]: 'Ethereum Network',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
-  [ChainId.MATIC]: 'Polygon',
+  [ChainId.MATIC]: 'Polygon Network',
   [ChainId.MUMBAI]: 'Mumbai',
-  [ChainId.BSCTESTNET]: 'BSC',
-  [ChainId.BSCMAINNET]: 'BSC',
-  [ChainId.AVAXTESTNET]: 'AVAX',
-  [ChainId.AVAXMAINNET]: 'AVAX'
+  [ChainId.BSCTESTNET]: 'BSC Testnet',
+  [ChainId.BSCMAINNET]: 'BSC Network',
+  [ChainId.AVAXTESTNET]: 'Avalanche Testnet',
+  [ChainId.AVAXMAINNET]: 'Avalanche Network'
 }

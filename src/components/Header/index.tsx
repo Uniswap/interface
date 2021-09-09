@@ -129,6 +129,12 @@ const AccountElement = styled.div<{ active: boolean }>`
   }
 `
 
+const HideExtraSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -136,7 +142,7 @@ const HideSmall = styled.span`
 `
 
 const HideText = styled.span`
-  @media (max-width: 1380px) {
+  @media (max-width: 1440px) {
     display: none;
   }
 `
@@ -154,7 +160,7 @@ const MigrateLiquidityWrapper = styled.span`
 `
 
 const AboutWrapper = styled.span`
-  @media (max-width: 1430px) {
+  @media (max-width: 1500px) {
     display: none;
   }
 `
@@ -374,34 +380,38 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
-            <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
-              <HideText>
-                <Trans>Bridge Assets</Trans>
-              </HideText>
-              ↗
-            </BridgeExternalLink>
+            <HideExtraSmall>
+              <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+                <HideText>
+                  <Trans>Bridge Assets</Trans>
+                </HideText>
+                ↗
+              </BridgeExternalLink>
+            </HideExtraSmall>
           )}
           {chainId && [ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId) && (
-            <BridgeExternalLink href={'https://www.binance.org/en/bridge'}>
-              <HideText>
-                <Trans>Bridge Assets</Trans>
-              </HideText>
-              ↗
-            </BridgeExternalLink>
+            <HideExtraSmall>
+              <BridgeExternalLink href={'https://www.binance.org/en/bridge'}>
+                <HideText>
+                  <Trans>Bridge Assets</Trans>
+                </HideText>
+                ↗
+              </BridgeExternalLink>
+            </HideExtraSmall>
           )}
           {chainId && [ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId) && (
-            <BridgeExternalLink href={'https://bridge.avax.network'}>
-              <HideText>
-                <Trans>Bridge Assets</Trans>
-              </HideText>
-              ↗
-            </BridgeExternalLink>
+            <HideExtraSmall>
+              <BridgeExternalLink href={'https://bridge.avax.network'}>
+                <HideText>
+                  <Trans>Bridge Assets</Trans>
+                </HideText>
+                ↗
+              </BridgeExternalLink>
+            </HideExtraSmall>
           )}
-          <HideSmall>
-            <div className="hidden sm:inline-block">
-              <Web3Network />
-            </div>
-          </HideSmall>
+
+          <Web3Network />
+
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>

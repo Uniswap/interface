@@ -103,6 +103,7 @@ const ModalContentWrapper = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.bg19};
   color: ${({ theme }) => theme.text1};
+  min-width: 272px;
   max-width: 272px;
   border-radius: 16px;
 
@@ -136,7 +137,7 @@ const ListItem = styled.div<{ selected?: boolean }>`
 `
 
 const NetworkLabel = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text13};
 `
 
 const SelectNetworkButton = styled(ButtonEmpty)`
@@ -201,7 +202,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
       <ModalHeader title={t`Select a Network`} />
 
       <InstructionText>
-        <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]} network</Trans>
+        <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]}</Trans>
       </InstructionText>
 
       <NetworkList>
@@ -210,7 +211,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
             return (
               <SelectNetworkButton key={i} padding="0">
                 <ListItem selected>
-                  <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '2rem', marginRight: '1rem' }} />
+                  <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '12px' }} />
                   <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
                 </ListItem>
               </SelectNetworkButton>
@@ -227,7 +228,7 @@ export default function NetworkModal({ isNotConnected }: { isNotConnected: boole
               }}
             >
               <ListItem>
-                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '2rem', marginRight: '1rem' }} />
+                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '12px' }} />
                 <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
               </ListItem>
             </SelectNetworkButton>
