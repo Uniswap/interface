@@ -99,7 +99,6 @@ export function useInactiveListener(suppress = false) {
 
   useEffect(() => {
     const { ethereum } = window
-    console.log('===eth', ethereum, ethereum && ethereum.on && !active && !error && !suppress)
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         // eat errors
