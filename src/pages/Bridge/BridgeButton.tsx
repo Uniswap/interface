@@ -20,6 +20,10 @@ export const BridgeButton = ({ onClick, disabled, children, from, to }: BridgeBu
         return '#627EEA'
       case 'Arbitrum':
         return '#2C374B'
+      case 'xDai':
+        return '#49A9A7'
+      case 'Binance':
+        return '#F8D12E'
       default:
         return '#2E17F2'
     }
