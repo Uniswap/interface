@@ -122,7 +122,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
-  cursor: pointer;
 
   :focus {
     border: 1px solid blue;
@@ -286,11 +285,11 @@ export default function Header() {
           <Trans>Pool</Trans>
         </StyledNavLink>
         {chainId && chainId === SupportedChainId.MAINNET && (
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+          <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
             <Trans>Vote</Trans>
           </StyledNavLink>
         )}
-        <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
+        <StyledExternalLink id={`charts-nav-link`} href={infoLink}>
           <Trans>Charts</Trans>
           <sup>↗</sup>
         </StyledExternalLink>
@@ -315,9 +314,9 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+          <AccountElement active={!!account}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                 <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
               </BalanceText>
             ) : null}

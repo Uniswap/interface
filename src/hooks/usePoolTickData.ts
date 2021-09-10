@@ -126,7 +126,7 @@ export function usePoolActiveLiquidity(
     return {
       isLoading,
       isUninitialized,
-      isError: isError,
+      isError,
       error,
       activeTick,
       data: ticksProcessed,

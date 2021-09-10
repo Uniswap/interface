@@ -66,7 +66,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
-    explorer: 'https://explorer.arbitrum.io/',
+    explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
@@ -74,7 +74,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
-    explorer: 'https://explorer.arbitrum.io/',
+    explorer: 'https://rinkeby-explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Rinkeby',
     logoUrl: arbitrumLogoUrl,

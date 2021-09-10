@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-08-02 14:52+0000\n"
-"Mime-Version: 1.0\n"
+"Project-Id-Version: uniswap-interface\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-09-03 17:08\n"
+"Last-Translator: \n"
+"Language: hu_HU\n"
+"Language-Team: Hungarian\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: hu\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
 "X-Crowdin-Language: hu\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
-"Project-Id-Version: uniswap-interface\n"
-"Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-08-02 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1018,6 +1018,10 @@ msgstr "Max:"
 msgid "Maximum sent"
 msgstr "Maximum elküldve"
 
+#: src/components/Menu/index.tsx
+msgid "Menu"
+msgstr "Menü"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1656,6 +1660,7 @@ msgid "Total deposits"
 msgstr "Összes letét"
 
 #: src/components/Settings/index.tsx
+#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Tranzakció beállítások"
 
@@ -1881,6 +1886,11 @@ msgstr "Szavazat a(z) {proposalId} javaslat ellen"
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Szavazat a(z) {proposalId} mellett"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "Szavazzon a tartózkodásra a {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
