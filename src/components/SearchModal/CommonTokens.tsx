@@ -10,7 +10,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { TYPE } from '../../theme'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
-export default function CommonBases({
+export default function CommonTokens({
   chainId,
   onSelect,
   selectedCurrency
@@ -20,7 +20,8 @@ export default function CommonBases({
   onSelect: (currency: Currency) => void
 }) {
   const nativeCurrency = useNativeCurrency()
-
+console.log(selectedCurrency)
+  console.log(selectedCurrency === nativeCurrency || selectedCurrency===undefined)
   return (
     <AutoColumn gap="15px">
       <AutoRow>
@@ -30,13 +31,13 @@ export default function CommonBases({
       </AutoRow>
       <AutoRow gap="4px">
         <Option
-          transparent
+          backgroundColor={'bg3'}
           onClick={() => {
             if (!selectedCurrency || !currencyEquals(selectedCurrency, nativeCurrency)) {
               onSelect(nativeCurrency)
             }
           }}
-          disabled={selectedCurrency === nativeCurrency}
+          disabled={selectedCurrency === nativeCurrency || selectedCurrency===undefined}
         >
           <CurrencyLogo size="20px" currency={nativeCurrency} marginRight={8} />
           <Text fontWeight={500} fontSize={16}>

@@ -1,11 +1,14 @@
 import styled from 'styled-components'
 import { Colors } from '../../theme/styled'
 
+
+
 export const Option = styled.button<{
   active?: boolean
   width?: string
   transparent?: boolean
   backgroundColor?: keyof Colors
+  disabled?:boolean
 }>`
   display:flex;
   color: ${({ theme }) => theme.text1};
@@ -19,7 +22,8 @@ export const Option = styled.button<{
   padding: 6px 10px;
   outline: none;
   margin-right: 8px;
-  cursor: pointer;
+ filter: ${({ disabled }) => disabled && 'grayscale(1)'};
+  cursor:${({ disabled }) => (!disabled && 'pointer')}; ;
   border: none;
   background-color: ${({ active, theme, transparent, backgroundColor }) => {
     if (transparent) {
@@ -28,4 +32,8 @@ export const Option = styled.button<{
     return active ? theme.primary1 : backgroundColor ? theme[backgroundColor]: theme.bg2
   }};
   color: ${({ theme }) => theme.white};
+   :hover {
+   
+    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+  }
 `

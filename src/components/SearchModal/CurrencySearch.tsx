@@ -7,7 +7,7 @@ import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
-import CommonBases from './CommonBases'
+import CommonTokens from './CommonTokens'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
 import { useTokenComparator } from './sorting'
@@ -112,6 +112,7 @@ export function CurrencySearch({
     },
     [onDismiss, onCurrencySelect]
   )
+  console.log(selectedCurrency)
 
   // clear the input on open
   useEffect(() => {
@@ -182,7 +183,7 @@ export function CurrencySearch({
           />
         </Row>
         {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
+          <CommonTokens chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
       </PaddedColumn>
       <Separator style={{marginBottom:'20px'}} />
