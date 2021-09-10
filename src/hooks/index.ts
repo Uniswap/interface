@@ -31,13 +31,32 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
   const context = useWeb3ReactCore()
   const { library, chainId, ...web3React } = context
   const chainIdWhenNotConnected = useSelector<AppState, ChainId>(state => state.application.chainIdWhenNotConnected)
-  return context.active && context.chainId
-    ? ({
-        library: providers[context.chainId as ChainId],
-        chainId: context.chainId as ChainId,
-        ...web3React
-      } as Web3ReactContextInterface)
-    : { library: providers[chainIdWhenNotConnected], chainId: chainIdWhenNotConnected, ...web3React }
+  if (context.active && context.chainId) {
+    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+      console.log('rpc: ', context.chainId, NETWORK_URLS[context.chainId as ChainId])
+    }
+    return {
+      library: providers[context.chainId as ChainId],
+      chainId: context.chainId as ChainId,
+      ...web3React
+    } as Web3ReactContextInterface
+  } else {
+    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+      console.log('rpc: ', chainIdWhenNotConnected, NETWORK_URLS[chainIdWhenNotConnected as ChainId])
+    }
+    return {
+      library: providers[chainIdWhenNotConnected],
+      chainId: chainIdWhenNotConnected,
+      ...web3React
+    } as Web3ReactContextInterface
+  }
+  // return context.active && context.chainId
+  //   ? ({
+  //       library: providers[context.chainId as ChainId],
+  //       chainId: context.chainId as ChainId,
+  //       ...web3React
+  //     } as Web3ReactContextInterface)
+  //   : { library: providers[chainIdWhenNotConnected], chainId: chainIdWhenNotConnected, ...web3React }
 }
 
 export function useEagerConnect() {
