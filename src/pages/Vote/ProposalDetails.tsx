@@ -1,7 +1,7 @@
 import { ButtonPrimary } from 'components/Button'
 import { DarkCard, OutlineCard } from 'components/Card'
 import React from 'react'
-import { ChevronLeft, ExternalLink, ThumbsDown, ThumbsUp } from 'react-feather'
+import { Check, ChevronLeft, ExternalLink, ThumbsDown, ThumbsUp, XCircle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -17,6 +17,7 @@ import moment from 'moment'
 import { BlueCard } from 'components/Card'
 import { StyledInternalLink } from 'theme/components'
 import { useIsDarkMode } from 'state/user/hooks'
+import { CloseIcon } from 'theme/components'
 export const ProposalDetails = () => {
     const params = useParams<{id: string}>()
     const [data, setData] = React.useState<Proposal>()
@@ -127,9 +128,11 @@ export const ProposalDetails = () => {
                        <IconWrapper onClick={() => updateVoteIfApplicable(false)} style={{cursor:'pointer', width: 50, height: 50,  }}><ThumbsDown style={{color: accountVotedNo ? 'red' : 'inherit'}} size={'30px'}></ThumbsDown> {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length}</IconWrapper>
                     </div>
 
-                    {proposalExpired && <div style={{display:'block', width:'100%'}}>
-                        {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length > 
+                    {proposalExpired && <div style={{padding: 15, background: "gold", color: "#222", display:'block', width:'100%'}}>
+                        {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length < 
                         data?.votes?.filter((a: {wallet: string; vote:boolean})=> !!a.vote).length ? 'Proposal Accepted' : 'Proposal Denied'}
+                        {data?.votes?.filter((a: {wallet: string; vote:boolean})=> !a.vote).length < 
+                        data?.votes?.filter((a: {wallet: string; vote:boolean})=> !!a.vote).length ? <Check /> : <XCircle />}
                     </div>}
                 </Body>
                 </>
