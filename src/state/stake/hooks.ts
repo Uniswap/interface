@@ -34,20 +34,38 @@ export type MultiRewardPool = {
 }
 
 export const multiRewardPools: MultiRewardPool[] = [
+  // CELO-mcUSD
+  {
+    address: '0xbbC8C824c638fd238178a71F5b1E5Ce7e4Ce586B',
+    underlyingPool: '0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89',
+    basePool: '0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89',
+    numRewards: 2,
+    active: true,
+  },
+  // CELO-mcEUR
+  {
+    address: '0x0F3d01aea89dA0b6AD81712Edb96FA7AF1c17E9B',
+    underlyingPool: '0x08252f2E68826950d31D268DfAE5E691EE8a2426',
+    basePool: '0x08252f2E68826950d31D268DfAE5E691EE8a2426',
+    numRewards: 2,
+    active: true,
+  },
   // UBE-CELO
-  // {
-  //   address: '0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B',
-  //   underlyingPool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
-  //   basePool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
-  //   numRewards: 2,
-  // },
+  {
+    address: '0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B',
+    underlyingPool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+    basePool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+    numRewards: 2,
+    active: true,
+  },
   // rCELO-CELO
-  // {
-  //   address: '0x194478Aa91e4D7762c3E51EeE57376ea9ac72761',
-  //   underlyingPool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
-  //   basePool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
-  //   numRewards: 2,
-  // },
+  {
+    address: '0x194478Aa91e4D7762c3E51EeE57376ea9ac72761',
+    underlyingPool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+    basePool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+    numRewards: 2,
+    active: true,
+  },
   // mCUSD-mcEUR
   {
     address: '0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0',
