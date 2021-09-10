@@ -46,7 +46,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { useToggleVersionCallback, Version } from '../../hooks/useToggledVersion'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -116,39 +116,14 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v2Trade,
-    v3Trade: { trade: v3Trade, state: v3TradeState },
-    bestTrade,
-    toggledTrade: trade,
+    v3Trade: { state: v3TradeState },
+    bestTrade: trade,
     allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
-
-  const toggleVersionCallback = useToggleVersionCallback()
-
-  // automatically toggle best version
-  useEffect(() => {
-    if (!bestTrade || !trade) return
-
-    if (bestTrade !== trade) {
-      toggleVersionCallback()
-
-      ReactGA.event({
-        category: 'Swap',
-        action: 'Automatic Version Toggle',
-        label: [
-          trade?.inputAmount?.currency?.symbol,
-          trade?.outputAmount?.currency?.symbol,
-          v2Trade?.route.path.map((t) => t.symbol).join('-'),
-          v3Trade?.swaps.map(({ route }) => routeToString(route)).join(';'),
-          getTradeVersion(trade),
-        ].join('/'),
-      })
-    }
-  }, [bestTrade, toggleVersionCallback, trade, v2Trade?.route.path, v3Trade?.swaps])
 
   const {
     wrapType,
@@ -224,9 +199,18 @@ export default function Swap({ history }: RouteComponentProps) {
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
-  const routeNotFound = toggledVersion === Version.v3 ? !v3Trade?.swaps : !trade?.route
-  const isLoadingRoute = V3TradeState.LOADING === v3TradeState
-  const isSyncingRoute = V3TradeState.SYNCING === v3TradeState
+
+  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
+    () =>
+      getTradeVersion(trade) === Version.v3
+        ? [
+            !(trade as V3Trade<Currency, Currency, TradeType>).swaps,
+            V3TradeState.LOADING === v3TradeState,
+            V3TradeState.SYNCING === v3TradeState,
+          ]
+        : [!trade?.route, false, false],
+    [trade, v3TradeState]
+  )
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
@@ -412,7 +396,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
                 id="swap-currency-input"
-                loading={independentField === Field.OUTPUT && isSyncingRoute}
+                loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
               <ArrowWrapper clickable>
                 <ArrowDown
@@ -437,7 +421,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
-                loading={independentField === Field.INPUT && isSyncingRoute}
+                loading={independentField === Field.INPUT && routeIsSyncing}
               />
             </div>
 
@@ -460,15 +444,15 @@ export default function Swap({ history }: RouteComponentProps) {
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
-                    content={<SwapRoute trade={trade} loading={isSyncingRoute} />}
+                    content={<SwapRoute trade={trade} loading={routeIsSyncing} />}
                     placement="top"
                     hideArrow={true}
                   >
-                    <RouterLabel syncing={isSyncingRoute} />
+                    <RouterLabel syncing={routeIsSyncing} />
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>
-                  {isSyncingRoute ? (
+                  {routeIsSyncing ? (
                     <LoadingBar width={125} height={17} />
                   ) : (
                     <TradePrice
@@ -484,7 +468,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </ResponsiveTooltipContainer>
                     )}
                     content={
-                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} loading={isSyncingRoute} />
+                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} loading={routeIsSyncing} />
                     }
                     placement="top"
                     hideArrow={true}
@@ -518,7 +502,7 @@ export default function Swap({ history }: RouteComponentProps) {
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
-                    {isLoadingRoute ? (
+                    {routeIsLoading ? (
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -527,7 +511,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </TYPE.main>
                 </GreyCard>
-              ) : isSyncingRoute ? (
+              ) : routeIsSyncing ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     <Dots>
