@@ -1,6 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import Decimal from 'decimal.js-light'
-import { CurrencyAmount, Pair, Percent, Token, TokenAmount, USD } from 'dxswap-sdk'
+import { CurrencyAmount, Pair, Percent, Token, TokenAmount, USD } from '@swapr/sdk'
 import { ethers } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { DateTime, Duration } from 'luxon'

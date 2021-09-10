@@ -11,7 +11,7 @@ import {
   Currency,
   _10000,
   _100
-} from 'dxswap-sdk'
+} from '@swapr/sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'

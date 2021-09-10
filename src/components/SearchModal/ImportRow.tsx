@@ -1,5 +1,5 @@
 import React, { CSSProperties, useContext } from 'react'
-import { Token } from 'dxswap-sdk'
+import { Token } from '@swapr/sdk'
 import { AutoRow, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'

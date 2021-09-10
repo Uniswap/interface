@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { CurrencyAmount, Percent, Token } from 'dxswap-sdk'
+import { CurrencyAmount, Percent, Token } from '@swapr/sdk'
 import { TYPE } from '../../../../theme'
 import DoubleCurrencyLogo from '../../../DoubleLogo'
 import { DarkCard } from '../../../Card'

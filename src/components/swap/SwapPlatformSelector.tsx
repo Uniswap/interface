@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
+import { CurrencyAmount, RoutablePlatform, Trade, TradeType } from '@swapr/sdk'
 import { AutoColumn } from '../Column'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'

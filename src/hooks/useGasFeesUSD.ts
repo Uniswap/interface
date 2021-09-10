@@ -1,4 +1,4 @@
-import { CurrencyAmount, USD } from 'dxswap-sdk'
+import { CurrencyAmount, USD } from '@swapr/sdk'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'

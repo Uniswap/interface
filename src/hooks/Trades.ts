@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, RoutablePlatform, Token, Trade } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair, RoutablePlatform, Token, Trade } from '@swapr/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 

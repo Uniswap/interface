@@ -12,7 +12,7 @@ import {
   Currency,
   RoutablePlatform,
   SWPR
-} from 'dxswap-sdk'
+} from '@swapr/sdk'
 import { authereum, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
@@ -297,7 +297,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
       decimals: Currency.ETHER.decimals || 18
     },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://explorer.arbitrum.io']
+    blockExplorerUrls: ['https://arbiscan.io']
   },
   [ChainId.ARBITRUM_RINKEBY]: {
     chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,

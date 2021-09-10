@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ChainId, SWPR, TokenAmount } from 'dxswap-sdk'
+import { ChainId, SWPR, TokenAmount } from '@swapr/sdk'
 import { useClaimWhitelist } from '../../state/claim/hooks'
 import { BigNumber } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, TokenAmount, Percent, JSBI, ChainId, RoutablePlatform } from 'dxswap-sdk'
+import { Currency, currencyEquals, TokenAmount, Percent, JSBI, ChainId, RoutablePlatform } from '@swapr/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'

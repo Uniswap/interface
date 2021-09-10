@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
-import { ChainId } from 'dxswap-sdk'
+import { ChainId } from '@swapr/sdk'
 
 export const defaultSubgraphClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-alpha',

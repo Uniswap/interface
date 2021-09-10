@@ -6,7 +6,7 @@ import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/swapr-unsupported
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { WrappedTokenInfo } from './wrapped-token-info'
-import { ChainId, Currency, Token } from 'dxswap-sdk'
+import { ChainId, Currency, Token } from '@swapr/sdk'
 import { useActiveWeb3React } from '../../hooks'
 
 export type TokenAddressMap = Readonly<{

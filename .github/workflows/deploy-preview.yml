@@ -1,0 +1,60 @@
+name: IPFS Preview Deploy
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  ipfs-preview-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: Inject slug variables
+        uses: rlespinasse/github-slug-action@3.5.1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{matrix.node-version}}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Start Deployment
+        uses: bobheadxi/deployments@v0.6.0
+        id: deployment
+        with:
+          step: start
+          token: ${{secrets.GITHUB_TOKEN}}
+          env: ${{env.GITHUB_HEAD_REF_SLUG_URL || env.GITHUB_REF_SLUG_URL}}
+          ref: ${{github.head_ref}}
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install --frozen-lockfile
+      - name: Build
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: ipfs-build
+        env:
+          REACT_APP_FACTORY_ADDRESS_ARBITRUM_ONE: '0xBF9173b60a30B9ff8c37cac787B6EE87D5e47916'
+          REACT_APP_ROUTER_ADDRESS_ARBITRUM_ONE: '0xf20D10E306e34F9d830715eeEF577AC16B5Ea72e'
+          REACT_APP_STAKING_REWARDS_FACTORY_ADDRESS_ARBITRUM_ONE: '0x85B94253ACd8C06525B509d94F9a9c5aF78a012f'
+          REACT_APP_SWPR_ADDRESS_ARBITRUM_ONE: '0x955b9fe60a5b5093df9Dc4B1B18ec8e934e77162'
+          REACT_APP_SWPR_CLAIMER_ADDRESS_ARBITRUM_ONE: '0xe54942077Df7b8EEf8D4e6bCe2f7B58B0082b0cd'
+          REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH: 'QmcjTAvDJZU339jrc9Ky2pXKR68R1SjnwdyGSQjt1kad9r'
+      - name: Deploy to IPFS
+        uses: web3-storage/add-to-web3@v1
+        id: web3
+        with:
+          web3_token: ${{secrets.WEB3_STORAGE_TOKEN}}
+          path_to_add: 'build'
+      - name: Update Deployment Status
+        uses: bobheadxi/deployments@v0.6.0
+        if: always()
+        with:
+          step: finish
+          token: ${{secrets.GITHUB_TOKEN}}
+          status: ${{job.status}}
+          deployment_id: ${{steps.deployment.outputs.deployment_id}}
+          env_url: 'https://${{steps.web3.outputs.cid}}.ipfs.dweb.link'

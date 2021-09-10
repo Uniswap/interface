@@ -1,4 +1,4 @@
-import { Currency, Token } from 'dxswap-sdk'
+import { Currency, Token } from '@swapr/sdk'
 import { TokenList } from '@uniswap/token-lists'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'

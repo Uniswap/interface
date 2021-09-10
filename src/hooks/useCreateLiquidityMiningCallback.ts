@@ -1,4 +1,4 @@
-import { LiquidityMiningCampaign } from 'dxswap-sdk'
+import { LiquidityMiningCampaign } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { useStakingRewardsDistributionFactoryContract } from './useContract'
 import { TransactionResponse } from '@ethersproject/providers'

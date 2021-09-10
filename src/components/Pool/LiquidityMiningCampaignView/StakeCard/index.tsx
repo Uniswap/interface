@@ -1,4 +1,4 @@
-import { JSBI, LiquidityMiningCampaign, parseBigintIsh, TokenAmount } from 'dxswap-sdk'
+import { JSBI, LiquidityMiningCampaign, parseBigintIsh, TokenAmount } from '@swapr/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Box, Flex } from 'rebass'

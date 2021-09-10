@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from '@swapr/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'

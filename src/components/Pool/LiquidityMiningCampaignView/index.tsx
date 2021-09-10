@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { LiquidityMiningCampaign } from 'dxswap-sdk'
+import { LiquidityMiningCampaign } from '@swapr/sdk'
 import { DarkCard } from '../../Card'
 import Information from './Information'
 import StakeCard from './StakeCard'

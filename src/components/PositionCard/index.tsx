@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, TokenAmount } from 'dxswap-sdk'
+import { JSBI, Pair, Percent, TokenAmount } from '@swapr/sdk'
 import React, { useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'

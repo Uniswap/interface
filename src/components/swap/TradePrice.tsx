@@ -1,5 +1,5 @@
 import React from 'react'
-import { Price } from 'dxswap-sdk'
+import { Price } from '@swapr/sdk'
 import { TYPE } from '../../theme'
 import styled from 'styled-components'
 import { transparentize } from 'polished'

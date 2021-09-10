@@ -1,6 +1,6 @@
 {
-  "name": "dxswap-dapp",
-  "version": "1.0.0-beta.4",
+  "name": "@swapr/frontend",
+  "version": "1.0.0-beta.4.1",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
@@ -11,6 +11,9 @@
     "@reach/portal": "^0.10.3",
     "@react-spring/web": "^9.2.4",
     "@reduxjs/toolkit": "^1.6.1",
+    "@swapr/core": "^0.3.11",
+    "@swapr/periphery": "^0.3.15",
+    "@swapr/sdk": "^0.10.4",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",
@@ -42,9 +45,6 @@
     "cross-env": "^7.0.2",
     "cypress": "^4.11.0",
     "decimal.js-light": "^2.5.1",
-    "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.9",
-    "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.10",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.10.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",

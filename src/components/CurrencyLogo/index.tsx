@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, DXD, SWPR } from 'dxswap-sdk'
+import { ChainId, Currency, Token, DXD, SWPR } from '@swapr/sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'

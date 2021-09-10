@@ -1,4 +1,4 @@
-import { PricedTokenAmount } from 'dxswap-sdk'
+import { PricedTokenAmount } from '@swapr/sdk'
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'

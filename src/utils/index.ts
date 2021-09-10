@@ -3,8 +3,8 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider, JsonRpcProvider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/IDXswapRouter.json'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, RoutablePlatform } from 'dxswap-sdk'
+import { abi as IDXswapRouterABI } from '@swapr/periphery/build/IDXswapRouter.json'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, Pair, RoutablePlatform } from '@swapr/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import Decimal from 'decimal.js-light'
 import { commify } from 'ethers/lib/utils'
@@ -30,7 +30,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
 const getExplorerPrefix = (chainId: ChainId) => {
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
-      return 'https://explorer.arbitrum.io/#'
+      return 'https://arbiscan.io'
     case ChainId.ARBITRUM_RINKEBY:
       return 'https://rinkeby-explorer.arbitrum.io/#'
     case ChainId.XDAI:
