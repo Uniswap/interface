@@ -49,7 +49,7 @@ const StyledCard = styled(DarkCard)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 32px 18px;
   `}
-`;
+`
 
 interface PairViewProps {
   campaign?: LiquidityMiningCampaign | null

@@ -23,7 +23,7 @@ interface ListFilterProps {
 
 export default function ListFilter({ disabled, filter, onFilterChange }: ListFilterProps) {
   const { account } = useWeb3React()
-  
+
   const handleFilterRadioChange = useCallback(
     event => {
       onFilterChange(PairsFilterType[event.target.value as keyof typeof PairsFilterType])

@@ -12,7 +12,7 @@ import TabTitle from './TabTitle'
 
 const View = styled(AutoColumn)`
   margin-top: 20px;
-`;
+`
 
 interface LiquidityMiningCampaignsListProps {
   pair?: Pair

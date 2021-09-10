@@ -13,7 +13,13 @@ interface TokenAmountDisplayerProps {
   className?: string
 }
 
-function TokenAmountDisplayer({ amount, fontSize = '14px', alignRight, showUSDValue, className }: TokenAmountDisplayerProps) {
+function TokenAmountDisplayer({
+  amount,
+  fontSize = '14px',
+  alignRight,
+  showUSDValue,
+  className
+}: TokenAmountDisplayerProps) {
   const { nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
 
   return (
