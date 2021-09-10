@@ -95,15 +95,6 @@ const Header = styled.h2`
   margin: 0;
   padding-right: 30px;
 `
-const BodyWrapper = styled.p`
-  font-size: 12px;
-  grid-column: 1 / 3;
-  line-height: 143%;
-  margin: 0;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-column: 2 / 3;
-  }
-`
 const LinkOutCircle = styled(ArrowDownCircle)`
   transform: rotate(230deg);
   width: 20px;
@@ -178,8 +169,8 @@ export function NetworkAlert() {
         </Header>
         <Body>
           <Trans>
-            Uniswap is now live on the Optimistic Ethereum (OΞ) network. Trade with low fees and nearly instant
-            transaction times on Layer 2. To get started, deposit assets from Ethereum to OΞ.
+            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
+            swap them.
           </Trans>{' '}
           <ReadMoreLink href={readMoreLink}>
             <Trans>Read more</Trans>
