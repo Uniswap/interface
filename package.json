@@ -1,6 +1,6 @@
 {
   "name": "@swapr/frontend",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.4.1",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
