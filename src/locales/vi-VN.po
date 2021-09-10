@@ -238,6 +238,10 @@ msgstr ""
 msgid "CLAIMED"
 msgstr "ĐÃ NHẬN"
 
+#: src/pages/Swap/index.tsx
+msgid "Calculating best route"
+msgstr "Đang tính giá"
+
 #: src/pages/Static/About.tsx
 msgid "Capital Amp Factor = 10"
 msgstr "Hệ Số AMP Thanh Khoản = 10"
@@ -1461,7 +1465,7 @@ msgid "You are creating a pool"
 msgstr ""
 
 #: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0} network"
+msgid "You are currently browsing DMM on the {0}"
 msgstr "Bạn hiện đang duyệt DMM trên mạng {0}"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx

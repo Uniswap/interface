@@ -16,7 +16,7 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -243,6 +243,12 @@ export default function Swap({ history }: RouteComponentProps) {
     onCurrencySelection
   ])
 
+  const isLoading =
+    currencies[Field.INPUT] &&
+    currencies[Field.OUTPUT] &&
+    (parsedAmounts[Field.INPUT] || parsedAmounts[Field.OUTPUT]) &&
+    !v2Trade
+
   return (
     <>
       <TokenWarningModal
@@ -361,13 +367,21 @@ export default function Swap({ history }: RouteComponentProps) {
               <ButtonLight onClick={toggleWalletModal}>
                 <Trans>Connect Wallet</Trans>
               </ButtonLight>
+            ) : isLoading ? (
+              <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px' }}>
+                <TYPE.main mb="4px">
+                  <Dots>
+                    <Trans>Calculating best route</Trans>
+                  </Dots>
+                </TYPE.main>
+              </GreyCard>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
-              <GreyCard style={{ textAlign: 'center' }}>
+              <GreyCard style={{ textAlign: 'center', borderRadius: '5.5px' }}>
                 <TYPE.main mb="4px">
                   <Trans>Insufficient liquidity for this trade.</Trans>
                 </TYPE.main>
