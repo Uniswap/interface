@@ -238,6 +238,10 @@ msgstr ""
 msgid "CLAIMED"
 msgstr "청구됨"
 
+#: src/pages/Swap/index.tsx
+msgid "Calculating best route"
+msgstr "최적 경로 계산"
+
 #: src/pages/Static/About.tsx
 msgid "Capital Amp Factor = 10"
 msgstr "자본 AMP 계수 = 10"
@@ -1461,7 +1465,7 @@ msgid "You are creating a pool"
 msgstr ""
 
 #: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0} network"
+msgid "You are currently browsing DMM on the {0}"
 msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
