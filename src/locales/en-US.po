@@ -238,6 +238,10 @@ msgstr "CLAIM"
 msgid "CLAIMED"
 msgstr "CLAIMED"
 
+#: src/pages/Swap/index.tsx
+msgid "Calculating best route"
+msgstr "Calculating best route"
+
 #: src/pages/Static/About.tsx
 msgid "Capital Amp Factor = 10"
 msgstr "Capital Amp Factor = 10"
@@ -1461,8 +1465,8 @@ msgid "You are creating a pool"
 msgstr "You are creating a pool"
 
 #: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0} network"
-msgstr "You are currently browsing DMM on the {0} network"
+msgid "You are currently browsing DMM on the {0}"
+msgstr "You are currently browsing DMM on the {0}"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."

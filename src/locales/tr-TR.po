@@ -238,6 +238,10 @@ msgstr ""
 msgid "CLAIMED"
 msgstr "ALINDI"
 
+#: src/pages/Swap/index.tsx
+msgid "Calculating best route"
+msgstr "En iyi rotayı hesaplama"
+
 #: src/pages/Static/About.tsx
 msgid "Capital Amp Factor = 10"
 msgstr "Sermaye Amp Faktörü = 10"
@@ -1461,7 +1465,7 @@ msgid "You are creating a pool"
 msgstr ""
 
 #: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0} network"
+msgid "You are currently browsing DMM on the {0}"
 msgstr "Şu anda {0} ağında DMM'ye göz atıyorsunuz"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
