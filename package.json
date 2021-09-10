@@ -155,5 +155,7 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "@davatar/react": "^1.0.2"
+  }
 }
