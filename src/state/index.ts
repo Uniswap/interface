@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
+import { setupListeners } from '@reduxjs/toolkit/query/react'
 
 import application from './application/reducer'
 import { updateVersion } from './global/actions'
@@ -43,6 +44,8 @@ const store = configureStore({
 })
 
 store.dispatch(updateVersion())
+
+setupListeners(store.dispatch)
 
 export default store
 

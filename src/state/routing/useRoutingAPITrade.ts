@@ -57,7 +57,10 @@ export function useRoutingAPITradeExactIn(amountIn?: CurrencyAmount<Currency>, c
     type: 'exactIn',
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, { pollingInterval: ms`10s` })
+  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
+    pollingInterval: ms`10s`,
+    refetchOnFocus: true,
+  })
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
@@ -115,7 +118,10 @@ export function useRoutingAPITradeExactOut(currencyIn?: Currency, amountOut?: Cu
     type: 'exactOut',
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, { pollingInterval: ms`10s` })
+  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
+    pollingInterval: ms`10s`,
+    refetchOnFocus: true,
+  })
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
