@@ -15,21 +15,47 @@ const simpleRpcProvider = new ethers.providers.JsonRpcProvider(
 )
 
 export const providers: {
-  [chainId in ChainId]?: ethers.providers.JsonRpcProvider
+  [chainId in ChainId]?: any
 } = {
   [ChainId.MAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MAINNET]),
   [ChainId.BSCMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.BSCMAINNET]),
   [ChainId.AVAXMAINNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.AVAXMAINNET]),
-  [ChainId.MATIC]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MATIC])
+  [ChainId.MATIC]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MATIC]),
+  [ChainId.ROPSTEN]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.ROPSTEN]),
+  [ChainId.MUMBAI]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.MUMBAI]),
+  [ChainId.AVAXTESTNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.AVAXTESTNET]),
+  [ChainId.BSCTESTNET]: new ethers.providers.JsonRpcProvider(NETWORK_URLS[ChainId.BSCTESTNET])
 }
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore()
+  // const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
+
   const { library, chainId, ...web3React } = context
   const chainIdWhenNotConnected = useSelector<AppState, ChainId>(state => state.application.chainIdWhenNotConnected)
-  return context.active
-    ? context
-    : { library: providers[chainIdWhenNotConnected], chainId: chainIdWhenNotConnected, ...web3React }
+  if (context.active && context.chainId) {
+    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+      console.log('rpc: ', context.chainId, NETWORK_URLS[context.chainId as ChainId])
+    }
+    const provider = providers[context.chainId as ChainId]
+    provider.provider = { isMetaMask: true }
+    provider.send = context.library.__proto__.send
+    provider.jsonRpcFetchFunc = context.library.jsonRpcFetchFunc
+    return {
+      library: provider,
+      chainId: context.chainId as ChainId,
+      ...web3React
+    } as Web3ReactContextInterface
+  } else {
+    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+      console.log('rpc: ', chainIdWhenNotConnected, NETWORK_URLS[chainIdWhenNotConnected as ChainId])
+    }
+    return {
+      library: providers[chainIdWhenNotConnected],
+      chainId: chainIdWhenNotConnected,
+      ...web3React
+    } as Web3ReactContextInterface
+  }
 }
 
 export function useEagerConnect() {
@@ -73,7 +99,6 @@ export function useInactiveListener(suppress = false) {
 
   useEffect(() => {
     const { ethereum } = window
-
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         // eat errors

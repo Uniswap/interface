@@ -129,7 +129,9 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
     const fn = async function() {
       timeout = setTimeout(() => {
         if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-          console.log('trade amount: ', currencyAmountIn.toSignificant(10))
+          if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+            console.log('trade amount: ', currencyAmountIn.toSignificant(10))
+          }
           setTrade(
             Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
               maxHops: 3,
@@ -166,7 +168,9 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
     const fn = async function() {
       timeout = setTimeout(() => {
         if (currencyAmountOut && currencyIn && allowedPairs.length > 0) {
-          console.log('trade amount: ', currencyAmountOut.toSignificant(10))
+          if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+            console.log('trade amount: ', currencyAmountOut.toSignificant(10))
+          }
           setTrade(
             Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
               maxHops: 3,
