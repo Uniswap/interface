@@ -22,6 +22,7 @@ import { BlueCard } from 'components/Card'
 import { TYPE } from 'theme'
 import { GreyCard } from 'components/Card'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
+import { walletconnect } from 'connectors'
 const DisabledMask = styled.div`
   position: relative;
   pointer-events: none;
@@ -152,8 +153,8 @@ export const GainsTracker = () => {
       const gains = localStorage.getItem(CUSTOM_GAINS_KEY)
       if (gains) {
         const model = JSON.parse(gains) as StoredAndTrackedGains
-
-        const w3 = new Web3(window.ethereum as any).eth
+        const provider = window.ethereum ? window.ethereum : walletconnect
+        const w3 = new Web3(provider as any).eth
         const calc = +(+selectedCurrencyBalance.toFixed(2) - +model.storedBalance).toFixed(0)
         const routerContr = new w3.Contract(routerAbi as any, routerAddress)
         const ten9 = 10 ** 9
