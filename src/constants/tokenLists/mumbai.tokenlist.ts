@@ -44,6 +44,30 @@ export const MUMBAI_TOKEN_LIST = {
       symbol: 'WMATIC',
       name: 'Wrapped Matic',
       decimals: 18
+    },
+    {
+      chainId: 80001,
+      address: '0x02CBE6055F8aad745321f70d6aDD4711455c7F45',
+      symbol: 'jEUR',
+      name: 'Jarvis Synthetic Euro',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/ZvP634G.png'
+    },
+    {
+      chainId: 80001,
+      address: '0x915E1f55eC2dc1524101ef44d4a0EebFe10Bc6bc',
+      symbol: 'jGBP',
+      name: 'Jarvis Synthetic British Pound',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/zOLD6Vf.png'
+    },
+    {
+      chainId: 80001,
+      address: '0x2b7D8FB31676Ab02DA37a124Acfa726125b1B95b',
+      symbol: 'jCHF',
+      name: 'Jarvis Synthetic Swiss Franc',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/EknGhAl.png'
     }
   ],
   version: {

@@ -55,6 +55,30 @@ export const MATIC_TOKEN_LIST = {
       name: 'xDollar Stablecoin',
       decimals: 18,
       logoURI: 'https://assets.coingecko.com/coins/images/16291/small/xUSD-web-transparent.png'
+    },
+    {
+      chainId: 137,
+      address: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
+      symbol: 'jEUR',
+      name: 'Jarvis Synthetic Euro',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/ZvP634G.png'
+    },
+    {
+      chainId: 137,
+      address: '0x767058F11800FBA6A682E73A6e79ec5eB74Fac8c',
+      symbol: 'jGBP',
+      name: 'Jarvis Synthetic British Pound',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/zOLD6Vf.png'
+    },
+    {
+      chainId: 137,
+      address: '0xbD1463F02f61676d53fd183C2B19282BFF93D099',
+      symbol: 'jCHF',
+      name: 'Jarvis Synthetic Swiss Franc',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/EknGhAl.png'
     }
   ],
   version: {
