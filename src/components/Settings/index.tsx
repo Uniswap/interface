@@ -17,6 +17,8 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { Percent } from '@uniswap/sdk-core'
+import { useActiveWeb3React } from 'hooks/web3'
+import { SupportedChainId } from 'constants/chains'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -115,6 +117,8 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
+  const { chainId } = useActiveWeb3React()
+
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -194,27 +198,29 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Trans>Interface Settings</Trans>
             </Text>
 
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  <Trans>Auto Router</Trans>
-                </TYPE.black>
-                <QuestionHelper
-                  text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
+            {chainId === SupportedChainId.MAINNET && (
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                    <Trans>Auto Router</Trans>
+                  </TYPE.black>
+                  <QuestionHelper
+                    text={<Trans>Use the Uniswap Labs API to get better pricing through a more efficient route.</Trans>}
+                  />
+                </RowFixed>
+                <Toggle
+                  id="toggle-optimized-router-button"
+                  isActive={!legacyRouter}
+                  toggle={() => {
+                    ReactGA.event({
+                      category: 'Routing',
+                      action: legacyRouter ? 'enable routing API' : 'disable routing API',
+                    })
+                    setLegacyRouter(!legacyRouter)
+                  }}
                 />
-              </RowFixed>
-              <Toggle
-                id="toggle-optimized-router-button"
-                isActive={!legacyRouter}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: legacyRouter ? 'enable routing API' : 'disable routing API',
-                  })
-                  setLegacyRouter(!legacyRouter)
-                }}
-              />
-            </RowBetween>
+              </RowBetween>
+            )}
 
             <RowBetween>
               <RowFixed>

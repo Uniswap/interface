@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { LoadingBar } from 'components/Loader/LoadingBar'
+import { opacityLoadingStyles } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { RouterLabel } from 'components/swap/RouterLabel'
@@ -17,7 +17,6 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { routeToString } from 'utils/routes'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -452,15 +451,13 @@ export default function Swap({ history }: RouteComponentProps) {
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>
-                  {routeIsSyncing ? (
-                    <LoadingBar width={125} height={17} />
-                  ) : (
+                  <div style={opacityLoadingStyles(routeIsSyncing)}>
                     <TradePrice
                       price={trade.executionPrice}
                       showInverted={showInverted}
                       setShowInverted={setShowInverted}
                     />
-                  )}
+                  </div>
                   <MouseoverTooltipContent
                     Container={({ children }) => (
                       <ResponsiveTooltipContainer origin="bottom right" width={'295px'}>

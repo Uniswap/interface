@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
 import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from './useCombinedV3Trade'
-import { useRouterTradeExactIn, useRouterTradeExactOut } from '../state/routing/useRoutingAPITrade'
+import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from '../state/routing/useRoutingAPITrade'
 import useDebounce from './useDebounce'
 
 // test fixtures
@@ -20,8 +20,8 @@ jest.mock('../state/routing/useRouterTrade')
 jest.mock('./useLocalV3Trade')
 
 // useRouterTrade mocks
-const mockUseRouterTradeExactIn = useRouterTradeExactIn as jest.MockedFunction<typeof useRouterTradeExactIn>
-const mockUseRouterTradeExactOut = useRouterTradeExactOut as jest.MockedFunction<typeof useRouterTradeExactOut>
+const mockUseRouterTradeExactIn = useRoutingAPITradeExactIn as jest.MockedFunction<typeof useRoutingAPITradeExactIn>
+const mockUseRouterTradeExactOut = useRoutingAPITradeExactOut as jest.MockedFunction<typeof useRoutingAPITradeExactOut>
 
 // useLocalV3Trade mocks
 const mockUseLocalV3TradeExactIn = useLocalV3TradeExactIn as jest.MockedFunction<typeof useLocalV3TradeExactIn>

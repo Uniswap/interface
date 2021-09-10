@@ -3,7 +3,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AutoColumn } from 'components/Column'
-import { LoadingBar } from 'components/Loader/LoadingBar'
+import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
@@ -32,13 +32,17 @@ export default memo(function SwapRoute({
     <AutoColumn gap="12px">
       <RowBetween>
         <RouterLabel />
-        <TYPE.black fontSize={14}>
-          {getTradeVersion(trade) === Version.v2 ? <Trans>via V2</Trans> : <Trans>via V3</Trans>}
-        </TYPE.black>
+        {!loading && (
+          <TYPE.black fontSize={14}>
+            {getTradeVersion(trade) === Version.v2 ? <Trans>via V2</Trans> : <Trans>via V3</Trans>}
+          </TYPE.black>
+        )}
       </RowBetween>
       <Separator />
       {loading ? (
-        <LoadingBar width={400} height={30} />
+        <LoadingRows>
+          <div style={{ width: '400px', height: '30px' }} />
+        </LoadingRows>
       ) : (
         <RoutingDiagram
           currencyIn={trade.inputAmount.currency}

@@ -106,8 +106,6 @@ export function useExpertModeManager(): [boolean, () => void] {
 }
 
 export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => void] {
-  const { chainId } = useActiveWeb3React()
-
   const dispatch = useAppDispatch()
 
   const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
@@ -119,7 +117,14 @@ export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => vo
     [dispatch]
   )
 
-  return [legacyRouter || chainId !== SupportedChainId.MAINNET, setLegacyRouter]
+  return [legacyRouter, setLegacyRouter]
+}
+
+export function useRoutingAPIEnabled(): boolean {
+  const { chainId } = useActiveWeb3React()
+  const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
+
+  return chainId === SupportedChainId.MAINNET && !legacyRouter
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

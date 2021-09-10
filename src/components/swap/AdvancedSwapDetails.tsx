@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { LoadingBar } from 'components/Loader/LoadingBar'
+import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components/macro'
 import { TYPE } from '../../theme'
@@ -27,7 +27,13 @@ function TextWithLoadingPlaceholder({
   width: number
   children: React.ReactNode
 }) {
-  return loading ? <LoadingBar height={15} width={width} /> : <>{children}</>
+  return loading ? (
+    <LoadingRows>
+      <div style={{ height: '15px', width: `${width}px` }} />
+    </LoadingRows>
+  ) : (
+    <>{children}</>
+  )
 }
 
 export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }: AdvancedSwapDetailsProps) {

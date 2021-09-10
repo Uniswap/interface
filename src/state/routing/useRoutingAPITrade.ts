@@ -5,10 +5,8 @@ import { BigNumber } from 'ethers'
 import { V3TradeState } from 'hooks/useCombinedV3Trade'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import ReactGA from 'react-ga'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { useIsLegacyRouter } from 'state/user/hooks'
 import { useRoutes } from './useRoutes'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
@@ -16,29 +14,50 @@ function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T 
 
   if (!localBlockNumber) return undefined
   if (localBlockNumber - dataBlockNumber > maxBlockAge) {
-    ReactGA.exception({ description: `Routing API stale (app: ${localBlockNumber} api: ${dataBlockNumber}` })
     return undefined
   }
 
   return data
 }
 
-export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
-  const [legacyRouter] = useIsLegacyRouter()
+/**
+ * Returns query arguments for the Routing API query or undefined if the
+ * query should be skipped.
+ */
+function useRoutingAPIArguments({
+  tokenIn,
+  tokenOut,
+  amount,
+  type,
+}: {
+  tokenIn: Currency | undefined
+  tokenOut: Currency | undefined
+  amount: CurrencyAmount<Currency> | undefined
+  type: 'exactIn' | 'exactOut'
+}) {
+  if (!tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)) {
+    return undefined
+  }
 
-  const { isLoading, isError, data } = useGetQuoteQuery(
-    !legacyRouter && amountIn && currencyOut && !amountIn.currency.equals(currencyOut)
-      ? {
-          tokenInAddress: amountIn.currency.wrapped.address,
-          tokenInChainId: amountIn.currency.chainId,
-          tokenOutAddress: currencyOut.wrapped.address,
-          tokenOutChainId: currencyOut.chainId,
-          amount: amountIn.quotient.toString(),
-          type: 'exactIn',
-        }
-      : skipToken,
-    { pollingInterval: ms`10s` }
-  )
+  return {
+    tokenInAddress: tokenIn.wrapped.address,
+    tokenInChainId: tokenIn.chainId,
+    tokenOutAddress: tokenOut.wrapped.address,
+    tokenOutChainId: tokenOut.chainId,
+    amount: amount.quotient.toString(),
+    type,
+  }
+}
+
+export function useRoutingAPITradeExactIn(amountIn?: CurrencyAmount<Currency>, currencyOut?: Currency) {
+  const queryArgs = useRoutingAPIArguments({
+    tokenIn: amountIn?.currency,
+    tokenOut: currencyOut,
+    amount: amountIn,
+    type: 'exactIn',
+  })
+
+  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, { pollingInterval: ms`10s` })
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
@@ -63,7 +82,7 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
     const amountOut =
       currencyOut && quoteResult ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote) : undefined
 
-    if (isError || !amountOut || !routes || routes.length === 0 || legacyRouter) {
+    if (isError || !amountOut || !routes || routes.length === 0 || !queryArgs) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -85,25 +104,18 @@ export function useRouterTradeExactIn(amountIn?: CurrencyAmount<Currency>, curre
       gasPriceWei,
       gasUseEstimate,
     }
-  }, [amountIn, currencyOut, isLoading, quoteResult, isError, routes, legacyRouter])
+  }, [amountIn, currencyOut, isLoading, quoteResult, isError, routes, queryArgs])
 }
 
-export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
-  const [legacyRouter] = useIsLegacyRouter()
+export function useRoutingAPITradeExactOut(currencyIn?: Currency, amountOut?: CurrencyAmount<Currency>) {
+  const queryArgs = useRoutingAPIArguments({
+    tokenIn: currencyIn,
+    tokenOut: amountOut?.currency,
+    amount: amountOut,
+    type: 'exactOut',
+  })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(
-    !legacyRouter && amountOut && currencyIn && !amountOut.currency.equals(currencyIn)
-      ? {
-          tokenInAddress: currencyIn.wrapped.address,
-          tokenInChainId: currencyIn.chainId,
-          tokenOutAddress: amountOut.currency.wrapped.address,
-          tokenOutChainId: amountOut.currency.chainId,
-          amount: amountOut.quotient.toString(),
-          type: 'exactOut',
-        }
-      : skipToken,
-    { pollingInterval: ms`10s` }
-  )
+  const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, { pollingInterval: ms`10s` })
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
@@ -126,7 +138,7 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
 
     const amountIn = currencyIn && quoteResult ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote) : undefined
 
-    if (isError || !amountIn || !routes || routes.length === 0 || legacyRouter) {
+    if (isError || !amountIn || !routes || routes.length === 0 || !queryArgs) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -147,5 +159,5 @@ export function useRouterTradeExactOut(currencyIn?: Currency, amountOut?: Curren
       gasPriceWei,
       gasUseEstimate,
     }
-  }, [amountOut, currencyIn, isLoading, quoteResult, isError, routes, legacyRouter])
+  }, [amountOut, currencyIn, isLoading, quoteResult, isError, routes, queryArgs])
 }

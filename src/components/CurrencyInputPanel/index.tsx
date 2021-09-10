@@ -1,25 +1,25 @@
-import { Pair } from '@uniswap/v2-sdk'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { useState, useCallback, ReactNode } from 'react'
-import styled from 'styled-components/macro'
+import { Pair } from '@uniswap/v2-sdk'
+import { AutoColumn } from 'components/Column'
+import { opacityLoadingStyles } from 'components/Loader/styled'
 import { darken } from 'polished'
+import { ReactNode, useCallback, useState } from 'react'
+import { Lock } from 'react-feather'
+import styled from 'styled-components/macro'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import useTheme from '../../hooks/useTheme'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import { TYPE } from '../../theme'
+import { ButtonGray } from '../Button'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ButtonGray } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
-import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { Trans } from '@lingui/macro'
-import useTheme from '../../hooks/useTheme'
-import { Lock } from 'react-feather'
-import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from '../Row'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { LoadingBar } from 'components/Loader/LoadingBar'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -255,7 +255,7 @@ export default function CurrencyInputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              style={loading ? { opacity: '.3', transition: 'opacity 0.2s ease-in-out' } : {}}
+              style={opacityLoadingStyles(loading)}
             />
           )}
         </InputRow>
@@ -290,8 +290,7 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              {/* TODO(judo): refactor and polish */}
-              <div style={loading ? { opacity: '.3', transition: 'opacity 0.2s ease-in-out' } : {}}>
+              <div style={opacityLoadingStyles(loading)}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
               </div>
             </RowBetween>

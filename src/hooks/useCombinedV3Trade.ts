@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
-import { useRouterTradeExactIn, useRouterTradeExactOut } from 'state/routing/useRoutingAPITrade'
+import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from 'state/routing/useRoutingAPITrade'
+import { useRoutingAPIEnabled } from 'state/user/hooks'
 import useDebounce from './useDebounce'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
 
@@ -12,8 +13,6 @@ export enum V3TradeState {
   VALID,
   SYNCING,
 }
-
-const shouldUseFallback = (state: V3TradeState) => [V3TradeState.NO_ROUTE_FOUND].includes(state)
 
 /**
  * Returns the best v3 trade for a desired exact input swap.
@@ -30,10 +29,15 @@ export function useV3TradeExactIn(
   gasPriceWei?: BigNumber
   gasUseEstimate?: BigNumber
 } {
+  const routingAPIEnabled = useRoutingAPIEnabled()
+
   const debouncedAmountIn = useDebounce(amountIn, 250)
 
   // attempt to use multi-route trade
-  const multiRouteTradeExactIn = useRouterTradeExactIn(debouncedAmountIn, currencyOut)
+  const multiRouteTradeExactIn = useRoutingAPITradeExactIn(
+    routingAPIEnabled ? debouncedAmountIn : undefined,
+    currencyOut
+  )
 
   // consider trade debouncing when inputs/outputs do not match
   const debouncing =
@@ -43,9 +47,10 @@ export function useV3TradeExactIn(
       !amountIn.currency.equals(multiRouteTradeExactIn.trade.inputAmount.currency) ||
       !currencyOut?.equals(multiRouteTradeExactIn.trade.outputAmount.currency))
 
-  const useFallback = !debouncing && shouldUseFallback(multiRouteTradeExactIn.state)
+  const useFallback =
+    !debouncing && (!routingAPIEnabled || multiRouteTradeExactIn.state === V3TradeState.NO_ROUTE_FOUND)
 
-  // only local router if multi-route trade failed
+  // only use local router if multi-route trade failed
   const bestV3TradeExactIn = useLocalV3TradeExactIn(
     useFallback ? debouncedAmountIn : undefined,
     useFallback ? currencyOut : undefined
@@ -74,9 +79,14 @@ export function useV3TradeExactOut(
   gasPriceWei?: BigNumber
   gasUseEstimate?: BigNumber
 } {
+  const routingAPIEnabled = useRoutingAPIEnabled()
+
   const debouncedAmountOut = useDebounce(amountOut, 250)
 
-  const multiRouteTradeExactOut = useRouterTradeExactOut(currencyIn, debouncedAmountOut)
+  const multiRouteTradeExactOut = useRoutingAPITradeExactOut(
+    routingAPIEnabled ? currencyIn : undefined,
+    debouncedAmountOut
+  )
 
   const debouncing =
     multiRouteTradeExactOut.trade &&
@@ -85,9 +95,9 @@ export function useV3TradeExactOut(
       !currencyIn?.equals(multiRouteTradeExactOut.trade.inputAmount.currency) ||
       !amountOut.currency.equals(multiRouteTradeExactOut.trade.outputAmount.currency))
 
-  const useFallback = !debouncing && shouldUseFallback(multiRouteTradeExactOut.state)
+  const useFallback =
+    !debouncing && (!routingAPIEnabled || multiRouteTradeExactOut.state === V3TradeState.NO_ROUTE_FOUND)
 
-  // only local router if multi-route trade failed
   const bestV3TradeExactOut = useLocalV3TradeExactOut(
     useFallback ? currencyIn : undefined,
     useFallback ? debouncedAmountOut : undefined
