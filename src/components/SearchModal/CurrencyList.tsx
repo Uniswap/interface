@@ -15,12 +15,12 @@ import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { TokenAddressMap, useCombinedActiveList } from '../../state/lists/hooks'
 import { isTokenOnList } from '../../utils'
-import { AutoColumn } from '../Column'
+
 import { TYPE } from '../../theme'
 import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
 import ImportRow from './ImportRow'
 import { DarkCard } from '../Card'
-import { RowBetween, RowFixed } from '../Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from '../QuestionHelper'
 
@@ -50,7 +50,7 @@ const TokenListLogoWrapper = styled.img`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText  title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
 
 function CurrencyRow({
@@ -83,20 +83,21 @@ function CurrencyRow({
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
-      alignItems="center"
+      alignItems="top"
       style={style}
     >
-      <Box mr="6px">
-        <CurrencyLogo currency={currency} size={'20px'} />
-      </Box>
       <Box>
-        <AutoColumn gap="2px">
-          <Text fontWeight={500}>{currency.symbol}</Text>
-          <TYPE.body fontSize="11px" color="text4" fontWeight={400}>
-            {currency.name}
+        <AutoRow >
+          <CurrencyLogo currency={currency} size={'20px'} />
+          <Text  marginLeft={'6px'} fontWeight={500}>{currency.symbol}</Text>
+        </AutoRow>
+        <AutoRow>
+          <TYPE.body marginTop={'4px'} fontSize="9px" color="text4" fontWeight={600}>
+            {currency.name?.toUpperCase()}
           </TYPE.body>
-        </AutoColumn>
+        </AutoRow>
       </Box>
+
       <Flex flex="1" px="20px">
         {!isOnSelectedList && (
           <Box>
@@ -118,7 +119,7 @@ function CurrencyRow({
           </Box>
         )}
       </Flex>
-      <Box style={{ justifySelf: 'flex-end' }}>
+      <Box  style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </Box>
     </TokenPickerItem>
@@ -193,6 +194,7 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
+      console.log(style)
       const currency: Currency = data[index]
       if (isBreakLine(currency)) return <BreakLineComponent style={style} />
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
@@ -238,7 +240,7 @@ export default function CurrencyList({
   )
 
   return (
-    <Flex overflowY="auto" flex="1">
+    <Flex  overflowY="auto" flex="1">
       <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
           <FixedSizeList
@@ -249,6 +251,7 @@ export default function CurrencyList({
             itemCount={itemData.length}
             itemSize={56}
             itemKey={currencyKey}
+
           >
             {Row}
           </FixedSizeList>
