@@ -15,6 +15,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
+import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 
 const Title = styled.p`
   margin: 0;
@@ -74,7 +75,8 @@ export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
 
   const [amount, setAmount] = useState('')
-  const { chainId: networkConnectorChainId } = useActiveWeb3React()
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
   const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
 
   const [sendFrom, setSendFrom] = useState(networks[0])
@@ -149,7 +151,11 @@ export default function Bridge() {
           disabled={step !== Step.Initial}
           id="brdige-currency-input"
         />
-        {sendFrom.chainId !== connectedNetwork ? (
+        {!account ? (
+          <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
+            Connect Wallet
+          </ButtonPrimary>
+        ) : sendFrom.chainId !== connectedNetwork ? (
           <ButtonPrimary mt="12px" onClick={() => setConnectedNetwork(sendFrom.chainId)}>
             Connect to {sendFrom.name}
           </ButtonPrimary>
