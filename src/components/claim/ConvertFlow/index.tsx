@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo } from 'react'
-import { TokenAmount } from '@swapr/sdk'
+import { SWPR_CONVERTER_ADDRESS, TokenAmount } from '@swapr/sdk'
 import { useActiveWeb3React } from '../../../hooks'
 import { AutoColumn } from '../../Column'
 import { RowBetween } from '../../Row'
 import { ApprovalState, useApproveCallback } from '../../../hooks/useApproveCallback'
-import { CONVERTER_ADDRESS } from '../../../constants/converter'
 import { ButtonPrimary } from '../../Button'
 import ProgressCircles from '../../ProgressSteps'
 import { useConvertSwprCallback } from '../../../hooks/swpr/useConvertSwprCallback'
@@ -25,7 +24,7 @@ export function ConvertFlow({ oldSwprBalance, disabled, onError }: ConvertFlowPr
   const { chainId, account } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const spender = useMemo(() => (chainId ? CONVERTER_ADDRESS[chainId] : undefined), [chainId])
+  const spender = useMemo(() => (chainId ? SWPR_CONVERTER_ADDRESS[chainId] : undefined), [chainId])
   const [approvalState, approveCallback] = useApproveCallback(oldSwprBalance, spender)
   const convertSwprCallback = useConvertSwprCallback(account || undefined)
 

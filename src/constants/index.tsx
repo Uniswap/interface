@@ -23,7 +23,6 @@ import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 import { providers } from 'ethers'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const CLAIM_LEAVES_IPFS_HASH = process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH
 
 // a list of tokens by chain
 type ChainTokenList = {

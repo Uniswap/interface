@@ -2404,21 +2404,28 @@
   dependencies:
     typescript "^3.9.5"
 
-"@swapr/periphery@^0.3.19":
-  version "0.3.19"
-  resolved "https://registry.yarnpkg.com/@swapr/periphery/-/periphery-0.3.19.tgz#06a2da53089604595966e1a1bcf106e44cb1d420"
-  integrity sha512-PWs9raN5kENDeYA/NBduwfqT28KFeMrxcQFjOMq1jY5HkEp/pdH67+9sbud7wZZBpf/90iWfILfY4G6eKXGCgA==
+"@swapr/core@^0.3.18":
+  version "0.3.18"
+  resolved "https://registry.yarnpkg.com/@swapr/core/-/core-0.3.18.tgz#249a6e1c90c53d6c2beae8c712d429cf8a577906"
+  integrity sha512-AsSyXCIx3OhR399lgQD/bmAgAA2Xa2k2XabH/kG1TeuHfmT2ob+8l5ROit7puO/lD9aFsXO4mxO34oVcoaoXgA==
+  dependencies:
+    typescript "^3.9.5"
+
+"@swapr/periphery@^0.3.20":
+  version "0.3.20"
+  resolved "https://registry.yarnpkg.com/@swapr/periphery/-/periphery-0.3.20.tgz#2dc528a1c29f2911b04d5305d32cb1f1fdaa122b"
+  integrity sha512-h2nH1ZDbk6IGLj6HmZLrg6vcfrWj2uHQXXYsyEXojOwjQ2EXDLw+YrmHhhCHI+qVaQ4rrQ2OclwZWe4oyuMyWg==
   dependencies:
     "@swapr/core" "^0.3.17"
 
-"@swapr/sdk@^0.10.6-rc.8":
-  version "0.10.6-rc.8"
-  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.6-rc.8.tgz#295828e8fdb07dcbc8213543fb5e0364b09dce56"
-  integrity sha512-gTXDNoKN/XVpBgBvhhXZEM8b6mHi7BGFP16b6LbCdjqfaibs5CD+hDmIKFBcxzfpv9s3QT2KO9w21noHdVFEoQ==
+"@swapr/sdk@^0.10.6":
+  version "0.10.6"
+  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.6.tgz#25dab37cd50ca48f4693a85435e9770605f88b85"
+  integrity sha512-A5Pwr4jtZ2UXe8QXoY7sqTtv12suTnU8U29YVNCgWkPr+b7zII/GpDTfCAiiTlwK1LlFa0mrXxe4lmv+NXrKsA==
   dependencies:
     "@makerdao/multicall" "^0.11.0"
-    "@swapr/core" "^0.3.17"
-    "@swapr/periphery" "^0.3.19"
+    "@swapr/core" "^0.3.18"
+    "@swapr/periphery" "^0.3.20"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"
