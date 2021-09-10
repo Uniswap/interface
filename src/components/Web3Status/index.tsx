@@ -149,7 +149,7 @@ export default function Web3Status() {
   return (
     <>
       <ConnectWalletPopover setModal={setModal} tryActivation={tryActivation}>
-        <Row alignItems="center">
+        <Row alignItems="center" justifyContent="flex-end">
           {networkConnectorChainId && !account && (
             <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
               {mobileByMedia ? 'Connect' : t('Connect wallet')}

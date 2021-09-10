@@ -6,10 +6,15 @@ export const defaultSubgraphClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+export const oldBuildClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one',
+  cache: new InMemoryCache()
+})
+
 export const subgraphClients: { [chainId in ChainId]?: ApolloClient<NormalizedCacheObject> | undefined } = {
   [ChainId.MAINNET]: defaultSubgraphClient,
   [ChainId.RINKEBY]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr_rinkeby',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-rinkeby-new',
     cache: new InMemoryCache()
   }),
   [ChainId.XDAI]: new ApolloClient({
@@ -17,11 +22,11 @@ export const subgraphClients: { [chainId in ChainId]?: ApolloClient<NormalizedCa
     cache: new InMemoryCache()
   }),
   [ChainId.ARBITRUM_ONE]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2',
     cache: new InMemoryCache()
   }),
   [ChainId.ARBITRUM_RINKEBY]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-new',
     cache: new InMemoryCache()
   })
 }

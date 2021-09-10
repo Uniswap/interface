@@ -11,8 +11,10 @@ import {
   STAKING_REWARDS_FACTORY_ABI,
   STAKING_REWARDS_DISTRIBUTION_ABI,
   SWPR_CLAIMER_ABI,
-  SWPR_CLAIMER_ADDRESS
+  SWPR_CLAIMER_ADDRESS,
+  SWPR_CONVERTER_ADDRESS
 } from '@swapr/sdk'
+import SWPR_CONVERTER_ABI from '../constants/abis/swpr-converter.json'
 import { abi as IDXswapPairABI } from '@swapr/core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -151,4 +153,10 @@ export function useSWPRClaimerContract(): Contract | null {
       return null
     }
   }, [library, chainId, account])
+}
+
+export function useSWPRConverterContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = useMemo(() => (chainId ? SWPR_CONVERTER_ADDRESS[chainId] : undefined), [chainId])
+  return useContract(address, SWPR_CONVERTER_ABI, withSignerIfPossible)
 }
