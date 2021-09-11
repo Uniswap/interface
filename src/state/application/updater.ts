@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
+import { CHAIN_INFO } from 'constants/chains'
+import useDebounce from 'hooks/useDebounce'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useActiveWeb3React } from 'hooks/web3'
+import ms from 'ms.macro'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import useDebounce from '../../hooks/useDebounce'
-import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { setImplements3085, updateBlockNumber, updateChainId } from './actions'
+import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './actions'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -19,6 +21,39 @@ function useQueryCacheInvalidator() {
   useEffect(() => {
     dispatch(api.util.invalidateTags([CHAIN_TAG]))
   }, [chainId, dispatch])
+}
+
+const NETWORK_HEALTH_CHECK_MS = ms`15s`
+const DEFAULT_MS_BEFORE_WARNING_WAIT = ms`10m`
+interface UseBlockWarningTimerArgs {
+  chainId: number | undefined
+  dispatch: (action: any) => void
+  msSinceLastBlock: number
+  setMsSinceLastBlock: (n: number) => void
+}
+function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
+  const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
+  const timeout = useRef<NodeJS.Timeout>()
+  useEffect(() => {
+    const waitMsBeforeWarning =
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING_WAIT) ||
+      DEFAULT_MS_BEFORE_WARNING_WAIT
+
+    timeout.current = setTimeout(() => {
+      setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
+      if (msSinceLastBlock > waitMsBeforeWarning) {
+        dispatch(setChainConnectivityWarning({ warn: true }))
+      } else if (chainConnectivityWarningActive) {
+        dispatch(setChainConnectivityWarning({ warn: false }))
+      }
+    }, NETWORK_HEALTH_CHECK_MS)
+
+    return function cleanup() {
+      if (timeout.current) {
+        clearTimeout(timeout.current)
+      }
+    }
+  }, [chainId, chainConnectivityWarningActive, dispatch, msSinceLastBlock, setMsSinceLastBlock])
 }
 
 export default function Updater(): null {
@@ -34,11 +69,13 @@ export default function Updater(): null {
 
   useQueryCacheInvalidator()
 
+  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
       setState((state) => {
         if (chainId === state.chainId) {
           if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
+          setMsSinceLastBlock(0)
           return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
         }
         return state
@@ -46,6 +83,8 @@ export default function Updater(): null {
     },
     [chainId, setState]
   )
+
+  useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock })
 
   // attach/detach listeners
   useEffect(() => {
