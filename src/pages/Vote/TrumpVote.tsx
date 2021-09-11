@@ -10,6 +10,7 @@ import { IconWrapper } from "theme/components";
 import { StyledInternalLink } from "theme/components";
 import { Proposal } from "./AddProposal";
 import moment from "moment";
+import Badge from "components/Badge";
 export const TrumpVote = () => {
   const [proposals, setProposals] = React.useState<Proposal[]>([]);
   React.useEffect(() => {
@@ -88,14 +89,14 @@ export const TrumpVote = () => {
                       </IconWrapper>
                     </div>
                   </div>
-                  <div style={{ display: "block" }}>
+                  <div style={{ display: "flex", alignItems: 'center', flexFlow: 'column wrap', marginTop: 20}}>
                     {7 -
                       moment(new Date()).diff(
                         moment(proposal.createdAt),
                         "days"
                       ) >
                       0 && (
-                      <>
+                      <Badge>
                         Expires in{" "}
                         {7 -
                           moment(new Date()).diff(
@@ -103,14 +104,14 @@ export const TrumpVote = () => {
                             "days"
                           )}{" "}
                         day
-                      </>
+                      </Badge>
                     )}
                     {7 -
                       moment(new Date()).diff(
                         moment(proposal.createdAt),
                         "days"
                       ) <=
-                      0 && <>Proposal Expired. {proposal.votes.filter((a:any) => !a.vote).length > proposal.votes.filter((a: any) => !!a.vote).length ? <span style={{color:'red'}}>Denied</span> : <span style={{color:'green'}}>Approved</span>}</>}
+                      0 && <><br/> {proposal.votes.filter((a:any) => !a.vote).length > proposal.votes.filter((a: any) => !!a.vote).length ? <Badge style={{color:'red'}}>Denied</Badge> : <Badge style={{color:'green'}}>Approved</Badge>}</>}
                   </div>
                 </li>
               ))}
