@@ -58,7 +58,7 @@ export const TrumpVote = () => {
             <ul style={{ padding: 9 }}>
               {proposals.map((proposal) => (
                 <li key={proposal._id} style={{ display: "flex" }}>
-                  <div style={{ display: "block" }}>
+                  <div style={{ display: "block", margin: "20px 0px" }}>
                     <StyledInternalLink
                       style={{ fontSize: 16, color: isDark ? "#fff" : "#222" }}
                       to={`/proposal/details/${proposal._id}`}
