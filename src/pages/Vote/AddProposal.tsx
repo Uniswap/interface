@@ -88,7 +88,7 @@ export const AddProposal = () => {
         
         if (proposalData && proposalData.length) {
             return moment(new Date()).diff((moment(new Date(proposalData[0].createdAt))), 'days') <= 7;
-        } else if (proposalData.length === 0 ) return true
+        } else if (proposalData.length === 0 ) return false
         return false;
     }, [account, proposals])
     
