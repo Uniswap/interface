@@ -30,6 +30,7 @@ interface UseBlockWarningTimerArgs {
   msSinceLastBlock: number
   setMsSinceLastBlock: (n: number) => void
 }
+
 function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
   const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
   const timeout = useRef<NodeJS.Timeout>()

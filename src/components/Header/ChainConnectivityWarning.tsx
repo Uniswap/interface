@@ -53,7 +53,7 @@ export function ChainConnectivityWarning() {
       <TitleRow>
         <CautionIcon />
         <TitleText>
-          <Trans>Network Downtime Warning</Trans>
+          <Trans>Network Warning</Trans>
         </TitleText>
       </TitleRow>
       <BodyRow>
