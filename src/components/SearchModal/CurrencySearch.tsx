@@ -18,7 +18,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useDebounce from '../../hooks/useDebounce'
 import { useActiveWeb3React } from '../../hooks'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
-import { ButtonPrimary } from '../Button'
+import { ButtonDark2 } from '../Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -207,7 +207,7 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonPrimary style={{border:'1px solid #3E4259'}} color={'dark2'} onClick={showManageView}>Manage token lists</ButtonPrimary>
+          <ButtonDark2  onClick={showManageView}>Manage token lists</ButtonDark2>
         </Row>
       </Footer>
     </ContentWrapper>

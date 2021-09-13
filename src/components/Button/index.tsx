@@ -51,14 +51,14 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)<{color?:keyof Colors}>`
-  background-color: ${({ theme,color }) => color ? (theme as any)[color] : theme.primary1};
+  background-color: ${({ theme }) =>theme.primary1};
   color: ${({ theme }) => theme.white};
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: ${({ theme,color }) => darken(0.05,  color ? (theme as any)[color] : theme.primary1)};
+    background-color: ${({ theme }) =>theme.primary1};
   }
   &:active {
-    background-color: ${({ theme,color }) => darken(0.1,  color ? (theme as any)[color] : theme.primary1)};
+    background-color: ${({ theme }) => theme.primary1};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.purple5};
@@ -68,6 +68,28 @@ export const ButtonPrimary = styled(Base)<{color?:keyof Colors}>`
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
+`
+
+export const ButtonDark2=styled(Base)`
+  background-color: ${({ theme }) =>  (theme.dark2)};
+  color: ${({ theme }) => theme.white};
+  transition: background-color 0.3s ease;
+  border:1px solid #3E4259;
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.dark2 )};
+  }
+  &:active {
+    background-color: ${({ theme }) => darken(0.1, theme.dark2)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.purple5};
+    color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
+    cursor: not-allowed;
+    box-shadow: none;
+    outline: none;
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+  }
+\`
 `
 
 export const ButtonSecondary = styled(Base)`
