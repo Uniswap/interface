@@ -191,7 +191,7 @@ export function CurrencySearch({
           <CommonTokens chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
       </AutoColumn>
-      <Separator style={{marginBottom:'20px'}} />
+      <Separator/>
       {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
           currencies={filteredSortedTokensWithNativeCurrency}

@@ -83,7 +83,7 @@ function CurrencyRow({
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
-      alignItems="top"
+      alignItems="center"
       style={style}
     >
       <Box>
