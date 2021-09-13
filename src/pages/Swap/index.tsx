@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
+import { CELO, ChainId as UbeswapChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { describeTrade } from 'components/swap/routing/describeTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useTradeCallback } from 'components/swap/routing/useTradeCallback'
@@ -71,7 +71,8 @@ export default function Swap() {
       return !(token.address in defaultTokens)
     })
 
-  const { address: account } = useContractKit()
+  const { address: account, network } = useContractKit()
+  const chainId = network.chainId as unknown as UbeswapChainId
 
   const theme = useContext(ThemeContext)
 
@@ -250,8 +251,14 @@ export default function Swap() {
   )
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-  }, [maxAmountInput, onUserInput])
+    if (maxAmountInput) {
+      if (currencies?.INPUT?.address === CELO[chainId].address) {
+        onUserInput(Field.INPUT, Math.max(Number(maxAmountInput.toExact()) - 0.01, 0).toString())
+      } else {
+        onUserInput(Field.INPUT, maxAmountInput.toExact())
+      }
+    }
+  }, [maxAmountInput, onUserInput, currencies, chainId])
 
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),

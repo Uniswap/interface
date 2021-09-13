@@ -1,5 +1,5 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
-import { Token, TokenAmount } from '@ubeswap/sdk'
+import { CELO, ChainId as UbeswapChainId, Token, TokenAmount } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
@@ -326,7 +326,11 @@ export default function AddLiquidity({
               value={formattedAmounts[Field.CURRENCY_A]}
               onUserInput={onFieldAInput}
               onMax={() => {
-                onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                if (currencies[Field.CURRENCY_A]?.address === CELO[chainId as unknown as UbeswapChainId].address) {
+                  onFieldAInput(Math.max(Number(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '') - 0.01, 0).toString())
+                } else {
+                  onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                }
               }}
               onCurrencySelect={handleCurrencyASelect}
               showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
@@ -342,7 +346,11 @@ export default function AddLiquidity({
               onUserInput={onFieldBInput}
               onCurrencySelect={handleCurrencyBSelect}
               onMax={() => {
-                onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                if (currencies[Field.CURRENCY_B]?.address === CELO[chainId as unknown as UbeswapChainId].address) {
+                  onFieldBInput(Math.max(Number(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '') - 0.01, 0).toString())
+                } else {
+                  onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                }
               }}
               showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
               currency={currencies[Field.CURRENCY_B]}
