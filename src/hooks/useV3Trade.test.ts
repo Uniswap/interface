@@ -1,9 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
-import { useV3TradeExactIn, useV3TradeExactOut, V3TradeState } from './useCombinedV3Trade'
+import { useV3TradeExactIn, useV3TradeExactOut } from './useCombinedV3Trade'
 import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from '../state/routing/useRoutingAPITrade'
 import useDebounce from './useDebounce'
+import { V3TradeState } from 'state/routing/types'
 
 // test fixtures
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')

@@ -1,18 +1,11 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
+import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
-
-export enum V3TradeState {
-  LOADING,
-  INVALID,
-  NO_ROUTE_FOUND,
-  VALID,
-  SYNCING,
-}
 
 /**
  * Returns the best v3 trade for a desired exact input swap.

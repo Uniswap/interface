@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { GetQuoteResult } from 'state/routing/slice'
+import { GetQuoteResult } from './types'
 
 /**
  * Transforms a Routing API quote into an array of routes that
