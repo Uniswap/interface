@@ -126,41 +126,39 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggre
               /
             </Text>
           </Box>
-          {aggregatedDataFilter === PairsFilterType.MY
-            ? (
-              <Box>
-                <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
-                  MY PAIRS
-                </TYPE.mediumHeader>
-              </Box>
-            ) : (
-              <PointableFlex onClick={handleAllClick}>
-                {!filteredToken && (
-                  <Box mr="6px" height="21px">
-                    <img src={threeBlurredCircles} alt="Circles" />
-                  </Box>
-                )}
-                {filteredToken && (
-                  <Box mr="8px">
-                    <CurrencyLogo currency={filteredToken} size="21px" />
-                  </Box>
-                )}
-                <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                  {filteredToken ? filteredToken.symbol : 'ALL'}
-                </Text>
-                <Box>
-                  <ChevronDown size={12} />
+          {aggregatedDataFilter === PairsFilterType.MY ? (
+            <Box>
+              <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
+                MY PAIRS
+              </TYPE.mediumHeader>
+            </Box>
+          ) : (
+            <PointableFlex onClick={handleAllClick}>
+              {!filteredToken && (
+                <Box mr="6px" height="21px">
+                  <img src={threeBlurredCircles} alt="Circles" />
                 </Box>
-                {filteredToken && (
-                  <Box ml="6px">
-                    <ResetFilterIconContainer onClick={handleResetFilterLocal}>
-                      <ResetFilterIcon />
-                    </ResetFilterIconContainer>
-                  </Box>
-                )}
-              </PointableFlex>
-            )
-          }
+              )}
+              {filteredToken && (
+                <Box mr="8px">
+                  <CurrencyLogo currency={filteredToken} size="21px" />
+                </Box>
+              )}
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                {filteredToken ? filteredToken.symbol : 'ALL'}
+              </Text>
+              <Box>
+                <ChevronDown size={12} />
+              </Box>
+              {filteredToken && (
+                <Box ml="6px">
+                  <ResetFilterIconContainer onClick={handleResetFilterLocal}>
+                    <ResetFilterIcon />
+                  </ResetFilterIconContainer>
+                </Box>
+              )}
+            </PointableFlex>
+          )}
         </Flex>
         <ButtonRow>
           <ResponsiveButtonSecondary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
@@ -196,7 +194,7 @@ export default function Pools() {
     filterToken
   )
   const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
-  
+
   const handleCurrencySelect = useCallback(token => {
     setFilterToken(token as Token)
   }, [])
@@ -208,7 +206,7 @@ export default function Pools() {
   const handleFilterChange = useCallback(filter => {
     setAggregatedDataFilter(filter)
   }, [])
-  
+
   return (
     <>
       <PageWrapper>
@@ -222,16 +220,15 @@ export default function Pools() {
               onFilteredTokenReset={handleFilterTokenReset}
             />
             <ListFilter filter={aggregatedDataFilter} onFilterChange={handleFilterChange} />
-            {aggregatedDataFilter === PairsFilterType.MY
-              ? <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
-              : (
-                <PairsList
-                  loading={loadingUserLpPositions || loadingAggregatedData}
-                  aggregatedPairs={aggregatedData}
-                  filter={aggregatedDataFilter}
-                />
-              )
-            }
+            {aggregatedDataFilter === PairsFilterType.MY ? (
+              <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
+            ) : (
+              <PairsList
+                loading={loadingUserLpPositions || loadingAggregatedData}
+                aggregatedPairs={aggregatedData}
+                filter={aggregatedDataFilter}
+              />
+            )}
           </AutoColumn>
         </AutoColumn>
         {account && (

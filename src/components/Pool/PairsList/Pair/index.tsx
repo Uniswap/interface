@@ -7,6 +7,7 @@ import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
 import ApyBadge from '../../ApyBadge'
 import { formatCurrencyAmount } from '../../../../utils'
+import { AutoColumn } from '../../../Column'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -53,7 +54,7 @@ const TextWrapper = styled.div`
     width: auto;
     margin: 0;
   `}
-`;
+`
 
 const BadgeWrapper = styled.div`
   align-self: flex-start;
@@ -62,8 +63,7 @@ const BadgeWrapper = styled.div`
   ${props => props.theme.mediaWidth.upToExtraSmall`
     align-self: center;
   `}
-`;
-
+`
 
 interface PairProps {
   token0?: Token
@@ -78,33 +78,35 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
   return (
     <SizedCard selectable {...rest}>
       <Flex alignItems="center" flexWrap="wrap">
-          <Box mr="16px">
-            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
-          </Box>
-          {staked && (
-            <Box>
+        <Box mr="16px">
+          <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
+        </Box>
+        <Box flex="1">
+          <AutoColumn gap="4px" justify="flex-end">
+            {staked && (
               <PositiveBadgeRoot>
                 <BadgeText>STAKING</BadgeText>
               </PositiveBadgeRoot>
-            </Box>
-          )}
-          <TextWrapper>
-            <Box>
-              <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-                ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
-              </TYPE.subHeader>
-            </Box>
-            <Box>
-              <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
-                {token0?.symbol}/{token1?.symbol}
-              </EllipsizedText>
-            </Box>
-          </TextWrapper>
-          {apy.greaterThan('0') && (
-            <BadgeWrapper>
-              <ApyBadge apy={apy} />
-            </BadgeWrapper>
-          )}
+            )}
+            {apy.greaterThan('0') && (
+              <BadgeWrapper>
+                <ApyBadge apy={apy} />
+              </BadgeWrapper>
+            )}
+          </AutoColumn>
+        </Box>
+        <TextWrapper>
+          <Box>
+            <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
+              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+            </TYPE.subHeader>
+          </Box>
+          <Box>
+            <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
+              {token0?.symbol}/{token1?.symbol}
+            </EllipsizedText>
+          </Box>
+        </TextWrapper>
       </Flex>
     </SizedCard>
   )

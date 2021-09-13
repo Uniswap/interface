@@ -1,7 +1,7 @@
 import { Pair, Percent, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import { DateTime } from 'luxon'
 import { transparentize } from 'polished'
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Lock, Unlock } from 'react-feather'
 import Skeleton from 'react-loading-skeleton'
 import { Box, Flex, Text } from 'rebass'
@@ -40,13 +40,13 @@ const View = styled(Flex)`
       width: initial;  
     }
   `};
-`;
+`
 
 const RewardProgramSection = styled(Box)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-area: reward-program;
   `};
-`;
+`
 
 const DatesSection = styled(Flex)`
   justify-content: flex-end;
@@ -60,7 +60,7 @@ const DatesSection = styled(Flex)`
       text-align: left;
     }
   `};
-`;
+`
 
 const RewardsSection = styled(Flex)`
   justify-content: flex-end;
@@ -73,20 +73,19 @@ const RewardsSection = styled(Flex)`
       justify-content: flex-start;
     }
   `};
-`;
+`
 
 const MaxPollSizeSection = styled(Box)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-area: max-pool-size;
   `};
-`;
+`
 
 const PoolTypeSection = styled(Box)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-area: pool-type;
   `};
-`;
-
+`
 
 const InfoRow = styled(Flex)`
   text-align: right;
@@ -105,8 +104,7 @@ const InfoRow = styled(Flex)`
       margin: 0;
     }
   `};
-`;
-
+`
 
 const StyledLock = styled(Lock)`
   color: ${props => props.theme.red1};
@@ -162,12 +160,20 @@ function Information({
   showUSDValue
 }: InformationProps) {
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
-  const upcoming = useMemo(() => {
-    return !!(startsAt && startsAt > Math.floor(Date.now() / 1000))
-  }, [startsAt])
-  const expired = useMemo(() => {
-    return !!(endsAt && endsAt < Math.floor(Date.now() / 1000))
-  }, [endsAt])
+  const [upcoming, setUpcoming] = useState(false)
+  const [expired, setExpired] = useState(false)
+  const [currentPeriodEnded, setCurrentPeriodEnded] = useState(false)
+
+  useEffect(() => {
+    const now = Math.floor(Date.now() / 1000)
+    setExpired(!!(endsAt && endsAt < now))
+    setUpcoming(!!(startsAt && startsAt > now))
+    setCurrentPeriodEnded(false)
+  }, [endsAt, startsAt, currentPeriodEnded])
+
+  const handleCountdownEnd = useCallback(() => {
+    setCurrentPeriodEnded(true)
+  }, [])
 
   return (
     <View justifyContent="space-between">
@@ -234,7 +240,7 @@ function Information({
                   color="text3"
                   style={{ whiteSpace: 'nowrap' }}
                 >
-                  <Countdown to={upcoming ? startsAt : endsAt} />
+                  <Countdown to={upcoming ? startsAt : expired ? 0 : endsAt} onEnd={handleCountdownEnd} />
                 </TYPE.body>
               )}
             </TYPE.small>
