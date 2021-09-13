@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 import { V3TradeState } from './types'
-import { useRoutes } from './useRoutes'
+import { computeRoutes } from './computeRoutes'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
   const localBlockNumber = useBlockNumber()
@@ -64,7 +64,10 @@ export function useRoutingAPITradeExactIn(amountIn?: CurrencyAmount<Currency>, c
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
-  const routes = useRoutes(amountIn?.currency, currencyOut, quoteResult)
+  const routes = useMemo(
+    () => computeRoutes(amountIn?.currency, currencyOut, quoteResult),
+    [amountIn, currencyOut, quoteResult]
+  )
 
   return useMemo(() => {
     if (!amountIn || !currencyOut) {
@@ -125,7 +128,10 @@ export function useRoutingAPITradeExactOut(currencyIn?: Currency, amountOut?: Cu
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
 
-  const routes = useRoutes(currencyIn, amountOut?.currency, quoteResult)
+  const routes = useMemo(
+    () => computeRoutes(currencyIn, amountOut?.currency, quoteResult),
+    [amountOut, currencyIn, quoteResult]
+  )
 
   return useMemo(() => {
     if (!amountOut || !currencyIn) {
