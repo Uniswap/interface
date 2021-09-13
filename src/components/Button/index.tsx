@@ -70,28 +70,6 @@ export const ButtonPrimary = styled(Base)<{color?:keyof Colors}>`
   }
 `
 
-export const ButtonDark2=styled(Base)`
-  background-color: ${({ theme }) =>  (theme.dark2)};
-  color: ${({ theme }) => theme.white};
-  transition: background-color 0.3s ease;
-  border:1px solid #3E4259;
-  &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.dark2 )};
-  }
-  &:active {
-    background-color: ${({ theme }) => darken(0.1, theme.dark2)};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.purple5};
-    color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
-    cursor: not-allowed;
-    box-shadow: none;
-    outline: none;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
-  }
-\`
-`
-
 export const ButtonSecondary = styled(Base)`
   border: 1px solid ${({ theme }) => theme.text5};
   color: ${({ theme }) => theme.text5};
@@ -144,6 +122,18 @@ export const ButtonDark = styled(Base)`
   }
   a:hover {
     text-decoration: none;
+  }
+`
+export const ButtonDark2=styled(Base)`
+  background-color: ${({ theme }) =>  (theme.dark2)};
+  color: ${({ theme }) => theme.white};
+  transition: background-color 0.3s ease;
+  border:1px solid ${({ theme }) =>  (theme.bg3)};
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.dark2 )};
+  }
+  &:active {
+    background-color: ${({ theme }) => darken(0.1, theme.dark2)};
   }
 `
 
