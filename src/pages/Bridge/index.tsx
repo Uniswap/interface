@@ -15,6 +15,13 @@ import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
+import { Field } from '../../state/swap/actions'
+import { RoutablePlatform } from '@swapr/sdk'
+import {
+  useDerivedSwapInfo,
+  useSwapActionHandlers
+} from '../../state/swap/hooks'
+
 
 const Title = styled.p`
   margin: 0;
@@ -75,6 +82,11 @@ export default function Bridge() {
 
   const [amount, setAmount] = useState('')
   const { chainId: networkConnectorChainId } = useActiveWeb3React()
+
+  const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
+  const { currencies } = useDerivedSwapInfo(platformOverride || undefined)
+
+
   const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
 
   const [sendFrom, setSendFrom] = useState(networks[0])
@@ -110,6 +122,17 @@ export default function Bridge() {
   const [bridge, setBridge] = useState('Swapr Fast Exit')
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
+  const { onCurrencySelection } = useSwapActionHandlers()
+  const handleOutputSelect = useCallback(
+    outputCurrency => {
+      setPlatformOverride(null) // reset platform override, since best prices might be on a different platform
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
+  //const { currencies } = useDerivedSwapInfo()
+
+
   return (
     <>
       <AppBody>
@@ -142,9 +165,10 @@ export default function Bridge() {
           label="Amount"
           value={amount}
           showMaxButton
+          currency={currencies[Field.OUTPUT]}
           onUserInput={setAmount}
           onMax={() => null}
-          onCurrencySelect={() => null}
+          onCurrencySelect={handleOutputSelect}
           disableCurrencySelect={step !== Step.Initial}
           disabled={step !== Step.Initial}
           id="brdige-currency-input"
