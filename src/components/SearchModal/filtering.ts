@@ -73,44 +73,24 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
 
     const allowedContracts = [
       '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase(),
-      '0xfF69e48af1174Da7F15D0c771861c33d3f19eD8a'.toLowerCase(),
+      '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase(),
       '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase(),
       '0x29699C8485302cd2857043FaB8bd885bA08Cf268'.toLowerCase(),
       WETH9[1].address,
       USDC.address,
       USDT.address,
     ]
-    const trumpCoin = new Token(
+    const squeezeCoin = new Token(
       1,
-      "0x99d36e97676A68313ffDc627fd6b56382a2a08B6",
+      "0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4",
       9,
-      "BabyTrump",
-      "BabyTrump Token"
+      "Squeeze",
+      "Squeeze Token"
     );
-    const stimulusCoin = new Token(
-      1,
-      "0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013",
-      9,
-      "Stimulus",
-      "Stimlus Check"
-    );
-    const trumpGoldCoin = new Token(
-      1,
-      "0x29699C8485302cd2857043FaB8bd885bA08Cf268",
-      9,
-      "TGOLD",
-      "Trump Gold"
-    );
-    const teslaInuCoin = new Token(
-      1,
-      '0xfF69e48af1174Da7F15D0c771861c33d3f19eD8a',
-      9,
-      'TESINU',
-      'Tesla Inu'
-    )
-  const trumpListedCoins = [teslaInuCoin, trumpGoldCoin, trumpCoin, stimulusCoin];
 
-    return _.uniqBy( [...exactMatches, ...symbolSubtrings, ...rest, ...trumpListedCoins], item => item.address.toLowerCase()).filter((item: any) => {
+  const squeezeListedCoins = [squeezeCoin];
+
+    return _.uniqBy( [...exactMatches, ...symbolSubtrings, ...rest, ...squeezeListedCoins], item => item.address.toLowerCase()).filter((item: any) => {
       if (!showOnlyTrumpCoins) return !!item;
       const isTrumpApproved = allowedContracts.includes(item.address.toLowerCase())
       return isTrumpApproved

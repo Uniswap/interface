@@ -5,7 +5,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-
+import squeezeLogo from '../../assets/images/squeeze.png'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
@@ -54,15 +54,8 @@ export default function CurrencyLogo({
   }
 
 
-  if (currency?.address?.toLowerCase() === '0xff69e48af1174da7f15d0c771861c33d3f19ed8a'.toLowerCase()) 
-  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/17468/small/400_filter_nobg_60c70a3c5aae1.jpg?1628214173']} alt={`${currency.symbol ?? 'token'} logo`} style={style} {...rest} />
-  if (currency?.address?.toLowerCase() === '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/Baby_Trump_Transpa.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-
-  if (currency?.address?.toLowerCase() === '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/CoinGecko.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-  if (currency?.address?.toLowerCase() === '0x29699C8485302cd2857043FaB8bd885bA08Cf268'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://babytrumptoken.com/images/Trump_Gold_Coin_Gecko.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  if (currency?.address?.toLowerCase() === '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase())
+  return <StyledLogo size={size} srcs={[squeezeLogo]} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }
