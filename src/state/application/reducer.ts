@@ -1,4 +1,5 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import {
   addPopup,
   PopupContent,
@@ -43,7 +44,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(setOpenModal, (state, action) => {
       state.openModal = action.payload
     })
-    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 25000 } }) => {
+    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) => {
       state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
         {
           key: key || nanoid(),

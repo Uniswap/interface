@@ -29,6 +29,7 @@
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
+    "object-shorthand": ["error", "always"],
     "no-restricted-imports": [
       "error",
       {

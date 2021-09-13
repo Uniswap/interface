@@ -215,8 +215,14 @@ export default function Swap({ history }: RouteComponentProps) {
       }
     } else {
       await approveCallback()
+
+      ReactGA.event({
+        category: 'Swap',
+        action: 'Approve',
+        label: [trade?.inputAmount.currency.symbol, toggledVersion].join('/'),
+      })
     }
-  }, [approveCallback, gatherPermitSignature, signatureState])
+  }, [approveCallback, gatherPermitSignature, signatureState, toggledVersion, trade?.inputAmount.currency.symbol])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -345,7 +351,7 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
 
-  const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
+  const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
@@ -660,7 +666,10 @@ export default function Swap({ history }: RouteComponentProps) {
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
-        <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
+        <UnsupportedCurrencyFooter
+          show={swapIsUnsupported}
+          currencies={[currencies[Field.INPUT], currencies[Field.OUTPUT]]}
+        />
       )}
     </>
   )

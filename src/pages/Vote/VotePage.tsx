@@ -33,6 +33,7 @@ import {
   useProposalData,
   useUserDelegatee,
   useUserVotesAsOfBlock,
+  VoteOption,
 } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
@@ -130,8 +131,8 @@ export default function VotePage({
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
 
-  // update support based on button interactions
-  const [support, setSupport] = useState<boolean>(true)
+  // update vote option based on button interactions
+  const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
 
   // modal for casting votes
   const showVoteModal = useModalOpen(ApplicationModal.VOTE)
@@ -203,7 +204,12 @@ export default function VotePage({
   return (
     <>
       <PageWrapper gap="lg" justify="center">
-        <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
+        <VoteModal
+          isOpen={showVoteModal}
+          onDismiss={toggleVoteModal}
+          proposalId={proposalData?.id}
+          voteOption={voteOption}
+        />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
         <ProposalInfo gap="lg" justify="start">
           <RowBetween style={{ width: '100%' }}>
@@ -252,7 +258,7 @@ export default function VotePage({
                 padding="8px"
                 $borderRadius="8px"
                 onClick={() => {
-                  setSupport(true)
+                  setVoteOption(VoteOption.For)
                   toggleVoteModal()
                 }}
               >
@@ -262,7 +268,7 @@ export default function VotePage({
                 padding="8px"
                 $borderRadius="8px"
                 onClick={() => {
-                  setSupport(false)
+                  setVoteOption(VoteOption.Against)
                   toggleVoteModal()
                 }}
               >

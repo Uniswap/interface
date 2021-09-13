@@ -66,6 +66,7 @@ const FallbackWrapper = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
   width: 100%;
+  user-select: none;
 `
 const Icon = styled.img`
   width: 16px;

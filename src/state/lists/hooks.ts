@@ -1,6 +1,5 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
-import { IS_ON_APP_URL } from 'constants/misc'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
@@ -115,24 +114,23 @@ export function useCombinedActiveList(): TokenAddressMap {
   return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
 }
 
-// list of tokens not supported on interface, used to show warnings and prevent swaps and adds
+// list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
 export function useUnsupportedTokenList(): TokenAddressMap {
-  // get hard coded unsupported tokens, only block on app url
-  const localUnsupportedListMap = useMemo(() => (IS_ON_APP_URL ? listToTokenMap(UNSUPPORTED_TOKEN_LIST) : {}), [])
-
-  // broken tokens, blocked on all URLS
+  // get hard-coded broken tokens
   const brokenListMap = useMemo(() => listToTokenMap(BROKEN_LIST), [])
 
-  // get any loaded unsupported tokens, this will be empty if not on app URL
+  // get hard-coded list of unsupported tokens
+  const localUnsupportedListMap = useMemo(() => listToTokenMap(UNSUPPORTED_TOKEN_LIST), [])
+
+  // get dynamic list of unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
   return useMemo(
     () => combineMaps(brokenListMap, combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)),
-    [localUnsupportedListMap, loadedUnsupportedListMap, brokenListMap]
+    [brokenListMap, localUnsupportedListMap, loadedUnsupportedListMap]
   )
 }
-
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))
