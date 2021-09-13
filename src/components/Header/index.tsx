@@ -433,27 +433,6 @@ export default function Header() {
             </Card>
           )}
   
-          <HeaderElement style={{ marginRight: 15 }}>
-            <IconWrapper
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-              id={'contract-nav-link'}
-            >
-              <Tooltip
-                text="Community members will be able to vote on propositions proposed by Trump Gold holders when Trump Gold is released"
-                show={showTip}
-              >
-                <StyledInternalLink to="/vote">Vote</StyledInternalLink>
-                <Info
-                  style={{ color: '#fff' }}
-                  onMouseOver={() => setShowTip(true)}
-                  onMouseLeave={() => setShowTip(false)}
-                />
-              </Tooltip>
-            </IconWrapper>
-          </HeaderElement>
           <NetworkCard />
 
           <HeaderElement>
