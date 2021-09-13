@@ -39,7 +39,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run linters
-        uses: wearerequired/lint-action@b98b0918aa71490373d2eca9e8e39a9bc1cc2517
+        uses: wearerequired/lint-action@a25b25ac232deed2e3d2f802b111da885f8aa617
         with:
           github_token: ${{ secrets.github_token }}
           eslint: true
