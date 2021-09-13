@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-13 16:04\n"
+"PO-Revision-Date: 2021-09-13 17:07\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -1483,7 +1483,7 @@ msgstr "Langkah 1. Dapatkan token Likuiditas UNI-V2"
 
 #: src/state/governance/hooks.ts
 msgid "Submitted new proposal"
-msgstr "Usulan baru yang diajukan"
+msgstr "Proposal baru diajukan"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1499,7 +1499,7 @@ msgstr "Berhasil"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Success"
-msgstr "Kesuksesan"
+msgstr "Berhasil"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1536,7 +1536,7 @@ msgstr "Terima kasih telah menjadi bagian dari komunitas Uniswap <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr "% yang akan Anda peroleh dalam biaya."
+msgstr "% yang akan Anda peroleh dalam bentuk biaya."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
@@ -1556,7 +1556,7 @@ msgstr "Token output tidak dapat ditransfer. Mungkin ada masalah dengan token ou
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran. Catatan: biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
+msgstr "Output token tidak dapat ditransfer. Mungkin ada masalah dengan output token. Catatan: biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1585,19 +1585,19 @@ msgstr "Token ini biasanya dipasangkan dengan token lain."
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Ini adalah rilis alfa Uniswap di jaringan {0}"
+msgstr "Ini adalah rilisan alpha dari Uniswap pada jaringan {0}."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Ini adalah rilis alfa Uniswap di jaringan {0} Anda harus menjembatani aset L1 ke jaringan untuk menukarnya."
+msgstr "Ini adalah rilisan alpha dari Uniswap pada jaringan {0}. Anda harus menjembatani aset L1 ke jaringan untuk menukarnya."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "Kumpulan ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk kumpulan. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
+msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk pool. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Kumpulan ini harus diinisialisasi pada {0} sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk kumpulan. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda."
+msgstr "Pool ini harus diinisialisasi pada {0} sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk kumpulan. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1675,7 +1675,7 @@ msgstr "Transaksi Dikirim"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction completed in"
-msgstr "Transaksi selesai di"
+msgstr "Transaksi selesai pada"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
@@ -1736,7 +1736,7 @@ msgstr "Tidak diklaim:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
-msgstr "Yg tak dpt ditentukan"
+msgstr "Tidak dapat ditentukan"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
@@ -1889,7 +1889,7 @@ msgstr "Beri suara untuk usulan {proposalId}"
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr "Memilih untuk abstain pada proposal {proposalId}"
+msgstr "Pilih untuk abstain pada proposal {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -2258,11 +2258,11 @@ msgstr "{0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% fee tier"
-msgstr "tingkat biaya {0}"
+msgstr "tingkat biaya {0}%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "{0}% select"
-msgstr "{0}% pilih"
+msgstr "{0}% memilih"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
