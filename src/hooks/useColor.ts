@@ -3,7 +3,6 @@ import Vibrant from 'node-vibrant'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import Logger from 'utils/Logger'
 import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
 
@@ -30,7 +29,6 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   try {
     return await getColorFromUriPath(logoURI)
   } catch (e) {
-    Logger.error(e)
     if (logoURI === URIForEthToken(address)) {
       return null
     }
@@ -38,9 +36,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
     try {
       logoURI = URIForEthToken(address)
       return await getColorFromUriPath(logoURI)
-    } catch (e) {
-      Logger.error(e)
-    }
+    } catch (e) {}
   }
 
   return null
