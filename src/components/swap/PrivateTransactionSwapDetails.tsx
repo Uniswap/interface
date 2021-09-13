@@ -81,7 +81,7 @@ export function PrivateTransactionSwapDetails({ trade, allowedSlippage }: Privat
       </RowBetween>
       <RowBetween>
         <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
-          Estimated gas fee that will be included in Frontrunning Protected transactions.
+          <Trans>Estimated gas fee that will be included in Frontrunning Protected transactions.</Trans>
         </TYPE.italic>
       </RowBetween>
     </AutoColumn>

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
 const DetailsFooter = styled.div`
@@ -14,7 +15,9 @@ const DetailsFooter = styled.div`
 export default function FrontrunningProtectionFooter() {
   return (
     <DetailsFooter>
-      <TYPE.italic>Frontrunning Protection: On</TYPE.italic>
+      <TYPE.italic>
+        <Trans>Frontrunning Protection: On</Trans>
+      </TYPE.italic>
     </DetailsFooter>
   )
 }

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { CheckCircle, Triangle } from 'react-feather'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -62,7 +63,7 @@ export default function Transaction({ hash }: { hash: string }) {
             {tx?.privateTransaction && (
               <>
                 <br />
-                Frontrunning Protection: On
+                <Trans>Frontrunning Protection: On</Trans>
               </>
             )}
           </TransactionStatusText>

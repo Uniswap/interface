@@ -165,10 +165,6 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   }
 
   const showCustomDeadlineRow = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
-  const showFrontrunningProtectionRow = Boolean(
-    chainId === SupportedChainId.MAINNET && library && library.provider.isMetaMask
-  )
-
   const frontrunningProtection = useFrontrunningProtection()
   const setFrontrunningProtection = useSetFrontrunningProtection()
 
@@ -278,7 +274,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
         </AutoColumn>
       )}
 
-      {showFrontrunningProtectionRow && (
+      {frontrunningProtection && (
         <AutoColumn gap="sm">
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -288,7 +284,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
               text={
                 <>
                   <Trans>Your transaction will be protected from frontrunning attacks. </Trans>
-                  <TYPE.italic marginTop={'4px'}>Powered by Flashbots & mistX</TYPE.italic>
+                  <TYPE.italic marginTop={'4px'}>
+                    <Trans>Powered by Flashbots & mistX</Trans>
+                  </TYPE.italic>
                 </>
               }
             />

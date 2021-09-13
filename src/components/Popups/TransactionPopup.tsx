@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -37,7 +38,11 @@ export default function TransactionPopup({
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>
           {summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
-          {privateTransactionDetails && <TYPE.italic>Frontrunning Protection: On</TYPE.italic>}
+          {privateTransactionDetails && (
+            <TYPE.italic>
+              <Trans>Frontrunning Protection: On</Trans>
+            </TYPE.italic>
+          )}
         </TYPE.body>
         {chainId && (!privateTransaction || (privateTransaction && success)) && (
           <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
