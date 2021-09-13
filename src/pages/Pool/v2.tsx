@@ -187,12 +187,12 @@ export default function Pool() {
             <AutoColumn gap="md" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
                 <HideSmall>
-                  <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  <TYPE.mediumHeader  style={{ color: "#FFF", marginTop: '0.5rem', justifySelf: 'flex-start' }}>
                     <Trans>Your V2 liquidity</Trans>
                   </TYPE.mediumHeader>
                 </HideSmall>
                 <ButtonRow>
-                  <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
+                  <ResponsiveButtonSecondary style={{background: "#FFF"}} as={Link} padding="6px 8px" to="/add/v2/ETH">
                     <Trans>Create a pair</Trans>
                   </ResponsiveButtonSecondary>
                   <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
@@ -200,7 +200,7 @@ export default function Pool() {
                       <Trans>Import Pool</Trans>
                     </Text>
                   </ResponsiveButtonPrimary>
-                  <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
+                  <ResponsiveButtonPrimary  id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
                     <Text fontWeight={500} fontSize={16}>
                       <Trans>Add V2 Liquidity</Trans>
                     </Text>
@@ -210,17 +210,17 @@ export default function Pool() {
 
               {!account ? (
                 <Card padding="40px">
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <TYPE.white color={'#FFF'} textAlign="center">
                     <Trans>Connect to a wallet to view your liquidity.</Trans>
-                  </TYPE.body>
+                  </TYPE.white>
                 </Card>
               ) : v2IsLoading ? (
                 <EmptyProposals>
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <TYPE.white color={'#FFF'} textAlign="center">
                     <Dots>
                       <Trans>Loading</Trans>
                     </Dots>
-                  </TYPE.body>
+                  </TYPE.white>
                 </EmptyProposals>
               ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
                 <>
@@ -267,9 +267,9 @@ export default function Pool() {
                 </>
               ) : (
                 <EmptyProposals>
-                  <TYPE.body color={theme.text3} textAlign="center">
+                  <TYPE.white color={theme.text3} textAlign="center">
                     <Trans>No liquidity found.</Trans>
-                  </TYPE.body>
+                  </TYPE.white>
                 </EmptyProposals>
               )}
             </AutoColumn>
