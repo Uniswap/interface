@@ -88,7 +88,6 @@ export default function Bridge() {
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
-  const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
 
   const [sendFrom, setSendFrom] = useState(networks[0])
   const [sendTo, setSendTo] = useState(networks[1])
@@ -143,7 +142,7 @@ export default function Bridge() {
           <AssetSelector
             modal={ApplicationModal.NETWORK_SWITCHER_FROM}
             label="from"
-            connected={connectedNetwork === sendFrom.chainId}
+            connected={networkConnectorChainId === sendFrom.chainId}
             onNetworkClick={onSendFromSelect}
             networks={networks}
             selectedNetwork={sendFrom}
@@ -154,7 +153,7 @@ export default function Bridge() {
           <AssetSelector
             modal={ApplicationModal.NETWORK_SWITCHER_TO}
             label="to"
-            connected={connectedNetwork === sendTo.chainId}
+            connected={networkConnectorChainId === sendTo.chainId}
             onNetworkClick={onSendToSelect}
             networks={networks}
             selectedNetwork={sendTo}
@@ -176,8 +175,8 @@ export default function Bridge() {
           <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
             Connect Wallet
           </ButtonPrimary>
-        ) : sendFrom.chainId !== connectedNetwork ? (
-          <ButtonPrimary mt="12px" onClick={() => setConnectedNetwork(sendFrom.chainId)}>
+        ) : sendFrom.chainId !== networkConnectorChainId ? (
+          <ButtonPrimary mt="12px" >
             Connect to {sendFrom.name}
           </ButtonPrimary>
         ) : step === Step.Collect ? (
