@@ -4,7 +4,7 @@ import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { gnosisSafe, injected } from '../connectors'
-import { NetworkContextName } from '../constants/misc'
+import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> {
   const context = useWeb3React<Web3Provider>()
@@ -14,14 +14,15 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> {
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()
-  const [triedSafe, setTriedSafe] = useState(false)
   const [tried, setTried] = useState(false)
+
+  // gnosisSafe.isSafeApp() races a timeout against postMessage, so it delays pageload if we are not in a safe app;
+  // if we are not embedded in an iframe, it is not worth checking
+  const [triedSafe, setTriedSafe] = useState(!IS_IN_IFRAME)
 
   // first, try connecting to a gnosis safe
   useEffect(() => {
-    // gnosisSafe.isSafeApp() races a timeout against postMessage, so it delays pageload if we are not in a safe app;
-    // if we are not in an iframe, it is not worth checking
-    if (window && window.parent !== window) {
+    if (!triedSafe) {
       gnosisSafe.isSafeApp().then((loadedInSafe) => {
         if (loadedInSafe) {
           activate(gnosisSafe, undefined, true).catch(() => {
@@ -31,12 +32,10 @@ export function useEagerConnect() {
           setTriedSafe(true)
         }
       })
-    } else {
-      setTriedSafe(true)
     }
   }, [activate, setTriedSafe]) // intentionally only running on mount
 
-  // then, if that fails, try connected to an injected connector
+  // then, if that fails, try connecting to an injected connector
   useEffect(() => {
     if (!active && triedSafe) {
       injected.isAuthorized().then((isAuthorized) => {
