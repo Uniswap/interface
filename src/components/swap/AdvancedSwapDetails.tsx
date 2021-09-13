@@ -15,19 +15,19 @@ import { TransactionDetailsLabel } from './styleds'
 interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
-  loading?: boolean
+  syncing?: boolean
 }
 
 function TextWithLoadingPlaceholder({
-  loading,
+  syncing,
   width,
   children,
 }: {
-  loading: boolean
+  syncing: boolean
   width: number
   children: React.ReactNode
 }) {
-  return loading ? (
+  return syncing ? (
     <LoadingRows>
       <div style={{ height: '15px', width: `${width}px` }} />
     </LoadingRows>
@@ -36,7 +36,7 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const { realizedLPFee, priceImpact } = useMemo(() => {
@@ -59,7 +59,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             <Trans>Liquidity Provider Fee</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TextWithLoadingPlaceholder loading={loading} width={65}>
+        <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
           </TYPE.black>
@@ -72,7 +72,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             <Trans>Price Impact</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TextWithLoadingPlaceholder loading={loading} width={50}>
+        <TextWithLoadingPlaceholder syncing={syncing} width={50}>
           <TYPE.black textAlign="right" fontSize={14}>
             <FormattedPriceImpact priceImpact={priceImpact} />
           </TYPE.black>
@@ -85,7 +85,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             <Trans>Allowed Slippage</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TextWithLoadingPlaceholder loading={loading} width={45}>
+        <TextWithLoadingPlaceholder syncing={syncing} width={45}>
           <TYPE.black textAlign="right" fontSize={14}>
             {allowedSlippage.toFixed(2)}%
           </TYPE.black>
@@ -98,7 +98,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, loading = false }:
             {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
           </TYPE.subHeader>
         </RowFixed>
-        <TextWithLoadingPlaceholder loading={loading} width={70}>
+        <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`

@@ -23,23 +23,23 @@ const V2_DEFAULT_FEE_TIER = 3000
 
 export default memo(function SwapRoute({
   trade,
-  loading,
+  syncing,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
-  loading: boolean
+  syncing: boolean
 }) {
   return (
     <AutoColumn gap="12px">
       <RowBetween>
         <RouterLabel />
-        {!loading && (
+        {!syncing && (
           <TYPE.black fontSize={14}>
             {getTradeVersion(trade) === Version.v2 ? <Trans>via V2</Trans> : <Trans>via V3</Trans>}
           </TYPE.black>
         )}
       </RowBetween>
       <Separator />
-      {loading ? (
+      {syncing ? (
         <LoadingRows>
           <div style={{ width: '400px', height: '30px' }} />
         </LoadingRows>

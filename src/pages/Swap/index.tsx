@@ -443,7 +443,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
-                    content={<SwapRoute trade={trade} loading={routeIsSyncing} />}
+                    content={<SwapRoute trade={trade} syncing={routeIsSyncing} />}
                     placement="top"
                     hideArrow={true}
                   >
@@ -465,7 +465,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </ResponsiveTooltipContainer>
                     )}
                     content={
-                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} loading={routeIsSyncing} />
+                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
                     }
                     placement="top"
                     hideArrow={true}

@@ -91,10 +91,8 @@ export function useLocalV3TradeExactIn(
       }
     }
 
-    const isSyncing = quotesResults.some(({ syncing }) => syncing)
-
     return {
-      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
+      state: V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
@@ -181,10 +179,8 @@ export function useLocalV3TradeExactOut(
       }
     }
 
-    const isSyncing = quotesResults.some(({ syncing }) => syncing)
-
     return {
-      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
+      state: V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_OUTPUT,
