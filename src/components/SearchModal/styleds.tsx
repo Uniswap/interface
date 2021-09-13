@@ -19,7 +19,8 @@ export const ModalInfo = styled.div`
 `
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding:22px 18.5px 20px 18.5px; 
+    padding: 20px;
+  padding-bottom: 12px;
 `
 
 export const MenuItem = styled(RowBetween)`

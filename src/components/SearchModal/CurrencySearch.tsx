@@ -5,13 +5,13 @@ import { FixedSizeList } from 'react-window'
 import { useAllTokens, useToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
 import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
-import Column from '../Column'
+import Column, { AutoColumn } from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonTokens from './CommonTokens'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { SearchInput, Separator } from './styleds'
 import styled, { ThemeContext } from 'styled-components/macro'
 import useToggle from '../../hooks/useToggle'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -165,7 +165,7 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="15px">
+      <AutoColumn style={{padding:"22px 18.5px 20px 18.5px"}}  gap="15px">
         <RowBetween>
           <TYPE.body fontWeight={500}>Select a token</TYPE.body>
           <CloseIcon onClick={onDismiss} />
@@ -185,7 +185,7 @@ export function CurrencySearch({
         {showCommonBases && (
           <CommonTokens chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
-      </PaddedColumn>
+      </AutoColumn>
       <Separator style={{marginBottom:'20px'}} />
       {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
