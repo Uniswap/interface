@@ -177,7 +177,15 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
   const v3Trade = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
 
-  const isV2TradeBetter = useMemo(() => isTradeBetter(v3Trade.trade, v2Trade, TWO_PERCENT), [v2Trade, v3Trade.trade])
+  const isV2TradeBetter = useMemo(() => {
+    try {
+      return isTradeBetter(v3Trade.trade, v2Trade, TWO_PERCENT)
+    } catch (e) {
+      // v3 trade may be debouncing or fetching and have different
+      // inputs/ouputs than v2
+      return undefined
+    }
+  }, [v2Trade, v3Trade.trade])
 
   const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 

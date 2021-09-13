@@ -447,7 +447,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     placement="top"
                     hideArrow={true}
                   >
-                    <RouterLabel syncing={routeIsSyncing} />
+                    <RouterLabel syncing={routeIsSyncing} version={getTradeVersion(trade)} />
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>
