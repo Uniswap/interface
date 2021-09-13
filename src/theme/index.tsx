@@ -50,7 +50,7 @@ function colors(darkMode: boolean): Colors {
 
     // backgrounds / greys
     bg0: darkMode ? 'rgb(138,182,47)' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
+    bg1: darkMode ? 'rgb(138,182,47)' : '#F7F8FA',
     bg2: darkMode ? 'green' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
@@ -64,7 +64,7 @@ function colors(darkMode: boolean): Colors {
     //primary colors
     primary1: darkMode ? '#111' : '#73b588',
     primary2: darkMode ? '#222' : '#d9dc51',
-    primary3: darkMode ? '#222' : '#d9dc51',
+    primary3: darkMode ? '#eee' : '#d9dc51',
     primary4: darkMode ? 'rgb(139, 197, 63)' : '#F6DDE8',
     primary5: darkMode ? 'rgb(138,182,47)' : '#FDEAF1',
 
