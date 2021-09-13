@@ -244,10 +244,7 @@ export default function Swap({ history }: RouteComponentProps) {
   ])
 
   const isLoading =
-    currencies[Field.INPUT] &&
-    currencies[Field.OUTPUT] &&
-    (parsedAmounts[Field.INPUT] || parsedAmounts[Field.OUTPUT]) &&
-    !v2Trade
+    (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
 
   return (
     <>
