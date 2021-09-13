@@ -38,6 +38,10 @@ const Footer = styled.div`
   background-color: ${({ theme }) => theme.bg1And2};
   border-top: 1px solid ${({ theme }) => theme.bg1And2};
 `
+const CloseIconStyled=styled(CloseIcon)`
+  display:flex;
+  padding:0;
+`
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -168,7 +172,7 @@ export function CurrencySearch({
       <AutoColumn style={{padding:"22px 18.5px 20px 18.5px"}}  gap="15px">
         <RowBetween>
           <TYPE.body fontWeight={500}>Select a token</TYPE.body>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIconStyled  onClick={onDismiss} />
         </RowBetween>
         <Row>
           <SearchInput
