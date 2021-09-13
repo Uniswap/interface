@@ -23,23 +23,23 @@ function useQueryCacheInvalidator() {
   }, [chainId, dispatch])
 }
 
-const NETWORK_HEALTH_CHECK_MS = ms`15s`
-const DEFAULT_MS_BEFORE_WARNING_WAIT = ms`10m`
-
-interface UseBlockWarningTimerArgs {
-  chainId: number | undefined
-  msSinceLastBlock: number
-  setMsSinceLastBlock: (n: number) => void
-}
-
-function useBlockWarningTimer({ chainId, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
+function useBlockWarningTimer() {
+  const NETWORK_HEALTH_CHECK_MS = ms`15s`
+  const DEFAULT_MS_BEFORE_WARNING = ms`10m`
+  const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
   const timeout = useRef<NodeJS.Timeout>()
+
+  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
+  const currentBlock = useBlockNumber()
+  useEffect(() => {
+    setMsSinceLastBlock(0)
+  }, [currentBlock])
+
   useEffect(() => {
     const waitMsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING_WAIT) ??
-      DEFAULT_MS_BEFORE_WARNING_WAIT
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
     timeout.current = setTimeout(() => {
       setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
@@ -55,7 +55,15 @@ function useBlockWarningTimer({ chainId, msSinceLastBlock, setMsSinceLastBlock }
         clearTimeout(timeout.current)
       }
     }
-  }, [chainId, chainConnectivityWarningActive, dispatch, msSinceLastBlock, setMsSinceLastBlock])
+  }, [
+    chainId,
+    chainConnectivityWarningActive,
+    DEFAULT_MS_BEFORE_WARNING,
+    dispatch,
+    msSinceLastBlock,
+    NETWORK_HEALTH_CHECK_MS,
+    setMsSinceLastBlock,
+  ])
 }
 
 export default function Updater(): null {
@@ -68,12 +76,7 @@ export default function Updater(): null {
     blockNumber: null,
   })
 
-  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
-  const currentBlock = useBlockNumber()
-  useEffect(() => {
-    setMsSinceLastBlock(0)
-  }, [currentBlock])
-
+  useBlockWarningTimer()
   useQueryCacheInvalidator()
 
   const blockNumberCallback = useCallback(
@@ -88,8 +91,6 @@ export default function Updater(): null {
     },
     [chainId, setState]
   )
-
-  useBlockWarningTimer({ chainId, msSinceLastBlock, setMsSinceLastBlock })
 
   // attach/detach listeners
   useEffect(() => {
