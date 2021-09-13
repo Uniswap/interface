@@ -8,6 +8,7 @@ import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { setChainConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
+import { useBlockNumber } from './hooks'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -24,19 +25,20 @@ function useQueryCacheInvalidator() {
 
 const NETWORK_HEALTH_CHECK_MS = ms`15s`
 const DEFAULT_MS_BEFORE_WARNING_WAIT = ms`10m`
+
 interface UseBlockWarningTimerArgs {
   chainId: number | undefined
-  dispatch: (action: any) => void
   msSinceLastBlock: number
   setMsSinceLastBlock: (n: number) => void
 }
 
-function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
+function useBlockWarningTimer({ chainId, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
+  const dispatch = useAppDispatch()
   const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
   const timeout = useRef<NodeJS.Timeout>()
   useEffect(() => {
     const waitMsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING_WAIT) ||
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING_WAIT) ??
       DEFAULT_MS_BEFORE_WARNING_WAIT
 
     timeout.current = setTimeout(() => {
@@ -59,7 +61,6 @@ function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceL
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-
   const windowVisible = useIsWindowVisible()
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
@@ -67,15 +68,19 @@ export default function Updater(): null {
     blockNumber: null,
   })
 
+  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
+  const currentBlock = useBlockNumber()
+  useEffect(() => {
+    setMsSinceLastBlock(0)
+  }, [currentBlock])
+
   useQueryCacheInvalidator()
 
-  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
       setState((state) => {
         if (chainId === state.chainId) {
           if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
-          setMsSinceLastBlock(0)
           return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
         }
         return state
@@ -84,7 +89,7 @@ export default function Updater(): null {
     [chainId, setState]
   )
 
-  useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock })
+  useBlockWarningTimer({ chainId, msSinceLastBlock, setMsSinceLastBlock })
 
   // attach/detach listeners
   useEffect(() => {
