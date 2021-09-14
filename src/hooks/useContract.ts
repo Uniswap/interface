@@ -13,17 +13,16 @@ import ERC20_ABI from '../constants/abis/erc20.json'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { getContract } from '../utils'
-import { useActiveWeb3React } from './index'
+import { getContract, getContractForReading } from '../utils'
+import { providers, useActiveWeb3React } from './index'
 import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, REWARD_LOCKER_ADDRESS } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
-
+import { ethers } from 'ethers'
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
-
   return useMemo(() => {
     if (!address || !ABI || !library) return null
     try {
@@ -33,6 +32,27 @@ export function useContract(address: string | undefined, ABI: any, withSignerIfP
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+export function useContractForReading(
+  address: string | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useMemo(() => {
+    if (!address || !chainId) return null
+    const provider = providers[chainId]
+    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+      console.log('===provider', provider)
+    }
+    try {
+      return getContractForReading(address, ABI, provider)
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [address, ABI, chainId])
 }
 
 // returns null on errors
@@ -120,7 +140,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+  return useContractForReading(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
 }
 
 export function useSocksController(): Contract | null {
