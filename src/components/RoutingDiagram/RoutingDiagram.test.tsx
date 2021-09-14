@@ -35,11 +35,8 @@ jest.mock(
 
 jest.mock('../Popover', () => () => 'Popover')
 
-jest.mock('hooks/useCurrencyFromActiveList', () => ({
-  useCurrencyFromActiveList: ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) => [
-    currency0,
-    currency1,
-  ],
+jest.mock('hooks/useTokenInfoFromActiveList', () => ({
+  useTokenInfoFromActiveList: (currency: Currency) => currency,
 }))
 
 it('renders when no routes are provided', () => {
