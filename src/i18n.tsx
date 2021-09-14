@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
-import { useActiveLocale, useSetLocaleFromUrl } from 'hooks/useActiveLocale'
+import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import { SupportedLocale } from 'constants/locales'
 import {
   af,
@@ -36,6 +36,7 @@ import {
   zh,
   PluralCategory,
 } from 'make-plural/plurals'
+import { useUserLocaleManager } from 'state/user/hooks'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -82,21 +83,24 @@ async function dynamicActivate(locale: SupportedLocale) {
   i18n.activate(locale)
 }
 
+dynamicActivate(initialLocale)
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  useSetLocaleFromUrl()
   const locale = useActiveLocale()
+  const [, setUserLocale] = useUserLocaleManager()
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
         document.documentElement.setAttribute('lang', locale)
+        setUserLocale(locale) // stores the selected locale to persist across sessions
         setLoaded(true)
       })
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
-  }, [locale])
+  }, [locale, setUserLocale])
 
   // prevent the app from rendering with placeholder text before the locale is loaded
   if (!loaded) return null
