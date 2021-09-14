@@ -83,7 +83,6 @@ export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
   const { typedValue } = useBridgeState()
   const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
-  //const [amount, setAmount] = useState('')
   const { bridgeCurrency, currencyBalance, parsedAmount } = useDerivedBridgeInfo()
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()

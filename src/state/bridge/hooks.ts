@@ -9,7 +9,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { replaceBridgeState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { replaceBridgeState, selectCurrency, switchCurrencies, typeInput } from './actions'
 import { currencyId } from '../../utils/currencyId'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
@@ -21,7 +21,6 @@ export function useBridgeActionHandlers(): {
   onCurrencySelection: (currency: Currency) => void
   onSwitchTokens: () => void
   onUserInput: (typedValue: string) => void
-  onChangeRecipient: (recipient: string | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
@@ -46,18 +45,10 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      dispatch(setRecipient({ recipient }))
-    },
-    [dispatch]
-  )
-
   return {
     onSwitchTokens,
     onCurrencySelection,
-    onUserInput,
-    onChangeRecipient
+    onUserInput
   }
 }
 
@@ -138,24 +129,12 @@ function parseTokenAmountURLParameter(urlParam: any): string {
   return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
 }
 
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
-const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
-  if (address) return address
-  if (ENS_NAME_REGEX.test(recipient)) return recipient
-  if (ADDRESS_REGEX.test(recipient)) return recipient
-  return null
-}
-
 export function queryParametersToBridgeState(
   parsedQs: ParsedQs,
   nativeCurrencyId: string
 ): {
   typedValue: string
   currencyId: string | undefined
-  recipient: string | null
 } {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, nativeCurrencyId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, nativeCurrencyId)
@@ -167,12 +146,9 @@ export function queryParametersToBridgeState(
     }
   }
 
-  const recipient = validatedRecipient(parsedQs.recipient)
-
   return {
     currencyId: inputCurrency,
-    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    recipient
+    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount)
   }
 }
 
@@ -196,7 +172,6 @@ export function useDefaultsFromURLSearch():
       replaceBridgeState({
         typedValue: parsed.typedValue,
         currencyId: parsed.currencyId,
-        recipient: parsed.recipient
       })
     )
 

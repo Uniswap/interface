@@ -1,18 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { replaceBridgeState, selectCurrency, setRecipient, typeInput } from './actions'
+import { replaceBridgeState, selectCurrency, typeInput } from './actions'
 
 export interface BridgeState {
   readonly typedValue: string
   readonly currencyId: string | undefined
-  // the typed recipient address or ENS name, or null if swap should go to sender
-  readonly recipient: string | null
   readonly protocolFeeTo: string | undefined
 }
 
 const initialState: BridgeState = {
   typedValue: '',
   currencyId: '',
-  recipient: null,
   protocolFeeTo: undefined
 }
 
@@ -20,12 +17,11 @@ export default createReducer<BridgeState>(initialState, builder =>
   builder
     .addCase(
       replaceBridgeState,
-      (state, { payload: { typedValue, currencyId, recipient } }) => {
+      (state, { payload: { typedValue, currencyId } }) => {
         return {
           ...state,
           currencyId: currencyId,
           typedValue: typedValue,
-          recipient
         }
       }
     )
@@ -40,8 +36,5 @@ export default createReducer<BridgeState>(initialState, builder =>
         ...state,
         typedValue
       }
-    })
-    .addCase(setRecipient, (state, { payload: { recipient } }) => {
-      state.recipient = recipient
     })
 )
