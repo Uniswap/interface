@@ -37,15 +37,16 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
     if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
       console.log('rpc: ', context.chainId, NETWORK_URLS[context.chainId as ChainId])
     }
-    const provider = providers[context.chainId as ChainId]
-    provider.provider = { isMetaMask: true }
-    provider.send = context.library.__proto__.send
-    provider.jsonRpcFetchFunc = context.library.jsonRpcFetchFunc
-    return {
-      library: provider,
-      chainId: context.chainId as ChainId,
-      ...web3React
-    } as Web3ReactContextInterface
+    // const provider = providers[context.chainId as ChainId].cl
+    // provider.provider = { isMetaMask: true }
+    // provider.send = context.library.__proto__.send
+    // provider.jsonRpcFetchFunc = context.library.jsonRpcFetchFunc
+    // return {
+    //   library: provider,
+    //   chainId: context.chainId as ChainId,
+    //   ...web3React
+    // } as Web3ReactContextInterface
+    return context
   } else {
     if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
       console.log('rpc: ', chainIdWhenNotConnected, NETWORK_URLS[chainIdWhenNotConnected as ChainId])

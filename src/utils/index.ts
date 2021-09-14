@@ -29,6 +29,7 @@ import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
+import { ethers } from 'ethers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -159,6 +160,14 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
   }
 
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
+}
+// account is optional
+export function getContractForReading(address: string, ABI: any, library: ethers.providers.JsonRpcProvider): Contract {
+  if (!isAddress(address) || address === AddressZero) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+
+  return new Contract(address, ABI, library)
 }
 
 // account is optional
