@@ -28,7 +28,6 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
-import { AddLiquidityNetworkAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -550,7 +549,6 @@ export default function AddLiquidity({
   return (
     <>
       <ScrollablePage>
-        <AddLiquidityNetworkAlert />
         <OptimismDowntimeWarning />
         <TransactionConfirmationModal
           isOpen={showConfirm}

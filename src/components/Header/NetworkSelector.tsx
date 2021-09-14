@@ -44,11 +44,6 @@ const FlyoutHeader = styled.div`
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   align-items: flex-start;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -59,17 +54,15 @@ const FlyoutMenu = styled.div`
   font-size: 16px;
   overflow: auto;
   padding: 16px;
-  width: 78%;
+  position: absolute;
+  top: 64px;
+  width: 272px;
   z-index: 99;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    left: unset;
-    position: absolute;
-    top: 50px;
-    transform: unset;
-    width: 272px;
-  }
   & > *:not(:last-child) {
     margin-bottom: 12px;
+  }
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    top: 50px;
   }
 `
 const FlyoutRow = styled.div<{ active: boolean }>`

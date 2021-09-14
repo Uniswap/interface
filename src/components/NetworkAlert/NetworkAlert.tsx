@@ -15,6 +15,21 @@ const L2Icon = styled.img`
   height: 40px;
   justify-self: center;
 `
+const BetaTag = styled.span<{ color: string }>`
+  align-items: center;
+  background-color: ${({ color }) => color};
+  border-radius: 4px;
+  color: ${({ theme }) => theme.white};
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  left: -16px;
+  position: absolute;
+  transform: rotate(-15deg);
+  top: -16px;
+  width: 60px;
+  z-index: 1;
+`
 const Body = styled.p`
   font-size: 12px;
   grid-column: 1 / 3;
@@ -24,13 +39,18 @@ const Body = styled.p`
     grid-column: 2 / 3;
   }
 `
+export const Controls = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+`
 const CloseIcon = styled(X)`
   cursor: pointer;
   position: absolute;
   top: 16px;
   right: 16px;
 `
-const ContentWrapper = styled.div`
+const BodyText = styled.div`
   align-items: center;
   display: grid;
   grid-gap: 4px;
@@ -41,6 +61,9 @@ const ContentWrapper = styled.div`
     grid-template-columns: 42px 4fr;
     grid-gap: 8px;
   }
+`
+const RootWrapper = styled.div`
+  position: relative;
 `
 export const ArbitrumWrapperBackgroundDarkMode = css`
   background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
@@ -58,7 +81,7 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -96,6 +119,7 @@ const Header = styled.h2`
   padding-right: 30px;
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
+  margin-left: 12px;
   transform: rotate(230deg);
   width: 20px;
   height: 20px;
@@ -103,13 +127,13 @@ const LinkOutCircle = styled(ArrowDownCircle)`
 const LinkOutToBridge = styled(ExternalLink)`
   align-items: center;
   background-color: black;
-  border-radius: 16px;
+  border-radius: 8px;
   color: white;
   display: flex;
   font-size: 16px;
   height: 44px;
   justify-content: space-between;
-  margin: 0 20px 20px 20px;
+  margin: 0 12px 20px 18px;
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
@@ -160,27 +184,32 @@ export function NetworkAlert() {
     ? 'https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism'
     : 'https://help.uniswap.org/en/articles/5538618-how-to-deposit-tokens-to-arbitrum'
   return (
-    <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
-      <CloseIcon onClick={dismiss} />
-      <ContentWrapper>
-        <L2Icon src={info.logoUrl} />
-        <Header>
-          <Trans>Uniswap on {info.label}</Trans>
-        </Header>
-        <Body>
-          <Trans>
-            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
-            swap them.
-          </Trans>{' '}
+    <RootWrapper>
+      <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+        {userEthBalance?.greaterThan(0) && <CloseIcon onClick={dismiss} />}
+        <BodyText>
+          <L2Icon src={info.logoUrl} />
+          <Header>
+            <Trans>Uniswap on {info.label}</Trans>
+          </Header>
+          <Body>
+            <Trans>
+              To starting trading on {info.label}, first bridge your assets from L1 to L2. Please treat this as a beta
+              release and learn about the risks before using {info.label}.
+            </Trans>
+          </Body>
+        </BodyText>
+        <Controls>
+          <LinkOutToBridge href={depositUrl}>
+            <Trans>Deposit assets</Trans>
+            <LinkOutCircle />
+          </LinkOutToBridge>
           <ReadMoreLink href={readMoreLink}>
-            <Trans>Read more</Trans>
+            <Trans>Learn More</Trans>
           </ReadMoreLink>
-        </Body>
+        </Controls>
       </ContentWrapper>
-      <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {info.label}</Trans>
-        <LinkOutCircle />
-      </LinkOutToBridge>
     </RootWrapper>
   )
 }
