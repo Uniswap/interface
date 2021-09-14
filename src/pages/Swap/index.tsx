@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { opacityLoadingStyles } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { RouterLabel } from 'components/swap/RouterLabel'
@@ -452,13 +451,11 @@ export default function Swap({ history }: RouteComponentProps) {
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>
-                  <div style={opacityLoadingStyles(routeIsSyncing)}>
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                  </div>
+                  <TradePrice
+                    price={trade.executionPrice}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
                   <MouseoverTooltipContent
                     Container={({ children }) => (
                       <ResponsiveTooltipContainer origin="bottom right" width={'295px'}>

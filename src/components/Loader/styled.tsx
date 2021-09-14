@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 
 export const loadingAnimation = keyframes`
   0% {
@@ -28,6 +28,7 @@ export const LoadingRows = styled.div`
   }
 `
 
-export function opacityLoadingStyles(loading: boolean) {
-  return { transition: 'opacity 0.2s ease-in-out', ...(loading ? { opacity: '0.3' } : { opacity: '1' }) }
-}
+export const loadingStyles = css<{ loading: boolean }>`
+  transition: opacity 0.2s ease-in-out;
+  opacity: ${({ loading }) => (loading ? '0.3' : '1')};
+`
