@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
+import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
@@ -32,10 +33,16 @@ export default memo(function SwapRoute({
     <AutoColumn gap="12px">
       <RowBetween>
         <RouterLabel />
-        {!syncing && (
-          <TYPE.black fontSize={14}>
-            {getTradeVersion(trade) === Version.v2 ? <Trans>via V2</Trans> : <Trans>via V3</Trans>}
-          </TYPE.black>
+        {syncing ? (
+          <LoadingRows>
+            <div style={{ width: '30px', height: '24px' }} />
+          </LoadingRows>
+        ) : (
+          <Badge>
+            <TYPE.black fontSize={12}>
+              {getTradeVersion(trade) === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}
+            </TYPE.black>
+          </Badge>
         )}
       </RowBetween>
       <Separator />

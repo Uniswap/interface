@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { ButtonGray } from 'components/Button'
+import Badge from 'components/Badge'
 import { AutoRow } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
@@ -11,6 +11,12 @@ const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
   width: 16px;
   stroke: #2172e5;
+`
+
+const VersionBadge = styled(Badge)`
+  height: 24px;
+  /* compensates for container padding */
+  margin: -0.5rem 0;
 `
 
 const GradientText = styled(TYPE.black)<{ pulsing: boolean }>`
@@ -37,18 +43,12 @@ export function RouterLabel({ syncing = false, version }: { syncing?: boolean; v
       </GradientText>
     </AutoRow>
   ) : version ? (
-    <ButtonGray
-      width="fit-content"
-      padding=".65rem"
-      margin="-.25rem"
-      disabled
-      style={{
-        opacity: 0.8,
-      }}
-    >
+    <VersionBadge>
       <TYPE.black fontSize={12}>{version === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}</TYPE.black>
-    </ButtonGray>
+    </VersionBadge>
   ) : (
-    <div></div>
+    <TYPE.black fontSize={14}>
+      <Trans>Routes</Trans>
+    </TYPE.black>
   )
 }

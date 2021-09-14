@@ -495,6 +495,14 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Trans>Unwrap</Trans>
                     ) : null)}
                 </ButtonPrimary>
+              ) : routeIsSyncing ? (
+                <GreyCard style={{ textAlign: 'center' }}>
+                  <TYPE.main mb="4px">
+                    <Dots>
+                      <Trans>Loading</Trans>
+                    </Dots>
+                  </TYPE.main>
+                </GreyCard>
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
@@ -505,14 +513,6 @@ export default function Swap({ history }: RouteComponentProps) {
                     ) : (
                       <Trans>Insufficient liquidity for this trade.</Trans>
                     )}
-                  </TYPE.main>
-                </GreyCard>
-              ) : routeIsSyncing ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">
-                    <Dots>
-                      <Trans>Loading</Trans>
-                    </Dots>
                   </TYPE.main>
                 </GreyCard>
               ) : showApproveFlow ? (

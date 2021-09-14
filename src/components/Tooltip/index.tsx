@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
@@ -11,6 +12,7 @@ export const TooltipContainer = styled.div<{ width?: string }>`
   background: ${({ theme }) => theme.bg2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.bg3};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

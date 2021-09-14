@@ -23,7 +23,7 @@ export function useV3TradeExactIn(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmountIn = useDebounce(amountIn, 250)
+  const debouncedAmountIn = useDebounce(amountIn, 150)
 
   const routingAPITradeExactIn = useRoutingAPITradeExactIn(
     routingAPIEnabled && isWindowVisible ? debouncedAmountIn : undefined,
@@ -72,12 +72,14 @@ export function useV3TradeExactOut(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmountOut = useDebounce(amountOut, 250)
+  const debouncedAmountOut = useDebounce(amountOut, 150)
 
   const routingAPITradeExactOut = useRoutingAPITradeExactOut(
     routingAPIEnabled && isWindowVisible ? currencyIn : undefined,
     debouncedAmountOut
   )
+
+  const isLoading = amountOut !== undefined && debouncedAmountOut === undefined
 
   const debouncing =
     routingAPITradeExactOut.trade &&
@@ -97,5 +99,6 @@ export function useV3TradeExactOut(
   return {
     ...(useFallback ? bestV3TradeExactOut : routingAPITradeExactOut),
     ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+    ...(isLoading ? { state: V3TradeState.LOADING } : {}),
   }
 }
