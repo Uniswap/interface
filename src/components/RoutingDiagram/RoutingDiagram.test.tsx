@@ -1,7 +1,6 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DAI, USDC, WBTC } from 'constants/tokens'
-import React from 'react'
 import { render } from 'test-utils'
 import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
 
@@ -35,6 +34,13 @@ jest.mock(
 )
 
 jest.mock('../Popover', () => () => 'Popover')
+
+jest.mock('hooks/useCurrencyFromActiveList', () => ({
+  useCurrencyFromActiveList: ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) => [
+    currency0,
+    currency1,
+  ],
+}))
 
 it('renders when no routes are provided', () => {
   const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC} routes={[]} />)

@@ -7,6 +7,7 @@ import Row, { AutoRow } from 'components/Row'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+import { useCurrencyFromActiveList } from 'hooks/useCurrencyFromActiveList'
 
 export interface RoutingDiagramEntry {
   percent: Percent
@@ -95,10 +96,12 @@ function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; pat
 }
 
 function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
+  const [currency0WithLogo, currency1WithLogo] = useCurrencyFromActiveList({ currency0, currency1 })
+
   return (
     <PoolBadge>
       <Box margin="0 5px 0 10px">
-        <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} />
+        <DoubleCurrencyLogo currency0={currency0WithLogo} currency1={currency1WithLogo} size={20} />
       </Box>
       <TYPE.small fontSize={12}>{feeAmount / 10000}%</TYPE.small>
     </PoolBadge>

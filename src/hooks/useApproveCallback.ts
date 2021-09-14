@@ -39,8 +39,8 @@ export function useApproveCallback(
     return currentAllowance.lessThan(amountToApprove)
       ? pendingApproval
         ? ApprovalState.PENDING
-        : ApprovalState.NOT_APPROVED
-      : ApprovalState.APPROVED
+        : ApprovalState.PENDING
+      : ApprovalState.NOT_APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
