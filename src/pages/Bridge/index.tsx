@@ -81,8 +81,9 @@ const networks: Network[] = [
 
 export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
-
-  const [amount, setAmount] = useState('')
+  const { typedValue } = useBridgeState()
+  const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
+  //const [amount, setAmount] = useState('')
   const { bridgeCurrency, currencyBalance, parsedAmount } = useDerivedBridgeInfo()
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
@@ -106,7 +107,7 @@ export default function Bridge() {
     setSendTo(sendFrom)
   }
 
-  const isButtonDisabled = !amount || step !== Step.Initial
+  const isButtonDisabled = !typedValue || step !== Step.Initial
 
   useEffect(() => {
     const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000)
@@ -114,15 +115,14 @@ export default function Bridge() {
   }, [step])
 
   const resetBridge = () => {
-    setAmount('')
+    handleUserInput('')
     setStep(Step.Initial)
   }
 
   const [bridge, setBridge] = useState('Swapr Fast Exit')
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
-  const { typedValue } = useBridgeState()
-  const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
+
   const handleCurrencySelect = useCallback(
     outputCurrency => {
       onCurrencySelection(outputCurrency)
@@ -195,21 +195,21 @@ export default function Bridge() {
           <NetworkSwitcher sendToId={sendTo.chainId} onCollectClick={() => setStep(Step.Success)} />
         ) : (
           <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
-            {!amount ? 'Enter ETH amount' : `Brigde to ${sendTo.name}`}
+            {!typedValue ? 'Enter ETH amount' : `Brigde to ${sendTo.name}`}
           </BridgeButton>
         )}
       </AppBody>
-      {step === Step.Initial && !!amount && (
+      {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
       )}
-      {step === Step.Pending && <FooterPending amount={amount} show />}
-      {step === Step.Ready && <FooterReady amount={amount} show onCollectButtonClick={() => setStep(Step.Collect)} />}
+      {step === Step.Pending && <FooterPending amount={typedValue} show />}
+      {step === Step.Ready && <FooterReady amount={typedValue} show onCollectButtonClick={() => setStep(Step.Collect)} />}
       <BridgeSuccesModal
         isOpen={step === Step.Success}
         onDismiss={resetBridge}
         onTradeButtonClick={resetBridge}
         onBackButtonClick={resetBridge}
-        amount={amount}
+        amount={typedValue}
       />
     </>
   )
