@@ -10,7 +10,6 @@ import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { switchToNetwork } from 'utils/switchToNetwork'
-import { X } from 'react-feather'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -21,7 +20,7 @@ const ActiveRowLinkList = styled.div`
     color: ${({ theme }) => theme.text2};
     display: flex;
     flex-direction: row;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 500;
     justify-content: space-between;
     padding: 8px 0 4px;
@@ -30,6 +29,8 @@ const ActiveRowLinkList = styled.div`
   & > a:first-child {
     border-top: 1px solid ${({ theme }) => theme.text2};
     margin: 0;
+    margin-top: 6px;
+    padding-top: 10px;
   }
 `
 const ActiveRowWrapper = styled.div`
@@ -125,14 +126,6 @@ const SelectorWrapper = styled.div`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     position: relative;
   }
-`
-const StyledClose = styled(X)`
-  cursor: pointer;
-  position: absolute;
-  height: 20px;
-  right: 20px;
-  top: 20px;
-  width: 20px;
 `
 const StyledChevronDown = styled(ChevronDown)`
   width: 12px;
@@ -236,7 +229,6 @@ https://help.uniswap.org/en/collections/3033942-layer-2"
       </SelectorControls>
       {open && (
         <FlyoutMenu>
-          <StyledClose onClick={toggle} />
           <FlyoutHeader>
             <Trans>Select a network</Trans>
           </FlyoutHeader>

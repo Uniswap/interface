@@ -18,9 +18,10 @@ const L2Icon = styled.img`
 const BetaTag = styled.span<{ color: string }>`
   align-items: center;
   background-color: ${({ color }) => color};
-  border-radius: 4px;
+  border-radius: 6px;
   color: ${({ theme }) => theme.white};
   display: flex;
+  font-size: 14px;
   height: 28px;
   justify-content: center;
   left: -16px;
@@ -202,7 +203,7 @@ export function NetworkAlert() {
         </BodyText>
         <Controls>
           <LinkOutToBridge href={depositUrl}>
-            <Trans>Deposit assets</Trans>
+            <Trans>Deposit Assets</Trans>
             <LinkOutCircle />
           </LinkOutToBridge>
           <ReadMoreLink href={readMoreLink}>
