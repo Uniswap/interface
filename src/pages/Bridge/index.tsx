@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { RoutablePlatform } from '@swapr/sdk'
+import { CurrencyAmount, RoutablePlatform } from '@swapr/sdk'
 import QuestionHelper from '../../components/QuestionHelper'
 import { RowBetween } from '../../components/Row'
 import AppBody from '../AppBody'
@@ -16,12 +16,15 @@ import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
-import { Field } from '../../state/swap/actions'
+import { Field } from '../../state/bridge/actions'
 import {
   useDerivedSwapInfo,
-  useSwapActionHandlers
-} from '../../state/swap/hooks'
+  useSwapActionHandlers,
+ 
+} from '../../state/bridge/hooks'
 import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+
 
 const Title = styled.p`
   margin: 0;
@@ -83,11 +86,11 @@ export default function Bridge() {
   const [amount, setAmount] = useState('')
 
   const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
-  const { currencies } = useDerivedSwapInfo(platformOverride || undefined)
+  const { currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo(platformOverride || undefined)
 
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
+  const { account, chainId: networkConnectorChainId } = useActiveWeb3React()
 
   const [sendFrom, setSendFrom] = useState(networks[0])
   const [sendTo, setSendTo] = useState(networks[1])
@@ -122,7 +125,8 @@ export default function Bridge() {
   const [bridge, setBridge] = useState('Swapr Fast Exit')
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
-  const { onCurrencySelection } = useSwapActionHandlers()
+  // const { typedValue } = useSwapState()
+  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const handleOutputSelect = useCallback(
     outputCurrency => {
       setPlatformOverride(null) // reset platform override, since best prices might be on a different platform
@@ -130,6 +134,19 @@ export default function Bridge() {
     },
     [onCurrencySelection]
   )
+  const handleTypeOutput = useCallback(
+    (value: string) => {
+      onUserInput(Field.OUTPUT, value)
+    },
+    [onUserInput]
+  )
+
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.OUTPUT], sendFrom.chainId)
+  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
+
+  const handleMaxInput = useCallback(() => {
+    maxAmountInput && onUserInput(Field.OUTPUT, maxAmountInput.toExact())
+  }, [maxAmountInput, onUserInput])
 
   return (
     <>
@@ -162,10 +179,10 @@ export default function Bridge() {
         <CurrencyInputPanel
           label="Amount"
           value={amount}
-          showMaxButton
+          showMaxButton={!atMaxAmountInput}
           currency={currencies[Field.OUTPUT]}
-          onUserInput={setAmount}
-          onMax={() => null}
+          onUserInput={handleTypeOutput}
+          onMax={handleMaxInput}
           onCurrencySelect={handleOutputSelect}
           disableCurrencySelect={step !== Step.Initial}
           disabled={step !== Step.Initial}
