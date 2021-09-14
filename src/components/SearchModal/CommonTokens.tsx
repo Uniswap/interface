@@ -11,7 +11,6 @@ import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import styled from 'styled-components'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
   border-radius: 12px;
   display: flex;
   line-height:19.5px;
@@ -21,7 +20,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+    background-color: ${({  disable }) => !disable && "#555a73"};
   }
 
   color: ${({ theme, disable }) => disable && theme.text3};

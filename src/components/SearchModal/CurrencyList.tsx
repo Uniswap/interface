@@ -210,7 +210,6 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
-      console.log(style)
       const currency: Currency = data[index]
       if (isBreakLine(currency)) return <BreakLineComponent style={style} />
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))

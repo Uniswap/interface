@@ -38,7 +38,7 @@ export const MenuItem = styled(RowBetween)`
 `
 
 export const TokenPickerItem = styled(Flex)`
-  padding: 0 22.5px;
+  padding: 0 12.5px 0 22.5px;
   height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
