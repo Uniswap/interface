@@ -27,6 +27,7 @@ const ContentWrapper = styled(Column)`
   overflow: hidden;
   position: relative;
   background-color: ${({ theme }) => theme.dark2};
+ 
 `
 
 const Footer = styled.div`

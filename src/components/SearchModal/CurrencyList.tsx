@@ -49,6 +49,19 @@ const TokenListLogoWrapper = styled.img`
   height: 20px;
 `
 
+const StyledFixedSizeList=styled(FixedSizeList)`
+    &&::-webkit-scrollbar {
+       width: 10px;
+    }
+
+   &&::-webkit-scrollbar-thumb {
+      background: ${({ theme }) => theme.bg3};
+      border-radius: 8px;
+      border:2px solid ${({ theme }) => theme.bg2};
+   }
+
+`
+
 function Balance({ balance }: { balance: CurrencyAmount }) {
   return <StyledBalanceText  title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -243,7 +256,7 @@ export default function CurrencyList({
     <Flex  overflowY="auto" flex="1">
       <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
-          <FixedSizeList
+          <StyledFixedSizeList
             ref={fixedListRef as any}
             width={width}
             height={height}
@@ -254,7 +267,7 @@ export default function CurrencyList({
 
           >
             {Row}
-          </FixedSizeList>
+          </StyledFixedSizeList>
         )}
       </AutoSizer>
     </Flex>
