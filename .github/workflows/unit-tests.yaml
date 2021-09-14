@@ -36,5 +36,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Check for duplicate dependencies
+        run: yarn test:dedup
+
       - name: Run unit tests
         run: yarn test

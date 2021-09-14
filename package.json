@@ -117,7 +117,8 @@
     "wcag-contrast": "^3.0.0",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
-    "workbox-routing": "^6.1.0"
+    "workbox-routing": "^6.1.0",
+    "yarn-deduplicate": "^3.1.0"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.6.4"
@@ -132,6 +133,7 @@
     "graphql:generate": "graphql-codegen --config codegen.yml",
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
+    "test:dedup": "yarn-deduplicate --list --fail",
     "test": "react-scripts test --env=./custom-test-env.js",
     "prei18n:extract": "touch src/locales/en-US.po",
     "prestart": "yarn graphql:generate && yarn prei18n:extract"
