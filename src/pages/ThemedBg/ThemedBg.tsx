@@ -16,7 +16,7 @@ export const ThemedBg = ({ theme, setTheme }: { theme: any; setTheme: (theme: st
       <OutlineCard>
       <span style={{textAlign: 'center', fontSize:22, color: "#fff"}}>Choose a custom background</span>
       <ul style={{background:'transparent', padding: 20, cursor: 'pointer'}}>
-        {['./squeeze.mp4', './trumpspace.mp4', './video.mp4'].map((key) => (
+        {['./squeeze2.mp4', './trumpspace.mp4', './video.mp4'].map((key) => (
           <li onClick={(e) => setTheme(key)} style={{ listStyle: 'none', padding: 15, margin: 10 }} key={key}>
             <video style={{ maxWidth: 400, border: theme === key ? '1px solid green' : '1px solid #eee' }}>
               <source src={key} type="video/mp4" />
