@@ -33,7 +33,7 @@ export function useEagerConnect() {
         }
       })
     }
-  }) // intentionally only running on mount
+  }, [activate, setTriedSafe, triedSafe])
 
   // then, if that fails, try connecting to an injected connector
   useEffect(() => {
