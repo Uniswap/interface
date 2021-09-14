@@ -30,6 +30,8 @@ export function useV3TradeExactIn(
     currencyOut
   )
 
+  const isLoading = amountIn !== undefined && debouncedAmountIn === undefined
+
   // consider trade debouncing when inputs/outputs do not match
   const debouncing =
     routingAPITradeExactIn.trade &&
@@ -50,6 +52,7 @@ export function useV3TradeExactIn(
   return {
     ...(useFallback ? bestV3TradeExactIn : routingAPITradeExactIn),
     ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+    ...(isLoading ? { state: V3TradeState.LOADING } : {}),
   }
 }
 

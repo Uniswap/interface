@@ -1,15 +1,15 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
-import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
+import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
-import { useTokenAllowance } from './useTokenAllowance'
 import { useActiveWeb3React } from './web3'
+import { useTokenAllowance } from './useTokenAllowance'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -39,8 +39,8 @@ export function useApproveCallback(
     return currentAllowance.lessThan(amountToApprove)
       ? pendingApproval
         ? ApprovalState.PENDING
-        : ApprovalState.PENDING
-      : ApprovalState.NOT_APPROVED
+        : ApprovalState.NOT_APPROVED
+      : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
@@ -90,7 +90,7 @@ export function useApproveCallback(
       .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
-          approval: { tokenAddress: token.address, spender: spender },
+          approval: { tokenAddress: token.address, spender },
         })
       })
       .catch((error: Error) => {

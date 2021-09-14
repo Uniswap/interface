@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
-import { loadingStyles } from 'components/Loader/styled'
+import { loadingOpacityMixin, LoadingOpacityContainer } from 'components/Loader/styled'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
@@ -146,8 +146,8 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   `};
 `
 
-const StyledNumericalInput = styled(NumericalInput)<{ loading: boolean }>`
-  ${loadingStyles}
+const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
+  ${loadingOpacityMixin}
 `
 
 interface CurrencyInputPanelProps {
@@ -259,7 +259,7 @@ export default function CurrencyInputPanel({
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
-              loading={loading}
+              $loading={loading}
             />
           )}
         </InputRow>
@@ -294,7 +294,9 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              <LoadingOpacityContainer $loading={loading}>
+                <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              </LoadingOpacityContainer>
             </RowBetween>
           </FiatRow>
         )}

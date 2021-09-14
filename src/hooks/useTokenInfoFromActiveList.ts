@@ -1,6 +1,6 @@
-import { useMemo } from '@testing-library/react-hooks/node_modules/@types/react'
 import { Currency } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
+import { useMemo } from 'react'
 import { useCombinedActiveList } from 'state/lists/hooks'
 
 /**

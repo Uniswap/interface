@@ -2,10 +2,12 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import { RouterLabel } from 'components/swap/RouterLabel'
 import SwapRoute from 'components/swap/SwapRoute'
+import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
@@ -30,11 +32,11 @@ import {
   ArrowWrapper,
   Dots,
   ResponsiveTooltipContainer,
+  StyledTradePrice,
   SwapCallbackError,
   Wrapper,
 } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
-import TradePrice from '../../components/swap/TradePrice'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
@@ -44,7 +46,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -200,14 +202,11 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () =>
-      getTradeVersion(trade) === Version.v3
-        ? [
-            !(trade as V3Trade<Currency, Currency, TradeType>).swaps,
-            V3TradeState.LOADING === v3TradeState,
-            V3TradeState.SYNCING === v3TradeState,
-          ]
-        : [!trade?.route, false, false],
+    () => [
+      trade instanceof V3Trade ? !trade?.swaps : !trade?.route,
+      V3TradeState.LOADING === v3TradeState,
+      V3TradeState.SYNCING === v3TradeState,
+    ],
     [trade, v3TradeState]
   )
 
@@ -451,11 +450,13 @@ export default function Swap({ history }: RouteComponentProps) {
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>
-                  <TradePrice
-                    price={trade.executionPrice}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                  />
+                  <LoadingOpacityContainer $loading={routeIsSyncing}>
+                    <TradePrice
+                      price={trade.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
+                  </LoadingOpacityContainer>
                   <MouseoverTooltipContent
                     Container={({ children }) => (
                       <ResponsiveTooltipContainer origin="bottom right" width={'295px'}>

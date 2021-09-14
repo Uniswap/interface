@@ -25,14 +25,14 @@ function TextWithLoadingPlaceholder({
 }: {
   syncing: boolean
   width: number
-  children: React.ReactNode
+  children: JSX.Element
 }) {
   return syncing ? (
     <LoadingRows>
       <div style={{ height: '15px', width: `${width}px` }} />
     </LoadingRows>
   ) : (
-    <>{children}</>
+    children
   )
 }
 

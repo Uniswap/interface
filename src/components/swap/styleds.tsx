@@ -7,6 +7,8 @@ import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 import { TYPE } from 'theme'
 import { TooltipContainer } from 'components/Tooltip'
+import TradePrice from './TradePrice'
+import { loadingOpacityMixin } from 'components/Loader/styled'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -146,4 +148,8 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
     transform: scale(0.8);
     transform-origin: ${origin ?? 'bottom left'};
   `}
+`
+
+export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
+  ${loadingOpacityMixin}
 `

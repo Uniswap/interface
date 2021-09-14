@@ -155,5 +155,7 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "@testing-library/react-hooks": "^7.0.2"
+  }
 }

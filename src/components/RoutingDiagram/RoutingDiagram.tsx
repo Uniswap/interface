@@ -4,10 +4,10 @@ import Badge from 'components/Badge'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { useCurrencyFromActiveList, useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 
 export interface RoutingDiagramEntry {
   percent: Percent

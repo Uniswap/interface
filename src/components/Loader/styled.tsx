@@ -28,7 +28,12 @@ export const LoadingRows = styled.div`
   }
 `
 
-export const loadingStyles = css<{ loading: boolean }>`
+export const loadingOpacityMixin = css<{ $loading: boolean }>`
+  filter: ${({ $loading }) => ($loading ? 'grayscale(1)' : 'none')};
+  opacity: ${({ $loading }) => ($loading ? '0.4' : '1')};
   transition: opacity 0.2s ease-in-out;
-  opacity: ${({ loading }) => (loading ? '0.3' : '1')};
+`
+
+export const LoadingOpacityContainer = styled.div<{ $loading: boolean }>`
+  ${loadingOpacityMixin}
 `
