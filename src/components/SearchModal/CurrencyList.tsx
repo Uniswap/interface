@@ -54,11 +54,14 @@ const StyledFixedSizeList=styled(FixedSizeList)`
        width: 10px;
     }
 
-   &&::-webkit-scrollbar-thumb {
+   &&::-webkit-scrollbar-thumb { 
       background: ${({ theme }) => theme.bg3};
       border-radius: 8px;
       border:2px solid ${({ theme }) => theme.bg2};
    }
+   //firefox support
+  scrollbar-color: ${({ theme }) => theme.bg3+' '+theme.bg2};
+  scrollbar-width: thin;
 
 `
 
