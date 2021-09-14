@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount, RoutablePlatform } from '@swapr/sdk'
+import { CurrencyAmount } from '@swapr/sdk'
 import QuestionHelper from '../../components/QuestionHelper'
 import { RowBetween } from '../../components/Row'
 import AppBody from '../AppBody'
@@ -16,16 +16,15 @@ import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
-import { Field } from '../../state/bridge/actions'
 import {
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
- 
+  useDerivedBridgeInfo,
+  useBridgeActionHandlers,
+  useBridgeState
 } from '../../state/bridge/hooks'
 import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 
-
+ 
 const Title = styled.p`
   margin: 0;
   font-weight: 500;
@@ -84,10 +83,7 @@ export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
 
   const [amount, setAmount] = useState('')
-
-  const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
-  const { currencyBalances, parsedAmount, currencies } = useDerivedSwapInfo(platformOverride || undefined)
-
+  const { bridgeCurrency, currencyBalance, parsedAmount } = useDerivedBridgeInfo()
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { account, chainId: networkConnectorChainId } = useActiveWeb3React()
@@ -125,27 +121,26 @@ export default function Bridge() {
   const [bridge, setBridge] = useState('Swapr Fast Exit')
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
-  // const { typedValue } = useSwapState()
-  const { onCurrencySelection, onUserInput } = useSwapActionHandlers()
-  const handleOutputSelect = useCallback(
+  const { typedValue } = useBridgeState()
+  const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
+  const handleCurrencySelect = useCallback(
     outputCurrency => {
-      setPlatformOverride(null) // reset platform override, since best prices might be on a different platform
-      onCurrencySelection(Field.OUTPUT, outputCurrency)
+      onCurrencySelection(outputCurrency)
     },
     [onCurrencySelection]
   )
-  const handleTypeOutput = useCallback(
+  const handleUserInput = useCallback(
     (value: string) => {
-      onUserInput(Field.OUTPUT, value)
+      onUserInput(value)
     },
     [onUserInput]
   )
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.OUTPUT], sendFrom.chainId)
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, sendFrom.chainId)
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.OUTPUT, maxAmountInput.toExact())
+    maxAmountInput && onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
   return (
@@ -178,12 +173,12 @@ export default function Bridge() {
         </Row>
         <CurrencyInputPanel
           label="Amount"
-          value={amount}
+          value={typedValue}
           showMaxButton={!atMaxAmountInput}
-          currency={currencies[Field.OUTPUT]}
-          onUserInput={handleTypeOutput}
+          currency={bridgeCurrency}
+          onUserInput={handleUserInput}
           onMax={handleMaxInput}
-          onCurrencySelect={handleOutputSelect}
+          onCurrencySelect={handleCurrencySelect}
           disableCurrencySelect={step !== Step.Initial}
           disabled={step !== Step.Initial}
           id="brdige-currency-input"

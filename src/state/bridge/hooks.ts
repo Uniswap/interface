@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from '@bridger/sdk'
+import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from '@swapr/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -83,12 +83,7 @@ export function tryParseAmount(value?: string, currency?: Currency, chainId?: nu
 
 // from the current bridge inputs, compute the best trade and return it.
 export function useDerivedBridgeInfo(
-): {
-  bridgeCurrency: Currency 
-  currencyBalance: CurrencyAmount 
-  parsedAmount: CurrencyAmount | undefined
-  inputError?: string
-} {
+) {
   const { account, chainId } = useActiveWeb3React()
   const {
     typedValue,
