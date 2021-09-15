@@ -44,7 +44,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
             .filter(([t0, t1]) => !t0.equals(t1))
             // filter out duplicate pairs
             .filter(([t0, t1], i, otherPairs) => {
-              // find the first index in the array which at which there are the same 2 tokens as the current
+              // find the first index in the array at which there are the same 2 tokens as the current
               const firstIndexInOtherPairs = otherPairs.findIndex(([t0Other, t1Other]) => {
                 return (t0.equals(t0Other) && t1.equals(t1Other)) || (t0.equals(t1Other) && t1.equals(t0Other))
               })
