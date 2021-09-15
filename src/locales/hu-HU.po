@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-03 17:08\n"
+"PO-Revision-Date: 2021-09-15 15:07\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -484,6 +484,8 @@ msgstr "Tranzakció megerősítése a pénztárcájában"
 msgid "Confirm transaction in wallet"
 msgstr "A tranzakció megerősítése a pénztárcában"
 
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
@@ -517,11 +519,6 @@ msgstr "Csatlakozzon egy pénztárcához a V2 likviditás megtekintéséhez."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Csatlakozzon egy pénztárcához a likviditás megtekintéséhez."
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Connect wallet"
-msgstr "Pénztárca csatlakoztatása"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -815,11 +812,8 @@ msgstr "Elrejt"
 msgid "High Price Impact"
 msgstr "Magas árhatás"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "I Understand"
-msgstr "Megértem"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Értem"
 

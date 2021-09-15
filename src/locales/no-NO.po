@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-03 17:08\n"
+"PO-Revision-Date: 2021-09-15 15:07\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -484,6 +484,8 @@ msgstr "Bekreft denne transaksjonen i lommeboken din"
 msgid "Confirm transaction in wallet"
 msgstr "Bekreft transaksjonen i lommeboken"
 
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
@@ -517,11 +519,6 @@ msgstr "Koble til en lommebok for å se V2-likviditeten."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Koble til en lommebok for å se innholdet ditt."
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Connect wallet"
-msgstr "Koble til lommebok"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -814,11 +811,8 @@ msgstr "Gjemme seg"
 msgid "High Price Impact"
 msgstr "Høy pris konsekvens"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "I Understand"
-msgstr "Jeg forstår"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Jeg forstår"
 

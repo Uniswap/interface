@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-03 17:08\n"
+"PO-Revision-Date: 2021-09-15 15:07\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -484,6 +484,8 @@ msgstr "Confirmă această tranzacție în portofelul tău"
 msgid "Confirm transaction in wallet"
 msgstr "Confirmați tranzacția în portofel"
 
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
@@ -517,11 +519,6 @@ msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea V2 a ta."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Conectează-te la un portofel pentru a vizualiza lichiditatea ta."
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Connect wallet"
-msgstr "Conectare la portofel"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -814,11 +811,8 @@ msgstr "Ascunde"
 msgid "High Price Impact"
 msgstr "Impact Preț Ridicat"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "I Understand"
-msgstr "Înțeleg"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Înţeleg"
 

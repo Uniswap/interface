@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-03 17:08\n"
+"PO-Revision-Date: 2021-09-15 15:07\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -484,6 +484,8 @@ msgstr "Conferma questa transazione nel tuo portafoglio"
 msgid "Confirm transaction in wallet"
 msgstr "Conferma transazione nel portafoglio"
 
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
@@ -517,11 +519,6 @@ msgstr "Connettiti a un portafoglio per visualizzare la tua liquidità V2."
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Connettiti a un portafoglio per visualizzare la tua liquidità."
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Connect wallet"
-msgstr "Collega portafoglio"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -814,11 +811,8 @@ msgstr "Nascondere"
 msgid "High Price Impact"
 msgstr "Impatto Ad Alto Prezzo"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "I Understand"
-msgstr "Capisco"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Capisco"
 
