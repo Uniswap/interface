@@ -1,3 +1,4 @@
+import { OpenClaimAddressModalAndRedirectToSwap } from 'pages/Swap/redirects'
 import { transparentize } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
@@ -22,6 +23,7 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
   Container?: ({ children }: { children: ReactNode }) => JSX.Element
+  onOpen?: () => void
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
@@ -50,9 +52,17 @@ export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show
   )
 }
 
-export function MouseoverTooltipContent({ content, children, ...rest }: Omit<TooltipContentProps, 'show'>) {
+export function MouseoverTooltipContent({
+  content,
+  children,
+  onOpen: openCallback = undefined,
+  ...rest
+}: Omit<TooltipContentProps, 'show'>) {
   const [show, setShow] = useState(false)
-  const open = useCallback(() => setShow(true), [setShow])
+  const open = useCallback(() => {
+    setShow(true)
+    openCallback?.()
+  }, [openCallback])
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <TooltipContent {...rest} show={show} content={content}>

@@ -449,6 +449,12 @@ export default function Swap({ history }: RouteComponentProps) {
                     Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
                     content={<SwapRoute trade={trade} syncing={routeIsSyncing} />}
                     placement="bottom"
+                    onOpen={() =>
+                      ReactGA.event({
+                        category: 'Swap',
+                        action: 'Router Tooltip Open',
+                      })
+                    }
                   >
                     <AutoRow gap="4px" width="auto">
                       <AutoRouterLogo />
@@ -468,7 +474,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   </LoadingOpacityContainer>
                   <MouseoverTooltipContent
                     Container={({ children }) => (
-                      <ResponsiveTooltipContainer origin="bottom right" width={'295px'}>
+                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
                         {children}
                       </ResponsiveTooltipContainer>
                     )}
@@ -476,6 +482,12 @@ export default function Swap({ history }: RouteComponentProps) {
                       <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
                     }
                     placement="bottom"
+                    onOpen={() =>
+                      ReactGA.event({
+                        category: 'Swap',
+                        action: 'Transaction Details Tooltip Open',
+                      })
+                    }
                   >
                     <StyledInfo />
                   </MouseoverTooltipContent>

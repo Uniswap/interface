@@ -146,7 +146,7 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
 
   ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
     transform: scale(0.8);
-    transform-origin: ${origin ?? 'bottom left'};
+    transform-origin: ${origin ?? 'top left'};
   `}
 `
 
