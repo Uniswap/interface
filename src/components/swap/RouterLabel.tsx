@@ -10,7 +10,17 @@ import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.s
 const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   height: 16px;
   width: 16px;
-  stroke: #2172e5;
+  stroke: ${({ theme }) => theme.blue1};
+`
+
+const UnstyledStyledAutoRouterIcon = styled(AutoRouterIcon)`
+  height: 16px;
+  width: 16px;
+
+  stroke: ${({ theme }) => theme.text3};
+  :hover {
+    stroke: ${({ theme }) => theme.text1};
+  }
 `
 
 const VersionBadge = styled(Badge)`
@@ -39,16 +49,34 @@ export function RouterLabel({ syncing = false, version }: { syncing?: boolean; v
     <AutoRow gap="4px" width="auto">
       <StyledAutoRouterIcon />
       <GradientText fontSize={14} pulsing={syncing}>
+        {/* If routes.length > 1... show number
+        {routes.length} */}
+      </GradientText>
+    </AutoRow>
+  ) : version ? (
+    <UnstyledStyledAutoRouterIcon />
+  ) : (
+    <TYPE.black fontSize={14}>
+      <Trans>Trade Route</Trans>
+    </TYPE.black>
+  )
+}
+
+export function RouterLabelPopover({ syncing = false, version }: { syncing?: boolean; version?: Version }) {
+  const routingAPIEnabled = useRoutingAPIEnabled()
+
+  return routingAPIEnabled ? (
+    <AutoRow gap="4px" width="auto">
+      <StyledAutoRouterIcon />
+      <GradientText fontSize={14} pulsing={syncing}>
         Auto Router
       </GradientText>
     </AutoRow>
   ) : version ? (
-    <VersionBadge>
-      <TYPE.black fontSize={12}>{version === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}</TYPE.black>
-    </VersionBadge>
+    <UnstyledStyledAutoRouterIcon />
   ) : (
     <TYPE.black fontSize={14}>
-      <Trans>Routes</Trans>
+      <Trans>Trade Route</Trans>
     </TYPE.black>
   )
 }

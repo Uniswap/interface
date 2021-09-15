@@ -12,7 +12,7 @@ import { memo } from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
-import { RouterLabel } from './RouterLabel'
+import { RouterLabelPopover } from './RouterLabel'
 
 const Separator = styled.div`
   border-top: 1px solid ${({ theme }) => theme.bg2};
@@ -32,7 +32,7 @@ export default memo(function SwapRoute({
   return (
     <AutoColumn gap="12px">
       <RowBetween>
-        <RouterLabel />
+        <RouterLabelPopover />
         {syncing ? (
           <LoadingRows>
             <div style={{ width: '30px', height: '24px' }} />
@@ -57,6 +57,10 @@ export default memo(function SwapRoute({
           routes={getTokenPath(trade)}
         />
       )}
+      {/* Hide and show this if Auto router is toggled on or off */}
+      <span style={{ fontSize: '12px', width: '400px' }}>
+        This route optimizes your price by considering split routes, multiple hops, and gas costs.
+      </span>
     </AutoColumn>
   )
 })
