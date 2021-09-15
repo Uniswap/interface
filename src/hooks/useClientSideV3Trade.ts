@@ -21,7 +21,7 @@ const DEFAULT_GAS_QUOTE = 2_000_000
  * @param amountIn the amount to swap in
  * @param currencyOut the desired output currency
  */
-export function useLocalV3TradeExactIn(
+export function useClientV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
@@ -107,7 +107,7 @@ export function useLocalV3TradeExactIn(
  * @param currencyIn the desired input currency
  * @param amountOut the amount to swap out
  */
-export function useLocalV3TradeExactOut(
+export function useClientSideV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {

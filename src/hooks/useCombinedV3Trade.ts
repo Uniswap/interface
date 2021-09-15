@@ -5,7 +5,7 @@ import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from 'state/rou
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
-import { useLocalV3TradeExactIn, useLocalV3TradeExactOut } from './useLocalV3Trade'
+import { useClientV3TradeExactIn, useClientSideV3TradeExactOut } from './useClientSideV3Trade'
 
 /**
  * Returns the best v3 trade for a desired exact input swap.
@@ -43,8 +43,8 @@ export function useV3TradeExactIn(
   const useFallback =
     !debouncing && (!routingAPIEnabled || routingAPITradeExactIn.state === V3TradeState.NO_ROUTE_FOUND)
 
-  // only use local router if multi-route trade failed
-  const bestV3TradeExactIn = useLocalV3TradeExactIn(
+  // only use client side router if routing api trade failed
+  const bestV3TradeExactIn = useClientV3TradeExactIn(
     useFallback ? debouncedAmountIn : undefined,
     useFallback ? currencyOut : undefined
   )
@@ -91,7 +91,7 @@ export function useV3TradeExactOut(
   const useFallback =
     !debouncing && (!routingAPIEnabled || routingAPITradeExactOut.state === V3TradeState.NO_ROUTE_FOUND)
 
-  const bestV3TradeExactOut = useLocalV3TradeExactOut(
+  const bestV3TradeExactOut = useClientSideV3TradeExactOut(
     useFallback ? currencyIn : undefined,
     useFallback ? debouncedAmountOut : undefined
   )
