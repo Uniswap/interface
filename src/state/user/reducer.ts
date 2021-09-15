@@ -18,6 +18,7 @@ import {
   updateUserLocale,
   updateArbitrumAlphaAcknowledged,
   updateFrontrunningProtection,
+  updateFrontrunningProtectionGasFee,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 
@@ -47,6 +48,9 @@ export interface UserState {
 
   // whether to use a frontrunning protection service
   frontrunningProtection: boolean
+
+  // Gas fee setting for frontrunning protected swaps
+  frontrunningProtectionGasFee: 'med' | 'high'
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -83,6 +87,7 @@ export const initialState: UserState = {
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
   frontrunningProtection: false,
+  frontrunningProtectionGasFee: 'med',
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
@@ -195,5 +200,8 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateFrontrunningProtection, (state, { payload: { frontrunningProtection } }) => {
       state.frontrunningProtection = frontrunningProtection
+    })
+    .addCase(updateFrontrunningProtectionGasFee, (state, { payload: { frontrunningProtectionGasFee } }) => {
+      state.frontrunningProtectionGasFee = frontrunningProtectionGasFee
     })
 )

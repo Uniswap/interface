@@ -29,6 +29,9 @@ export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance:
 export const updateFrontrunningProtection = createAction<{ frontrunningProtection: boolean }>(
   'user/updateFrontrunningProtection'
 )
+export const updateFrontrunningProtectionGasFee = createAction<{ frontrunningProtectionGasFee: 'med' | 'high' }>(
+  'user/updateFrontrunningProtectionGasFee'
+)
 export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')

@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useState, useContext, useCallback } from 'react'
 import { Percent } from '@uniswap/sdk-core'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -6,19 +7,23 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { darken } from 'polished'
 import {
   useFrontrunningProtection,
   useSetFrontrunningProtection,
+  useFrontrunningProtectionGasFee,
+  useSetFrontrunningProtectionGasFee,
   useSetUserSlippageTolerance,
   useUserSlippageTolerance,
   useUserTransactionTTL,
 } from 'state/user/hooks'
+import { usePrivateTransactionFees } from 'state/application/hooks'
 import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import Toggle from '../Toggle'
+import { Type } from 'react-feather'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -48,6 +53,7 @@ const FancyButton = styled.button`
 `
 
 const Option = styled(FancyButton)<{ active: boolean }>`
+  padding: 0 8px;
   margin-right: 8px;
   :hover {
     cursor: pointer;
@@ -165,9 +171,13 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   }
 
   const showCustomDeadlineRow = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showFrontrunningProtectionRow = chainId === 1 && library && library.provider.isMetaMask
   const frontrunningProtection = useFrontrunningProtection()
   const setFrontrunningProtection = useSetFrontrunningProtection()
-
+  const frontrunningProtectionGasFee = useFrontrunningProtectionGasFee()
+  const setFrontrunningProtectionGasFee = useSetFrontrunningProtectionGasFee()
+  const privateTransactionFees = usePrivateTransactionFees()
+  console.log('frontrunningProtectionGasFee: ', frontrunningProtectionGasFee)
   return (
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
@@ -274,7 +284,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
         </AutoColumn>
       )}
 
-      {frontrunningProtection && (
+      {showFrontrunningProtectionRow && (
         <AutoColumn gap="sm">
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -283,7 +293,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             <QuestionHelper
               text={
                 <>
-                  <Trans>Your transaction will be protected from frontrunning attacks. </Trans>
+                  <Trans>Your transaction will be protected from frontrunning attacks.</Trans>
                   <TYPE.italic marginTop={'4px'}>
                     <Trans>Powered by Flashbots & mistX</Trans>
                   </TYPE.italic>
@@ -298,6 +308,45 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
               toggle={() => setFrontrunningProtection(!frontrunningProtection)}
             />
           </RowFixed>
+        </AutoColumn>
+      )}
+
+      {frontrunningProtection && privateTransactionFees && (
+        <AutoColumn gap="sm">
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              <Trans>Max gas fee</Trans>
+            </TYPE.black>
+            <QuestionHelper text={<Trans>Maximum gas fee for frontrunning protected swaps.</Trans>} />
+          </RowFixed>
+          <Row>
+            <Option
+              onClick={() => {
+                setFrontrunningProtectionGasFee('med')
+              }}
+              active={frontrunningProtectionGasFee === 'med'}
+            >
+              <Trans>
+                High:{' '}
+                {BigNumber.from(privateTransactionFees.med.maxFeePerGas)
+                  .add(privateTransactionFees.med.maxPriorityFeePerGas)
+                  .div(1000000000)}
+              </Trans>
+            </Option>
+            <Option
+              onClick={() => {
+                setFrontrunningProtectionGasFee('high')
+              }}
+              active={frontrunningProtectionGasFee === 'high'}
+            >
+              <Trans>
+                Instant:{' '}
+                {BigNumber.from(privateTransactionFees.high.maxFeePerGas)
+                  .add(privateTransactionFees.high.maxPriorityFeePerGas)
+                  .div(1000000000)}
+              </Trans>
+            </Option>
+          </Row>
         </AutoColumn>
       )}
     </AutoColumn>

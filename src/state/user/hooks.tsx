@@ -21,6 +21,7 @@ import {
   SerializedToken,
   updateArbitrumAlphaAcknowledged,
   updateFrontrunningProtection,
+  updateFrontrunningProtectionGasFee,
   updateHideClosedPositions,
   updateUserDarkMode,
   updateUserDeadline,
@@ -175,7 +176,7 @@ export function useFrontrunningProtection(): boolean {
 }
 
 /**
- * Return whether the user has enabled frontrunning protection
+ * Return callback to enable or disable frontrunning protection
  */
 export function useSetFrontrunningProtection(): (frontrunningProtection: boolean) => void {
   const dispatch = useAppDispatch()
@@ -183,6 +184,33 @@ export function useSetFrontrunningProtection(): (frontrunningProtection: boolean
   return useCallback(
     (frontrunningProtection: boolean) => {
       dispatch(updateFrontrunningProtection({ frontrunningProtection }))
+    },
+    [dispatch]
+  )
+}
+
+/**
+ * Return the gas fee setting for frontrunning protected transactions
+ */
+export function useFrontrunningProtectionGasFee(): 'med' | 'high' {
+  const frontrunningProtectionGasFee = useAppSelector((state) => {
+    return state.user.frontrunningProtectionGasFee
+  })
+
+  return useMemo((): 'med' | 'high' => {
+    return frontrunningProtectionGasFee
+  }, [frontrunningProtectionGasFee])
+}
+
+/**
+ * Return whether the user has enabled frontrunning protection
+ */
+export function useSetFrontrunningProtectionGasFee(): (frontrunningProtectionGasFee: 'med' | 'high') => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (frontrunningProtectionGasFee: 'med' | 'high') => {
+      dispatch(updateFrontrunningProtectionGasFee({ frontrunningProtectionGasFee }))
     },
     [dispatch]
   )
