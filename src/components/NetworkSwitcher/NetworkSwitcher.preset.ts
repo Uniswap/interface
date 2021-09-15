@@ -4,19 +4,20 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 
-import { NetworkSwitcherOptionsPreset } from './NetworkSwitcher.types'
-
-export const networkSwitcherOptionsPreset: NetworkSwitcherOptionsPreset = {
-  [ChainId.MAINNET]: {
-    header: 'Ethereum',
+export const networkOptionsPreset = [
+  {
+    chainId: ChainId.MAINNET,
+    name: 'Ethereum',
     logoSrc: EthereumLogo
   },
-  [ChainId.ARBITRUM_ONE]: {
-    header: 'Arbitrum one',
+  {
+    chainId: ChainId.ARBITRUM_ONE,
+    name: 'Arbitrum one',
     logoSrc: ArbitrumLogo
   },
-  [ChainId.XDAI]: {
-    header: 'xDai',
+  {
+    chainId: ChainId.XDAI,
+    name: 'xDai',
     logoSrc: XDAILogo
   }
-}
+]
