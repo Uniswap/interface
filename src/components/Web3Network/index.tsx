@@ -54,7 +54,7 @@ const NetworkLabel = styled.div`
 `
 
 function Web3Network(): JSX.Element | null {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
   const node = useRef<HTMLDivElement>()
@@ -75,7 +75,7 @@ function Web3Network(): JSX.Element | null {
         </Row>
         <img src={DropdownSVG} />
       </NetworkSwitchContainer>
-      <NetworkModal isNotConnected={!(library && library.provider && library.provider.isMetaMask)} />
+      <NetworkModal />
     </NetworkCard>
   )
 }
