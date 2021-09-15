@@ -47,12 +47,7 @@ export function useBestV3TradeExactIn(
   )
 
   return useMemo(() => {
-    if (
-      !amountIn ||
-      !currencyOut ||
-      // skip when tokens are the same
-      amountIn.currency.equals(currencyOut)
-    ) {
+    if (!amountIn || !currencyOut || quotesResults.some(({ valid }) => !valid)) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
@@ -135,13 +130,7 @@ export function useBestV3TradeExactOut(
   )
 
   return useMemo(() => {
-    if (
-      !amountOut ||
-      !currencyIn ||
-      quotesResults.some(({ valid }) => !valid) ||
-      // skip when tokens are the same
-      amountOut.currency.equals(currencyIn)
-    ) {
+    if (!amountOut || !currencyIn || quotesResults.some(({ valid }) => !valid)) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
