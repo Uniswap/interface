@@ -6,7 +6,7 @@ import { t } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { keccak256, serializeTransaction } from 'ethers/lib/utils'
+import { keccak256, serializeTransaction, parseTransaction } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { useTransactionAdder, usePrivateTransactionAdder } from '../state/transactions/hooks'
@@ -415,6 +415,18 @@ export function useSwapCallback(
               if (web3Provider) {
                 web3Provider.provider.isMetaMask = true
               }
+
+              /**
+               * Hack for detecting hardware wallets connected through metamask
+               * Hardware wallets cannot sign with eth_sign. A direct hardware wallet connection should be used instead
+               */
+              const parsed = parseTransaction(rawSignedTransaction)
+              if (parsed.from !== account) {
+                throw new Error(
+                  'Hardware wallets connected through MetaMask cannot sign frontrunning protected transactions. Use a standard MetaMask wallet instead.'
+                )
+              }
+
               const hash = keccak256(rawSignedTransaction)
               const bundle: BundleReq = {
                 transactions: [rawSignedTransaction],
