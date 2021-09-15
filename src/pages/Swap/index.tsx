@@ -66,12 +66,12 @@ import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
 const StyledInfo = styled(Info)`
-  opacity: 0.4;
-  color: ${({ theme }) => theme.text1};
   height: 16px;
   width: 16px;
+  margin-left: 4px;
+  color: ${({ theme }) => theme.text3};
   :hover {
-    opacity: 0.8;
+    color: ${({ theme }) => theme.text1};
   }
 `
 
@@ -443,13 +443,12 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {!showWrap && trade && (
-              <Row justify={!trade ? 'center' : 'space-between'}>
+              <Row justify={!trade ? 'center' : 'space-between'} style={{ margin: '0 12px', width: 'unset' }}>
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
                     content={<SwapRoute trade={trade} syncing={routeIsSyncing} />}
-                    placement="top"
-                    hideArrow={true}
+                    placement="bottom"
                   >
                     <RouterLabel syncing={routeIsSyncing} version={getTradeVersion(trade)} />
                   </MouseoverTooltipContent>
@@ -471,8 +470,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     content={
                       <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
                     }
-                    placement="top"
-                    hideArrow={true}
+                    placement="bottom"
                   >
                     <StyledInfo />
                   </MouseoverTooltipContent>
