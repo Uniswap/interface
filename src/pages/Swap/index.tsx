@@ -32,7 +32,6 @@ import {
   ArrowWrapper,
   Dots,
   ResponsiveTooltipContainer,
-  StyledTradePrice,
   SwapCallbackError,
   Wrapper,
 } from '../../components/swap/styleds'
