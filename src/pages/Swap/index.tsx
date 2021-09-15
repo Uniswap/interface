@@ -147,9 +147,18 @@ export default function Swap({ history }: RouteComponentProps) {
     [independentField, parsedAmount, showWrap, trade]
   )
 
+  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
+    () => [
+      trade instanceof V3Trade ? !trade?.swaps : !trade?.route,
+      V3TradeState.LOADING === v3TradeState,
+      V3TradeState.SYNCING === v3TradeState,
+    ],
+    [trade, v3TradeState]
+  )
+
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
-  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
+  const priceImpact = routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -198,15 +207,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
-  )
-
-  const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
-    () => [
-      trade instanceof V3Trade ? !trade?.swaps : !trade?.route,
-      V3TradeState.LOADING === v3TradeState,
-      V3TradeState.SYNCING === v3TradeState,
-    ],
-    [trade, v3TradeState]
   )
 
   // check whether the user has approved the router on the input token
