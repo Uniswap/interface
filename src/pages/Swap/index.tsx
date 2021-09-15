@@ -383,7 +383,7 @@ export default function Swap({ history }: RouteComponentProps) {
             onDismiss={handleConfirmDismiss}
           />
 
-          <AutoColumn gap={'md'}>
+          <AutoColumn gap={'sm'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
                 label={
@@ -463,7 +463,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     <AutoRow gap="4px" width="auto">
                       <AutoRouterLogo />
                       {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                        <TYPE.blue fontSize={14}>{trade.swaps.length}</TYPE.blue>
+                        <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
                       )}
                     </AutoRow>
                   </MouseoverTooltipContent>
