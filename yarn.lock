@@ -9132,9 +9132,9 @@ eslint-module-utils@^2.6.1:
     debug "^3.2.7"
     pkg-dir "^2.0.0"
 
-"eslint-plugin-es@https://github.com/mysticatea/eslint-plugin-es#00d73851793541dc7b0d07292deb0ca2bc8a25e1":
+eslint-plugin-es@mysticatea/eslint-plugin-es#00d73851793541dc7b0d07292deb0ca2bc8a25e1:
   version "4.1.0"
-  resolved "https://github.com/mysticatea/eslint-plugin-es#00d73851793541dc7b0d07292deb0ca2bc8a25e1"
+  resolved "https://codeload.github.com/mysticatea/eslint-plugin-es/tar.gz/00d73851793541dc7b0d07292deb0ca2bc8a25e1"
   dependencies:
     eslint-utils "^2.0.0"
     regexpp "^3.0.0"
