@@ -5,7 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
-import { RouterLabel } from 'components/swap/RouterLabel'
+import { AutoRouterLogo } from 'components/swap/RouterLabel'
 import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -450,7 +450,12 @@ export default function Swap({ history }: RouteComponentProps) {
                     content={<SwapRoute trade={trade} syncing={routeIsSyncing} />}
                     placement="bottom"
                   >
-                    <RouterLabel syncing={routeIsSyncing} version={getTradeVersion(trade)} />
+                    <AutoRow gap="4px" width="auto">
+                      <AutoRouterLogo />
+                      {trade instanceof V3Trade && trade.swaps.length > 1 && (
+                        <TYPE.blue>{trade.swaps.length}</TYPE.blue>
+                      )}
+                    </AutoRow>
                   </MouseoverTooltipContent>
                 </RowFixed>
                 <RowFixed>

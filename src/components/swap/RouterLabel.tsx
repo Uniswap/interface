@@ -1,7 +1,4 @@
 import { Trans } from '@lingui/macro'
-import Badge from 'components/Badge'
-import { AutoRow } from 'components/Row'
-import { Version } from 'hooks/useToggledVersion'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
@@ -13,23 +10,14 @@ const StyledAutoRouterIcon = styled(AutoRouterIcon)`
   stroke: ${({ theme }) => theme.blue1};
 `
 
-const UnstyledStyledAutoRouterIcon = styled(AutoRouterIcon)`
-  height: 16px;
-  width: 16px;
-
+const DisabledAutoRouterIcon = styled(StyledAutoRouterIcon)`
   stroke: ${({ theme }) => theme.text3};
   :hover {
     stroke: ${({ theme }) => theme.text1};
   }
 `
 
-const VersionBadge = styled(Badge)`
-  height: 24px;
-  /* compensates for container padding */
-  margin: -0.5rem 0;
-`
-
-const GradientText = styled(TYPE.black)<{ pulsing: boolean }>`
+const StyledAutoRouterLabel = styled(TYPE.black)`
   line-height: 1rem;
 
   /* fallback color */
@@ -42,38 +30,17 @@ const GradientText = styled(TYPE.black)<{ pulsing: boolean }>`
   }
 `
 
-export function RouterLabel({ syncing = false, version }: { syncing?: boolean; version?: Version }) {
+export function AutoRouterLogo() {
   const routingAPIEnabled = useRoutingAPIEnabled()
 
-  return routingAPIEnabled ? (
-    <AutoRow gap="4px" width="auto">
-      <StyledAutoRouterIcon />
-      <GradientText fontSize={14} pulsing={syncing}>
-        {/* If routes.length > 1... show number
-        {routes.length} */}
-      </GradientText>
-    </AutoRow>
-  ) : version ? (
-    <UnstyledStyledAutoRouterIcon />
-  ) : (
-    <TYPE.black fontSize={14}>
-      <Trans>Trade Route</Trans>
-    </TYPE.black>
-  )
+  return routingAPIEnabled ? <StyledAutoRouterIcon /> : <DisabledAutoRouterIcon />
 }
 
-export function RouterLabelPopover({ syncing = false, version }: { syncing?: boolean; version?: Version }) {
+export function AutoRouterLabel() {
   const routingAPIEnabled = useRoutingAPIEnabled()
 
   return routingAPIEnabled ? (
-    <AutoRow gap="4px" width="auto">
-      <StyledAutoRouterIcon />
-      <GradientText fontSize={14} pulsing={syncing}>
-        Auto Router
-      </GradientText>
-    </AutoRow>
-  ) : version ? (
-    <UnstyledStyledAutoRouterIcon />
+    <StyledAutoRouterLabel>Auto Router</StyledAutoRouterLabel>
   ) : (
     <TYPE.black fontSize={14}>
       <Trans>Trade Route</Trans>

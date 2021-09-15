@@ -6,13 +6,14 @@ import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
-import { RowBetween } from 'components/Row'
+import { AutoRow, RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
+import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
-import { RouterLabelPopover } from './RouterLabel'
+import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Separator = styled.div`
   border-top: 1px solid ${({ theme }) => theme.bg2};
@@ -29,10 +30,15 @@ export default memo(function SwapRoute({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
+  const routingAPIEnabled = useRoutingAPIEnabled()
+
   return (
     <AutoColumn gap="12px">
       <RowBetween>
-        <RouterLabelPopover />
+        <AutoRow gap="4px" width="auto">
+          <AutoRouterLogo />
+          <AutoRouterLabel />
+        </AutoRow>
         {syncing ? (
           <LoadingRows>
             <div style={{ width: '30px', height: '24px' }} />
@@ -57,10 +63,11 @@ export default memo(function SwapRoute({
           routes={getTokenPath(trade)}
         />
       )}
-      {/* Hide and show this if Auto router is toggled on or off */}
-      <span style={{ fontSize: '12px', width: '400px' }}>
-        This route optimizes your price by considering split routes, multiple hops, and gas costs.
-      </span>
+      {routingAPIEnabled && (
+        <TYPE.main fontSize={12} width={400}>
+          <Trans>This route optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>
+        </TYPE.main>
+      )}
     </AutoColumn>
   )
 })

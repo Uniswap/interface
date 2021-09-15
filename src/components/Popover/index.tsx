@@ -73,10 +73,9 @@ export interface PopoverProps {
   show: boolean
   children: React.ReactNode
   placement?: Placement
-  hideArrow?: boolean
 }
 
-export default function Popover({ content, show, children, placement = 'auto', hideArrow = false }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
@@ -107,14 +106,12 @@ export default function Popover({ content, show, children, placement = 'auto', h
       <Portal>
         <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
-          {!hideArrow && (
-            <Arrow
-              className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-              ref={setArrowElement as any}
-              style={styles.arrow}
-              {...attributes.arrow}
-            />
-          )}
+          <Arrow
+            className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+            ref={setArrowElement as any}
+            style={styles.arrow}
+            {...attributes.arrow}
+          />
         </PopoverContainer>
       </Portal>
     </>
