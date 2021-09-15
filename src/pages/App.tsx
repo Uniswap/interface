@@ -19,6 +19,8 @@ import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 
+import KNCPrice from 'components/KNCPrice'
+
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
 const Pool = lazy(() => import(/* webpackChunkName: 'pool-page' */ './Pool'))
@@ -135,6 +137,7 @@ export default function App() {
                 <Header />
               </HeaderWrapper>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
+                <KNCPrice />
                 <Popups />
                 <UtilitiesWrapper>
                   <Utilities />

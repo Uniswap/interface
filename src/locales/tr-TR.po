@@ -430,8 +430,12 @@ msgid "Don't see a pool you joined?"
 msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
 
 #: src/pages/Farms/vesting.tsx
-msgid "Duration: ~{lockedTime} days"
+msgid "Duration: {duration}"
 msgstr ""
+
+#: 
+#~ msgid "Duration: ~{lockedTime} days"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
@@ -445,17 +449,21 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "Dinamik Ücretler"
 
-#: src/pages/Farms/index.tsx
-msgid "ENDING IN"
-msgstr "BİTİYOR"
+#: 
+#~ msgid "ENDING IN"
+#~ msgstr "BİTİYOR"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
+msgstr ""
 
 #: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Ödülleri her topladığınızda, ~30 günlük yeni bir vesting süresi oluşturulur. Birden fazla vesting dönemi aynı anda çalışabilir. Vesting süreci sonrası kilidi açılmış ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
-#: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr ""
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -468,6 +476,10 @@ msgstr "Yüksek kaymalı işlemlere olanak tanır. Kendi sorumluluğunuzda kulla
 #: src/pages/Static/About.tsx
 msgid "Encourage trading"
 msgstr "Alım satımı teşvik edin"
+
+#: src/components/FarmsList/index.tsx
+msgid "Ending In"
+msgstr ""
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -805,6 +817,10 @@ msgstr "Market"
 msgid "Max"
 msgstr "Maksimum"
 
+#: src/pages/Static/About.tsx
+msgid "Max APY"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Maximum sold"
@@ -1132,9 +1148,9 @@ msgstr "Rota"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Bu token’lar aracılığıyla yönlendirme, işleminiz için en iyi fiyatı sağladı."
 
-#: src/pages/Farms/index.tsx
-msgid "START IN"
-msgstr "BAŞLA"
+#: 
+#~ msgid "START IN"
+#~ msgstr "BAŞLA"
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1317,13 +1333,17 @@ msgstr "Kilitli Toplam Değer"
 msgid "Total Value Locked:"
 msgstr "Kilitli Toplam Değer:"
 
+#: src/pages/Farms/index.tsx
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
+msgstr ""
+
 #: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Toplanabilecek toplam ödüllerdir. Hasat edilen ödüller kilitlenir ve ~30 gün boyunca vesting süreci işler."
 
-#: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
-msgstr ""
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+#~ msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1496,8 +1516,12 @@ msgstr "Pozisyonun"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Başından beri toplam hasat ödüllerinizdir. Her yeni ödül toplamanızda, bunlar hasat tarihinden itibaren ~ 30 gün boyunca kilitlenir ve süre içinde kazanılır. Süreç ile birlikte kilidi açılan ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr ""
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -1586,9 +1610,9 @@ msgstr "{0} Beklemede"
 msgid "{0} added"
 msgstr "{0} eklendi"
 
-#: src/pages/Farms/index.tsx
-msgid "{0} blocks"
-msgstr ""
+#: 
+#~ msgid "{0} blocks"
+#~ msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
@@ -1598,6 +1622,10 @@ msgstr "{0} kaldırıldı"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} token varlıkları"
+
+#: src/components/FarmsList/ListItem.tsx
+msgid "{0}% LP Fee + {1}% Rewards"
+msgstr ""
 
 #: src/pages/Pools/index.tsx
 msgid "{0}-{1}"

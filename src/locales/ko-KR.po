@@ -430,8 +430,12 @@ msgid "Don't see a pool you joined?"
 msgstr "예치한 풀이 보이지 않습니까?"
 
 #: src/pages/Farms/vesting.tsx
-msgid "Duration: ~{lockedTime} days"
+msgid "Duration: {duration}"
 msgstr ""
+
+#: 
+#~ msgid "Duration: ~{lockedTime} days"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
@@ -445,17 +449,21 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "동적 수수료"
 
-#: src/pages/Farms/index.tsx
-msgid "ENDING IN"
-msgstr "종료"
+#: 
+#~ msgid "ENDING IN"
+#~ msgstr "종료"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
+msgstr ""
 
 #: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
 
-#: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr ""
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -468,6 +476,10 @@ msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. �
 #: src/pages/Static/About.tsx
 msgid "Encourage trading"
 msgstr "거래 장려"
+
+#: src/components/FarmsList/index.tsx
+msgid "Ending In"
+msgstr ""
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -805,6 +817,10 @@ msgstr "마켓"
 msgid "Max"
 msgstr "최대"
 
+#: src/pages/Static/About.tsx
+msgid "Max APY"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Maximum sold"
@@ -1132,9 +1148,9 @@ msgstr "경로"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수 있습니다."
 
-#: src/pages/Farms/index.tsx
-msgid "START IN"
-msgstr "에서 시작"
+#: 
+#~ msgid "START IN"
+#~ msgstr "에서 시작"
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1317,13 +1333,17 @@ msgstr "예치된 자산 가치"
 msgid "Total Value Locked:"
 msgstr "예치된 자산 가치:"
 
+#: src/pages/Farms/index.tsx
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
+msgstr ""
+
 #: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
 
-#: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
-msgstr ""
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+#~ msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1496,8 +1516,12 @@ msgstr "당신의 위치"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr ""
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -1586,9 +1610,9 @@ msgstr "{0} 보류 중"
 msgid "{0} added"
 msgstr "{0} 추가됨"
 
-#: src/pages/Farms/index.tsx
-msgid "{0} blocks"
-msgstr ""
+#: 
+#~ msgid "{0} blocks"
+#~ msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
@@ -1598,6 +1622,10 @@ msgstr "{0} 삭제됨"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 토큰"
+
+#: src/components/FarmsList/ListItem.tsx
+msgid "{0}% LP Fee + {1}% Rewards"
+msgstr ""
 
 #: src/pages/Pools/index.tsx
 msgid "{0}-{1}"
