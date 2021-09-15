@@ -17,7 +17,7 @@ import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
 import {
-  useDerivedBridgeInfo,
+  useBridgeInfo,
   useBridgeActionHandlers,
   useBridgeState
 } from '../../state/bridge/hooks'
@@ -83,7 +83,7 @@ export default function Bridge() {
   const [step, setStep] = useState(Step.Initial)
   const { typedValue } = useBridgeState()
   const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
-  const { bridgeCurrency, currencyBalance, parsedAmount } = useDerivedBridgeInfo()
+  const { bridgeCurrency, currencyBalance, parsedAmount } = useBridgeInfo()
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { chainId: networkConnectorChainId, account } = useActiveWeb3React()

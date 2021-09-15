@@ -4,13 +4,11 @@ import { replaceBridgeState, selectCurrency, typeInput } from './actions'
 export interface BridgeState {
   readonly typedValue: string
   readonly currencyId: string | undefined
-  readonly protocolFeeTo: string | undefined
 }
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: '',
-  protocolFeeTo: undefined
+  currencyId: ''
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
