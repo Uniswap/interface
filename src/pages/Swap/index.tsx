@@ -9,6 +9,7 @@ import useENS from 'hooks/useENS'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 
@@ -47,6 +48,7 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
 export default function Swap() {
+  const { t } = useTranslation()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -268,7 +270,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const { isEstimate, makeLabel } = describeTrade(trade)
-  const actionLabel = makeLabel(independentField !== Field.INPUT)
+  const actionLabel = t(makeLabel(independentField !== Field.INPUT))
 
   return (
     <>
@@ -297,7 +299,11 @@ export default function Swap() {
 
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              label={independentField === Field.OUTPUT && trade ? `From${isEstimate ? ' (estimated)' : ''}` : 'From'}
+              label={
+                independentField === Field.OUTPUT && trade
+                  ? `${t('from')}${isEstimate ? ' (estimated)' : ''}`
+                  : t('from')
+              }
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
@@ -329,7 +335,9 @@ export default function Swap() {
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && trade ? `To${isEstimate ? ' (estimated)' : ''}` : 'To'}
+              label={
+                independentField === Field.INPUT && trade ? `${t('to')}${isEstimate ? ' (estimated)' : ''}` : t('to')
+              }
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
@@ -383,7 +391,7 @@ export default function Swap() {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>{t('connectWallet')}</ButtonLight>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>

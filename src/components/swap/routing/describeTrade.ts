@@ -19,21 +19,21 @@ export const describeTrade = (
 } => {
   if (trade instanceof MoolaDirectTrade) {
     return {
-      label: trade.isWithdrawal() ? 'Withdraw' : 'Deposit',
+      label: trade.isWithdrawal() ? 'withdraw' : 'deposit',
       makeLabel: (isInverted) => {
         const result = trade.isWithdrawal()
         const resultInverted = isInverted ? !result : result
-        return resultInverted ? 'Withdraw' : 'Deposit'
+        return resultInverted ? 'withdraw' : 'deposit'
       },
       routingMethod: RoutingMethod.MOOLA,
       isEstimate: false,
     }
   } else {
     return {
-      label: 'Swap',
+      label: 'swap',
       routingMethod: trade instanceof MoolaRouterTrade ? RoutingMethod.MOOLA_ROUTER : RoutingMethod.UBESWAP,
       isEstimate: true,
-      makeLabel: () => 'Swap',
+      makeLabel: () => 'swap',
     }
   }
 }

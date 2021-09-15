@@ -3,6 +3,7 @@ import { JSBI, Pair, Percent, TokenAmount } from '@ubeswap/sdk'
 import { darken, transparentize } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -155,6 +156,7 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
+  const { t } = useTranslation()
   const { address: account } = useContractKit()
 
   const currency0 = pair.token0
@@ -207,12 +209,12 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             >
               {showMore ? (
                 <>
-                  Manage
+                  {t('manage')}
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  Manage
+                  {t('manage')}
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -304,7 +306,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                   width="48%"
                 >
-                  Add
+                  {t('addLiquidity')}
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -313,7 +315,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   width="48%"
                   to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
-                  Remove
+                  {t('removeLiquidity')}
                 </ButtonPrimary>
               </RowBetween>
             )}

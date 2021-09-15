@@ -2,6 +2,7 @@ import { useContractKit } from '@celo-tools/use-contractkit'
 import { cUSD, JSBI } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { usePairStakingInfo } from 'state/stake/useStakingInfo'
 import styled from 'styled-components'
@@ -92,6 +93,7 @@ export default function Manage({
     params: { currencyIdA, currencyIdB, stakingAddress },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stakingAddress: string }>) {
+  const { t } = useTranslation()
   const { address: account, network } = useContractKit()
   const { chainId } = network
 
@@ -148,7 +150,7 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {tokenA?.symbol}-{tokenB?.symbol} Liquidity Mining
+          {tokenA?.symbol}-{tokenB?.symbol} {t('liquidityMining')}
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={tokenA ?? undefined} currency1={tokenB ?? undefined} size={24} />
       </RowBetween>
@@ -156,7 +158,7 @@ export default function Manage({
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>{t('totalDeposits')}</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInCUSD
                 ? `$${
@@ -176,7 +178,7 @@ export default function Manage({
           <AutoColumn gap="sm">
             {stakingInfo?.active && (
               <>
-                <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
+                <TYPE.body style={{ margin: 0 }}>{t('poolRate')}</TYPE.body>
                 {userStaked
                   ? stakingInfo?.rewardRates?.map((rewardRate, idx) => {
                       return (
@@ -258,7 +260,7 @@ export default function Manage({
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
+                  <TYPE.white fontWeight={600}>{t('yourLiquidityDeposits')}</TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
@@ -279,7 +281,7 @@ export default function Manage({
                   <RowBetween>
                     <RowFixed>
                       <TYPE.white>
-                        Current value:{' '}
+                        {t('currentValue')}:{' '}
                         {userValueCUSD
                           ? `$${userValueCUSD.toFixed(2, {
                               separator: ',',
@@ -302,7 +304,7 @@ export default function Manage({
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <TYPE.black>Your unclaimed rewards</TYPE.black>
+                  <TYPE.black>{t('yourUnclaimedRewards')}</TYPE.black>
                 </div>
                 {stakingInfo?.earnedAmounts?.some((earnedAmount) => JSBI.notEqual(BIG_INT_ZERO, earnedAmount?.raw)) && (
                   <ButtonEmpty
@@ -311,7 +313,7 @@ export default function Manage({
                     width="fit-content"
                     onClick={() => setShowClaimRewardModal(true)}
                   >
-                    Claim
+                    {t('claim')}
                   </ButtonEmpty>
                 )}
               </RowBetween>
@@ -339,7 +341,7 @@ export default function Manage({
                     {stakingInfo?.active
                       ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK)?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                       : '0'}
-                    {` ${rewardRate.token.symbol} / week`}
+                    {` ${rewardRate.token.symbol} / ${t('week')}`}
                   </TYPE.black>
                 </RowBetween>
               ))}
@@ -350,14 +352,16 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          When you withdraw, the contract will automagically claim UBE on your behalf!
+          {t('withdrawTip')}
         </TYPE.main>
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit UBE-LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0))
+                  ? t('deposit')
+                  : `${t('deposit')} UBE-LP Tokens`}
               </ButtonPrimary>
             )}
 
@@ -369,7 +373,7 @@ export default function Manage({
                   width="160px"
                   onClick={() => setShowUnstakingModal(true)}
                 >
-                  Withdraw
+                  {t('withdraw')}
                 </ButtonPrimary>
               </>
             )}

@@ -2,6 +2,7 @@ import { ErrorBoundary } from '@sentry/react'
 import { JSBI } from '@ubeswap/sdk'
 import { partition } from 'lodash'
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import useStakingInfo from 'state/stake/useStakingInfo'
 import styled from 'styled-components'
 
@@ -43,6 +44,7 @@ flex-direction: column;
 `
 
 export default function Earn() {
+  const { t } = useTranslation()
   // staking info for connected account
   const stakingInfos = useStakingInfo()
 
@@ -88,19 +90,17 @@ export default function Earn() {
             <CardSection>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>Ubeswap liquidity mining</TYPE.white>
+                  <TYPE.white fontWeight={600}>Ubeswap {t('liquidityMining')}</TYPE.white>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white fontSize={14}>
-                    Deposit your Liquidity Provider tokens to receive UBE, the Ubeswap protocol governance token.
-                  </TYPE.white>
+                  <TYPE.white fontSize={14}>{t('liquidityMiningDesc')}</TYPE.white>
                 </RowBetween>{' '}
                 <ExternalLink
                   style={{ color: 'white', textDecoration: 'underline' }}
                   href="https://docs.ubeswap.org/faq"
                   target="_blank"
                 >
-                  <TYPE.white fontSize={14}>Read more about UBE</TYPE.white>
+                  <TYPE.white fontSize={14}>{t('liquidityMiningReadMore')}</TYPE.white>
                 </ExternalLink>
               </AutoColumn>
             </CardSection>
@@ -113,7 +113,9 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Triple Reward Pools</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
+            {t('triple')} {t('rewardPools')}
+          </TYPE.mediumHeader>
         </DataRow>
         {tripleRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
         {tripleRewards.map((x) => {
@@ -137,7 +139,9 @@ export default function Earn() {
       {dualRewards.length > 0 && (
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Dual Reward Pools</TYPE.mediumHeader>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
+              {t('double')} {t('rewardPools')}
+            </TYPE.mediumHeader>
           </DataRow>
           {dualRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
           {dualRewards.map((x) => {
@@ -157,7 +161,7 @@ export default function Earn() {
       {stakedPools.length > 0 && (
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Your Pools</TYPE.mediumHeader>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('yourPools')}</TYPE.mediumHeader>
             <div>{/* TODO(igm): show TVL here */}</div>
           </DataRow>
 
@@ -173,7 +177,7 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Available Pools</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('availablePools')}</TYPE.mediumHeader>
           <div>
             {!isGenesisOver && (
               <span>
@@ -202,7 +206,7 @@ export default function Earn() {
       {inactivePools.length > 0 && (
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Inactive Pools</TYPE.mediumHeader>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('inactivePools')}</TYPE.mediumHeader>
             <div>{/* TODO(igm): show TVL here */}</div>
           </DataRow>
 

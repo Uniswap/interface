@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { Pair } from '@ubeswap/sdk'
 import React, { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -71,6 +72,7 @@ const EmptyProposals = styled.div`
 `
 
 export default function Pool() {
+  const { t } = useTranslation()
   const theme = useContext(ThemeContext)
   const { address: account } = useContractKit()
 
@@ -113,19 +115,17 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
+                <TYPE.white fontWeight={600}>{t('liquidityProviderRewards')}</TYPE.white>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
-                  {`Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
-                </TYPE.white>
+                <TYPE.white fontSize={14}>{t('liquidityProviderRewardsDesc')}</TYPE.white>
               </RowBetween>
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
                 href="https://docs.ubeswap.org/tutorial/providing-liquidity"
               >
-                <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
+                <TYPE.white fontSize={14}>{t('liquidityProviderRewardsReadMore')}</TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -137,12 +137,12 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
+                  {t('yourLiquidity')}
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
-                  Create a pair
+                  {t('createPair')}
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
                   id="join-pool-button"
@@ -152,7 +152,7 @@ export default function Pool() {
                   to="/add/ETH"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
+                    {t('addLiquidity')}
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>

@@ -2,6 +2,7 @@ import { Percent } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
 import styled from 'styled-components'
 
@@ -71,6 +72,7 @@ interface Props {
 }
 
 export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
+  const { t } = useTranslation()
   const [token0, token1] = stakingInfo.tokens
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
@@ -146,14 +148,14 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
           style={{ width: '100%' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">
-            {isStaking ? 'Manage' : 'Deposit'}
+            {isStaking ? t('manage') : t('deposit')}
           </ButtonPrimary>
         </StyledInternalLink>
       </TopSection>
 
       <StatContainer>
         <PoolStatRow
-          statName="Total deposited"
+          statName={t('totalDeposited')}
           statValue={
             valueOfTotalStakedAmountInCUSD
               ? `$${valueOfTotalStakedAmountInCUSD.toFixed(0, {
@@ -167,7 +169,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
             return (
               <React.Fragment key={idx}>
                 <PoolStatRow
-                  statName={totalRewardRate.token.symbol + ' rate'}
+                  statName={totalRewardRate.token.symbol + ` ${t('rate')}`}
                   statValue={
                     stakingInfo.active
                       ? `${totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })} ${
