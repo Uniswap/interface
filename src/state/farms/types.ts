@@ -29,6 +29,7 @@ export interface Farm {
     stakedBalance?: string
     rewards?: string[]
   }
+  time: string
 }
 
 export interface Reward {

@@ -20,8 +20,8 @@ const FarmListWrapper = styled.div`
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 3rem;
-  grid-template-columns: 2fr 1.5fr 1fr 2fr 1fr 0.25fr;
-  grid-template-areas: 'pools liq apy reward staked_balance expand';
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr 0.25fr;
+  grid-template-areas: 'pools liq end apy reward staked_balance expand';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
   align-items: center;
@@ -76,9 +76,15 @@ const FarmsList = ({ farms }: FarmsListProps) => {
           />
         </Flex>
 
-        <Flex grid-area="liq" alignItems="center" justifyContent="flex-end">
+        <Flex grid-area="liq" alignItems="center" justifyContent="flex-center">
           <ClickableText>
             <Trans>Staked TVL</Trans>
+          </ClickableText>
+        </Flex>
+
+        <Flex grid-area="end" alignItems="right" justifyContent="flex-end">
+          <ClickableText>
+            <Trans>Ending In</Trans>
           </ClickableText>
         </Flex>
 

@@ -7,7 +7,6 @@ import { ethers } from 'ethers'
 import { MaxUint256 } from '@ethersproject/constants'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
-import { Trans } from '@lingui/macro'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ZERO } from 'libs/sdk/src/constants'
@@ -18,7 +17,6 @@ import { Dots } from 'components/swap/styleds'
 import { ButtonPrimary } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import InfoHelper from 'components/InfoHelper'
 import { Farm, Reward } from 'state/farms/types'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
@@ -26,13 +24,15 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
-import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
+import { formattedNum, getTokenSymbol, getTokenLogoURL, isAddressString, shortenAddress } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 import { RewardToken } from 'pages/Farms/styleds'
 import { currencyIdFromAddress } from 'utils/currencyId'
 import { useBlockNumber } from 'state/application/hooks'
+import { t, Trans } from '@lingui/macro'
+import InfoHelper from 'components/InfoHelper'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -47,8 +47,8 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 3rem;
-  grid-template-columns: 2fr 1.5fr 1fr 2fr 1fr 0.25fr;
-  grid-template-areas: 'pools liq apy reward staked_balance expand';
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr 0.25fr;
+  grid-template-areas: 'pools liq end apy reward staked_balance expand';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
   align-items: center;
@@ -287,7 +287,7 @@ const ListItem = ({ farm }: ListItemProps) => {
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
 
   const apr = farmAPR + tradingFeeAPR
-
+  const tradingFeeAPRPercent = (tradingFeeAPR * 100) / apr
   const amp = farm.amp / 10000
 
   const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
@@ -374,10 +374,19 @@ const ListItem = ({ farm }: ListItemProps) => {
             </>
           </div>
         </DataText>
-        <DataText grid-area="liq" align="right">
+        <DataText grid-area="liq" align="center">
           {formattedNum(liquidity.toString(), true)}
         </DataText>
-        <APY grid-area="apy">{apr.toFixed(2)}%</APY>
+        <DataText grid-area="liq" align="right">
+          {farm.time}
+        </DataText>
+        <APY grid-area="apy">
+          {apr.toFixed(2)}%
+          <InfoHelper
+            text={t`${tradingFeeAPRPercent.toFixed(0)}% LP Fee + ${100 -
+              parseInt(tradingFeeAPRPercent.toFixed(0))}% Rewards`}
+          />
+        </APY>
         <DataText
           grid-area="reward"
           align="right"
@@ -385,10 +394,12 @@ const ListItem = ({ farm }: ListItemProps) => {
         >
           {farmRewards.map((reward, index) => {
             return (
-              <span key={reward.token.address}>
-                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
-                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-              </span>
+              <div key={reward.token.address} style={{ marginTop: '2px' }}>
+                <Flex style={{ alignItems: 'center' }}>
+                  {getFullDisplayBalance(reward?.amount)} &nbsp;
+                  <img src={`${getTokenLogoURL(reward.token.address, chainId)}`} alt="logo" width="20px" />
+                </Flex>
+              </div>
             )
           })}
         </DataText>
