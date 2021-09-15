@@ -922,7 +922,7 @@ export default function AddLiquidity({
                                     }}
                                   >
                                     <TYPE.black fontSize={13} color="black">
-                                      <Trans>I Understand</Trans>
+                                      <Trans>I understand</Trans>
                                     </TYPE.black>
                                   </ButtonYellow>
                                 </Row>
