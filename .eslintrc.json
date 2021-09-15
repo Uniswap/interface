@@ -15,6 +15,7 @@
     }
   },
   "extends": [
+    "plugin:es/no-new-in-esnext",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
@@ -22,6 +23,7 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "es/no-numeric-separators": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
