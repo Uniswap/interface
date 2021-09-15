@@ -135,7 +135,7 @@ function useFormattedProposalCreatedLogs(
 
           // Bravo proposal omits newlines
           if (startBlock === BRAVO_START_BLOCK) {
-            description = description.replaceAll(/  /g, '\n').replaceAll(/\d\. /g, '\n$&')
+            description = description.replace(/  /g, '\n').replace(/\d\. /g, '\n$&')
           }
         }
         return {
