@@ -93,7 +93,7 @@ function PairView({ loading, pair }: PairViewProps) {
               <ButtonWithLink
                 link={
                   pair?.liquidityToken.address
-                    ? `https://dxstats.eth.link/#/pair/${pair?.liquidityToken.address}`
+                    ? `https://dxstats.eth.link/#/pair/${pair?.liquidityToken.address}?chainId=${chainId}`
                     : 'https://dxstats.eth.link/#/pairs'
                 }
                 text={'Stats'}
