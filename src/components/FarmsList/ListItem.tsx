@@ -393,12 +393,14 @@ const ListItem = ({ farm }: ListItemProps) => {
               <div key={reward.token.address} style={{ marginTop: '2px' }}>
                 <Flex style={{ alignItems: 'center' }}>
                   {getFullDisplayBalance(reward?.amount)}
-                  <img
-                    src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                    alt="logo"
-                    width="20px"
-                    style={{ marginLeft: '3px' }}
-                  />
+                  {chainId && reward.token.address && (
+                    <img
+                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                      alt="logo"
+                      width="20px"
+                      style={{ marginLeft: '3px' }}
+                    />
+                  )}
                 </Flex>
               </div>
             )
@@ -541,12 +543,14 @@ const ListItem = ({ farm }: ListItemProps) => {
                               <div key={reward.token.address}>
                                 <Flex style={{ alignItems: 'center' }}>
                                   {getFullDisplayBalance(reward?.amount)}
-                                  <img
-                                    src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                                    alt="logo"
-                                    width="20px"
-                                    style={{ marginLeft: '3px' }}
-                                  />
+                                  {chainId && reward.token.address && (
+                                    <img
+                                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                                      alt="logo"
+                                      width="20px"
+                                      style={{ marginLeft: '3px' }}
+                                    />
+                                  )}
                                 </Flex>
                               </div>
                             )
@@ -637,6 +641,7 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataTitle>
           <DataText grid-area="apy">
             <APY grid-area="apy">{apr.toFixed(2)}%</APY>
+            {apr != 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
           </DataText>
         </GridItem>
 
@@ -650,12 +655,14 @@ const ListItem = ({ farm }: ListItemProps) => {
                 <div key={reward.token.address} style={{ marginTop: '2px' }}>
                   <Flex style={{ alignItems: 'center' }}>
                     {getFullDisplayBalance(reward?.amount)}
-                    <img
-                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                      alt="logo"
-                      width="20px"
-                      style={{ marginLeft: '3px' }}
-                    />
+                    {chainId && reward.token.address && (
+                      <img
+                        src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                        alt="logo"
+                        width="20px"
+                        style={{ marginLeft: '3px' }}
+                      />
+                    )}
                   </Flex>
                 </div>
               )
@@ -831,12 +838,14 @@ const ListItem = ({ farm }: ListItemProps) => {
                         <div key={reward.token.address} style={{ marginTop: '2px' }}>
                           <Flex style={{ alignItems: 'center' }}>
                             {getFullDisplayBalance(reward?.amount)}
-                            <img
-                              src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                              alt="logo"
-                              width="20px"
-                              style={{ marginLeft: '3px' }}
-                            />
+                            {chainId && reward.token.address && (
+                              <img
+                                src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                                alt="logo"
+                                width="20px"
+                                style={{ marginLeft: '3px' }}
+                              />
+                            )}
                           </Flex>
                         </div>
                       )
