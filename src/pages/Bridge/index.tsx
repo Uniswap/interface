@@ -85,7 +85,6 @@ export default function Bridge() {
   const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
   const { bridgeCurrency, currencyBalance, parsedAmount } = useDerivedBridgeInfo()
 
-  const [amount, setAmount] = useState('')
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
   const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
