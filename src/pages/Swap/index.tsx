@@ -462,9 +462,11 @@ export default function Swap({ history }: RouteComponentProps) {
                   >
                     <AutoRow gap="4px" width="auto">
                       <AutoRouterLogo />
-                      {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                        <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
-                      )}
+                      <LoadingOpacityContainer $loading={routeIsSyncing}>
+                        {trade instanceof V3Trade && trade.swaps.length > 1 && (
+                          <TYPE.blue fontSize={14}>{trade.swaps.length} routes</TYPE.blue>
+                        )}
+                      </LoadingOpacityContainer>
                     </AutoRow>
                   </MouseoverTooltipContent>
                 </RowFixed>
