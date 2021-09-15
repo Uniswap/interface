@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
+import { useBestV3Trade, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
@@ -156,11 +156,12 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     maxHops: singleHopOnly ? 1 : undefined,
   })
 
-  const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
-
   const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
+  const v3Trade = useBestV3Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    parsedAmount,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
+  )
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
