@@ -287,7 +287,6 @@ const ListItem = ({ farm }: ListItemProps) => {
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
 
   const apr = farmAPR + tradingFeeAPR
-  const tradingFeeAPRPercent = (tradingFeeAPR * 100) / apr
   const amp = farm.amp / 10000
 
   const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
@@ -382,10 +381,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         </DataText>
         <APY grid-area="apy">
           {apr.toFixed(2)}%
-          <InfoHelper
-            text={t`${tradingFeeAPRPercent.toFixed(0)}% LP Fee + ${100 -
-              parseInt(tradingFeeAPRPercent.toFixed(0))}% Rewards`}
-          />
+          {apr != 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
         </APY>
         <DataText
           grid-area="reward"
@@ -396,8 +392,13 @@ const ListItem = ({ farm }: ListItemProps) => {
             return (
               <div key={reward.token.address} style={{ marginTop: '2px' }}>
                 <Flex style={{ alignItems: 'center' }}>
-                  {getFullDisplayBalance(reward?.amount)} &nbsp;
-                  <img src={`${getTokenLogoURL(reward.token.address, chainId)}`} alt="logo" width="20px" />
+                  {getFullDisplayBalance(reward?.amount)}
+                  <img
+                    src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                    alt="logo"
+                    width="20px"
+                    style={{ marginLeft: '3px' }}
+                  />
                 </Flex>
               </div>
             )
@@ -537,13 +538,17 @@ const ListItem = ({ farm }: ListItemProps) => {
                         <div>
                           {farmRewards?.map((reward, index) => {
                             return (
-                              <span key={reward.token.address}>
-                                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(
-                                  reward.token,
-                                  chainId
-                                )}`}</span>
-                                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-                              </span>
+                              <div key={reward.token.address}>
+                                <Flex style={{ alignItems: 'center' }}>
+                                  {getFullDisplayBalance(reward?.amount)}
+                                  <img
+                                    src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                                    alt="logo"
+                                    width="20px"
+                                    style={{ marginLeft: '3px' }}
+                                  />
+                                </Flex>
+                              </div>
                             )
                           })}
                         </div>
@@ -642,10 +647,17 @@ const ListItem = ({ farm }: ListItemProps) => {
           <DataText style={{ display: 'flex', flexDirection: 'column' }}>
             {farmRewards.map((reward, index) => {
               return (
-                <RewardToken key={reward.token.address}>
-                  <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
-                  {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-                </RewardToken>
+                <div key={reward.token.address} style={{ marginTop: '2px' }}>
+                  <Flex style={{ alignItems: 'center' }}>
+                    {getFullDisplayBalance(reward?.amount)}
+                    <img
+                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                      alt="logo"
+                      width="20px"
+                      style={{ marginLeft: '3px' }}
+                    />
+                  </Flex>
+                </div>
               )
             })}
           </DataText>
@@ -816,13 +828,17 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <div>
                     {farmRewards?.map((reward, index) => {
                       return (
-                        <span key={reward.token.address}>
-                          <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(
-                            reward.token,
-                            chainId
-                          )}`}</span>
-                          {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
-                        </span>
+                        <div key={reward.token.address} style={{ marginTop: '2px' }}>
+                          <Flex style={{ alignItems: 'center' }}>
+                            {getFullDisplayBalance(reward?.amount)}
+                            <img
+                              src={`${getTokenLogoURL(reward.token.address, chainId)}`}
+                              alt="logo"
+                              width="20px"
+                              style={{ marginLeft: '3px' }}
+                            />
+                          </Flex>
+                        </div>
                       )
                     })}
                   </div>

@@ -61,7 +61,6 @@ export default function About() {
   const { loading: loadingPoolFarm, data: farms } = useFarmsData()
   const [maxApr, setMaxApr] = useState<number>(-1)
   const [indexx, setIndexx] = useState<number>(0)
-  console.log('apr')
   return (
     <div className={style.wrapper}>
       <div className={style.image1}></div>
