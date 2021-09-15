@@ -96,6 +96,10 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
+export function useTokenContractForReading(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContractForReading(tokenAddress, ERC20_ABI, withSignerIfPossible)
+}
+
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
