@@ -6,7 +6,7 @@ import DoubleCurrencyLogo from '../../DoubleLogo'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
 import { RowBetween } from '../../Row'
-import { ButtonGrey } from '../../Button'
+import { ButtonGrey, ButtonWithLink } from '../../Button'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 import Skeleton from 'react-loading-skeleton'
 import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
@@ -88,6 +88,16 @@ function PairView({ loading, pair }: PairViewProps) {
               <Text fontSize="16px" fontWeight="600" lineHeight="20px">
                 {pair ? `${pair?.token0.symbol}/${pair?.token1.symbol}` : <Skeleton width="60px" />}
               </Text>
+            </Box>
+            <Box marginLeft="auto">
+              <ButtonWithLink
+                link={
+                  pair?.liquidityToken.address
+                    ? `https://dxstats.eth.link/#/pair/${pair?.liquidityToken.address}`
+                    : 'https://dxstats.eth.link/#/pairs'
+                }
+                text={'Stats'}
+              />
             </Box>
           </Flex>
           <DataRow loading={overallLoading} title="Liquidity:" value={`$${formatCurrencyAmount(liquidityUSD)}`} />
