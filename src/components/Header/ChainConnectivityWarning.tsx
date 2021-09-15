@@ -57,7 +57,11 @@ export function ChainConnectivityWarning() {
         </TitleText>
       </TitleRow>
       <BodyRow>
-        <Trans>{label} may be down right now, or you may have lost your network connection.</Trans>{' '}
+        {chainId === SupportedChainId.MAINNET ? (
+          <Trans>You may have lost your network connection.</Trans>
+        ) : (
+          <Trans>{label} may be down right now, or you may have lost your network connection.</Trans>
+        )}{' '}
         {(info as L2ChainInfo).statusPage !== undefined && (
           <span>
             <Trans>Check network status</Trans>{' '}
