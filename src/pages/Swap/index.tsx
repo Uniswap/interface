@@ -443,7 +443,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {!showWrap && trade && (
-              <Row justify={!trade ? 'center' : 'space-between'} style={{ margin: '0 12px', width: 'unset' }}>
+              <Row justify={!trade ? 'center' : 'space-between'}>
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
                     Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
@@ -453,7 +453,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     <AutoRow gap="4px" width="auto">
                       <AutoRouterLogo />
                       {trade instanceof V3Trade && trade.swaps.length > 1 && (
-                        <TYPE.blue>{trade.swaps.length}</TYPE.blue>
+                        <TYPE.blue fontSize={14}>{trade.swaps.length}</TYPE.blue>
                       )}
                     </AutoRow>
                   </MouseoverTooltipContent>
