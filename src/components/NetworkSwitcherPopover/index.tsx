@@ -1,13 +1,11 @@
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { Placement } from '@popperjs/core'
 import { useActiveWeb3React } from '../../hooks'
-import { getObjectKeys } from '../../utils/objectKeysExtended'
 import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals } from '../../state/application/hooks'
-import { NetworkSwitcher, networkSwitcherOptionsPreset, NetworkOptionProps } from '../NetworkSwitcher'
+import { NetworkSwitcher, NetworkOptionProps, networkOptionsPreset } from '../NetworkSwitcher'
 interface NetworkSwitcherPopoverProps {
   children: ReactNode
   modal: ApplicationModal
@@ -15,15 +13,9 @@ interface NetworkSwitcherPopoverProps {
 }
 
 export default function NetworkSwitcherPopover({ children, modal, placement }: NetworkSwitcherPopoverProps) {
-  const popoverRef = useRef(null)
   const closeModals = useCloseModals()
   const { connector, chainId } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(modal)
-  const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
-
-  useOnClickOutside(popoverRef, () => {
-    if (networkSwitcherPopoverOpen || ethereumOptionPopoverOpen) closeModals()
-  })
 
   const { selectEthereum, selectNetwork } = useNetworkSwitch({
     onSelectNetworkCallback: closeModals
@@ -39,11 +31,12 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     return connector?.supportedChainIds?.indexOf(networkId) === -1 || chainId === networkId
   }
 
-  const options = getObjectKeys(networkSwitcherOptionsPreset).map(optionChainId => {
-    const chainId = Number(optionChainId)
+  const options = networkOptionsPreset.map<NetworkOptionProps>(network => {
+    const { chainId, logoSrc, name } = network
 
     return {
-      ...(networkSwitcherOptionsPreset[optionChainId] as NetworkOptionProps),
+      logoSrc,
+      header: name,
       disabled: isOptionDisabled(chainId),
       onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
     }

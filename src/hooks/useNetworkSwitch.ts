@@ -13,7 +13,7 @@ export type UseNetworkSwitchProps = {
   onSelectNetworkCallback?: () => void
 }
 
-export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchProps) => {
+export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchProps = {}) => {
   const { connector, chainId, account } = useActiveWeb3React()
 
   const selectNetwork = useCallback(
