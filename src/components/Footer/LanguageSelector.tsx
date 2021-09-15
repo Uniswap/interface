@@ -39,8 +39,7 @@ export default function LanguageSelector() {
       <Select
         id="language-selector"
         name="language"
-        value={userLocale as string}
-        defaultValue={LOCALE_LABEL['en-US']}
+        value={(userLocale as string) || LOCALE_LABEL['en-US']}
         sx={{
           border: 'none',
           width: 'fit-content',

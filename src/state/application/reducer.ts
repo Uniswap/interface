@@ -35,7 +35,7 @@ const initialState: ApplicationState = {
   openModal: null,
   ethPrice: {},
   kncPrice: '',
-  chainIdWhenNotConnected: 1
+  chainIdWhenNotConnected: ChainId.MAINNET
 }
 
 export default createReducer(initialState, builder =>
@@ -76,7 +76,7 @@ export default createReducer(initialState, builder =>
     .addCase(updateKNCPrice, (state, { payload: kncPrice }) => {
       state.kncPrice = kncPrice
     })
-    .addCase(updateChainIdWhenNotConnected, (state, { payload: kncPrice }) => {
-      state.chainIdWhenNotConnected = kncPrice
+    .addCase(updateChainIdWhenNotConnected, (state, { payload: chainId }) => {
+      state.chainIdWhenNotConnected = chainId
     })
 )

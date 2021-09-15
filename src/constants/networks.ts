@@ -4,6 +4,9 @@ import Polygon from '../assets/networks/polygon-network.png'
 import BSC from '../assets/networks/bsc-network.png'
 import AVAX from '../assets/networks/avax-network.png'
 
+export const SUPPORTED_NETWORKS = [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET] as const
+export type SupportedNetwork = typeof SUPPORTED_NETWORKS[number]
+
 export const NETWORK_ICON = {
   [ChainId.MAINNET]: Mainnet,
   [ChainId.ROPSTEN]: Mainnet,
