@@ -31,11 +31,10 @@ export function useAllV3Ticks(
   const poolAddress =
     currencyA && currencyB && feeAmount ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount) : undefined
 
-  //TODO(judo): determine if pagination is necessary for this query
   const { isLoading, isError, error, isUninitialized, data } = useAllV3TicksQuery(
     poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken,
     {
-      pollingInterval: ms`2m`,
+      pollingInterval: ms`30s`,
     }
   )
 
@@ -126,7 +125,7 @@ export function usePoolActiveLiquidity(
     return {
       isLoading,
       isUninitialized,
-      isError: isError,
+      isError,
       error,
       activeTick,
       data: ticksProcessed,

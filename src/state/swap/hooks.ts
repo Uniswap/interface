@@ -116,8 +116,8 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
-  currencies: { [field in Field]?: Currency }
+export function useDerivedSwapInfo(toggledVersion: Version): {
+  currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
@@ -208,9 +208,9 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     [Field.OUTPUT]: relevantTokenBalances[1],
   }
 
-  const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined,
+  const currencies: { [field in Field]?: Currency | null } = {
+    [Field.INPUT]: inputCurrency,
+    [Field.OUTPUT]: outputCurrency,
   }
 
   let inputError: string | undefined
@@ -327,18 +327,20 @@ export function useDefaultsFromURLSearch():
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
+    const inputCurrencyId = parsed[Field.INPUT].currencyId ?? undefined
+    const outputCurrencyId = parsed[Field.OUTPUT].currencyId ?? undefined
 
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
-        inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        inputCurrencyId,
+        outputCurrencyId,
         recipient: parsed.recipient,
       })
     )
 
-    setResult({ inputCurrencyId: parsed[Field.INPUT].currencyId, outputCurrencyId: parsed[Field.OUTPUT].currencyId })
+    setResult({ inputCurrencyId, outputCurrencyId })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])
 

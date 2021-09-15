@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-08-16 23:05\n"
+"PO-Revision-Date: 2021-09-03 17:08\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1885,6 +1885,11 @@ msgstr "{proposalId} 제안에 반대 투표"
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "{proposalId} 제안에 투표"
+
+#: src/components/vote/VoteModal.tsx
+#: src/components/vote/VoteModal.tsx
+msgid "Vote to abstain on proposal {proposalId}"
+msgstr "{proposalId}에 대한 기권 투표"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"

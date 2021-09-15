@@ -11,7 +11,7 @@ import ms from 'ms.macro'
 import { PoolState, usePool } from './usePools'
 
 // maximum number of blocks past which we consider the data stale
-const MAX_DATA_BLOCK_AGE = 10
+const MAX_DATA_BLOCK_AGE = 20
 
 interface FeeTierDistribution {
   isLoading: boolean
@@ -85,7 +85,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { isLoading, isFetching, isUninitialized, isError, data } = useFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken,
     {
-      pollingInterval: ms`2m`,
+      pollingInterval: ms`30s`,
     }
   )
 
