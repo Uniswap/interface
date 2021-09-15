@@ -115,7 +115,7 @@ export function useActiveNetwork() {
       const isNotConnected = !(library && library.provider && library.provider.isMetaMask)
       if (isNotConnected) {
         dispatch(updateChainIdWhenNotConnected(chainId))
-        history.push(target)
+        setTimeout(() => history.push(target), 3000)
         return
       }
 
