@@ -58,7 +58,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
 
   let error: string | undefined
   if (!account) {
-    error = t`Connect wallet`
+    error = t`Connect Wallet`
   }
   if (!stakingInfo?.stakedAmount) {
     error = error ?? t`Enter an amount`
