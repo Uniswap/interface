@@ -3,14 +3,14 @@ import { Token as TokenUNI, TokenAmount as TokenAmountUNI } from '@uniswap/sdk'
 import { Token as TokenSUSHI, TokenAmount as TokenAmountSUSHI } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 
-import { useTokenContract } from '../hooks/useContract'
+import { useTokenContract, useTokenContractForReading } from '../hooks/useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
 
 export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount | undefined {
-  const contract = useTokenContract(token?.address, false)
+  const contractForReading = useTokenContractForReading(token?.address, false)
 
   const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const allowance = useSingleCallResult(contract, 'allowance', inputs).result
+  const allowance = useSingleCallResult(contractForReading, 'allowance', inputs).result
 
   return useMemo(() => (token && allowance ? new TokenAmount(token, allowance.toString()) : undefined), [
     token,
