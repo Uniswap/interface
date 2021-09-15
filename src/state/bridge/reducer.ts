@@ -26,10 +26,10 @@ export default createReducer<BridgeState>(initialState, builder =>
       }
     )
     .addCase(selectCurrency, (state, { payload: { currencyId } }) => {
-        return {
-          ...state,
-          currencyId: currencyId
-        }
+      return {
+        ...state,
+        currencyId: currencyId
+      }
     })
     .addCase(typeInput, (state, { payload: { typedValue } }) => {
       return {

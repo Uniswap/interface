@@ -24,7 +24,7 @@ import {
 import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 
- 
+
 const Title = styled.p`
   margin: 0;
   font-weight: 500;

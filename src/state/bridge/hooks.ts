@@ -154,7 +154,7 @@ export function queryParametersToBridgeState(
 
 // updates the bridge state to use the defaults for a given network
 export function useDefaultsFromURLSearch():
-  | { currencyId: string | undefined}
+  | { currencyId: string | undefined }
   | undefined {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
