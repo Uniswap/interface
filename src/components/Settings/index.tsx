@@ -7,7 +7,7 @@ import styled, { ThemeContext } from 'styled-components/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useIsLegacyRouter } from '../../state/user/hooks'
+import { useExpertModeManager, useClientSideRouter } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -127,7 +127,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [legacyRouter, setLegacyRouter] = useIsLegacyRouter()
+  const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -210,13 +210,13 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 </RowFixed>
                 <Toggle
                   id="toggle-optimized-router-button"
-                  isActive={!legacyRouter}
+                  isActive={!clientSideRouter}
                   toggle={() => {
                     ReactGA.event({
                       category: 'Routing',
-                      action: legacyRouter ? 'enable routing API' : 'disable routing API',
+                      action: clientSideRouter ? 'enable routing API' : 'disable routing API',
                     })
-                    setLegacyRouter(!legacyRouter)
+                    setClientSideRouter(!clientSideRouter)
                   }}
                 />
               </RowBetween>

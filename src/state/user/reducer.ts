@@ -16,7 +16,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
-  updateUserLegacyRouter,
+  updateUserClientSideRouter,
   updateUserSlippageTolerance,
 } from './actions'
 
@@ -35,7 +35,7 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userLegacyRouter: boolean // whether the user has disabled the routing API
+  userClientSideRouter: boolean // whether routes should be calculated with the client side router only
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -74,7 +74,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userLocale: null,
-  userLegacyRouter: false,
+  userClientSideRouter: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
@@ -147,8 +147,8 @@ export default createReducer(initialState, (builder) =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserLegacyRouter, (state, action) => {
-      state.userLegacyRouter = action.payload.userLegacyRouter
+    .addCase(updateUserClientSideRouter, (state, action) => {
+      state.userClientSideRouter = action.payload.userClientSideRouter
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

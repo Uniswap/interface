@@ -190,19 +190,6 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
 
   const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
-  if (isV2TradeBetter !== undefined) {
-    console.debug(
-      {
-        v2TradeInput: v2Trade?.inputAmount.toExact(),
-        v3TradeInput: v3Trade?.trade?.inputAmount.toExact(),
-        v2TradeOutput: v2Trade?.outputAmount.toExact(),
-        v3TradeOutput: v3Trade?.trade?.outputAmount.toExact(),
-        isV2TradeBetter,
-      },
-      'Debug v2 v3 comparison'
-    )
-  }
-
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
     [Field.OUTPUT]: relevantTokenBalances[1],

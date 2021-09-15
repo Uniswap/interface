@@ -23,7 +23,7 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserLegacyRouter,
+  updateUserClientSideRouter,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'
@@ -104,26 +104,26 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useIsLegacyRouter(): [boolean, (userLegacyRouter: boolean) => void] {
+export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
   const dispatch = useAppDispatch()
 
-  const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
+  const clientSideRouter = useAppSelector((state) => Boolean(state.user.userClientSideRouter))
 
-  const setLegacyRouter = useCallback(
-    (newLegacyRouter: boolean) => {
-      dispatch(updateUserLegacyRouter({ userLegacyRouter: newLegacyRouter }))
+  const setClientSideRouter = useCallback(
+    (newClientSideRouter: boolean) => {
+      dispatch(updateUserClientSideRouter({ userClientSideRouter: newClientSideRouter }))
     },
     [dispatch]
   )
 
-  return [legacyRouter, setLegacyRouter]
+  return [clientSideRouter, setClientSideRouter]
 }
 
 export function useRoutingAPIEnabled(): boolean {
   const { chainId } = useActiveWeb3React()
-  const legacyRouter = useAppSelector((state) => state.user.userLegacyRouter)
+  const [clientSideRouter] = useClientSideRouter()
 
-  return chainId === SupportedChainId.MAINNET && !legacyRouter
+  return chainId === SupportedChainId.MAINNET && !clientSideRouter
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

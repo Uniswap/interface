@@ -22,21 +22,17 @@ interface TooltipProps extends Omit<PopoverProps, 'content'> {
 
 interface TooltipContentProps extends Omit<PopoverProps, 'content'> {
   content: ReactNode
-  Container?: ({ children }: { children: ReactNode }) => JSX.Element
   onOpen?: () => void
+  // whether to wrap the content in a `TooltipContainer`
+  wrap?: boolean
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
-function TooltipContent({ content, Container, ...rest }: TooltipContentProps) {
-  return (
-    <Popover
-      content={Container ? Container({ children: content }) : <TooltipContainer>{content}</TooltipContainer>}
-      {...rest}
-    />
-  )
+function TooltipContent({ content, wrap = false, ...rest }: TooltipContentProps) {
+  return <Popover content={wrap ? <TooltipContainer>{content}</TooltipContainer> : content} {...rest} />
 }
 
 export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {

@@ -48,7 +48,6 @@ export function computeRoutes(
     // `Route` constructor may throw if inputs/outputs are temporarily out of sync
     // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
     // This is not fatal and will fix itself in future render cycles
-    console.debug(e)
     return undefined
   }
 }

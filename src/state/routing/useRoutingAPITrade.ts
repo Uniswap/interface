@@ -62,7 +62,7 @@ export function useRoutingAPITradeExactIn(amountIn?: CurrencyAmount<Currency>, c
     refetchOnFocus: true,
   })
 
-  const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
+  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const routes = useMemo(
     () => computeRoutes(amountIn?.currency, currencyOut, quoteResult),
@@ -126,7 +126,7 @@ export function useRoutingAPITradeExactOut(currencyIn?: Currency, amountOut?: Cu
     refetchOnFocus: true,
   })
 
-  const quoteResult = useFreshData(data, Number(data?.blockNumber) ?? 0)
+  const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
 
   const routes = useMemo(
     () => computeRoutes(currencyIn, amountOut?.currency, quoteResult),

@@ -446,8 +446,12 @@ export default function Swap({ history }: RouteComponentProps) {
               <Row justify={!trade ? 'center' : 'space-between'}>
                 <RowFixed style={{ position: 'relative' }}>
                   <MouseoverTooltipContent
-                    Container={({ children }) => <ResponsiveTooltipContainer>{children}</ResponsiveTooltipContainer>}
-                    content={<SwapRoute trade={trade} syncing={routeIsSyncing} />}
+                    wrap={false}
+                    content={
+                      <ResponsiveTooltipContainer>
+                        <SwapRoute trade={trade} syncing={routeIsSyncing} />
+                      </ResponsiveTooltipContainer>
+                    }
                     placement="bottom"
                     onOpen={() =>
                       ReactGA.event({
@@ -473,13 +477,11 @@ export default function Swap({ history }: RouteComponentProps) {
                     />
                   </LoadingOpacityContainer>
                   <MouseoverTooltipContent
-                    Container={({ children }) => (
-                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                        {children}
-                      </ResponsiveTooltipContainer>
-                    )}
+                    wrap={false}
                     content={
-                      <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
+                      <ResponsiveTooltipContainer origin="top right" width={'295px'}>
+                        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={routeIsSyncing} />
+                      </ResponsiveTooltipContainer>
                     }
                     placement="bottom"
                     onOpen={() =>

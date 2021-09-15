@@ -12,6 +12,7 @@ export function useTokenInfoFromActiveList(currency: Currency) {
 
   return useMemo(() => {
     if (!chainId) return
+    if (currency.isNative) return currency
 
     try {
       return activeList[chainId][currency.wrapped.address].token
