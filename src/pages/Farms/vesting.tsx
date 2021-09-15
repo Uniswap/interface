@@ -9,7 +9,7 @@ import { ExternalLink, TYPE } from 'theme'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
-import { Fraction, JSBI, Token } from 'libs/sdk/src'
+import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
 import { AVERAGE_BLOCK_TIME_IN_SECSS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
@@ -421,9 +421,13 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
       </ButtonPrimary>
     </AutoRow>
   )
-  // const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
   const duration =
-    startTimestamp && endTimestamp ? `~${getFormattedTimeFromSecond((endTimestamp - startTimestamp) / 1000)}` : ''
+    chainId &&
+    getFormattedTimeFromSecond(
+      BigNumber.from(schedule[1])
+        .sub(BigNumber.from(schedule[0]))
+        .toNumber() * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+    )
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
