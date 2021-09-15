@@ -116,7 +116,7 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(toggledVersion: Version): {
+export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
