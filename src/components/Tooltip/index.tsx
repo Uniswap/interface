@@ -8,23 +8,27 @@ const TooltipContainer = styled.div`
   font-weight: 400;
 `
 
-interface TooltipProps extends Omit<PopoverProps, 'content'> {
-  text: string
+interface TooltipProps extends PopoverProps {
+  text?: string
 }
 
-export default function Tooltip({ text, ...rest }: TooltipProps) {
+export default function Tooltip({ text, ...rest }: Omit<TooltipProps, 'content'>) {
   return <Popover content={<TooltipContainer>{text}</TooltipContainer>} {...rest} />
 }
 
-export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show'>) {
+export function CustomTooltip({ content, ...rest }: PopoverProps) {
+  return <Popover offsetY={3} placement={'bottom'} content={content} {...rest} />
+}
+
+export function MouseoverTooltip({ children, content, ...rest }: Omit<TooltipProps, 'show'>) {
   const [show, setShow] = useState(false)
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <Tooltip {...rest} show={show}>
+    <CustomTooltip content={content} {...rest} show={show}>
       <div onMouseEnter={open} onMouseLeave={close}>
         {children}
       </div>
-    </Tooltip>
+    </CustomTooltip>
   )
 }
