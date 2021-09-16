@@ -189,13 +189,13 @@ export default function Bridge() {
   const fromOptions = createNetworkOptions({
     value: fromInputNetwork,
     setValue: handleFromNetworkChange,
-    activeChainId: chainId
+    activeChainId: !!account ? chainId : -1
   })
 
   const toOptions = createNetworkOptions({
     value: toInputNetwork,
     setValue: handleToNetworkChange,
-    activeChainId: chainId
+    activeChainId: !!account ? chainId : -1
   })
 
   const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) => {
