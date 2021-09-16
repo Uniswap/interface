@@ -279,7 +279,7 @@ export function useFarmApr(
       .filter(
         token =>
           token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-          token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()
+          token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase()
       )
   )
 
@@ -316,7 +316,7 @@ export function useFarmApr(
     if (
       chainId &&
       rewardPerBlock.token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-      rewardPerBlock.token.address.toLowerCase() != KNC[chainId as ChainId].address.toLowerCase() &&
+      rewardPerBlock.token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase() &&
       tokenPrices[0]
     ) {
       const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
@@ -389,7 +389,7 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
       .filter(
         token =>
           token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-          token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()
+          token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase()
       )
   )
   if (!rewards) {
@@ -417,7 +417,7 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
     if (
       chainId &&
       reward.token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-      reward.token.address.toLowerCase() != KNC[chainId as ChainId].address.toLowerCase() &&
+      reward.token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase() &&
       tokenPrices[0]
     ) {
       total += parseFloat(getFullDisplayBalance(reward.amount)) * tokenPrices[0]
