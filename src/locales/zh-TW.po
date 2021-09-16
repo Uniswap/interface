@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -342,6 +342,10 @@ msgstr "更改您的網絡以返回 L1"
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "圖表"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "檢查網絡狀態"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "收到的最低數額"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "更多"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "網絡警告"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "您沒有足夠的票數來提交提案"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "您在此流動池中還未有流動資金。"
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "您可能丟失了網絡連接。"
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "為 {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "有 socks 表情包"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "這裡。"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 代幣"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} 可能正在關閉，或者您可能已經失去了網絡連接。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -342,6 +342,10 @@ msgstr "Ändra ditt nätverk för att gå tillbaka till L1"
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Diagram"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Kontrollera nätverksstatus"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "Minimum mottaget"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Mer"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Nätverksvarning"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "Du har inte tillräckligt med röster för att skicka in ett förslag"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Du har inte likviditet i denna pool ännu."
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Du kan ha tappat din nätverksanslutning."
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "för {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "har socks emotikon"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "här."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} tokens"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} kan vara nere just nu, eller så kan du ha tappat din nätverksanslutning."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

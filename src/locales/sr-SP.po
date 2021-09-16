@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -342,6 +342,10 @@ msgstr "Промените мрежу да бисте се вратили на �
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Графикони"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Проверите статус мреже"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "Минимално примљено"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Више"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Упозорење на мрежу"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "Немате довољно гласова за подношење пр�
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Још увек немате ликвидност у овом фонду."
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Можда сте изгубили мрежну везу."
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "за {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "има чарапе емоџи"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "овде."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} жетона"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} тренутно у квару или сте изгубили мрежну везу."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

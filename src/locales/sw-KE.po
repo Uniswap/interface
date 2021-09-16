@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: sw_KE\n"
 "Language-Team: Swahili\n"
@@ -342,6 +342,10 @@ msgstr "Badilisha mtandao wako kurudi L1"
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Chati"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Angalia hali ya mtandao"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "Kiwango cha chini kimepokelewa"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Zaidi"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Onyo la Mtandao"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "Huna kura za kutosha kuwasilisha pendekezo"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Bado huna ukwasi katika dimbwi hili."
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Labda umepoteza muunganisho wako wa mtandao."
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "kwa {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "ina soksi emoji"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "hapa."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "Ishara {activeTokensOnThisChain}"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} inaweza kuwa chini sasa hivi, au labda umepoteza muunganisho wako wa mtandao."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

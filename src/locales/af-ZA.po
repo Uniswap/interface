@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -342,6 +342,10 @@ msgstr "Verander u netwerk om terug te gaan na L1"
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Grafieke"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Gaan die netwerkstatus na"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "Minimum ontvang"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Meer"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Netwerkwaarskuwing"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "U het nie genoeg stemme om 'n voorstel in te dien nie"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "U het nog nie likiditeit in hierdie poel nie."
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "U het moontlik u netwerkverbinding verloor."
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "vir {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "het sokkies emoji"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "hier."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} tokens"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} dalk nou af, of u het moontlik u netwerkverbinding verloor."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

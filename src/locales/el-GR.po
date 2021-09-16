@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-15 15:07\n"
+"PO-Revision-Date: 2021-09-16 03:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -342,6 +342,10 @@ msgstr "Αλλάξτε το δίκτυό σας για να επιστρέψετ
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Διαγράμματα"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Ελέγξτε την κατάσταση του δικτύου"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1064,6 +1068,10 @@ msgstr "Ελάχιστο λαμβανόμενο"
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Περισσότερα"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Προειδοποίηση δικτύου"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1984,6 +1992,10 @@ msgstr "Δεν έχετε αρκετές ψήφους για να υποβάλε
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την δεξαμενή."
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Ενδέχεται να έχετε χάσει τη σύνδεση δικτύου σας."
+
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
 msgid "You must bridge L1 assets to the network to use them."
@@ -2116,6 +2128,10 @@ msgstr "για {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "έχει κάλτσες emoji"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "εδώ."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2281,6 +2297,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} μάρκες"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} may be down right now, or you may have lost your network connection."
+msgstr "{label} μπορεί να είναι εκτός λειτουργίας αυτή τη στιγμή ή να έχετε χάσει τη σύνδεσή σας στο δίκτυο."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
