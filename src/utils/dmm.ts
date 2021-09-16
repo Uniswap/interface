@@ -29,7 +29,7 @@ import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
 import { useRewardTokens } from 'state/farms/hooks'
-import { useETHPrice, useKNCPrice } from 'state/application/hooks'
+import { useETHPrice, useKNCPrice, useTokensPrice } from 'state/application/hooks'
 import { getFullDisplayBalance } from './formatBalance'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
@@ -273,6 +273,16 @@ export function useFarmApr(
   const { chainId } = useActiveWeb3React()
   const ethPrice = useETHPrice()
   const kncPrice = useKNCPrice()
+  const temp = [...rewardPerBlocks]
+  const tokenPrices = useTokensPrice(
+    temp
+      .map(item => item.token)
+      .filter(
+        token =>
+          token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
+          token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()
+      )
+  )
 
   if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
     return 0
@@ -297,12 +307,23 @@ export function useFarmApr(
         parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
       total += yearlyETHRewardAllocation * parseFloat(ethPrice.currentPrice)
     }
-
     if (kncPrice && rewardPerBlock.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
       const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
       const yearlyKNCRewardAllocation =
         parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
       total += yearlyKNCRewardAllocation * parseFloat(kncPrice)
+    }
+
+    if (
+      chainId &&
+      rewardPerBlock.token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
+      rewardPerBlock.token.address.toLowerCase() != KNC[chainId as ChainId].address.toLowerCase() &&
+      tokenPrices[0]
+    ) {
+      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
+      const yearlyKNCRewardAllocation =
+        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
+      total += yearlyKNCRewardAllocation * tokenPrices[0]
     }
 
     return total
