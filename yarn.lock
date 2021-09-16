@@ -1384,10 +1384,10 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@davatar/react@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.0.2.tgz#eee9abb53dd38cb460f130ed9652e5b3375f856e"
-  integrity sha512-dnXr1o5bSIPeEMpEmFLYvUMYMkFQyzm0Ry3+HaYOi+nlSBGV1125LGrPEHCLss+KLWfoOQl1BC+enfYVPeHouw==
+"@davatar/react@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.1.0.tgz#8fdeee6ebecd8da3e7c7d1de0df5db60919517c6"
+  integrity sha512-TYgLp3xDl5+jPRK9HO7viegl9o98MKquJK0HRP3iUycePEMag/z5nSQKiwtQaUh+dJZtuPkq2FjkHdIyw8qAPQ==
   dependencies:
     color "^3.2.1"
     ethers "^5.4.6"
