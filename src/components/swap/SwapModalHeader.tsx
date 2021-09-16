@@ -106,7 +106,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {t`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {nativeInput?.symbol}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {nativeOutput?.symbol}
             </b>
             {t` or the transaction will revert.`}
           </TYPE.italic>
@@ -114,7 +114,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {t`Input is estimated. You will sell at most `}
             <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {nativeOutput?.symbol}
+              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {nativeInput?.symbol}
             </b>
             {t` or the transaction will revert.`}
             {t` or the transaction will revert.`}
