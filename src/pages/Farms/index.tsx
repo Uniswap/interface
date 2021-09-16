@@ -18,8 +18,6 @@ import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
 import {
   PageWrapper,
-  KNCPriceContainer,
-  KNCPriceWrapper,
   TabContainer,
   TabWrapper,
   Tab,
@@ -77,25 +75,32 @@ const Farms = () => {
   const totalRewards = useFarmRewards(farms)
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
 
-  const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
-  const isFarmStarted = farm && blockNumber && farm.startBlock < blockNumber
-  const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
+  const farmsList = farms.map(farm => {
+    const isFarmStarted = farm && blockNumber && farm.startBlock < blockNumber
+    const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
 
-  let remainingBlocks: number | false | undefined
-  let estimatedRemainingSeconds: number | false | undefined
-  let formattedEstimatedRemainingTime: string | false | 0 | undefined
+    let remainingBlocks: number | false | undefined
+    let estimatedRemainingSeconds: number | false | undefined
+    let formattedEstimatedRemainingTime: string | false | 0 | undefined
 
-  if (!isFarmStarted) {
-    remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
-    estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
-    formattedEstimatedRemainingTime = estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
-  } else {
-    remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
-    estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
-    formattedEstimatedRemainingTime = estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
-  }
+    if (!isFarmStarted) {
+      remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
+      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+      formattedEstimatedRemainingTime =
+        estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+    } else {
+      remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
+      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+      formattedEstimatedRemainingTime =
+        estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+    }
+    return {
+      ...farm,
+      time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Start in ') + formattedEstimatedRemainingTime}`
+    }
+  })
 
-  const stakedOnlyFarms = farms.filter(
+  const stakedOnlyFarms = farmsList.filter(
     farm => farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
   )
 
@@ -137,24 +142,9 @@ const Farms = () => {
 
   const rewardTokens = useRewardTokensFullInfo()
 
-  const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
   return (
     <>
       <PageWrapper>
-        <KNCPriceContainer>
-          {kncPrice ? (
-            <KNCPriceWrapper>
-              <img
-                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202/logo.png`}
-                alt="knc-logo"
-                width="20px"
-              />
-              {formattedNum(kncPrice, true)}
-            </KNCPriceWrapper>
-          ) : (
-            <Loader />
-          )}
-        </KNCPriceContainer>
         <TabContainer>
           <TabWrapper>
             <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
@@ -214,7 +204,7 @@ const Farms = () => {
                       <Trans>My Total Rewards</Trans>
                     </TotalRewardsTitle>
                     <InfoHelper
-                      text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over ~${lockedTime} days.`}
+                      text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool).`}
                     />
                   </TotalRewardsTitleWrapper>
                   <RewardNumberContainer>
@@ -249,34 +239,15 @@ const Farms = () => {
                 )}
               </HarvestAllContainer>
             </HeadingContainer>
-
-            <RemainingTimeContainer>
-              <EndInTitle>{!isFarmStarted ? t`START IN` : t`ENDING IN`}:</EndInTitle>
-              <div>
-                {!blockNumber ? (
-                  <Loader />
-                ) : isFarmEnded ? (
-                  `${FARM_ENDED}`
-                ) : (
-                  <span>
-                    <span style={{ marginRight: '4px' }}>
-                      <Trans>{!remainingBlocks ? <Loader /> : remainingBlocks} blocks</Trans>
-                    </span>
-                    <span>(~ {formattedEstimatedRemainingTime})</span>
-                  </span>
-                )}
-              </div>
-            </RemainingTimeContainer>
-
             <Panel>
-              <FarmsList farms={stakedOnly ? stakedOnlyFarms : farms} />
+              <FarmsList farms={stakedOnly ? stakedOnlyFarms : farmsList} />
             </Panel>
           </>
         ) : (
           <Vesting rewardTokens={rewardTokens} />
         )}
       </PageWrapper>
-      <FarmHistoryModal farms={farms} />
+      <FarmHistoryModal farms={farmsList} />
       <SwitchLocaleLink />
     </>
   )

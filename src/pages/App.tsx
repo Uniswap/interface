@@ -17,6 +17,9 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
+import { useActiveNetwork } from 'hooks/useActiveNetwork'
+
+import KNCPrice from 'components/KNCPrice'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -117,6 +120,7 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  useActiveNetwork()
   const { account, chainId } = useActiveWeb3React()
   const aboutPage = useRouteMatch('/about')
   const apolloClient = exchangeCient[chainId as ChainId]
@@ -133,6 +137,7 @@ export default function App() {
                 <Header />
               </HeaderWrapper>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
+                <KNCPrice />
                 <Popups />
                 <UtilitiesWrapper>
                   <Utilities />

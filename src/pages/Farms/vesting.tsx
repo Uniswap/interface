@@ -9,7 +9,7 @@ import { ExternalLink, TYPE } from 'theme'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
-import { Fraction, JSBI, Token } from 'libs/sdk/src'
+import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
 import { AVERAGE_BLOCK_TIME_IN_SECSS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
@@ -198,8 +198,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
     </div>
   )
 
-  const lockedTime = chainId && [96, 56, 43113, 43114].includes(chainId) ? '14' : '30'
-
   const claimedBlock = (
     <div>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
@@ -250,7 +248,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
         <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 10px 0">
           <Trans>TOTAL HARVESTED REWARDS</Trans>
           <InfoHelper
-            text={t`Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~${lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).`}
+            text={t`Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline.`}
           />
         </TYPE.body>
         {above1400 ? (
@@ -298,7 +296,7 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
             <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 10px 0 0">
               <Trans>VESTING SCHEDULES</Trans>
               <InfoHelper
-                text={t`Each time you harvest rewards, a new vesting period of ~${lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).`}
+                text={t`Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline.`}
               />
             </TYPE.body>
           </AutoRow>
@@ -423,13 +421,19 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
       </ButtonPrimary>
     </AutoRow>
   )
-  const lockedTime = chainId && [97, 56, 43113, 43114].includes(chainId) ? '14' : '30'
+  const duration =
+    chainId &&
+    getFormattedTimeFromSecond(
+      BigNumber.from(schedule[1])
+        .sub(BigNumber.from(schedule[0]))
+        .toNumber() * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+    )
   return (
     <div style={{ padding: '20px 0 100px 0', borderBottom: '1px solid #404b51' }}>
       <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 20px 0">
         <Trans>Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}</Trans>
         <br />
-        <Trans>Duration: ~{lockedTime} days</Trans>
+        <Trans>Duration: {duration}</Trans>
       </TYPE.body>
 
       {above1400 ? (

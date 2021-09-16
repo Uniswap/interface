@@ -1,96 +1,16 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../state'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
-import { updateChainIdWhenNotConnected } from '../../state/application/actions'
 
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainId } from 'libs/sdk/src'
 import ModalHeader from '../ModalHeader'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonEmpty } from 'components/Button'
-
-const SWITCH_NETWORK_PARAMS: {
-  [chainId in ChainId]?: {
-    chainId: string
-  }
-} = {
-  [ChainId.MAINNET]: {
-    chainId: '0x1'
-  },
-  [ChainId.MATIC]: {
-    chainId: '0x89'
-  },
-  [ChainId.BSCMAINNET]: {
-    chainId: '0x38'
-  },
-  [ChainId.AVAXMAINNET]: {
-    chainId: '0xA86A'
-  }
-}
-
-const ADD_NETWORK_PARAMS: {
-  [chainId in ChainId]?: {
-    chainId: string
-    chainName: string
-    nativeCurrency: {
-      name: string
-      symbol: string
-      decimals: number
-    }
-    rpcUrls: string[]
-    blockExplorerUrls: string[]
-  }
-} = {
-  [ChainId.MAINNET]: {
-    chainId: '0x1',
-    chainName: 'Ethereum',
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.com']
-  },
-  [ChainId.MATIC]: {
-    chainId: '0x89',
-    chainName: 'Polygon',
-    nativeCurrency: {
-      name: 'Matic',
-      symbol: 'MATIC',
-      decimals: 18
-    },
-    rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
-    blockExplorerUrls: ['https://polygonscan.com/']
-  },
-  [ChainId.BSCMAINNET]: {
-    chainId: '0x38',
-    chainName: 'BSC',
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18
-    },
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    blockExplorerUrls: ['https://bscscan.com/']
-  },
-  [ChainId.AVAXMAINNET]: {
-    chainId: '0xA86A',
-    chainName: 'AVAX',
-    nativeCurrency: {
-      name: 'AVAX',
-      symbol: 'AVAX',
-      decimals: 18
-    },
-    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
-    blockExplorerUrls: ['https://cchain.explorer.avax.network/']
-  }
-}
+import { useActiveNetwork } from 'hooks/useActiveNetwork'
 
 const ModalContentWrapper = styled.div`
   position: absolute;
@@ -164,38 +84,13 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   }
 `
 
-export default function NetworkModal({ isNotConnected }: { isNotConnected: boolean }): JSX.Element | null {
-  const { chainId, library, account } = useActiveWeb3React()
+export default function NetworkModal(): JSX.Element | null {
+  const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
+  const { changeNetwork } = useActiveNetwork()
 
-  const dispatch = useDispatch<AppDispatch>()
   if (!chainId || !networkModalOpen) return null
-
-  const changeNetwork = async (key: ChainId) => {
-    if (isNotConnected) {
-      dispatch(updateChainIdWhenNotConnected(key))
-    } else {
-      const switchNetworkParams = SWITCH_NETWORK_PARAMS[key]
-      const addNetworkParams = ADD_NETWORK_PARAMS[key]
-
-      try {
-        await library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])
-      } catch (switchError) {
-        // This error code indicates that the chain has not been added to MetaMask.
-        if (switchError.code === 4902 || switchError.code === -32603) {
-          try {
-            library?.send('wallet_addEthereumChain', [addNetworkParams, account])
-          } catch (addError) {
-            console.error(addError)
-          }
-        } else {
-          // handle other "switch" errors
-          console.error(switchError)
-        }
-      }
-    }
-  }
 
   return (
     <ModalContentWrapper>

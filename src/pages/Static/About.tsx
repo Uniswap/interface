@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player/lazy'
 import style from './about.module.scss'
 
@@ -11,13 +11,21 @@ import Loader from 'components/Loader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, ETHER } from 'libs/sdk/src'
+import { ChainId, ETHER, Fraction, JSBI } from 'libs/sdk/src'
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
+
+import { Farm } from 'state/farms/types'
+import { useFarmsData } from 'state/farms/hooks'
+import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks } from 'utils/dmm'
+import useTokenBalance from 'hooks/useTokenBalance'
+import { isAddressString } from 'utils'
+import { ethers } from 'ethers'
+import { useBlockNumber } from 'state/application/hooks'
 
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
@@ -50,6 +58,9 @@ export default function About() {
 
   const globalData = data && data.dmmFactories[0]
 
+  const { loading: loadingPoolFarm, data: farms } = useFarmsData()
+  const [maxApr, setMaxApr] = useState<number>(-1)
+  const [indexx, setIndexx] = useState<number>(0)
   return (
     <div className={style.wrapper}>
       <div className={style.image1}></div>
@@ -112,6 +123,18 @@ export default function About() {
             <Text fontSize={10} fontStyle="italic" mt={2}>
               <Trans>Equivalent TVL when compared to typical AMMs</Trans>
             </Text>
+          </div>
+        </div>
+
+        <div className={`${style.section_number} ${style.trading_volume_section}`}>
+          <div>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+              {maxApr < 0 ? <Loader /> : `${maxApr.toFixed(2)}%`}
+            </Text>
+            <Text fontSize={14} mt={2}>
+              <Trans>Max APY</Trans>
+            </Text>
+            <Text fontSize={14}>&nbsp;</Text>
           </div>
         </div>
       </div>
@@ -443,37 +466,56 @@ export default function About() {
               (c) dmm.exchange
             </Text>
           </div>
+          {farms.map(
+            (farm, index) =>
+              index == indexx && (
+                <Apr
+                  key={farm.id}
+                  farm={farm}
+                  onAprUpdate={(value: any) => {
+                    if (!!maxApr && value > maxApr) {
+                      setMaxApr(value)
+                      setIndexx(indexx + 1)
+                    }
+                  }}
+                />
+              )
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-{
-  /* <div className={style.wrapper6}>
-        <div>
-          <div className={[style.box, style.box_1].join(' ')}></div>
-          <div className={style.text_5}>Reduce the impact of IL</div>
-          <div className={style.text_6}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In facilisis sollicitudin ultricies. Nam viverra
-            urna quis vulputate pulvinar. Curabitur aliquet id nisl et tempor.
-          </div>
-        </div>
-        <div>
-          <div className={[style.box, style.box_2].join(' ')}></div>
-          <div className={style.text_5}>Increase LP Profit</div>
-          <div className={style.text_6}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In facilisis sollicitudin ultricies. Nam viverra
-            urna quis vulputate pulvinar. Curabitur aliquet id nisl et tempor.
-          </div>
-        </div>
-        <div>
-          <div className={[style.box, style.box_3].join(' ')}></div>
-          <div className={style.text_5}>Encourage trading</div>
-          <div className={style.text_6}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In facilisis sollicitudin ultricies. Nam viverra
-            urna quis vulputate pulvinar. Curabitur aliquet id nisl et tempor.
-          </div>
-        </div>
-      </div> */
+function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
+  const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
+  const poolAddressChecksum = isAddressString(farm.id)
+  const { value: userTokenBalance, decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
+  // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
+  const lpTokenRatio = new Fraction(
+    farm.totalStake.toString(),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+  ).divide(
+    new Fraction(
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    )
+  )
+  const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
+  const currentBlock = useBlockNumber()
+  const isLiquidityMiningActive =
+    currentBlock && farm.startBlock && farm.endBlock
+      ? farm.startBlock <= currentBlock && currentBlock <= farm.endBlock
+      : false
+
+  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString(), isLiquidityMiningActive)
+  const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
+
+  const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
+  const apr = farmAPR + tradingFeeAPR
+
+  useEffect(() => {
+    onAprUpdate(apr)
+  }, [apr])
+  return <></>
 }

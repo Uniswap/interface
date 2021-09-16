@@ -430,8 +430,12 @@ msgid "Don't see a pool you joined?"
 msgstr "Không thấy Pool mà bạn đã tham gia?"
 
 #: src/pages/Farms/vesting.tsx
-msgid "Duration: ~{lockedTime} days"
+msgid "Duration: {duration}"
 msgstr ""
+
+#: 
+#~ msgid "Duration: ~{lockedTime} days"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
@@ -445,17 +449,21 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "Các Phí Linh Động"
 
-#: src/pages/Farms/index.tsx
-msgid "ENDING IN"
-msgstr "KẾT THÚC TRONG"
+#: 
+#~ msgid "ENDING IN"
+#~ msgstr "KẾT THÚC TRONG"
+
+#: src/pages/Farms/vesting.tsx
+msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
+msgstr ""
 
 #: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Mỗi khi bạn thu hoạch phần thưởng, một khoảng thời gian vesting mới ~ 30 ngày sẽ được tạo ra. Nhiều giai đoạn vesting có thể chạy đồng thời. Phần thưởng đã mở cho mỗi lượt vesting có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
-#: src/pages/Farms/vesting.tsx
-msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-msgstr ""
+#: 
+#~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
+#~ msgstr ""
 
 #: src/pages/Farms/index.tsx
 msgid "Eligible Pools"
@@ -468,6 +476,10 @@ msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạ
 #: src/pages/Static/About.tsx
 msgid "Encourage trading"
 msgstr "Khuyến khích giao dịch"
+
+#: src/components/FarmsList/index.tsx
+msgid "Ending In"
+msgstr ""
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -805,6 +817,10 @@ msgstr "Thị trường"
 msgid "Max"
 msgstr "Tối đa"
 
+#: src/pages/Static/About.tsx
+msgid "Max APY"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Maximum sold"
@@ -1132,9 +1148,9 @@ msgstr "Tuyến"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Tuyến thông qua các token này dẫn đến giá tốt nhất cho giao dịch của bạn."
 
-#: src/pages/Farms/index.tsx
-msgid "START IN"
-msgstr "BẮT ĐẦU VÀO"
+#: 
+#~ msgid "START IN"
+#~ msgstr "BẮT ĐẦU VÀO"
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1317,13 +1333,17 @@ msgstr "Tổng Giá trị Đã khóa"
 msgid "Total Value Locked:"
 msgstr "Tổng Giá trị Đã khóa:"
 
+#: src/pages/Farms/index.tsx
+msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
+msgstr ""
+
 #: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Tổng số phần thưởng có thể thu hoạch. Phần thưởng đã thu hoạch được khóa và trao vesting trong ~ 30 ngày."
 
-#: src/pages/Farms/index.tsx
-msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
-msgstr ""
+#: 
+#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
+#~ msgstr ""
 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1496,8 +1516,12 @@ msgstr "Vị trí của bạn"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Tổng số phần thưởng thu hoạch của bạn kể từ đầu. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và được cấp vesting trong ~ 30 ngày, bắt đầu từ ngày thu hoạch. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
+#: 
+#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#~ msgstr ""
+
 #: src/pages/Farms/vesting.tsx
-msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
@@ -1586,9 +1610,9 @@ msgstr "{0} Đang chờ xử lý"
 msgid "{0} added"
 msgstr "{0} đã được thêm vào"
 
-#: src/pages/Farms/index.tsx
-msgid "{0} blocks"
-msgstr ""
+#: 
+#~ msgid "{0} blocks"
+#~ msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
@@ -1598,6 +1622,10 @@ msgstr "{0} đã bị loại bỏ"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} tokens"
+
+#: src/components/FarmsList/ListItem.tsx
+msgid "{0}% LP Fee + {1}% Rewards"
+msgstr ""
 
 #: src/pages/Pools/index.tsx
 msgid "{0}-{1}"
