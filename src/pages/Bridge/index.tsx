@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount } from '@swapr/sdk'
+import { ChainId, CurrencyAmount } from '@swapr/sdk'
 import QuestionHelper from '../../components/QuestionHelper'
 import { RowBetween } from '../../components/Row'
 import AppBody from '../AppBody'
@@ -15,21 +15,20 @@ import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
+import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import {
   useBridgeInfo,
   useBridgeActionHandlers,
   useBridgeState
 } from '../../state/bridge/hooks'
-import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
 
 import {
   NetworkSwitcher as NetworkSwitcherPopover,
   networkOptionsPreset,
   NetworkOptionProps
 } from '../../components/NetworkSwitcher'
-import { ChainId } from '@swapr/sdk'
-import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 
 const Title = styled.p`
   margin: 0;
@@ -133,32 +132,29 @@ const createNetworkOptions = ({
 export default function Bridge() {
   const { chainId, account } = useActiveWeb3React()
   const { selectEthereum, selectNetwork } = useNetworkSwitch()
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-
-  const [step, setStep] = useState(Step.Initial)
-  const [bridge, setBridge] = useState('Swapr Fast Exit')
   const { typedValue } = useBridgeState()
   const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
   const { bridgeCurrency, currencyBalance, parsedAmount } = useBridgeInfo()
 
-  //const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
-  //const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
+  const [step, setStep] = useState(Step.Initial)
+  const [bridge, setBridge] = useState('Swapr Fast Exit')
+
+  const isButtonDisabled = !typedValue || step !== Step.Initial
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
+  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
+
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
   useEffect(() => {
     const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000)
     return () => clearTimeout(timer)
   }, [step])
- 
-  const isButtonDisabled = !typedValue || step !== Step.Initial
-
 
   const resetBridge = () => {
     handleUserInput('')
     setStep(Step.Initial)
   }
-
-  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
-
 
   const handleCurrencySelect = useCallback(
     outputCurrency => {
@@ -166,6 +162,7 @@ export default function Bridge() {
     },
     [onCurrencySelection]
   )
+
   const handleUserInput = useCallback(
     (value: string) => {
       onUserInput(value)
@@ -173,12 +170,10 @@ export default function Bridge() {
     [onUserInput]
   )
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
-
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
+
   const {
     handleSwap,
     showFromNetworkList,
