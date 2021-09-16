@@ -8,6 +8,7 @@ import {
   ApplicationModal,
   setOpenModal,
   updateChainId,
+  setChainConnectivityWarning,
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
@@ -15,6 +16,7 @@ type PopupList = Array<{ key: string; show: boolean; content: PopupContent; remo
 export interface ApplicationState {
   // used by RTK-Query to build dynamic subgraph urls
   readonly chainId: number | null
+  readonly chainConnectivityWarning: boolean
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
@@ -22,6 +24,7 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   chainId: null,
+  chainConnectivityWarning: false,
   blockNumber: {},
   popupList: [],
   openModal: null,
@@ -60,5 +63,8 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(setChainConnectivityWarning, (state, { payload: { warn } }) => {
+      state.chainConnectivityWarning = warn
     })
 )
