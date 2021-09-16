@@ -17,8 +17,8 @@ import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Separator = styled.div`
   border-top: 1px solid ${({ theme }) => theme.bg2};
-  width: 100%;
   height: 1px;
+  width: 100%;
 `
 
 const V2_DEFAULT_FEE_TIER = 3000

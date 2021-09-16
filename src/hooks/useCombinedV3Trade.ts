@@ -41,7 +41,7 @@ export function useV3TradeExactIn(
       !currencyOut?.equals(routingAPITradeExactIn.trade.outputAmount.currency))
 
   const useFallback =
-    !debouncing && (!routingAPIEnabled || routingAPITradeExactIn.state === V3TradeState.NO_ROUTE_FOUND)
+    !routingAPIEnabled || (!debouncing && routingAPITradeExactIn.state === V3TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed
   const bestV3TradeExactIn = useClientV3TradeExactIn(
@@ -89,7 +89,7 @@ export function useV3TradeExactOut(
       !amountOut.currency.equals(routingAPITradeExactOut.trade.outputAmount.currency))
 
   const useFallback =
-    !debouncing && (!routingAPIEnabled || routingAPITradeExactOut.state === V3TradeState.NO_ROUTE_FOUND)
+    !routingAPIEnabled || (!debouncing && routingAPITradeExactOut.state === V3TradeState.NO_ROUTE_FOUND)
 
   const bestV3TradeExactOut = useClientSideV3TradeExactOut(
     useFallback ? currencyIn : undefined,

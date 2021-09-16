@@ -3,15 +3,15 @@ import { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
 import Popover, { PopoverProps } from '../Popover'
 
-export const TooltipContainer = styled.div<{ width?: string }>`
-  width: ${({ width }) => width ?? '256px'};
+export const TooltipContainer = styled.div`
+  width: 256px;
   padding: 0.6rem 1rem;
   font-weight: 400;
   word-break: break-word;
 
-  background: ${({ theme }) => theme.bg2};
+  background: ${({ theme }) => theme.bg0};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.bg2};
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 

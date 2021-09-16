@@ -114,7 +114,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const newLocal = useDerivedSwapInfo(toggledVersion)
   const {
     v3Trade: { state: v3TradeState },
     bestTrade: trade,
@@ -123,7 +122,7 @@ export default function Swap({ history }: RouteComponentProps) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = newLocal
+  } = useDerivedSwapInfo(toggledVersion)
 
   const {
     wrapType,
