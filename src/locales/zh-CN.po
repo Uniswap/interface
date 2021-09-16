@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 16:05\n"
+"PO-Revision-Date: 2021-09-16 17:07\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -2001,7 +2001,7 @@ msgstr "您在此流动池中还未有流动资金。"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
-msgstr "您可能丢失了网络连接。"
+msgstr "您的网络连接可能断了。"
 
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
@@ -2307,7 +2307,7 @@ msgstr "{activeTokensOnThisChain} 代币"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} 可能正在关闭，或者您可能已经失去了网络连接。"
+msgstr "{label} 可能正在关闭，或者您的网络已经断了。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
