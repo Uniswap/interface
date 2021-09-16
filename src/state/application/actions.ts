@@ -30,7 +30,7 @@ export enum ApplicationModal {
   NETWORK_SWITCHER,
   ETHEREUM_OPTION,
   NETWORK_SWITCHER_FROM,
-  NETWORK_SWITCHER_TO,
+  NETWORK_SWITCHER_TO
 }
 
 export enum MainnetGasPrice {

@@ -1,13 +1,9 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Network } from '.'
 import TriangleIcon from '../../assets/svg/triangle.svg'
-import Popover from '../../components/Popover'
+import { NetworkOptionProps } from '../../components/NetworkSwitcher'
 import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useCloseModals, useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 const Section = styled.button`
   width: 100%;
@@ -66,105 +62,23 @@ const AssetName = styled.p`
   }
 `
 
-const StyledPopover = styled(Popover)`
-  padding: 0;
-  background-color: ${({ theme }) => theme.bg1};
-  border-color: ${({ theme }) => theme.dark2};
-  border-style: solid;
-  border-width: 1.2px;
-  border-radius: 12px;
-  border-image: none;
-  overflow: hidden;
-`
-
-const NetworksList = styled.ul`
-  width: 182px;
-  margin: 0;
-  padding: 22px 24px;
-  list-style: none;
-`
-
-const NetworkItem = styled.li`
-  & + & {
-    margin-top: 24px;
-  }
-`
-
-const NetworkButton = styled.button`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  img {
-    height: 18px;
-    width: 18px;
-    margin-right: 8px;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-`
-
 interface AssetSelectorProps {
   label: string
-  modal: ApplicationModal
-  connected?: boolean
-  onNetworkClick: (network: Network) => void
-  networks: Network[]
-  selectedNetwork: Network
+  selectedNetwork: Partial<NetworkOptionProps> | undefined
+  onClick: () => void
 }
 
-export const AssetSelector = ({
-  label,
-  connected,
-  modal,
-  onNetworkClick,
-  networks,
-  selectedNetwork
-}: AssetSelectorProps) => {
-  const switcherPopoverOpen = useModalOpen(modal)
-  const toggleNetworkSwitcherPopover = useToggleModal(modal)
-
-  const popoverRef = useRef(null)
-  const closeModals = useCloseModals()
-  useOnClickOutside(popoverRef, () => {
-    if (switcherPopoverOpen) closeModals()
-  })
-
+export const AssetSelector = ({ label, selectedNetwork, onClick }: AssetSelectorProps) => {
   return (
-    <div ref={popoverRef}>
-      <StyledPopover
-        placement="bottom"
-        show={switcherPopoverOpen}
-        content={
-          <NetworksList>
-            {networks.map((network, index) => (
-              <NetworkItem key={index}>
-                <NetworkButton onClick={() => onNetworkClick(network)} disabled={network.name === selectedNetwork.name}>
-                  <img src={network.icon} alt={`${network.name} logo`} />
-                  {network.name}
-                </NetworkButton>
-              </NetworkItem>
-            ))}
-          </NetworksList>
-        }
-      >
-        <Section onClick={toggleNetworkSwitcherPopover}>
-          <Row>
-            <IconWrapper>
-              <img src={selectedNetwork.icon} alt={`${selectedNetwork.name} logo`} />
-            </IconWrapper>
-            {connected && <TagSuccess>Connected</TagSuccess>}
-          </Row>
-          <SmallLabel>{label}</SmallLabel>
-          <AssetName>{selectedNetwork.name}</AssetName>
-        </Section>
-      </StyledPopover>
-    </div>
+    <Section onClick={onClick}>
+      <Row>
+        <IconWrapper>
+          <img src={selectedNetwork?.logoSrc} alt={`${selectedNetwork?.header} logo`} />
+        </IconWrapper>
+        {selectedNetwork?.active && <TagSuccess>Connected</TagSuccess>}
+      </Row>
+      <SmallLabel>{label}</SmallLabel>
+      <AssetName>{selectedNetwork?.header}</AssetName>
+    </Section>
   )
 }
