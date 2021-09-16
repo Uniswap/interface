@@ -21,7 +21,6 @@ import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import {
   useBridgeInfo,
   useBridgeActionHandlers,
-  useBridgeState
 } from '../../state/bridge/hooks'
 
 import {
@@ -130,11 +129,10 @@ const createNetworkOptions = ({
 }
 
 export default function Bridge() {
-  const { chainId, account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { selectEthereum, selectNetwork } = useNetworkSwitch()
-  const { typedValue } = useBridgeState()
   const { onCurrencySelection, onUserInput } = useBridgeActionHandlers()
-  const { bridgeCurrency, currencyBalance, parsedAmount } = useBridgeInfo()
+  const { bridgeCurrency, currencyBalance, parsedAmount, typedValue } = useBridgeInfo()
 
   const [step, setStep] = useState(Step.Initial)
   const [bridge, setBridge] = useState('Swapr Fast Exit')
@@ -157,8 +155,8 @@ export default function Bridge() {
   }
 
   const handleCurrencySelect = useCallback(
-    outputCurrency => {
-      onCurrencySelection(outputCurrency)
+    selectedCurrency => {
+      onCurrencySelection(selectedCurrency)
     },
     [onCurrencySelection]
   )
@@ -250,6 +248,7 @@ export default function Bridge() {
           onCurrencySelect={handleCurrencySelect}
           disableCurrencySelect={step !== Step.Initial}
           disabled={step !== Step.Initial}
+          hideBalance={fromInputNetwork !== chainId}
           id="brdige-currency-input"
         />
         {!account ? (
@@ -269,7 +268,7 @@ export default function Bridge() {
           <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!typedValue ? 'Enter ETH amount' : `Brigde to ${getNetworkOptionById(toInputNetwork, toOptions)?.header}`}
           </BridgeButton>
-        )}
+        ) }
       </AppBody>
       {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />

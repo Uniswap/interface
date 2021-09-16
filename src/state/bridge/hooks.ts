@@ -48,10 +48,10 @@ export function useBridgeInfo(
   const { account, chainId } = useActiveWeb3React()
   const {
     typedValue,
-    currencyId: bridgeCurrencyId,
+    currencyId,
   } = useBridgeState()
 
-  const bridgeCurrency = useCurrency(bridgeCurrencyId)
+  const bridgeCurrency = useCurrency(currencyId)
   const parsedAmount = tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId)
 
   const [currencyBalance] = useCurrencyBalances(account ?? undefined, [
@@ -79,7 +79,8 @@ export function useBridgeInfo(
     bridgeCurrency,
     currencyBalance,
     parsedAmount,
-    inputError
+    inputError,
+    typedValue
   }
 }
 
