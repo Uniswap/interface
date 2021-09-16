@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-16 16:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -282,7 +282,7 @@ msgstr "自动"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router"
-msgstr "自动路由器"
+msgstr "自动路由"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -760,7 +760,7 @@ msgstr "从待用代币列表中扩展出的结果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
-msgstr "专业级"
+msgstr "专业模式"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1594,7 +1594,7 @@ msgstr "在您添加流动性之前， {0} 池需要先初始化。请先选择�
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "此路线通过考虑拆分路线、多跳和天然气成本来优化您的价格。"
+msgstr "这个路由方案通过拆分路由、多级路由和gas 成本等因素来优化价格。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1653,7 +1653,7 @@ msgstr "存入总额"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "商路"
+msgstr "交易路由"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
@@ -1812,7 +1812,7 @@ msgstr "更新代币列表"
 
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "使用 Uniswap Labs API 通过更有效的途径获得更好的定价。"
+msgstr "使用 Uniswap Labs API 通过更有效的路由获得更好的定价。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
