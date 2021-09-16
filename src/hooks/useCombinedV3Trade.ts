@@ -23,7 +23,7 @@ export function useV3TradeExactIn(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmountIn = useDebounce(amountIn, 150)
+  const debouncedAmountIn = useDebounce(amountIn, 100)
 
   const routingAPITradeExactIn = useRoutingAPITradeExactIn(
     routingAPIEnabled && isWindowVisible ? debouncedAmountIn : undefined,
@@ -72,7 +72,7 @@ export function useV3TradeExactOut(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmountOut = useDebounce(amountOut, 150)
+  const debouncedAmountOut = useDebounce(amountOut, 100)
 
   const routingAPITradeExactOut = useRoutingAPITradeExactOut(
     routingAPIEnabled && isWindowVisible ? currencyIn : undefined,

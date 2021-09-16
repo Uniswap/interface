@@ -519,7 +519,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       <Trans>Unwrap</Trans>
                     ) : null)}
                 </ButtonPrimary>
-              ) : routeIsSyncing ? (
+              ) : routeIsSyncing || routeIsLoading ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     <Dots>
@@ -530,13 +530,7 @@ export default function Swap({ history }: RouteComponentProps) {
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
-                    {routeIsLoading ? (
-                      <Dots>
-                        <Trans>Loading</Trans>
-                      </Dots>
-                    ) : (
-                      <Trans>Insufficient liquidity for this trade.</Trans>
-                    )}
+                    <Trans>Insufficient liquidity for this trade.</Trans>
                   </TYPE.main>
                 </GreyCard>
               ) : showApproveFlow ? (
