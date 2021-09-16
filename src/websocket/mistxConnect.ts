@@ -86,8 +86,7 @@ export interface SwapReq {
   to: string
 }
 
-// const serverUrl = 'https://protection-staging.flashbots.net/'
-const serverUrl = 'localhost:4000'
+const serverUrl = 'https://protection-staging.flashbots.net/'
 
 let socket: MistxSocket | null = null
 

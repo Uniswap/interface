@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ReactNode, useContext } from 'react'
+import { ReactNode, useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
@@ -19,6 +19,8 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import AnimatedConfirmation from './AnimatedConfirmation'
+import { emitTransactionCancellation } from '../../websocket/mistxConnect'
+import { Status } from '@alchemist-coin/mistx-connect'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -98,6 +100,33 @@ function TransactionSubmittedContent({
 
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
+  const [cancellingPrivateTransaction, setCancellingPrivateTransaction] = useState<boolean>(false)
+
+  const transaction = useTransaction(hash)
+  const privateTransaction = transaction?.privateTransaction
+  const privateTransactionId = transaction?.privateTransactionDetails?.bundle.id
+  const [privateTransactionStatus, privateTransactionStatusLabel] = useMemo(() => {
+    let status = Status.PENDING_BUNDLE
+    let statusLabel = 'Submitted'
+    if (transaction?.privateTransactionDetails) {
+      status = transaction.privateTransactionDetails.status as Status
+    }
+    if (status === Status.CANCEL_BUNDLE_SUCCESSFUL) {
+      statusLabel = 'Cancelled'
+    }
+    if (status === Status.FAILED_BUNDLE) {
+      statusLabel = 'Failed'
+    }
+    if (status === Status.SUCCESSFUL_BUNDLE) {
+      statusLabel = 'Success'
+    }
+    return [status, statusLabel]
+  }, [transaction?.privateTransactionDetails])
+  console.log(
+    'privateTransactionStatus',
+    privateTransactionStatus,
+    privateTransactionStatus === Status.SUCCESSFUL_BUNDLE
+  )
   return (
     <Wrapper>
       <Section inline={inline}>
@@ -107,14 +136,36 @@ function TransactionSubmittedContent({
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
         )}
-        <ConfirmedIcon inline={inline}>
-          <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
-        </ConfirmedIcon>
+        {!privateTransaction && (
+          <ConfirmedIcon inline={inline}>
+            <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
+          </ConfirmedIcon>
+        )}
+        {privateTransaction && (
+          <ConfirmedIcon inline={inline}>
+            {privateTransactionStatus === Status.SUCCESSFUL_BUNDLE ? (
+              <CheckCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.green1} />
+            ) : privateTransactionStatus === Status.CANCEL_BUNDLE_SUCCESSFUL ? (
+              <AlertCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.yellow1} />
+            ) : privateTransactionStatus === Status.FAILED_BUNDLE ? (
+              <AlertTriangle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.red1} />
+            ) : (
+              <ArrowUpCircle strokeWidth={0.5} size={inline ? '40px' : '90px'} color={theme.primary1} />
+            )}
+          </ConfirmedIcon>
+        )}
         <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>Transaction Submitted</Trans>
-          </Text>
-          {chainId && hash && (
+          {!privateTransaction && (
+            <Text fontWeight={500} fontSize={20} textAlign="center">
+              <Trans>Transaction Submitted</Trans>
+            </Text>
+          )}
+          {privateTransaction && (
+            <Text fontWeight={500} fontSize={20} textAlign="center">
+              <Trans>Transaction {privateTransactionStatusLabel}</Trans>
+            </Text>
+          )}
+          {chainId && hash && !privateTransaction && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                 <Trans>View on Explorer</Trans>
@@ -137,11 +188,41 @@ function TransactionSubmittedContent({
               )}
             </ButtonLight>
           )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
-              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+          {privateTransaction && privateTransactionStatus === Status.PENDING_BUNDLE && (
+            <Text fontWeight={300} fontSize={16} textAlign="center">
+              <Trans>
+                Currently only one frontrunning protected transaction can be submitted at a time. Please wait while your
+                transaction is confirmed before submitting another transcation.
+              </Trans>
             </Text>
-          </ButtonPrimary>
+          )}
+          {privateTransaction && privateTransactionStatus === Status.PENDING_BUNDLE && (
+            <ButtonPrimary
+              onClick={() => {
+                if (privateTransactionId) {
+                  setCancellingPrivateTransaction(true)
+                  emitTransactionCancellation(privateTransactionId)
+                }
+              }}
+              disabled={!privateTransactionId || cancellingPrivateTransaction}
+              style={{ margin: '20px 0 0 0' }}
+            >
+              <Text fontWeight={500} fontSize={20}>
+                {cancellingPrivateTransaction ? (
+                  <Trans>Cancellation Pending...</Trans>
+                ) : (
+                  <Trans>Cancel Transaction</Trans>
+                )}
+              </Text>
+            </ButtonPrimary>
+          )}
+          {(!privateTransaction || (privateTransaction && privateTransactionStatus !== Status.PENDING_BUNDLE)) && (
+            <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+              <Text fontWeight={500} fontSize={20}>
+                {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+              </Text>
+            </ButtonPrimary>
+          )}
         </AutoColumn>
       </Section>
     </Wrapper>
