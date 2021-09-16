@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 03:04\n"
+"PO-Revision-Date: 2021-09-16 15:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -94,10 +94,6 @@ msgstr "<0/> Ψήφοι"
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Αναλυτικά λογαριασμού και δεδουλευμένα τέλη</0><1> ↗ </1>"
-
-#: src/pages/Swap/index.tsx
-msgid "<0>Back to </0>V3"
-msgstr "<0>Επιστροφή στη </0>V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
@@ -220,6 +216,10 @@ msgstr "Επιτρέψτε στο πρωτόκολλο Uniswap να χρησιμ
 msgid "Allowed"
 msgstr "Επιτρέπεται"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Allowed Slippage"
+msgstr "Επιτρέπεται η ολίσθηση"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Ποσό"
@@ -279,6 +279,10 @@ msgstr "Τουλάχιστον {0} {1} και {2} {3} θα επιστραφού�
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "Αυτόματο"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router"
+msgstr "Αυτόματος δρομολογητής"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -661,10 +665,6 @@ msgstr "Λεπτομερής"
 msgid "Details"
 msgstr "Λεπτομέρειες"
 
-#: src/components/Settings/index.tsx
-msgid "Disable Multihops"
-msgstr "Απενεργοποίηση Multihops"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Αποσύνδεση"
@@ -757,6 +757,10 @@ msgstr "Εκτελέστηκε"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Εκτεταμένα αποτελέσματα από ανενεργές Λίστες Μάρκας"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "Λειτουργία ειδικού"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -874,10 +878,6 @@ msgstr "Εγκατάσταση Metamask"
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Ανεπαρκής ρευστότητα για αυτήν τη διαπραγμάτευση. Δοκιμάστε να ενεργοποιήσετε τις διαπραγματεύσεις/το εμπόριο πολλαπλών λυκίσκων."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -1382,19 +1382,11 @@ msgstr "Αφαίρεση {0}/{1} V3 ρευστότητας"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Αφαίρεση των {0} {1} και {2} {3}"
 
-#: src/components/Settings/index.tsx
-msgid "Restricts swaps to direct pairs only."
-msgstr "Περιορίζει τις ανταλλαγές μόνο σε απευθείας ζεύγη."
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Επιστροφή"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Route"
-msgstr "Διαδρομή"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1463,7 +1455,6 @@ msgid "Simple"
 msgstr "Απλό"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Ανοχή ολίσθησης"
 
@@ -1601,6 +1592,10 @@ msgstr "Αυτή η ομάδα πρέπει να προετοιμαστεί γι
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
 msgstr "Αυτή η ομάδα πρέπει να αρχικοποιηθεί στις {0} για να μπορέσετε να προσθέσετε ρευστότητα. Για να ξεκινήσετε, επιλέξτε μια τιμή εκκίνησης για την ομάδα. Στη συνέχεια, εισαγάγετε το εύρος τιμών ρευστότητας και το ποσό κατάθεσης."
 
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
+msgstr "Αυτή η διαδρομή βελτιστοποιεί την τιμή σας λαμβάνοντας υπόψη τις χωρισμένες διαδρομές, το πολλαπλό λυκίσκο και το κόστος αερίου."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Αυτή η μάρκα δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτή είναι η μάρκα που θέλετε να διαπραγματευτείτε."
@@ -1632,10 +1627,6 @@ msgstr "'Ως"
 msgid "To (at least)"
 msgstr "Έως (από το ελάχιστο)"
 
-#: src/components/Settings/index.tsx
-msgid "Toggle Expert Mode"
-msgstr "Λειτουργία Εναλλαγής Εμπειρογνωμόνων"
-
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Μάρκες"
@@ -1659,6 +1650,14 @@ msgstr "Σύνολο που κατατέθηκε"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Συνολικές καταθέσεις"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "Εμπορική οδός"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Transaction Details"
+msgstr "Λεπτομέρειες Συναλλαγής"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1811,9 +1810,17 @@ msgstr "Ενημέρωση Ανάθεσης"
 msgid "Update list"
 msgstr "Ενημέρωση λίστας"
 
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgstr "Χρησιμοποιήστε το API Uniswap Labs για να έχετε καλύτερες τιμές μέσω μιας πιο αποτελεσματικής διαδρομής."
+
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Χρήστης"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "V2"
+msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1823,7 +1830,7 @@ msgstr "Το V2 δεν είναι διαθέσιμο στο Layer 2. Μετάβ�
 msgid "V2 liquidity"
 msgstr "V2 ρευστότητα"
 
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapRoute.tsx
 msgid "V3"
 msgstr "V3"
 

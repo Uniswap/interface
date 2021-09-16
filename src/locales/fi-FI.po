@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 03:04\n"
+"PO-Revision-Date: 2021-09-16 15:04\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -94,10 +94,6 @@ msgstr "<0/> Äänet"
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>Tilin analytiikka ja kertyneet maksut</0><1> ↗ </1>"
-
-#: src/pages/Swap/index.tsx
-msgid "<0>Back to </0>V3"
-msgstr "<0> Takaisin kohtaan</0>V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
@@ -220,6 +216,10 @@ msgstr "Salli Uniswap-protokollan käyttää {0}"
 msgid "Allowed"
 msgstr "Sallittu"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Allowed Slippage"
+msgstr "Sallittu liukuminen"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Määrä"
@@ -279,6 +279,10 @@ msgstr "Vähintään {0} {1} ja {2} {3} palautetaan lompakkoosi valitun hinta-al
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "Automaattinen"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router"
+msgstr "Automaattinen reititin"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -661,10 +665,6 @@ msgstr "Yksityiskohtainen"
 msgid "Details"
 msgstr "Tiedot"
 
-#: src/components/Settings/index.tsx
-msgid "Disable Multihops"
-msgstr "Poista Multihops käytöstä"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
@@ -757,6 +757,10 @@ msgstr "Suoritettu"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "Laajennetut tulokset passiivisista rahakeluetteloista"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "Asiantuntijatila"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -874,10 +878,6 @@ msgstr "Asenna Metamask"
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ei riittävästi likviditeettiä tälle kaupalle."
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Ei riittävästi likviditeettiä tälle kaupalle. Yritä mahdollistaa monihyppyiset kaupat."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -1382,19 +1382,11 @@ msgstr "Poista {0}/{1} V3-likviditeetti"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Poistetaan {0} {1} ja {2} {3}"
 
-#: src/components/Settings/index.tsx
-msgid "Restricts swaps to direct pairs only."
-msgstr "Rajoittaa vaihdot vain suoriin pareihin."
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Palaa"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Route"
-msgstr "Reitti"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1463,7 +1455,6 @@ msgid "Simple"
 msgstr "Yksinkertainen"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Luistonsieto"
 
@@ -1601,6 +1592,10 @@ msgstr "Tämä pooli on alustettava, ennen kuin voit lisätä likviditeettiä. A
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
 msgstr "Tämä pooli on alustettava arvoon {0} ennen kuin voit lisätä likviditeettiä. Alusta valitsemalla altaan aloitushinta. Syötä sitten likviditeetin hintaluokka ja talletussumma."
 
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
+msgstr "Tämä reitti optimoi hintasi ottamalla huomioon jaetut reitit, useita hyppyjä ja kaasukustannuksia."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Tätä rahaketta ei näy aktiivisissa rahakeluetteloissa. Varmista, että tämä on rahake, jonka haluat vaihtaa."
@@ -1632,10 +1627,6 @@ msgstr "Vastaanottaja"
 msgid "To (at least)"
 msgstr "Mihin (ainakin)"
 
-#: src/components/Settings/index.tsx
-msgid "Toggle Expert Mode"
-msgstr "Hallitse asiantuntijatilaa"
-
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Rahakkeet"
@@ -1659,6 +1650,14 @@ msgstr "Talletettu yhteensä"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Talletuksia yhteensä"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "Kauppareitti"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Transaction Details"
+msgstr "maksutapahtuman tiedot"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1811,9 +1810,17 @@ msgstr "Päivitä delegointi"
 msgid "Update list"
 msgstr "Päivitä luettelo"
 
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgstr "Käytä Uniswap Labs -sovellusliittymää saadaksesi paremman hinnan tehokkaamman reitin kautta."
+
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Käyttäjä"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "V2"
+msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1823,7 +1830,7 @@ msgstr "V2 ei ole käytettävissä kerroksessa 2. Vaihda kerrokseen 1 Ethereum."
 msgid "V2 liquidity"
 msgstr "V2-likviditeetti"
 
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapRoute.tsx
 msgid "V3"
 msgstr "V3"
 

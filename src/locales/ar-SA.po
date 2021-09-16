@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 03:04\n"
+"PO-Revision-Date: 2021-09-16 15:04\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -94,10 +94,6 @@ msgstr "<0/> الأصوات"
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0>تحليلات الحساب والرسوم المتراكمة</0><1> ↗ </1>"
-
-#: src/pages/Swap/index.tsx
-msgid "<0>Back to </0>V3"
-msgstr "<0> رجوع إلى</0> V3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
@@ -220,6 +216,10 @@ msgstr "السماح لبروتوكول Uniswap باستخدام {0} الخاص 
 msgid "Allowed"
 msgstr "مسموح"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Allowed Slippage"
+msgstr "الانزلاق السعري المسموح به"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "المبلغ"
@@ -279,6 +279,10 @@ msgstr "سيتم استرداد {0} {1} و {2} {3} على الأقل إلى مح
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "تلقائي"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router"
+msgstr "جهاز التوجيه التلقائي"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -661,10 +665,6 @@ msgstr "مفصل"
 msgid "Details"
 msgstr "التفاصيل"
 
-#: src/components/Settings/index.tsx
-msgid "Disable Multihops"
-msgstr "تعطيل Multihops"
-
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "قطع الاتصال"
@@ -757,6 +757,10 @@ msgstr "أعدم"
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
 msgstr "النتائج الموسعة من قوائم الرموز غير النشطة"
+
+#: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "وضع الخبراء"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -874,10 +878,6 @@ msgstr "تثبيت Metamask"
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "السيولة غير كافية لهذه التجارة."
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "السيولة غير كافية لهذا التداول. حاول تفعيل التداول متعدد المراحل."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -1382,19 +1382,11 @@ msgstr "إزالة سيولة {0}/{1} V3"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "إزالة {0} {1} و {2} {3}"
 
-#: src/components/Settings/index.tsx
-msgid "Restricts swaps to direct pairs only."
-msgstr "يقيد المبادلات إلى أزواج فقط ."
-
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "رجوع"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Route"
-msgstr "طريق"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1463,7 +1455,6 @@ msgid "Simple"
 msgstr "بسيط"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "تحمل الانزلاق"
 
@@ -1601,6 +1592,10 @@ msgstr "يجب تهيئة هذا المستودع قبل أن تتمكن من إ
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
 msgstr "يجب تهيئة هذا المستودع على {0} قبل أن تتمكن من إضافة السيولة. للتهيئة ، حدد سعر البداية للمجمع. ثم أدخل نطاق سعر السيولة ومبلغ الإيداع."
 
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
+msgstr "يعمل هذا المسار على تحسين سعرك من خلال التفكير في الطرق المنقسمة والقفزات المتعددة وتكاليف الغاز."
+
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "لا يظهر هذا الرمز في قائمة (قوائم) الرموز النشطة. تأكد من أن هذا هو الرمز الذي تريد تداوله."
@@ -1632,10 +1627,6 @@ msgstr "إلى"
 msgid "To (at least)"
 msgstr "إلى (على الأقل)"
 
-#: src/components/Settings/index.tsx
-msgid "Toggle Expert Mode"
-msgstr "تبديل وضع الخبير"
-
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "الرموز"
@@ -1659,6 +1650,14 @@ msgstr "الإجمالي المودَع"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "مجموع الودائع"
+
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "طريق التجارة"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Transaction Details"
+msgstr "تفاصيل الصفقه"
 
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
@@ -1811,9 +1810,17 @@ msgstr "تحديث التفويض"
 msgid "Update list"
 msgstr "قائمة التحديث"
 
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgstr "استخدم Uniswap Labs API للحصول على أسعار أفضل من خلال مسار أكثر كفاءة."
+
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "المستخدم"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "V2"
+msgstr "V2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1823,7 +1830,7 @@ msgstr "V2 غير متوفر في الطبقة 2. قم بالتبديل إلى �
 msgid "V2 liquidity"
 msgstr "سيولة V2"
 
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapRoute.tsx
 msgid "V3"
 msgstr "V3"
 
