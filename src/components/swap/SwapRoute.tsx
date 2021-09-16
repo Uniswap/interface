@@ -85,8 +85,12 @@ function getTokenPath(
     return [{ percent: new Percent(100, 100), path }]
   }
 
-  return trade.swaps.map(({ route: { tokenPath, pools }, inputAmount }) => {
-    const portion = inputAmount.divide(trade.inputAmount)
+  return trade.swaps.map(({ route: { tokenPath, pools }, inputAmount, outputAmount }) => {
+    const portion =
+      trade.tradeType === TradeType.EXACT_INPUT
+        ? inputAmount.divide(trade.inputAmount)
+        : outputAmount.divide(trade.outputAmount)
+
     const percent = new Percent(portion.numerator, portion.denominator)
 
     const path: [Currency, Currency, FeeAmount][] = []

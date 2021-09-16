@@ -63,13 +63,16 @@ export default function RoutingDiagram({
   currencyOut: Currency
   routes: RoutingDiagramEntry[]
 }) {
+  const tokenIn = useTokenInfoFromActiveList(currencyIn)
+  const tokenOut = useTokenInfoFromActiveList(currencyOut)
+
   return (
     <Wrapper>
       {routes.map(({ percent, path }, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={currencyIn} />
+          <CurrencyLogo currency={tokenIn} />
           <Route percent={percent} path={path} />
-          <CurrencyLogo currency={currencyOut} />
+          <CurrencyLogo currency={tokenOut} />
         </RouteContainerRow>
       ))}
     </Wrapper>
