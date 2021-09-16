@@ -273,9 +273,8 @@ export function useFarmApr(
   const { chainId } = useActiveWeb3React()
   const ethPrice = useETHPrice()
   const kncPrice = useKNCPrice()
-  const temp = [...rewardPerBlocks]
   const tokenPrices = useTokensPrice(
-    temp
+    rewardPerBlocks
       .map(item => item.token)
       .filter(
         token =>
@@ -384,7 +383,15 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
   const { chainId } = useActiveWeb3React()
   const ethPrice = useETHPrice()
   const kncPrice = useKNCPrice()
-
+  const tokenPrices = useTokensPrice(
+    (rewards || [])
+      .map(item => item.token)
+      .filter(
+        token =>
+          token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
+          token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()
+      )
+  )
   if (!rewards) {
     return 0
   }
@@ -405,6 +412,15 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
 
     if (kncPrice && reward.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
       total += parseFloat(getFullDisplayBalance(reward.amount)) * parseFloat(kncPrice)
+    }
+
+    if (
+      chainId &&
+      reward.token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
+      reward.token.address.toLowerCase() != KNC[chainId as ChainId].address.toLowerCase() &&
+      tokenPrices[0]
+    ) {
+      total += parseFloat(getFullDisplayBalance(reward.amount)) * tokenPrices[0]
     }
 
     return total
