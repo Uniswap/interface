@@ -93,7 +93,7 @@ export function PoolPriceBar({
       )}
 
       <AutoRow justify="space-between" gap="4px">
-        <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+        <Text fontWeight={500} fontSize={14} color={theme.primaryText2} pt={1}>
           <Trans>Share of Pool</Trans>:
         </Text>
         <TYPE.black fontWeight={500} fontSize={14}>

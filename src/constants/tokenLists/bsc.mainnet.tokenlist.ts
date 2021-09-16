@@ -59,6 +59,13 @@ export const BSC_MAINNET_TOKEN_LIST = {
       name: 'FIWA',
       decimals: 18,
       logoURI: 'https://i.imgur.com/RoTnvYw.png'
+    },
+    {
+      chainId: 56,
+      address: '0xE8176d414560cFE1Bf82Fd73B986823B89E4F545',
+      symbol: 'HERO',
+      name: 'HERO',
+      decimals: 18
     }
   ],
   version: {
