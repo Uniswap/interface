@@ -68,7 +68,7 @@ export function useRoutingAPITrade(
   const queryArgs = useRoutingAPIArguments({ tokenIn: currencyIn, tokenOut: currencyOut, amount, tradeType })
 
   const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`10ms`,
+    pollingInterval: ms`10s`,
     refetchOnFocus: true,
   })
 
