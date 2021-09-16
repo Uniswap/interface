@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
-import { useBestV3TradeExactOut } from './useBestV3Trade'
+import { useClientSideV3TradeExactOut } from './useClientSideV3Trade'
 import { useActiveWeb3React } from './web3'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -27,7 +27,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   const v2USDCTrade = useV2TradeExactOut(currency, amountOut, {
     maxHops: 2,
   })
-  const v3USDCTrade = useBestV3TradeExactOut(currency, amountOut)
+  const v3USDCTrade = useClientSideV3TradeExactOut(currency, amountOut)
 
   return useMemo(() => {
     if (!currency || !stablecoin) {
