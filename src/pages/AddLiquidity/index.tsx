@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, Token, TokenAmount, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -45,18 +45,13 @@ import isZero from 'utils/isZero'
 import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { useDerivedPairInfo } from 'state/pair/hooks'
 import Loader from 'components/Loader'
+import CurrentPrice from 'components/CurrentPrice'
 
 const ActiveText = styled.div`
   font-weight: 500;
   font-size: 20px;
 `
 
-const DashedLine = styled.div`
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  border-style: dashed;
-  margin: auto 0.5rem;
-`
 const RowFlat2 = (props: { children: React.ReactNode }) => {
   return (
     <div style={{ marginTop: '1rem' }}>
@@ -66,7 +61,7 @@ const RowFlat2 = (props: { children: React.ReactNode }) => {
 }
 
 const OutlineCard2 = styled(OutlineCard)`
-  padding: 0.75rem 1.5rem;
+  padding: 12px 16px;
   border: 2px solid ${({ theme }) => theme.bg3};
   border-style: dashed;
   border-radius: 8px;
@@ -462,6 +457,11 @@ export default function AddLiquidity({
   const percentToken0 = realPercentToken0.toSignificant(4)
   const percentToken1 = realPercentToken1.toSignificant(4)
 
+  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const currentPrice = pair
+    ? new Price(pair.token0 as Currency, pair.token1 as Currency, pair.virtualReserve0.raw, pair.virtualReserve1.raw)
+    : undefined
+
   const tokens = useMemo(
     () =>
       [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]].map(currency => wrappedCurrency(currency, chainId)),
@@ -577,32 +577,45 @@ export default function AddLiquidity({
             </div>
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <>
-                <OutlineCard2 padding="0px" borderRadius={'20px'}>
-                  <Row padding="4px 0 1rem 0" style={{ justifyContent: 'center' }}>
-                    <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                      {noLiquidity ? t`Initial ratio` : t`Ratio`} <Trans>and Pool share</Trans>
-                    </TYPE.subHeader>
-                  </Row>
+              <OutlineCard2 padding="0px" borderRadius={'20px'}>
+                <Row padding="0 0 1rem 0" style={{ justifyContent: 'center' }}>
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                    {noLiquidity ? t`Ratio` : t`Prices`} <Trans>and Pool share</Trans>
+                  </TYPE.subHeader>
+                </Row>
 
+                {!noLiquidity && (
                   <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
                     <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                      <Trans>Inventory ratio:</Trans>
+                      <Trans>Current Price:</Trans>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={500} fontSize={14}>
-                      {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
+                      <CurrentPrice
+                        price={currentPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
                     </TYPE.black>
                   </AutoRow>
+                )}
 
-                  <PoolPriceBar
-                    currencies={currencies}
-                    poolTokenPercentage={poolTokenPercentage}
-                    noLiquidity={noLiquidity}
-                    price={price}
-                    pair={pair}
-                  />
-                </OutlineCard2>
-              </>
+                <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                    <Trans>Inventory ratio:</Trans>
+                  </TYPE.subHeader>
+                  <TYPE.black fontWeight={500} fontSize={14}>
+                    {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
+                  </TYPE.black>
+                </AutoRow>
+
+                <PoolPriceBar
+                  currencies={currencies}
+                  poolTokenPercentage={poolTokenPercentage}
+                  noLiquidity={noLiquidity}
+                  price={price}
+                  pair={pair}
+                />
+              </OutlineCard2>
             )}
 
             <RowFlat2>
@@ -716,7 +729,7 @@ export default function AddLiquidity({
       </AppBody>
 
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '425px', marginTop: '24px' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}
