@@ -474,7 +474,7 @@ export default function AddLiquidity({
       </ButtonPrimary>
     ) : !account ? (
       <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
-        <Trans>Connect wallet</Trans>
+        <Trans>Connect Wallet</Trans>
       </ButtonLight>
     ) : (
       <AutoColumn gap={'md'}>
@@ -920,7 +920,7 @@ export default function AddLiquidity({
                                     }}
                                   >
                                     <TYPE.black fontSize={13} color="black">
-                                      <Trans>I Understand</Trans>
+                                      <Trans>I understand</Trans>
                                     </TYPE.black>
                                   </ButtonYellow>
                                 </Row>

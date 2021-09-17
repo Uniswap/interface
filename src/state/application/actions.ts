@@ -28,3 +28,4 @@ export const addPopup =
   createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>('application/addPopup')
 export const removePopup = createAction<{ key: string }>('application/removePopup')
 export const setImplements3085 = createAction<{ implements3085: boolean }>('application/setImplements3085')
+export const setChainConnectivityWarning = createAction<{ warn: boolean }>('application/setChainConnectivityWarning')
