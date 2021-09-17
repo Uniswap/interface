@@ -471,10 +471,11 @@ export const SUGGESTED_BASES: ChainTokenList = {
     new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
   ],
   [ChainId.AVAXMAINNET]: [
-    ...WETH_ONLY[ChainId.MAINNET],
-    DAI[ChainId.MAINNET],
-    USDC[ChainId.MAINNET],
-    USDT[ChainId.MAINNET]
+    ...WETH_ONLY[ChainId.AVAXMAINNET],
+    DAI[ChainId.AVAXMAINNET],
+    USDC[ChainId.AVAXMAINNET],
+    USDT[ChainId.AVAXMAINNET],
+    new Token(ChainId.AVAXMAINNET, '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', 18, 'WETH.e', 'Wrapped Ether')
   ]
 }
 
