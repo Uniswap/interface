@@ -1,13 +1,17 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import { USDC } from 'constants/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
+import { useV2Pair } from 'hooks/useV2Pairs'
 import React, { useState } from 'react'
 import { Clipboard } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
+import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { IconWrapper } from 'theme/components'
@@ -48,6 +52,7 @@ import { ProposalDetails } from './Vote/ProposalDetails'
 import { routerAbi, routerAddress } from './Vote/routerAbi'
 import { TrumpVote } from './Vote/TrumpVote'
 import VotePage from './Vote/VotePage'
+import { useTrumpBalance } from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
 const THEME_BG_KEY = 'themedBG';
 
@@ -119,9 +124,8 @@ const VideoWrapper = styled.video`
 export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
-  
 const [theme, setTheme] = React.useState('./squeeze2.mp4')
-  
+const { account } = useWeb3React()
   const setThemeCb = (newTheme: string) => {
       localStorage.setItem(THEME_BG_KEY, newTheme)
       setTheme(newTheme)
@@ -145,6 +149,23 @@ const [theme, setTheme] = React.useState('./squeeze2.mp4')
     </VideoWrapper>
   )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
+    const sq = new Token(
+      1,
+      "0xabd4dc8fde9848cbc4ff2c0ee81d4a49f4803da4",
+      9,
+      "Squeeze",
+      "Squeeze Token"
+    );
+    const sqz: CurrencyAmount<Token> | undefined = useTokenBalance(
+      account ?? undefined,
+      sq
+    );
+
+    const usdc = useUSDCValue(sqz ?? undefined);
+    console.log(sqz, usdc, sq)
+  const [state, transactions] = useV2Pair(sq)
+  console.log(state, transactions)
+
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -158,7 +179,10 @@ const [theme, setTheme] = React.useState('./squeeze2.mp4')
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            <Popups />
+            <p>{sqz?.toFixed(9)} </p>
+            <p>{usdc?.toFixed(9)}</p>
+
+ <Popups />
             <Polling />
             <TopLevelModals />
             <Switch>
