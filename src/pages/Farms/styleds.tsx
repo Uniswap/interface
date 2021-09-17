@@ -241,18 +241,6 @@ export const RewardUSD = styled.span`
   color: ${({ theme }) => theme.text11};
 `
 
-export const RemainingTimeContainer = styled.div`
-  display: flex;
-  font-size: 16px;
-  margin-bottom: 20px;
-`
-
-export const EndInTitle = styled.div`
-  margin-right: 12px;
-  font-size: 16px;
-  font-weight: 500;
-`
-
 export const HistoryButton = styled.div`
   margin-left: auto;
   cursor: pointer;
