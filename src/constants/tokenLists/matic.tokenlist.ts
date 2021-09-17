@@ -58,6 +58,13 @@ export const MATIC_TOKEN_LIST = {
     },
     {
       chainId: 137,
+      address: '0x3Dc7B06dD0B1f08ef9AcBbD2564f8605b4868EEA',
+      symbol: 'XDO',
+      name: 'xDollar',
+      decimals: 18
+    },
+    {
+      chainId: 137,
       address: '0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c',
       symbol: 'jEUR',
       name: 'Jarvis Synthetic Euro',

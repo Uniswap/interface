@@ -338,6 +338,9 @@ export const getMaticTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a'.toLowerCase()) {
     address = '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2'
   }
+  if (address?.toLowerCase() === '0x3Dc7B06dD0B1f08ef9AcBbD2564f8605b4868EEA'.toLowerCase()) {
+    uri = 'https://assets.coingecko.com/coins/images/16289/small/logo-web-transparent_2.png'
+  }
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
   }
