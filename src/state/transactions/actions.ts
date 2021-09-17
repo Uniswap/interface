@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { TradeType } from '@uniswap/sdk-core'
 
 export interface SerializableTransactionReceipt {
   to: string
@@ -11,14 +12,59 @@ export interface SerializableTransactionReceipt {
   status?: number
 }
 
+export enum TransactionType {
+  APPROVAL,
+  SWAP,
+  CLAIM,
+}
+
+export interface BaseTransactionInfo {
+  type: TransactionType
+}
+
+export interface ApprovalTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.APPROVAL
+  tokenAddress: string
+  spender: string
+}
+
+interface BaseSwapTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.SWAP
+  tradeType: TradeType
+  inputCurrencyId: string
+  outputCurrencyId: string
+}
+
+export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
+  tradeType: TradeType.EXACT_INPUT
+  inputCurrencyAmountRaw: string
+  expectedOutputCurrencyAmountRaw: string
+  minimumOutputCurrencyAmountRaw: string
+}
+export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
+  tradeType: TradeType.EXACT_OUTPUT
+  outputCurrencyAmountRaw: string
+  expectedInputCurrencyAmountRaw: string
+  maximumInputCurrencyAmountRaw: string
+}
+
+export interface ClaimTransactionInfo {
+  type: TransactionType.CLAIM
+  recipient: string
+}
+
+export type TransactionInfo =
+  | ApprovalTransactionInfo
+  | ExactOutputSwapTransactionInfo
+  | ExactInputSwapTransactionInfo
+  | ClaimTransactionInfo
+
 export const addTransaction =
   createAction<{
     chainId: number
     hash: string
     from: string
-    approval?: { tokenAddress: string; spender: string }
-    claim?: { recipient: string }
-    summary?: string
+    info: TransactionInfo
   }>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: number }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{
