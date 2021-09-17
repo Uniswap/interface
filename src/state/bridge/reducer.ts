@@ -1,14 +1,37 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { replaceBridgeState, selectCurrency, typeInput } from './actions'
+import { ChainId } from '@swapr/sdk'
+import {
+  replaceBridgeState,
+  selectCurrency,
+  typeInput,
+  setFromBridgeNetwork,
+  setToBridgeNetwork,
+  swapBridgeNetworks,
+  showListFromNetwork
+} from './actions'
 
+export interface BridgeNetworkInput {
+  readonly chainId: ChainId
+  readonly showList: boolean
+}
 export interface BridgeState {
   readonly typedValue: string
   readonly currencyId: string | undefined
+  readonly fromNetwork: BridgeNetworkInput
+  readonly toNetwork: BridgeNetworkInput
 }
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: ''
+  currencyId: '',
+  fromNetwork: {
+    chainId: 1,
+    showList: false
+  },
+  toNetwork: {
+    chainId: 42161,
+    showList: false
+  }
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
@@ -33,6 +56,50 @@ export default createReducer<BridgeState>(initialState, builder =>
       return {
         ...state,
         typedValue
+      }
+    })
+    .addCase(setFromBridgeNetwork, (state, { payload: { chainId, showList } }) => {
+      return {
+        ...state,
+        fromNetwork: {
+          ...state.fromNetwork,
+          chainId: chainId ? chainId : state.fromNetwork.chainId,
+          showList: showList ? showList : state.fromNetwork.showList
+        }
+      }
+    })
+    .addCase(setToBridgeNetwork, (state, { payload: { chainId, showList } }) => {
+      return {
+        ...state,
+        toNetwork: {
+          ...state.fromNetwork,
+          chainId: chainId ? chainId : state.toNetwork.chainId,
+          showList: showList ? showList : state.toNetwork.showList
+        }
+      }
+    })
+    .addCase(swapBridgeNetworks, (state) => {
+      const { fromNetwork: { chainId: fromChainId }, toNetwork: { chainId: toChainId } } = state
+
+      return {
+        ...state,
+        fromNetwork: {
+          ...state.fromNetwork,
+          chainId: toChainId
+        },
+        toNetwork: {
+          ...state.toNetwork,
+          chainId: fromChainId
+        }
+      }
+    })
+    .addCase(showListFromNetwork, (state, { payload: { showList } }) => {
+      return {
+        ...state,
+        fromNetwork: {
+          ...state.fromNetwork,
+          showList: showList
+        }
       }
     })
 )
