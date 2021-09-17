@@ -297,7 +297,7 @@ const Pools = ({
   )
 }
 
-const PoolFarm = ({ key, farm }: { key: number; farm: Farm }) => {
+const PoolFarm = ({ farm }: { farm: Farm }) => {
   const { chainId } = useActiveWeb3React()
   return (
     <ButtonGray
