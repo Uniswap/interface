@@ -16,13 +16,34 @@ export enum TransactionType {
   APPROVAL,
   SWAP,
   CLAIM,
+  VOTE,
+  DELEGATE,
 }
 
 export interface BaseTransactionInfo {
   type: TransactionType
 }
 
-export interface ApprovalTransactionInfo extends BaseTransactionInfo {
+export enum VotingDecision {
+  OPPOSE,
+  FAVOR,
+  ABSTAIN,
+}
+
+export interface VoteTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.VOTE
+  governorAddress: string
+  proposalId: number
+  decision: VotingDecision
+  reason: string
+}
+
+export interface DelegateTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.DELEGATE
+  delegatee: string
+}
+
+export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
   spender: string
@@ -54,10 +75,12 @@ export interface ClaimTransactionInfo {
 }
 
 export type TransactionInfo =
-  | ApprovalTransactionInfo
+  | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
+  | VoteTransactionInfo
+  | DelegateTransactionInfo
 
 export const addTransaction =
   createAction<{

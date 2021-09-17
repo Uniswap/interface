@@ -7,20 +7,21 @@ import { useCurrency } from '../../hooks/Tokens'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import {
-  ApprovalTransactionInfo,
+  ApproveTransactionInfo,
   ClaimTransactionInfo,
+  DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionInfo,
   TransactionType,
+  VoteTransactionInfo,
+  VotingDecision,
 } from '../../state/transactions/actions'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExternalLink } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import Loader from '../Loader'
 import { RowFixed } from '../Row'
-
-const TransactionWrapper = styled.div``
 
 const TransactionStatusText = styled.div`
   margin-right: 0.5rem;
@@ -48,11 +49,50 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 `
 
 function ClaimInfo({ info }: { info: ClaimTransactionInfo }) {
-  return <Trans>Claim UNI airdrop for {info.recipient}</Trans>
+  return <Trans>Claim accumulated UNI rewards for {info.recipient}</Trans>
 }
 
-function ApprovalInfo({ info }: { info: ApprovalTransactionInfo }) {
+function ApprovalInfo({ info }: { info: ApproveTransactionInfo }) {
   return <Trans>Approve {info.tokenAddress} to spend your tokens</Trans>
+}
+
+function VoteInfo({ info }: { info: VoteTransactionInfo }) {
+  const proposalKey = `${info.governorAddress}/${info.proposalId}`
+  if (info.reason && info.reason.trim().length > 0) {
+    switch (info.decision) {
+      case VotingDecision.FAVOR:
+        return <Trans>Voted in favor of proposal {proposalKey}</Trans>
+      case VotingDecision.ABSTAIN:
+        return <Trans>Abstain to vote for {proposalKey}</Trans>
+      case VotingDecision.OPPOSE:
+        return <Trans>Vote against {proposalKey}</Trans>
+    }
+  } else {
+    switch (info.decision) {
+      case VotingDecision.FAVOR:
+        return (
+          <Trans>
+            Voted in favor of proposal {proposalKey} with reason {info.reason}
+          </Trans>
+        )
+      case VotingDecision.ABSTAIN:
+        return (
+          <Trans>
+            Abstain to vote for {proposalKey} with reason {info.reason}
+          </Trans>
+        )
+      case VotingDecision.OPPOSE:
+        return (
+          <Trans>
+            Vote against {proposalKey} with reason {info.reason}
+          </Trans>
+        )
+    }
+  }
+}
+
+function DelegateInfo({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
+  return <Trans>Delegate voting power to {delegatee}</Trans>
 }
 
 function SwapInfo({ info }: { info: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo }) {
@@ -100,6 +140,12 @@ function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.APPROVAL:
       return <ApprovalInfo info={info} />
+
+    case TransactionType.VOTE:
+      return <VoteInfo info={info} />
+
+    case TransactionType.DELEGATE:
+      return <DelegateInfo info={info} />
   }
 }
 
@@ -115,7 +161,7 @@ export default function Transaction({ hash }: { hash: string }) {
   if (!chainId) return null
 
   return (
-    <TransactionWrapper>
+    <div>
       <TransactionState
         href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
         pending={pending}
@@ -128,6 +174,6 @@ export default function Transaction({ hash }: { hash: string }) {
           {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
         </IconWrapper>
       </TransactionState>
-    </TransactionWrapper>
+    </div>
   )
 }
