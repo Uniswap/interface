@@ -16,6 +16,12 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
     address = '0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a'
   }
 
+  if (address?.toLowerCase() === '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab') {
+    //weth.e
+    address = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  }
+
   if (!uri) {
     uri = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${address}/logo.png`
   }
