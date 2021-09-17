@@ -262,8 +262,8 @@ export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
   [ChainId.MUMBAI]: 2.1,
   [ChainId.BSCTESTNET]: 3,
   [ChainId.BSCMAINNET]: 3,
-  [ChainId.AVAXTESTNET]: 1.7,
-  [ChainId.AVAXMAINNET]: 1.7
+  [ChainId.AVAXTESTNET]: 1.85,
+  [ChainId.AVAXMAINNET]: 1.85
 }
 
 export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
@@ -694,7 +694,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
       ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
       : ['0xcCAc8DFb75120140A5469282a13E9A60B1751276', '0x31De05f28568e3d3D612BFA6A78B356676367470'],
   [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
-  [ChainId.AVAXMAINNET]: []
+  [ChainId.AVAXMAINNET]: ['0x98910F7f13496fcDE2ade93648F05b4854Fc99D9']
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -717,7 +717,7 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
       ? '0x51E8D106C646cA58Caf32A47812e95887C071a62'
       : '0xfab5186A194588F5AD5074Bd52659302906B4522',
   [ChainId.AVAXTESTNET]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
-  [ChainId.AVAXMAINNET]: ''
+  [ChainId.AVAXMAINNET]: '0xf530a090EF6481cfB33F98c63532E7745abab58A'
 }
 
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
@@ -782,5 +782,5 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0x2D49F16C9ad4f1145bb27c9af71474F468a697c8'
         ],
   [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
-  [ChainId.AVAXMAINNET]: []
+  [ChainId.AVAXMAINNET]: ['0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525', '0x0f0FC5a5029E3d155708356b422D22Cc29f8b3D4']
 }
