@@ -1,23 +1,18 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { KNC, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useCallback, useEffect, useState } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useRewardLockerContract } from './useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useRewardTokensFullInfo } from 'utils/dmm'
-import { ChainId, Token, WETH } from 'libs/sdk/src'
-import { useRewardTokens } from 'state/farms/hooks'
-import { useAllTokens } from './Tokens'
-import { useActiveListUrls } from 'state/lists/hooks'
 
-const useVesting = (rewardTokens: Token[]) => {
+const useVesting = () => {
   // SLP is usually 18, KMP is 6
   const addTransaction = useTransactionAdder()
   const [schedules, setSchedules] = useState([])
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const lockerContract = useRewardLockerContract()
+  const rewardTokens = useRewardTokensFullInfo()
 
   const fetchSchedules = useCallback(async () => {
     const getSchedules = async (address: string): Promise<any> => {

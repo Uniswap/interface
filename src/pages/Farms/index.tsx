@@ -11,7 +11,7 @@ import { useFarmsData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
-import { useBlockNumber, useFarmHistoryModalToggle, useKNCPrice } from 'state/application/hooks'
+import { useBlockNumber, useFarmHistoryModalToggle } from 'state/application/hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECSS, FAIRLAUNCH_ADDRESSES } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
@@ -40,8 +40,6 @@ import {
   RewardToken,
   Plus,
   RewardUSD,
-  RemainingTimeContainer,
-  EndInTitle,
   HistoryButton
 } from './styleds'
 import { formattedNum, getTokenSymbol } from 'utils'
@@ -52,18 +50,14 @@ import RainMakerMobileBanner from '../../assets/images/rain-maker-mobile.png'
 import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
 import { Reward } from 'state/farms/types'
-import { useFarmRewards, useFarmRewardsUSD, useRewardTokensFullInfo } from 'utils/dmm'
+import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import useFairLaunch from 'hooks/useFairLaunch'
-
-const FARM_ENDED = 'Ended'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
-  const kncPrice = useKNCPrice()
   const lgBreakpoint = useMedia('(min-width: 992px)')
-  const xxlBreakpoint = useMedia('(min-width: 1200px)')
   const { loading, data: farms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
@@ -139,8 +133,6 @@ const Farms = () => {
 
     return canHarvest
   }
-
-  const rewardTokens = useRewardTokensFullInfo()
 
   return (
     <>
@@ -244,7 +236,7 @@ const Farms = () => {
             </Panel>
           </>
         ) : (
-          <Vesting rewardTokens={rewardTokens} />
+          <Vesting />
         )}
       </PageWrapper>
       <FarmHistoryModal farms={farmsList} />
