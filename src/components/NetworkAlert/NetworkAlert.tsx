@@ -182,8 +182,8 @@ export function NetworkAlert() {
   const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const depositUrl = isOptimism ? `${info.bridge}?chainId=1` : info.bridge
   const readMoreLink = isOptimism
-    ? 'https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism'
-    : 'https://help.uniswap.org/en/articles/5538618-how-to-deposit-tokens-to-arbitrum'
+    ? 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ'
+    : 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum'
   return (
     <RootWrapper>
       <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
