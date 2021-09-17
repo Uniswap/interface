@@ -181,7 +181,8 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   const isV2TradeBetter = useMemo(() => {
     try {
       // avoids comparing trades when V3Trade is not in a ready state.
-      return [V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3Trade.state)
+      return toggledVersion === Version.v2 ||
+        [V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3Trade.state)
         ? isTradeBetter(v3Trade.trade, v2Trade, TWO_PERCENT)
         : undefined
     } catch (e) {
@@ -189,7 +190,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
       // inputs/ouputs than v2
       return undefined
     }
-  }, [v2Trade, v3Trade])
+  }, [toggledVersion, v2Trade, v3Trade.state, v3Trade.trade])
 
   const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
