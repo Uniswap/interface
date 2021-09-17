@@ -1,11 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useKNCPrice } from 'state/application/hooks'
 import { KNCPriceContainer, KNCPriceWrapper } from './styleds'
 import Loader from 'components/Loader'
-import { formattedNum, getTokenSymbol } from 'utils'
+import { formattedNum } from 'utils'
+import { useActiveWeb3React } from 'hooks'
+import { ChainId } from 'libs/sdk/src'
 
 export default function KNCPice() {
+  const { chainId } = useActiveWeb3React()
   const kncPrice = useKNCPrice()
+
+  if (chainId && chainId === ChainId.AVAXMAINNET) {
+    return null
+  }
+
   return (
     <KNCPriceContainer>
       {kncPrice ? (
