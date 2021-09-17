@@ -19,5 +19,15 @@ export const networkOptionsPreset = [
     chainId: ChainId.XDAI,
     name: 'xDai',
     logoSrc: XDAILogo
+  },
+  {
+    chainId: ChainId.RINKEBY,
+    name: 'Rinkeby',
+    logoSrc: EthereumLogo
+  },
+  {
+    chainId: ChainId.ARBITRUM_RINKEBY,
+    name: 'Arbitrum Rinkeby',
+    logoSrc: ArbitrumLogo
   }
 ]

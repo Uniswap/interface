@@ -309,6 +309,17 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     },
     rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
     blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io']
+  },
+  [ChainId.RINKEBY]: {
+    chainId: `0x${ChainId.RINKEBY.toString(16)}`,
+    chainName: 'Rinkeby',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://rinkeby.infura.io/v3'],
+    blockExplorerUrls: ['https://rinkeby.etherscan.io']
   }
 }
 
