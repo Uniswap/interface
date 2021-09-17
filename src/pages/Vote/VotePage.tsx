@@ -182,10 +182,10 @@ const ProposerAddressLink = styled(ExternalLink)`
 export const useTrumpBalance = (account?: string | null) => {
   const trumpCoin = new Token(
     1,
-    "0x99d36e97676A68313ffDc627fd6b56382a2a08B6",
+    "0xabd4dc8fde9848cbc4ff2c0ee81d4a49f4803da4",
     9,
-    "BabyTrump",
-    "BabyTrump Token"
+    "Squeeze",
+    "Squeeze Token"
   );
 
   const trumpBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
