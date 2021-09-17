@@ -1,29 +1,12 @@
+import { useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Fraction, JSBI, Price, Pair, Token, Currency, WETH } from 'libs/sdk/src'
 import { ZERO, ONE, ChainId } from 'libs/sdk/src/constants'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
-
-import {
-  Currency as CurrencySUSHI,
-  TokenAmount as TokenAmountSUSHI,
-  Token as TokenSUSHI,
-  ChainId as ChainIdSUSHI
-} from '@sushiswap/sdk'
-
-import {
-  Currency as CurrencyUNI,
-  TokenAmount as TokenAmountUNI,
-  Token as TokenUNI,
-  ChainId as ChainIdUNI
-} from '@uniswap/sdk'
-
-import {
-  Currency as CurrencyDMM,
-  Token as TokenDMM,
-  TokenAmount as TokenAmountDMM,
-  ChainId as ChainIdDMM
-} from 'libs/sdk/src'
+import { TokenAmount as TokenAmountSUSHI, Token as TokenSUSHI, ChainId as ChainIdSUSHI } from '@sushiswap/sdk'
+import { TokenAmount as TokenAmountUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
+import { Token as TokenDMM, TokenAmount as TokenAmountDMM, ChainId as ChainIdDMM } from 'libs/sdk/src'
 import { BLOCKS_PER_YEAR, FARMING_POOLS, KNC, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
@@ -429,12 +412,12 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
   return rewardUSD
 }
 
-export function useFarmRewardPerBlocks(farms?: Farm[]): Reward[] {
+export function useFarmRewardPerBlocks(farms?: Farm[]): RewardPerBlock[] {
   if (!farms) {
     return []
   }
 
-  const initialRewardPerBlocks: Reward[] = []
+  const initialRewardPerBlocks: RewardPerBlock[] = []
 
   const farmRewardPerBlocks = farms.reduce((total, farm) => {
     if (farm.rewardPerBlocks) {
@@ -469,13 +452,19 @@ export function useRewardTokensFullInfo(): Token[] {
       : chainId && [43113, 43114].includes(chainId)
       ? 'AVAX'
       : 'ETH'
-  return !!rewardTokens
-    ? rewardTokens.map(address =>
-        address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-          ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
-          : allTokens[address]
-      )
-    : []
+
+  return useMemo(
+    () =>
+      !!rewardTokens
+        ? rewardTokens.map(address =>
+            address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
+              ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
+              : allTokens[address]
+          )
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chainId, nativeName, JSON.stringify(rewardTokens)]
+  )
 }
 
 export function checkIsFarmingPool(address: string, chainId?: ChainId): boolean {

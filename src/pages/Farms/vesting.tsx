@@ -51,18 +51,18 @@ const Seperator = styled.div`
   border: 1px solid #404b51;
 `
 
-const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
+const fixedFormatting = (value: BigNumber, decimals: number) => {
+  const res = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toFixed(6)
+  return parseFloat(res).toString()
+}
+
+const Vesting = () => {
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
-  const kncPrice = useKNCPrice()
 
-  const toUSD = useCallback(
-    value => kncPrice && value && `$${(parseFloat(kncPrice) * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
-    [kncPrice]
-  )
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
-  const { schedules } = useVesting(rewardTokens)
+  const { schedules, vestMultipleTokensAtIndices } = useVesting()
 
   const info = schedules.reduce<{
     [key: string]: {
@@ -152,7 +152,6 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
   )
 
   const [pendingTx, setPendingTx] = useState(false)
-  const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting(rewardTokens)
   const onClaimAll = async () => {
     if (!chainId || !account) return
     setPendingTx(true)
@@ -305,26 +304,21 @@ const Vesting = ({ rewardTokens }: { rewardTokens: Token[] }) => {
           (s, index) =>
             !BigNumber.from(s[2])
               .sub(BigNumber.from(s[3]))
-              .isZero() && <Schedule schedule={s} key={index} rewardTokens={rewardTokens} />
+              .isZero() && <Schedule schedule={s} key={index} />
         )}
 
         {schedules.map(
           (s, index) =>
             BigNumber.from(s[2])
               .sub(BigNumber.from(s[3]))
-              .isZero() && <Schedule schedule={s} key={index} rewardTokens={rewardTokens} />
+              .isZero() && <Schedule schedule={s} key={index} />
         )}
       </ExpandedContent>
     </>
   )
 }
 
-const fixedFormatting = (value: BigNumber, decimals: number) => {
-  const res = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toFixed(6)
-  return parseFloat(res).toString()
-}
-
-const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Token[] }) => {
+const Schedule = ({ schedule }: { schedule: any }) => {
   const { account, chainId } = useActiveWeb3React()
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
@@ -383,7 +377,7 @@ const Schedule = ({ schedule, rewardTokens }: { schedule: any; rewardTokens: Tok
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
     .div(100)
   const [pendingTx, setPendingTx] = useState(false)
-  const { vestAtIndex } = useVesting(rewardTokens)
+  const { vestAtIndex } = useVesting()
   const onVest = async () => {
     if (!chainId || !account) return
     setPendingTx(true)
