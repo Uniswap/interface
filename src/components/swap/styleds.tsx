@@ -5,6 +5,10 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import { TYPE } from 'theme'
+import { TooltipContainer } from 'components/Tooltip'
+import TradePrice from './TradePrice'
+import { loadingOpacityMixin } from 'components/Loader/styled'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -127,4 +131,25 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;
+`
+
+export const TransactionDetailsLabel = styled(TYPE.black)`
+  border-bottom: 1px solid ${({ theme }) => theme.bg2};
+  padding-bottom: 0.5rem;
+`
+
+export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg2};
+  padding: 1rem;
+  width: ${({ width }) => width ?? 'auto'};
+
+  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+    transform: scale(0.8);
+    transform-origin: ${origin ?? 'top left'};
+  `}
+`
+
+export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
+  ${loadingOpacityMixin}
 `

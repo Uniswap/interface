@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { useUserSingleHopOnly } from '../state/user/hooks'
 import { useActiveWeb3React } from './web3'
 import { useV3SwapPools } from './useV3SwapPools'
 
@@ -66,12 +65,10 @@ export function useAllV3Routes(
   const { chainId } = useActiveWeb3React()
   const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   return useMemo(() => {
     if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
 
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, singleHopOnly ? 1 : 2)
+    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 2)
     return { loading: false, routes }
-  }, [chainId, currencyIn, currencyOut, pools, poolsLoading, singleHopOnly])
+  }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
 }

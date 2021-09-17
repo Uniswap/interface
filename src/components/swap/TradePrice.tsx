@@ -1,6 +1,5 @@
-import { useCallback } from 'react'
-import { Price, Currency } from '@uniswap/sdk-core'
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
+import { Currency, Price } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
 

@@ -1,6 +1,9 @@
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
+<<<<<<< HEAD
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
+=======
+>>>>>>> main
 import ms from 'ms.macro'
 
 export enum SupportedChainId {
@@ -48,7 +51,11 @@ export const L2_CHAIN_IDS = [
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
+<<<<<<< HEAD
 export interface L1ChainInfo {
+=======
+interface L1ChainInfo {
+>>>>>>> main
   readonly blockWaitMsBeforeWarning?: number
   readonly docs: string
   readonly explorer: string
@@ -75,6 +82,7 @@ export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo 
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://arbiscan.io/',
@@ -85,6 +93,7 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://rinkeby-explorer.arbitrum.io/',
@@ -138,8 +147,11 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'OΞ',
     logoUrl: optimismLogoUrl,
+<<<<<<< HEAD
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
+=======
+>>>>>>> main
     statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
@@ -151,7 +163,10 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Optimistic Kovan',
     rpcUrls: ['https://kovan.optimism.io'],
     logoUrl: optimismLogoUrl,
+<<<<<<< HEAD
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
+=======
+>>>>>>> main
     statusPage: 'https://optimism.io/status',
   },
 }

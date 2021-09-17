@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro'
+import { CHAIN_INFO, L2ChainInfo, SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 const BodyRow = styled.div`
-  color: black;
+  color: ${({ theme }) => theme.black};
   font-size: 12px;
 `
 const CautionIcon = styled(AlertOctagon)`
-  color: black;
+  color: ${({ theme }) => theme.black};
 `
 const Link = styled(ExternalLink)`
-  color: black;
+  color: ${({ theme }) => theme.black};
   text-decoration: underline;
 `
 const TitleRow = styled.div`
@@ -42,22 +44,32 @@ const Wrapper = styled.div`
 `
 
 export function ChainConnectivityWarning() {
+  const { chainId } = useActiveWeb3React()
+  const info = CHAIN_INFO[chainId ?? SupportedChainId.MAINNET]
+  const label = info?.label
+
   return (
     <Wrapper>
       <TitleRow>
         <CautionIcon />
         <TitleText>
-          <Trans>Network Downtime Warning</Trans>
+          <Trans>Network Warning</Trans>
         </TitleText>
       </TitleRow>
       <BodyRow>
-        <Trans>
-          The Optimism network is down right now, or you may have lost connection to the sequencer. Check Optimism
-          network status
-        </Trans>{' '}
-        <Link href="">
-          <Trans>here.</Trans>
-        </Link>
+        {chainId === SupportedChainId.MAINNET ? (
+          <Trans>You may have lost your network connection.</Trans>
+        ) : (
+          <Trans>{label} may be down right now, or you may have lost your network connection.</Trans>
+        )}{' '}
+        {(info as L2ChainInfo).statusPage !== undefined && (
+          <span>
+            <Trans>Check network status</Trans>{' '}
+            <Link href={(info as L2ChainInfo).statusPage || ''}>
+              <Trans>here.</Trans>
+            </Link>
+          </span>
+        )}
       </BodyRow>
     </Wrapper>
   )

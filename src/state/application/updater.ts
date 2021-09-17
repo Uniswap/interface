@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './actions'
+import { useBlockNumber } from './hooks'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -24,24 +25,28 @@ function useQueryCacheInvalidator() {
 }
 
 const NETWORK_HEALTH_CHECK_MS = ms`15s`
-const DEFAULT_MS_BEFORE_WARNING_WAIT = ms`10m`
-interface UseBlockWarningTimerArgs {
-  chainId: number | undefined
-  dispatch: (action: any) => void
-  msSinceLastBlock: number
-  setMsSinceLastBlock: (n: number) => void
-}
-function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock }: UseBlockWarningTimerArgs) {
+const DEFAULT_MS_BEFORE_WARNING = ms`10m`
+
+function useBlockWarningTimer() {
+  const { chainId } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
   const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
   const timeout = useRef<NodeJS.Timeout>()
+  const isWindowVisible = useIsWindowVisible()
+  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
+  const currentBlock = useBlockNumber()
+
+  useEffect(() => {
+    setMsSinceLastBlock(0)
+  }, [currentBlock])
+
   useEffect(() => {
     const waitMsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING_WAIT) ||
-      DEFAULT_MS_BEFORE_WARNING_WAIT
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
     timeout.current = setTimeout(() => {
       setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
-      if (msSinceLastBlock > waitMsBeforeWarning) {
+      if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
         dispatch(setChainConnectivityWarning({ warn: true }))
       } else if (chainConnectivityWarningActive) {
         dispatch(setChainConnectivityWarning({ warn: false }))
@@ -53,13 +58,12 @@ function useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceL
         clearTimeout(timeout.current)
       }
     }
-  }, [chainId, chainConnectivityWarningActive, dispatch, msSinceLastBlock, setMsSinceLastBlock])
+  }, [chainId, chainConnectivityWarningActive, dispatch, isWindowVisible, msSinceLastBlock, setMsSinceLastBlock])
 }
 
 export default function Updater(): null {
   const { account, chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
-
   const windowVisible = useIsWindowVisible()
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
@@ -67,6 +71,7 @@ export default function Updater(): null {
     blockNumber: null,
   })
 
+  useBlockWarningTimer()
   useQueryCacheInvalidator()
 
   const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
@@ -83,8 +88,6 @@ export default function Updater(): null {
     },
     [chainId, setState]
   )
-
-  useBlockWarningTimer({ chainId, dispatch, msSinceLastBlock, setMsSinceLastBlock })
 
   // attach/detach listeners
   useEffect(() => {

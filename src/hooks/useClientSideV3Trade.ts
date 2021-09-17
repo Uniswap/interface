@@ -1,20 +1,13 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, Trade, SwapQuoter } from '@uniswap/v3-sdk'
+import { Route, SwapQuoter, Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
+import { V3TradeState } from 'state/routing/types'
 import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
 import { useActiveWeb3React } from './web3'
-
-export enum V3TradeState {
-  LOADING,
-  INVALID,
-  NO_ROUTE_FOUND,
-  VALID,
-  SYNCING,
-}
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISM]: 6_000_000,
@@ -28,7 +21,7 @@ const DEFAULT_GAS_QUOTE = 2_000_000
  * @param amountIn the amount to swap in
  * @param currencyOut the desired output currency
  */
-export function useBestV3TradeExactIn(
+export function useClientV3TradeExactIn(
   amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
@@ -97,10 +90,8 @@ export function useBestV3TradeExactIn(
       }
     }
 
-    const isSyncing = quotesResults.some(({ syncing }) => syncing)
-
     return {
-      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
+      state: V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
@@ -116,7 +107,7 @@ export function useBestV3TradeExactIn(
  * @param currencyIn the desired input currency
  * @param amountOut the amount to swap out
  */
-export function useBestV3TradeExactOut(
+export function useClientSideV3TradeExactOut(
   currencyIn?: Currency,
   amountOut?: CurrencyAmount<Currency>
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
@@ -186,10 +177,8 @@ export function useBestV3TradeExactOut(
       }
     }
 
-    const isSyncing = quotesResults.some(({ syncing }) => syncing)
-
     return {
-      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
+      state: V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_OUTPUT,
