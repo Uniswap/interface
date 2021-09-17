@@ -1,22 +1,24 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Contract } from '@ethersproject/contracts'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Interface } from '@ethersproject/abi'
 
 import { exchangeCient } from 'apollo/client'
 import { FARM_DATA, FARM_HISTORIES } from 'apollo/queries'
 import { ChainId, WETH } from 'libs/sdk/src'
+import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
-import { setRewardTokens, setFarmsData, setLoading, setError } from './actions'
+import { setFarmsData, setLoading, setError } from './actions'
 import { useBlockNumber, useETHPrice } from 'state/application/hooks'
-import useFairLaunch from 'hooks/useFairLaunch'
 import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
 import { useAllTokens } from 'hooks/Tokens'
 import { getBulkPoolData } from 'state/pools/hooks'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
 
 export const useFarms = (): Farm[] => {
   const farms = useSelector((state: AppState) => state.farms.data)
@@ -24,29 +26,24 @@ export const useFarms = (): Farm[] => {
 }
 
 export const useRewardTokens = () => {
-  const dispatch = useAppDispatch()
-
   const { chainId } = useActiveWeb3React()
-  const { getRewardTokens } = useFairLaunch(FAIRLAUNCH_ADDRESSES[chainId as ChainId]?.[0])
+  const rewardTokensMulticallResult = useMultipleContractSingleData(
+    FAIRLAUNCH_ADDRESSES[chainId as ChainId],
+    new Interface(FAIRLAUNCH_ABI),
+    'getRewardTokens'
+  )
 
-  const rewardTokens = useSelector((state: AppState) => state.farms.rewardTokens)
+  return useMemo(() => {
+    let result: string[] = []
 
-  const fetchRewardTokens = useCallback(async () => {
-    try {
-      const rewardTokens = await getRewardTokens()
-      dispatch(setRewardTokens(rewardTokens))
-    } catch (e) {
-      dispatch(setRewardTokens([]))
-    }
-  }, [dispatch, getRewardTokens])
+    rewardTokensMulticallResult.forEach(token => {
+      if (token?.result?.[0]) {
+        result = result.concat(token?.result?.[0].filter((item: string) => result.indexOf(item) < 0))
+      }
+    })
 
-  useEffect(() => {
-    if (chainId) {
-      fetchRewardTokens()
-    }
-  }, [chainId, fetchRewardTokens])
-
-  return rewardTokens
+    return result
+  }, [rewardTokensMulticallResult])
 }
 
 export const fetchFarms = async (poolsList: string[], chainId?: ChainId) => {
