@@ -93,12 +93,15 @@ export default createReducer(initialState, (builder) =>
         // no-op since it's not the latest request
         return
       }
+      const current = state.byUrl[url]?.current ?? null
+      const pendingUpdate = state.byUrl[url]?.pendingUpdate ?? null
+      const loadingRequestId = state.byUrl[url]?.loadingRequestId ?? null
 
       state.byUrl[url] = {
-        current: null,
-        pendingUpdate: null,
-        loadingRequestId: null,
-        error: errorMessage,
+        current,
+        pendingUpdate,
+        loadingRequestId,
+        error: current ? null : errorMessage,
       }
     })
     .addCase(addList, (state, { payload: url }) => {
