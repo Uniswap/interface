@@ -112,7 +112,6 @@ export default function Manage({
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
   const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
-  const userStaked = Boolean(stakingInfo?.stakedAmount?.greaterThan('0'))
 
   // toggle for staking modal and unstaking modal
   const [showStakingModal, setShowStakingModal] = useState(false)
@@ -179,23 +178,14 @@ export default function Manage({
             {stakingInfo?.active && (
               <>
                 <TYPE.body style={{ margin: 0 }}>{t('poolRate')}</TYPE.body>
-                {userStaked
-                  ? stakingInfo?.rewardRates?.map((rewardRate, idx) => {
-                      return (
-                        <TYPE.body fontSize={24} fontWeight={500} key={idx}>
-                          {rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
-                          {` ${rewardRate.token.symbol} / week`}
-                        </TYPE.body>
-                      )
-                    })
-                  : stakingInfo?.totalRewardRates?.map((rewardRate, idx) => {
-                      return (
-                        <TYPE.body fontSize={24} fontWeight={500} key={idx}>
-                          {rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
-                          {` ${rewardRate.token.symbol} / week`}
-                        </TYPE.body>
-                      )
-                    })}
+                {stakingInfo?.totalRewardRates?.map((rewardRate, idx) => {
+                  return (
+                    <TYPE.body fontSize={24} fontWeight={500} key={idx}>
+                      {rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
+                      {` ${rewardRate.token.symbol} / week`}
+                    </TYPE.body>
+                  )
+                })}
               </>
             )}
           </AutoColumn>

@@ -161,7 +161,11 @@ export const usePairTripleStakingInfo = (
     .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
     .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
   const dualPool = useMultiStakeRewards(multiRewardPool?.underlyingPool ?? '', stakingInfo, 2, true)
-  return useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, 3, multiRewardPool?.active || false)
+  const triplePool = useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, 3, multiRewardPool?.active || false)
+  if (multiRewardPool?.numRewards === 2) {
+    return null
+  }
+  return triplePool
 }
 
 interface UnclaimedInfo {
