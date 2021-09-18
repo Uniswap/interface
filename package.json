@@ -137,7 +137,7 @@
     "@sentry/react": "^6.9.0",
     "@sentry/tracing": "^6.9.0",
     "@ubeswap/core": "^1.0.2",
-    "@ubeswap/default-token-list": "^3.3.5",
+    "@ubeswap/default-token-list": "^3.3.10",
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.0",
     "@walletconnect/utils": "^1.4.1",
