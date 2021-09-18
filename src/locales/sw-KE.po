@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-17 18:05\n"
+"PO-Revision-Date: 2021-09-18 18:05\n"
 "Last-Translator: \n"
 "Language: sw_KE\n"
 "Language-Team: Swahili\n"
@@ -157,11 +157,11 @@ msgstr "Ongeza Ujumbe +"
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add Liquidity"
-msgstr "Ongeza Liquidity"
+msgstr "Ongeza Mtaji"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Ongeza Liquidity ya V2"
+msgstr "Ongeza Mtaji wa V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
@@ -169,11 +169,11 @@ msgstr "Ongeza ukwasi."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
-msgstr "Ongeza ukwasi zaidi"
+msgstr "Ongeza Mtaji zaidi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Ongeza {0} kwa Metamask <0 />"
+msgstr "Ongeza {0} kwa Metamask <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
