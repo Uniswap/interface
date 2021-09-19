@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
@@ -88,22 +88,17 @@ dynamicActivate(initialLocale)
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const locale = useActiveLocale()
   const [, setUserLocale] = useUserLocaleManager()
-  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
         document.documentElement.setAttribute('lang', locale)
         setUserLocale(locale) // stores the selected locale to persist across sessions
-        setLoaded(true)
       })
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
   }, [locale, setUserLocale])
-
-  // prevent the app from rendering with placeholder text before the locale is loaded
-  if (!loaded) return null
 
   return (
     <I18nProvider forceRenderOnLocaleChange={false} i18n={i18n}>
