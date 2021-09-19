@@ -25,7 +25,6 @@ const MigrateV2Pair = lazy(() => import('./MigrateV2/MigrateV2Pair'))
 const OpenClaimAddressModalAndRedirectToSwap = lazy(() =>
   import('./Swap/redirects').then((module) => ({ default: module.OpenClaimAddressModalAndRedirectToSwap }))
 )
-const RedirectToSwap = lazy(() => import('./Swap/redirects').then((module) => ({ default: module.RedirectToSwap })))
 const Pool = lazy(() => import('./Pool'))
 const PoolFinder = lazy(() => import('./PoolFinder'))
 const PoolV2 = lazy(() => import('./Pool/v2'))
@@ -39,6 +38,7 @@ const RedirectDuplicateTokenIdsV2 = lazy(() =>
 const RedirectPathToSwapOnly = lazy(() =>
   import('./Swap/redirects').then((module) => ({ default: module.RedirectPathToSwapOnly }))
 )
+const RedirectToSwap = lazy(() => import('./Swap/redirects').then((module) => ({ default: module.RedirectToSwap })))
 const RemoveLiquidity = lazy(() => import('./RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('./RemoveLiquidity/V3'))
 const Vote = lazy(() => import('./Vote'))
