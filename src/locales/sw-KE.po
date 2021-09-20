@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-18 18:05\n"
+"PO-Revision-Date: 2021-09-20 08:05\n"
 "Last-Translator: \n"
 "Language: sw_KE\n"
 "Language-Team: Swahili\n"
@@ -165,7 +165,7 @@ msgstr "Ongeza Mtaji wa V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "Ongeza ukwasi."
+msgstr "Ongeza Mtaji."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add more liquidity"
