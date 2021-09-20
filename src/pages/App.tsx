@@ -1,6 +1,7 @@
-import * as React from 'react'
+import { lazy, Suspense } from 'react'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Route, Switch } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
@@ -13,8 +14,7 @@ import { ApplicationModal } from '../state/application/actions'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Swap from './Swap'
-
-const { lazy, Suspense } = React
+import { Dots } from 'components/swap/styleds'
 
 const AddLiquidity = lazy(() => import('./AddLiquidity'))
 const CreateProposal = lazy(() => import('./CreateProposal'))
@@ -98,7 +98,14 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense
+              fallback={
+                <div>
+                  <Trans>loading</Trans>
+                  <Dots />
+                </div>
+              }
+            >
               <Switch>
                 <Route exact strict path="/vote" component={Vote} />
                 <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
