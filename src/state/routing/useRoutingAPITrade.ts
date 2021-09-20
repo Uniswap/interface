@@ -48,24 +48,31 @@ function useRoutingAPIArguments({
   }
 }
 
+/**
+ * Returns the best v3 trade by invoking the routing api
+ * @param tradeType whether the swap is an exact in/out
+ * @param amountSpecified the exact amount to swap in/out
+ * @param otherCurrency the desired output/payment currency
+ */
 export function useRoutingAPITrade(
   tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, typeof tradeType> | null } {
-  const [currencyIn, currencyOut, amount]: [
-    Currency | undefined,
-    Currency | undefined,
-    CurrencyAmount<Currency> | undefined
-  ] = useMemo(
+  const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency, amountSpecified]
-        : [otherCurrency, amountSpecified?.currency, amountSpecified],
+        ? [amountSpecified?.currency, otherCurrency]
+        : [otherCurrency, amountSpecified?.currency],
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const queryArgs = useRoutingAPIArguments({ tokenIn: currencyIn, tokenOut: currencyOut, amount, tradeType })
+  const queryArgs = useRoutingAPIArguments({
+    tokenIn: currencyIn,
+    tokenOut: currencyOut,
+    amount: amountSpecified,
+    tradeType,
+  })
 
   const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`10s`,

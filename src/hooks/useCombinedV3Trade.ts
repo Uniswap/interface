@@ -8,10 +8,11 @@ import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
 
 /**
- * Returns the best v3 trade for a desired exact input swap.
+ * Returns the best v3 trade for a desired swap.
  * Uses optimized routes from the Routing API and falls back to the v3 router.
- * @param amountIn The amount to swap in
- * @param currentOut the desired output currency
+ * @param tradeType whether the swap is an exact in/out
+ * @param amountSpecified the exact amount to swap in/out
+ * @param otherCurrency the desired output/payment currency
  */
 export function useV3Trade(
   tradeType: TradeType,

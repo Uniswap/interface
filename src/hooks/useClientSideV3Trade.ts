@@ -17,9 +17,10 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
 const DEFAULT_GAS_QUOTE = 2_000_000
 
 /**
- * Returns the best v3 trade for a desired exact input swap
- * @param amountIn the amount to swap in
- * @param currencyOut the desired output currency
+ * Returns the best v3 trade for a desired swap
+ * @param tradeType whether the swap is an exact in/out
+ * @param amountSpecified the exact amount to swap in/out
+ * @param otherCurrency the desired output/payment currency
  */
 export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
