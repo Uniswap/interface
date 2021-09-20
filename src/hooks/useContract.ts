@@ -43,9 +43,6 @@ export function useContractForReading(
   return useMemo(() => {
     if (!address || !chainId) return null
     const provider = providers[chainId]
-    if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
-      console.log('===provider', provider)
-    }
     try {
       return getContractForReading(address, ABI, provider)
     } catch (error) {

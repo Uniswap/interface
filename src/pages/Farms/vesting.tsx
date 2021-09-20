@@ -21,11 +21,29 @@ import { Reward } from 'state/farms/types'
 import { Flex } from 'rebass'
 import { useMedia } from 'react-use'
 
+import { ChevronDown, ChevronUp } from 'react-feather'
 const VestSchedule = styled.div`
   display: grid;
   grid-template-columns: 4fr 1fr;
   grid-template-areas: 'total vestable vest';
 `
+
+const MenuFlyout = styled.span`
+  min-width: 15rem;
+  background-color: ${({ theme }) => theme.bg14};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
+  border-radius: 5px;
+  padding: 19px 32px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  position: absolute;
+  top: 2.5rem !important;
+  left: 0 !important;
+  z-index: 10000;
+`
+
 const Tag = styled.div<{ tag?: string }>`
   display: flex;
   position: relative;
@@ -59,7 +77,6 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 const Vesting = () => {
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useContext(ThemeContext)
-
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const { schedules, vestMultipleTokensAtIndices } = useVesting()
@@ -164,72 +181,128 @@ const Vesting = () => {
     // await Promise.all(Object.keys(info).map(k => vestAtIndex(info[k].token.address, info[k].vestableIndexes)))
     setPendingTx(false)
   }
-  const totalBlock = (
-    <div>
-      {Object.keys(info).map(k => (
-        <div key={k}>
-          <TYPE.body color={theme.text11} fontWeight={600} fontSize={28}>
-            {fixedFormatting(info[k].totalAmount, 18)} {k}
-          </TYPE.body>
-        </div>
-      ))}
 
-      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={24}>
-        {formattedNum(totalUSD.toString(), true)}
-      </TYPE.body>
+  const [open, setOpen] = useState<number>(-1)
+  const totalBlock = (
+    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 0 ? 0 : -1)}>
+      <Flex>
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={24}>
+          {formattedNum(totalUSD.toString(), true)}
+        </TYPE.body>
+        <TYPE.body
+          color={'#08a1e7'}
+          fontWeight={'normal'}
+          fontSize={14}
+          style={{ margin: '0.25rem 0.25rem 0.25rem 1rem' }}
+        >
+          Details
+        </TYPE.body>
+        {open == 0 ? (
+          <ChevronUp size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+        ) : (
+          <ChevronDown size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+        )}
+      </Flex>
+
+      {open == 0 && (
+        <MenuFlyout>
+          {Object.keys(info).map(k => (
+            <div key={k}>
+              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={16}>
+                {fixedFormatting(info[k].totalAmount, 18)} {k}
+              </TYPE.body>
+            </div>
+          ))}
+        </MenuFlyout>
+      )}
     </div>
   )
 
   const lockedBlock = (
-    <div>
+    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 1 ? 1 : -1)}>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
         <Trans>Locked Rewards</Trans>
       </TYPE.body>
-      {Object.keys(info).map(k => (
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-          {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
-        </TYPE.body>
-      ))}
 
-      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-        {formattedNum(lockedUSD.toString(), true)}
-      </TYPE.body>
+      <Flex>
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+          {formattedNum(lockedUSD.toString(), true)}
+        </TYPE.body>
+        {open == 1 ? (
+          <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+        ) : (
+          <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+        )}
+      </Flex>
+      {open == 1 && (
+        <MenuFlyout>
+          {Object.keys(info).map(k => (
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+              {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
+            </TYPE.body>
+          ))}
+        </MenuFlyout>
+      )}
     </div>
   )
 
   const claimedBlock = (
-    <div>
+    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 2 ? 2 : -1)}>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
         <Trans>Claimed Rewards</Trans>
       </TYPE.body>
-      {Object.keys(info).map(k => (
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-          {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
-        </TYPE.body>
-      ))}
 
-      <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-        {formattedNum(claimedUSD.toString(), true)}
-      </TYPE.body>
+      <Flex>
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+          {formattedNum(claimedUSD.toString(), true)}
+        </TYPE.body>
+        {open == 2 ? (
+          <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+        ) : (
+          <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+        )}
+      </Flex>
+
+      {open == 2 && (
+        <MenuFlyout>
+          {Object.keys(info).map(k => (
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+              {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
+            </TYPE.body>
+          ))}
+        </MenuFlyout>
+      )}
     </div>
   )
 
   const unLockedBlock = (
-    <div>
+    <div onClick={() => setOpen(open != 3 ? 3 : -1)}>
       <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
-        <div>
+        <div style={{ position: 'relative' }}>
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
             <Trans>Unlocked Rewards</Trans>
           </TYPE.body>
-          {Object.keys(info).map(k => (
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
-              {fixedFormatting(info[k].vestableAmount, 18)} {k}
-            </TYPE.body>
-          ))}
 
-          <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-            {formattedNum(unlockedUSD.toString(), true)}
-          </TYPE.body>
+          <Flex>
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+              {formattedNum(unlockedUSD.toString(), true)}
+            </TYPE.body>
+            {open == 3 ? (
+              <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+            ) : (
+              <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+            )}
+          </Flex>
+
+          {open == 3 && (
+            <MenuFlyout>
+              {Object.keys(info).map(k => (
+                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+                  {fixedFormatting(info[k].vestableAmount, 18)} {k}
+                </TYPE.body>
+              ))}
+            </MenuFlyout>
+          )}
         </div>
         {Object.keys(info).length > 0 && (
           <div>
