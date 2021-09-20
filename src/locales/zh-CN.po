@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 17:07\n"
+"PO-Revision-Date: 2021-09-20 10:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -760,7 +760,7 @@ msgstr "从待用代币列表中扩展出的结果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
-msgstr "专业模式"
+msgstr "专家模式"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1594,7 +1594,7 @@ msgstr "在您添加流动性之前， {0} 池需要先初始化。请先选择�
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "这个路由方案通过拆分路由、多级路由和gas 成本等因素来优化价格。"
+msgstr "这个路由方案通过考虑拆分路由、多级路由和gas 成本等因素来优化价格。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -2307,7 +2307,7 @@ msgstr "{activeTokensOnThisChain} 代币"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} 可能正在关闭，或者您的网络已经断了。"
+msgstr "{label} 可能正处下线状态，或者您的网络已经断了。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
