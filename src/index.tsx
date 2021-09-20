@@ -35,6 +35,29 @@ function Updaters() {
   )
 }
 
+const initGoogleAnalytics = () => {
+  const gaLinkScript = document.createElement('script')
+  gaLinkScript.async = true
+  gaLinkScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-69MK4SBS26'
+
+  const gaScript = document.createElement('script')
+  gaScript.innerHTML = `
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-69MK4SBS26');
+`
+
+  document.head.insertBefore(gaScript, document.head.childNodes[0])
+  document.head.insertBefore(gaLinkScript, document.head.childNodes[0])
+}
+
+if (process.env.REACT_APP_MAINNET_ENV === 'production') {
+  initGoogleAnalytics()
+}
+
 ReactDOM.render(
   <StrictMode>
     <SEO

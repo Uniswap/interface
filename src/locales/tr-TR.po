@@ -357,6 +357,10 @@ msgstr "Yeni bir havuz oluştur"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "Mevcut havuzları görüntülemek için yeni bir havuz oluşturun veya başka bir token çifti seçin."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price:"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
@@ -674,9 +678,9 @@ msgstr "Gelişmiş Modda, 'işlemi onayla' istemi devre dışı bırakılır. Bu
 msgid "Increase LP Profit"
 msgstr "LP Karını Artırın"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Initial ratio"
-msgstr ""
+#: 
+#~ msgid "Initial ratio"
+#~ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -1058,6 +1062,10 @@ msgstr "Fiyat aralığı {0}/{1}"
 #: src/pages/Swap/index.tsx
 msgid "Price:"
 msgstr "Fiyat:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Prices"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Privacy"
@@ -1623,6 +1631,7 @@ msgstr "{0} kaldırıldı"
 msgid "{0} tokens"
 msgstr "{0} token varlıkları"
 
+#: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr ""
