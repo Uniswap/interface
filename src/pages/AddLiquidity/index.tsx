@@ -408,10 +408,26 @@ export default function AddLiquidity({
     nativeA?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
 
+  const isWrappedTokenInPool = useCallback(
+    (currency: Currency | null | undefined, selectedCurrency: Currency) => {
+      return (
+        pairAddress &&
+        chainId &&
+        currency &&
+        ((currencyEquals(currency, ETHER) && currencyEquals(selectedCurrency, WETH[chainId])) ||
+          (currencyEquals(currency, WETH[chainId]) && currencyEquals(selectedCurrency, ETHER)))
+      )
+    },
+    [chainId, pairAddress]
+  )
   const handleCurrencyASelect = useCallback(
-    (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA, chainId)
-      if (newCurrencyIdA === currencyIdB) {
+    (selectedCurrencyA: Currency) => {
+      const newCurrencyIdA = currencyId(selectedCurrencyA, chainId)
+
+      // support WETH
+      if (isWrappedTokenInPool(currencyA, selectedCurrencyA)) {
+        history.push(`/add/${newCurrencyIdA}/${currencyIdB}/${pairAddress}`)
+      } else if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
       } else {
         history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
@@ -420,11 +436,14 @@ export default function AddLiquidity({
     [currencyIdB, history, currencyIdA, chainId]
   )
   const handleCurrencyBSelect = useCallback(
-    (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB, chainId)
-      if (currencyIdA === newCurrencyIdB) {
+    (selectedCurrencyB: Currency) => {
+      const newCurrencyIdB = currencyId(selectedCurrencyB, chainId)
+
+      if (isWrappedTokenInPool(currencyB, selectedCurrencyB)) {
+        history.push(`/add/${currencyIdA}/${newCurrencyIdB}/${pairAddress}`)
+      } else if (newCurrencyIdB === currencyIdA) {
         if (currencyIdB) {
-          history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
+          history.push(`/add/${currencyIdB}/${currencyIdA}`)
         } else {
           history.push(`/add/${newCurrencyIdB}`)
         }
