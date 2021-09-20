@@ -18,10 +18,10 @@ const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    currencyId: null,
+    currencyId: undefined,
   },
   [Field.OUTPUT]: {
-    currencyId: null,
+    currencyId: undefined,
   },
   recipient: null,
 }
@@ -33,10 +33,10 @@ export default createReducer<SwapState>(initialState, (builder) =>
       (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
           [Field.INPUT]: {
-            currencyId: inputCurrencyId,
+            currencyId: inputCurrencyId || null,
           },
           [Field.OUTPUT]: {
-            currencyId: outputCurrencyId,
+            currencyId: outputCurrencyId || null,
           },
           independentField: field,
           typedValue,
