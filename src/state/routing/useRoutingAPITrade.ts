@@ -54,11 +54,11 @@ function useRoutingAPIArguments({
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useRoutingAPITrade(
-  tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT,
+export function useRoutingAPITrade<TTradeType extends TradeType>(
+  tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, typeof tradeType> | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -118,7 +118,7 @@ export function useRoutingAPITrade(
       }
     }
 
-    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, typeof tradeType>({
+    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TTradeType>({
       routes,
       tradeType,
     })

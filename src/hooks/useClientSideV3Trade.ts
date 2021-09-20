@@ -26,7 +26,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
   const [currencyIn, currencyOut] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -41,7 +41,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const quotesResults = useSingleContractWithCallData(
     quoter,
     amountSpecified
-      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, TradeType.EXACT_INPUT).calldata)
+      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
       : [],
     {
       gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
@@ -55,7 +55,9 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       !currencyOut ||
       quotesResults.some(({ valid }) => !valid) ||
       // skip when tokens are the same
-      amountSpecified.currency.equals(currencyOut)
+      (tradeType === TradeType.EXACT_INPUT
+        ? amountSpecified.currency.equals(currencyOut)
+        : amountSpecified.currency.equals(currencyIn))
     ) {
       return {
         state: V3TradeState.INVALID,
@@ -123,9 +125,9 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       state: V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
-        tradeType: TradeType.EXACT_INPUT,
+        tradeType,
         inputAmount: amountIn,
-        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, amountOut.toString()),
+        outputAmount: amountOut,
       }),
     }
   }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
