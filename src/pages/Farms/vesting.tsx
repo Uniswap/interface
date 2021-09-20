@@ -252,7 +252,7 @@ const Vesting = () => {
   )
 
   const claimedBlock = (
-    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 2 ? 2 : -1)}>
+    <div style={{ position: 'relative' }}>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
         <Trans>Claimed Rewards</Trans>
       </TYPE.body>
