@@ -339,15 +339,15 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
     return []
   }
 
-  const initialRewards: Reward[] = []
+  const initialRewards: { [key: string]: Reward } = {}
 
   const farmRewards = farms.reduce((total, farm) => {
     if (farm.userData?.rewards) {
       farm.rewardTokens.map((token, index) => {
-        if (total[index]) {
-          total[index].amount = total[index].amount.add(BigNumber.from(farm.userData?.rewards?.[index]))
+        if (total[token.address]) {
+          total[token.address].amount = total[token.address].amount.add(BigNumber.from(farm.userData?.rewards?.[index]))
         } else {
-          total[index] = {
+          total[token.address] = {
             token,
             amount: BigNumber.from(farm.userData?.rewards?.[index])
           }
@@ -359,7 +359,7 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
     return total
   }, initialRewards)
 
-  return farmRewards
+  return Object.values(farmRewards)
 }
 
 export function useFarmRewardsUSD(rewards?: Reward[]): number {
