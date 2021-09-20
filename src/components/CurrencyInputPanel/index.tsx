@@ -155,7 +155,7 @@ export default function CurrencyInputPanel({
   fontSize
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
