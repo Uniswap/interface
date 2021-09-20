@@ -254,6 +254,10 @@ msgstr "자본 AMP 계수 = 5"
 msgid "Change"
 msgstr "변경"
 
+#: src/pages/Swap/index.tsx
+msgid "Checking allowance..."
+msgstr ""
+
 #: src/pages/Farms/vesting.tsx
 msgid "Claim"
 msgstr "클레임하기"
@@ -1422,6 +1426,16 @@ msgstr "잠금 해제: {0} {1}"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "목록 업데이트"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Use Native Token"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Use Wrapped Token"
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Use this tool to find pairs that don't automatically appear in the interface."

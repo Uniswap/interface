@@ -5,7 +5,11 @@ export const getBscMainnetTokenLogoURL = (address: string) => {
     //knc
     address = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  } else if (address?.toLowerCase() === '0x633237c6fa30fae46cc5bb22014da30e50a718cc') {
+    //fiwa
+    uri = `https://bscscan.com/token/images/defiwarrior_32b.png`
   }
+
   if (!uri) {
     uri = `https://pancakeswap.finance/images/tokens/${address}.png`
   }

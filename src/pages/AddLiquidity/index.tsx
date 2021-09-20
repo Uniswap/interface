@@ -4,7 +4,7 @@ import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmo
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
@@ -75,7 +75,6 @@ const NumericalInput2 = styled(NumericalInput)`
 const USDPrice = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 8px;
   font-size: 12px;
   font-weight: 500;
   font-stretch: normal;
@@ -100,11 +99,12 @@ export default function AddLiquidity({
 
   const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId])))
-  )
+  const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
+  const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
+  const currencyBIsETHER = !!(chainId && currencyB && currencyEquals(currencyB, ETHER))
+  const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
+
+  const oneCurrencyIsWETH = currencyBIsWETH || currencyAIsWETH
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
@@ -570,9 +570,21 @@ export default function AddLiquidity({
                 id="add-liquidity-input-tokena"
                 showCommonBases
               />
-              <USDPrice>
-                {usdPrices[0] ? `1 ${nativeA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
-              </USDPrice>
+              <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
+                <USDPrice>
+                  {usdPrices[0] ? `1 ${nativeA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
+                </USDPrice>
+
+                {pairAddress && chainId && (currencyAIsWETH || currencyAIsETHER) && (
+                  <StyledInternalLink
+                    to={`/add/${
+                      currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                    }/${currencyIdB}/${pairAddress}`}
+                  >
+                    {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
+                  </StyledInternalLink>
+                )}
+              </Flex>
             </div>
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
@@ -590,9 +602,21 @@ export default function AddLiquidity({
                 id="add-liquidity-input-tokenb"
                 showCommonBases
               />
-              <USDPrice>
-                {usdPrices[1] ? `1 ${nativeB?.symbol} = ${formattedNum(usdPrices[1].toString(), true)}` : <Loader />}
-              </USDPrice>
+              <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
+                <USDPrice>
+                  {usdPrices[1] ? `1 ${nativeB?.symbol} = ${formattedNum(usdPrices[1].toString(), true)}` : <Loader />}
+                </USDPrice>
+
+                {pairAddress && chainId && (currencyBIsWETH || currencyBIsETHER) && (
+                  <StyledInternalLink
+                    to={`/add/${currencyIdA}/${
+                      currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
+                    }/${pairAddress}`}
+                  >
+                    {currencyBIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
+                  </StyledInternalLink>
+                )}
+              </Flex>
             </div>
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (

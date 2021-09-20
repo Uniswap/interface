@@ -24,11 +24,10 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
-import { formattedNum, getTokenSymbol, getTokenLogoURL, isAddressString, shortenAddress } from 'utils'
+import { formattedNum, getTokenLogoURL, isAddressString, shortenAddress } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
-import { RewardToken } from 'pages/Farms/styleds'
 import { currencyIdFromAddress } from 'utils/currencyId'
 import { useBlockNumber } from 'state/application/hooks'
 import { t, Trans } from '@lingui/macro'
@@ -373,10 +372,8 @@ const ListItem = ({ farm }: ListItemProps) => {
             </>
           </div>
         </DataText>
-        <DataText grid-area="liq" align="center">
-          {formattedNum(liquidity.toString(), true)}
-        </DataText>
-        <DataText grid-area="liq" align="right">
+        <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
+        <DataText grid-area="liq" align="right" style={{ textAlign: 'right' }}>
           {farm.time}
         </DataText>
         <APY grid-area="apy">
@@ -388,7 +385,7 @@ const ListItem = ({ farm }: ListItemProps) => {
           align="right"
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
         >
-          {farmRewards.map((reward, index) => {
+          {farmRewards.map(reward => {
             return (
               <div key={reward.token.address} style={{ marginTop: '2px' }}>
                 <Flex style={{ alignItems: 'center' }}>
@@ -538,7 +535,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                     <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
                       <RewardBalanceWrapper>
                         <div>
-                          {farmRewards?.map((reward, index) => {
+                          {farmRewards?.map(reward => {
                             return (
                               <div key={reward.token.address}>
                                 <Flex style={{ alignItems: 'center' }}>

@@ -201,6 +201,10 @@ const Farms = () => {
                   </TotalRewardsTitleWrapper>
                   <RewardNumberContainer>
                     {totalRewards.map((reward, index) => {
+                      if (!reward || !reward.amount || reward.amount.lte(0)) {
+                        return null
+                      }
+
                       return (
                         <RewardToken key={reward.token.address}>
                           <span>
