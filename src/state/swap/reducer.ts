@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { parsedQueryString } from 'hooks/useParsedQueryString'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
   readonly independentField: Field
@@ -14,17 +16,7 @@ export interface SwapState {
   readonly recipient: string | null
 }
 
-const initialState: SwapState = {
-  independentField: Field.INPUT,
-  typedValue: '',
-  [Field.INPUT]: {
-    currencyId: undefined,
-  },
-  [Field.OUTPUT]: {
-    currencyId: undefined,
-  },
-  recipient: null,
-}
+const initialState: SwapState = queryParametersToSwapState(parsedQueryString())
 
 export default createReducer<SwapState>(initialState, (builder) =>
   builder

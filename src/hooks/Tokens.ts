@@ -13,6 +13,7 @@ import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks
 
 import { useActiveWeb3React } from './web3'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { SupportedChainId } from 'constants/chains'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -181,8 +182,16 @@ export function useCurrency(currencyId: string | null | undefined): Currency | n
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
-  const extendedEther = useMemo(() => (chainId ? ExtendedEther.onChain(chainId) : undefined), [chainId])
+  const extendedEther = useMemo(
+    () =>
+      chainId
+        ? ExtendedEther.onChain(chainId)
+        : // display mainnet when not connected
+          ExtendedEther.onChain(SupportedChainId.MAINNET),
+    [chainId]
+  )
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-  if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
+  if (currencyId === null || currencyId === undefined) return currencyId
+  if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isETH ? extendedEther : token
 }
