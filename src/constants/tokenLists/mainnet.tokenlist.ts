@@ -145,6 +145,13 @@ export const MAINNET_TOKEN_LIST = {
       name: 'Jarvis Synthetic Swiss Franc',
       decimals: 18,
       logoURI: 'https://i.imgur.com/EknGhAl.png'
+    },
+    {
+      chainId: 1,
+      address: '0x7F3EDcdD180Dbe4819Bd98FeE8929b5cEdB3AdEB',
+      symbol: 'XTK',
+      name: 'xToken',
+      decimals: 18
     }
   ],
   version: {
