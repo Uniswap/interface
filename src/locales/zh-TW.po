@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-20 10:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -282,7 +282,7 @@ msgstr "自動"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router"
-msgstr "自動路由器"
+msgstr "自動路由"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -760,7 +760,7 @@ msgstr "從待用代幣列表中擴展出的結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
-msgstr "專業級"
+msgstr "專家模式"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1594,7 +1594,7 @@ msgstr "在您添加流動性之前， {0} 池需要先初始化。請先選擇�
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "此路線通過考慮拆分路線、多跳和天然氣成本來優化您的價格。"
+msgstr "這個路由方案通過考慮拆分路由、多級路由和gas 成本等因素來優化價格。"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1653,7 +1653,7 @@ msgstr "存款總額"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "商路"
+msgstr "交易路由"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
@@ -1812,7 +1812,7 @@ msgstr "更新代幣列表"
 
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "使用 Uniswap Labs API 通過更有效的途徑獲得更好的定價。"
+msgstr "使用 Uniswap Labs API 通過更有效的路由獲得更好的定價。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -2001,7 +2001,7 @@ msgstr "您在此流動池中還未有流動資金。"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
-msgstr "您可能丟失了網絡連接。"
+msgstr "您的網絡連接可能斷了。"
 
 #: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
 #: src/components/NetworkAlert/MinimalNetworkAlert.tsx
@@ -2307,7 +2307,7 @@ msgstr "{activeTokensOnThisChain} 代幣"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} 可能正在關閉，或者您可能已經失去了網絡連接。"
+msgstr "{label} 可能正處下線狀態，或者您的網絡已經斷了。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

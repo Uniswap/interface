@@ -36,7 +36,7 @@ exports[`renders multi route 1`] = `
             <div
               class="css-1t7xebc"
             >
-              DoubleCurrencyLogo currency0=USDC currency1=DAI
+              DoubleCurrencyLogo currency0=DAI currency1=USDC
             </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -79,7 +79,7 @@ exports[`renders multi route 1`] = `
             <div
               class="css-1t7xebc"
             >
-              DoubleCurrencyLogo currency0=USDC currency1=WBTC
+              DoubleCurrencyLogo currency0=WBTC currency1=USDC
             </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -93,7 +93,7 @@ exports[`renders multi route 1`] = `
             <div
               class="css-1t7xebc"
             >
-              DoubleCurrencyLogo currency0=WBTC currency1=DAI
+              DoubleCurrencyLogo currency0=DAI currency1=WBTC
             </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -145,7 +145,7 @@ exports[`renders single route 1`] = `
             <div
               class="css-1t7xebc"
             >
-              DoubleCurrencyLogo currency0=USDC currency1=DAI
+              DoubleCurrencyLogo currency0=DAI currency1=USDC
             </div>
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
