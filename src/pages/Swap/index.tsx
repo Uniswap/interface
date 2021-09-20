@@ -448,7 +448,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   }
                 }}
                 id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                disabled={
+                  !isValid ||
+                  (priceImpactSeverity > 3 && !isExpertMode) ||
+                  !!swapCallbackError ||
+                  approval !== ApprovalState.APPROVED
+                }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
                 <Text fontSize={20} fontWeight={500}>
@@ -456,6 +461,8 @@ export default function Swap({ history }: RouteComponentProps) {
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
                     ? t`Price Impact Too High`
+                    : approval !== ApprovalState.APPROVED
+                    ? t`Checking allowance...`
                     : priceImpactSeverity > 2
                     ? t`Swap Anyway`
                     : t`Swap`}
