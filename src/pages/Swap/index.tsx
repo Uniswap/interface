@@ -459,10 +459,10 @@ export default function Swap({ history }: RouteComponentProps) {
                 <Text fontSize={20} fontWeight={500}>
                   {swapInputError
                     ? swapInputError
-                    : approval !== ApprovalState.APPROVED
-                    ? t`Checking allowance...`
                     : priceImpactSeverity > 3 && !isExpertMode
                     ? t`Price Impact Too High`
+                    : approval !== ApprovalState.APPROVED
+                    ? t`Checking allowance...`
                     : priceImpactSeverity > 2
                     ? t`Swap Anyway`
                     : t`Swap`}
