@@ -357,6 +357,10 @@ msgstr "Create a new pool"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "Create a new pool or select another pair of tokens to view the available pools."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price:"
+msgstr "Current Price:"
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
@@ -674,9 +678,9 @@ msgstr "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. T
 msgid "Increase LP Profit"
 msgstr "Increase LP Profit"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Initial ratio"
-msgstr "Initial ratio"
+#: 
+#~ msgid "Initial ratio"
+#~ msgstr "Initial ratio"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -1058,6 +1062,10 @@ msgstr "Price range {0}/{1}"
 #: src/pages/Swap/index.tsx
 msgid "Price:"
 msgstr "Price:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Prices"
+msgstr "Prices"
 
 #: src/pages/Static/About.tsx
 msgid "Privacy"
@@ -1623,6 +1631,7 @@ msgstr "{0} removed"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr "{0}% LP Fee + {1}% Rewards"

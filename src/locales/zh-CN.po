@@ -357,6 +357,10 @@ msgstr "创建新的池"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "创建新的池或选择另一个代币对已查看可用池。"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price:"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
@@ -674,9 +678,9 @@ msgstr "在进阶模式下，“确认交易”提示被停用。 这可能导�
 msgid "Increase LP Profit"
 msgstr "增加 LP收益"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Initial ratio"
-msgstr ""
+#: 
+#~ msgid "Initial ratio"
+#~ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -1058,6 +1062,10 @@ msgstr "价格范围 {0}/{1}"
 #: src/pages/Swap/index.tsx
 msgid "Price:"
 msgstr "价格:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Prices"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Privacy"
@@ -1623,6 +1631,7 @@ msgstr "{0} 移除"
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
+#: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr ""

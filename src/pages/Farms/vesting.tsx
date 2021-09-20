@@ -184,7 +184,7 @@ const Vesting = () => {
 
   const [open, setOpen] = useState<number>(-1)
   const totalBlock = (
-    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 0 ? 0 : -1)}>
+    <div style={{ position: 'relative' }}>
       <Flex>
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={24}>
           {formattedNum(totalUSD.toString(), true)}
@@ -194,14 +194,17 @@ const Vesting = () => {
           fontWeight={'normal'}
           fontSize={14}
           style={{ margin: '0.25rem 0.25rem 0.25rem 1rem' }}
+          onClick={() => setOpen(open != 0 ? 0 : -1)}
         >
           Details
         </TYPE.body>
-        {open == 0 ? (
-          <ChevronUp size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
-        ) : (
-          <ChevronDown size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
-        )}
+        <span onClick={() => setOpen(open != 0 ? 0 : -1)}>
+          {open == 0 ? (
+            <ChevronUp size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+          ) : (
+            <ChevronDown size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
+          )}
+        </span>
       </Flex>
 
       {open == 0 && (
@@ -219,7 +222,7 @@ const Vesting = () => {
   )
 
   const lockedBlock = (
-    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 1 ? 1 : -1)}>
+    <div style={{ position: 'relative' }}>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
         <Trans>Locked Rewards</Trans>
       </TYPE.body>
@@ -228,11 +231,13 @@ const Vesting = () => {
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
           {formattedNum(lockedUSD.toString(), true)}
         </TYPE.body>
-        {open == 1 ? (
-          <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-        ) : (
-          <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-        )}
+        <span onClick={() => setOpen(open != 1 ? 1 : -1)}>
+          {open == 1 ? (
+            <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+          ) : (
+            <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+          )}
+        </span>
       </Flex>
       {open == 1 && (
         <MenuFlyout>
@@ -247,7 +252,7 @@ const Vesting = () => {
   )
 
   const claimedBlock = (
-    <div style={{ position: 'relative' }} onClick={() => setOpen(open != 2 ? 2 : -1)}>
+    <div style={{ position: 'relative' }}>
       <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
         <Trans>Claimed Rewards</Trans>
       </TYPE.body>
@@ -256,11 +261,13 @@ const Vesting = () => {
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
           {formattedNum(claimedUSD.toString(), true)}
         </TYPE.body>
-        {open == 2 ? (
-          <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-        ) : (
-          <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-        )}
+        <span onClick={() => setOpen(open != 2 ? 2 : -1)}>
+          {open == 2 ? (
+            <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+          ) : (
+            <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+          )}
+        </span>
       </Flex>
 
       {open == 2 && (
@@ -276,7 +283,7 @@ const Vesting = () => {
   )
 
   const unLockedBlock = (
-    <div onClick={() => setOpen(open != 3 ? 3 : -1)}>
+    <div>
       <Tag style={{ width: `${above1400 ? '300px' : '100%'}`, padding: '20px' }}>
         <div style={{ position: 'relative' }}>
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
@@ -287,11 +294,13 @@ const Vesting = () => {
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
-            {open == 3 ? (
-              <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-            ) : (
-              <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
-            )}
+            <span onClick={() => setOpen(open != 3 ? 3 : -1)}>
+              {open == 3 ? (
+                <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              ) : (
+                <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
+              )}
+            </span>
           </Flex>
 
           {open == 3 && (

@@ -8,7 +8,6 @@ import dayjs from 'dayjs'
 
 import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import {
   ROUTER_ADDRESSES,
   FACTORY_ADDRESSES,

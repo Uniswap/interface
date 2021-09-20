@@ -1,7 +1,6 @@
 import { ChainId, JSBI, Percent, Token, WETH } from 'libs/sdk/src'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { injected, ledger, walletconnect, walletlink, trezor } from '../connectors'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { injected, ledger, walletconnect, walletlink } from '../connectors'
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
@@ -679,7 +678,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : ['0x31De05f28568e3d3D612BFA6A78B356676367470'],
+      : ['0xc93239B33239A901143e15473e4A852a0D92c53b', '0x31De05f28568e3d3D612BFA6A78B356676367470'],
   [ChainId.ROPSTEN]: ['0x0FEEa33C4dE6f37A0Fc550028FddA2401B2Ee5Ce', '0xfEf235b06AFe69589e6C7622F4C071BcCed5bb13'],
   [ChainId.RINKEBY]: [''],
   [ChainId.GÖRLI]: [''],
@@ -697,7 +696,11 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.BSCMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD', '0xf530a090EF6481cfB33F98c63532E7745abab58A']
-      : ['0xcCAc8DFb75120140A5469282a13E9A60B1751276', '0x31De05f28568e3d3D612BFA6A78B356676367470'],
+      : [
+          '0xc49b3b43565b76E5ba7A98613263E7bFdEf1140c',
+          '0xcCAc8DFb75120140A5469282a13E9A60B1751276',
+          '0x31De05f28568e3d3D612BFA6A78B356676367470'
+        ],
   [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
   [ChainId.AVAXMAINNET]: ['0x98910F7f13496fcDE2ade93648F05b4854Fc99D9']
 }
@@ -739,7 +742,8 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0xcE9874C42DcE7fffbE5E48B026Ff1182733266Cb',
           '0xD343d5dba2FBa55EEF58189619c05e33CAB95cA1',
           '0x1cf68Bbc2b6D3C6CfE1BD3590CF0E10b06a05F17',
-          '0x61639D6eC06C13a96B5eB9560b359D7c648C7759'
+          '0x61639D6eC06C13a96B5eB9560b359D7c648C7759',
+          '0xf4c408835De8C68232f4746b5Ed598608B17e98D'
         ],
   [ChainId.ROPSTEN]: [
     '0x4F54C52D446605f324f30dDd79547D607255612E',
@@ -785,7 +789,8 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
           '0xec303cE1eDbEbF7e71fc7B350341bB6A6A7a6381',
           '0xc3daC2049616326E7D596cE52062789d96373b55',
           '0xd26fa4D47Ab61C03259F0CBC9054890DF5C3B7aD',
-          '0x2D49F16C9ad4f1145bb27c9af71474F468a697c8'
+          '0x2D49F16C9ad4f1145bb27c9af71474F468a697c8',
+          '0xf81e106C5B44ba9A993Fc1f456A4c8e54C47CF34'
         ],
   [ChainId.AVAXTESTNET]: ['0x2b4b833864f75fc23f96b5a0cbde8a4046c710b6', '0x0cfc06499dab780aab7775dc260117ec5ca106b4'],
   [ChainId.AVAXMAINNET]: ['0xe1dAd9E06380bC8962e259dDd6a5257A4f56d525', '0x0f0FC5a5029E3d155708356b422D22Cc29f8b3D4']

@@ -357,6 +357,10 @@ msgstr "Tạo Pool mới"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "Tạo một Pool mới hoặc chọn một cặp token khác để xem các Pool có sẵn."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price:"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
@@ -674,9 +678,9 @@ msgstr "Trong Chế độ Nâng cao, lời nhắc 'xác nhận giao dịch' bị
 msgid "Increase LP Profit"
 msgstr "Tăng Lợi nhuận LP"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Initial ratio"
-msgstr ""
+#: 
+#~ msgid "Initial ratio"
+#~ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -1058,6 +1062,10 @@ msgstr "Phạm vi giá {0} / {1}"
 #: src/pages/Swap/index.tsx
 msgid "Price:"
 msgstr "Giá:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Prices"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Privacy"
@@ -1623,6 +1631,7 @@ msgstr "{0} đã bị loại bỏ"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
+#: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr ""

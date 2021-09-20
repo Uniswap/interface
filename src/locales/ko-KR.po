@@ -357,6 +357,10 @@ msgstr "새 풀 만들기"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "새 풀을 생성하거나 다른 토큰 쌍을 선택하시면 현재 예치가 가능한 풀을 확인 할 수 있습니다."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price:"
+msgstr ""
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 msgid "Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio."
@@ -674,9 +678,9 @@ msgstr "고급 모드에서는 '트랜잭션 확인' 하기 버튼이 비활성�
 msgid "Increase LP Profit"
 msgstr "LP 수익 증대"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Initial ratio"
-msgstr ""
+#: 
+#~ msgid "Initial ratio"
+#~ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -1058,6 +1062,10 @@ msgstr "가격대 {0}/{1}"
 #: src/pages/Swap/index.tsx
 msgid "Price:"
 msgstr "가격:"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Prices"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Privacy"
@@ -1623,6 +1631,7 @@ msgstr "{0} 삭제됨"
 msgid "{0} tokens"
 msgstr "{0} 토큰"
 
+#: src/components/FarmsList/ListItem.tsx
 #: src/components/FarmsList/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr ""
