@@ -43,9 +43,9 @@ const store = configureStore({
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
 })
 
-store.dispatch(updateVersion())
-
 setupListeners(store.dispatch)
+
+store.dispatch(updateVersion())
 
 export default store
 
