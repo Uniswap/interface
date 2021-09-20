@@ -10,8 +10,12 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.6.1",
+    "ethers": "^5.4.7",
     "react": "17.0.2",
-    "react-native": "0.65.1"
+    "react-native": "0.65.1",
+    "redux-saga": "^1.1.3",
+    "typed-redux-saga": "^1.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
