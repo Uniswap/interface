@@ -4,6 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
+    "@davatar/react": "1.1.0",
     "@ethersproject/experimental": "^5.4.0",
     "@gnosis.pm/safe-apps-web3-react": "^0.6.0",
     "@graphql-codegen/cli": "1.21.5",
@@ -14,7 +15,6 @@
     "@lingui/loader": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
-    "@metamask/jazzicon": "^2.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -22,13 +22,15 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
+    "@testing-library/react-hooks": "^7.0.2",
     "@typechain/ethers-v5": "^7.0.0",
+    "@types/array.prototype.flat": "^1.2.1",
+    "@types/array.prototype.flatmap": "^1.2.2",
     "@types/d3": "^6.7.1",
     "@types/jest": "^25.2.1",
     "@types/lingui__core": "^2.7.1",
     "@types/lingui__macro": "^2.7.4",
     "@types/lingui__react": "^2.8.3",
-    "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",
     "@types/ms.macro": "^2.0.0",
     "@types/multicodec": "^1.0.0",
@@ -66,6 +68,8 @@
     "@web3-react/walletconnect-connector": "^7.0.2-alpha.0",
     "@web3-react/walletlink-connector": "^6.2.3",
     "ajv": "^6.12.3",
+    "array.prototype.flat": "^1.2.4",
+    "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
     "cypress": "^7.7.0",
@@ -115,12 +119,13 @@
     "ua-parser-js": "^0.7.28",
     "use-count-up": "^2.2.5",
     "wcag-contrast": "^3.0.0",
+    "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "1.6.4"
+    "@walletconnect/ethereum-provider": "1.6.5"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",

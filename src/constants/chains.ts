@@ -1,5 +1,6 @@
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimism_logo.svg'
+import ms from 'ms.macro'
 
 export enum SupportedChainId {
   MAINNET = 1,
@@ -47,6 +48,7 @@ export const L2_CHAIN_IDS = [
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
 
 interface L1ChainInfo {
+  readonly blockWaitMsBeforeWarning?: number
   readonly docs: string
   readonly explorer: string
   readonly infoLink: string
@@ -55,6 +57,7 @@ interface L1ChainInfo {
 export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
   readonly logoUrl: string
+  readonly statusPage?: string
 }
 
 type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
@@ -64,6 +67,7 @@ type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
 
 export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://arbiscan.io/',
@@ -72,6 +76,7 @@ export const CHAIN_INFO: ChainInfo = {
     logoUrl: arbitrumLogoUrl,
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
     docs: 'https://offchainlabs.com/',
     explorer: 'https://rinkeby-explorer.arbitrum.io/',
@@ -110,19 +115,23 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Görli',
   },
   [SupportedChainId.OPTIMISM]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimism',
     logoUrl: optimismLogoUrl,
+    statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
+    blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://gateway.optimism.io/',
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism',
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,
+    statusPage: 'https://optimism.io/status',
   },
 }
