@@ -11,8 +11,8 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
+import { ReactComponent as LogoDark } from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -264,7 +264,11 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+          {darkMode ? (
+            <LogoDark width="24px" height="100%" title="logo" />
+          ) : (
+            <Logo width="24px" height="100%" title="logo" />
+          )}
         </UniIcon>
       </Title>
       <HeaderLinks>
