@@ -13,11 +13,14 @@ export interface SerializableTransactionReceipt {
 }
 
 export enum TransactionType {
-  APPROVAL,
-  SWAP,
-  CLAIM,
-  VOTE,
-  DELEGATE,
+  APPROVAL = 0,
+  SWAP = 1,
+  DEPOSIT_LIQUIDITY_STAKING = 2,
+  WITHDRAW_LIQUIDITY_STAKING = 3,
+  CLAIM = 4,
+  VOTE = 5,
+  DELEGATE = 6,
+  WRAP = 7,
 }
 
 export interface BaseTransactionInfo {
@@ -69,6 +72,24 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   maximumInputCurrencyAmountRaw: string
 }
 
+export interface DepositLiquidityStakingTransactionInfo {
+  type: TransactionType.DEPOSIT_LIQUIDITY_STAKING
+  token0Address: string
+  token1Address: string
+}
+
+export interface WithdrawLiquidityStakingTransactionInfo {
+  type: TransactionType.WITHDRAW_LIQUIDITY_STAKING
+  token0Address: string
+  token1Address: string
+}
+
+export interface WrapTransactionInfo {
+  type: TransactionType.WRAP
+  unwrapped: boolean
+  currencyAmountRaw: string
+}
+
 export interface ClaimTransactionInfo {
   type: TransactionType.CLAIM
   recipient: string
@@ -81,6 +102,9 @@ export type TransactionInfo =
   | ClaimTransactionInfo
   | VoteTransactionInfo
   | DelegateTransactionInfo
+  | DepositLiquidityStakingTransactionInfo
+  | WithdrawLiquidityStakingTransactionInfo
+  | WrapTransactionInfo
 
 export const addTransaction =
   createAction<{

@@ -19,6 +19,7 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import AnimatedConfirmation from './AnimatedConfirmation'
+import { TransactionSummary } from 'components/AccountDetails/Transaction'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -273,7 +274,7 @@ function L2Content({
             )}
           </Text>
           <Text fontWeight={400} fontSize={16} textAlign="center">
-            {transaction?.summary ?? pendingText ?? ''}
+            {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>

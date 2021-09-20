@@ -3,6 +3,7 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ExtendedEther } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -10,12 +11,15 @@ import {
   ApproveTransactionInfo,
   ClaimTransactionInfo,
   DelegateTransactionInfo,
+  DepositLiquidityStakingTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
   VotingDecision,
+  WithdrawLiquidityStakingTransactionInfo,
+  WrapTransactionInfo,
 } from '../../state/transactions/actions'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExternalLink } from '../../theme'
@@ -95,6 +99,31 @@ function DelegateInfo({ info: { delegatee } }: { info: DelegateTransactionInfo }
   return <Trans>Delegate voting power to {delegatee}</Trans>
 }
 
+function WrapInfo({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
+  const { chainId } = useActiveWeb3React()
+  const amount = useMemo(() => {
+    if (!chainId) return undefined
+    const ether = ExtendedEther.onChain(chainId)
+    return CurrencyAmount.fromRawAmount(ether, currencyAmountRaw)
+  }, [chainId, currencyAmountRaw])
+
+  if (unwrapped) {
+    return <Trans>Unwrap {amount?.toSignificant(6)} WETH to ETH</Trans>
+  } else {
+    return <Trans>Wrap {amount?.toSignificant(6)} ETH to WETH</Trans>
+  }
+}
+
+function DepositLiquidityStakingInfo({}: { info: DepositLiquidityStakingTransactionInfo }) {
+  // not worth rendering the tokens since you can should no longer deposit liquidity in the staking contracts
+  // todo: deprecate and delete the code paths that allow this, show user more information
+  return <Trans>Deposit liquidity</Trans>
+}
+
+function WithdrawLiquidityStakingInfo({}: { info: WithdrawLiquidityStakingTransactionInfo }) {
+  return <Trans>Withdraw deposited liquidity</Trans>
+}
+
 function SwapInfo({ info }: { info: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo }) {
   const { inputCurrencyId, outputCurrencyId } = info
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -130,10 +159,15 @@ function SwapInfo({ info }: { info: ExactInputSwapTransactionInfo | ExactOutputS
   }
 }
 
-function TransactionSummary({ info }: { info: TransactionInfo }) {
+export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.CLAIM:
       return <ClaimInfo info={info} />
+
+    case TransactionType.DEPOSIT_LIQUIDITY_STAKING:
+      return <DepositLiquidityStakingInfo info={info} />
+    case TransactionType.WITHDRAW_LIQUIDITY_STAKING:
+      return <WithdrawLiquidityStakingInfo info={info} />
 
     case TransactionType.SWAP:
       return <SwapInfo info={info} />
@@ -146,6 +180,9 @@ function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.DELEGATE:
       return <DelegateInfo info={info} />
+
+    case TransactionType.WRAP:
+      return <WrapInfo info={info} />
   }
 }
 
