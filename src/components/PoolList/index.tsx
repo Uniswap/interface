@@ -110,16 +110,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
         return -1
       }
 
-      // Pool with AMP = 1 will be on top
-      // AMP from contract is 10000 (real value is 1)
-      if (JSBI.equal(poolA.amp, JSBI.BigInt(10000))) {
-        return -1
-      }
-
-      if (JSBI.equal(poolB.amp, JSBI.BigInt(10000))) {
-        return 1
-      }
-
       const poolAHealthFactor = getHealthFactor(poolA)
       const poolBHealthFactor = getHealthFactor(poolB)
 

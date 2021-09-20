@@ -268,7 +268,7 @@ const Pools = ({
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
               userLiquidityPositions={userLiquidityPositions?.liquidityPositions}
-              maxItems={3}
+              maxItems={2}
             />
           ) : (
             <SelectPairInstructionWrapper>
@@ -286,7 +286,7 @@ const Pools = ({
           <Trans>Popular Pairs</Trans> &nbsp;
           {loadingPoolFarm && <Loader />}
         </div>
-        <Flex alignItems="center" justifyContent="flexStart">
+        <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
           {farms.map((farm, index) => (
             <PoolFarm key={index} farm={farm} />
           ))}
