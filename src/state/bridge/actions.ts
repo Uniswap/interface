@@ -10,4 +10,3 @@ export const replaceBridgeState = createAction<{
 export const setFromBridgeNetwork = createAction<Partial<BridgeNetworkInput>>('bridge/setFromNetwork')
 export const setToBridgeNetwork = createAction<Partial<BridgeNetworkInput>>('bridge/setToNetwork')
 export const swapBridgeNetworks = createAction('bridge/swapNetworks')
-export const showListFromNetwork = createAction<{ showList: boolean }>('bridge/showListFromNetwork')

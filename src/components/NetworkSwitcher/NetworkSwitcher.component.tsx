@@ -28,13 +28,14 @@ export const NetworkSwitcher = ({
   children,
   placement,
   onOuterClick,
+  parentRef,
   showWalletConnector = true
 }: NetworkSwitcherProps) => {
   const popoverRef = useRef(null)
   const { account } = useActiveWeb3React()
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
 
-  useOnClickOutside(popoverRef, () => {
+  useOnClickOutside(parentRef || popoverRef, () => {
     if (show || ethereumOptionPopoverOpen) onOuterClick()
   })
 

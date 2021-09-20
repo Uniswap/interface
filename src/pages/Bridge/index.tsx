@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ChainId, CurrencyAmount } from '@swapr/sdk'
 import QuestionHelper from '../../components/QuestionHelper'
@@ -28,7 +28,6 @@ import {
   networkOptionsPreset,
   NetworkOptionProps
 } from '../../components/NetworkSwitcher'
-import { BridgeNetworkInput } from '../../state/bridge/reducer'
 
 const Title = styled.p`
   margin: 0;
@@ -60,60 +59,13 @@ enum Step {
   Success
 }
 
-// export const useBridgeInputs = () => {
-//   const [showFromNetworkList, setShowFromNetworkList] = useState(false)
-//   const [showToNetworkList, setShowToNetworkList] = useState(false)
-//   const [fromInputNetwork, setFromInputNetwork] = useState<ChainId>(1)
-//   const [toInputNetwork, setToInputNetwork] = useState<ChainId>(42161)
-//   // const { fromInputNetwork, toInputNetwork, showFromNetworkList, showToNetworkList } = useBridgeInfo()
-
-//   const handleSwap = useCallback(() => {
-//     setFromInputNetwork(toInputNetwork)
-//     setToInputNetwork(fromInputNetwork)
-//   }, [fromInputNetwork, toInputNetwork])
-
-//   const handleFromNetworkChange = useCallback(
-//     (chainId: ChainId) => {
-//       if (chainId === toInputNetwork) {
-//         handleSwap()
-//         return
-//       }
-//       setFromInputNetwork(chainId)
-//     },
-//     [handleSwap, toInputNetwork]
-//   )
-
-//   const handleToNetworkChange = useCallback(
-//     (chainId: ChainId) => {
-//       if (chainId === fromInputNetwork) {
-//         handleSwap()
-//         return
-//       }
-//       setToInputNetwork(chainId)
-//     },
-//     [fromInputNetwork, handleSwap]
-//   )
-
-//   return {
-//     handleSwap,
-//     showFromNetworkList,
-//     setShowFromNetworkList,
-//     showToNetworkList,
-//     setShowToNetworkList,
-//     toInputNetwork,
-//     handleToNetworkChange,
-//     fromInputNetwork,
-//     handleFromNetworkChange
-//   }
-// }
-
 const createNetworkOptions = ({
   value,
   setValue,
   activeChainId
 }: {
   value: ChainId
-  setValue: ({chainId, showList}:Partial<BridgeNetworkInput>) => void
+  setValue: (chainId: ChainId) => void
   activeChainId: ChainId | undefined
 }): Array<NetworkOptionProps & { chainId: ChainId }> => {
   return networkOptionsPreset.map(option => {
@@ -125,7 +77,7 @@ const createNetworkOptions = ({
       logoSrc: logoSrc,
       active: value === activeChainId,
       disabled: value === optionChainId,
-      onClick: () => setValue({chainId: optionChainId})
+      onClick: () => setValue(optionChainId)
     }
   })
 }
@@ -134,14 +86,21 @@ export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
   const { selectEthereum, selectNetwork } = useNetworkSwitch()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
-  const { onCurrencySelection, onUserInput, onToNetworkChange, onSwapBridgeNetworks,  onFromChange, onFromNetworkShowList} = useBridgeActionHandlers()
+  const {
+    onCurrencySelection,
+    onUserInput,
+    onToNetworkChange,
+    onFromNetworkChange,
+    onSwapBridgeNetworks
+  } = useBridgeActionHandlers()
 
   const [step, setStep] = useState(Step.Initial)
   const [bridge, setBridge] = useState('Swapr Fast Exit')
 
+  const isNetworkConnected = fromNetwork.chainId === chainId
   const isButtonDisabled = !typedValue || step !== Step.Initial
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
+  const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
@@ -157,24 +116,30 @@ export default function Bridge() {
   }
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(maxAmountInput.toExact())
+    maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
   }, [maxAmountInput, onUserInput])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
-    setValue: onFromChange,
+    setValue: onFromNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
 
   const toOptions = createNetworkOptions({
     value: toNetwork.chainId,
-    setValue: onFromChange,
+    setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
 
   const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) => {
     return options.find(option => option.chainId === chainId)
   }
+
+  const [showFromList, setShowFromList] = useState(false)
+  const [showToList, setShowToList] = useState(false)
+
+  const fromPanelRef = useRef(null)
+  const toPanelRef = useRef(null)
 
   return (
     <>
@@ -184,33 +149,35 @@ export default function Bridge() {
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
-          <div>
+          <div ref={fromPanelRef}>
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              onClick={() => onFromChange({showList:true})}
+              onClick={() => setShowFromList(val => !val)}
             />
             <NetworkSwitcherPopover
-              show={fromNetwork.showList}
-              onOuterClick={() => onFromNetworkShowList}
+              show={showFromList}
+              onOuterClick={() => setShowFromList(false)}
               options={fromOptions}
               showWalletConnector={false}
+              parentRef={fromPanelRef}
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
-          <div>
+          <div ref={toPanelRef}>
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              onClick={() => onToNetworkChange}
+              onClick={() => setShowToList(val => !val)}
             />
             <NetworkSwitcherPopover
-              show={toNetwork.showList}
-              onOuterClick={() => onToNetworkChange}
+              show={showToList}
+              onOuterClick={() => setShowToList(false)}
               options={toOptions}
               showWalletConnector={false}
+              parentRef={toPanelRef}
             />
           </div>
         </Row>
@@ -224,14 +191,14 @@ export default function Bridge() {
           onCurrencySelect={onCurrencySelection}
           disableCurrencySelect={step !== Step.Initial}
           disabled={step !== Step.Initial}
-          hideBalance={fromNetwork.chainId !== chainId}
+          hideBalance={!isNetworkConnected}
           id="brdige-currency-input"
         />
         {!account ? (
           <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
             Connect Wallet
           </ButtonPrimary>
-        ) : fromNetwork.chainId !== chainId ? (
+        ) : !isNetworkConnected ? (
           <ButtonPrimary
             mt="12px"
             onClick={fromNetwork.chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(fromNetwork.chainId)}
@@ -244,7 +211,7 @@ export default function Bridge() {
           <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!typedValue ? 'Enter ETH amount' : `Brigde to ${getNetworkOptionById(toNetwork.chainId, toOptions)?.header}`}
           </BridgeButton>
-        ) }
+        )}
       </AppBody>
       {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />

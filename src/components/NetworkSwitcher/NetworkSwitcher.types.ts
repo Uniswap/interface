@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { Placement } from '@popperjs/core'
+import { RefObject } from 'hoist-non-react-statics/node_modules/@types/react'
 
 export interface NetworkSwitcherProps {
   children?: ReactNode
@@ -9,6 +10,7 @@ export interface NetworkSwitcherProps {
   options: NetworkOptionProps[]
   placement?: Placement
   showWalletConnector?: boolean
+  parentRef?: RefObject<HTMLElement>
 }
 
 export interface EthereumOptionPopoverProps {

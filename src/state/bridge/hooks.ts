@@ -5,10 +5,9 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks, showListFromNetwork } from './actions'
+import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks } from './actions'
 import { currencyId } from '../../utils/currencyId'
 import { tryParseAmount } from '../swap/hooks'
-import { BridgeNetworkInput } from './reducer'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -17,11 +16,9 @@ export function useBridgeState(): AppState['bridge'] {
 export function useBridgeActionHandlers(): {
   onCurrencySelection: (currency: Currency) => void
   onUserInput: (typedValue: string) => void
-  onFromNetworkChange: (chainId: ChainId, showList: boolean) => void
+  onFromNetworkChange: (chainId: ChainId) => void
   onToNetworkChange: (chainId: ChainId) => void
   onSwapBridgeNetworks: () => void,
-  onFromChange: (payload: Partial<BridgeNetworkInput>) => any
-  onFromNetworkShowList: () => void  
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -33,7 +30,7 @@ export function useBridgeActionHandlers(): {
   const onFromNetworkChange = useCallback(
     (chainId: ChainId) => {
       if (chainId === toNetwork.chainId) {
-        swapBridgeNetworks()
+        dispatch(swapBridgeNetworks())
         return
       }
       dispatch(
@@ -42,13 +39,13 @@ export function useBridgeActionHandlers(): {
         })
       )
     },
-    [dispatch]
+    [dispatch, toNetwork.chainId]
   )
 
   const onToNetworkChange = useCallback(
     (chainId: ChainId) => {
       if (chainId === fromNetwork.chainId) {
-        swapBridgeNetworks()
+        dispatch(swapBridgeNetworks())
         return
       }
       dispatch(
@@ -57,27 +54,13 @@ export function useBridgeActionHandlers(): {
         })
       )
     },
-    [dispatch]
-  )
-
-  const onFromChange = (payload: Partial<BridgeNetworkInput>) => {
-    dispatch(setFromBridgeNetwork(payload))
-  }
-
-  const onFromNetworkShowList = useCallback(() => {
-    dispatch(
-      showListFromNetwork({
-        showList: false
-      })
-    )
-  },
-  [dispatch]
+    [dispatch, fromNetwork.chainId]
   )
 
   const onSwapBridgeNetworks = useCallback(() => {
     dispatch(swapBridgeNetworks())
-  }, 
-  [dispatch]
+  },
+    [dispatch]
   )
 
   const onCurrencySelection = useCallback(
@@ -103,9 +86,7 @@ export function useBridgeActionHandlers(): {
     onUserInput,
     onFromNetworkChange,
     onToNetworkChange,
-    onSwapBridgeNetworks,
-    onFromChange,
-    onFromNetworkShowList
+    onSwapBridgeNetworks
   }
 }
 

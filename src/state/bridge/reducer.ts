@@ -7,12 +7,10 @@ import {
   setFromBridgeNetwork,
   setToBridgeNetwork,
   swapBridgeNetworks,
-  showListFromNetwork
 } from './actions'
 
 export interface BridgeNetworkInput {
   readonly chainId: ChainId
-  readonly showList: boolean
 }
 export interface BridgeState {
   readonly typedValue: string
@@ -25,12 +23,10 @@ const initialState: BridgeState = {
   typedValue: '',
   currencyId: '',
   fromNetwork: {
-    chainId: 1,
-    showList: false
+    chainId: 1
   },
   toNetwork: {
-    chainId: 42161,
-    showList: false
+    chainId: 42161
   }
 }
 
@@ -58,29 +54,27 @@ export default createReducer<BridgeState>(initialState, builder =>
         typedValue
       }
     })
-    .addCase(setFromBridgeNetwork, (state, { payload: { chainId, showList } }) => {
+    .addCase(setFromBridgeNetwork, (state, { payload: { chainId } }) => {
       return {
         ...state,
         fromNetwork: {
           ...state.fromNetwork,
           chainId: chainId ? chainId : state.fromNetwork.chainId,
-          showList: showList ? showList : state.fromNetwork.showList
         }
       }
     })
-    .addCase(setToBridgeNetwork, (state, { payload: { chainId, showList } }) => {
+    .addCase(setToBridgeNetwork, (state, { payload: { chainId } }) => {
       return {
         ...state,
         toNetwork: {
           ...state.fromNetwork,
           chainId: chainId ? chainId : state.toNetwork.chainId,
-          showList: showList ? showList : state.toNetwork.showList
         }
       }
     })
     .addCase(swapBridgeNetworks, (state) => {
       const { fromNetwork: { chainId: fromChainId }, toNetwork: { chainId: toChainId } } = state
-
+      console.log({ fromChainId, toChainId })
       return {
         ...state,
         fromNetwork: {
@@ -90,15 +84,6 @@ export default createReducer<BridgeState>(initialState, builder =>
         toNetwork: {
           ...state.toNetwork,
           chainId: fromChainId
-        }
-      }
-    })
-    .addCase(showListFromNetwork, (state, { payload: { showList } }) => {
-      return {
-        ...state,
-        fromNetwork: {
-          ...state.fromNetwork,
-          showList: showList
         }
       }
     })
