@@ -4,6 +4,7 @@ import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
+
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants/tokens'
 import { useMerkleDistributorContract } from '../../hooks/useContract'

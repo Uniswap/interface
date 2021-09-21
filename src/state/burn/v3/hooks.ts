@@ -1,17 +1,17 @@
-import { CurrencyAmount, Percent, Currency } from '@uniswap/sdk-core'
+import { t } from '@lingui/macro'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import { usePool } from 'hooks/usePools'
-import { useActiveWeb3React } from 'hooks/web3'
 import { useToken } from 'hooks/Tokens'
+import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { PositionDetails } from 'types/position'
+import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { AppState } from '../../index'
 import { selectPercent } from './actions'
-import { unwrappedToken } from 'utils/unwrappedToken'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { t } from '@lingui/macro'
 
 export function useBurnV3State(): AppState['burnV3'] {
   return useAppSelector((state) => state.burnV3)

@@ -7,6 +7,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -21,10 +22,10 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateOptimismAlphaAcknowledged,
+  updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserClientSideRouter,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'

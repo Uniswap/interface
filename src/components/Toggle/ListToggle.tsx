@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
+
 import { TYPE } from '../../theme'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`

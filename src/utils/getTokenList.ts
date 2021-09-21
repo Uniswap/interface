@@ -1,5 +1,6 @@
 import { TokenList } from '@uniswap/token-lists'
 import { ValidateFunction } from 'ajv'
+
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'

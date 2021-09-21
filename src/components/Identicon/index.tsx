@@ -1,7 +1,7 @@
+import Davatar from '@davatar/react'
 import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import Davatar from '@davatar/react'
 
 const StyledIdenticonContainer = styled.div`
   height: 1rem;

@@ -1,9 +1,7 @@
-import { useEffect } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { ReactNode } from 'react'
-import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import { DEFAULT_LOCALE, DEFAULT_MESSAGES, SupportedLocale } from 'constants/locales'
+import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import {
   af,
   ar,
@@ -25,6 +23,7 @@ import {
   nl,
   no,
   pl,
+  PluralCategory,
   pt,
   ro,
   ru,
@@ -35,8 +34,9 @@ import {
   uk,
   vi,
   zh,
-  PluralCategory,
 } from 'make-plural/plurals'
+import { useEffect } from 'react'
+import { ReactNode } from 'react'
 import { useUserLocaleManager } from 'state/user/hooks'
 
 type LocalePlural = {

@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+
 import { WETH9_EXTENDED } from '../constants/tokens'
 import { tryParseAmount } from '../state/swap/hooks'
 import { TransactionType } from '../state/transactions/actions'

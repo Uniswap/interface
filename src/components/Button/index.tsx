@@ -1,10 +1,10 @@
-import styled from 'styled-components/macro'
+import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
+import { Check, ChevronDown } from 'react-feather'
+import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
+import styled from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
-import { ChevronDown, Check } from 'react-feather'
-import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import useTheme from 'hooks/useTheme'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 

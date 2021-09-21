@@ -31,6 +31,7 @@ import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 's
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { TYPE } from 'theme'
+
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/actions'

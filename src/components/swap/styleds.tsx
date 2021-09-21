@@ -1,14 +1,14 @@
+import { loadingOpacityMixin } from 'components/Loader/styled'
+import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
-
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
 import { Text } from 'rebass'
-import { AutoColumn } from '../Column'
+import styled, { css } from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { TooltipContainer } from 'components/Tooltip'
+
+import { AutoColumn } from '../Column'
 import TradePrice from './TradePrice'
-import { loadingOpacityMixin } from 'components/Loader/styled'
 
 export const Wrapper = styled.div`
   position: relative;

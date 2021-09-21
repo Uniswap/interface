@@ -1,6 +1,7 @@
-import { ReactNode, useMemo } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { Trans } from '@lingui/macro'
+import { ReactNode, useMemo } from 'react'
+
+import { useActiveWeb3React } from '../../hooks/web3'
 
 // SDN OFAC addresses
 const BLOCKED_ADDRESSES: string[] = [

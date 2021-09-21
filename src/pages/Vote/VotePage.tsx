@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -6,9 +7,9 @@ import { DateTime } from 'luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
+
 import { ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -40,7 +41,6 @@ import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
-import { t, Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;

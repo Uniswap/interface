@@ -1,9 +1,9 @@
 import styled from 'styled-components/macro'
-import { AutoColumn } from '../Column'
 
 import uImage from '../../assets/images/big_unicorn.png'
-import xlUnicorn from '../../assets/images/xl_uni.png'
 import noise from '../../assets/images/noise.png'
+import xlUnicorn from '../../assets/images/xl_uni.png'
+import { AutoColumn } from '../Column'
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);

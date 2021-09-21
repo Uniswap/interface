@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react'
 import { area, curveStepAfter, ScaleLinear } from 'd3'
-import styled from 'styled-components/macro'
-import { ChartEntry } from './types'
 import inRange from 'lodash/inRange'
+import React, { useMemo } from 'react'
+import styled from 'styled-components/macro'
+
+import { ChartEntry } from './types'
 
 const Path = styled.path<{ fill: string | undefined }>`
   opacity: 0.5;

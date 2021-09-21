@@ -1,22 +1,23 @@
-import { Trans, t } from '@lingui/macro'
-import {
-  useV3MintState,
-  useV3MintActionHandlers,
-  useRangeHopCallbacks,
-  useV3DerivedMintInfo,
-} from 'state/mint/v3/hooks'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { BigNumber } from '@ethersproject/bignumber'
-import DowntimeWarning from 'components/DowntimeWarning'
 import { TransactionResponse } from '@ethersproject/providers'
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import DowntimeWarning from 'components/DowntimeWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
+import {
+  useRangeHopCallbacks,
+  useV3DerivedMintInfo,
+  useV3MintActionHandlers,
+  useV3MintState,
+} from 'state/mint/v3/hooks'
 import { ThemeContext } from 'styled-components/macro'
+
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'

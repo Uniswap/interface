@@ -1,6 +1,7 @@
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
+
 import { SupportedChainId } from '../constants/chains'
 
 const initialStyles = {

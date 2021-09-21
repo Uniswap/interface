@@ -1,26 +1,25 @@
+import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
-import { ArrowDown, AlertTriangle } from 'react-feather'
+import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
+
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
+import { ButtonPrimary } from '../Button'
+import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
-import { TruncatedText, SwapShowAcceptChanges } from './styleds'
-import { Trans } from '@lingui/macro'
-
-import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import { LightCard } from '../Card'
-
 import TradePrice from '../swap/TradePrice'
+import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 const ArrowWrapper = styled.div`
   padding: 4px;

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { ReactComponent as StaticRouterIcon } from '../../assets/svg/static_route.svg'
 

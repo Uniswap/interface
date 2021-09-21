@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feat
 import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components/macro'
+
 import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`

@@ -3,6 +3,7 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'constants/tokens'
 import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
+
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import { useBestV3Trade } from './useBestV3Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'

@@ -2,6 +2,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+
 import { useStakingContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { StakingInfo } from '../../state/stake/hooks'

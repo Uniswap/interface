@@ -4,6 +4,7 @@ import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+
 import Texture from '../../assets/images/sandtexture.webp'
 import { ExternalLink } from '../../theme'
 

@@ -1,6 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { BigNumber, utils } from 'ethers'
+
 import { addNetwork } from './addNetwork'
 
 interface SwitchNetworkArguments {

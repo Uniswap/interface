@@ -1,21 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import JSBI from 'jsbi'
-import styled from 'styled-components/macro'
-import { utils } from 'ethers'
-import { ExternalLink, TYPE } from 'theme'
+import { getAddress } from '@ethersproject/address'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNI } from '../../constants/tokens'
-import AppBody from '../AppBody'
-import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { ButtonError } from 'components/Button'
-import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
-import { Wrapper } from 'pages/Pool/styleds'
-import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
-import { ProposalEditor } from './ProposalEditor'
-import { ProposalActionDetail } from './ProposalActionDetail'
-import { ProposalSubmissionModal } from './ProposalSubmissionModal'
+import { AutoColumn } from 'components/Column'
+import { utils } from 'ethers'
 import { useActiveWeb3React } from 'hooks/web3'
+import JSBI from 'jsbi'
+import { Wrapper } from 'pages/Pool/styleds'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   CreateProposalData,
   ProposalState,
@@ -25,9 +18,17 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import { Trans } from '@lingui/macro'
 import { tryParseAmount } from 'state/swap/hooks'
-import { getAddress } from '@ethersproject/address'
+import styled from 'styled-components/macro'
+import { ExternalLink, TYPE } from 'theme'
+
+import { CreateProposalTabs } from '../../components/NavigationTabs'
+import { UNI } from '../../constants/tokens'
+import AppBody from '../AppBody'
+import { ProposalActionDetail } from './ProposalActionDetail'
+import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
+import { ProposalEditor } from './ProposalEditor'
+import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
 const CreateProposalButton = ({
   proposalThreshold,

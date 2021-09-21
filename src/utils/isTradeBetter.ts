@@ -1,7 +1,8 @@
-import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from '../constants/misc'
-import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+
+import { ONE_HUNDRED_PERCENT, ZERO_PERCENT } from '../constants/misc'
 
 // returns whether tradeB is better than tradeA by at least a threshold percentage amount
 export function isTradeBetter(
