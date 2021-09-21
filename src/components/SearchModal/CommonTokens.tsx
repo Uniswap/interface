@@ -18,6 +18,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   margin-right: 8px;
   color: ${({ theme }) => theme.text1};
   align-items: center;
+  transition: background-color 0.3s ease;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
     background-color: ${({ disable }) => !disable && '#555a73'};
