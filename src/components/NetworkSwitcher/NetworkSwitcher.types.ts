@@ -1,8 +1,6 @@
-import { ReactNode } from 'react'
+import { ReactNode, RefObject } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { Placement } from '@popperjs/core'
-import { RefObject } from 'hoist-non-react-statics/node_modules/@types/react'
-
 export interface NetworkSwitcherProps {
   children?: ReactNode
   show: boolean

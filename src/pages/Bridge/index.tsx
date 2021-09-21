@@ -82,38 +82,55 @@ const createNetworkOptions = ({
   })
 }
 
+const getNetworkOptionById = (
+  chainId: ChainId,
+  options: ReturnType<typeof createNetworkOptions>
+  ) => options.find(option => option.chainId === chainId)
+
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
   const { selectEthereum, selectNetwork } = useNetworkSwitch()
-  const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const { 
+    bridgeCurrency, 
+    currencyBalance, 
+    parsedAmount, 
+    typedValue, 
+    fromNetwork, 
+    toNetwork 
+  } = useBridgeInfo()
   const {
-    onCurrencySelection,
     onUserInput,
     onToNetworkChange,
+    onCurrencySelection,
     onFromNetworkChange,
     onSwapBridgeNetworks
   } = useBridgeActionHandlers()
-
+  
   const [step, setStep] = useState(Step.Initial)
   const [bridge, setBridge] = useState('Swapr Fast Exit')
-
-  const isNetworkConnected = fromNetwork.chainId === chainId
-  const isButtonDisabled = !typedValue || step !== Step.Initial
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
-  const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
-
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
-
+  
+  const [showToList, setShowToList] = useState(false)
+  const [showFromList, setShowFromList] = useState(false)
+  
+  const toPanelRef = useRef(null)
+  const fromPanelRef = useRef(null)
+  
   useEffect(() => {
     const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000)
     return () => clearTimeout(timer)
   }, [step])
-
-  const resetBridge = () => {
+  
+  const isNetworkConnected = fromNetwork.chainId === chainId
+  const isButtonDisabled = !typedValue || step !== Step.Initial
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
+  const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
+  
+  const handleResetBridge = () => {
     onUserInput('')
     setStep(Step.Initial)
   }
+  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -130,16 +147,6 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-
-  const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) => {
-    return options.find(option => option.chainId === chainId)
-  }
-
-  const [showFromList, setShowFromList] = useState(false)
-  const [showToList, setShowToList] = useState(false)
-
-  const fromPanelRef = useRef(null)
-  const toPanelRef = useRef(null)
 
   return (
     <>
@@ -220,9 +227,9 @@ export default function Bridge() {
       {step === Step.Ready && <FooterReady amount={typedValue} show onCollectButtonClick={() => setStep(Step.Collect)} />}
       <BridgeSuccesModal
         isOpen={step === Step.Success}
-        onDismiss={resetBridge}
-        onTradeButtonClick={resetBridge}
-        onBackButtonClick={resetBridge}
+        onDismiss={handleResetBridge}
+        onTradeButtonClick={handleResetBridge}
+        onBackButtonClick={handleResetBridge}
         amount={typedValue}
       />
     </>

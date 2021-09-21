@@ -1,7 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
 import {
-  replaceBridgeState,
   selectCurrency,
   typeInput,
   setFromBridgeNetwork,
@@ -32,16 +31,6 @@ const initialState: BridgeState = {
 
 export default createReducer<BridgeState>(initialState, builder =>
   builder
-    .addCase(
-      replaceBridgeState,
-      (state, { payload: { typedValue, currencyId } }) => {
-        return {
-          ...state,
-          currencyId: currencyId,
-          typedValue: typedValue,
-        }
-      }
-    )
     .addCase(selectCurrency, (state, { payload: { currencyId } }) => {
       return {
         ...state,
