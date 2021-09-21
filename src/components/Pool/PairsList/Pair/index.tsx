@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import ApyBadge from '../../ApyBadge'
 import { formatCurrencyAmount } from '../../../../utils'
 import { AutoColumn } from '../../../Column'
+import { unwrappedToken } from '../../../../utils/wrappedCurrency'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -103,7 +104,7 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
           </Box>
           <Box>
             <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
-              {token0?.symbol}/{token1?.symbol}
+              {unwrappedToken(token0)?.symbol}/{unwrappedToken(token1)?.symbol}
             </EllipsizedText>
           </Box>
         </TextWrapper>
