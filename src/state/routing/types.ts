@@ -13,12 +13,12 @@ export interface GetQuoteResult {
   gasUseEstimateQuote: string
   gasUseEstimateQuoteDecimals: string
   gasUseEstimateUSD: string
-  methodParameters?: { calldata: string; value: string }
+  methodParameters: { calldata: string; value: string }
   quote: string
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  quoteId?: string
+  quoteId: string
   route: {
     address: string
     amountIn?: string
@@ -40,5 +40,5 @@ export interface GetQuoteResult {
       symbol?: string
     }
   }[][]
-  routeString?: string
+  routeString: string
 }

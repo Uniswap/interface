@@ -1,10 +1,11 @@
-import { Trans } from '@lingui/macro'
+import { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
+import { Trans } from '@lingui/macro'
+
 import { network } from '../../connectors'
-import { NetworkContextName } from '../../constants/misc'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
+import { NetworkContextName } from '../../constants/misc'
 import Loader from '../Loader'
 
 const MessageWrapper = styled.div`
