@@ -28,6 +28,18 @@ describe('transaction reducer', () => {
       store.dispatch(updateVersion())
       expect(store.getState()[1]['abc']).toBeUndefined()
     })
+    it('keeps old format transactions that do have info', () => {
+      store = createStore(reducer, {
+        [1]: {
+          abc: {
+            hash: 'abc',
+            info: {},
+          } as any,
+        },
+      })
+      store.dispatch(updateVersion())
+      expect(store.getState()[1]['abc']).toBeTruthy()
+    })
   })
 
   describe('addTransaction', () => {
