@@ -12,7 +12,6 @@
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
     "@lingui/cli": "^3.9.0",
-    "@lingui/loader": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
     "@popperjs/core": "^2.4.4",
@@ -131,15 +130,16 @@
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
     "compile-external-abi-types": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "compile-v3-contract-types": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
-    "build": "yarn compile-contract-types && yarn graphql:generate && yarn i18n:extract && react-scripts build",
+    "build": "yarn compile-contract-types && yarn graphql:generate && yarn i18n:extract && yarn i18n:compile && react-scripts build",
     "i18n:extract": "lingui extract --locale en-US",
+    "i18n:compile": "lingui compile",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "graphql:generate": "graphql-codegen --config codegen.yml",
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
     "test": "react-scripts test --env=./custom-test-env.js",
     "prei18n:extract": "touch src/locales/en-US.po",
-    "prestart": "yarn graphql:generate && yarn prei18n:extract"
+    "prestart": "yarn graphql:generate && yarn prei18n:extract && yarn i18n:compile"
   },
   "eslintConfig": {
     "extends": "react-app",
