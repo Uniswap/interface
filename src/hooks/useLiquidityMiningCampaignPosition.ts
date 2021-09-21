@@ -17,7 +17,9 @@ export function useLiquidityMiningCampaignPosition(
   account?: string
 ): UseLiquidityMiningCampaignUserPositionHookResult {
   const { chainId } = useActiveWeb3React()
+
   const distributionContract = useStakingRewardsDistributionContract(campaign?.address, true)
+
   const claimedRewardsResult = useSingleCallResult(distributionContract, 'getClaimedRewards', [account])
   const stakedTokensOfResult = useSingleCallResult(distributionContract, 'stakedTokensOf', [account])
   const claimableRewardsResult = useSingleCallResult(distributionContract, 'claimableRewards', [account])

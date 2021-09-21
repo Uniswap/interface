@@ -42,7 +42,7 @@ export const TokenPickerItem = styled(Flex)`
   height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
   background-color: transparent;
   :hover {
     background-color: ${({ theme, disabled }) => !disabled && transparentize(0.4, theme.bg3)};

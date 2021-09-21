@@ -49,24 +49,23 @@ const TokenListLogoWrapper = styled.img`
   height: 20px;
 `
 
-const StyledFixedSizeList=styled(FixedSizeList)`
-    &&::-webkit-scrollbar {
-       width: 10px;
-    }
+const StyledFixedSizeList = styled(FixedSizeList)`
+  &&::-webkit-scrollbar {
+    width: 10px;
+  }
 
-   &&::-webkit-scrollbar-thumb { 
-      background: ${({ theme }) => theme.bg3};
-      border-radius: 8px;
-      border:2px solid ${({ theme }) => theme.bg2};
-   }
-   //firefox support
-  scrollbar-color: ${({ theme }) => theme.bg3+' '+theme.bg2};
+  &&::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.bg3};
+    border-radius: 8px;
+    border: 2px solid ${({ theme }) => theme.bg2};
+  }
+  //firefox support
+  scrollbar-color: ${({ theme }) => theme.bg3 + ' ' + theme.bg2};
   scrollbar-width: thin;
-
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText  title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
 
 function CurrencyRow({
@@ -103,9 +102,11 @@ function CurrencyRow({
       style={style}
     >
       <Box>
-        <AutoRow >
+        <AutoRow>
           <CurrencyLogo currency={currency} size={'20px'} />
-          <Text  marginLeft={'6px'} fontWeight={500}>{currency.symbol}</Text>
+          <Text marginLeft={'6px'} fontWeight={500}>
+            {currency.symbol}
+          </Text>
         </AutoRow>
         <AutoRow>
           <TYPE.body marginTop={'4px'} fontSize="9px" color="text4" fontWeight={600}>
@@ -135,7 +136,7 @@ function CurrencyRow({
           </Box>
         )}
       </Flex>
-      <Box  style={{ justifySelf: 'flex-end' }}>
+      <Box style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </Box>
     </TokenPickerItem>
@@ -255,7 +256,7 @@ export default function CurrencyList({
   )
 
   return (
-    <Flex  overflowY="auto" flex="1">
+    <Flex overflowY="auto" flex="1">
       <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
           <StyledFixedSizeList
@@ -266,7 +267,6 @@ export default function CurrencyList({
             itemCount={itemData.length}
             itemSize={56}
             itemKey={currencyKey}
-
           >
             {Row}
           </StyledFixedSizeList>

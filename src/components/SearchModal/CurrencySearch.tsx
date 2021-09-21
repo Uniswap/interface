@@ -27,7 +27,6 @@ const ContentWrapper = styled(Column)`
   overflow: hidden;
   position: relative;
   background-color: ${({ theme }) => theme.dark2};
- 
 `
 
 const Footer = styled.div`
@@ -39,9 +38,9 @@ const Footer = styled.div`
   background-color: ${({ theme }) => theme.bg1And2};
   border-top: 1px solid ${({ theme }) => theme.bg1And2};
 `
-const CloseIconStyled=styled(CloseIcon)`
-  display:flex;
-  padding:0;
+const CloseIconStyled = styled(CloseIcon)`
+  display: flex;
+  padding: 0;
 `
 
 interface CurrencySearchProps {
@@ -117,7 +116,6 @@ export function CurrencySearch({
     },
     [onDismiss, onCurrencySelect]
   )
-  console.log(selectedCurrency)
 
   // clear the input on open
   useEffect(() => {
@@ -170,10 +168,10 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <AutoColumn style={{padding:"22px 18.5px 20px 18.5px"}}  gap="15px">
+      <AutoColumn style={{ padding: '22px 18.5px 20px 18.5px' }} gap="15px">
         <RowBetween>
           <TYPE.body fontWeight={500}>Select a token</TYPE.body>
-          <CloseIconStyled  onClick={onDismiss} />
+          <CloseIconStyled onClick={onDismiss} />
         </RowBetween>
         <Row>
           <SearchInput
@@ -192,7 +190,7 @@ export function CurrencySearch({
           <CommonTokens chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
       </AutoColumn>
-      <Separator/>
+      <Separator />
       {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
           currencies={filteredSortedTokensWithNativeCurrency}
@@ -213,7 +211,7 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonDark2  onClick={showManageView}>Manage token lists</ButtonDark2>
+          <ButtonDark2 onClick={showManageView}>Manage token lists</ButtonDark2>
         </Row>
       </Footer>
     </ContentWrapper>

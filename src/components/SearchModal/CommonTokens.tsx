@@ -13,19 +13,19 @@ import styled from 'styled-components'
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border-radius: 12px;
   display: flex;
-  line-height:19.5px;
+  line-height: 19.5px;
   padding: 6px 10px;
-  margin-right:8px;
+  margin-right: 8px;
   color: ${({ theme }) => theme.text1};
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({  disable }) => !disable && "#555a73"};
+    background-color: ${({ disable }) => !disable && '#555a73'};
   }
 
   color: ${({ theme, disable }) => disable && theme.text3};
   background-color: ${({ theme }) => theme.bg3};
-  opacity: ${({ disable }) => disable && "0.5"};
+  opacity: ${({ disable }) => disable && '0.5'};
 `
 
 export default function CommonTokens({
@@ -38,8 +38,7 @@ export default function CommonTokens({
   onSelect: (currency: Currency) => void
 }) {
   const nativeCurrency = useNativeCurrency()
-console.log(selectedCurrency)
-  console.log(selectedCurrency === nativeCurrency || selectedCurrency===undefined)
+
   return (
     <AutoColumn gap="15px">
       <AutoRow>
@@ -54,7 +53,7 @@ console.log(selectedCurrency)
               onSelect(nativeCurrency)
             }
           }}
-          disable={selectedCurrency === nativeCurrency || selectedCurrency===undefined}
+          disable={selectedCurrency === nativeCurrency || selectedCurrency === undefined}
         >
           <CurrencyLogo size="20px" currency={nativeCurrency} marginRight={8} />
           <Text fontWeight={500} fontSize={16}>
@@ -64,11 +63,7 @@ console.log(selectedCurrency)
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
-            <BaseWrapper
-              onClick={() => !selected && onSelect(token)}
-              disable={selected}
-              key={token.address}
-            >
+            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo size="20px" currency={token} marginRight={8} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}
