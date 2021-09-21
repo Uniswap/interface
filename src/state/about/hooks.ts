@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { exchangeCient } from 'apollo/client'
+import { exchangeClient } from 'apollo/client'
 import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
@@ -51,21 +51,21 @@ export function useGlobalData() {
         chainId === ChainId.BSCMAINNET ||
         chainId === ChainId.AVAXMAINNET
       ) {
-        const resultMainnet: { data: GlobalData } = await exchangeCient[ChainId.MAINNET].query({
+        const resultMainnet: { data: GlobalData } = await exchangeClient[ChainId.MAINNET].query({
           query: GLOBAL_DATA(ChainId.MAINNET),
           fetchPolicy: 'cache-first'
         })
-        const resultMatic: { data: GlobalData } = await exchangeCient[ChainId.MATIC].query({
+        const resultMatic: { data: GlobalData } = await exchangeClient[ChainId.MATIC].query({
           query: GLOBAL_DATA(ChainId.MATIC),
           fetchPolicy: 'cache-first'
         })
 
-        const resultBSC: { data: GlobalData } = await exchangeCient[ChainId.BSCMAINNET].query({
+        const resultBSC: { data: GlobalData } = await exchangeClient[ChainId.BSCMAINNET].query({
           query: GLOBAL_DATA(ChainId.BSCMAINNET),
           fetchPolicy: 'cache-first'
         })
 
-        const resultAVAX: { data: GlobalData } = await exchangeCient[ChainId.AVAXMAINNET].query({
+        const resultAVAX: { data: GlobalData } = await exchangeClient[ChainId.AVAXMAINNET].query({
           query: GLOBAL_DATA(ChainId.BSCMAINNET),
           fetchPolicy: 'cache-first'
         })
@@ -105,22 +105,22 @@ export function useGlobalData() {
         chainId === ChainId.BSCTESTNET ||
         chainId === ChainId.AVAXTESTNET
       ) {
-        const resultRopsten: { data: GlobalData } = await exchangeCient[ChainId.ROPSTEN].query({
+        const resultRopsten: { data: GlobalData } = await exchangeClient[ChainId.ROPSTEN].query({
           query: GLOBAL_DATA(ChainId.ROPSTEN),
           fetchPolicy: 'cache-first'
         })
 
-        const resultMumbai: { data: GlobalData } = await exchangeCient[ChainId.MUMBAI].query({
+        const resultMumbai: { data: GlobalData } = await exchangeClient[ChainId.MUMBAI].query({
           query: GLOBAL_DATA(ChainId.MUMBAI),
           fetchPolicy: 'cache-first'
         })
 
-        const resultBscTestnet: { data: GlobalData } = await exchangeCient[ChainId.BSCTESTNET].query({
+        const resultBscTestnet: { data: GlobalData } = await exchangeClient[ChainId.BSCTESTNET].query({
           query: GLOBAL_DATA(ChainId.BSCTESTNET),
           fetchPolicy: 'cache-first'
         })
 
-        const resultAvaxTestnet: { data: GlobalData } = await exchangeCient[ChainId.AVAXTESTNET].query({
+        const resultAvaxTestnet: { data: GlobalData } = await exchangeClient[ChainId.AVAXTESTNET].query({
           query: GLOBAL_DATA(ChainId.BSCTESTNET),
           fetchPolicy: 'cache-first'
         })
@@ -191,7 +191,7 @@ export function useGlobalData() {
           }
         }
       } else {
-        result = await exchangeCient[chainId as ChainId].query({
+        result = await exchangeClient[chainId as ChainId].query({
           query: GLOBAL_DATA(chainId as ChainId),
           fetchPolicy: 'cache-first'
         })

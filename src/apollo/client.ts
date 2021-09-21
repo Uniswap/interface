@@ -58,7 +58,7 @@ export const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = ne
   cache: new InMemoryCache()
 })
 
-export const exchangeCient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
+export const exchangeClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
   [ChainId.RINKEBY]: ropstenExchangeClient,

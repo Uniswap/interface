@@ -4,7 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Interface } from '@ethersproject/abi'
 
-import { exchangeCient } from 'apollo/client'
+import { exchangeClient } from 'apollo/client'
 import { FARM_DATA, FARM_HISTORIES } from 'apollo/queries'
 import { ChainId, WETH } from 'libs/sdk/src'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
@@ -47,7 +47,7 @@ export const useRewardTokens = () => {
 }
 
 export const fetchFarms = async (poolsList: string[], chainId?: ChainId) => {
-  const result = await exchangeCient[chainId as ChainId].query({
+  const result = await exchangeClient[chainId as ChainId].query({
     query: FARM_DATA,
     variables: {
       poolsList
@@ -174,7 +174,7 @@ export const useFarmHistories = (isModalOpen: boolean) => {
       setLoading(true)
 
       try {
-        const result = await exchangeCient[chainId as ChainId].query<FarmHistoriesSubgraphResult>({
+        const result = await exchangeClient[chainId as ChainId].query<FarmHistoriesSubgraphResult>({
           query: FARM_HISTORIES,
           variables: {
             user: account

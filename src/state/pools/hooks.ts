@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
-import { exchangeCient } from 'apollo/client'
+import { exchangeClient } from 'apollo/client'
 import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
 import { ChainId, Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
@@ -147,7 +147,7 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
 
 export async function getBulkPoolData(poolList: string[], ethPrice?: string, chainId?: ChainId): Promise<any> {
   try {
-    const current = await exchangeCient[chainId as ChainId].query({
+    const current = await exchangeClient[chainId as ChainId].query({
       query: POOLS_BULK,
       variables: {
         allPools: poolList
@@ -164,7 +164,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
 
       const [oneDayResult] = await Promise.all(
         [b1].map(async block => {
-          const result = exchangeCient[chainId as ChainId].query({
+          const result = exchangeClient[chainId as ChainId].query({
             query: POOLS_HISTORICAL_BULK(block, poolList),
             fetchPolicy: 'network-only'
           })
@@ -182,7 +182,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
             let data = { ...pool }
             let oneDayHistory = oneDayData?.[pool.id]
             if (!oneDayHistory) {
-              const newData = await exchangeCient[chainId as ChainId].query({
+              const newData = await exchangeClient[chainId as ChainId].query({
                 query: POOL_DATA(pool.id, b1),
                 fetchPolicy: 'network-only'
               })

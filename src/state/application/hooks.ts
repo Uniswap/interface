@@ -2,7 +2,7 @@ import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
-import { exchangeCient } from 'apollo/client'
+import { exchangeClient } from 'apollo/client'
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
 import { ChainId, Token, WETH } from 'libs/sdk/src'
 import { KNC, ZERO_ADDRESS } from '../../constants'
@@ -132,11 +132,11 @@ const getEthPrice = async (chainId?: ChainId) => {
 
   try {
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
-    const result = await exchangeCient[chainId as ChainId].query({
+    const result = await exchangeClient[chainId as ChainId].query({
       query: ETH_PRICE(),
       fetchPolicy: 'network-only'
     })
-    const resultOneDay = await exchangeCient[chainId as ChainId].query({
+    const resultOneDay = await exchangeClient[chainId as ChainId].query({
       query: ETH_PRICE(oneDayBlock),
       fetchPolicy: 'network-only'
     })
@@ -184,7 +184,7 @@ const getKNCPriceByETH = async (chainId?: ChainId) => {
   let kncPriceByETH = 0
 
   try {
-    const result = await exchangeCient[chainId as ChainId].query({
+    const result = await exchangeClient[chainId as ChainId].query({
       query: TOKEN_DERIVED_ETH(KNC[chainId as ChainId].address),
       fetchPolicy: 'no-cache'
     })
@@ -226,7 +226,7 @@ const getTokenPriceByETH = async (tokenAddress: string, chainId?: ChainId) => {
   let tokenPriceByETH = 0
 
   try {
-    const result = await exchangeCient[chainId as ChainId].query({
+    const result = await exchangeClient[chainId as ChainId].query({
       query: TOKEN_DERIVED_ETH(tokenAddress),
       fetchPolicy: 'no-cache'
     })

@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
-import { defaultExchangeClient, exchangeCient } from 'apollo/client'
+import { defaultExchangeClient, exchangeClient } from 'apollo/client'
 import Loader from 'components/LocalLoader'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
@@ -123,7 +123,7 @@ export default function App() {
   useActiveNetwork()
   const { account, chainId } = useActiveWeb3React()
   const aboutPage = useRouteMatch('/about')
-  const apolloClient = exchangeCient[chainId as ChainId]
+  const apolloClient = exchangeClient[chainId as ChainId]
 
   return (
     <>
