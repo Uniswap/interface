@@ -37,6 +37,7 @@ const black = '#000000'
 
 function colors(darkMode: boolean): Colors {
   return {
+    darkMode,
     // base
     white,
     black,
