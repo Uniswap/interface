@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -264,6 +264,18 @@ msgstr "מאשר"
 msgid "Approving {0}"
 msgstr "מאשר {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "ארביסקאן"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "גשר ארביטרום"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "ארביטרום נמצאת בגרסת בטא ועשויה לחוות השבתה. בזמן השבתה, העמדה שלך לא תרוויח עמלות ולא תוכל להסיר נזילות. <0> קרא עוד.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "האם אתה בטוח?"
@@ -319,6 +331,10 @@ msgstr "הטוב ביותר לזוגות יציבים."
 msgid "Blocked address"
 msgstr "כתובת חסומה"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "לְגַשֵׁר"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "על ידי הוספת נזילות תרוויח 0.3% מכלל העסקאות בזוג זה ביחס לחלק שלך במאגר. העמלות מתווספות לבריכה, נצברות בזמן אמת וניתן לתבוע אותן באמצעות משיכת הנזילות שלך."
@@ -338,10 +354,6 @@ msgstr "מבוטל"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "שינוי"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "שנה את הרשת שלך כדי לחזור ל- L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "לְהַפְקִיד"
 msgid "Deposit Amounts"
 msgstr "סכומי הפקדה"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "נכסי הפקדה"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "הפקדת אסימוני LP של UNI-V2"
@@ -630,12 +646,6 @@ msgstr "הפקדת אסימוני LP של UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "הפקדת נזילות"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "הפקדה ל {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "לא בתוקף"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "גלה בריכות פופולריות ב- Uniswap Analytics."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "מגלה ארצות"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "שכבת עמלה"
@@ -810,6 +824,10 @@ msgstr "תפקידים בטווח מלא עשויים להרוויח פחות ש
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "קבל תמיכה בדיסקורד"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "מרכז עזרה"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "שפה"
 msgid "Learn"
 msgstr "לִלמוֹד"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "למד עוד"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "למד אודות מתן נזילות"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "למד עוד"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "זכאים להצביע רק קולות של UNI שהועברו בעצמ
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את הדף, או בקר בדפדפן או במכשיר אחר."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "אופטימיות מתוכננת השבתה"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "שער אופטימיות"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "אופטימיות צופה השבתה מתוכננת בעתיד הקרוב. זמן השבתה לא מתוכנן עשוי להתרחש גם כן. בזמן שהרשת מושבתת, לא ייווצרו עמלות ולא תוכל להסיר נזילות. <0> קרא עוד.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Ethereum אופטימי נמצא בגרסת ביטא ועשוי לחוות השבתה. אופטימיות מצפה להשבתה מתוכננת לשדרג את הרשת בעתיד הקרוב. בזמן השבתה, העמדה שלך לא תרוויח עמלות ולא תוכל להסיר נזילות. <0> קרא עוד.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "את'רקאן אופטימי"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "שער L2 אופטימי"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "בתור"
 msgid "Rates"
 msgstr "תעריפים"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "קרא עוד"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "קרא עוד על UNI"
@@ -1395,6 +1403,10 @@ msgstr "חפש שם או הדבק כתובת"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "בחר זוג"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "בחר רשת"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "החלף בכל מקרה"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "החלפת {0} {1} ב- {2} {3}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "עבור ל- L1 (Mainnet)"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "תודה שהיית חלק מקהילת Uniswap <0 />"
@@ -1575,15 +1583,6 @@ msgstr "אין נתוני נזילות."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "אסימונים אלה משויכים בדרך כלל לאסימונים אחרים."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "זהו שחרור אלפא של Uniswap ברשת {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "זהו שחרור אלפא של Uniswap ברשת {0} עליך לגשר על נכסי L1 לרשת כדי להחליף אותם."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. דמי הגז יהיו גבוהים מהרגיל עקב עסקת האתחול."
@@ -1626,6 +1625,10 @@ msgstr "ל"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "עבור (לפחות)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "כדי להתחיל לסחור ב {0}, תחילה גשר את הנכסים שלך מ- L1 ל- L2. אנא התייחס לזה כאל גרסת בטא ולמד על הסיכונים לפני השימוש {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "עדיין אין לך נזילות במאגר זה."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "ייתכן שאיבדת את חיבור הרשת שלך, או {label} מושבת כרגע."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "יכול להיות שאיבדת את חיבור הרשת שלך."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "עליך לגשר על נכסי L1 לרשת כדי להשתמש בהם."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0 /> לכל <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} גשר"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} אסימונים בהתאמה אישית"
@@ -2193,10 +2191,6 @@ msgstr "{0} מופקד"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} סייר"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} אסימונים"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} עשוי להיות כרגע, או שאולי איבדת את חיבור הרשת שלך."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -264,6 +264,18 @@ msgstr "Aprovant"
 msgid "Approving {0}"
 msgstr "S’aprova {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Arbiscà"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Pont Arbitrum"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "L’àrbitre és en versió beta i pot experimentar temps d’inactivitat. Durant el temps d'inactivitat, la vostra posició no generarà comissions i no podreu eliminar la liquiditat. <0> Llegiu-ne més.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "N'esteu segurs?"
@@ -319,6 +331,10 @@ msgstr "El millor per a parells estables."
 msgid "Blocked address"
 msgstr "Adreça bloquejada"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Pont"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Si afegiu liquiditat, guanyareu el 0,3% de totes les operacions d’aquest parell proporcional a la vostra quota de grup. Les comissions s’afegeixen al grup, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
@@ -338,10 +354,6 @@ msgstr "Cancel·lat"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Canvi"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "Canvieu la vostra xarxa per tornar a L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "Dipòsit"
 msgid "Deposit Amounts"
 msgstr "Quantitats de dipòsit"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "Actius de dipòsit"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Dipositeu fitxes LP UNI-V2"
@@ -630,12 +646,6 @@ msgstr "Dipositeu fitxes LP UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Dipòsit de liquiditat"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "Dipòsit a {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "Caducat"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Exploreu grups populars a Uniswap Analytics."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "Explorador"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Nivell de tarifa"
@@ -810,6 +824,10 @@ msgstr "Les posicions de rang complet poden guanyar menys comissions que les pos
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Obteniu assistència a Discord"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "Centre d'ajuda"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "Llenguatge"
 msgid "Learn"
 msgstr "Aprendre"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "Aprèn més"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Obteniu informació sobre com proporcionar liquiditat"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "Aprèn més"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "Només es poden votar els vots UNI que s’autodelegaven o delegaven a u
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Vaja! S'ha produït un error desconegut. Actualitzeu la pàgina o visiteu-la des d’un altre navegador o dispositiu."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "Temps d'inactivitat previst per a l'optimisme"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Optimism Gateway"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "L'optimisme espera un temps d'inactivitat previst en un futur proper. També es pot produir un temps d'inactivitat no planificat. Mentre la xarxa estigui inactiva, no es generaran comissions i no podreu eliminar la liquiditat. <0> Llegiu-ne més.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Ethereum optimista és en versió beta i pot experimentar temps d'inactivitat. L'optimisme espera que els temps d'inactivitat previstos actualitzin la xarxa en un futur proper. Durant el temps d'inactivitat, la vostra posició no generarà comissions i no podreu eliminar la liquiditat. <0> Llegiu-ne més.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "Etherscan optimista"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "Gateway L2 optimista"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "En cua"
 msgid "Rates"
 msgstr "Tarifes"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "Llegeix més"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Llegiu més sobre UNI"
@@ -1395,6 +1403,10 @@ msgstr "Cerqueu el nom o enganxeu l'adreça"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Seleccioneu Parella"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Seleccioneu una xarxa"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "Intercanviar de totes maneres"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Intercanvi de {0} {1} per {2} {3}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "Canviar a L1 (Mainnet)"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Gràcies per formar part de la comunitat Uniswap <0 />"
@@ -1575,15 +1583,6 @@ msgstr "No hi ha dades de liquiditat."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Aquestes fitxes solen aparellar-se amb altres fitxes."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Es tracta d’una versió alfa d’Uniswap a la xarxa {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Es tracta d’una versió alfa d’Uniswap a la xarxa {0} Heu de connectar els recursos L1 a la xarxa per canviar-los."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Aquest grup s’ha d’inicialitzar abans d’afegir liquiditat. Per inicialitzar, seleccioneu un preu inicial per a la piscina. A continuació, introduïu l'interval de preus de liquiditat i l'import del dipòsit. Les comissions de gas seran superiors a l'habitual a causa de la transacció d'inicialització."
@@ -1626,6 +1625,10 @@ msgstr "Per a"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "A (com a mínim)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Per començar a cotitzar a {0}, primer creeu els vostres actius de L1 a L2. Tracteu-ho com una versió beta i apreneu sobre els riscos abans d’utilitzar {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "Encara no teniu liquiditat en aquest grup."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "És possible que hàgiu perdut la connexió de xarxa o que {label} estigui inactiu en aquest moment."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "És possible que hàgiu perdut la connexió de xarxa."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "Heu de connectar els actius L1 a la xarxa per utilitzar-los."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} Pont"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Fitxes personalitzades"
@@ -2193,10 +2191,6 @@ msgstr "{0} Dipositat"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} Explorador"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} fitxes"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} possible que 0 estigui inactiu en aquest moment o bé hagueu perdut la connexió de xarxa."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

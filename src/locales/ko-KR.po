@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -264,6 +264,18 @@ msgstr "승인 중"
 msgid "Approving {0}"
 msgstr "{0} 승인 중"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "아르비스칸"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "아비트룸 브리지"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Arbitrum은 베타 버전이며 다운타임이 발생할 수 있습니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "확실합니까?"
@@ -319,6 +331,10 @@ msgstr "안정적인 쌍에 가장 적합합니다."
 msgid "Blocked address"
 msgstr "차단된 주소"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "다리"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "유동성을 추가하면 풀 쉐어에 비례하여이 쌍에 대한 모든 거래의 0.3%를 벌 수 있습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구할 수 있습니다."
@@ -338,10 +354,6 @@ msgstr "취소 된"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "변경"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "L1로 돌아가도록 네트워크 변경"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "예치"
 msgid "Deposit Amounts"
 msgstr "입금액"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "예금 자산"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP 토큰 예치"
@@ -630,12 +646,6 @@ msgstr "UNI-V2 LP 토큰 예치"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "예금 유동성"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "{0}입금"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "만료 됨"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Uniswap Analytics에서 인기있는 풀을 살펴보십시오."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "탐침"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "수수료 등급"
@@ -810,6 +824,10 @@ msgstr "전체 범위 포지션은 집중 포지션보다 적은 수수료를 �
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Discord에서 지원 받기"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "지원 센터"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "언어"
 msgid "Learn"
 msgstr "학습"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "더 알아보기"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "유동성 제공에 대해 알아보기"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "더 알아보기"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "{0} 차단 이전에 자체 위임되었거나 다른 주소로 위임 �
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "낙관적 계획된 다운타임"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "낙관 게이트웨이"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "낙관론은 가까운 장래에 계획된 다운타임을 예상합니다. 계획되지 않은 다운타임도 발생할 수 있습니다. 네트워크가 다운되는 동안 수수료가 생성되지 않으며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "낙관적 이더리움은 베타 버전이며 가동 중지 시간이 발생할 수 있습니다. 낙관론은 가까운 장래에 네트워크를 업그레이드하기 위해 계획된 다운타임을 예상합니다. 다운타임 동안 귀하의 포지션은 수수료를 받지 못하며 유동성을 제거할 수 없습니다. <0>더 읽어보세요.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "낙관적 Etherscan"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "낙관적 L2 게이트웨이"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "대기 중"
 msgid "Rates"
 msgstr "요율"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "더 읽기"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "UNI에 대해 자세히 알아보기"
@@ -1395,6 +1403,10 @@ msgstr "이름 검색 또는 주소 붙여 넣기"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "쌍 선택"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "네트워크 선택"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "어쨌든 스왑"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "L1(메인넷)으로 전환"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Uniswap 커뮤니티에 참여해 주셔서 감사합니다. <0/>"
@@ -1575,15 +1583,6 @@ msgstr "유동성 데이터가 없습니다."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "이러한 토큰은 일반적으로 다른 토큰과 쌍을 이룹니다."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "{0} 네트워크에서 Uniswap의 알파 릴리스입니다."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "{0} 네트워크에서 Uniswap의 알파 릴리스입니다. L1 자산을 네트워크에 연결하여 스왑해야합니다."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
@@ -1626,6 +1625,10 @@ msgstr "스왑 후"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "스왑 후(최소)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "{0}에서 거래를 시작하려면 먼저 자산을 L1에서 L2로 연결하십시오. {1}을 사용하기 전에 위험에 대해 알아보십시오."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "아직 이 풀에 유동성이 없습니다."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "네트워크 연결이 끊어졌거나 {label} 이 다운되었을 수 있습니다."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "네트워크 연결이 끊어졌을 수 있습니다."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "L1 자산을 사용하려면 네트워크에 브리지해야 합니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> / <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} 브리지"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} 사용자 지정 토큰"
@@ -2193,10 +2191,6 @@ msgstr "{0} 예치됨"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} 탐험가"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 토큰"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} 이 지금 다운되었거나 네트워크 연결이 끊어졌을 수 있습니다."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

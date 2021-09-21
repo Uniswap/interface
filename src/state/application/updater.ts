@@ -7,7 +7,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
-import { setChainConnectivityWarning, updateBlockNumber, updateChainId } from './actions'
+import { switchToNetwork } from 'utils/switchToNetwork'
+import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './actions'
 import { useBlockNumber } from './hooks'
 
 function useQueryCacheInvalidator() {
@@ -61,7 +62,7 @@ function useBlockWarningTimer() {
 }
 
 export default function Updater(): null {
-  const { library, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
@@ -115,6 +116,15 @@ export default function Updater(): null {
       updateChainId({ chainId: debouncedState.chainId ? supportedChainId(debouncedState.chainId) ?? null : null })
     )
   }, [dispatch, debouncedState.chainId])
+
+  useEffect(() => {
+    if (!account || !library?.provider?.request || !library?.provider?.isMetaMask) {
+      return
+    }
+    switchToNetwork({ library })
+      .then((x) => x ?? dispatch(setImplements3085({ implements3085: true })))
+      .catch(() => dispatch(setImplements3085({ implements3085: false })))
+  }, [account, chainId, dispatch, library])
 
   return null
 }

@@ -1,19 +1,66 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import {
+  ARBITRUM_HELP_CENTER_LINK,
+  L2_CHAIN_IDS,
+  OPTIMISM_HELP_CENTER_LINK,
+  SupportedChainId,
+  SupportedL2ChainId,
+} from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
-import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
+import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
-import { ReadMoreLink } from './styles'
+
+export const DesktopTextBreak = styled.div`
+  display: none;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
+    display: block;
+  }
+`
 
 const L2Icon = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   justify-self: center;
+`
+const BetaTag = styled.span<{ color: string }>`
+  align-items: center;
+  background-color: ${({ color }) => color};
+  border-radius: 6px;
+  color: ${({ theme }) => theme.white};
+  display: flex;
+  font-size: 14px;
+  height: 28px;
+  justify-content: center;
+  left: -16px;
+  position: absolute;
+  transform: rotate(-15deg);
+  top: -16px;
+  width: 60px;
+  z-index: 1;
+`
+const Body = styled.p`
+  font-size: 12px;
+  grid-column: 1 / 3;
+  line-height: 143%;
+  margin: 0;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    grid-column: 2 / 3;
+  }
+`
+export const Controls = styled.div<{ thin?: boolean }>`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  ${({ thin }) =>
+    thin &&
+    css`
+      margin: auto 32px auto 0;
+    `}
 `
 const CloseIcon = styled(X)`
   cursor: pointer;
@@ -21,7 +68,7 @@ const CloseIcon = styled(X)`
   top: 16px;
   right: 16px;
 `
-const ContentWrapper = styled.div`
+const BodyText = styled.div`
   align-items: center;
   display: grid;
   grid-gap: 4px;
@@ -32,6 +79,37 @@ const ContentWrapper = styled.div`
     grid-template-columns: 42px 4fr;
     grid-gap: 8px;
   }
+`
+const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: ${({ theme }) => theme.text1};
+  display: flex;
+  font-size: 16px;
+  height: 44px;
+  justify-content: space-between;
+  margin: 0 0 20px 0;
+  padding: 12px 16px;
+  text-decoration: none;
+  width: auto;
+  :hover,
+  :focus,
+  :active {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  transition: background-color 150ms ease-in-out;
+  ${({ thin }) =>
+    thin &&
+    css`
+      font-size: 14px;
+      margin: auto;
+      width: 112px;
+    `}
+`
+const RootWrapper = styled.div`
+  position: relative;
 `
 export const ArbitrumWrapperBackgroundDarkMode = css`
   background: radial-gradient(285% 8200% at 30% 50%, rgba(40, 160, 240, 0.1) 0%, rgba(219, 255, 0, 0) 100%),
@@ -49,7 +127,7 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string; thin?: boolean }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -66,7 +144,13 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
   overflow: hidden;
   position: relative;
   width: 100%;
-
+  ${({ thin }) =>
+    thin &&
+    css`
+      flex-direction: row;
+      max-width: max-content;
+      min-height: min-content;
+    `}
   :before {
     background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
@@ -80,36 +164,29 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
     z-index: -1;
   }
 `
-const Header = styled.h2`
+const Header = styled.h2<{ thin?: boolean }>`
   font-weight: 600;
   font-size: 20px;
   margin: 0;
   padding-right: 30px;
-`
-const Body = styled.p`
-  font-size: 12px;
-  grid-column: 1 / 3;
-  line-height: 143%;
-  margin: 0;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    grid-column: 2 / 3;
-  }
+  display: ${({ thin }) => (thin ? 'none' : 'block')};
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
+  margin-left: 12px;
   transform: rotate(230deg);
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled(ExternalLink)`
+const LinkOutToBridge = styled(ExternalLink)<{ thin?: boolean }>`
   align-items: center;
   background-color: black;
-  border-radius: 16px;
+  border-radius: 8px;
   color: white;
   display: flex;
   font-size: 16px;
   height: 44px;
   justify-content: space-between;
-  margin: 0 20px 20px 20px;
+  margin: 0 12px 20px 18px;
   padding: 12px 16px;
   text-decoration: none;
   width: auto;
@@ -118,52 +195,85 @@ const LinkOutToBridge = styled(ExternalLink)`
   :active {
     background-color: black;
   }
+  ${({ thin }) =>
+    thin &&
+    css`
+      font-size: 14px;
+      margin: auto 10px;
+      width: 168px;
+    `}
 `
-export function NetworkAlert() {
+
+interface NetworkAlertProps {
+  thin?: boolean
+}
+
+export function NetworkAlert(props: NetworkAlertProps) {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
+  const [optimismAlphaAcknowledged, setOptimismAlphaAcknowledged] = useOptimismAlphaAlert()
   const [locallyDismissed, setLocallyDimissed] = useState(false)
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const dismiss = useCallback(() => {
     if (userEthBalance?.greaterThan(0)) {
-      setArbitrumAlphaAcknowledged(true)
+      switch (chainId) {
+        case SupportedChainId.OPTIMISM:
+          setOptimismAlphaAcknowledged(true)
+          break
+        case SupportedChainId.ARBITRUM_ONE:
+          setArbitrumAlphaAcknowledged(true)
+          break
+      }
     } else {
       setLocallyDimissed(true)
     }
-  }, [setArbitrumAlphaAcknowledged, userEthBalance])
-  if (!chainId || !L2_CHAIN_IDS.includes(chainId) || arbitrumAlphaAcknowledged || locallyDismissed) {
+  }, [chainId, setArbitrumAlphaAcknowledged, setOptimismAlphaAcknowledged, userEthBalance])
+
+  const onOptimismAndOptimismAcknowledged = SupportedChainId.OPTIMISM === chainId && optimismAlphaAcknowledged
+  const onArbitrumAndArbitrumAcknowledged = SupportedChainId.ARBITRUM_ONE === chainId && arbitrumAlphaAcknowledged
+  if (
+    !chainId ||
+    !L2_CHAIN_IDS.includes(chainId) ||
+    onArbitrumAndArbitrumAcknowledged ||
+    onOptimismAndOptimismAcknowledged ||
+    locallyDismissed
+  ) {
     return null
   }
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
   const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const depositUrl = isOptimism ? `${info.bridge}?chainId=1` : info.bridge
-  const readMoreLink = isOptimism
-    ? 'https://help.uniswap.org/en/articles/5392809-how-to-deposit-tokens-to-optimism'
-    : 'https://help.uniswap.org/en/articles/5538618-how-to-deposit-tokens-to-arbitrum'
+  const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
+  const showCloseIcon = Boolean(userEthBalance?.greaterThan(0) && !props.thin)
   return (
-    <RootWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
-      <CloseIcon onClick={dismiss} />
-      <ContentWrapper>
-        <L2Icon src={info.logoUrl} />
-        <Header>
-          <Trans>Uniswap on {info.label}</Trans>
-        </Header>
-        <Body>
-          <Trans>
-            This is an alpha release of Uniswap on the {info.label} network. You must bridge L1 assets to the network to
-            swap them.
-          </Trans>{' '}
-          <ReadMoreLink href={readMoreLink}>
-            <Trans>Read more</Trans>
-          </ReadMoreLink>
-        </Body>
+    <RootWrapper>
+      <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl} thin={props.thin}>
+        {showCloseIcon && <CloseIcon onClick={dismiss} />}
+        <BodyText>
+          <L2Icon src={info.logoUrl} />
+          <Header thin={props.thin}>
+            <Trans>Uniswap on {info.label}</Trans>
+          </Header>
+          <Body>
+            <Trans>
+              To starting trading on {info.label}, first bridge your assets from L1 to L2. Please treat this as a beta
+              release and learn about the risks before using {info.label}.
+            </Trans>
+          </Body>
+        </BodyText>
+        <Controls thin={props.thin}>
+          <LinkOutToBridge href={depositUrl} thin={props.thin}>
+            <Trans>Deposit Assets</Trans>
+            <LinkOutCircle />
+          </LinkOutToBridge>
+          <LearnMoreLink href={helpCenterLink} thin={props.thin}>
+            <Trans>Learn More</Trans>
+          </LearnMoreLink>
+        </Controls>
       </ContentWrapper>
-      <LinkOutToBridge href={depositUrl}>
-        <Trans>Deposit to {info.label}</Trans>
-        <LinkOutCircle />
-      </LinkOutToBridge>
     </RootWrapper>
   )
 }
