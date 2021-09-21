@@ -715,6 +715,10 @@ msgstr "Insufficient {0} balance"
 msgid "Insured by"
 msgstr "Insured by"
 
+#: src/state/swap/hooks.ts
+msgid "Invalid amount"
+msgstr "Invalid amount"
+
 #: src/state/mint/hooks_for_migration.ts
 msgid "Invalid pair"
 msgstr "Invalid pair"

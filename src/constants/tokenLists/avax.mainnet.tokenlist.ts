@@ -44,6 +44,13 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'WETH.e',
       name: 'Wrapped Ether',
       decimals: 18
+    },
+    {
+      chainId: 43114,
+      address: '0x938fe3788222a74924e062120e7bfac829c719fb',
+      symbol: 'APEIN',
+      name: 'Ape In',
+      decimals: 18
     }
   ],
   version: {

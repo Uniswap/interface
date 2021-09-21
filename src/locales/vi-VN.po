@@ -715,6 +715,10 @@ msgstr ""
 msgid "Insured by"
 msgstr "Được bảo hiểm bởi"
 
+#: src/state/swap/hooks.ts
+msgid "Invalid amount"
+msgstr ""
+
 #: src/state/mint/hooks_for_migration.ts
 msgid "Invalid pair"
 msgstr ""
