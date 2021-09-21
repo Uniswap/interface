@@ -185,7 +185,7 @@ function CollectFeesSummary({ info: { currencyId0, currencyId1 } }: { info: Coll
 
   return (
     <Trans>
-      Create {currency0?.symbol}/{currency1?.symbol} V3 pool
+      Collect {currency0?.symbol}/{currency1?.symbol} fees
     </Trans>
   )
 }
