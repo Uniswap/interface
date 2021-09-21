@@ -20,7 +20,7 @@ const ActiveRowLinkList = styled.div`
     color: ${({ theme }) => theme.text2};
     display: flex;
     flex-direction: row;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     justify-content: space-between;
     padding: 8px 0 4px;
@@ -189,10 +189,12 @@ export default function NetworkSelector() {
     }
     const active = chainId === targetChain
     const hasExtendedInfo = L2_CHAIN_IDS.includes(targetChain)
+    const isOptimism = targetChain === SupportedChainId.OPTIMISM
+    const rowText = `${CHAIN_INFO[targetChain].label}${isOptimism ? ' (Optimism)' : ''}`
     const RowContent = () => (
       <FlyoutRow onClick={handleRowClick} active={active}>
         <Logo src={CHAIN_INFO[targetChain].logoUrl} />
-        <NetworkLabel>{CHAIN_INFO[targetChain].label}</NetworkLabel>
+        <NetworkLabel>{rowText}</NetworkLabel>
         {chainId === targetChain && <FlyoutRowActiveIndicator />}
       </FlyoutRow>
     )

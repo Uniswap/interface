@@ -8,11 +8,17 @@ import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { CHAIN_INFO } from '../../constants/chains'
-import { ReadMoreLink } from './styles'
+
+export const DesktopTextBreak = styled.div`
+  display: none;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
+    display: block;
+  }
+`
 
 const L2Icon = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   justify-self: center;
 `
 const BetaTag = styled.span<{ color: string }>`
@@ -40,10 +46,15 @@ const Body = styled.p`
     grid-column: 2 / 3;
   }
 `
-export const Controls = styled.div`
+export const Controls = styled.div<{ thin?: boolean }>`
   align-items: center;
   display: flex;
   justify-content: flex-start;
+  ${({ thin }) =>
+    thin &&
+    css`
+      margin: auto 32px auto 0;
+    `}
 `
 const CloseIcon = styled(X)`
   cursor: pointer;
@@ -62,6 +73,34 @@ const BodyText = styled.div`
     grid-template-columns: 42px 4fr;
     grid-gap: 8px;
   }
+`
+const LearnMoreLink = styled(ExternalLink)<{ thin?: boolean }>`
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: ${({ theme }) => theme.text1};
+  display: flex;
+  font-size: 16px;
+  height: 44px;
+  justify-content: space-between;
+  margin: 0 0 20px 0;
+  padding: 12px 16px;
+  text-decoration: none;
+  width: auto;
+  :hover,
+  :focus,
+  :active {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  transition: background-color 150ms ease-in-out;
+  ${({ thin }) =>
+    thin &&
+    css`
+      font-size: 14px;
+      margin: auto;
+      width: 112px;
+    `}
 `
 const RootWrapper = styled.div`
   position: relative;
@@ -82,7 +121,7 @@ export const OptimismWrapperBackgroundLightMode = css`
   background: radial-gradient(92% 105% at 50% 7%, rgba(255, 58, 212, 0.04) 0%, rgba(255, 255, 255, 0.03) 100%),
     radial-gradient(100% 97% at 0% 12%, rgba(235, 0, 255, 0.1) 0%, rgba(243, 19, 19, 0.1) 100%), hsla(0, 0%, 100%, 0.5);
 `
-const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string }>`
+const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; logoUrl: string; thin?: boolean }>`
   ${({ chainId, darkMode }) =>
     [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
       ? darkMode
@@ -99,7 +138,13 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
   overflow: hidden;
   position: relative;
   width: 100%;
-
+  ${({ thin }) =>
+    thin &&
+    css`
+      flex-direction: row;
+      max-width: max-content;
+      min-height: min-content;
+    `}
   :before {
     background-image: url(${({ logoUrl }) => logoUrl});
     background-repeat: no-repeat;
@@ -113,11 +158,12 @@ const ContentWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean
     z-index: -1;
   }
 `
-const Header = styled.h2`
+const Header = styled.h2<{ thin?: boolean }>`
   font-weight: 600;
   font-size: 20px;
   margin: 0;
   padding-right: 30px;
+  display: ${({ thin }) => (thin ? 'none' : 'block')};
 `
 const LinkOutCircle = styled(ArrowDownCircle)`
   margin-left: 12px;
@@ -125,7 +171,7 @@ const LinkOutCircle = styled(ArrowDownCircle)`
   width: 20px;
   height: 20px;
 `
-const LinkOutToBridge = styled(ExternalLink)`
+const LinkOutToBridge = styled(ExternalLink)<{ thin?: boolean }>`
   align-items: center;
   background-color: black;
   border-radius: 8px;
@@ -143,8 +189,20 @@ const LinkOutToBridge = styled(ExternalLink)`
   :active {
     background-color: black;
   }
+  ${({ thin }) =>
+    thin &&
+    css`
+      font-size: 14px;
+      margin: auto 10px;
+      width: 168px;
+    `}
 `
-export function NetworkAlert() {
+
+interface NetworkAlertProps {
+  thin?: boolean
+}
+
+export function NetworkAlert(props: NetworkAlertProps) {
   const { account, chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
   const [arbitrumAlphaAcknowledged, setArbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
@@ -187,11 +245,11 @@ export function NetworkAlert() {
   return (
     <RootWrapper>
       <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
-      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+      <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl} thin={props.thin}>
         {userEthBalance?.greaterThan(0) && <CloseIcon onClick={dismiss} />}
         <BodyText>
           <L2Icon src={info.logoUrl} />
-          <Header>
+          <Header thin={props.thin}>
             <Trans>Uniswap on {info.label}</Trans>
           </Header>
           <Body>
@@ -201,14 +259,14 @@ export function NetworkAlert() {
             </Trans>
           </Body>
         </BodyText>
-        <Controls>
-          <LinkOutToBridge href={depositUrl}>
+        <Controls thin={props.thin}>
+          <LinkOutToBridge href={depositUrl} thin={props.thin}>
             <Trans>Deposit Assets</Trans>
             <LinkOutCircle />
           </LinkOutToBridge>
-          <ReadMoreLink href={readMoreLink}>
+          <LearnMoreLink href={readMoreLink} thin={props.thin}>
             <Trans>Learn More</Trans>
-          </ReadMoreLink>
+          </LearnMoreLink>
         </Controls>
       </ContentWrapper>
     </RootWrapper>
