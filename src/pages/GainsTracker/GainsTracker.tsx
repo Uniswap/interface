@@ -11,7 +11,7 @@ import moment from 'moment'
 import { Wrapper } from 'pages/RemoveLiquidity/styled'
 import { useTrumpBalance } from 'pages/Vote/VotePage'
 import React, { useCallback } from 'react'
-import { Calendar, ChevronDown, Info } from 'react-feather'
+import { AlertCircle, Calendar, ChevronDown, Info } from 'react-feather'
 import { useCurrencyBalance, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 import _ from 'lodash'
@@ -213,12 +213,18 @@ export const GainsTracker = () => {
       }
     }, [selectedCurrencyBalance, account])
   
-  
+  const showWarning = React.useMemo(() => {
+   const showWarning = (!trumpBalance || +trumpBalance?.toFixed(2) <= 0);
+ return showWarning;
+  }, [trumpBalance])
+      
+
   return (
     <GainsWrapper>
       <Card style={{ maxWidth: 600 }}>
         <Wrapper>
           <CardSection>
+
             <div style={{ paddingLeft: 15, paddingRight: 15 }}>
               <div>
                 <h1 style={{filter: 'drop-shadow(2px 4px 6px black)', color:'#fff'}}>GAINSTRACKER &trade;</h1>
@@ -231,22 +237,25 @@ export const GainsTracker = () => {
                   </div>
                 )}
               </div>
-              {
-                (trumpBalance && +trumpBalance?.toFixed(2) <= 0 && (
-                  <BlueCard>
-                    <p>
-                      This feature is only avaialable to current holders of BabyTrump. Please check again at a future
-                      date or acquire some BabyTrump to use the universal gains tracking functionality.
-                    </p>
-                  </BlueCard>
-                ))}
-             <DarkCard><TYPE.main><small >
+           <DarkCard>
+             {!!account && !showWarning && <TYPE.main><small >
                 Select a currency, or input the contract address of a project you own that you would like to track redistribution gains. &nbsp;
                 <Tooltip show={showTip} text={tipmessage}>
                   <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
                 </Tooltip>
               </small>
-              </TYPE.main> </DarkCard>
+              </TYPE.main>
+
+             } 
+             {showWarning && (<React.Fragment>
+      <AlertCircle />
+      <small>This feature is only avaialable to current holders of Squeeze Token. Please check again at a future
+      date or acquire some Squeeze Token to use the universal gains tracking functionality.</small>
+    </React.Fragment>)}
+             
+                </DarkCard>
+          {!account &&  <DarkCard><TYPE.main>Connect your wallet to track gains</TYPE.main></DarkCard>}
+
             </div>
           </CardSection>
           <CardSection>
