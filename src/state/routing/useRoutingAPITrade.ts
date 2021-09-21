@@ -6,10 +6,10 @@ import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
-import { V3TradeState } from './types'
 import { computeRoutes } from './computeRoutes'
+import { V3TradeState } from './types'
 
-function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
+export function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
   const localBlockNumber = useBlockNumber()
 
   if (!localBlockNumber) return undefined
@@ -24,7 +24,7 @@ function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T 
  * Returns query arguments for the Routing API query or undefined if the
  * query should be skipped.
  */
-function useRoutingAPIArguments({
+export function useRoutingAPIArguments({
   tokenIn,
   tokenOut,
   amount,

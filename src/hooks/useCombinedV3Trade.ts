@@ -3,9 +3,10 @@ import { Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITradeExactIn, useRoutingAPITradeExactOut } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
+import { useClientSideV3TradeExactOut } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
-import { useClientV3TradeExactIn, useClientSideV3TradeExactOut } from './useClientSideV3Trade'
+import { useSmartOrderTrade } from './useSmartOrderRouter'
 
 /**
  * Returns the best v3 trade for a desired exact input swap.
@@ -44,10 +45,17 @@ export function useV3TradeExactIn(
     !routingAPIEnabled || (!debouncing && routingAPITradeExactIn.state === V3TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed
-  const bestV3TradeExactIn = useClientV3TradeExactIn(
-    useFallback ? debouncedAmountIn : undefined,
-    useFallback ? currencyOut : undefined
-  )
+  // const bestV3TradeExactIn = useClientV3TradeExactIn(
+  //   useFallback ? debouncedAmountIn : undefined,
+  //   useFallback ? currencyOut : undefined
+  // )
+  const bestV3TradeExactIn = useSmartOrderTrade(TradeType.EXACT_INPUT, amountIn, currencyOut) as {
+    state: V3TradeState
+    trade: Trade<Currency, Currency, TradeType.EXACT_INPUT>
+  }
+
+  console.log(routingAPITradeExactIn.trade?.outputAmount.toSignificant())
+  console.log(bestV3TradeExactIn.trade?.outputAmount.toSignificant())
 
   return {
     ...(useFallback ? bestV3TradeExactIn : routingAPITradeExactIn),

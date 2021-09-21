@@ -4574,10 +4574,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^1.40.1":
-  version "1.40.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-1.40.1.tgz#2bc927c19a0bd51f49abc0ed7683cc5257874c9e"
-  integrity sha512-gzuAw3l99kjHOBo4Jhy/Pq0geocGUIoUQjQ5k+HVWgbJXa+q1yjYl2IeZUpDgBsDTqyKrf9g7145dFwdy524vQ==
+"@uniswap/smart-order-router@^1.42.1":
+  version "1.42.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-1.42.1.tgz#7cd1902e5d324513ad3749fa76fa3ade2b9cac63"
+  integrity sha512-O44zHjV2cpLkKUPUExkKjXUKVk1X80LnxXPLWLv11KnHOSgfkviEBf1KUb/wNmAq0eS6hBiLZmo9hUJYrz4pAg==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"
@@ -4593,7 +4593,7 @@
     "@uniswap/default-token-list" "^2.0.0"
     "@uniswap/token-lists" "*"
     "@uniswap/v3-periphery" "^1.1.1"
-    "@uniswap/v3-sdk" "3.3.1"
+    "@uniswap/v3-sdk" "^3.4.1"
     async-retry "^1.3.1"
     await-timeout "^1.1.1"
     axios "^0.21.1"
@@ -4653,17 +4653,6 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
-"@uniswap/v3-periphery@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0.tgz#8e789dcd70bdd06e01e21dd75372dc76ab38ea47"
-  integrity sha512-kRqUrjnyh+X1wJdSENPDFr9sjRVebv2KyLtfqDOPij0dXJ69GspFU2qrZXjouc6LYdkWG7x3fagiTlw0eGniYQ==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
-    "@uniswap/lib" "^4.0.1-alpha"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    base64-sol "1.0.1"
-
 "@uniswap/v3-periphery@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.1.1.tgz#be6dfca7b29318ea0d76a7baf15d3b33c3c5e90a"
@@ -4675,18 +4664,6 @@
     "@uniswap/v3-core" "1.0.0"
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
-
-"@uniswap/v3-sdk@3.3.1":
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.3.1.tgz#111f531474a72eece193f7a952a82f346bb527c1"
-  integrity sha512-fz5++gLZpgAQS5vctw+7jZliwi8yikWM1Eh/sQGOLjgD72zbjWLwL5m32HikeDnOhFEc0gF+HcK/feKc1UIFXw==
-  dependencies:
-    "@ethersproject/abi" "^5.0.12"
-    "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^3.0.0-alpha.3"
-    "@uniswap/v3-periphery" "1.0.0"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
 
 "@uniswap/v3-sdk@^3.4.1":
   version "3.4.1"
