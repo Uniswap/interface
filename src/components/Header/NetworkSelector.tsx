@@ -1,5 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import {
+  ARBITRUM_HELP_CENTER_LINK,
+  CHAIN_INFO,
+  L2_CHAIN_IDS,
+  OPTIMISM_HELP_CENTER_LINK,
+  SupportedChainId,
+  SupportedL2ChainId,
+} from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useRef } from 'react'
@@ -146,7 +153,7 @@ const ExplorerText = ({ chainId }: { chainId: SupportedL2ChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
-      return <Trans>Arbitrum Explorer</Trans>
+      return <Trans>Arbiscan</Trans>
     case SupportedChainId.OPTIMISM:
     case SupportedChainId.OPTIMISTIC_KOVAN:
       return <Trans>Optimistic Etherscan</Trans>
@@ -198,6 +205,7 @@ export default function NetworkSelector() {
         {chainId === targetChain && <FlyoutRowActiveIndicator />}
       </FlyoutRow>
     )
+    const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
     if (active && hasExtendedInfo) {
       return (
         <ActiveRowWrapper>
@@ -209,10 +217,7 @@ export default function NetworkSelector() {
             <ExternalLink href={CHAIN_INFO[targetChain].explorer}>
               <ExplorerText chainId={chainId} /> <LinkOutCircle />
             </ExternalLink>
-            <ExternalLink
-              href="https://help.uniswap.org/en/collections/3033942-layer-2
-https://help.uniswap.org/en/collections/3033942-layer-2"
-            >
+            <ExternalLink href={helpCenterLink}>
               <Trans>Help Center</Trans> <LinkOutCircle />
             </ExternalLink>
           </ActiveRowLinkList>

@@ -1,5 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
+import {
+  ARBITRUM_HELP_CENTER_LINK,
+  L2_CHAIN_IDS,
+  OPTIMISM_HELP_CENTER_LINK,
+  SupportedChainId,
+  SupportedL2ChainId,
+} from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useState } from 'react'
 import { ArrowDownCircle, X } from 'react-feather'
@@ -239,14 +245,13 @@ export function NetworkAlert(props: NetworkAlertProps) {
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
   const isOptimism = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const depositUrl = isOptimism ? `${info.bridge}?chainId=1` : info.bridge
-  const readMoreLink = isOptimism
-    ? 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ'
-    : 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum'
+  const helpCenterLink = isOptimism ? OPTIMISM_HELP_CENTER_LINK : ARBITRUM_HELP_CENTER_LINK
+  const showCloseIcon = Boolean(userEthBalance?.greaterThan(0) && !props.thin)
   return (
     <RootWrapper>
       <BetaTag color={isOptimism ? '#ff0420' : '#0490ed'}>Beta</BetaTag>
       <ContentWrapper chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl} thin={props.thin}>
-        {userEthBalance?.greaterThan(0) && <CloseIcon onClick={dismiss} />}
+        {showCloseIcon && <CloseIcon onClick={dismiss} />}
         <BodyText>
           <L2Icon src={info.logoUrl} />
           <Header thin={props.thin}>
@@ -264,7 +269,7 @@ export function NetworkAlert(props: NetworkAlertProps) {
             <Trans>Deposit Assets</Trans>
             <LinkOutCircle />
           </LinkOutToBridge>
-          <LearnMoreLink href={readMoreLink} thin={props.thin}>
+          <LearnMoreLink href={helpCenterLink} thin={props.thin}>
             <Trans>Learn More</Trans>
           </LearnMoreLink>
         </Controls>
