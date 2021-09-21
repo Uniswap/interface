@@ -345,7 +345,7 @@ function V2PairMigration({
             addTransaction(response, {
               type: TransactionType.MIGRATE_LIQUIDITY_V3,
               baseCurrencyId: currencyId(currency0),
-              quoteCurrencyId: currencyId(currency0),
+              quoteCurrencyId: currencyId(currency1),
               isFork: isNotUniswap,
             })
             setPendingMigrationHash(response.hash)

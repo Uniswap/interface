@@ -163,7 +163,7 @@ function MigrateLiquidityToV3Summary({
 
   return (
     <Trans>
-      Migrate ${baseCurrency?.symbol}/${quoteCurrency?.symbol} liquidity to V3
+      Migrate {baseCurrency?.symbol}/{quoteCurrency?.symbol} liquidity to V3
     </Trans>
   )
 }
