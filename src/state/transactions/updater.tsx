@@ -106,7 +106,6 @@ export default function Updater(): null {
                 {
                   txn: {
                     hash,
-                    success: receipt.status === 1,
                   },
                 },
                 hash,
