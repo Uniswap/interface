@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   extends: '@react-native-community',
   rules: {
+    curly: 'off',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
