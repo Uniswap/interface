@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
-import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import styled from 'styled-components/macro'
@@ -127,30 +126,27 @@ export default function CTACards() {
   const { chainId } = useActiveWeb3React()
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
-    <div>
-      <MinimalNetworkAlert />
-      <CTASection>
-        <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
-          <ResponsiveColumn>
-            <HeaderText>
-              <Trans>Learn about providing liquidity</Trans> ↗
-            </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-              <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-            </TYPE.body>
-          </ResponsiveColumn>
-        </CTA1>
-        <CTA2 href={infoLink + 'pools'}>
-          <ResponsiveColumn>
-            <HeaderText style={{ alignSelf: 'flex-start' }}>
-              <Trans>Top pools</Trans> ↗
-            </HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-              <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-            </TYPE.body>
-          </ResponsiveColumn>
-        </CTA2>
-      </CTASection>
-    </div>
+    <CTASection>
+      <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
+        <ResponsiveColumn>
+          <HeaderText>
+            <Trans>Learn about providing liquidity</Trans> ↗
+          </HeaderText>
+          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+            <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
+          </TYPE.body>
+        </ResponsiveColumn>
+      </CTA1>
+      <CTA2 href={infoLink + 'pools'}>
+        <ResponsiveColumn>
+          <HeaderText style={{ alignSelf: 'flex-start' }}>
+            <Trans>Top pools</Trans> ↗
+          </HeaderText>
+          <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+            <Trans>Explore popular pools on Uniswap Analytics.</Trans>
+          </TYPE.body>
+        </ResponsiveColumn>
+      </CTA2>
+    </CTASection>
   )
 }

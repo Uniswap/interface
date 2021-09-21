@@ -1,10 +1,11 @@
-import { SupportedChainId } from 'constants/chains'
-import { BigNumber, utils } from 'ethers'
 import { Web3Provider } from '@ethersproject/providers'
+import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import { BigNumber, utils } from 'ethers'
+import { addNetwork } from './addNetwork'
 
 interface SwitchNetworkArguments {
   library: Web3Provider
-  chainId: SupportedChainId
+  chainId?: SupportedChainId
 }
 
 // provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
@@ -13,9 +14,27 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
   if (!library?.provider?.request) {
     return
   }
+  if (!chainId && library?.getNetwork) {
+    ;({ chainId } = await library.getNetwork())
+  }
   const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
-  return library?.provider.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{ chainId: formattedChainId }],
-  })
+  try {
+    await library?.provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: formattedChainId }],
+    })
+  } catch (error) {
+    // 4902 is the error code for attempting to switch to an unrecognized chainId
+    if (error.code === 4902 && chainId !== undefined) {
+      const info = CHAIN_INFO[chainId]
+
+      // metamask (only known implementer) automatically switches after a network is added
+      // the second call is done here because that behavior is not a part of the spec and cannot be relied upon in the future
+      // metamask's behavior when switching to the current network is just to return null (a no-op)
+      await addNetwork({ library, chainId, info })
+      await switchToNetwork({ library, chainId })
+    } else {
+      throw error
+    }
+  }
 }

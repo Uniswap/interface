@@ -18,7 +18,7 @@ export enum ApplicationModal {
   DELEGATE,
   VOTE,
   POOL_OVERVIEW_OPTIONS,
-  ARBITRUM_OPTIONS,
+  NETWORK_SELECTOR,
 }
 
 export const updateChainId = createAction<{ chainId: number | null }>('application/updateChainId')
@@ -27,4 +27,5 @@ export const setOpenModal = createAction<ApplicationModal | null>('application/s
 export const addPopup =
   createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>('application/addPopup')
 export const removePopup = createAction<{ key: string }>('application/removePopup')
+export const setImplements3085 = createAction<{ implements3085: boolean }>('application/setImplements3085')
 export const setChainConnectivityWarning = createAction<{ warn: boolean }>('application/setChainConnectivityWarning')
