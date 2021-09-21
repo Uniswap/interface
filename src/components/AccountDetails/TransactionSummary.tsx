@@ -84,7 +84,7 @@ function SubmitProposalTransactionSummary({}: { info: SubmitProposalTransactionI
 function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   const token = useToken(info.tokenAddress)
 
-  return <Trans>Approve {token?.symbol} on Uniswap</Trans>
+  return <Trans>Approve {token?.symbol}</Trans>
 }
 
 function VoteSummary({ info }: { info: VoteTransactionInfo }) {
