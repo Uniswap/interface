@@ -117,7 +117,7 @@ export default function Bridge() {
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
-  }, [maxAmountInput, onUserInput])
+  }, [maxAmountInput, isNetworkConnected, onUserInput])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
