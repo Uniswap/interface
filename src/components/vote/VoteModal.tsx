@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { VoteOption } from '../../state/governance/model'
+import { VoteOption } from '../../state/governance/types'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 
 import Modal from '../Modal'

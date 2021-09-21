@@ -34,7 +34,7 @@ import {
   useUserDelegatee,
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
-import { VoteOption } from '../../state/governance/model'
+import { VoteOption } from '../../state/governance/types'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'

@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useCurrency, useToken } from '../../hooks/Tokens'
-import { VoteOption } from '../../state/governance/model'
+import { VoteOption } from '../../state/governance/types'
 import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
@@ -25,7 +25,7 @@ import {
 } from '../../state/transactions/actions'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
-  return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))).toSignificant(sigFigs)
+  return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)
 }
 
 function FormattedCurrencyAmount({
@@ -92,9 +92,9 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
   if (info.reason && info.reason.trim().length > 0) {
     switch (info.decision) {
       case VoteOption.For:
-        return <Trans>Voted in favor of proposal {proposalKey}</Trans>
+        return <Trans>Voted for proposal {proposalKey}</Trans>
       case VoteOption.Abstain:
-        return <Trans>Abstain to vote for proposal {proposalKey}</Trans>
+        return <Trans>Vote to abstain on proposal {proposalKey}</Trans>
       case VoteOption.Against:
         return <Trans>Vote against proposal {proposalKey}</Trans>
     }
@@ -103,19 +103,19 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
       case VoteOption.For:
         return (
           <Trans>
-            Voted in favor of proposal {proposalKey} with reason &quot;{info.reason}&quot;
+            Voted for proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
       case VoteOption.Abstain:
         return (
           <Trans>
-            Abstain to vote for {proposalKey} with reason &quot;{info.reason}&quot;
+            Vote to abstain on proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
       case VoteOption.Against:
         return (
           <Trans>
-            Vote against {proposalKey} with reason &quot;{info.reason}&quot;
+            Vote against proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
     }
