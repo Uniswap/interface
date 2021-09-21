@@ -41,25 +41,25 @@ function TokenAmountDisplayer({
   }
 
   return (
-    <MouseoverTooltip
-      styled={{ border: 'none', borderRadius: '4px', backgroundColor: theme.bg3 }}
-      content={tooltipIcons(amount.token)}
-    >
-      <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center" className={className}>
-        <Box mr="4px">
+    <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center" className={className}>
+      <Box mr="4px">
+        <MouseoverTooltip
+          styled={{ border: 'none', borderRadius: '4px', backgroundColor: theme.bg3 }}
+          content={tooltipIcons(amount.token)}
+        >
           <TYPE.small fontWeight="500" fontSize={fontSize} color="text3">
             {showUSDValue
               ? `$${amount.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toSignificant(4)}`
               : amount.toSignificant(4)}
           </TYPE.small>
+        </MouseoverTooltip>
+      </Box>
+      {!showUSDValue && (
+        <Box mr="4px">
+          <CurrencyLogo currency={amount.token} size={fontSize} />
         </Box>
-        {!showUSDValue && (
-          <Box mr="4px">
-            <CurrencyLogo currency={amount.token} size={fontSize} />
-          </Box>
-        )}
-      </Flex>
-    </MouseoverTooltip>
+      )}
+    </Flex>
   )
 }
 
