@@ -11,8 +11,8 @@ import {
 } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import XDAILogo from '../../assets/images/xdai-stake-logo.png'
-import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
+import XDAILogo from '../../assets/images/xdai-stake-logo.svg'
+import ArbitrumLogo from '../../assets/images/arbitrum-logo.svg'
 import Popover from '../Popover'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
