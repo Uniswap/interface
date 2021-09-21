@@ -5,7 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
 import { useBestV2Trade } from 'hooks/useBestV2Trade'
-import { useV3Trade } from 'hooks/useCombinedV3Trade'
+import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -162,7 +162,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
-  const v3Trade = useV3Trade(
+  const v3Trade = useBestV3Trade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     toggledVersion !== Version.v2 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
