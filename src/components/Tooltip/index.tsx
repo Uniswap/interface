@@ -8,6 +8,10 @@ const TooltipContainer = styled.div`
   font-weight: 400;
 `
 
+const CursorPointerDiv = styled.div`
+  cursor: pointer;
+`
+
 interface TooltipProps extends PopoverProps {
   text?: string
 }
@@ -26,9 +30,9 @@ export function MouseoverTooltip({ children, content, ...rest }: Omit<TooltipPro
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <CustomTooltip content={content} {...rest} show={show}>
-      <div onMouseEnter={open} onMouseLeave={close}>
+      <CursorPointerDiv onMouseEnter={open} onMouseLeave={close}>
         {children}
-      </div>
+      </CursorPointerDiv>
     </CustomTooltip>
   )
 }
