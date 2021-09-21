@@ -24,7 +24,7 @@ export function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 
  * Returns query arguments for the Routing API query or undefined if the
  * query should be skipped.
  */
-export function useRoutingAPIArguments({
+function useRoutingAPIArguments({
   tokenIn,
   tokenOut,
   amount,

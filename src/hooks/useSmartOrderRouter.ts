@@ -6,8 +6,11 @@ import {
   EIP1559GasPriceProvider,
   HeuristicGasModelFactory,
   ID_TO_CHAIN_ID,
+  IMetric,
+  MetricLoggerUnit,
   PoolProvider,
   QuoteProvider,
+  setGlobalMetric,
   SubgraphProvider,
   SwapRoute,
   TokenListProvider,
@@ -34,34 +37,16 @@ const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   distributionPercent: 5,
 }
 
-/**
- * Returns query arguments for the Routing API query or undefined if the
- * query should be skipped.
- */
-function useRoutingAPIArguments({
-  tokenIn,
-  tokenOut,
-  amount,
-  tradeType,
-}: {
-  tokenIn: Currency | undefined
-  tokenOut: Currency | undefined
-  amount: CurrencyAmount<Currency> | undefined
-  tradeType: TradeType
-}) {
-  if (!tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)) {
-    return undefined
+class MetricLogger extends IMetric {
+  putDimensions() {
+    return
   }
 
-  return {
-    tokenInAddress: tokenIn.wrapped.address,
-    tokenInChainId: tokenIn.chainId,
-    tokenOutAddress: tokenOut.wrapped.address,
-    tokenOutChainId: tokenOut.chainId,
-    amount: amount.quotient.toString(),
-    type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
+  putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
+    console.info({ key, value, unit }, `[Metric]: ${key}: ${value} | ${unit ? unit : ''}`)
   }
 }
+setGlobalMetric(new MetricLogger())
 
 function useRouter() {
   const { chainId, library: provider } = useActiveWeb3React()
@@ -157,7 +142,7 @@ function useTrade(
     setIsLoading(true)
     setIsError(false)
     ;(async () => {
-      console.log('smart order router')
+      console.time('smart order router')
 
       try {
         const swapRouteResponse =
@@ -170,10 +155,9 @@ function useTrade(
         setIsError(true)
         setSwapRoute(undefined)
       } finally {
-        console.log('judo done!')
         setIsLoading(false)
 
-        console.log('smart order router')
+        console.timeEnd('smart order router')
       }
     })()
 
@@ -205,19 +189,7 @@ export function useSmartOrderTrade(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const queryArgs = useRoutingAPIArguments({
-    tokenIn: currencyIn,
-    tokenOut: currencyOut,
-    amount: amountSpecified,
-    tradeType,
-  })
-
   const { isLoading, isError, data } = useTrade(tradeType, amountSpecified, currencyIn, currencyOut)
-  // const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
-  //   pollingInterval: ms`10s`,
-  //   refetchOnFocus: true,
-  // })
-
   const freshData = useFreshData(data, Number(data?.blockNumber) || 0)
 
   // const routes = useMemo(
@@ -240,7 +212,7 @@ export function useSmartOrderTrade(
       }
     }
 
-    if (isError || !queryArgs || !freshData) {
+    if (isError || !freshData) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
@@ -252,5 +224,5 @@ export function useSmartOrderTrade(
       state: V3TradeState.VALID,
       trade: freshData.trade,
     }
-  }, [currencyIn, currencyOut, isLoading, isError, queryArgs, freshData])
+  }, [currencyIn, currencyOut, isLoading, isError, freshData])
 }

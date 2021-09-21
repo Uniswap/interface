@@ -49,13 +49,23 @@ export function useV3TradeExactIn(
   //   useFallback ? debouncedAmountIn : undefined,
   //   useFallback ? currencyOut : undefined
   // )
-  const bestV3TradeExactIn = useSmartOrderTrade(TradeType.EXACT_INPUT, amountIn, currencyOut) as {
+  const bestV3TradeExactIn = useSmartOrderTrade(
+    TradeType.EXACT_INPUT,
+    useFallback ? debouncedAmountIn : undefined,
+    useFallback ? currencyOut : undefined
+  ) as {
     state: V3TradeState
     trade: Trade<Currency, Currency, TradeType.EXACT_INPUT>
   }
 
-  console.log(routingAPITradeExactIn.trade?.outputAmount.toSignificant())
-  console.log(bestV3TradeExactIn.trade?.outputAmount.toSignificant())
+  if (routingAPITradeExactIn.state === V3TradeState.VALID && bestV3TradeExactIn.trade) {
+    console.log(
+      'routing api:',
+      routingAPITradeExactIn.trade?.outputAmount.toSignificant(),
+      'client side:',
+      bestV3TradeExactIn.trade?.outputAmount.toSignificant()
+    )
+  }
 
   return {
     ...(useFallback ? bestV3TradeExactIn : routingAPITradeExactIn),

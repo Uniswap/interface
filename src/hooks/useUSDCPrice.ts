@@ -2,8 +2,8 @@ import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
-import { useV2TradeExactOut } from './useV2Trade'
 import { useClientSideV3TradeExactOut } from './useClientSideV3Trade'
+import { useV2TradeExactOut } from './useV2Trade'
 import { useActiveWeb3React } from './web3'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
