@@ -1,10 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Fraction, TradeType } from '@uniswap/sdk-core'
+import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { useMemo } from 'react'
-import { ExtendedEther } from '../../constants/tokens'
-import { useCurrency } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { useCurrency, useToken } from '../../hooks/Tokens'
 import { VoteOption } from '../../state/governance/model'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -31,10 +28,49 @@ function formatAmount(amountRaw: string, decimals: number, sigFigs: number): str
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))).toSignificant(sigFigs)
 }
 
+function FormattedCurrencyAmount({
+  rawAmount,
+  symbol,
+  decimals,
+  sigFigs,
+}: {
+  rawAmount: string
+  symbol: string
+  decimals: number
+  sigFigs: number
+}) {
+  return (
+    <>
+      {formatAmount(rawAmount, decimals, sigFigs)} {symbol}
+    </>
+  )
+}
+
+function FormattedCurrencyAmountManaged({
+  rawAmount,
+  currencyId,
+  sigFigs = 6,
+}: {
+  rawAmount: string
+  currencyId: string
+  sigFigs: number
+}) {
+  const currency = useCurrency(currencyId)
+  return currency ? (
+    <FormattedCurrencyAmount
+      rawAmount={rawAmount}
+      decimals={currency.decimals}
+      sigFigs={sigFigs}
+      symbol={currency.symbol ?? '???'}
+    />
+  ) : null
+}
+
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   return typeof uniAmountRaw === 'string' ? (
     <Trans>
-      Claim {formatAmount(uniAmountRaw, 18, 4)} UNI for {recipient}
+      Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol={'UNI'} decimals={18} sigFigs={4} /> for{' '}
+      {recipient}
     </Trans>
   ) : (
     <Trans>Claim UNI reward for {recipient}</Trans>
@@ -46,7 +82,9 @@ function SubmitProposalTransactionSummary({}: { info: SubmitProposalTransactionI
 }
 
 function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
-  return <Trans>Approve {info.tokenAddress} to spend your tokens</Trans>
+  const token = useToken(info.tokenAddress)
+
+  return <Trans>Approve {token?.symbol} on Uniswap</Trans>
 }
 
 function VoteSummary({ info }: { info: VoteTransactionInfo }) {
@@ -56,9 +94,9 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
       case VoteOption.For:
         return <Trans>Voted in favor of proposal {proposalKey}</Trans>
       case VoteOption.Abstain:
-        return <Trans>Abstain to vote for {proposalKey}</Trans>
+        return <Trans>Abstain to vote for proposal {proposalKey}</Trans>
       case VoteOption.Against:
-        return <Trans>Vote against {proposalKey}</Trans>
+        return <Trans>Vote against proposal {proposalKey}</Trans>
     }
   } else {
     switch (info.decision) {
@@ -89,17 +127,19 @@ function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInf
 }
 
 function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
-  const { chainId } = useActiveWeb3React()
-  const amount = useMemo(() => {
-    if (!chainId) return undefined
-    const ether = ExtendedEther.onChain(chainId)
-    return CurrencyAmount.fromRawAmount(ether, currencyAmountRaw)
-  }, [chainId, currencyAmountRaw])
-
   if (unwrapped) {
-    return <Trans>Unwrap {amount?.toSignificant(6)} WETH to ETH</Trans>
+    return (
+      <Trans>
+        Unwrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'WETH'} decimals={18} sigFigs={6} /> to
+        ETH
+      </Trans>
+    )
   } else {
-    return <Trans>Wrap {amount?.toSignificant(6)} ETH to WETH</Trans>
+    return (
+      <Trans>
+        Wrap <FormattedCurrencyAmount rawAmount={currencyAmountRaw} symbol={'ETH'} decimals={18} sigFigs={6} /> to WETH
+      </Trans>
+    )
   }
 }
 
@@ -155,20 +195,11 @@ function RemoveLiquidityV3Summary({
 }: {
   info: RemoveLiquidityV3TransactionInfo
 }) {
-  const baseCurrency = useCurrency(baseCurrencyId)
-  const quoteCurrency = useCurrency(quoteCurrencyId)
-
-  const [baseAmount, quoteAmount] = useMemo(() => {
-    return [
-      baseCurrency ? CurrencyAmount.fromRawAmount(baseCurrency, expectedAmountBaseRaw) : null,
-      quoteCurrency ? CurrencyAmount.fromRawAmount(quoteCurrency, expectedAmountQuoteRaw) : null,
-    ]
-  }, [baseCurrency, expectedAmountBaseRaw, expectedAmountQuoteRaw, quoteCurrency])
-
   return (
     <Trans>
-      Remove {baseAmount?.toSignificant(3)} {baseCurrency?.symbol} and {quoteAmount?.toSignificant(3)}
-      {quoteCurrency?.symbol}
+      Remove{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} /> and{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />
     </Trans>
   )
 }
@@ -197,54 +228,48 @@ function AddLiquidityV2PoolSummary({
 }: {
   info: AddLiquidityV2PoolTransactionInfo
 }) {
-  const baseCurrency = useCurrency(baseCurrencyId)
-  const quoteCurrency = useCurrency(quoteCurrencyId)
-
-  const [baseAmount, quoteAmount] = useMemo(() => {
-    return [
-      baseCurrency ? CurrencyAmount.fromRawAmount(baseCurrency, expectedAmountBaseRaw) : null,
-      quoteCurrency ? CurrencyAmount.fromRawAmount(quoteCurrency, expectedAmountQuoteRaw) : null,
-    ]
-  }, [baseCurrency, expectedAmountBaseRaw, expectedAmountQuoteRaw, quoteCurrency])
-
   return (
     <Trans>
-      Add ${baseAmount?.toSignificant(3)} ${baseCurrency?.symbol} and ${quoteAmount?.toSignificant(3)} $
-      {quoteCurrency?.symbol} to Uniswap V2
+      Add <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
+      and <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
+      to Uniswap V2
     </Trans>
   )
 }
 
 function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo }) {
-  const { inputCurrencyId, outputCurrencyId } = info
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
-  const [inputCurrencyAmount, outputCurrencyAmount] = useMemo(() => {
-    if (info.tradeType === TradeType.EXACT_INPUT) {
-      return [
-        inputCurrency ? CurrencyAmount.fromRawAmount(inputCurrency, info.inputCurrencyAmountRaw) : undefined,
-        outputCurrency ? CurrencyAmount.fromRawAmount(outputCurrency, info.expectedOutputCurrencyAmountRaw) : undefined,
-      ]
-    } else {
-      return [
-        inputCurrency ? CurrencyAmount.fromRawAmount(inputCurrency, info.expectedInputCurrencyAmountRaw) : undefined,
-        outputCurrency ? CurrencyAmount.fromRawAmount(outputCurrency, info.outputCurrencyAmountRaw) : undefined,
-      ]
-    }
-  }, [info, inputCurrency, outputCurrency])
-
   if (info.tradeType === TradeType.EXACT_INPUT) {
     return (
       <Trans>
-        Swap exactly {inputCurrencyAmount?.toSignificant(4)} {inputCurrencyAmount?.currency.symbol} for{' '}
-        {outputCurrencyAmount?.toSignificant(4)} {outputCurrencyAmount?.currency.symbol}
+        Swap exactly{' '}
+        <FormattedCurrencyAmountManaged
+          rawAmount={info.inputCurrencyAmountRaw}
+          currencyId={info.inputCurrencyId}
+          sigFigs={6}
+        />{' '}
+        for{' '}
+        <FormattedCurrencyAmountManaged
+          rawAmount={info.expectedOutputCurrencyAmountRaw}
+          currencyId={info.outputCurrencyId}
+          sigFigs={6}
+        />
       </Trans>
     )
   } else {
     return (
       <Trans>
-        Swap {inputCurrencyAmount?.toSignificant(4)} {inputCurrencyAmount?.currency.symbol} for exactly{' '}
-        {outputCurrencyAmount?.toSignificant(4)} {outputCurrencyAmount?.currency.symbol}
+        Swap{' '}
+        <FormattedCurrencyAmountManaged
+          rawAmount={info.expectedInputCurrencyAmountRaw}
+          currencyId={info.inputCurrencyId}
+          sigFigs={6}
+        />{' '}
+        for exactly{' '}
+        <FormattedCurrencyAmountManaged
+          rawAmount={info.outputCurrencyAmountRaw}
+          currencyId={info.outputCurrencyId}
+          sigFigs={6}
+        />
       </Trans>
     )
   }
