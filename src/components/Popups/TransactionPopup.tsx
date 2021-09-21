@@ -6,7 +6,7 @@ import { useTransaction } from '../../state/transactions/hooks'
 import { TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { TransactionSummary } from '../AccountDetails/Transaction'
+import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 

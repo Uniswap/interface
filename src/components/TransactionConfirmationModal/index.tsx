@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { ReactNode, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
+import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
@@ -19,7 +20,6 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import Badge from 'components/Badge'
 import AnimatedConfirmation from './AnimatedConfirmation'
-import { TransactionSummary } from 'components/AccountDetails/Transaction'
 
 const Wrapper = styled.div`
   width: 100%;
