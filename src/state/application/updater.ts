@@ -8,6 +8,7 @@ import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
+
 import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './actions'
 import { useBlockNumber } from './hooks'
 

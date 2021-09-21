@@ -1,13 +1,14 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Token, Currency } from '@uniswap/sdk-core'
-import { useFeeTierDistributionQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { reduce } from 'lodash'
-import { useBlockNumber } from 'state/application/hooks'
-import ReactGA from 'react-ga'
-import { useMemo } from 'react'
-import { FeeTierDistributionQuery } from 'state/data/generated'
 import ms from 'ms.macro'
+import { useMemo } from 'react'
+import ReactGA from 'react-ga'
+import { useBlockNumber } from 'state/application/hooks'
+import { useFeeTierDistributionQuery } from 'state/data/enhanced'
+import { FeeTierDistributionQuery } from 'state/data/generated'
+
 import { PoolState, usePool } from './usePools'
 
 // maximum number of blocks past which we consider the data stale

@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+
 import { tryParsePrice } from './utils'
 
 describe('hooks', () => {

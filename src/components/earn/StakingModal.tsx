@@ -4,6 +4,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components/macro'
+
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'

@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+
 import { gnosisSafe, injected } from '../connectors'
 import { IS_IN_IFRAME, NetworkContextName } from '../constants/misc'
 

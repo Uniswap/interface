@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+
 import { SupportedChainId } from '../constants/chains'
 import { DAI_OPTIMISM, USDC, USDC_ARBITRUM } from '../constants/tokens'
 import { useBestV2Trade } from './useBestV2Trade'

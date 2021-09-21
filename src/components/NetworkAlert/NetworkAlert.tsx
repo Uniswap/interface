@@ -13,6 +13,7 @@ import { useArbitrumAlphaAlert, useDarkModeManager, useOptimismAlphaAlert } from
 import { useETHBalances } from 'state/wallet/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
+
 import { CHAIN_INFO } from '../../constants/chains'
 
 export const DesktopTextBreak = styled.div`

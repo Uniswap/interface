@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { updateVersion } from '../global/actions'
 import {
   addTransaction,

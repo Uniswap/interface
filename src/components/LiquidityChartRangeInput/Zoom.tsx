@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef } from 'react'
 import { ButtonGray } from 'components/Button'
-import styled from 'styled-components/macro'
-import { ScaleLinear, select, ZoomBehavior, zoom, ZoomTransform, zoomIdentity } from 'd3'
+import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
+import styled from 'styled-components/macro'
+
 import { ZoomLevels } from './types'
 
 const Wrapper = styled.div<{ count: number }>`

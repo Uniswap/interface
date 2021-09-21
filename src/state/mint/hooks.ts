@@ -1,17 +1,17 @@
 import { t } from '@lingui/macro'
-import { useCallback, useMemo } from 'react'
-import { AppState } from '../index'
-import { Field, typeInput } from './actions'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, Token, Percent, Price, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useCallback, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { Field, typeInput } from './actions'
 
 const ZERO = JSBI.BigInt(0)
 

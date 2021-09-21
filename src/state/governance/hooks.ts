@@ -23,6 +23,7 @@ import {
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+
 import { SupportedChainId } from '../../constants/chains'
 import { BRAVO_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'

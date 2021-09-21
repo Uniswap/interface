@@ -1,22 +1,23 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
-import { calculateGasMargin } from '../utils/calculateGasMargin'
-import approveAmountCalldata from '../utils/approveAmountCalldata'
 import { useTransactionAdder } from '../state/transactions/hooks'
+import approveAmountCalldata from '../utils/approveAmountCalldata'
+import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
-import { useActiveWeb3React } from './web3'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import { useV2RouterContract } from './useContract'
+import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
-import useENS from './useENS'
+import { useActiveWeb3React } from './web3'
 
 enum SwapCallbackState {
   INVALID,

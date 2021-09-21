@@ -1,6 +1,6 @@
+import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
-import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import ms from 'ms.macro'
 
 export enum SupportedChainId {

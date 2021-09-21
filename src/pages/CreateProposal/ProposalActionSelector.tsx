@@ -1,13 +1,13 @@
-import React, { useCallback } from 'react'
-import styled from 'styled-components/macro'
-import { Text } from 'rebass'
-import { CloseIcon } from 'theme'
 import { Trans } from '@lingui/macro'
+import { ButtonDropdown } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styleds'
-import { ButtonDropdown } from 'components/Button'
+import React, { useCallback } from 'react'
+import { Text } from 'rebass'
+import styled from 'styled-components/macro'
+import { CloseIcon } from 'theme'
 
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',

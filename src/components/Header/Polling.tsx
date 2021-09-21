@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'state/hooks'
 import styled, { keyframes } from 'styled-components/macro'
+
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'

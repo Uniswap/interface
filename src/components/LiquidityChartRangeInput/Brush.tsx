@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
-import styled from 'styled-components/macro'
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
+import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;

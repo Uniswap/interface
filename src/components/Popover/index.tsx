@@ -3,6 +3,7 @@ import Portal from '@reach/portal'
 import React, { useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
+
 import useInterval from '../../hooks/useInterval'
 
 const PopoverContainer = styled.div<{ show: boolean }>`

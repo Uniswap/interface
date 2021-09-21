@@ -2,6 +2,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DAI, USDC, WBTC } from 'constants/tokens'
 import { render } from 'test-utils'
+
 import RoutingDiagram, { RoutingDiagramEntry } from './RoutingDiagram'
 
 const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 100)

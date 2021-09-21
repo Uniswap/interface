@@ -1,13 +1,17 @@
 import { t, Trans } from '@lingui/macro'
+import { Percent } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
+
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useClientSideRouter } from '../../state/user/hooks'
+import { useClientSideRouter, useExpertModeManager } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -16,9 +20,6 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Percent } from '@uniswap/sdk-core'
-import { useActiveWeb3React } from 'hooks/web3'
-import { SupportedChainId } from 'constants/chains'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;

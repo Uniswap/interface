@@ -11,6 +11,7 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
+
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ReactComponent as LogoDark } from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'

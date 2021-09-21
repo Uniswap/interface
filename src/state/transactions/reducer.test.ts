@@ -1,4 +1,5 @@
 import { createStore, Store } from 'redux'
+
 import { updateVersion } from '../global/actions'
 import {
   addTransaction,

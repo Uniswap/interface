@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TradeType } from '@uniswap/sdk-core'
+
 import { VoteOption } from '../governance/types'
 
 export interface SerializableTransactionReceipt {

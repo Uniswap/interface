@@ -3,6 +3,7 @@ import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
+
 import useCurrentBlockTimestamp from './useCurrentBlockTimestamp'
 import { useActiveWeb3React } from './web3'
 

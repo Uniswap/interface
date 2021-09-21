@@ -13,6 +13,7 @@ import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
+
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
 const Separator = styled.div`

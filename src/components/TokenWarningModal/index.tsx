@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
-import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
+
+import Modal from '../Modal'
 
 export default function TokenWarningModal({
   isOpen,

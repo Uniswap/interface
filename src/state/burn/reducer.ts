@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { Field, typeInput } from './actions'
 
 interface BurnState {

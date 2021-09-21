@@ -4,39 +4,38 @@ import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
-import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-
+import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
-import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import EIP_2612 from 'abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
+import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
-import EIP_2612 from 'abis/eip_2612.json'
-
 import {
-  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  QUOTER_ADDRESSES,
-  V3_MIGRATOR_ADDRESSES,
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  MERKLE_DISTRIBUTOR_ADDRESS,
-  MULTICALL_ADDRESS,
-  V2_ROUTER_ADDRESS,
   ENS_REGISTRAR_ADDRESSES,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
+  MERKLE_DISTRIBUTOR_ADDRESS,
+  MULTICALL_ADDRESS,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  QUOTER_ADDRESSES,
+  V2_ROUTER_ADDRESS,
+  V3_MIGRATOR_ADDRESSES,
 } from 'constants/addresses'
-import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useMemo } from 'react'
-import { Quoter, NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
+import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 'types/v3'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
-import { Erc20, ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Weth } from '../abis/types'
+
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 

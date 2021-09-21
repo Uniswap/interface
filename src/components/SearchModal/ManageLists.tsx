@@ -10,6 +10,7 @@ import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import styled from 'styled-components/macro'
+
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useTheme from '../../hooks/useTheme'

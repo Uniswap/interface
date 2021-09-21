@@ -1,13 +1,14 @@
+import { Trans } from '@lingui/macro'
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
 import { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
+
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { ONE_BIPS } from '../../constants/misc'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import { Trans } from '@lingui/macro'
 
 export function PoolPriceBar({
   currencies,

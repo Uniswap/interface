@@ -1,5 +1,6 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+
 import {
   addPopup,
   ApplicationModal,

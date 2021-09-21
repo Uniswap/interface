@@ -1,16 +1,15 @@
-import { useContext } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon, CustomLightSpinner } from '../../theme'
-import { ArrowUpCircle } from 'react-feather'
 import { Trans } from '@lingui/macro'
+import { useContext } from 'react'
+import { ArrowUpCircle } from 'react-feather'
+import styled, { ThemeContext } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { AutoColumn, ColumnCenter } from '../Column'
+import { RowBetween } from '../Row'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;
