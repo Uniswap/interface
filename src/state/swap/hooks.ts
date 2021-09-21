@@ -4,7 +4,8 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
-import { useV3TradeExactIn, useV3TradeExactOut } from 'hooks/useCombinedV3Trade'
+import { useBestV2Trade } from 'hooks/useBestV2Trade'
+import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,7 +17,6 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { Version } from '../../hooks/useToggledVersion'
-import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
@@ -157,26 +157,16 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
 
   // get v2 and v3 quotes
   // skip if other version is toggled
-  const bestV2TradeExactIn = useV2TradeExactIn(
-    toggledVersion !== Version.v3 && isExactIn ? parsedAmount : undefined,
-    outputCurrency ?? undefined
+  const v2Trade = useBestV2Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    parsedAmount,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
-  const bestV2TradeExactOut = useV2TradeExactOut(
-    inputCurrency ?? undefined,
-    toggledVersion !== Version.v3 && !isExactIn ? parsedAmount : undefined
+  const v3Trade = useBestV3Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    toggledVersion !== Version.v2 ? parsedAmount : undefined,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
-
-  const bestV3TradeExactIn = useV3TradeExactIn(
-    toggledVersion !== Version.v2 && isExactIn ? parsedAmount : undefined,
-    outputCurrency ?? undefined
-  )
-  const bestV3TradeExactOut = useV3TradeExactOut(
-    inputCurrency ?? undefined,
-    toggledVersion !== Version.v2 && !isExactIn ? parsedAmount : undefined
-  )
-
-  const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut
 
   const isV2TradeBetter = useMemo(() => {
     try {
@@ -221,11 +211,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   if (!to || !formattedTo) {
     inputError = inputError ?? t`Enter a recipient`
   } else {
-    if (
-      BAD_RECIPIENT_ADDRESSES[formattedTo] ||
-      (bestV2TradeExactIn && involvesAddress(bestV2TradeExactIn, formattedTo)) ||
-      (bestV2TradeExactOut && involvesAddress(bestV2TradeExactOut, formattedTo))
-    ) {
+    if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
       inputError = inputError ?? t`Invalid recipient`
     }
   }
