@@ -21,6 +21,7 @@ import PairSearchModal from '../../../components/SearchModal/PairSearchModal'
 import Skeleton from 'react-loading-skeleton'
 import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
+import { unwrappedToken } from '../../../utils/wrappedCurrency'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -128,7 +129,11 @@ export default function Pair({
                   </Box>
                   <Box mr="4px">
                     <Text fontWeight="600" fontSize="16px" lineHeight="20px">
-                      {!token0 || !token1 ? <Skeleton width="60px" /> : `${token0.symbol}/${token1.symbol}`}
+                      {!token0 || !token1 ? (
+                        <Skeleton width="60px" />
+                      ) : (
+                        `${unwrappedToken(token0)?.symbol}/${unwrappedToken(token1)?.symbol}`
+                      )}
                     </Text>
                   </Box>
                   <Box>
