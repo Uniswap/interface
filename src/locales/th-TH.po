@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -150,6 +150,10 @@ msgstr "คล่องแคล่ว"
 msgid "Add"
 msgstr "เพิ่ม"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "เพิ่ม <0/> และ <1/> ไปยัง Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "เพิ่มผู้รับมอบสิทธิ์ +"
@@ -175,16 +179,11 @@ msgstr "เพิ่มสภาพคล่อง"
 msgid "Add {0} to Metamask <0/>"
 msgstr "เพิ่ม {0} ให้กับ Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "เพิ่ม {0} {1} และ {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "เพิ่มสภาพคล่อง {0}-{1}"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "เพิ่มสภาพคล่อง {0}/{1}"
 
@@ -241,6 +240,7 @@ msgstr "อนุมัติ"
 msgid "Approve Token"
 msgstr "อนุมัติโทเค็น"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "ดูคำแนะนำการใช้งาน v3 LP และ�
 msgid "Claim"
 msgstr "เรียกร้อง"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "อ้างสิทธิ์ <0/> สำหรับ {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "รับสิทธิ์ UNI"
 msgid "Claim UNI Token"
 msgstr "รับโทเค็น UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "รับรางวัล UNI สะสม"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "รับรางวัล UNI สำหรับ {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "อ้างสิทธิ์"
 msgid "Claimed UNI!"
 msgstr "อ้างสิทธิ์ UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "อ้างสิทธิ์!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "อ้างสิทธิ์"
 
@@ -454,6 +462,10 @@ msgstr "สะสมเป็น WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "เก็บค่าธรรมเนียม"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "เก็บค่าธรรมเนียม {0}/{1}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "สร้างสระ"
 msgid "Create an issue on GitHub"
 msgstr "สร้างปัญหาบน GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "สร้างกลุ่มและเพิ่มสภาพคล่อง {0}/{1}"
 
@@ -587,7 +599,7 @@ msgstr "สร้างกลุ่มและเพิ่มสภาพคล
 msgid "Create pool."
 msgstr "สร้างพูล"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "สร้างพูล V3 {0}/{1}"
 
@@ -612,13 +624,13 @@ msgstr "พ่ายแพ้"
 msgid "Delegate Votes"
 msgstr "โหวตตัวแทน"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "มอบอำนาจการลงคะแนนเป็น {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "มอบหมายให้:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "โหวตที่ได้รับมอบหมาย"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "ฝากทรัพย์สิน"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "ฝากโทเค็น LP ของ UNI-V2"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "สภาพคล่องในการฝาก"
 
@@ -1062,6 +1074,10 @@ msgstr "โยกย้ายสภาพคล่อง V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "ย้ายโทเค็นสภาพคล่องของคุณจาก Uniswap V2 เป็น Uniswap V3"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "โอนย้าย {0}/{1} ไปที่ V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "การย้ายถิ่น"
@@ -1359,6 +1375,10 @@ msgstr "ผู้รับ"
 msgid "Remove"
 msgstr "ลบ"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "ลบ <0/> และ </1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "ลบจำนวนเงิน"
@@ -1377,15 +1397,7 @@ msgstr "ลบสภาพคล่อง"
 msgid "Remove list"
 msgstr "ลบรายการ"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "ลบ {0} {1} และ {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "ลบ {0}/{1} V3 สภาพคล่อง"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "กำลังลบ {0} {1} และ {2} {3}"
@@ -1486,8 +1498,8 @@ msgstr "สถานะ"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "ขั้นตอนที่ 1 รับโทเค็นสภาพคล่อง UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
 msgstr "ส่งข้อเสนอใหม่"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1522,10 +1534,18 @@ msgstr "จัดหา {0} {1} และ {2} {3}"
 msgid "Swap"
 msgstr "แลกเปลี่ยน"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "สลับ <0/> เป็น </1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "สลับกัน"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "สลับเฉพาะ <0/> เป็น <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "ไม่มีชื่อ"
 msgid "Unwrap"
 msgstr "แกะ"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "แกะ <0/> ไปยัง ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "อัพเดทคณะผู้แทน"
@@ -1893,15 +1917,39 @@ msgstr "โหวตให้"
 msgid "Vote against proposal {proposalId}"
 msgstr "โหวตคัดค้านข้อเสนอ {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "โหวตคัดค้านข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตคัดค้านข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "โหวตข้อเสนอ {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "โหวตข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "โหวตงดรับข้อเสนอ {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "โหวตงดรับข้อเสนอ {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "โหวตงดรับข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "ถอน"
 msgid "Withdraw & Claim"
 msgstr "ถอนและเรียกร้อง"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "ถอนเงินที่ฝากไว้"
 
@@ -1964,6 +2011,10 @@ msgstr "ถอนตัว UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "ห่อ"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "ตัด <0/> ถึง WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -150,6 +150,10 @@ msgstr "Hoạt động"
 msgid "Add"
 msgstr "Thêm vào"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Thêm <0 /> và <1 /> vào Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Thêm đại biểu +"
@@ -175,16 +179,11 @@ msgstr "Thêm thanh khoản"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Thêm {0} vào Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Thêm {0} {1} và {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Thêm {0}-{1} thanh khoản"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Thêm {0}/{1} thanh khoản V3"
 
@@ -241,6 +240,7 @@ msgstr "Phê duyệt"
 msgid "Approve Token"
 msgstr "Phê duyệt mã thông báo"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Xem hướng dẫn di chuyển và hướng dẫn v3 LP của chúng tô
 msgid "Claim"
 msgstr "Nhận"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Yêu cầu <0 /> cho {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Nhận UNI"
 msgid "Claim UNI Token"
 msgstr "Yêu cầu mã token UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Yêu cầu phần thưởng UNI tích lũy"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Yêu cầu phần thưởng UNI cho {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Đã yêu cầu bồi thường"
 msgid "Claimed UNI!"
 msgstr "Đã nhận UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Đã yêu cầu bồi thường!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Đang yêu cầu"
 
@@ -454,6 +462,10 @@ msgstr "Thu thập dưới dạng WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Thu phí"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Thu thập {0}/{1} phí"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Tạo một nhóm"
 msgid "Create an issue on GitHub"
 msgstr "Tạo sự cố trên GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Tạo nhóm và thêm {0}/{1} thanh khoản V3"
 
@@ -587,7 +599,7 @@ msgstr "Tạo nhóm và thêm {0}/{1} thanh khoản V3"
 msgid "Create pool."
 msgstr "Tạo nhóm."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Tạo {0}/{1} hồ bơi V3"
 
@@ -612,13 +624,13 @@ msgstr "Bị đánh bại"
 msgid "Delegate Votes"
 msgstr "Phiếu bầu ủy quyền"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Ủy quyền biểu quyết thành {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Giao cho:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Phiếu bầu được ủy quyền"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Ký quỹ tài sản"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Gửi token UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Thanh khoản tiền gửi"
 
@@ -1062,6 +1074,10 @@ msgstr "Di chuyển Thanh khoản V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Di chuyển mã token thanh khoản của bạn từ Uniswap V2 sang Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Di chuyển {0}/{1} thanh khoản cho V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Đang di chuyển"
@@ -1359,6 +1375,10 @@ msgstr "Người nhận"
 msgid "Remove"
 msgstr "Xóa"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Xóa <0 /> và <1 />"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Xóa số tiền"
@@ -1377,15 +1397,7 @@ msgstr "Loại bỏ thanh khoản"
 msgid "Remove list"
 msgstr "Xóa danh sách"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Xóa {0} {1} và {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Di {0}/{1} thanh khoản V3"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Loại bỏ {0} {1} và {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Trạng thái"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Bước 1. Nhận mã token thanh khoản UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Đã gửi đề xuất mới"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Gửi đề xuất mới"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 msgid "Swap"
 msgstr "Hoán đổi"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Hoán đổi <0 /> lấy chính xác <1 />"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Vẫn hoán đổi"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Không có tiêu đề"
 msgid "Unwrap"
 msgstr "Tháo"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Mở gói <0 /> thành ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Cập nhật ủy quyền"
@@ -1893,15 +1917,39 @@ msgstr "Bỏ phiếu cho"
 msgid "Vote against proposal {proposalId}"
 msgstr "Bỏ phiếu chống lại đề xuất {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Bỏ phiếu chống lại đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu chống lại đề xuất {proposalKey} với lý do \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Bỏ phiếu cho đề xuất {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Bỏ phiếu cho đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu cho đề xuất {proposalKey} với lý do \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Bỏ phiếu trắng đối với đề xuất {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Bỏ phiếu trắng đối với đề xuất {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Bỏ phiếu trắng đối với đề xuất {proposalKey} với lý do \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Rút tiền"
 msgid "Withdraw & Claim"
 msgstr "Rút tiền & xác nhận quyền sở hữu"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Rút tiền thanh khoản đã ký gửi"
 
@@ -1964,6 +2011,10 @@ msgstr "Đã rút UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Bọc lại"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Wrap <0 /> thành WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

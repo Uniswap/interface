@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -150,6 +150,10 @@ msgstr "Aktiv"
 msgid "Add"
 msgstr "Legg til"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Legg til <0/> og <1/> i Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Legg til delegat +"
@@ -175,16 +179,11 @@ msgstr "Legg til mer likviditet"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Legg til {0} til metamaske <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Legg til {0} {1} og {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Legg til {0}-{1} likviditet"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Legg til {0}/{1} V3-likviditet"
 
@@ -241,6 +240,7 @@ msgstr "Godkjenn"
 msgid "Approve Token"
 msgstr "Godkjenn token"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Sjekk ut våre v3 LP-gjennomgangs- og migrasjonsguider."
 msgid "Claim"
 msgstr "Hent"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Gjør krav på <0/> for {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Hent UNI"
 msgid "Claim UNI Token"
 msgstr "Hent UNI-pollett"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Innkasser akkumulerte UNI-belønninger"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Krev UNI -belønning for {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Påtatt"
 msgid "Claimed UNI!"
 msgstr "Hentet UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Påstått!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Henter"
 
@@ -454,6 +462,10 @@ msgstr "Samle som WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Samle inn avgifter"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Samle {0}/{1} avgifter"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Lag en pott"
 msgid "Create an issue on GitHub"
 msgstr "Opprett et problem på GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Opprett pott og legg til {0}/{1} V3-likviditet"
 
@@ -587,7 +599,7 @@ msgstr "Opprett pott og legg til {0}/{1} V3-likviditet"
 msgid "Create pool."
 msgstr "Opprett pott."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Opprett {0}/{1} V3 basseng"
 
@@ -612,13 +624,13 @@ msgstr "Nedkjempet"
 msgid "Delegate Votes"
 msgstr "Delegere stemmer"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Delegere stemmerett til {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegert til:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Delegerte stemmer"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Innskuddsmidler"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Sett inn UNI-V2 LP-polletter"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Innskuddslikviditet"
 
@@ -1062,6 +1074,10 @@ msgstr "Migrer V2-likviditet"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Overføre likviditetspolletten din fra Uniswap V2 til Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Overfør {0}/{1} likviditet til V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migrerer"
@@ -1359,6 +1375,10 @@ msgstr "Mottaker"
 msgid "Remove"
 msgstr "Fjern"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Fjern <0/> og <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Fjern beløp"
@@ -1377,15 +1397,7 @@ msgstr "Fjern likviditet"
 msgid "Remove list"
 msgstr "Fjern liste"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Fjern {0} {1} og {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Fjerne {0}/{1} V3-likviditet"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Fjerner {0} {1} og {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Status"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Trinn 1. Få UNI-V2-likviditetspolletter"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Innlevert nytt forslag"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Send inn nytt forslag"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Leverer {0} {1} og {2} {3}"
 msgid "Swap"
 msgstr "Bytt"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Bytt <0/> for nøyaktig <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Bytt uansett"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Bytt nøyaktig <0/> for <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Uten navn"
 msgid "Unwrap"
 msgstr "Pakk opp"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Pakk ut <0/> til ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Oppdater delegasjon"
@@ -1893,15 +1917,39 @@ msgstr "Stem på"
 msgid "Vote against proposal {proposalId}"
 msgstr "Stem mot forslag {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Stem mot forslag {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem mot forslag {proposalKey} med grunn \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Stem på forslag {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Stem på forslag {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem på forslag {proposalKey} med grunn \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Stem for å avstå fra forslag {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Stem for å avstå fra forslag {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem for å avstå fra forslag {proposalKey} med grunn \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Trekk"
 msgid "Withdraw & Claim"
 msgstr "Trekk tilbake & få"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Trekk tilbake innskuddslikviditet"
 
@@ -1964,6 +2011,10 @@ msgstr "Avsluttet UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Bryt"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Fest <0/> til WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

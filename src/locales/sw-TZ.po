@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -150,6 +150,10 @@ msgstr "Inatumika"
 msgid "Add"
 msgstr "Ongeza"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Ongeza <0 /> na <1 /> ili Kubadilisha V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Ongeza Ujumbe +"
@@ -175,16 +179,11 @@ msgstr "Ongeza Mtaji zaidi"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Ongeza {0} kwa Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Ongeza {0} {1} na {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Ongeza ukwasi {0}-{1}"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Kuongeza {0}/{1} V3 ukwasi"
 
@@ -241,6 +240,7 @@ msgstr "Idhinisha"
 msgid "Approve Token"
 msgstr "Idhinisha Ishara"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Angalia mwongozo wetu wa v3 LP na mwongozo wa uhamiaji."
 msgid "Claim"
 msgstr "Chukua"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Dai <0 /> kwa {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Dai UNI"
 msgid "Claim UNI Token"
 msgstr "Dai Mshahara wa UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Madai yaliyokusanywa thawabu za UNI"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Dai malipo ya UNI kwa {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Alidai"
 msgid "Claimed UNI!"
 msgstr "UNI inayodaiwa!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Alidai!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Kudai"
 
@@ -454,6 +462,10 @@ msgstr "Kusanya kama WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Kusanya makato"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Kukusanya {0}/{1} ada"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Unda bwawa"
 msgid "Create an issue on GitHub"
 msgstr "Unda suala kwenye GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Kujenga bwawa na kuongeza {0}/{1} V3 ukwasi"
 
@@ -587,7 +599,7 @@ msgstr "Kujenga bwawa na kuongeza {0}/{1} V3 ukwasi"
 msgid "Create pool."
 msgstr "Unda bwawa."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Kujenga {0}/{1} V3 pool"
 
@@ -612,13 +624,13 @@ msgstr "Imeshindwa"
 msgid "Delegate Votes"
 msgstr "Shiriki Kura"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Kabidhi nguvu ya kupiga kura kwa {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Imekabidhiwa kwa:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Kura zilizokabidhiwa"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Mali ya Amana"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Amana UNI-V2 LP Ishara"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Amana ukwasi"
 
@@ -1062,6 +1074,10 @@ msgstr "Hamisha Kioevu cha V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Hamisha ishara zako za ukwasi kutoka kwa Uniswap V2 hadi Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Kuhamia {0}/{1} ukwasi V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Kuhamia"
@@ -1359,6 +1375,10 @@ msgstr "Mpokeaji"
 msgid "Remove"
 msgstr "Ondoa"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Ondoa <0 /> na <1 />"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Ondoa Kiasi"
@@ -1377,15 +1397,7 @@ msgstr "Ondoa Liquidity"
 msgid "Remove list"
 msgstr "Ondoa orodha"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Ondoa {0} {1} na {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Ondoa {0}/{1} V3 ukwasi"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Kuondoa {0} {1} na {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Hali"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Hatua ya 1. Pata tokeni za Liquidity za UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Iliwasilishwa pendekezo jipya"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Tuma pendekezo jipya"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Kusambaza {0} {1} na {2} {3}"
 msgid "Swap"
 msgstr "Badilishana"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Badili <0 /> kwa haswa <1 />"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Badili Vyovyote vile"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Badilisha kabisa <0 /> kwa <1 />"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Haina Jina"
 msgid "Unwrap"
 msgstr "Unwrap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Unwrap <0 /> hadi ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Sasisha Ujumbe"
@@ -1893,15 +1917,39 @@ msgstr "Pigia Kura"
 msgid "Vote against proposal {proposalId}"
 msgstr "Piga kura dhidi ya pendekezo {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Piga kura dhidi ya pendekezo {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Piga kura dhidi ya pendekezo {proposalKey} kwa sababu \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Piga kura ya pendekezo {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Piga kura ya pendekezo {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Pigia kura pendekezo {proposalKey} kwa sababu \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Kura ya kuacha pendekezo {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Kura ya kuacha pendekezo {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Piga kura ya kuacha pendekezo {proposalKey} kwa sababu \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Kutoa"
 msgid "Withdraw & Claim"
 msgstr "Ondoa & Dai"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Ondoa ukwasi uliowekwa"
 
@@ -1964,6 +2011,10 @@ msgstr "Umeondoa UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Funga"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Funga <0 /> kwa WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

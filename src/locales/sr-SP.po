@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -150,6 +150,10 @@ msgstr "Активно"
 msgid "Add"
 msgstr "Додати"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Додајте <0/> и <1/> у Унисвап В2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Додајте делегата +"
@@ -175,16 +179,11 @@ msgstr "Додајте више ликвидности"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Додајте {0} у Метамаск <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Додај {0} {1} и {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Додајте {0}-{1} ликвидност"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Додај {0}/{1} В3 ликвидност"
 
@@ -241,6 +240,7 @@ msgstr "Одобри"
 msgid "Approve Token"
 msgstr "Одобри жетон"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Погледајте наше водиче за v3 LP и водиче з
 msgid "Claim"
 msgstr "Потраживање"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Потраживање <0/> за {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Преузми УНИ"
 msgid "Claim UNI Token"
 msgstr "Преузми УНИ токен"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Преузми накупљене УНИ награде"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Затражите УНИ награду за {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Преузето"
 msgid "Claimed UNI!"
 msgstr "Преузет УНИ!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Потраживано!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Преузимање"
 
@@ -454,6 +462,10 @@ msgstr "Сакупи као WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Сакупи накнаде"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Покупи {0}/{1} накнаде"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Направите фонд"
 msgid "Create an issue on GitHub"
 msgstr "Направите питање на GitHub-у"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Направите фонд и додајте {0}/{1} V3 ликвидност"
 
@@ -587,7 +599,7 @@ msgstr "Направите фонд и додајте {0}/{1} V3 ликвидн�
 msgid "Create pool."
 msgstr "Направите фонд."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Створити {0}/{1} В3 базен"
 
@@ -612,13 +624,13 @@ msgstr "Поражени"
 msgid "Delegate Votes"
 msgstr "Делегирајте гласове"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Делегирајте гласачку моћ на {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Делегирано за:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Делегирани гласови"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Депозитна средства"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Положите UNI-V2 LP токене"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
 
@@ -1062,6 +1074,10 @@ msgstr "Миграција V2 ликвидности"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Пребаците своје токене ликвидности са Uniswap V2 на Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Мигрирајте {0}/{1} ликвидност у В3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Миграција"
@@ -1359,6 +1375,10 @@ msgstr "Прималац"
 msgid "Remove"
 msgstr "Уклоните"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Уклоните <0/> и <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Уклони износ"
@@ -1377,15 +1397,7 @@ msgstr "Уклони ликвидност"
 msgid "Remove list"
 msgstr "Уклони листу"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Уклони {0} {1} и {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Уклони {0}/{1} V3 ликвидност"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Уклањање {0} {1} и {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Статус"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Корак 1. Набавите UNI-V2 токене ликвидности"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Поднет нови предлог"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Поднесите нови предлог"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Снабдевање {0} {1} и {2} {3}"
 msgid "Swap"
 msgstr "Размени"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Замени <0/> за тачно <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Замени свеједно"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Замените тачно <0/> за <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Без наслова"
 msgid "Unwrap"
 msgstr "Одмотај"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Одмотајте <0/> на ЕТХ"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Ажурирање делегације"
@@ -1893,15 +1917,39 @@ msgstr "Гласајте за"
 msgid "Vote against proposal {proposalId}"
 msgstr "Гласајте против предлога {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Гласајте против предлога {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте против предлога {proposalKey} са разлогом \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Гласајте за предлог {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Гласајте за предлог {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте за предлог {proposalKey} са разлогом \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Гласајте за уздржавање по предлогу {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Гласајте за уздржавање по предлогу {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте за уздржавање од предлога {proposalKey} са разлогом \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Повуците"
 msgid "Withdraw & Claim"
 msgstr "Повуци и затражи"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Повући депоновану ликвидност"
 
@@ -1964,6 +2011,10 @@ msgstr "Повукао UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Упакујте"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Замотајте <0/> у ВЕТХ"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -150,6 +150,10 @@ msgstr "アクティブ"
 msgid "Add"
 msgstr "追加"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "<0 />と<1 />をUniswapV2に追加します"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "第三者に投票を委任する"
@@ -175,16 +179,11 @@ msgstr "流動性を追加する"
 msgid "Add {0} to Metamask <0/>"
 msgstr "{0} をメタマスクに追加 <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} の追加"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "{0}-{1} の流動性を追加"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "{0}/{1} V3の流動性を追加"
 
@@ -241,6 +240,7 @@ msgstr "承認"
 msgid "Approve Token"
 msgstr "トークンを承認する"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "V3の流動性と移行ガイドをご覧ください。"
 msgid "Claim"
 msgstr "請求"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "以下のための請求<0 /> {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "UNIを請求"
 msgid "Claim UNI Token"
 msgstr "UNIトークンを請求する"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "UNI報酬を請求する"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "{0}UNI報酬を請求する"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "請求済み"
 msgid "Claimed UNI!"
 msgstr "請求済みのUNI！"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "主張！"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "請求中"
 
@@ -454,6 +462,10 @@ msgstr "WETHで取得"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "報酬を取得"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "収集 {0}/{1} の手数料"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "プールを作成"
 msgid "Create an issue on GitHub"
 msgstr "GitHubでissueを作成する"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "プールを作成し、 {0}/{1} のV3流動性を追加"
 
@@ -587,7 +599,7 @@ msgstr "プールを作成し、 {0}/{1} のV3流動性を追加"
 msgid "Create pool."
 msgstr "プールを作成"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "{0}/{1} V3プールを作成"
 
@@ -612,13 +624,13 @@ msgstr "否決"
 msgid "Delegate Votes"
 msgstr "投票を委任する"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "投票権を {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "委任先:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "委任された投票"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "預金資産"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP トークンを預け入れる"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "流動性を預ける"
 
@@ -1062,6 +1074,10 @@ msgstr "V2の流動性を移行"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Uniswap V2からUniswap V3に流動性トークンを移行します。"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "移行 {0}/{1} V3への流動性"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "移行中"
@@ -1359,6 +1375,10 @@ msgstr "受取人"
 msgid "Remove"
 msgstr "削除"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "<0 />と<1 />を削除します"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "削除する数量"
@@ -1377,15 +1397,7 @@ msgstr "流動性を削除"
 msgid "Remove list"
 msgstr "リストを削除"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を削除"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3流動性を削除"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} と {2} {3} を解除中"
@@ -1486,9 +1498,9 @@ msgstr "ステータス"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "ステップ1. UNI-V2流動性トークンを入手"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "提出された新しい提案"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "新しい提案を送信する"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "{0} {1} と {2} {3} を追加中"
 msgid "Swap"
 msgstr "スワップ"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "<0 />を正確に<1 />に交換します"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "問題発生の可能性があるが、スワップする"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "正確に<0 />を<1 />に交換します"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "タイトル未設定"
 msgid "Unwrap"
 msgstr "アンラップ"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "<0 />をETHにアンラップ"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "委任を更新"
@@ -1893,15 +1917,39 @@ msgstr "賛成に投票"
 msgid "Vote against proposal {proposalId}"
 msgstr "提案 {proposalId} に反対票を入れる"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "{proposalKey}反対票を投じる"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "理由「{0}」 {proposalKey} 反対票を投じる"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "提案 {proposalId} に賛成票を入れる"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "{proposalKey}投票する"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "理由「{0}」で提案 {proposalKey}"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "{proposalId}を棄権するために投票する"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "{proposalKey}を棄権するために投票する"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "理由「{0}」 {proposalKey} を棄権することに投票する"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "引き出す"
 msgid "Withdraw & Claim"
 msgstr "引き出しと請求"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "預け入れた流動性を引き出す"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2を引き出しました"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "ラップ"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "<0 />をWETHにラップ"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

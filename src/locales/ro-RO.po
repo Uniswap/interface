@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -150,6 +150,10 @@ msgstr "Activ"
 msgid "Add"
 msgstr "Adăugare"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Adăugați <0 /> și <1 /> la Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Adaugă Delegat +"
@@ -175,16 +179,11 @@ msgstr "Adăugați mai multă lichiditate"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Adaugă {0} la Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Add {0} {1} and {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Adaugă {0}-{1} lichiditate"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Adaugă {0}/{1} lichiditate V3"
 
@@ -241,6 +240,7 @@ msgstr "Aprobă"
 msgid "Approve Token"
 msgstr "Aprobați jetonul"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Vezi ghicurile noastre v3 LP de utilizare și migrare."
 msgid "Claim"
 msgstr "Solicitare"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Revendicați <0 /> pentru {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Revendică UNI"
 msgid "Claim UNI Token"
 msgstr "Revendicați jetonul UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Revendică recompense UNI acumulate"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Revendicați recompensa UNI pentru {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Revendicat"
 msgid "Claimed UNI!"
 msgstr "UNI Revendicate!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Revendicat!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Revendicare"
 
@@ -454,6 +462,10 @@ msgstr "Colectează ca WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Colectează taxe"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Collect {0}/{1} taxele"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Creează o rezervă"
 msgid "Create an issue on GitHub"
 msgstr "Creează o problemă pe GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Creează rezervă și adaugă {0}/{1} V3 lichiditate"
 
@@ -587,7 +599,7 @@ msgstr "Creează rezervă și adaugă {0}/{1} V3 lichiditate"
 msgid "Create pool."
 msgstr "Creează grup."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Creează {0}/{1} piscina V3"
 
@@ -612,13 +624,13 @@ msgstr "Învins"
 msgid "Delegate Votes"
 msgstr "Voturi delegate"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Delegă puterea de vot la {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegat către:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Voturi delegate"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Activele de depozit"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Depune Jetoane UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Lichiditate de depozit"
 
@@ -1062,6 +1074,10 @@ msgstr "Migrare Lichiditate V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migrează jetoanele tale de lichiditate de la Uniswap V2 la Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Migrare {0}/{1} lichiditate la V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migrare"
@@ -1359,6 +1375,10 @@ msgstr "Destinatar"
 msgid "Remove"
 msgstr "Elimină"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Eliminați <0 /> și <1 />"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Elimină Suma"
@@ -1377,15 +1397,7 @@ msgstr "Elimină Lichiditatea"
 msgid "Remove list"
 msgstr "Elimină lista"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Elimină {0} {1} și {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Elimină lichiditățile V3 {0}/{1}"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Se elimină {0} {1} și {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "stare"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Pasul 1. Obține jetoane de Lichiditate UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "A fost trimisă o nouă propunere"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Trimiteți o nouă propunere"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Se furnizează {0} {1} și {2} {3}"
 msgid "Swap"
 msgstr "Schimbă"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Schimbați <0 /> pentru exact <1 />"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Schimbă Oricum"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Schimbați exact <0 /> cu <1 />"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Fără titlu"
 msgid "Unwrap"
 msgstr "Despachetează"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Desfaceți <0 /> la ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Actualizează Delegarea"
@@ -1893,15 +1917,39 @@ msgstr "Vot pentru"
 msgid "Vote against proposal {proposalId}"
 msgstr "Votează împotriva propunerii {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Votează împotriva propunerii {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Votează împotriva propunerii {proposalKey} cu motivul „{0}”"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Votează pentru propunerea {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Vot pentru propunerea {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Votează pentru propunerea {proposalKey} cu motivul „{0}”"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Votați pentru a vă abține la propunerea {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Votați pentru a vă abține la propunerea {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Votați pentru a vă abține la propunerea {proposalKey} cu motivul „{0}”"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Retrage"
 msgid "Withdraw & Claim"
 msgstr "Retrage & Solicită"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Retrage lichiditatea depozitată"
 
@@ -1964,6 +2011,10 @@ msgstr "S-au retras UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Împachetează"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Înfășurați <0 /> pe WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

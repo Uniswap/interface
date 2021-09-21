@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -150,6 +150,10 @@ msgstr "啟用"
 msgid "Add"
 msgstr "新增"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "將 <0/> 和 <1/> 添加到 Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "添加委托 +"
@@ -175,16 +179,11 @@ msgstr "增加流動性"
 msgid "Add {0} to Metamask <0/>"
 msgstr "將 {0} 添加到 Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "註入 {0} {1} 和 {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "註入 {0}-{1} 流動資金"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "註入 {0}/{1} V3 流動資金"
 
@@ -241,6 +240,7 @@ msgstr "批準"
 msgid "Approve Token"
 msgstr "批准代幣"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "查看我們的 v3 流動池介紹和遷移指南。"
 msgid "Claim"
 msgstr "領取"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "要求 <0/> 為 {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "領取 UNI"
 msgid "Claim UNI Token"
 msgstr "領取 UNI 代幣"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "領取累積的 UNI 代幣獎勵"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "{0}索取 UNI 獎勵"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "已領取"
 msgid "Claimed UNI!"
 msgstr "已領取 UNI 代幣！"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "聲稱！"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "領取中"
 
@@ -454,6 +462,10 @@ msgstr "以 WETH 方式收取"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "收取手續費"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "收取 {0}/{1}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "創建流動池"
 msgid "Create an issue on GitHub"
 msgstr "在GitHub上創建問題"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "創建流動池並註入 {0}/{1} V3 流動資金"
 
@@ -587,7 +599,7 @@ msgstr "創建流動池並註入 {0}/{1} V3 流動資金"
 msgid "Create pool."
 msgstr "創建流動池。"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "創建 {0}/{1} V3 池"
 
@@ -612,13 +624,13 @@ msgstr "未通過"
 msgid "Delegate Votes"
 msgstr "委托投票"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "將投票權委託給 {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "委托給："
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "委託投票"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "存入資產"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "存入 UNI-V2 流動池代幣"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "存入流動資金"
 
@@ -1062,6 +1074,10 @@ msgstr "遷移 V2 流動資金"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "將您的流動資金從 Uniswap V2 遷移到 Uniswap V3。"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "將 {0}/{1} 流動性遷移到 V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "正在遷移"
@@ -1359,6 +1375,10 @@ msgstr "接收方"
 msgid "Remove"
 msgstr "去除"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "刪除 <0/> 和 <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "去除數額"
@@ -1377,15 +1397,7 @@ msgstr "去除流動資金"
 msgid "Remove list"
 msgstr "去除代幣列表"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "去除 {0} {1} 和 {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "去除 {0}/{1} V3 流動資金"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "正在去除 {0} {1} 和 {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "狀態"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "第 1 步：獲取 UNI-V2 流動池代幣"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "提交了新提案"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "提交新提案"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "供應 {0} {1} 和 {2} {3}"
 msgid "Swap"
 msgstr "兌換"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "將 <0/> 替換為 <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "仍要兌換"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "將 <0/> 替換為 <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "無標題"
 msgid "Unwrap"
 msgstr "展開"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "將 <0/> 解包到 ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "更新投票權委托"
@@ -1893,15 +1917,39 @@ msgstr "投票贊成"
 msgid "Vote against proposal {proposalId}"
 msgstr "投票反對提案 {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "投票反對提案 {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "以“{0}”為理由對提案 {proposalKey}"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "投票贊成提案 {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "為提案 {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "以“{0}”為理由為提案 {proposalKey}"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "針對提案 {proposalId} 投棄權票"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "{proposalKey}投棄權票"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "以“{0}”為由投票棄權提案 {proposalKey}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "贖回"
 msgid "Withdraw & Claim"
 msgstr "贖回和領取"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "贖回註入的流動資金"
 
@@ -1964,6 +2011,10 @@ msgstr "已贖回 UNI-V2！"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "包裹"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "將 <0/> 包裹到 WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

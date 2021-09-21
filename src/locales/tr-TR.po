@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -150,6 +150,10 @@ msgstr "Aktif"
 msgid "Add"
 msgstr "Ekle"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Uniswap V2'ye <0/> ve <1/> ekleyin"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Temsilci Ekle +"
@@ -175,16 +179,11 @@ msgstr "Daha fazla likidite ekleyin"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Metamask'a {0} ekle <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} ve {2} {3} ekle"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "{0}-{1} likidite ekle"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "{0}/{1} V3 likidite ekle"
 
@@ -241,6 +240,7 @@ msgstr "Onayla"
 msgid "Approve Token"
 msgstr "Onay Simgesi"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "V3 LP adım adım açıklamalı kılavuzumuza ve geçiş kılavuzlarım�
 msgid "Claim"
 msgstr "Talep"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "İstem <0 /> için {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "UNI talep et"
 msgid "Claim UNI Token"
 msgstr "UNI Jetonu talep et"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Birikmiş UNI ödüllerini talep et"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "{0}için UNI ödülü talep et"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Talep Edilen"
 msgid "Claimed UNI!"
 msgstr "UNI talep edildi!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Hak talebinde bulunuldu!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Talep ediliyor"
 
@@ -454,6 +462,10 @@ msgstr "WETH olarak toplayın"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Ücretleri topla"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "{0}/{1} ücretleri toplayın"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Bir havuz oluştur"
 msgid "Create an issue on GitHub"
 msgstr "GitHub'da bir konu oluşturun"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Havuz oluşturun ve {0}/{1} V3 likidite ekleyin"
 
@@ -587,7 +599,7 @@ msgstr "Havuz oluşturun ve {0}/{1} V3 likidite ekleyin"
 msgid "Create pool."
 msgstr "Havuz oluşturun."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "{0}/{1} V3 havuzu oluştur"
 
@@ -612,13 +624,13 @@ msgstr "mağlup"
 msgid "Delegate Votes"
 msgstr "Oylar Devret"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Oylama gücünü {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Yetki verildi:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "devredilen oylar"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Mevduat Varlıkları"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP Jetonlarını yatırın"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Mevduat likiditesi"
 
@@ -1062,6 +1074,10 @@ msgstr "V2 Likiditesini Geçirin"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Likidite jetonlarınızı Uniswap V2'den Uniswap V3'e geçirin."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "{0}/{1} likiditesini V3'e taşıyın"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Geçiriliyor"
@@ -1359,6 +1375,10 @@ msgstr "alıcı"
 msgid "Remove"
 msgstr "Kaldır"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "<0/> ve <1/> öğesini kaldırın"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Tutarı Kaldır"
@@ -1377,15 +1397,7 @@ msgstr "Likiditeyi Kaldır"
 msgid "Remove list"
 msgstr "Listeyi kaldır"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Şunları kaldır: {0} {1} ve {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3 likiditesini kaldır"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} ve {2} {3} kaldırılıyor"
@@ -1486,9 +1498,9 @@ msgstr "Durum"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Adım 1. UNI-V2 Likidite jetonları alın"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Yeni teklif gönderildi"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Yeni teklif gönder"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "{0} {1} ve {2} {3} temini"
 msgid "Swap"
 msgstr "Swap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "<0/> öğesini tam olarak <1/> ile değiştirin"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Yine de Swap"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Tam olarak <0/> ile <1/> arasında geçiş yapın"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "başlıksız"
 msgid "Unwrap"
 msgstr "Paketi Aç"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "<0/> paketini ETH'ye açın"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Yetkilendirmeyi Güncelle"
@@ -1893,15 +1917,39 @@ msgstr "Destek Oyu Ver"
 msgid "Vote against proposal {proposalId}"
 msgstr "Teklife karşı oy {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Teklife karşı oy {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "{0}\" nedeni ile {proposalKey} önerisine karşı oy verin"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Teklife destek oyu {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Teklif için oy verin {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "{proposalKey}{0}\" nedeni ile oy verin"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "{proposalId}önerisinde çekimser oy"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "{proposalKey}önerisinde çekimser oy"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "{proposalKey}{0}\" nedeni ile çekimser kalın"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Çek"
 msgid "Withdraw & Claim"
 msgstr "Çek ve Talep Et"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Yatırılan likiditeyi çekin"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2 çekildi!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Paketle"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "<0/> öğesini WETH olarak sarın"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

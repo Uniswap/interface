@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -150,6 +150,10 @@ msgstr "Aktiivinen"
 msgid "Add"
 msgstr "Lisää"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Lisää <0/> ja <1/> Uniswap V2: een"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Lisää delegaatti +"
@@ -175,16 +179,11 @@ msgstr "Lisää lisää likviditeettiä"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Lisää {0} Metamaskiin <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Lisää {0} {1} ja {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Lisää {0}-{1} likviditeetti"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Lisää {0}/{1} V3 likviditeetti"
 
@@ -241,6 +240,7 @@ msgstr "Hyväksy"
 msgid "Approve Token"
 msgstr "Hyväksy tunnus"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Tutustu v3 LP -läpikävelyymme ja siirto-oppaisiimme."
 msgid "Claim"
 msgstr "Lunasta"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Väitä <0/> {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Lunasta UNI"
 msgid "Claim UNI Token"
 msgstr "Lunasta UNI-rahake"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Lunasta kertyneet UNI-palkinnot"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Lunasta UNI -palkinto {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Lunastettu"
 msgid "Claimed UNI!"
 msgstr "UNI lunastettu!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Väitetty!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Lunastetaan"
 
@@ -454,6 +462,10 @@ msgstr "Kerää WETH:na"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Kerää palkkiot"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Kerää {0}/{1} -maksuja"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Luo pooli"
 msgid "Create an issue on GitHub"
 msgstr "Luo ongelma GitHubiin"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Luo pooli ja lisää {0}/{1} V3-likviditeetti"
 
@@ -587,7 +599,7 @@ msgstr "Luo pooli ja lisää {0}/{1} V3-likviditeetti"
 msgid "Create pool."
 msgstr "Luo pooli."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Luo {0}/{1} V3 pool"
 
@@ -612,13 +624,13 @@ msgstr "Voitettu"
 msgid "Delegate Votes"
 msgstr "Delegoi äänet"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Siirrä äänioikeus {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegoitu henkilölle:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Delegoidut äänet"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Talletusomaisuus"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Talleta UNI-V2 LP -rahakkeita"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Talleta likviditeettiä"
 
@@ -1062,6 +1074,10 @@ msgstr "Siirrä V2-likviditeetti"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Siirrä likviditeettirahakkeesi Uniswap V2:sta Uniswap V3:een."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Siirrä {0}/{1} -likviditeetti V3: een"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Siirretään"
@@ -1359,6 +1375,10 @@ msgstr "Vastaanottaja"
 msgid "Remove"
 msgstr "Poista"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Poista <0/> ja <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Poista summa"
@@ -1377,15 +1397,7 @@ msgstr "Poista likviditeetti"
 msgid "Remove list"
 msgstr "Poista luettelo"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Poista {0} {1} ja {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Poista {0}/{1} V3-likviditeetti"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Poistetaan {0} {1} ja {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Tila"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Vaihe 1. Hanki UNI-V2 likviditeettirahakkeita"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Lähetetty uusi ehdotus"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Lähetä uusi ehdotus"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Toimitetaan {0} {1} ja {2} {3}"
 msgid "Swap"
 msgstr "Vaihda"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Vaihda <0/> täsmälleen <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Vaihda silti"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Vaihda täsmälleen <0/> arvoon <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Nimetön"
 msgid "Unwrap"
 msgstr "Unwrap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Pura <0/> ETH: ksi"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Päivitä delegointi"
@@ -1893,15 +1917,39 @@ msgstr "Äänestä puolesta"
 msgid "Vote against proposal {proposalId}"
 msgstr "Äänestä ehdotusta {proposalId} vastaan"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Äänestä ehdotusta {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Äänestä ehdotusta {proposalKey} syystä{0}"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Äänestä ehdotuksen {proposalId} puolesta"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Äänestä ehdotusta {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Äänestä ehdotusta {proposalKey} syystä{0}"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Äänestää tyhjää ehdotuksesta {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Äänestää tyhjää ehdotuksesta {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Äänestä tyhjää ehdotuksesta {proposalKey} syystä{0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Vetäydy"
 msgid "Withdraw & Claim"
 msgstr "Vetäydy & lunasta"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Vedä talletettu likviditeetti takaisin"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2 vedetty pois!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Wrap"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Kääri <0/> WETH -kohtaan"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

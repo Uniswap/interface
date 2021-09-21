@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -150,6 +150,10 @@ msgstr "Ενεργός"
 msgid "Add"
 msgstr "Προσθήκη"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Προσθέστε <0/> και <1/> στο Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Προσθήκη εκπροσώπου +"
@@ -175,16 +179,11 @@ msgstr "Προσθέστε περισσότερη ρευστότητα"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Προσθήκη {0} στο Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Προσθήκη {0} {1} και {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Προσθήκη {0}-{1} ρευστότητας"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Προσθήκη {0}/{1} V3 ρευστότητας"
 
@@ -241,6 +240,7 @@ msgstr "Έγκριση"
 msgid "Approve Token"
 msgstr "Έγκριση κουπονιού"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Ρίξτε μια ματιά στους οδηγούς μας συνέχ
 msgid "Claim"
 msgstr "Διεκδίκηση"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Αξίωση <0/> για {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Διεκδικήστε UNI"
 msgid "Claim UNI Token"
 msgstr "Διεκδίκηση μάρκας UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Διεκδίκηση των συσσωρευμένων επιβραβεύσεων UNI"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Διεκδικήστε ανταμοιβή UNI για {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Διεκδικήθηκε"
 msgid "Claimed UNI!"
 msgstr "UNI διεκδικήθηκε!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Διεκδικήθηκε!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Διεκδίκηση"
 
@@ -454,6 +462,10 @@ msgstr "Συλλέξτε ως WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Συλλέξτε χρεώσεις"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Συλλέξτε {0}/{1} τέλη"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Δημιουργία δεξαμενής"
 msgid "Create an issue on GitHub"
 msgstr "Δημιουργήστε ένα ζήτημα στο GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Δημιουργήστε δεξαμενή και προσθέστε {0}/{1} V3 ρευστότητα"
 
@@ -587,7 +599,7 @@ msgstr "Δημιουργήστε δεξαμενή και προσθέστε {0}/
 msgid "Create pool."
 msgstr "Δημιουργία δεξαμενής."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Δημιουργία {0}/{1} πισίνα V3"
 
@@ -612,13 +624,13 @@ msgstr "Νίκησε"
 msgid "Delegate Votes"
 msgstr "Ανάθεση Ψήφων"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Εκχωρήστε την εξουσία ψήφου στο {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Ανατέθηκε σε:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Κατ 'εξουσιοδότηση ψήφοι"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Κατάθεση περιουσιακών στοιχείων"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Κατάθεση μάρκας UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Κατάθεση ρευστότητας"
 
@@ -1062,6 +1074,10 @@ msgstr "Μεταφορά Ρευστότητας V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Μεταφορά της δίκης μάρκας ρευστότητας σας από Uniswap V2 σε Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Μετεγκατάσταση {0}/{1} ρευστότητας στο V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Γίνεται μεταφορά"
@@ -1359,6 +1375,10 @@ msgstr "Παραλήπτης"
 msgid "Remove"
 msgstr "Αφαίρεση"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Κατάργηση <0/> και <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Αφαίρεση Ποσού"
@@ -1377,15 +1397,7 @@ msgstr "Αφαίρεση Ρευστότητας"
 msgid "Remove list"
 msgstr "Αφαίρεση λίστας"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Κατάργηση των {0} {1} και {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Αφαίρεση {0}/{1} V3 ρευστότητας"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Αφαίρεση των {0} {1} και {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Κατάσταση"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Βήμα 1. Πάρτε τα διακριτικά ρευστότητας UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Υποβλήθηκε νέα πρόταση"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Υποβολή νέας πρότασης"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
 msgid "Swap"
 msgstr "Ανταλλαγή"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Αντικαταστήστε <0/> με ακριβώς <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Ανταλλάξτε ούτως ή άλλως"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Αντικαταστήστε ακριβώς <0/> με <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Χωρίς τίτλο"
 msgid "Unwrap"
 msgstr "Αποκαλύπτω"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Ξετυλίξτε <0/> στο ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Ενημέρωση Ανάθεσης"
@@ -1893,15 +1917,39 @@ msgstr "Ψήφοι υπέρ"
 msgid "Vote against proposal {proposalId}"
 msgstr "Ψήφοι κατά της πρότασης {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Vηφοφορία κατά της πρότασης {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφίστε κατά της πρότασης {proposalKey} με αιτιολογία \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Ψήφοι υπέρ της πρότασης {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Vηφίστε την πρόταση {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφίστε την πρόταση {proposalKey} με αιτιολογία \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Vηφοφορία για αποχή στην πρόταση {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Vηφοφορία για αποχή στην πρόταση {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Vηφοφορία για αποχή στην πρόταση {proposalKey} με αιτιολογία \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Ανάληψη"
 msgid "Withdraw & Claim"
 msgstr "Ανάληψη & Διεκδίκηση"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Ανάληψη κατατεθειμένης ρευστότητας"
 
@@ -1964,6 +2011,10 @@ msgstr "Πραγματοποιήθηκε ανάληψη UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Καλύπτω"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Τυλίξτε <0/> στο WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

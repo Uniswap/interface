@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -150,6 +150,10 @@ msgstr "פָּעִיל"
 msgid "Add"
 msgstr "הוספה"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "הוסף את <0/> ו- <1/> ל- Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "הוסף נציג +"
@@ -175,16 +179,11 @@ msgstr "הוסף עוד נזילות"
 msgid "Add {0} to Metamask <0/>"
 msgstr "הוסף {0} למטא-מסכה <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "הוסף {0} {1} ו- {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "הוסף {0}-{1} נזילות"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "להוסיף {0}/{1} נזילות V3"
 
@@ -241,6 +240,7 @@ msgstr "לְאַשֵׁר"
 msgid "Approve Token"
 msgstr "אשר אסימון"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "עיין במדריכי ההדרכה וההעברה של v3 LP שלנו.
 msgid "Claim"
 msgstr "תְבִיעָה"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "תבעו את <0/> עבור {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "תבע את UNI"
 msgid "Claim UNI Token"
 msgstr "תבע את אסימון UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "התביעה צברה תגמולים של UNI"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "תבעו תגמול של UNI עבור {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "נִתבָּע"
 msgid "Claimed UNI!"
 msgstr "UNI נתבע!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "נִתבָּע!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "תביעה"
 
@@ -454,6 +462,10 @@ msgstr "לגבות כ- WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "גבה עמלות"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "אסוף {0}/{1} ודמים"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "צור מאגר"
 msgid "Create an issue on GitHub"
 msgstr "צור בעיה ב- GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "צור ברכה והוסף {0}/{1} נזילות V3"
 
@@ -587,7 +599,7 @@ msgstr "צור ברכה והוסף {0}/{1} נזילות V3"
 msgid "Create pool."
 msgstr "צור בריכה."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "צור {0}/{1} הבריכה V3"
 
@@ -612,13 +624,13 @@ msgstr "מוּבָס"
 msgid "Delegate Votes"
 msgstr "האצל הצבעות"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "האציל את כוח ההצבעה ל {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "הואצל ל:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "קולות מאושרים"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "נכסי הפקדה"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "הפקדת אסימוני LP של UNI-V2"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "הפקדת נזילות"
 
@@ -1062,6 +1074,10 @@ msgstr "העבר נזילות V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "העבר את אסימוני הנזילות שלך מ- Uniswap V2 ל- Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "העבר {0}/{1} ל- V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "נודדים"
@@ -1359,6 +1375,10 @@ msgstr "מקבל"
 msgid "Remove"
 msgstr "לְהַסִיר"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "הסר את <0/> ו- <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "הסר את הסכום"
@@ -1377,15 +1397,7 @@ msgstr "הסר נזילות"
 msgid "Remove list"
 msgstr "הסר את הרשימה"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "הסר {0} {1} ו {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "הסר {0}/{1} נזילות V3"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "הסרת {0} {1} ו {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "סטָטוּס"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "שלב 1. קבל תווי נזילות של UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "הוגשה הצעה חדשה"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "הגישו הצעה חדשה"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "אספקת {0} {1} ו {2} {3}"
 msgid "Swap"
 msgstr "לְהַחלִיף"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "החלף את <0/> בדיוק ל <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "החלף בכל מקרה"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "החלף בדיוק <0/> עבור <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "ללא כותרת"
 msgid "Unwrap"
 msgstr "לְגוֹלֵל"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "פרק את <0/> ל- ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "עדכן משלחת"
@@ -1893,15 +1917,39 @@ msgstr "להצביע בעד"
 msgid "Vote against proposal {proposalId}"
 msgstr "הצביעו נגד הצעה {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "הצביעו נגד הצעה {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "הצביעו נגד הצעה {proposalKey} עם סיבה \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "הצביע להצעה {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "הצביעו להצעה {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "הצביעו להצעה {proposalKey} עם סיבה \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "הצביעו להימנע מהצעה {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "הצביעו להימנע מהצעה {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "הצביעו להימנע מהצעה {proposalKey} עם סיבה \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "לָסֶגֶת"
 msgid "Withdraw & Claim"
 msgstr "משיכה ותביעה"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "משיכת נזילות שהופקדה"
 
@@ -1964,6 +2011,10 @@ msgstr "משך את UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "לַעֲטוֹף"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "עטפו את <0/> ל- WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

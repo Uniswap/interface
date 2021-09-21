@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -150,6 +150,10 @@ msgstr "نشط"
 msgid "Add"
 msgstr "إضافة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "أضف <0 /> و <1 /> إلى Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "إضافة مندوب +"
@@ -175,16 +179,11 @@ msgstr "أضف المزيد من السيولة"
 msgid "Add {0} to Metamask <0/>"
 msgstr "إضافة {0} إلى Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "إضافة {0} {1} و {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "إضافة سيولة {0}-{1}"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "إضافة سيولة {0}/{1} V3"
 
@@ -241,6 +240,7 @@ msgstr "الموافقة"
 msgid "Approve Token"
 msgstr "الموافقة على رمز"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "تحقق من أدلة التجول والترحيل الخاصة بـ v
 msgid "Claim"
 msgstr "مطالبة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "مطالبة <0 /> مقابل {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "مطالبة UNI"
 msgid "Claim UNI Token"
 msgstr "مطالبة برمز UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "المطالبة بجوائز UNI المتراكمة"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "اطلب مكافأة UNI مقابل {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "مطالب"
 msgid "Claimed UNI!"
 msgstr "طالبَ بـ UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "ادعى!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "مطالبة"
 
@@ -454,6 +462,10 @@ msgstr "اجمع كـ WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "تحصيل الرسوم"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "اجمع {0}/{1} رسوم"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "إنشاء مجموعة"
 msgid "Create an issue on GitHub"
 msgstr "قم بإنشاء مشكلة على GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "إنشاء مجموعة وإضافة سيولة {0}/{1} V3"
 
@@ -587,7 +599,7 @@ msgstr "إنشاء مجموعة وإضافة سيولة {0}/{1} V3"
 msgid "Create pool."
 msgstr "إنشاء مجموعة."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "خلق {0}/{1} تجمع V3"
 
@@ -612,13 +624,13 @@ msgstr "هزم"
 msgid "Delegate Votes"
 msgstr "أصوات التفويض"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "تفويض سلطة التصويت إلى {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "مفوض إلى:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "الأصوات المفوضة"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "أصول الإيداع"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "إيداع رموز UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "إيداع السيولة"
 
@@ -1062,6 +1074,10 @@ msgstr "ترحيل سيولة V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "نقل رموز السيولة الخاصة بك من Uniswap V2 إلى Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "تهاجر {0}/{1} السيولة إلى V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "الترحيل"
@@ -1359,6 +1375,10 @@ msgstr "متلقي"
 msgid "Remove"
 msgstr "إزالة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "قم بإزالة <0 /> و <1 />"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "إزالة المبلغ"
@@ -1377,15 +1397,7 @@ msgstr "إزالة السيولة"
 msgid "Remove list"
 msgstr "إزالة القائمة"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "إزالة {0} {1} و {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "إزالة سيولة {0}/{1} V3"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "إزالة {0} {1} و {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "حالة"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "الخطوة 1. احصل على رمز سيولة UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "قدم اقتراح جديد"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "إرسال اقتراح جديد"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "إمداد {0} {1} و {2} {3}"
 msgid "Swap"
 msgstr "مبادلة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "استبدل <0 /> بـ <1 /> بالضبط"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "مبادلة على أي حال"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "استبدل بالضبط <0 /> بـ <1 />"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "بدون عنوان"
 msgid "Unwrap"
 msgstr "Unwrap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "قم بفك التفاف <0 /> إلى ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "تحديث التفويض"
@@ -1893,15 +1917,39 @@ msgstr "التصويت لـ"
 msgid "Vote against proposal {proposalId}"
 msgstr "التصويت ضد الاقتراح {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "التصويت ضد الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت ضد الاقتراح {proposalKey} مع السبب \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "التصويت لصالح الاقتراح {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "التصويت على الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت على الاقتراح {proposalKey} مع السبب \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "التصويت على الامتناع عن التصويت {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "التصويت للامتناع عن التصويت على الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت على الامتناع عن التصويت على الاقتراح {proposalKey} مع السبب \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "سحب"
 msgid "Withdraw & Claim"
 msgstr "السحب والمطالبة"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "سحب السيولة المودعة"
 
@@ -1964,6 +2011,10 @@ msgstr "سحب UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "التفاف"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "لف <0 /> إلى WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

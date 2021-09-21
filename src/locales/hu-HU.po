@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -150,6 +150,10 @@ msgstr "Aktív"
 msgid "Add"
 msgstr "Hozzáadás"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "A <0/> és <1/> hozzáadása a Uniswap V2 -hez"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Adja hozzá a Delegate + elemet"
@@ -175,16 +179,11 @@ msgstr "Adjon hozzá több likviditást"
 msgid "Add {0} to Metamask <0/>"
 msgstr "{0} hozzáadása a Metamask <0/> elemhez"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} és {2} {3} hozzáadása"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Adjon hozzá {0}-{1} likviditást"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Adjon hozzá {0}/{1} V3 likviditást"
 
@@ -241,6 +240,7 @@ msgstr "Jóváhagyás"
 msgid "Approve Token"
 msgstr "Token jóváhagyása"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Nézze meg a v3 LP használati és migrációs útmutatókat."
 msgid "Claim"
 msgstr "Követelés"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "<0/>. Igénypont {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "UNI igénylése"
 msgid "Claim UNI Token"
 msgstr "UNI token igénylése"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Felhalmozott UNI jutalmak igénylése"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Kérjen UNI jutalmat {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Igényelt"
 msgid "Claimed UNI!"
 msgstr "Igényelt UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Követelt!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Igénylés"
 
@@ -454,6 +462,10 @@ msgstr "Begyűjtés WETH-ként"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Díjak begyűjtése"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Gyűjtsön {0}/{1} díjat"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Pool létrehozása"
 msgid "Create an issue on GitHub"
 msgstr "Egy probléma felvetése a GitHubon"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Pool létrehozása és {0}/{1} V3 likviditás hozzáadása"
 
@@ -587,7 +599,7 @@ msgstr "Pool létrehozása és {0}/{1} V3 likviditás hozzáadása"
 msgid "Create pool."
 msgstr "Pool létrehozása."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Készítsen {0}/{1} V3 medence"
 
@@ -612,13 +624,13 @@ msgstr "Legyőzött"
 msgid "Delegate Votes"
 msgstr "Szavazatok delegálása"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Delegálja a szavazati jogot {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegálva:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Delegált szavazatok"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Betéti eszközök"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP tokenek letétbe helyezése"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Likviditás letétbe helyezése"
 
@@ -1063,6 +1075,10 @@ msgstr "V2 likviditás migrálása"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Likviditási tokenek migrálása az Uniswap V2-ről az Uniswap V3-ra."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "A {0}/{1} likviditás áttelepítése a V3 -ba"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migrálás"
@@ -1360,6 +1376,10 @@ msgstr "Befogadó"
 msgid "Remove"
 msgstr "Eltávolítás"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Távolítsa el a (z) <0/> és <1/> elemeket"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Összeg eltávolítása"
@@ -1378,15 +1398,7 @@ msgstr "Likviditás eltávolítása"
 msgid "Remove list"
 msgstr "Lista eltávolítása"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "{0} {1} és {2} {3} eltávolítása"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3 likviditás eltávolítása"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} és {2} {3} eltávolítása"
@@ -1487,9 +1499,9 @@ msgstr "Állapot"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1. lépés: Szerezzen UNI-V2 likviditási tokeneket"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Új javaslatot nyújtott be"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Új javaslat benyújtása"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1523,10 +1535,18 @@ msgstr "{0} {1} és {2} {3} kínálása"
 msgid "Swap"
 msgstr "Swap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Cserélje le a <0/> pontot <1/> értékre"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Swap mindenképp"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Pontosan cserélje ki a <0/> értéket a <1/> értékre"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1806,6 +1826,10 @@ msgstr "Névtelen"
 msgid "Unwrap"
 msgstr "Kicsomagolás"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Csomagolja ki a (z) <0/> gombot ETH -ra"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Delegálás frissítése"
@@ -1894,15 +1918,39 @@ msgstr "Szavazás mellett"
 msgid "Vote against proposal {proposalId}"
 msgstr "Szavazat a(z) {proposalId} javaslat ellen"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Szavazzon a {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Szavazzon a {proposalKey} javaslat ellen \"{0}\" indokkal"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Szavazat a(z) {proposalId} mellett"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Szavazás a {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Szavazzon a {proposalKey} javaslatra az \"{0}\" indokkal"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Szavazzon a tartózkodásra a {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Szavazzon a tartózkodásra a {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Szavazzon tartózkodásra a {proposalKey} javaslatról az \"{0}\" indokkal"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1949,8 +1997,7 @@ msgstr "Visszavonás"
 msgid "Withdraw & Claim"
 msgstr "Visszavonás és követelés"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "A letétbe helyezett likviditás visszavonása"
 
@@ -1965,6 +2012,10 @@ msgstr "Visszavonta az UNI-V2-t!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Becsomagolás"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Tekerje a <0/> elemet WETH -re"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

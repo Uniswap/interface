@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -150,6 +150,10 @@ msgstr "활성"
 msgid "Add"
 msgstr "추가"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Uniswap V2에 <0/> 및 <1/> 추가"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "대리인 추가 +"
@@ -175,16 +179,11 @@ msgstr "더 많은 유동성 추가"
 msgid "Add {0} to Metamask <0/>"
 msgstr "{0}을(를) Metamask에 추가<0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} 과 {2} {3}추가"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "{0}-{1} 유동성 추가"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "{0}/{1} V3 유동성 추가"
 
@@ -241,6 +240,7 @@ msgstr "승인"
 msgid "Approve Token"
 msgstr "토큰 승인"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "v3 LP 연습 및 마이그레이션 가이드를 확인하세요."
 msgid "Claim"
 msgstr "청구"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "제 <0 />에 대한 {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "UNI 청구"
 msgid "Claim UNI Token"
 msgstr "UNI 토큰 청구"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "누적된 UNI 보상 청구"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "{0}대한 UNI 보상 받기"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "청구됨"
 msgid "Claimed UNI!"
 msgstr "청구된 UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "주장!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "청구 중"
 
@@ -454,6 +462,10 @@ msgstr "WETH로 수집"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "수수료 징수"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "{0}/{1} 수수료를 수집"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "풀 만들기"
 msgid "Create an issue on GitHub"
 msgstr "GitHub에서 문제 만들기"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "풀 만들기 및 {0}/{1} V3 유동성 추가"
 
@@ -587,7 +599,7 @@ msgstr "풀 만들기 및 {0}/{1} V3 유동성 추가"
 msgid "Create pool."
 msgstr "풀을 만듭니다."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "작성 {0}/{1} V3 풀을"
 
@@ -612,13 +624,13 @@ msgstr "패배"
 msgid "Delegate Votes"
 msgstr "위임 투표"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "투표권을 {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "위임 대상 :"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "위임 된 투표"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "예금 자산"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "UNI-V2 LP 토큰 예치"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "예금 유동성"
 
@@ -1062,6 +1074,10 @@ msgstr "V2 유동성 마이그레이션"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "유동성 토큰을 Uniswap V2에서 Uniswap V3로 마이그레이션하십시오."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "마이그레이션 {0}/{1} V3 유동성"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "마이그레이션 중"
@@ -1359,6 +1375,10 @@ msgstr "받는 사람"
 msgid "Remove"
 msgstr "제거"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "<0/> 및 <1/> 제거"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "금액 제거"
@@ -1377,15 +1397,7 @@ msgstr "유동성 제거"
 msgid "Remove list"
 msgstr "목록 제거"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "{0} {1} 및 {2} {3}제거"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3 유동성 제거"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} 및 {2} {3} 제거 중"
@@ -1486,8 +1498,8 @@ msgstr "상태"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1 단계. UNI-V2 유동성 토큰 받기"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
 msgstr "새 제안 제출"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1522,10 +1534,18 @@ msgstr "{0} {1} 및 {2} {3} 공급 중"
 msgid "Swap"
 msgstr "스왑"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "<0/>을 정확히 <1/>로 바꿉니다."
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "어쨌든 스왑"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "<1/>에 대해 정확히 <0/> 스왑"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "제목 없음"
 msgid "Unwrap"
 msgstr "언랩"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "<0/>을 ETH로 풀기"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "위임 업데이트"
@@ -1893,15 +1917,39 @@ msgstr "찬성 투표"
 msgid "Vote against proposal {proposalId}"
 msgstr "{proposalId} 제안에 반대 투표"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "{proposalKey}에 반대 투표"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "이유가 \"{0}\"인 {proposalKey} 에 반대 투표"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "{proposalId} 제안에 투표"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "제안 {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "이유가 \"{0}\"인 {proposalKey} 투표하십시오."
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "{proposalId}에 대한 기권 투표"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "{proposalKey}에 대한 기권 투표"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "이유가 \"{0}\"인 {proposalKey} 에 대해 기권 투표"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "인출"
 msgid "Withdraw & Claim"
 msgstr "인출 및 청구"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "예치된 유동성 인출"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2 인출!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "랩"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "<0/>을 WETH로 래핑"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

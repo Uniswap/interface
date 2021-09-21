@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -150,6 +150,10 @@ msgstr "Aktivní"
 msgid "Add"
 msgstr "Přidat"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Přidejte <0/> a <1/> do Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Přidat delegáta +"
@@ -175,16 +179,11 @@ msgstr "Přidejte více likvidity"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Přidat {0} do metamasky <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Přidat {0} {1} a {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Přidat likviditu {0}-{1}"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Přidat likviditu V3 {0}/{1}"
 
@@ -241,6 +240,7 @@ msgstr "Schválit"
 msgid "Approve Token"
 msgstr "Schválit token"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Podívejte se na naše průvodce v3 LP a migrační průvodce."
 msgid "Claim"
 msgstr "Nárokovat"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Získejte <0/> za {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Nárokovat si UNI"
 msgid "Claim UNI Token"
 msgstr "Nárokujte si žeton UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Nárokujte si akumulované odměny UNI"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Získejte odměnu UNI za {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Nárokováno"
 msgid "Claimed UNI!"
 msgstr "Nárokováno UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Nárokováno!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Nárokování"
 
@@ -454,6 +462,10 @@ msgstr "Sbírat jako WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Pobírat poplatky"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Sbírejte {0}/{1} poplatky"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Vytvořit fond"
 msgid "Create an issue on GitHub"
 msgstr "Vytvořte problém na GitHubu"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Vytvořit fond a přidat likviditu V3 {0}/{1}"
 
@@ -587,7 +599,7 @@ msgstr "Vytvořit fond a přidat likviditu V3 {0}/{1}"
 msgid "Create pool."
 msgstr "Vytvořit fond."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Vytvoření {0}/{1} V3 bazén"
 
@@ -612,13 +624,13 @@ msgstr "Poražený"
 msgid "Delegate Votes"
 msgstr "Delegovat hlasy"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Delegujte hlasovací právo na {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Delegováno (komu):"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Delegované hlasy"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Vklad majetku"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Uložit žetony UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Uložit likviditu"
 
@@ -1062,6 +1074,10 @@ msgstr "Migrovat likviditu V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migrujte své žetony likvidity z Uniswap V2 do Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Migrace {0}/{1} likvidity až V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migrace"
@@ -1359,6 +1375,10 @@ msgstr "Příjemce"
 msgid "Remove"
 msgstr "Odstranit"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Odstraňte <0/> a <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Odstranit částku"
@@ -1377,15 +1397,7 @@ msgstr "Odstranit likviditu"
 msgid "Remove list"
 msgstr "Odstranit seznam"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Odstranit {0} {1} a {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Odstranit likviditu V3 {0}/{1}"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Odstraňování {0} {1} a {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Postavení"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Krok 1. Získejte žetony likvidity UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Předložený nový návrh"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Odeslat nový návrh"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Dodávání {0} {1} a {2} {3}"
 msgid "Swap"
 msgstr "Prohodit"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Vyměňte <0/> za přesně <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Přesto prohodit"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Vyměňte přesně <0/> za <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Nepojmenovaná"
 msgid "Unwrap"
 msgstr "Rozbalit"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Rozbalte <0/> na ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Aktualizovat delegaci"
@@ -1893,15 +1917,39 @@ msgstr "Hlasovat pro"
 msgid "Vote against proposal {proposalId}"
 msgstr "Hlasovat proti návrhu {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Hlasovat proti návrhu {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Hlasovat proti návrhu {proposalKey} s důvodem „{0}“"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Hlasovat pro návrh {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Hlasujte pro návrh {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Hlasujte pro návrh {proposalKey} s důvodem „{0}“"
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Hlasujte, abyste se zdrželi hlasování o návrhu {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Hlasujte, abyste se zdrželi hlasování o návrhu {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Hlasujte, abyste se zdrželi hlasování o návrhu {proposalKey} s důvodem „{0}“"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Vybrat"
 msgid "Withdraw & Claim"
 msgstr "Vybrat a nárokovat"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Vybrat uloženou likviditu"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2 vybráno!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Zalomit"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Zabalte <0/> do MOKRÉHO"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

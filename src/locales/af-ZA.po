@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 19:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -150,6 +150,10 @@ msgstr "Aktief"
 msgid "Add"
 msgstr "Voeg by"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Voeg <0/> en <1/> by Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Voeg afgevaardigde + by"
@@ -175,16 +179,11 @@ msgstr "Voeg meer likiditeit by"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Voeg {0} by Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Voeg {0} {1} en {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Voeg {0}-{1} likiditeit by"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Voeg {0}/{1} V3 likiditeit by"
 
@@ -241,6 +240,7 @@ msgstr "Goedkeur"
 msgid "Approve Token"
 msgstr "Keur token goed"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -373,6 +373,10 @@ msgstr "Kyk na ons v3 LP-deurleidings- en migrasiegidse."
 msgid "Claim"
 msgstr "Eis"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Eis <0/> vir {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -385,10 +389,9 @@ msgstr "Eis UNI"
 msgid "Claim UNI Token"
 msgstr "Eis UNI-teken"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Eis opgehoopte UNI-belonings"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Eis UNI -beloning vir {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -407,7 +410,12 @@ msgstr "Geëis"
 msgid "Claimed UNI!"
 msgstr "UNI geëis!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Opgeëis!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Eis"
 
@@ -454,6 +462,10 @@ msgstr "Versamel as WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Vorder fooie in"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Versamel {0}/{1} fooie"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -579,7 +591,7 @@ msgstr "Skep 'n poel"
 msgid "Create an issue on GitHub"
 msgstr "Skep 'n probleem op GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Skep poel en voeg {0}/{1} V3 likiditeit"
 
@@ -587,7 +599,7 @@ msgstr "Skep poel en voeg {0}/{1} V3 likiditeit"
 msgid "Create pool."
 msgstr "Skep poel."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Skep {0}/{1} V3 swembad"
 
@@ -612,13 +624,13 @@ msgstr "Verslaan"
 msgid "Delegate Votes"
 msgstr "Delegeer Stemme"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Delegeer stemreg na {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Afgevaardig na:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Afgevaardigde stemme"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -643,7 +655,7 @@ msgstr "Deposito bates"
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Plaas UNI-V2 LP-tekens"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Deponeer likiditeit"
 
@@ -1062,6 +1074,10 @@ msgstr "Migreer V2 Likiditeit"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Migreer u likiditeitsteken van Uniswap V2 na Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Migreer {0}/{1} likiditeit na V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Migreer"
@@ -1359,6 +1375,10 @@ msgstr "Ontvanger"
 msgid "Remove"
 msgstr "Verwyder"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Verwyder <0/> en <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Verwyder bedrag"
@@ -1377,15 +1397,7 @@ msgstr "Verwyder vloeibaarheid"
 msgid "Remove list"
 msgstr "Verwyder lys"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Verwyder {0} {1} en {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Verwyder {0}/{1} V3 likiditeit"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Verwyder {0} {1} en {2} {3}"
@@ -1486,9 +1498,9 @@ msgstr "Status"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Stap 1. Kry UNI-V2 likiditeitstekens"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Nuwe voorstel ingedien"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Dien nuwe voorstel in"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1522,10 +1534,18 @@ msgstr "Verskaf {0} {1} en {2} {3}"
 msgid "Swap"
 msgstr "Ruil om"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Ruil <0/> vir presies <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Ruil in elk geval"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Ruil presies <0/> vir <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1805,6 +1825,10 @@ msgstr "Naamloos"
 msgid "Unwrap"
 msgstr "Maak oop"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Pak <0/> uit na ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Delegasie op te dateer"
@@ -1893,15 +1917,39 @@ msgstr "Stem vir"
 msgid "Vote against proposal {proposalId}"
 msgstr "Stem teen voorstel {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Stem teen voorstel {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem teen voorstel {proposalKey} met rede \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Stem vir voorstel {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Stem vir voorstel {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem vir voorstel {proposalKey} met rede \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Stem om te onthou van voorstel {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Stem om te onthou van voorstel {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Stem om te onthou van voorstel {proposalKey} met rede \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1948,8 +1996,7 @@ msgstr "Onttrek"
 msgid "Withdraw & Claim"
 msgstr "Onttrek en eis"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Onttrek gedeponeerde likiditeit"
 
@@ -1964,6 +2011,10 @@ msgstr "UNI-V2 onttrek!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Draai toe"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Draai <0/> om met WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
