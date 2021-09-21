@@ -44,6 +44,7 @@ function TokenAmountDisplayer({
     <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center" className={className}>
       <Box mr="4px">
         <MouseoverTooltip
+          disabled={!showUSDValue}
           styled={{ border: 'none', borderRadius: '4px', backgroundColor: theme.bg3 }}
           content={tooltipIcons(amount.token)}
         >
