@@ -46,7 +46,7 @@ function TokenAmountDisplayer({
         styled={{ border: 'none', borderRadius: '4px', backgroundColor: theme.bg3 }}
         content={tooltipIcons(amount.token)}
       >
-        <Flex>
+        <Flex alignItems="center">
           <Box mr="4px">
             <TYPE.small fontWeight="500" fontSize={fontSize} color="text3">
               {showUSDValue
