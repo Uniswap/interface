@@ -11,11 +11,17 @@ import { FooterPending } from './FooterPending'
 import { FooterReady } from './FooterReady'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
-import { ApplicationModal } from '../../state/application/actions'
 import { BridgeButton } from './BridgeButton'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
+import {
+  NetworkSwitcher as NetworkSwitcherPopover,
+  networkOptionsPreset,
+  NetworkOptionProps
+} from '../../components/NetworkSwitcher'
+import { ChainId } from '@swapr/sdk'
+import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 
 const Title = styled.p`
   margin: 0;
@@ -47,70 +53,124 @@ enum Step {
   Success
 }
 
-export interface Network {
-  chainId: number
-  name: string
-  icon: string
+export const useBridgeInputs = () => {
+  const [showFromNetworkList, setShowFromNetworkList] = useState(false)
+  const [showToNetworkList, setShowToNetworkList] = useState(false)
+  const [fromInputNetwork, setFromInputNetwork] = useState<ChainId>(1)
+  const [toInputNetwork, setToInputNetwork] = useState<ChainId>(42161)
+
+  const handleSwap = useCallback(() => {
+    setFromInputNetwork(toInputNetwork)
+    setToInputNetwork(fromInputNetwork)
+  }, [fromInputNetwork, toInputNetwork])
+
+  const handleFromNetworkChange = useCallback(
+    (chainId: ChainId) => {
+      if (chainId === toInputNetwork) {
+        handleSwap()
+        return
+      }
+      setFromInputNetwork(chainId)
+    },
+    [handleSwap, toInputNetwork]
+  )
+
+  const handleToNetworkChange = useCallback(
+    (chainId: ChainId) => {
+      if (chainId === fromInputNetwork) {
+        handleSwap()
+        return
+      }
+      setToInputNetwork(chainId)
+    },
+    [fromInputNetwork, handleSwap]
+  )
+
+  return {
+    handleSwap,
+    showFromNetworkList,
+    setShowFromNetworkList,
+    showToNetworkList,
+    setShowToNetworkList,
+    toInputNetwork,
+    handleToNetworkChange,
+    fromInputNetwork,
+    handleFromNetworkChange
+  }
 }
 
-const networks: Network[] = [
-  {
-    chainId: 42161,
-    name: 'Arbitrum',
-    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/10273.png'
-  },
-  {
-    chainId: 1,
-    name: 'Ethereum',
-    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
-  },
-  {
-    chainId: 100,
-    name: 'xDai',
-    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5601.png'
-  }
-]
+const createNetworkOptions = ({
+  value,
+  setValue,
+  activeChainId
+}: {
+  value: ChainId
+  setValue: (value: ChainId) => void
+  activeChainId: ChainId | undefined
+}): Array<NetworkOptionProps & { chainId: ChainId }> => {
+  return networkOptionsPreset.map(option => {
+    const { chainId: optionChainId, logoSrc, name } = option
+
+    return {
+      chainId: optionChainId,
+      header: name,
+      logoSrc: logoSrc,
+      active: value === activeChainId,
+      disabled: value === optionChainId,
+      onClick: () => setValue(optionChainId)
+    }
+  })
+}
 
 export default function Bridge() {
-  const [step, setStep] = useState(Step.Initial)
-
-  const [amount, setAmount] = useState('')
+  const { chainId, account } = useActiveWeb3React()
+  const { selectEthereum, selectNetwork } = useNetworkSwitch()
   const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
-  const { chainId: networkConnectorChainId, account } = useActiveWeb3React()
-  const [connectedNetwork, setConnectedNetwork] = useState<undefined | number>(networkConnectorChainId)
 
-  const [sendFrom, setSendFrom] = useState(networks[0])
-  const [sendTo, setSendTo] = useState(networks[1])
-
-  const onSendFromSelect = (network: Network) => {
-    if (network.name === sendTo.name) setSendTo(sendFrom)
-    setSendFrom(network)
-  }
-
-  const onSendToSelect = (network: Network) => {
-    if (network.name === sendFrom.name) setSendFrom(sendTo)
-    setSendTo(network)
-  }
-
-  const onSwapButtonClick = () => {
-    setSendFrom(sendTo)
-    setSendTo(sendFrom)
-  }
-
-  const isButtonDisabled = !amount || step !== Step.Initial
+  const [step, setStep] = useState(Step.Initial)
+  const [amount, setAmount] = useState('')
+  const [bridge, setBridge] = useState('Swapr Fast Exit')
 
   useEffect(() => {
     const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000)
     return () => clearTimeout(timer)
   }, [step])
+  const isButtonDisabled = !amount || step !== Step.Initial
 
   const resetBridge = () => {
     setAmount('')
     setStep(Step.Initial)
   }
 
-  const [bridge, setBridge] = useState('Swapr Fast Exit')
   const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
+
+  const {
+    handleSwap,
+    showFromNetworkList,
+    showToNetworkList,
+    fromInputNetwork,
+    toInputNetwork,
+    setShowFromNetworkList,
+    setShowToNetworkList,
+    handleFromNetworkChange,
+    handleToNetworkChange
+  } = useBridgeInputs()
+
+  const fromOptions = createNetworkOptions({
+    value: fromInputNetwork,
+    setValue: handleFromNetworkChange,
+    activeChainId: !!account ? chainId : -1
+  })
+
+  const toOptions = createNetworkOptions({
+    value: toInputNetwork,
+    setValue: handleToNetworkChange,
+    activeChainId: !!account ? chainId : -1
+  })
+
+  const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) => {
+    return options.find(option => option.chainId === chainId)
+  }
 
   return (
     <>
@@ -120,25 +180,35 @@ export default function Bridge() {
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
-          <AssetSelector
-            modal={ApplicationModal.NETWORK_SWITCHER_FROM}
-            label="from"
-            connected={connectedNetwork === sendFrom.chainId}
-            onNetworkClick={onSendFromSelect}
-            networks={networks}
-            selectedNetwork={sendFrom}
-          />
-          <SwapButton onClick={onSwapButtonClick}>
+          <div>
+            <AssetSelector
+              label="from"
+              selectedNetwork={getNetworkOptionById(fromInputNetwork, fromOptions)}
+              onClick={() => setShowFromNetworkList(true)}
+            />
+            <NetworkSwitcherPopover
+              show={showFromNetworkList}
+              onOuterClick={() => setShowFromNetworkList(false)}
+              options={fromOptions}
+              showWalletConnector={false}
+            />
+          </div>
+          <SwapButton onClick={handleSwap}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
-          <AssetSelector
-            modal={ApplicationModal.NETWORK_SWITCHER_TO}
-            label="to"
-            connected={connectedNetwork === sendTo.chainId}
-            onNetworkClick={onSendToSelect}
-            networks={networks}
-            selectedNetwork={sendTo}
-          />
+          <div>
+            <AssetSelector
+              label="to"
+              selectedNetwork={getNetworkOptionById(toInputNetwork, toOptions)}
+              onClick={() => setShowToNetworkList(true)}
+            />
+            <NetworkSwitcherPopover
+              show={showToNetworkList}
+              onOuterClick={() => setShowToNetworkList(false)}
+              options={toOptions}
+              showWalletConnector={false}
+            />
+          </div>
         </Row>
         <CurrencyInputPanel
           label="Amount"
@@ -155,15 +225,18 @@ export default function Bridge() {
           <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
             Connect Wallet
           </ButtonPrimary>
-        ) : sendFrom.chainId !== connectedNetwork ? (
-          <ButtonPrimary mt="12px" onClick={() => setConnectedNetwork(sendFrom.chainId)}>
-            Connect to {sendFrom.name}
+        ) : fromInputNetwork !== chainId ? (
+          <ButtonPrimary
+            mt="12px"
+            onClick={fromInputNetwork === ChainId.MAINNET ? selectEthereum : () => selectNetwork(fromInputNetwork)}
+          >
+            Connect to {getNetworkOptionById(fromInputNetwork, fromOptions)?.header}
           </ButtonPrimary>
         ) : step === Step.Collect ? (
-          <NetworkSwitcher sendToId={sendTo.chainId} onCollectClick={() => setStep(Step.Success)} />
+          <NetworkSwitcher sendToId={toInputNetwork} onCollectClick={() => setStep(Step.Success)} />
         ) : (
           <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
-            {!amount ? 'Enter ETH amount' : `Brigde to ${sendTo.name}`}
+            {!amount ? 'Enter ETH amount' : `Brigde to ${getNetworkOptionById(toInputNetwork, toOptions)?.header}`}
           </BridgeButton>
         )}
       </AppBody>
