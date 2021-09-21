@@ -299,7 +299,7 @@ export default function CurrencyInputPanel({
       </Container>
       {onCurrencySelect && (
         <CurrencySearchModal
-          showOnlyTrumpCoins={true}
+          showOnlyTrumpCoins={showOnlyTrumpCoins}
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}
