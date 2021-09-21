@@ -8,7 +8,7 @@ import useTheme from 'hooks/useTheme'
 
 type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-const Base = styled(RebassButton)<
+export const BaseButton = styled(RebassButton)<
   {
     padding?: string
     width?: string
@@ -50,7 +50,7 @@ const Base = styled(RebassButton)<
   }
 `
 
-export const ButtonPrimary = styled(Base)`
+export const ButtonPrimary = styled(BaseButton)`
   background-color: ${({ theme }) => theme.primary1};
   color: white;
   &:focus {
@@ -67,7 +67,8 @@ export const ButtonPrimary = styled(Base)`
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
       altDisabledStyle ? (disabled ? theme.primary1 : theme.bg2) : theme.bg2};
-    color: ${({ theme }) => theme.text2};
+    color: ${({ altDisabledStyle, disabled, theme }) =>
+      altDisabledStyle ? (disabled ? theme.white : theme.text2) : theme.text2};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
@@ -75,7 +76,7 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
-export const ButtonLight = styled(Base)`
+export const ButtonLight = styled(BaseButton)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
   font-size: 16px;
@@ -103,7 +104,7 @@ export const ButtonLight = styled(Base)`
   }
 `
 
-export const ButtonGray = styled(Base)`
+export const ButtonGray = styled(BaseButton)`
   background-color: ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
@@ -117,7 +118,7 @@ export const ButtonGray = styled(Base)`
   }
 `
 
-export const ButtonSecondary = styled(Base)`
+export const ButtonSecondary = styled(BaseButton)`
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   background-color: transparent;
@@ -145,7 +146,7 @@ export const ButtonSecondary = styled(Base)`
   }
 `
 
-export const ButtonOutlined = styled(Base)`
+export const ButtonOutlined = styled(BaseButton)`
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
@@ -164,7 +165,7 @@ export const ButtonOutlined = styled(Base)`
   }
 `
 
-export const ButtonYellow = styled(Base)`
+export const ButtonYellow = styled(BaseButton)`
   background-color: ${({ theme }) => theme.yellow3};
   color: white;
   &:focus {
@@ -185,7 +186,7 @@ export const ButtonYellow = styled(Base)`
   }
 `
 
-export const ButtonEmpty = styled(Base)`
+export const ButtonEmpty = styled(BaseButton)`
   background-color: transparent;
   color: ${({ theme }) => theme.primary1};
   display: flex;
@@ -207,7 +208,7 @@ export const ButtonEmpty = styled(Base)`
   }
 `
 
-export const ButtonText = styled(Base)`
+export const ButtonText = styled(BaseButton)`
   padding: 0;
   width: fit-content;
   background: none;
@@ -229,7 +230,7 @@ export const ButtonText = styled(Base)`
   }
 `
 
-const ButtonConfirmedStyle = styled(Base)`
+const ButtonConfirmedStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text1};
   /* border: 1px solid ${({ theme }) => theme.green1}; */
@@ -242,7 +243,7 @@ const ButtonConfirmedStyle = styled(Base)`
   }
 `
 
-const ButtonErrorStyle = styled(Base)`
+const ButtonErrorStyle = styled(BaseButton)`
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -264,6 +264,18 @@ msgstr "Έγκριση"
 msgid "Approving {0}"
 msgstr "Έγκριση {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Αρβισκανός"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Γέφυρα Arbitrum"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Το Arbitrum βρίσκεται σε Beta και ενδέχεται να αντιμετωπίσει διακοπές λειτουργίας. Κατά τη διάρκεια του χρόνου διακοπής, η θέση σας δεν θα κερδίσει τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Σίγουρα;"
@@ -319,6 +331,10 @@ msgstr "Καλύτερο για σταθερά ζεύγη."
 msgid "Blocked address"
 msgstr "Αποκλεισμένη διεύθυνση"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Γέφυρα"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Προσθέτοντας ρευστότητα θα κερδίσετε το 0,3% όλων των συναλλαγών σε αυτό το ζεύγος αναλογικά με το μερίδιό σας στη δεξαμενή. Οι χρεώσεις προστίθενται στη ψηφοφορία, συσσωρεύονται σε πραγματικό χρόνο και μπορούν να ζητηθούν μέσω της ανάληψη σας ρευστότητας."
@@ -338,10 +354,6 @@ msgstr "Ακυρώθηκε"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Αλλαγή"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "Αλλάξτε το δίκτυό σας για να επιστρέψετε στο L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "Κατάθεση"
 msgid "Deposit Amounts"
 msgstr "Ποσά Κατάθεσης"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "Κατάθεση περιουσιακών στοιχείων"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Κατάθεση μάρκας UNI-V2 LP"
@@ -630,12 +646,6 @@ msgstr "Κατάθεση μάρκας UNI-V2 LP"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Κατάθεση ρευστότητας"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "Κατάθεση σε {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "έχει λήξει"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Εξερευνήστε δημοφιλείς δεξαμενές στο Uniswap Analytics."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "Εξερευνητής"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Βαθμίδα Χρέωσης"
@@ -810,6 +824,10 @@ msgstr "Οι θέσεις πλήρους εμβέλειας μπορεί να κ
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Βρείτε υποστήριξη για τη Διαφωνία"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "Κέντρο βοηθείας"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "Γλώσσα"
 msgid "Learn"
 msgstr "Μάθετε"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "Μάθε περισσότερα"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Μάθετε σχετικά με την παροχή ρευστότητας"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "Μάθε περισσότερα"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "Μόνο οι ψήφοι UNI που ανατέθηκαν αυτοπρο�
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Ωχ! Προέκυψε ένα άγνωστο σφάλμα. Παρακαλώ ανανεώστε τη σελίδα ή επισκεφθείτε από άλλο πρόγραμμα περιήγησης ή συσκευή."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "Αισιοδοξία Προγραμματισμένος χρόνος διακοπής"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Πύλη αισιοδοξίας"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Η αισιοδοξία αναμένει προγραμματισμένο χρόνο διακοπής στο εγγύς μέλλον. Μπορεί επίσης να συμβεί μη προγραμματισμένος χρόνος διακοπής. Ενώ το δίκτυο είναι εκτός λειτουργίας, δεν θα δημιουργηθούν τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Το Optimistic Ethereum βρίσκεται σε έκδοση Beta και ενδέχεται να αντιμετωπίσει διακοπές λειτουργίας. Η αισιοδοξία αναμένει προγραμματισμένο χρόνο διακοπής λειτουργίας για την αναβάθμιση του δικτύου στο εγγύς μέλλον. Κατά τη διάρκεια του χρόνου διακοπής, η θέση σας δεν θα κερδίσει τέλη και δεν θα μπορείτε να αφαιρέσετε τη ρευστότητα. <0> Διαβάστε περισσότερα.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "Αισιόδοξη Ethercan"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "Αισιόδοξη πύλη L2"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "Σε ουρά"
 msgid "Rates"
 msgstr "Τιμές"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "Διαβάστε περισσότερα"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Διαβάστε περισσότερα για UNI"
@@ -1395,6 +1403,10 @@ msgstr "Αναζήτηση ονόματος ή επικόλλησης διεύθ
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Επιλέξτε Ζεύγος"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Επιλέξτε ένα δίκτυο"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "Ανταλλάξτε ούτως ή άλλως"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Ανταλλαγή {0} {1} για {2} {3}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "Εναλλαγή σε L1 (Mainnet)"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Σας ευχαριστούμε που συμμετείχατε στην κοινότητα Uniswap <0 />"
@@ -1575,15 +1583,6 @@ msgstr "Δεν υπάρχουν δεδομένα ρευστότητας."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Αυτές οι μάρκες δεν συνδυάζονται συνήθως με αλλά μάρκες."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Πρόκειται για μια έκδοση άλφα του Uniswap στο δίκτυο {0} Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα ανταλλάξετε."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Αυτή η ομάδα πρέπει να προετοιμαστεί για να μπορέσετε να προσθέσετε ρευστότητα. Για να ξεκινήσετε, επιλέξτε μια τιμή εκκίνησης για την ομάδα. Στη συνέχεια, εισαγάγετε το εύρος τιμών ρευστότητας και το ποσό κατάθεσης. Τα τέλη φυσικού αερίου θα είναι υψηλότερα από το συνηθισμένο λόγω της αρχικής συναλλαγής."
@@ -1626,6 +1625,10 @@ msgstr "'Ως"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Έως (από το ελάχιστο)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Για να ξεκινήσετε τις συναλλαγές με {0}, γεφυρώστε πρώτα τα περιουσιακά σας στοιχεία από το L1 στο L2. Αντιμετωπίστε το ως έκδοση beta και μάθετε για τους κινδύνους πριν χρησιμοποιήσετε το {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την δεξαμενή."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Μπορεί να έχετε χάσει τη σύνδεσή σας στο δίκτυο ή το {label} να είναι εκτός λειτουργίας αυτήν τη στιγμή."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Ενδέχεται να έχετε χάσει τη σύνδεση δικτύου σας."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "Πρέπει να γεφυρώσετε στοιχεία L1 στο δίκτυο για να τα χρησιμοποιήσετε."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> ανά <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} Γέφυρα"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Προσαρμοσμένες Μάρκες"
@@ -2193,10 +2191,6 @@ msgstr "{0} Κατατέθηκε"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} Εξερεύνηση"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} μάρκες"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} μπορεί να είναι εκτός λειτουργίας αυτή τη στιγμή ή να έχετε χάσει τη σύνδεσή σας στο δίκτυο."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
