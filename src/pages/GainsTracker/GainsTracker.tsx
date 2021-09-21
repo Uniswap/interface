@@ -100,19 +100,19 @@ export const GainsTracker = () => {
 
   React.useEffect(() => {
     if (account) {
-    const trackingCustom = JSON.parse(localStorage.getItem(CUSTOM_GAINS_KEY)!) as StoredAndTrackedGains
-    console.log(trackingCustom)
-    if (trackingCustom) {
-      setIsTracking(true)
-      const currency = {
-        ...trackingCustom.selectedCurrency,
-        equals: (val: any) => _.isEqual(trackingCustom.selectedCurrency, val),
+      const trackingCustom = JSON.parse(localStorage.getItem(CUSTOM_GAINS_KEY)!) as StoredAndTrackedGains
+      console.log(trackingCustom)
+      if (trackingCustom) {
+        setIsTracking(true)
+        const currency = {
+          ...trackingCustom.selectedCurrency,
+          equals: (val: any) => _.isEqual(trackingCustom.selectedCurrency, val),
+        }
+        setCurrency(currency)
+      } else {
+        setIsTracking(false)
       }
-      setCurrency(currency)
-    } else {
-      setIsTracking(false)
     }
-  }
   }, [account, localStorage.getItem(CUSTOM_GAINS_KEY)])
 
   const stopTrackingCustom = useCallback(() => {
@@ -130,7 +130,13 @@ export const GainsTracker = () => {
     }
 
     return ''
-  }, [isTrackingGains, selectedCurrencyBalance, localStorage.getItem(CUSTOM_GAINS_KEY), startTrackingCustom, stopTrackingCustom])
+  }, [
+    isTrackingGains,
+    selectedCurrencyBalance,
+    localStorage.getItem(CUSTOM_GAINS_KEY),
+    startTrackingCustom,
+    stopTrackingCustom,
+  ])
 
   const startedTrackingAt = () => {
     if (!isTrackingGains) return ''
@@ -184,49 +190,70 @@ export const GainsTracker = () => {
     right: 50px;
     z-index: 9;
     margin-top: 5px;
-    font-size:12px;
+    font-size: 12px;
   `
 
   const GainsWrapper = !trumpBalance || (trumpBalance && +trumpBalance.toFixed(2) <= 0) ? DisabledMask : React.Fragment
   const [currencyValue, setCurrencyValue] = React.useState('')
+  const total = useUSDCValue(selectedCurrencyBalance ?? undefined)
   React.useEffect(() => {
     if (selectedCurrencyBalance && +selectedCurrencyBalance?.toFixed(2) > 0) {
-      const provider = window.ethereum ? window.ethereum : walletconnect
-      const w3 = new Web3(provider as any).eth;
-      const routerContr = new w3.Contract(routerAbi as any, routerAddress);
-      const ten9 = 10 ** 9;
-      const amount = +selectedCurrencyBalance.toFixed(0) * ten9;
-      const address = currency?.address ? currency.address : selectedCurrencyBalance?.currency?.wrapped?.address;
-      const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
-        address,
-        WETH9[1].address,
-        USDC.address,
-      ]);
-      amountsOut.call().then((response: any) => {
-        const usdc = response[response.length - 1];
-        const ten6 = 10 ** 6;
-        const usdcValue = usdc / ten6;
-        setCurrencyValue(usdcValue.toFixed(2));
-      });
-       
+      if (currency?.wrapped?.address === WETH9[1].address) {
+        if (total) setCurrencyValue(total?.toFixed(2))
+        else setCurrencyValue('0.00')
+        return
       }
-    }, [selectedCurrencyBalance, account])
-  
+      const provider = window.ethereum ? window.ethereum : walletconnect
+      if (provider === walletconnect) {
+        walletconnect.activate().then(() => {
+          const w3 = new Web3(provider as any).eth
+          const routerContr = new w3.Contract(routerAbi as any, routerAddress)
+          const ten9 = 10 ** 9
+          const amount = +selectedCurrencyBalance.toFixed(0) * ten9
+          const address = currency?.address ? currency.address : selectedCurrencyBalance?.currency?.wrapped?.address
+          const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+            address,
+            WETH9[1].address,
+            USDC.address,
+          ])
+          amountsOut.call().then((response: any) => {
+            const usdc = response[response.length - 1]
+            const ten6 = 10 ** 6
+            const usdcValue = usdc / ten6
+            setCurrencyValue(usdcValue.toFixed(2))
+          })
+        })
+      } else {
+        const w3 = new Web3(provider as any).eth
+        const routerContr = new w3.Contract(routerAbi as any, routerAddress)
+        const ten9 = 10 ** 9
+        const amount = +selectedCurrencyBalance.toFixed(0) * ten9
+        const address = currency?.address ? currency.address : selectedCurrencyBalance?.currency?.wrapped?.address
+        const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [address, WETH9[1].address, USDC.address])
+        amountsOut.call().then((response: any) => {
+          const usdc = response[response.length - 1]
+          const ten6 = 10 ** 6
+          const usdcValue = usdc / ten6
+          setCurrencyValue(usdcValue.toFixed(2))
+        })
+      }
+    } else {
+    }
+  }, [selectedCurrencyBalance, total, currency, account])
+
   const showWarning = React.useMemo(() => {
-   const showWarning = !!account && (!trumpBalance || +trumpBalance?.toFixed(2) <= 0);
- return showWarning;
+    const showWarning = !!account && (!trumpBalance || +trumpBalance?.toFixed(2) <= 0)
+    return showWarning
   }, [trumpBalance, account])
-      
 
   return (
     <GainsWrapper>
       <Card style={{ maxWidth: 600 }}>
         <Wrapper>
           <CardSection>
-
             <div style={{ paddingLeft: 15, paddingRight: 15 }}>
               <div>
-                <h1 style={{filter: 'drop-shadow(2px 4px 6px black)', color:'#fff'}}>GAINSTRACKER &trade;</h1>
+                <h1 style={{ filter: 'drop-shadow(2px 4px 6px black)', color: '#fff' }}>GAINSTRACKER &trade;</h1>
                 {isTrackingCustom && (
                   <div>
                     <Badge>
@@ -236,24 +263,36 @@ export const GainsTracker = () => {
                   </div>
                 )}
               </div>
-              {!!account && !showWarning && <DarkCard style={{marginBottom: 30, marginTop: 30}}>
- <TYPE.main><small >
-                Select a currency, or input the contract address of a project you own that you would like to track redistribution gains. &nbsp;
-                <Tooltip show={showTip} text={tipmessage}>
-                  <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
-                </Tooltip>
-              </small>
-              </TYPE.main>
-</DarkCard>
-             } 
-             {showWarning && (<BlueCard><React.Fragment>
-      <AlertCircle />
-      <small>This feature is only avaialable to current holders of Squeeze Token. Please check again at a future
-      date or acquire some Squeeze Token to use the universal gains tracking functionality.</small>
-    </React.Fragment></BlueCard>)}
-             
-          {!account &&  <DarkCard><TYPE.main>Connect your wallet to track gains</TYPE.main></DarkCard>}
+              {!!account && !showWarning && (
+                <DarkCard style={{ marginBottom: 30, marginTop: 30 }}>
+                  <TYPE.main>
+                    <small>
+                      Select a currency, or input the contract address of a project you own that you would like to track
+                      redistribution gains. &nbsp;
+                      <Tooltip show={showTip} text={tipmessage}>
+                        <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setShowTip(false)} />
+                      </Tooltip>
+                    </small>
+                  </TYPE.main>
+                </DarkCard>
+              )}
+              {showWarning && (
+                <BlueCard>
+                  <React.Fragment>
+                    <AlertCircle />
+                    <small>
+                      This feature is only avaialable to current holders of Squeeze Token. Please check again at a
+                      future date or acquire some Squeeze Token to use the universal gains tracking functionality.
+                    </small>
+                  </React.Fragment>
+                </BlueCard>
+              )}
 
+              {!account && (
+                <DarkCard>
+                  <TYPE.main>Connect your wallet to track gains</TYPE.main>
+                </DarkCard>
+              )}
             </div>
           </CardSection>
           <CardSection>
@@ -270,22 +309,22 @@ export const GainsTracker = () => {
               onCurrencySelect={handleInputSelect}
               otherCurrency={gains() ? USDC : undefined}
               showCommonBases={false}
-              renderBalance={amt => {
-                return `Balance: ${(amt.toFixed(0))} (${(+currencyValue).toFixed(2)} USD)`
+              renderBalance={(amt) => {
+                return `Balance: ${amt.toFixed(2)} (${(+currencyValue ?? total).toFixed(2)} USD)`
               }}
               id="swap-currency-input"
             />
           </CardSection>
           {selectedCurrencyBalance && (
             <CardSection>
-                {isTrackingGains &&  <TYPE.blue style={{marginBottom:35}}>
-                    If you buy or sell, it is recommended to reset your gains tracker to see the most accurate results. 
-                </TYPE.blue>}
+              {isTrackingGains && (
+                <TYPE.blue style={{ marginBottom: 35 }}>
+                  If you buy or sell, it is recommended to reset your gains tracker to see the most accurate results.
+                </TYPE.blue>
+              )}
               <ButtonPrimary onClick={callback}>
                 {isTrackingGains ? 'Stop Tracking Gains' : 'Start Tracking Gains'}
               </ButtonPrimary>
-
-              
             </CardSection>
           )}
         </Wrapper>
