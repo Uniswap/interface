@@ -1,54 +1,3 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
-import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { AlertTriangle } from 'react-feather'
-import ReactGA from 'react-ga'
-import { ZERO_PERCENT } from '../../constants/misc'
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
-import { WETH9_EXTENDED } from '../../constants/tokens'
-import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
-import { RouteComponentProps } from 'react-router-dom'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import Row, { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
-import approveAmountCalldata from '../../utils/approveAmountCalldata'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { Review } from './Review'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { Field, Bound } from '../../state/mint/v3/actions'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { Dots } from '../Pool/styleds'
-import { currencyId } from '../../utils/currencyId'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import {
-  DynamicSection,
-  CurrencyDropdown,
-  StyledInput,
-  Wrapper,
-  ScrollablePage,
-  ResponsiveTwoColumns,
-  PageWrapper,
-  StackedContainer,
-  StackedItem,
-  RightContainer,
-  MediumOnly,
-  HideMedium,
-} from './styled'
 import { Trans, t } from '@lingui/macro'
 import {
   useV3MintState,
@@ -57,21 +6,72 @@ import {
   useV3DerivedMintInfo,
 } from 'state/mint/v3/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
-import { PositionPreview } from 'components/PositionPreview'
-import FeeSelector from 'components/FeeSelector'
-import RangeSelector from 'components/RangeSelector'
-import PresetsButtons from 'components/RangeSelector/PresetsButtons'
-import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
-import { AddRemoveTabs } from 'components/NavigationTabs'
-import HoverInlineText from 'components/HoverInlineText'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
-import { SupportedChainId } from 'constants/chains'
 import DowntimeWarning from 'components/DowntimeWarning'
-import { CHAIN_INFO } from '../../constants/chains'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
+import ReactGA from 'react-ga'
+import { RouteComponentProps } from 'react-router-dom'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components/macro'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
+import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import FeeSelector from '../../components/FeeSelector'
+import HoverInlineText from '../../components/HoverInlineText'
+import LiquidityChartRangeInput from '../../components/LiquidityChartRangeInput'
+import { AddRemoveTabs } from '../../components/NavigationTabs'
+import { PositionPreview } from '../../components/PositionPreview'
+import RangeSelector from '../../components/RangeSelector'
+import PresetsButtons from '../../components/RangeSelector/PresetsButtons'
+import RateToggle from '../../components/RateToggle'
+import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
+import { CHAIN_INFO, SupportedChainId } from '../../constants/chains'
+import { ZERO_PERCENT } from '../../constants/misc'
+import { WETH9_EXTENDED } from '../../constants/tokens'
+import { useCurrency } from '../../hooks/Tokens'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
+import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
+import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
+import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { Bound, Field } from '../../state/mint/v3/actions'
+import { TransactionType } from '../../state/transactions/actions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
+import { ExternalLink, TYPE } from '../../theme'
+import approveAmountCalldata from '../../utils/approveAmountCalldata'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { currencyId } from '../../utils/currencyId'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { Dots } from '../Pool/styleds'
+import { Review } from './Review'
+import {
+  CurrencyDropdown,
+  DynamicSection,
+  HideMedium,
+  MediumOnly,
+  PageWrapper,
+  ResponsiveTwoColumns,
+  RightContainer,
+  ScrollablePage,
+  StackedContainer,
+  StackedItem,
+  StyledInput,
+  Wrapper,
+} from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -208,11 +208,7 @@ export default function AddLiquidity({
   async function onCreate() {
     if (!chainId || !library) return
 
-    if (!positionManager || !baseCurrency || !quoteCurrency) {
-      return
-    }
-
-    if (position && account && deadline) {
+    if (chainId && library && position && account && deadline && baseCurrency && quoteCurrency && positionManager) {
       const { calldata, value } = NonfungiblePositionManager.createCallParameters(position.pool)
 
       const txn: { to: string; data: string; value: string } = {
@@ -237,7 +233,9 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                summary: t`Create ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 pool`,
+                type: TransactionType.CREATE_V3_POOL,
+                baseCurrencyId: currencyId(baseCurrency),
+                quoteCurrencyId: currencyId(quoteCurrency),
               })
               // dont set txn hash as we dont want submitted txn screen for create
               ReactGA.event({
@@ -332,9 +330,13 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                summary: noLiquidity
-                  ? t`Create pool and add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`
-                  : t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`,
+                type: TransactionType.ADD_LIQUIDITY_V3_POOL,
+                baseCurrencyId: currencyId(baseCurrency),
+                quoteCurrencyId: currencyId(quoteCurrency),
+                createPool: Boolean(noLiquidity),
+                expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
+                feeAmount: position.pool.fee,
               })
               setTxHash(response.hash)
               ReactGA.event({

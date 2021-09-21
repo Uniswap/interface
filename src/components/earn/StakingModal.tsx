@@ -1,26 +1,27 @@
-import { useState, useCallback } from 'react'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
+import { useCallback, useState } from 'react'
+import styled from 'styled-components/macro'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonConfirmed, ButtonError } from '../Button'
-import ProgressCircles from '../ProgressSteps'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import { Pair } from '@uniswap/v2-sdk'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { TransactionResponse } from '@ethersproject/providers'
+import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { ButtonConfirmed, ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { t, Trans } from '@lingui/macro'
+import ProgressCircles from '../ProgressSteps'
+import { RowBetween } from '../Row'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -105,7 +106,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           )
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: t`Deposit liquidity`,
+              type: TransactionType.DEPOSIT_LIQUIDITY_STAKING,
+              token0Address: stakingInfo.tokens[0].address,
+              token1Address: stakingInfo.tokens[1].address,
             })
             setHash(response.hash)
           })

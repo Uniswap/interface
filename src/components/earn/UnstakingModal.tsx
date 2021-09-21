@@ -1,18 +1,19 @@
-import { useState } from 'react'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
-import { useStakingContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { t, Trans } from '@lingui/macro'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
+import { useStakingContract } from '../../hooks/useContract'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { StakingInfo } from '../../state/stake/hooks'
+import { TransactionType } from '../../state/transactions/actions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
+import Modal from '../Modal'
+import { LoadingView, SubmittedView } from '../ModalViews'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -48,7 +49,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         .exit({ gasLimit: 300000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: t`Withdraw deposited liquidity`,
+            type: TransactionType.WITHDRAW_LIQUIDITY_STAKING,
+            token0Address: stakingInfo.tokens[0].address,
+            token1Address: stakingInfo.tokens[1].address,
           })
           setHash(response.hash)
         })

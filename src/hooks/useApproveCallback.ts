@@ -5,6 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
+import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
@@ -88,10 +89,7 @@ export function useApproveCallback(
         gasLimit: calculateGasMargin(chainId, estimatedGas),
       })
       .then((response: TransactionResponse) => {
-        addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.currency.symbol,
-          approval: { tokenAddress: token.address, spender },
-        })
+        addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress: token.address, spender })
       })
       .catch((error: Error) => {
         console.debug('Failed to approve token', error)

@@ -3,26 +3,16 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import { addTransaction } from './actions'
+import { addTransaction, TransactionInfo, TransactionType } from './actions'
 import { TransactionDetails } from './reducer'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
-export function useTransactionAdder(): (
-  response: TransactionResponse,
-  customData?: { summary?: string; approval?: { tokenAddress: string; spender: string }; claim?: { recipient: string } }
-) => void {
+export function useTransactionAdder(): (response: TransactionResponse, info: TransactionInfo) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
 
   return useCallback(
-    (
-      response: TransactionResponse,
-      {
-        summary,
-        approval,
-        claim,
-      }: { summary?: string; claim?: { recipient: string }; approval?: { tokenAddress: string; spender: string } } = {}
-    ) => {
+    (response: TransactionResponse, info: TransactionInfo) => {
       if (!account) return
       if (!chainId) return
 
@@ -30,7 +20,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, chainId, approval, summary, claim }))
+      dispatch(addTransaction({ hash, from: account, info, chainId }))
     },
     [dispatch, chainId, account]
   )
@@ -92,9 +82,8 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
         if (tx.receipt) {
           return false
         } else {
-          const approval = tx.approval
-          if (!approval) return false
-          return approval.spender === spender && approval.tokenAddress === tokenAddress && isTransactionRecent(tx)
+          if (tx.info.type !== TransactionType.APPROVAL) return false
+          return tx.info.spender === spender && tx.info.tokenAddress === tokenAddress && isTransactionRecent(tx)
         }
       }),
     [allTransactions, spender, tokenAddress]
@@ -113,7 +102,7 @@ export function useUserHasSubmittedClaim(account?: string): {
   const claimTxn = useMemo(() => {
     const txnIndex = Object.keys(allTransactions).find((hash) => {
       const tx = allTransactions[hash]
-      return tx.claim && tx.claim.recipient === account
+      return tx.info.type === TransactionType.CLAIM && tx.info.recipient === account
     })
     return txnIndex && allTransactions[txnIndex] ? allTransactions[txnIndex] : undefined
   }, [account, allTransactions])

@@ -5,11 +5,11 @@ import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
+import { TransactionType } from '../state/transactions/actions'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
-import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { isAddress, shortenAddress } from '../utils'
+import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './web3'
 import { useArgentWalletContract } from './useArgentWalletContract'
@@ -17,7 +17,6 @@ import { useV2RouterContract } from './useContract'
 import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
-import { Version } from './useToggledVersion'
 
 enum SwapCallbackState {
   INVALID,
@@ -334,28 +333,28 @@ export function useSwapCallback(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(4)
-            const outputAmount = trade.outputAmount.toSignificant(4)
-
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
-
-            const tradeVersion = getTradeVersion(trade)
-
-            const withVersion = tradeVersion === Version.v3 ? withRecipient : `${withRecipient} on ${tradeVersion}`
-
-            addTransaction(response, {
-              summary: withVersion,
-            })
+            addTransaction(
+              response,
+              trade.tradeType === TradeType.EXACT_INPUT
+                ? {
+                    type: TransactionType.SWAP,
+                    tradeType: TradeType.EXACT_INPUT,
+                    inputCurrencyId: currencyId(trade.inputAmount.currency),
+                    inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                    expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                    outputCurrencyId: currencyId(trade.outputAmount.currency),
+                    minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                  }
+                : {
+                    type: TransactionType.SWAP,
+                    tradeType: TradeType.EXACT_OUTPUT,
+                    inputCurrencyId: currencyId(trade.inputAmount.currency),
+                    maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+                    outputCurrencyId: currencyId(trade.outputAmount.currency),
+                    outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+                    expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+                  }
+            )
 
             return response.hash
           })
@@ -373,5 +372,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction, allowedSlippage])
 }

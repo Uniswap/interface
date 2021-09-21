@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { ReactNode, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
+import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
@@ -273,7 +274,7 @@ function L2Content({
             )}
           </Text>
           <Text fontWeight={400} fontSize={16} textAlign="center">
-            {transaction?.summary ?? pendingText ?? ''}
+            {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
