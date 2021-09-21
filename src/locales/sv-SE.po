@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -264,6 +264,18 @@ msgstr "Godkänner"
 msgid "Approving {0}"
 msgstr "Godkänner {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Arbiskan"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Arbitrum Bridge"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Arbitrum är i beta och kan uppstå stillestånd. Under stillestånd tjänar din position inga avgifter och du kommer inte att kunna ta bort likviditet. <0> Läs mer.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Är du säker?"
@@ -319,6 +331,10 @@ msgstr "Bäst för stabila par."
 msgid "Blocked address"
 msgstr "Blockerad adress"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Bro"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Genom att fylla på likviditet kommer du att tjäna 0,3 procent av alla affärer med detta par proportionellt mot din andel av poolen. Avgifter läggs till poolen, samlas in i realtid och kan krävas vid likviditetsutflöde."
@@ -338,10 +354,6 @@ msgstr "Inställt"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Ändra"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "Ändra ditt nätverk för att gå tillbaka till L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "Insättning"
 msgid "Deposit Amounts"
 msgstr "Insättningsbelopp"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "Insättningstillgångar"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Sätt in UNI-V2 LP-tokens"
@@ -630,12 +646,6 @@ msgstr "Sätt in UNI-V2 LP-tokens"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Insättningslikviditet"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "Insättning till {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "Utgånget"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Utforska populära pooler i Uniswap Analytics."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "Utforskare"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Avgiftsnivå"
@@ -810,6 +824,10 @@ msgstr "Fullständiga positioner kan tjäna mindre avgifter än koncentrerade po
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Få support angående brist på överensstämmelse"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "Hjälpcenter"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "Språk"
 msgid "Learn"
 msgstr "Lär dig"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "Läs mer"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Lär dig mer om att tillhandahålla likviditet"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "Läs mer"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "Endast UNI-röster som var självdelegerade eller delegerade till en ann
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hoppsan! Ett okänt fel inträffade. Uppdatera sidan eller använd en annan webbläsare eller enhet."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "Optimism planerad driftstopp"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Optimism Gateway"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimismen förväntar sig planerad driftstopp inom en snar framtid. Oplanerad stillestånd kan också förekomma. Medan nätverket är nere genereras inte avgifter och du kommer inte att kunna ta bort likviditet. <0> Läs mer.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimistic Ethereum finns i beta och kan uppleva stillestånd. Optimism förväntar sig planerad driftstopp för att uppgradera nätverket inom en snar framtid. Under stillestånd tjänar din position inga avgifter och du kommer inte att kunna ta bort likviditet. <0> Läs mer.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "Optimistisk Etherscan"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "Optimistisk L2 Gateway"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "Kö"
 msgid "Rates"
 msgstr "Kurser"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "Läs mer"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Läs mer om UNI"
@@ -1395,6 +1403,10 @@ msgstr "Sök namn eller klistra in adress"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Välj Par"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Välj ett nätverk"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "Byt ändå"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Byter ut {0} {1} mot {2} {3}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "Byt till L1 (Mainnet)"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Tack för att du deltar i Uniswap-gemenskapen<0/>"
@@ -1575,15 +1583,6 @@ msgstr "Det finns inga likviditetsdata."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Dessa tokens paras vanligtvis ihop med andra tokens."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Detta är en alfa-release av Uniswap i {0} nätverket."
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Detta är en alfa-release av Uniswap i {0} nätverket. Du måste överbrygga L1-tillgångar till nätverket för att byta dem."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Denna pool måste initieras innan du kan lägga till likviditet. För att initialisera, välj ett startpris för poolen. Ange sedan ditt likviditetsprisklass och insättningsbelopp. Gasavgifterna kommer att vara högre än vanligt på grund av initialiseringstransaktionen."
@@ -1626,6 +1625,10 @@ msgstr "Till"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Till (minst)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "För att börja handla med {0}, överbrygga först dina tillgångar från L1 till L2. Behandla detta som en betaversion och lär dig om riskerna innan du använder {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "Du har inte likviditet i denna pool ännu."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Du kan ha tappat din nätverksanslutning, eller {label} kan vara nere just nu."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Du kan ha tappat din nätverksanslutning."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "Du måste överbrygga L1-tillgångar till nätverket för att kunna använda dem."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} Bro"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Anpassade token"
@@ -2193,10 +2191,6 @@ msgstr "{0} insatta"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} Explorer"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} tokens"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} kan vara nere just nu, eller så kan du ha tappat din nätverksanslutning."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 19:04\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -264,6 +264,18 @@ msgstr "Схвалення"
 msgid "Approving {0}"
 msgstr "Схвалення {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Арбіскан"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Арбітрум міст"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Арбітрум знаходиться в бета -версії і може мати простої. Під час простою ваша позиція не буде заробляти комісії, і ви не зможете видалити ліквідність. <0> Докладніше.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
@@ -319,6 +331,10 @@ msgstr "Найкраще для стабільних пар."
 msgid "Blocked address"
 msgstr "Заблокована адреса"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Міст"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Додавши ліквідність, ви заробите 0,3% усієї торгівлі за цією парою пропорційно вашій частці пула. До пула додається комісія, що нараховується в режимі реального часу й може бути отримана шляхом зняття ліквідності."
@@ -338,10 +354,6 @@ msgstr "Скасовано"
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Змінити"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "Змініть свою мережу, щоб повернутися до L1"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -623,6 +635,10 @@ msgstr "Внести"
 msgid "Deposit Amounts"
 msgstr "Суми поповнення"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "Депозитні активи"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Токени для внесення на UNI-V2"
@@ -630,12 +646,6 @@ msgstr "Токени для внесення на UNI-V2"
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
 msgstr "Ліквідність внеску"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "Депозит до {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +784,10 @@ msgstr "Термін дії закінчився"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Дослідіть популярні пули на Uniswap Analytics."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "Провідник"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Рівень комісій"
@@ -810,6 +824,10 @@ msgstr "Позиції в повному діапазоні можуть зар�
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Отримайте підтримку в Discord"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "Центр допомоги"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +939,13 @@ msgstr "Мову"
 msgid "Learn"
 msgstr "Ознайомитися"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "Вчи більше"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Дізнайтеся про забезпечення ліквідності"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "Вивчайте більше"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1142,21 +1160,17 @@ msgstr "Участь у голосуванні можуть брати лише 
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Ой! Сталася невідома помилка. Оновіть сторінку або зайдіть з іншого браузера чи пристрою."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "Оптимізм запланований час простою"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Шлюз оптимізму"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Оптимізм очікує найближчим часом запланованих простоїв. Також можуть виникнути незаплановані простої. Поки мережа не працює, комісії не будуть генеруватися, і ви не зможете видалити ліквідність. <0> Докладніше.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Оптимістичний Ethereum знаходиться в бета -версії і може зазнати простоїв. Оптимізм очікує найближчим часом запланованих простоїв для оновлення мережі. Під час простою ваша позиція не буде заробляти комісії, і ви не зможете видалити ліквідність. <0> Докладніше.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "Оптимістичний Etherscan"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "Оптимістичний шлюз L2"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1327,6 @@ msgstr "У черзі"
 msgid "Rates"
 msgstr "Ставки"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "Читати далі"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Дізнатися більше про UNI"
@@ -1395,6 +1403,10 @@ msgstr "Шукайте ім’я або введіть адресу"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Виберіть Пара"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Виберіть мережу"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1519,10 +1531,6 @@ msgstr "Обміняти в будь-якому випадку"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Обмін {0} {1} на {2} {3}"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "Переключитися на L1 (Mainnet)"
-
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
 msgstr "Дякуємо за участь у спільноті Uniswap <0/>"
@@ -1575,15 +1583,6 @@ msgstr "Даних про ліквідність немає."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ці токени зазвичай поєднані в пари з іншими токенами."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Це альфа-версія Uniswap в мережі {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Це альфа-версія Uniswap в мережі {0} Ви повинні підключити активи L1 до мережі, щоб їх обміняти."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Цей пул потрібно ініціалізувати, перш ніж ви зможете додати ліквідність. Для ініціалізації виберіть початкову ціну пулу. Потім введіть діапазон цін ліквідності та суму депозиту. Плата за газ буде вищою, ніж зазвичай, через транзакцію ініціалізації."
@@ -1626,6 +1625,10 @@ msgstr "Кому"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "До (не менше)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Щоб почати торгувати на {0}, спочатку з'єднайте свої активи з L1 на L2. Будь ласка, розгляньте це як бета -версію та дізнайтеся про ризики перед використанням {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -2000,13 +2003,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "У вас ще немає ліквідності в цьому пулі."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Можливо, ви втратили з’єднання з мережею, або зараз може бути {label}"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Можливо, ви втратили з’єднання з мережею."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "Ви повинні з'єднати ресурси L1 з мережею, щоб використовувати їх."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2178,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> на <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} Міст"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} спеціальних токенів"
@@ -2193,10 +2191,6 @@ msgstr "Внесено {0}"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} Провідник"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2298,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} лексем"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} може бути вниз прямо зараз, або ви , можливо, втратили підключення до мережі."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
