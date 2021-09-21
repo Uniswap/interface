@@ -254,6 +254,10 @@ msgstr "Capital Amp Factor = 5"
 msgid "Change"
 msgstr "Change"
 
+#: src/pages/Swap/index.tsx
+msgid "Checking allowance..."
+msgstr "Checking allowance..."
+
 #: src/pages/Farms/vesting.tsx
 msgid "Claim"
 msgstr "Claim"
@@ -1422,6 +1426,16 @@ msgstr "Unlocked: {0} {1}"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "Update list"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Use Native Token"
+msgstr "Use Native Token"
+
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
+msgid "Use Wrapped Token"
+msgstr "Use Wrapped Token"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Use this tool to find pairs that don't automatically appear in the interface."
