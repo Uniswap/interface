@@ -1,4 +1,5 @@
 import { createStore, Store } from 'redux'
+import { updateVersion } from '../global/actions'
 import {
   addTransaction,
   checkedTransaction,
@@ -13,6 +14,20 @@ describe('transaction reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, initialState)
+  })
+
+  describe('updateVersion', () => {
+    it('clears old format transactions that do not have info', () => {
+      store = createStore(reducer, {
+        [1]: {
+          abc: {
+            hash: 'abc',
+          } as any,
+        },
+      })
+      store.dispatch(updateVersion())
+      expect(store.getState()[1]['abc']).toBeUndefined()
+    })
   })
 
   describe('addTransaction', () => {

@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useCurrency, useToken } from '../../hooks/Tokens'
+import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -67,18 +68,19 @@ function FormattedCurrencyAmountManaged({
 }
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
+  const { ENSName } = useENSName()
   return typeof uniAmountRaw === 'string' ? (
     <Trans>
       Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol={'UNI'} decimals={18} sigFigs={4} /> for{' '}
-      {recipient}
+      {ENSName ?? recipient}
     </Trans>
   ) : (
-    <Trans>Claim UNI reward for {recipient}</Trans>
+    <Trans>Claim UNI reward for {ENSName ?? recipient}</Trans>
   )
 }
 
 function SubmitProposalTransactionSummary({}: { info: SubmitProposalTransactionInfo }) {
-  return <Trans>Submitted new proposal</Trans>
+  return <Trans>Submit new proposal</Trans>
 }
 
 function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
@@ -92,7 +94,7 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
   if (info.reason && info.reason.trim().length > 0) {
     switch (info.decision) {
       case VoteOption.For:
-        return <Trans>Voted for proposal {proposalKey}</Trans>
+        return <Trans>Vote for proposal {proposalKey}</Trans>
       case VoteOption.Abstain:
         return <Trans>Vote to abstain on proposal {proposalKey}</Trans>
       case VoteOption.Against:
@@ -103,7 +105,7 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
       case VoteOption.For:
         return (
           <Trans>
-            Voted for proposal {proposalKey} with reason &quot;{info.reason}&quot;
+            Vote for proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
       case VoteOption.Abstain:
@@ -123,7 +125,8 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
 }
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
-  return <Trans>Delegate voting power to {delegatee}</Trans>
+  const { ENSName } = useENSName(delegatee)
+  return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
 function WrapSummary({ info: { currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {

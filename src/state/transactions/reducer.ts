@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { updateVersion } from '../global/actions'
 import {
   addTransaction,
   checkedTransaction,
@@ -30,6 +31,18 @@ export const initialState: TransactionState = {}
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(updateVersion, (transactions) => {
+      // in case there are any transactions in the store with the old format, remove them
+      Object.keys(transactions).forEach((chainId) => {
+        const chainTransactions = transactions[chainId as unknown as number]
+        Object.keys(chainTransactions).forEach((hash) => {
+          if (!('info' in chainTransactions[hash])) {
+            // clear old transactions that don't have the right format
+            delete chainTransactions[hash]
+          }
+        })
+      })
+    })
     .addCase(addTransaction, (transactions, { payload: { chainId, from, hash, info } }) => {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
