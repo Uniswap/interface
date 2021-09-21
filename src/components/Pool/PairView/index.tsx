@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Pair } from '@swapr/sdk'
 import { DarkCard } from '../../Card'
@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom'
 import { usePrevious } from 'react-use'
 import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 import { formatCurrencyAmount } from '../../../utils'
+import { unwrappedToken } from '../../../utils/wrappedCurrency'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -60,6 +61,9 @@ function PairView({ loading, pair }: PairViewProps) {
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
   const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
+  const unwrappedToken0 = useMemo(() => unwrappedToken(pair?.token0), [pair])
+  const unwrappedToken1 = useMemo(() => unwrappedToken(pair?.token1), [pair])
+
   const overallLoading = loading || volumeLoading || liquidityLoading
 
   useEffect(() => {
@@ -80,13 +84,13 @@ function PairView({ loading, pair }: PairViewProps) {
               <DoubleCurrencyLogo
                 loading={overallLoading}
                 size={20}
-                currency0={pair?.token0}
-                currency1={pair?.token1}
+                currency0={unwrappedToken0}
+                currency1={unwrappedToken1}
               />
             </Box>
             <Box>
               <Text fontSize="16px" fontWeight="600" lineHeight="20px">
-                {pair ? `${pair?.token0.symbol}/${pair?.token1.symbol}` : <Skeleton width="60px" />}
+                {pair ? `${unwrappedToken0?.symbol}/${unwrappedToken1?.symbol}` : <Skeleton width="60px" />}
               </Text>
             </Box>
           </Flex>
