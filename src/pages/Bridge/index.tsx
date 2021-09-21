@@ -25,6 +25,7 @@ import {
   networkOptionsPreset,
   NetworkOptionProps
 } from '../../components/NetworkSwitcher'
+import { useArbBridge } from '../../hooks/useArbBridge'
 
 const Title = styled.p`
   margin: 0;
@@ -136,6 +137,10 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
+  const { depositEth } = useArbBridge()
+
+  const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
+
   return (
     <>
       <AppBody>
@@ -205,7 +210,7 @@ export default function Bridge() {
         ) : step === Step.Collect ? (
           <NetworkSwitcher sendToId={toNetwork.chainId} onCollectClick={() => setStep(Step.Success)} />
         ) : (
-          <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
+          <BridgeButton onClick={handleDeposit} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!typedValue
               ? 'Enter ETH amount'
               : `Brigde to ${getNetworkOptionById(toNetwork.chainId, toOptions)?.header}`}
