@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-09-22 18:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -266,15 +266,15 @@ msgstr "批準 {0}"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
-msgstr "阿比斯坎"
+msgstr "Arbiscan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "仲裁橋"
+msgstr "Arbitrum橋"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum 處於測試階段，可能會遇到停機時間。在停機期間，您的頭寸不會賺取費用，您將無法移除流動性。 <0>閱讀更多。</0>"
+msgstr "Arbitrum 處於 Beta 階段，可能會遇到停機問題。在停機期間，您的倉位不會賺取手續費，也將無法移除流動性。 <0>閱讀更多。 </0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -375,7 +375,7 @@ msgstr "領取"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "要求 <0/> 為 {0}"
+msgstr "為 {0} 領取 <0/>"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -391,7 +391,7 @@ msgstr "領取 UNI 代幣"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0}索取 UNI 獎勵"
+msgstr "{0} 索取 UNI 獎勵"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -412,7 +412,7 @@ msgstr "已領取 UNI 代幣！"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "聲稱！"
+msgstr "已領取!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -465,7 +465,7 @@ msgstr "收取手續費"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "收取 {0}/{1}"
+msgstr "收取 {0}/{1} 手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -798,7 +798,7 @@ msgstr "在 Uniswap 數據分析中探索較受歡迎的流動池。"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
-msgstr "探險家"
+msgstr "瀏覽器"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1182,7 +1182,7 @@ msgstr "Optimism 網關"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "樂觀以太坊處於測試階段，可能會遇到停機時間。樂觀預計計劃停機時間將在不久的將來升級網絡。在停機期間，您的頭寸不會賺取費用，您將無法移除流動性。 <0>閱讀更多。</0>"
+msgstr "Optimistic 以太坊處於 Beta 階段，可能會遇到停機問題。 Optimistic 計劃近期會停機升級網絡。在停機期間，您的倉位不會賺取手續費，也將無法移除流動性。 <0>閱讀更多。 </0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1377,7 +1377,7 @@ msgstr "去除"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "刪除 <0/> 和 <1/>"
+msgstr "移除 <0/> 和 <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1536,7 +1536,7 @@ msgstr "兌換"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "將 <0/> 替換為 <1/>"
+msgstr "將 <0/> 兌換成恰好 <1/>"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1545,7 +1545,7 @@ msgstr "仍要兌換"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "將 <0/> 替換為 <1/>"
+msgstr "將恰好 <0/> 兌換成 <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1827,7 +1827,7 @@ msgstr "展開"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to ETH"
-msgstr "將 <0/> 解包到 ETH"
+msgstr "將 <0/> 換回為 ETH"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1923,7 +1923,7 @@ msgstr "投票反對提案 {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr "以“{0}”為理由對提案 {proposalKey}"
+msgstr "以“{0}”為理由反對提案 {proposalKey}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1932,11 +1932,11 @@ msgstr "投票贊成提案 {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr "為提案 {proposalKey}"
+msgstr "投票贊成提案 {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "以“{0}”為理由為提案 {proposalKey}"
+msgstr "以“{0}”為理由贊成提案 {proposalKey}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1945,11 +1945,11 @@ msgstr "針對提案 {proposalId} 投棄權票"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "{proposalKey}投棄權票"
+msgstr "為提案 {proposalKey} 投棄權票"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "以“{0}”為由投票棄權提案 {proposalKey}"
+msgstr "以“{0}”為由為提案 {proposalKey} 投棄權票"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -2014,7 +2014,7 @@ msgstr "包裹"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to WETH"
-msgstr "將 <0/> 包裹到 WETH"
+msgstr "將 <0/> 換為 WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
