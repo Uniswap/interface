@@ -90,7 +90,6 @@ const Warning = styled.div`
   background: ${({ theme }) => `${theme.warning}20`};
   border-radius: 0.625rem;
   padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
 `
 
 export default function AddLiquidity({
@@ -498,15 +497,10 @@ export default function AddLiquidity({
   const usdPrices = useTokensPrice(tokens)
   const marketPrices = useTokensMarketPrice(tokens)
 
-  const poolRatio = usdPrices[1] && usdPrices[0] / usdPrices[1]
-  const marketRatio = marketPrices[1] && marketPrices[0] / marketPrices[1]
+  const poolRatio = Number(pairAddress ? currentPrice?.toSignificant(6) : price?.toSignificant(6))
+  const marketRatio = marketPrices[0] && marketPrices[1] / marketPrices[0]
 
-  const showSanityPriceWarning = !!(
-    pairAddress &&
-    poolRatio &&
-    marketRatio &&
-    Math.abs(poolRatio - marketRatio) / marketRatio > 0.05
-  )
+  const showSanityPriceWarning = !!(poolRatio && marketRatio && Math.abs(poolRatio - marketRatio) / marketRatio > 0.05)
 
   return (
     <>
@@ -728,6 +722,15 @@ export default function AddLiquidity({
               </OutlineCard2>
             )}
 
+            {showSanityPriceWarning && (
+              <Warning>
+                <AlertTriangle color={theme.yellow2} />
+                <Text fontSize="0.75rem" marginLeft="0.75rem">
+                  <Trans>The price is deviating quite a lot from that market price, please be careful!</Trans>
+                </Text>
+              </Warning>
+            )}
+
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>
                 <Trans>Connect Wallet</Trans>
@@ -769,14 +772,6 @@ export default function AddLiquidity({
                     </RowBetween>
                   )}
 
-                {showSanityPriceWarning && (
-                  <Warning>
-                    <AlertTriangle color={theme.yellow2} />
-                    <Text fontSize="0.75rem" marginLeft="0.75rem">
-                      <Trans>The price is deviating quite a lot from that market price, please be careful!</Trans>
-                    </Text>
-                  </Warning>
-                )}
                 <ButtonError
                   onClick={() => {
                     expertMode ? onAdd() : setShowConfirm(true)
