@@ -1,6 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexStripZeros } from '@ethersproject/bytes'
 import { Web3Provider } from '@ethersproject/providers'
 import { L1ChainInfo, L2ChainInfo, SupportedChainId } from 'constants/chains'
-import { BigNumber, utils } from 'ethers'
 
 interface AddNetworkArguments {
   library: Web3Provider
@@ -14,7 +15,7 @@ export async function addNetwork({ library, chainId, info }: AddNetworkArguments
   if (!library?.provider?.request) {
     return
   }
-  const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
+  const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
     await library?.provider.request({
       method: 'wallet_addEthereumChain',

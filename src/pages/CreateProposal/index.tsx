@@ -1,10 +1,10 @@
-import { getAddress } from '@ethersproject/address'
+import { defaultAbiCoder } from '@ethersproject/abi'
+import { getAddress, isAddress } from '@ethersproject/address'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { utils } from 'ethers'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -162,7 +162,7 @@ export default function CreateProposal() {
     () =>
       Boolean(
         !proposalAction ||
-          !utils.isAddress(toAddressValue) ||
+          !isAddress(toAddressValue) ||
           !currencyValue?.isToken ||
           amountValue === '' ||
           titleValue === '' ||
@@ -214,7 +214,7 @@ ${bodyValue}
 
     createProposalData.calldatas = []
     for (let i = 0; i < createProposalData.signatures.length; i++) {
-      createProposalData.calldatas[i] = utils.defaultAbiCoder.encode(types[i], values[i])
+      createProposalData.calldatas[i] = defaultAbiCoder.encode(types[i], values[i])
     }
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
