@@ -14,12 +14,12 @@ import {
   SwapRoute,
   TokenListProvider,
   UniswapMulticallProvider,
+  URISubgraphProvider,
 } from '@uniswap/smart-order-router'
 import { Trade } from '@uniswap/v3-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import { V3TradeState } from 'state/routing/types'
 import { useFreshData } from 'state/routing/useRoutingAPITrade'
-import { URISubgraphProvider } from './URISubgraphProvider'
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {

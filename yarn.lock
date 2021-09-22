@@ -1604,6 +1604,15 @@
     "@ethersproject/logger" "^5.4.0"
     bn.js "^4.11.9"
 
+"@ethersproject/bignumber@5.4.2", "@ethersproject/bignumber@^5.1.1":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@ethersproject/bignumber/-/bignumber-5.4.2.tgz#44232e015ae4ce82ac034de549eb3583c71283d8"
+  integrity sha512-oIBDhsKy5bs7j36JlaTzFgNPaZjiNDOXsdSgSpXRucUl+UA6L/1YLlFeI3cPAoodcenzF4nxNPV13pcy7XbWjA==
+  dependencies:
+    "@ethersproject/bytes" "^5.4.0"
+    "@ethersproject/logger" "^5.4.0"
+    bn.js "^4.11.9"
+
 "@ethersproject/bytes@5.4.0", "@ethersproject/bytes@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/bytes/-/bytes-5.4.0.tgz#56fa32ce3bf67153756dbaefda921d1d4774404e"
@@ -4359,10 +4368,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^1.42.1":
-  version "1.42.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-1.42.1.tgz#7cd1902e5d324513ad3749fa76fa3ade2b9cac63"
-  integrity sha512-O44zHjV2cpLkKUPUExkKjXUKVk1X80LnxXPLWLv11KnHOSgfkviEBf1KUb/wNmAq0eS6hBiLZmo9hUJYrz4pAg==
+"@uniswap/smart-order-router@^1.44.1":
+  version "1.44.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-1.44.1.tgz#dd1ea52866c44d8ee23038f962f28a0484772f24"
+  integrity sha512-Rp31oEe2bT7ydhbV/pw3h0lZdZp/iKFOUYyMoUNbivQC8IWdMrqKTOVqAvh5HLBDUzjNP+Z/l8KnP0+C9fTz5Q==
   dependencies:
     "@bitauth/libauth" "^1.17.1"
     "@ethersproject/bignumber" "^5.1.1"
@@ -4376,7 +4385,7 @@
     "@types/sinon" "^10.0.2"
     "@types/stats-lite" "^2.2.0"
     "@uniswap/default-token-list" "^2.0.0"
-    "@uniswap/token-lists" "*"
+    "@uniswap/token-lists" "^1.0.0-beta.25"
     "@uniswap/v3-periphery" "^1.1.1"
     "@uniswap/v3-sdk" "^3.4.1"
     async-retry "^1.3.1"
@@ -4399,7 +4408,7 @@
     stats-lite "^2.2.0"
     tslib "^1.14.1"
 
-"@uniswap/token-lists@*", "@uniswap/token-lists@^1.0.0-beta.25":
+"@uniswap/token-lists@^1.0.0-beta.25":
   version "1.0.0-beta.25"
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.25.tgz#e4279cf2581b297723d82eafd1bed35273070f07"
   integrity sha512-XemgUs8YiYP7Xci+Wb8vPSnyxV9aTO6J5XLPzhZmgDFO1RY5JMnB0As8PJFia3Pg9JSRZ7+AahzxowPYhnUVWw==
