@@ -281,10 +281,10 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
 
   return {
     [Field.INPUT]: {
-      currencyId: inputCurrency || null,
+      currencyId: inputCurrency === '' ? null : inputCurrency ?? null,
     },
     [Field.OUTPUT]: {
-      currencyId: outputCurrency || null,
+      currencyId: outputCurrency === '' ? null : outputCurrency ?? null,
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
