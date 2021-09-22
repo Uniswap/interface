@@ -4,8 +4,6 @@
 /src/types/v3
 /src/abis/types
 /src/locales/**/*.js
-/src/locales/**/*.ts
-/src/locales/**/*.json
 /src/locales/**/en-US.po
 /src/state/data/generated.ts
 

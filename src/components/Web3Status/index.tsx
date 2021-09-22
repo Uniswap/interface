@@ -5,6 +5,7 @@ import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components/macro'
+
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -233,14 +234,12 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
-  if (!contextNetwork.active && !active) {
-    return null
-  }
-
   return (
     <>
       <Web3StatusInner />
-      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
+      {(contextNetwork.active || active) && (
+        <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
+      )}
     </>
   )
 }

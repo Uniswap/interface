@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
+
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
@@ -12,6 +13,7 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateOptimismAlphaAcknowledged,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -28,9 +30,10 @@ export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
-  userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
+  optimismAlphaAcknowledged: boolean
 
+  userDarkMode: boolean | null // the user's choice for dark mode or light mode
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
@@ -70,8 +73,9 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   arbitrumAlphaAcknowledged: false,
-  userDarkMode: null,
   matchesDarkMode: false,
+  optimismAlphaAcknowledged: false,
+  userDarkMode: null,
   userExpertMode: false,
   userLocale: null,
   userClientSideRouter: false,
@@ -130,6 +134,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
       state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
+    })
+    .addCase(updateOptimismAlphaAcknowledged, (state, action) => {
+      state.optimismAlphaAcknowledged = action.payload.optimismAlphaAcknowledged
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode

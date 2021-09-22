@@ -1,11 +1,12 @@
-import ReactGA from 'react-ga'
-import { stringify } from 'qs'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useLocation } from 'react-router-dom'
-import { LocationDescriptor } from 'history'
 import { SupportedLocale } from 'constants/locales'
-import { useActiveLocale } from './useActiveLocale'
+import { LocationDescriptor } from 'history'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { stringify } from 'qs'
 import { useMemo } from 'react'
+import ReactGA from 'react-ga'
+import { useLocation } from 'react-router-dom'
+
+import { useActiveLocale } from './useActiveLocale'
 
 export function useLocationLinkProps(locale: SupportedLocale | null): {
   to?: LocationDescriptor

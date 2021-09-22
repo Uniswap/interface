@@ -1,7 +1,9 @@
-import { TextInput, ResizingTextArea } from './'
-import { render, screen, fireEvent } from 'test-utils'
 // include style rules in snapshots
 import 'jest-styled-components'
+
+import { fireEvent, render, screen } from 'test-utils'
+
+import { ResizingTextArea, TextInput } from './'
 
 describe('TextInput', () => {
   it('renders correctly', () => {

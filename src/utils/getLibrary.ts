@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import ms from 'ms.macro'
+
 import { SupportedChainId } from '../constants/chains'
 
 const NETWORK_POLLING_INTERVALS: { [chainId: number]: number } = {

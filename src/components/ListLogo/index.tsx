@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
-import useHttpLocations from '../../hooks/useHttpLocations'
 
+import useHttpLocations from '../../hooks/useHttpLocations'
 import Logo from '../Logo'
 
 const StyledListLogo = styled(Logo)<{ size: string }>`

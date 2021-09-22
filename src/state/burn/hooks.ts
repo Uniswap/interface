@@ -1,17 +1,17 @@
 import { t } from '@lingui/macro'
-import JSBI from 'jsbi'
-import { Token, Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import { useCallback } from 'react'
-import { useV2Pair } from '../../hooks/useV2Pairs'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useBurnState(): AppState['burn'] {
   return useAppSelector((state) => state.burn)

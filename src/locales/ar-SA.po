@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-16 15:04\n"
+"PO-Revision-Date: 2021-09-21 22:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -150,6 +150,10 @@ msgstr "نشط"
 msgid "Add"
 msgstr "إضافة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "أضف <0 /> و <1 /> إلى Uniswap V2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "إضافة مندوب +"
@@ -175,16 +179,11 @@ msgstr "أضف المزيد من السيولة"
 msgid "Add {0} to Metamask <0/>"
 msgstr "إضافة {0} إلى Metamask <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "إضافة {0} {1} و {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "إضافة سيولة {0}-{1}"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "إضافة سيولة {0}/{1} V3"
 
@@ -241,6 +240,7 @@ msgstr "الموافقة"
 msgid "Approve Token"
 msgstr "الموافقة على رمز"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -263,6 +263,18 @@ msgstr "الموافقة"
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
 msgstr "الموافقة على {0}"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Arbiscan"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "جسر Arbitrum"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Arbitrum في الإصدار التجريبي وقد يواجه بعض التوقفات عن العمل. خلال فترة التوقف عن العمل ، لن يربح مركزك رسومًا ولن تتمكن من إزالة السيولة. <0> اقرأ المزيد.</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -319,6 +331,10 @@ msgstr "الأفضل للأزواج مستقرة."
 msgid "Blocked address"
 msgstr "عنوان محظور"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "كوبري"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "من خلال إضافة السيولة ستكسب 0.3٪ من جميع المعاملات على هذا الزوج بما يتناسب مع نصيبك من المجموعة. تضاف الرسوم إلى المجموعة، تتراكم في الوقت الحقيقي ويمكن المطالبة بها بسحب السيولة الخاصة بك."
@@ -339,10 +355,6 @@ msgstr "ألغيت"
 msgid "Change"
 msgstr "تغيير"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "قم بتغيير شبكتك للعودة إلى L1"
-
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "الرسوم البيانية"
@@ -361,6 +373,10 @@ msgstr "تحقق من أدلة التجول والترحيل الخاصة بـ v
 msgid "Claim"
 msgstr "مطالبة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "مطالبة <0 /> مقابل {0}"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -373,10 +389,9 @@ msgstr "مطالبة UNI"
 msgid "Claim UNI Token"
 msgstr "مطالبة برمز UNI"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "المطالبة بجوائز UNI المتراكمة"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "اطلب مكافأة UNI مقابل {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -395,7 +410,12 @@ msgstr "مطالب"
 msgid "Claimed UNI!"
 msgstr "طالبَ بـ UNI!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "ادعى!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "مطالبة"
 
@@ -442,6 +462,10 @@ msgstr "اجمع كـ WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "تحصيل الرسوم"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "اجمع {0}/{1} رسوم"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -567,7 +591,7 @@ msgstr "إنشاء مجموعة"
 msgid "Create an issue on GitHub"
 msgstr "قم بإنشاء مشكلة على GitHub"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "إنشاء مجموعة وإضافة سيولة {0}/{1} V3"
 
@@ -575,7 +599,7 @@ msgstr "إنشاء مجموعة وإضافة سيولة {0}/{1} V3"
 msgid "Create pool."
 msgstr "إنشاء مجموعة."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "خلق {0}/{1} تجمع V3"
 
@@ -600,13 +624,13 @@ msgstr "هزم"
 msgid "Delegate Votes"
 msgstr "أصوات التفويض"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "تفويض سلطة التصويت إلى {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "مفوض إلى:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "الأصوات المفوضة"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -623,19 +647,17 @@ msgstr "الإيداع"
 msgid "Deposit Amounts"
 msgstr "مبالغ الإيداع"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "أصول الإيداع"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "إيداع رموز UNI-V2 LP"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "إيداع السيولة"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "إيداع {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -774,6 +796,10 @@ msgstr "منتهي الصلاحية"
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "استكشف المجموعات الشعبية على تحليلات Uniswap."
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "إكسبلورر"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "مستوى الرسوم"
@@ -810,6 +836,10 @@ msgstr "قد تكسب المراكز الكاملة النطاق رسومًا أ
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "احصل على الدعم على Discord"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "مركز المساعدة"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -921,13 +951,13 @@ msgstr "لغة"
 msgid "Learn"
 msgstr "تعلم"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "يتعلم أكثر"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "تعرف على توفير السيولة"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "يتعلم أكثر"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1044,6 +1074,10 @@ msgstr "ترحيل سيولة V2"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "نقل رموز السيولة الخاصة بك من Uniswap V2 إلى Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "تهاجر {0}/{1} السيولة إلى V3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "الترحيل"
@@ -1142,21 +1176,17 @@ msgstr "أصوات UNI التي تم تفويضها بنفسك أو تفويضه
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "عفواً! حدث خطأ غير معروف. يُرجى تحديث الصفحة، أو الزيارة من متصفح آخر أو جهاز آخر."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "التفاؤل وقت التوقف المخطط له"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "بوابة التفاؤل"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "يتوقع التفاؤل توقفًا مخططًا له في المستقبل القريب. قد يحدث أيضًا توقف غير مخطط له. أثناء تعطل الشبكة ، لن يتم فرض رسوم ولن تتمكن من إزالة السيولة. <0> اقرأ المزيد.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Optimistic Ethereum في الإصدار التجريبي وقد تواجه فترة توقف. يتوقع التفاؤل التوقف المخطط له لتحديث الشبكة في المستقبل القريب. خلال فترة التوقف عن العمل ، لن يربح مركزك رسومًا ولن تتمكن من إزالة السيولة. <0> اقرأ المزيد.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "متفائل Etherscan"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "بوابة L2 المتفائلة"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1313,12 +1343,6 @@ msgstr "في قائمة الانتظار"
 msgid "Rates"
 msgstr "الأسعار"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "قراءة المزيد"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "اقرأ المزيد عن UNI"
@@ -1351,6 +1375,10 @@ msgstr "متلقي"
 msgid "Remove"
 msgstr "إزالة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "قم بإزالة <0 /> و <1 />"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "إزالة المبلغ"
@@ -1369,15 +1397,7 @@ msgstr "إزالة السيولة"
 msgid "Remove list"
 msgstr "إزالة القائمة"
 
-#: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "إزالة {0} {1} و {2} {3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "إزالة سيولة {0}/{1} V3"
-
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "إزالة {0} {1} و {2} {3}"
@@ -1395,6 +1415,10 @@ msgstr "البحث عن اسم أو لصق العنوان"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "حدد زوج"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "حدد شبكة"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1474,9 +1498,9 @@ msgstr "حالة"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "الخطوة 1. احصل على رمز سيولة UNI-V2"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "قدم اقتراح جديد"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "إرسال اقتراح جديد"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1510,18 +1534,22 @@ msgstr "إمداد {0} {1} و {2} {3}"
 msgid "Swap"
 msgstr "مبادلة"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "استبدل <0 /> بـ <1 /> بالضبط"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "مبادلة على أي حال"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "استبدل بالضبط <0 /> بـ <1 />"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "مبادلة {0} {1} مقابل {2} {3}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "التبديل إلى L1 (الشبكة الرئيسية)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1575,15 +1603,6 @@ msgstr "لا توجد بيانات سيولة."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "هذه الرموز عادة ما تقترن مع رموز أخرى."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "هذا إصدار ألفا من Uniswap على شبكة {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "هذا إصدار ألفا من Uniswap على شبكة {0} يجب ربط أصول L1 بالشبكة لتبديلها."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "يجب تهيئة هذا المستودع قبل أن تتمكن من إضافة السيولة. للتهيئة ، حدد سعر البداية للمجمع. ثم أدخل نطاق سعر السيولة ومبلغ الإيداع. ستكون رسوم الغاز أعلى من المعتاد بسبب معاملة التهيئة."
@@ -1626,6 +1645,10 @@ msgstr "إلى"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "إلى (على الأقل)"
+
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "لبدء التداول على {0}، قم أولاً بتوصيل أصولك من L1 إلى L2. يرجى التعامل مع هذا كإصدار تجريبي والتعرف على المخاطر قبل استخدام {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1802,6 +1825,10 @@ msgstr "بدون عنوان"
 msgid "Unwrap"
 msgstr "Unwrap"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "قم بفك التفاف <0 /> إلى ETH"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "تحديث التفويض"
@@ -1890,15 +1917,39 @@ msgstr "التصويت لـ"
 msgid "Vote against proposal {proposalId}"
 msgstr "التصويت ضد الاقتراح {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "التصويت ضد الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت ضد الاقتراح {proposalKey} مع السبب \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "التصويت لصالح الاقتراح {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "التصويت على الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت على الاقتراح {proposalKey} مع السبب \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "التصويت على الامتناع عن التصويت {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "التصويت للامتناع عن التصويت على الاقتراح {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "التصويت على الامتناع عن التصويت على الاقتراح {proposalKey} مع السبب \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1945,8 +1996,7 @@ msgstr "سحب"
 msgid "Withdraw & Claim"
 msgstr "السحب والمطالبة"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "سحب السيولة المودعة"
 
@@ -1961,6 +2011,10 @@ msgstr "سحب UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "التفاف"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "لف <0 /> إلى WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2000,13 +2054,12 @@ msgid "You don’t have liquidity in this pool yet."
 msgstr "ليس لديك سيولة في هذه المجموعة حتى الآن."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "ربما تكون قد فقدت اتصالك بالشبكة ، أو ربما يكون الرقم {label}"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "ربما تكون قد فقدت اتصالك بالشبكة."
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "يجب عليك ربط أصول L1 بالشبكة لاستخدامها."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2176,10 +2229,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> لكل <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} جسر"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} رموز مخصصة"
@@ -2193,10 +2242,6 @@ msgstr "{0} مودعة"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} مستكشف"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -2304,10 +2349,6 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} توكينز"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
-msgid "{label} may be down right now, or you may have lost your network connection."
-msgstr "{label} قد يكون معطلاً الآن ، أو ربما فقدت اتصالك بالشبكة."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"

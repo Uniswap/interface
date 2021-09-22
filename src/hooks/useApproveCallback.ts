@@ -1,15 +1,17 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, Percent, Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
+
 import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
-import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
+import { TransactionType } from '../state/transactions/actions'
+import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
-import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
+import { useActiveWeb3React } from './web3'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -88,10 +90,7 @@ export function useApproveCallback(
         gasLimit: calculateGasMargin(chainId, estimatedGas),
       })
       .then((response: TransactionResponse) => {
-        addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.currency.symbol,
-          approval: { tokenAddress: token.address, spender },
-        })
+        addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress: token.address, spender })
       })
       .catch((error: Error) => {
         console.debug('Failed to approve token', error)

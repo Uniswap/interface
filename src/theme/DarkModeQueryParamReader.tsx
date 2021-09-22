@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
-
-import { RouteComponentProps } from 'react-router-dom'
 import { parse } from 'qs'
+import { useEffect } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
+
 import { updateUserDarkMode } from '../state/user/actions'
 
 export default function DarkModeQueryParamReader({ location: { search } }: RouteComponentProps): null {

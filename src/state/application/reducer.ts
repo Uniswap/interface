@@ -1,11 +1,13 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+
 import {
   addPopup,
   ApplicationModal,
   PopupContent,
   removePopup,
   setChainConnectivityWarning,
+  setImplements3085,
   setOpenModal,
   updateBlockNumber,
   updateChainId,
@@ -14,20 +16,21 @@ import {
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
-  // used by RTK-Query to build dynamic subgraph urls
-  readonly chainId: number | null
-  readonly chainConnectivityWarning: boolean
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly popupList: PopupList
+  readonly chainConnectivityWarning: boolean
+  readonly chainId: number | null
+  readonly implements3085: boolean
   readonly openModal: ApplicationModal | null
+  readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
-  chainId: null,
-  chainConnectivityWarning: false,
   blockNumber: {},
-  popupList: [],
+  chainConnectivityWarning: false,
+  chainId: null,
+  implements3085: false,
   openModal: null,
+  popupList: [],
 }
 
 export default createReducer(initialState, (builder) =>
@@ -63,6 +66,9 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(setImplements3085, (state, { payload: { implements3085 } }) => {
+      state.implements3085 = implements3085
     })
     .addCase(setChainConnectivityWarning, (state, { payload: { warn } }) => {
       state.chainConnectivityWarning = warn

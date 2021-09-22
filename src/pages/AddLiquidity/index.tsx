@@ -3,21 +3,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import FeeSelector from 'components/FeeSelector'
-import HoverInlineText from 'components/HoverInlineText'
-import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
-import { AddRemoveTabs } from 'components/NavigationTabs'
-import { AddLiquidityNetworkAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
-import OptimismDowntimeWarning from 'components/OptimismDowntimeWarning'
-import { PositionPreview } from 'components/PositionPreview'
-import RangeSelector from 'components/RangeSelector'
-import PresetsButtons from 'components/RangeSelector/PresetsButtons'
-import RateToggle from 'components/RateToggle'
+import DowntimeWarning from 'components/DowntimeWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { SupportedChainId } from 'constants/chains'
-import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -30,26 +17,39 @@ import {
   useV3MintState,
 } from 'state/mint/v3/hooks'
 import { ThemeContext } from 'styled-components/macro'
+
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import FeeSelector from '../../components/FeeSelector'
+import HoverInlineText from '../../components/HoverInlineText'
+import LiquidityChartRangeInput from '../../components/LiquidityChartRangeInput'
+import { AddRemoveTabs } from '../../components/NavigationTabs'
+import { PositionPreview } from '../../components/PositionPreview'
+import RangeSelector from '../../components/RangeSelector'
+import PresetsButtons from '../../components/RangeSelector/PresetsButtons'
+import RateToggle from '../../components/RateToggle'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
-import { CHAIN_INFO } from '../../constants/chains'
+import { CHAIN_INFO, SupportedChainId } from '../../constants/chains'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
+import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Bound, Field } from '../../state/mint/v3/actions'
+import { TransactionType } from '../../state/transactions/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { ExternalLink, TYPE } from '../../theme'
@@ -209,11 +209,7 @@ export default function AddLiquidity({
   async function onCreate() {
     if (!chainId || !library) return
 
-    if (!positionManager || !baseCurrency || !quoteCurrency) {
-      return
-    }
-
-    if (position && account && deadline) {
+    if (chainId && library && position && account && deadline && baseCurrency && quoteCurrency && positionManager) {
       const { calldata, value } = NonfungiblePositionManager.createCallParameters(position.pool)
 
       const txn: { to: string; data: string; value: string } = {
@@ -238,7 +234,9 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                summary: t`Create ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 pool`,
+                type: TransactionType.CREATE_V3_POOL,
+                baseCurrencyId: currencyId(baseCurrency),
+                quoteCurrencyId: currencyId(quoteCurrency),
               })
               // dont set txn hash as we dont want submitted txn screen for create
               ReactGA.event({
@@ -333,9 +331,13 @@ export default function AddLiquidity({
             .then((response: TransactionResponse) => {
               setAttemptingTxn(false)
               addTransaction(response, {
-                summary: noLiquidity
-                  ? t`Create pool and add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`
-                  : t`Add ${baseCurrency?.symbol}/${quoteCurrency?.symbol} V3 liquidity`,
+                type: TransactionType.ADD_LIQUIDITY_V3_POOL,
+                baseCurrencyId: currencyId(baseCurrency),
+                quoteCurrencyId: currencyId(quoteCurrency),
+                createPool: Boolean(noLiquidity),
+                expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
+                feeAmount: position.pool.fee,
               })
               setTxHash(response.hash)
               ReactGA.event({
@@ -550,8 +552,7 @@ export default function AddLiquidity({
   return (
     <>
       <ScrollablePage>
-        <AddLiquidityNetworkAlert />
-        <OptimismDowntimeWarning />
+        <DowntimeWarning />
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}

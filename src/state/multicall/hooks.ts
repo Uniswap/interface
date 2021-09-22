@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hooks'
 import { addMulticallListeners, ListenerOptions, removeMulticallListeners } from './actions'

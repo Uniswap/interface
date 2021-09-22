@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, DEFAULT_MESSAGES, SupportedLocale } from 'constants/locales'
 import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import {
   af,
@@ -29,12 +29,14 @@ import {
   ru,
   sr,
   sv,
+  sw,
   tr,
   uk,
   vi,
   zh,
 } from 'make-plural/plurals'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { ReactNode } from 'react'
 import { useUserLocaleManager } from 'state/user/hooks'
 
 type LocalePlural = {
@@ -68,6 +70,7 @@ const plurals: LocalePlural = {
   'ru-RU': ru,
   'sr-SP': sr,
   'sv-SE': sv,
+  'sw-TZ': sw,
   'tr-TR': tr,
   'uk-UA': uk,
   'vi-VN': vi,
@@ -76,8 +79,8 @@ const plurals: LocalePlural = {
 }
 
 async function dynamicActivate(locale: SupportedLocale) {
-  const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
+  const { messages } = locale === DEFAULT_LOCALE ? { messages: DEFAULT_MESSAGES } : await import(`locales/${locale}`)
   i18n.load(locale, messages)
   i18n.activate(locale)
 }
@@ -87,22 +90,17 @@ dynamicActivate(initialLocale)
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const locale = useActiveLocale()
   const [, setUserLocale] = useUserLocaleManager()
-  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
         document.documentElement.setAttribute('lang', locale)
         setUserLocale(locale) // stores the selected locale to persist across sessions
-        setLoaded(true)
       })
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
   }, [locale, setUserLocale])
-
-  // prevent the app from rendering with placeholder text before the locale is loaded
-  if (!loaded) return null
 
   return (
     <I18nProvider forceRenderOnLocaleChange={false} i18n={i18n}>

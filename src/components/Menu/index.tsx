@@ -1,6 +1,7 @@
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
-import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
+import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
@@ -8,6 +9,7 @@ import { BookOpen, Check, ChevronLeft, Code, Globe, Info, MessageCircle, Moon, P
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
+
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -60,7 +62,6 @@ const UNIbutton = styled(ButtonPrimary)`
 `
 
 const StyledMenu = styled.div`
-  margin-left: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;

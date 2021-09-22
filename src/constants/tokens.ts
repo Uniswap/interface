@@ -1,4 +1,5 @@
-import { WETH9, Token, Ether } from '@uniswap/sdk-core'
+import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
+
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 

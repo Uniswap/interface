@@ -1,11 +1,12 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
+
 import { ButtonPrimary } from '../../components/Button'
-import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import { Trans } from '@lingui/macro'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
