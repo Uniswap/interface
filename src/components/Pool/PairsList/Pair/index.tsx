@@ -77,12 +77,12 @@ interface PairProps {
 export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiquidityText, ...rest }: PairProps) {
   return (
     <SizedCard selectable {...rest}>
-      <Flex alignItems="center" flexWrap="wrap">
+      <Flex flexWrap="wrap">
         <Box mr="16px">
           <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
         </Box>
         <Box flex="1">
-          <AutoColumn gap="4px" justify="flex-end">
+          <AutoColumn gap="6px" justify="flex-end">
             {staked && (
               <PositiveBadgeRoot>
                 <BadgeText>STAKING</BadgeText>
