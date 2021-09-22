@@ -1,4 +1,5 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, Token, TokenAmount } from '@ubeswap/sdk'
 import { useDoTransaction } from 'components/swap/routing'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -69,6 +70,8 @@ export default function AddLiquidity({
     liquidityMinted,
     poolTokenPercentage,
     error,
+    showRampA,
+    showRampB,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
@@ -385,37 +388,73 @@ export default function AddLiquidity({
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (
               <AutoColumn gap={'md'}>
-                {(approvalA === ApprovalState.NOT_APPROVED ||
+                {(showRampA ||
+                  showRampB ||
+                  approvalA === ApprovalState.NOT_APPROVED ||
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||
                   approvalB === ApprovalState.PENDING) &&
                   isValid && (
                     <RowBetween>
-                      {approvalA !== ApprovalState.APPROVED && (
+                      {showRampA ? (
                         <ButtonPrimary
-                          onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING}
-                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                          onClick={() => {
+                            new RampInstantSDK({
+                              hostAppName: 'Ubeswap',
+                              hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
+                              userAddress: account,
+                              swapAsset: currencies.CURRENCY_A?.symbol,
+                              hostApiKey: process.env.REACT_APP_RAMP_KEY,
+                            }).show()
+                          }}
+                          width={showRampB ? '48%' : '100%'}
                         >
-                          {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_A]?.symbol
-                          )}
+                          Get more {currencies.CURRENCY_A?.symbol} via Ramp
                         </ButtonPrimary>
+                      ) : (
+                        approvalA !== ApprovalState.APPROVED && (
+                          <ButtonPrimary
+                            onClick={approveACallback}
+                            disabled={approvalA === ApprovalState.PENDING}
+                            width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                          >
+                            {approvalA === ApprovalState.PENDING ? (
+                              <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                            ) : (
+                              'Approve ' + currencies[Field.CURRENCY_A]?.symbol
+                            )}
+                          </ButtonPrimary>
+                        )
                       )}
-                      {approvalB !== ApprovalState.APPROVED && (
+                      {showRampB ? (
                         <ButtonPrimary
-                          onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING}
+                          onClick={() => {
+                            new RampInstantSDK({
+                              hostAppName: 'Ubeswap',
+                              hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
+                              userAddress: account,
+                              swapAsset: currencies.CURRENCY_B?.symbol,
+                              hostApiKey: process.env.REACT_APP_RAMP_KEY,
+                            }).show()
+                          }}
                           width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
-                          {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_B]?.symbol
-                          )}
+                          Get more {currencies.CURRENCY_B?.symbol} via Ramp
                         </ButtonPrimary>
+                      ) : (
+                        approvalB !== ApprovalState.APPROVED && (
+                          <ButtonPrimary
+                            onClick={approveBCallback}
+                            disabled={approvalB === ApprovalState.PENDING}
+                            width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                          >
+                            {approvalB === ApprovalState.PENDING ? (
+                              <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                            ) : (
+                              'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                            )}
+                          </ButtonPrimary>
+                        )
                       )}
                     </RowBetween>
                   )}

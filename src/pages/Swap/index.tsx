@@ -1,4 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
+import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk'
 import { CELO, ChainId as UbeswapChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { describeTrade } from 'components/swap/routing/describeTrade'
 import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
@@ -90,7 +91,14 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
+  const {
+    v2Trade,
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError,
+    showRamp,
+  } = useDerivedSwapInfo()
   const { address: recipientAddress } = useENS(recipient)
   const trade = v2Trade
 
@@ -397,6 +405,20 @@ export default function Swap() {
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
                 {singleHopOnly && <TYPE.main mb="4px">Try enabling multi-hop trades.</TYPE.main>}
               </GreyCard>
+            ) : showRamp ? (
+              <ButtonLight
+                onClick={() => {
+                  new RampInstantSDK({
+                    hostAppName: 'Ubeswap',
+                    hostLogoUrl: 'https://info.ubeswap.org/favicon.png',
+                    userAddress: account,
+                    swapAsset: currencies.INPUT?.symbol,
+                    hostApiKey: process.env.REACT_APP_RAMP_KEY,
+                  }).show()
+                }}
+              >
+                Get more {currencies.INPUT?.symbol} via Ramp
+              </ButtonLight>
             ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonConfirmed

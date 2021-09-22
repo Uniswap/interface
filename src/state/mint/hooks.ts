@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { JSBI, Pair, Percent, Price, Token, TokenAmount } from '@ubeswap/sdk'
+import { CELO, cEUR, ChainId, cUSD, JSBI, Pair, Percent, Price, Token, TokenAmount } from '@ubeswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -56,8 +56,10 @@ export function useDerivedMintInfo(
   liquidityMinted?: TokenAmount
   poolTokenPercentage?: Percent
   error?: string
+  showRampA: boolean
+  showRampB: boolean
 } {
-  const { address: account } = useContractKit()
+  const { address: account, network } = useContractKit()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
@@ -168,12 +170,30 @@ export function useDerivedMintInfo(
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
+  let showRampA = false
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+    if (
+      currencyAAmount.currency.address === cUSD[network.chainId as unknown as ChainId].address ||
+      currencyAAmount.currency.address === CELO[network.chainId as unknown as ChainId].address ||
+      currencyAAmount.currency.address === cEUR[network.chainId as unknown as ChainId].address
+    ) {
+      showRampA = true
+    } else {
+      error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+    }
   }
 
+  let showRampB = false
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+    if (
+      currencyBAmount.currency.address === cUSD[network.chainId as unknown as ChainId].address ||
+      currencyBAmount.currency.address === CELO[network.chainId as unknown as ChainId].address ||
+      currencyBAmount.currency.address === cEUR[network.chainId as unknown as ChainId].address
+    ) {
+      showRampB = true
+    } else {
+      error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+    }
   }
 
   return {
@@ -188,5 +208,7 @@ export function useDerivedMintInfo(
     liquidityMinted,
     poolTokenPercentage,
     error,
+    showRampA,
+    showRampB,
   }
 }

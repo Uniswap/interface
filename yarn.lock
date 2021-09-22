@@ -2511,6 +2511,13 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.3.tgz#8b68da1ebd7fc603999cf6ebee34a4899a14b88e"
   integrity sha512-xDu17cEfh7Kid/d95kB6tZsLOmSWKCZKtprnhVepjsSaCij+lM3mItSJDuuHDMbCWTh8Ejmebwb+KONcCJ0eXQ==
 
+"@ramp-network/ramp-instant-sdk@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@ramp-network/ramp-instant-sdk/-/ramp-instant-sdk-2.5.0.tgz#4d8a746cd5cf2dfd6ffb1451058cfe9126d85c10"
+  integrity sha512-KKow1w+G49a/zq4Vv659G+ZVWs6DwWglLJL2H7XxATbCSE+7QknNjId/RIwJ1sDfJv10rV4AqjELXcPsgKlgcw==
+  dependencies:
+    body-scroll-lock "^2.6.4"
+
 "@reach/dialog@^0.15.0":
   version "0.15.3"
   resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.15.3.tgz#5486905d353c852ee92ad5161f87ba17ee428095"
@@ -3608,10 +3615,10 @@
   dependencies:
     openzeppelin-solidity "^4.0.0"
 
-"@ubeswap/sdk@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@ubeswap/sdk/-/sdk-2.1.0.tgz#175ea558ce3ef5c0d552e795b534e17f52491f05"
-  integrity sha512-VtnvgWxOrrqrnJeKY9mmiHpBORAOSIt6WzbCY4woLXQUtxbqNpobAjKt6ffbb+usc3yj5QqKRGWba2HQ7+9Ayw==
+"@ubeswap/sdk@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@ubeswap/sdk/-/sdk-2.1.1.tgz#b1622f66087678a17bdc184256618418dc508732"
+  integrity sha512-UBcqcUv2q1IA/5RqYSRHGQiHkm55nN+dZ+b98Il6wsi+FcUS2qyZFPgoNtGD8jpGfauERFJs4OIaRJWJRF1NYg==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^6.0.3"
@@ -4928,6 +4935,11 @@ body-parser@1.19.0, body-parser@^1.16.0:
     qs "6.7.0"
     raw-body "2.4.0"
     type-is "~1.6.17"
+
+body-scroll-lock@^2.6.4:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-2.7.1.tgz#caf3f9c91773af1ffb684cd66ed9137b5b737014"
+  integrity sha512-hS53SQ8RhM0e4DsQ3PKz6Gr2O7Kpdh59TWU98GHjaQznL7y4dFycEPk7pFQAikqBaUSCArkc5E3pe7CWIt2fZA==
 
 bonjour@^3.5.0:
   version "3.5.0"

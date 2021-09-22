@@ -1,6 +1,6 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
+import { CELO, cEUR, ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
 import { UbeswapTrade } from 'components/swap/routing/trade'
 import { ParsedQs } from 'qs'
@@ -112,8 +112,9 @@ export function useDerivedSwapInfo(): {
   parsedAmount: TokenAmount | undefined
   v2Trade: UbeswapTrade | undefined
   inputError?: string
+  showRamp: boolean
 } {
-  const { address: account } = useContractKit()
+  const { address: account, network } = useContractKit()
 
   const {
     independentField,
@@ -187,7 +188,15 @@ export function useDerivedSwapInfo(): {
     slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null,
   ]
 
+  let showRamp = false
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+    if (
+      amountIn.currency.address === cUSD[network.chainId as unknown as ChainId].address ||
+      amountIn.currency.address === CELO[network.chainId as unknown as ChainId].address ||
+      amountIn.currency.address === cEUR[network.chainId as unknown as ChainId].address
+    ) {
+      showRamp = true
+    }
     inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
@@ -196,6 +205,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
+    showRamp,
     inputError,
   }
 }
