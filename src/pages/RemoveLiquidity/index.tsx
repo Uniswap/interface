@@ -31,7 +31,6 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
-import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -47,7 +46,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { convertToNativeTokenFromETH, useCurrencyConvertedToNative } from 'utils/dmm'
 
 export default function RemoveLiquidity({
-  history,
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
   }
@@ -442,29 +440,6 @@ export default function RemoveLiquidity({
     chainId &&
       ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
         (currencyB && currencyEquals(WETH[chainId], currencyB)))
-  )
-
-  const handleSelectCurrencyA = useCallback(
-    (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA, chainId)
-      if (newCurrencyIdA === currencyIdB) {
-        history.push(`/remove/${currencyIdB}/${currencyIdA}`)
-      } else {
-        history.push(`/remove/${newCurrencyIdA}/${currencyIdB}`)
-      }
-    },
-    [currencyIdA, currencyIdB, history, chainId]
-  )
-  const handleSelectCurrencyB = useCallback(
-    (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB, chainId)
-      if (currencyIdA === newCurrencyIdB) {
-        history.push(`/remove/${currencyIdB}/${newCurrencyIdB}`)
-      } else {
-        history.push(`/remove/${currencyIdA}/${newCurrencyIdB}`)
-      }
-    },
-    [currencyIdA, currencyIdB, history, chainId]
   )
 
   const handleDismissConfirmation = useCallback(() => {

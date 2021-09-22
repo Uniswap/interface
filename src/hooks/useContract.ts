@@ -19,7 +19,7 @@ import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, REWARD_LOCKER_ADDRESS } from '
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
-import { ethers } from 'ethers'
+
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()

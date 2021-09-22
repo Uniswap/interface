@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
-import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
+import { PairState, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -59,7 +59,7 @@ export function useDerivedMintInfo(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
-    (tokenA?.symbol != WETH[chainId as ChainId].symbol || tokenB?.symbol != WETH[chainId as ChainId].symbol)
+    (tokenA?.symbol !== WETH[chainId as ChainId].symbol || tokenB?.symbol !== WETH[chainId as ChainId].symbol)
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -142,7 +142,7 @@ export function useDerivedMintInfo(
   if (!account) {
     error = t`Connect wallet`
   }
-  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol == 'WETH' && tokenB?.symbol == 'WETH')) {
+  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol === 'WETH' && tokenB?.symbol === 'WETH')) {
     error = error ?? 'Invalid pair'
   }
 

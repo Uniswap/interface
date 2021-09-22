@@ -343,7 +343,7 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
 
   const farmRewards = farms.reduce((total, farm) => {
     if (farm.userData?.rewards) {
-      farm.rewardTokens.map((token, index) => {
+      farm.rewardTokens.forEach((token, index) => {
         if (total[token.address]) {
           total[token.address].amount = total[token.address].amount.add(BigNumber.from(farm.userData?.rewards?.[index]))
         } else {
@@ -393,7 +393,7 @@ export function useFarmRewardPerBlocks(farms?: Farm[]): RewardPerBlock[] {
 
   const farmRewardPerBlocks = farms.reduce((total, farm) => {
     if (farm.rewardPerBlocks) {
-      farm.rewardTokens.map((token, index) => {
+      farm.rewardTokens.forEach((token, index) => {
         if (total[index]) {
           total[index].amount = total[index].amount.add(BigNumber.from(farm.rewardPerBlocks[index]))
         } else {

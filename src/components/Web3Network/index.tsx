@@ -73,7 +73,7 @@ function Web3Network(): JSX.Element | null {
           />
           <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
         </Row>
-        <img src={DropdownSVG} />
+        <img src={DropdownSVG} alt="Dropdown Icon" />
       </NetworkSwitchContainer>
       <NetworkModal />
     </NetworkCard>

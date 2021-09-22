@@ -1,17 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER, Token } from '@uniswap/sdk'
-import { Token as TT } from 'libs/sdk/src'
+import { TokenAmount, CurrencyAmount, ETHER } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
-import { useTokenAllowance, useTokenAllowanceUNI } from '../data/Allowances'
-// import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
-import { Field } from '../state/swap/actions'
+import { useTokenAllowanceUNI } from '../data/Allowances'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
-import { Version } from './useToggledVersion'
 
 export enum ApprovalState {
   UNKNOWN,

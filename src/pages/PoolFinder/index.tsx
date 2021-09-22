@@ -66,14 +66,14 @@ export default function PoolFinder() {
 
   const myPairs = pairs
     .filter(([pairState, pair]) => {
-      const validPairNoLiquidity: boolean =
-        pairState === PairState.NOT_EXISTS ||
-        Boolean(
-          pairState === PairState.EXISTS &&
-            pair &&
-            JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
-            JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
-        )
+      // const validPairNoLiquidity: boolean =
+      //   pairState === PairState.NOT_EXISTS ||
+      //   Boolean(
+      //     pairState === PairState.EXISTS &&
+      //       pair &&
+      //       JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
+      //       JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+      //   )
       let hasPosition = false
       if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
         hasPosition = Boolean(
@@ -83,9 +83,7 @@ export default function PoolFinder() {
       }
       return pairState === PairState.EXISTS && hasPosition && pair
     })
-    .map(
-      ([pairState, pair], index) => !!pair && <MinimalPositionCard key={index} pair={pair} border="1px solid #CED0D9" />
-    )
+    .map(([_, pair], index) => !!pair && <MinimalPositionCard key={index} pair={pair} border="1px solid #CED0D9" />)
 
   const handleSearchDismiss = useCallback(() => {
     setShowSearch(false)
@@ -157,7 +155,7 @@ export default function PoolFinder() {
             <Trans>Add liquidity</Trans>
           </Text>
         </StyledInternalLink>
-        {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
+        {pairs.filter(([pairState]) => pairState === PairState.LOADING).length > 0 && (
           <LightCard padding="45px 10px">
             <AutoColumn gap="sm" justify="center">
               <Text textAlign="center">

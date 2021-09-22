@@ -11,7 +11,7 @@ import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween } from '../../components/Row'
 import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import { useTrackedTokenPairs, toV2LiquidityToken, toV2LiquidityTokenSushi } from '../../state/user/hooks'
@@ -36,15 +36,6 @@ const TitleRow = styled(RowBetween)`
     gap: 12px;
     width: 100%;
     flex-direction: column-reverse;
-  `};
-`
-
-const ButtonRow = styled(RowFixed)`
-  gap: 8px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
   `};
 `
 

@@ -3,7 +3,6 @@ import { ButtonEmpty } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { FixedHeightRow } from 'components/PositionCard'
 import QuestionHelper from 'components/QuestionHelper'
-import { useActiveWeb3React } from 'hooks'
 import { Currency, Fraction, JSBI, Pair, Percent, Price } from 'libs/sdk/src'
 import React, { ReactNode, useContext } from 'react'
 import { useState } from 'react'
@@ -18,12 +17,6 @@ import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
 const DEFAULT_PRICE_RANGE = '0.00 - ♾️'
-
-const AutoColumn2 = styled(AutoColumn)`
-  width: 48%;
-  height: 100%;
-  margin: 0 !important;
-`
 
 const OutlineCard2 = styled(OutlineCard)`
   padding: 0.75rem 1.5rem;
@@ -53,8 +46,7 @@ export function PoolPriceBar({
   currencies,
   noLiquidity,
   poolTokenPercentage,
-  price,
-  pair
+  price
 }: {
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
@@ -184,7 +176,6 @@ export function PoolPriceRangeBar({
   const theme = useContext(ThemeContext)
   // const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
   // const show = !!priceRangeCalc(price, amp)[0]
-  const { chainId } = useActiveWeb3React()
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
   const existedPriceRange = () => {
@@ -201,13 +192,13 @@ export function PoolPriceRangeBar({
                 <TYPE.black>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 0 : 1
+                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
                 <TYPE.black>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 0 : 1
+                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
                   ][0]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
               </>
@@ -224,13 +215,13 @@ export function PoolPriceRangeBar({
                 <TYPE.black>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 1 : 0
+                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
                 <TYPE.black>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
-                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 1 : 0
+                    currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
                   ][0]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
               </>

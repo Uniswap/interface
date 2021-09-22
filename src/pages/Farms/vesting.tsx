@@ -53,8 +53,8 @@ const Tag = styled.div<{ tag?: string }>`
   padding: 12px 16px;
   border-radius: 16px;
   font-size: 16px;
-  color: ${({ tag }) => (tag == 'active' ? '#1f292e' : 'inherit')};
-  background-color: ${({ theme, tag }) => (tag == 'active' ? '#4aff8c' : theme.bg11)};
+  color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
+  background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg11)};
   z-index: 9999;
   box-sizing: border-box;
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
@@ -168,7 +168,7 @@ const Vesting = () => {
     })
   )
 
-  const [pendingTx, setPendingTx] = useState(false)
+  const [, setPendingTx] = useState(false)
   const onClaimAll = async () => {
     if (!chainId || !account) return
     setPendingTx(true)
@@ -194,12 +194,12 @@ const Vesting = () => {
           fontWeight={'normal'}
           fontSize={14}
           style={{ margin: '0.25rem 0.25rem 0.25rem 1rem' }}
-          onClick={() => setOpen(open != 0 ? 0 : -1)}
+          onClick={() => setOpen(open !== 0 ? 0 : -1)}
         >
           Details
         </TYPE.body>
-        <span onClick={() => setOpen(open != 0 ? 0 : -1)}>
-          {open == 0 ? (
+        <span onClick={() => setOpen(open !== 0 ? 0 : -1)}>
+          {open === 0 ? (
             <ChevronUp size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
           ) : (
             <ChevronDown size="16" color="#08a1e7" style={{ marginTop: '0.25rem' }} />
@@ -207,7 +207,7 @@ const Vesting = () => {
         </span>
       </Flex>
 
-      {open == 0 && (
+      {open === 0 && (
         <MenuFlyout>
           {Object.keys(info).map(k => (
             <div key={k}>
@@ -231,15 +231,15 @@ const Vesting = () => {
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
           {formattedNum(lockedUSD.toString(), true)}
         </TYPE.body>
-        <span onClick={() => setOpen(open != 1 ? 1 : -1)}>
-          {open == 1 ? (
+        <span onClick={() => setOpen(open !== 1 ? 1 : -1)}>
+          {open === 1 ? (
             <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
           ) : (
             <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
           )}
         </span>
       </Flex>
-      {open == 1 && (
+      {open === 1 && (
         <MenuFlyout>
           {Object.keys(info).map(k => (
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -261,8 +261,8 @@ const Vesting = () => {
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
           {formattedNum(claimedUSD.toString(), true)}
         </TYPE.body>
-        <span onClick={() => setOpen(open != 2 ? 2 : -1)}>
-          {open == 2 ? (
+        <span onClick={() => setOpen(open !== 2 ? 2 : -1)}>
+          {open === 2 ? (
             <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
           ) : (
             <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
@@ -270,7 +270,7 @@ const Vesting = () => {
         </span>
       </Flex>
 
-      {open == 2 && (
+      {open === 2 && (
         <MenuFlyout>
           {Object.keys(info).map(k => (
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -294,8 +294,8 @@ const Vesting = () => {
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
-            <span onClick={() => setOpen(open != 3 ? 3 : -1)}>
-              {open == 3 ? (
+            <span onClick={() => setOpen(open !== 3 ? 3 : -1)}>
+              {open === 3 ? (
                 <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
               ) : (
                 <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
@@ -303,7 +303,7 @@ const Vesting = () => {
             </span>
           </Flex>
 
-          {open == 3 && (
+          {open === 3 && (
             <MenuFlyout>
               {Object.keys(info).map(k => (
                 <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
@@ -458,7 +458,7 @@ const Schedule = ({ schedule }: { schedule: any }) => {
   const unvestableAmount = BigNumber.from(schedule[2])
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
     .div(100)
-  const [pendingTx, setPendingTx] = useState(false)
+  const [, setPendingTx] = useState(false)
   const { vestAtIndex } = useVesting()
   const onVest = async () => {
     if (!chainId || !account) return
@@ -477,7 +477,7 @@ const Schedule = ({ schedule }: { schedule: any }) => {
       <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
         {toUSD(BigNumber.from(schedule[2]))}
       </TYPE.body>
-      {vestedAndVestablePercent == 100 && !fullyVestedAlready && (
+      {vestedAndVestablePercent === 100 && !fullyVestedAlready && (
         <Tag tag={'active'} style={{ color: '#1f292e', fontSize: '14px', padding: '6px 20px' }}>
           <Trans>Fully Vested</Trans>
         </Tag>

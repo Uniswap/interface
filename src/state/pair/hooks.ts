@@ -1,12 +1,7 @@
 import { PairState, usePair } from 'data/Reserves'
-import { Contract } from 'ethers'
-import { useActiveWeb3React } from 'hooks'
-import { useCurrency } from 'hooks/Tokens'
 import { Currency, ETHER, Pair, Token } from 'libs/sdk/src'
-import React, { useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRouterContract, getFactoryContract } from 'utils'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import { Field, selectCurrency } from './actions'
 
@@ -42,10 +37,6 @@ export function useDerivedPairInfo(
   currencies: { [field in Field]?: Currency }
   pairs: [PairState, Pair | null][]
 } {
-  const {
-    [Field.CURRENCY_A]: { currencyId: currencyIdA },
-    [Field.CURRENCY_B]: { currencyId: currencyIdB }
-  } = usePairState()
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,

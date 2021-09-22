@@ -50,15 +50,15 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.name
   )
 }
-function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
-  return new TokenUNI(
-    serializedToken.chainId,
-    serializedToken.address,
-    serializedToken.decimals,
-    serializedToken.symbol,
-    serializedToken.name
-  )
-}
+// function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
+//   return new TokenUNI(
+//     serializedToken.chainId,
+//     serializedToken.address,
+//     serializedToken.decimals,
+//     serializedToken.symbol,
+//     serializedToken.name
+//   )
+// }
 
 export function useIsDarkMode(): boolean {
   const { userDarkMode, matchesDarkMode } = useSelector<
@@ -362,7 +362,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
-  const { loading, error, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+  const { data: userLiquidityPositions } = useUserLiquidityPositions(account)
 
   // get pairs that has liquidity
   const generatedPairs: [Token, Token][] = useMemo(() => {

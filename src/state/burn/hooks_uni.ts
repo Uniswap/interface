@@ -1,7 +1,6 @@
 import { CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
 import { Currency, TokenAmount as TokenAmountDMM } from 'libs/sdk/src'
 import { useUnAmplifiedPair } from 'data/Reserves'
-import { useEffect } from 'react'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'

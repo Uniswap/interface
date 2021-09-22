@@ -257,7 +257,7 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
           return 0
         }
 
-        if (token?.address == ZERO_ADDRESS.toLowerCase() || token?.address === WETH[chainId as ChainId].address) {
+        if (token?.address === ZERO_ADDRESS.toLowerCase() || token?.address === WETH[chainId as ChainId].address) {
           return parseFloat(ethPrice.currentPrice)
         }
 

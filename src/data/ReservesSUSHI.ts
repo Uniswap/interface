@@ -1,5 +1,5 @@
-import { Token as TokenSUSHI, TokenAmount, Pair, ChainId as ChainIdSuShi } from '@sushiswap/sdk'
-import { Currency, ChainId } from 'libs/sdk/src'
+import { Token as TokenSUSHI, TokenAmount, Pair } from '@sushiswap/sdk'
+import { Currency } from 'libs/sdk/src'
 import { useMemo } from 'react'
 // import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2PairABI from '@sushiswap/core/build/abi/IUniswapV2Pair.json'

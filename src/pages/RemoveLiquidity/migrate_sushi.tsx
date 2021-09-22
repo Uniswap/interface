@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, WETH, CurrencyAmount, TokenAmount, currencyEquals, JSBI, Token } from 'libs/sdk/src'
+import { ETHER, WETH, CurrencyAmount, TokenAmount, JSBI, Token } from 'libs/sdk/src'
 import { Pair, Percent } from '@sushiswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -54,9 +54,8 @@ const DashedLine = styled.div`
 `
 
 export default function MigrateLiquiditySUSHI({
-  history,
   match: {
-    params: { currencyIdA, currencyIdB, pairAddress }
+    params: { currencyIdA, currencyIdB }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
@@ -103,7 +102,6 @@ export default function MigrateLiquiditySUSHI({
     [Field.CURRENCY_B]:
       independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
   }
-  const atMaxAmount = parsedAmounts[Field.LIQUIDITY_PERCENT]?.equalTo(new Percent('1'))
 
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
@@ -239,12 +237,12 @@ export default function MigrateLiquiditySUSHI({
             [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
           }
     const {
-      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
+      // [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
       [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
     } = parsedAmountsMaxA
     const {
-      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
-      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
+      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB
+      // [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
     } = parsedAmountsMaxB
 
     if (
@@ -320,9 +318,6 @@ export default function MigrateLiquiditySUSHI({
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
-
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -506,11 +501,6 @@ export default function MigrateLiquiditySUSHI({
   )
 
   const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB)))
-  )
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
@@ -899,8 +889,3 @@ export default function MigrateLiquiditySUSHI({
     </>
   )
 }
-
-// import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-// export default function AAA() {
-//   return <></>
-// }

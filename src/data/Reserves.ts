@@ -3,13 +3,9 @@ import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 
-import {
-  useMultipleContractSingleData,
-  useSingleContractMultipleData,
-  useSingleCallResult
-} from '../state/multicall/hooks'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useFactoryContract, usePairContract } from 'hooks/useContract'
+import { useFactoryContract } from 'hooks/useContract'
 import DMMPool from 'libs/sdk/src/abis/DMMPool.json'
 
 export enum PairState {
@@ -174,7 +170,7 @@ export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency 
   )
   return useMemo(() => {
     return ress.map(res => {
-      const { result, loading } = res
+      const { result } = res
       return result?.[0]
     })
   }, [tokens, ress])

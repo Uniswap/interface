@@ -204,7 +204,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
                   <AddCircle />
                 </ButtonEmpty>
               }
-              {getMyLiquidity(myLiquidity) != '-' && (
+              {getMyLiquidity(myLiquidity) !== '-' && (
                 <ButtonEmpty
                   padding="0"
                   as={Link}
@@ -414,7 +414,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         >
           <AddCircle />
         </ButtonEmpty>
-        {getMyLiquidity(myLiquidity) != '-' && (
+        {getMyLiquidity(myLiquidity) !== '-' && (
           <ButtonEmpty
             padding="0"
             as={Link}

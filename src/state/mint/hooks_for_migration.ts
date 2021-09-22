@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
-import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
-import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
+import { PairState, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
-import { AppDispatch, AppState } from '../index'
+import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import { Field } from './actions'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -60,7 +60,7 @@ export function useDerivedMintInfoMigration(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
-    (tokenA?.symbol != 'WETH' || tokenB?.symbol != 'WETH')
+    (tokenA?.symbol !== 'WETH' || tokenB?.symbol !== 'WETH')
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -143,7 +143,7 @@ export function useDerivedMintInfoMigration(
   if (!account) {
     error = t`Connect wallet`
   }
-  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol == 'WETH' && tokenB?.symbol == 'WETH')) {
+  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol === 'WETH' && tokenB?.symbol === 'WETH')) {
     error = error ?? t`Invalid pair`
   }
 

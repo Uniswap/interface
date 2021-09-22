@@ -3,16 +3,12 @@ import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent } from 'libs/sd
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 import { PoolPriceRangeBar } from './PoolPriceBar'
-import { AutoColumn } from 'components/Column'
-import { Separator } from 'components/SearchModal/styleds'
 import styled from 'styled-components'
-import { parseUnits } from 'ethers/lib/utils'
-import { useActiveWeb3React } from 'hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const DashedLine = styled.div`
@@ -42,7 +38,6 @@ export function ConfirmAddModalBottom({
   const amp = !!pair
     ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
     : amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
-  const { chainId } = useActiveWeb3React()
   const tokenA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const tokenB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
   return (
