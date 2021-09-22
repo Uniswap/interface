@@ -6,7 +6,7 @@ import DoubleCurrencyLogo from '../../DoubleLogo'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
 import { RowBetween } from '../../Row'
-import { ButtonGrey, ButtonWithLink } from '../../Button'
+import { ButtonGrey } from '../../Button'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 import Skeleton from 'react-loading-skeleton'
 import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
@@ -17,11 +17,18 @@ import { useHistory } from 'react-router-dom'
 import { usePrevious } from 'react-use'
 import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 import { formatCurrencyAmount } from '../../../utils'
+import { TYPE } from '../../../theme'
+import { ArrowUpRight } from 'react-feather'
+import { ExternalLink } from '../../../theme'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
     background: ${props => props.theme.bg1};
   }
+`
+
+const StyledStatsLinkIcon = styled(ArrowUpRight)`
+  color: ${props => props.theme.text4};
 `
 
 const DataText = styled.div`
@@ -90,14 +97,26 @@ function PairView({ loading, pair }: PairViewProps) {
               </Text>
             </Box>
             <Box marginLeft="auto">
-              <ButtonWithLink
-                link={
+              <ButtonGrey
+                style={{ padding: '8px 12px' }}
+                as={ExternalLink}
+                href={
                   pair?.liquidityToken.address
                     ? `https://dxstats.eth.link/#/pair/${pair?.liquidityToken.address}?chainId=${chainId}`
-                    : 'https://dxstats.eth.link/#/pairs'
+                    : `https://dxstats.eth.link/#/pairs?chainId=${chainId}`
                 }
-                text={'Stats'}
-              />
+              >
+                <Flex>
+                  <Box mr="4px">
+                    <TYPE.small color="text4" fontSize="12px" letterSpacing="0.08em">
+                      Stats
+                    </TYPE.small>
+                  </Box>
+                  <Box>
+                    <StyledStatsLinkIcon size="12px" />
+                  </Box>
+                </Flex>
+              </ButtonGrey>
             </Box>
           </Flex>
           <DataRow loading={overallLoading} title="Liquidity:" value={`$${formatCurrencyAmount(liquidityUSD)}`} />
