@@ -9,7 +9,7 @@ describe('hooks', () => {
       expect(
         queryParametersToSwapState(
           parse(
-            '?inputCurrency=ETH&outputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f&exactAmount=20.5&exactField=outPUT',
+            '?inputCurrency=ETH&outputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f&exactAmount=20.5&exactField=output',
             { parseArrays: false, ignoreQueryPrefix: true }
           )
         )
