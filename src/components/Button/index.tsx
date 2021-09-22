@@ -123,6 +123,18 @@ export const ButtonDark = styled(Base)`
     text-decoration: none;
   }
 `
+export const ButtonDark2 = styled(Base)`
+  background-color: ${({ theme }) => theme.dark2};
+  color: ${({ theme }) => theme.white};
+  transition: background-color 0.3s ease;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.dark2)};
+  }
+  &:active {
+    background-color: ${({ theme }) => darken(0.1, theme.dark2)};
+  }
+`
 
 export const ButtonOutlined = styled(Base)`
   border: 8px solid;

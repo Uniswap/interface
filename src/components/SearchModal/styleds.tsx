@@ -38,14 +38,14 @@ export const MenuItem = styled(RowBetween)`
 `
 
 export const TokenPickerItem = styled(Flex)`
-  padding: 0 20px;
+  padding: 0 12.5px 0 22.5px;
   height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
   background-color: transparent;
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && transparentize(0.4, theme.bg2)};
+    background-color: ${({ theme, disabled }) => !disabled && transparentize(0.4, theme.bg3)};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
