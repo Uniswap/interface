@@ -86,9 +86,8 @@ export const ButtonSecondary = styled(Base)`
 `
 
 export const ButtonGrey = styled(Base)`
-  border: 1px solid #252237;
-  background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
-  background-blend-mode: overlay, normal;
+  border: 1px solid #2a2f42;
+  background-color: ${props => props.theme.bg1And2};
   color: ${({ theme }) => theme.text5};
   font-size: 16px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
@@ -233,12 +232,12 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export function ButtonWithLink({ link, text, marginTop }: { link: string; text: string; marginTop?: string }) {
+export function ButtonWithLink({ link, text, style }: { link: string; text: string; style?: any }) {
   return (
     <ButtonSecondary
       id="join-pool-button"
       as="a"
-      style={{ marginTop: marginTop ? marginTop : '0', padding: '10px 0px', borderRadius: '8px' }}
+      style={{ padding: '10px 20px', borderRadius: '8px', ...style }}
       href={link}
       rel="noopener noreferrer"
       target="_blank"
