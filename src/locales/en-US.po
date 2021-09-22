@@ -1272,6 +1272,10 @@ msgstr "Terms of Use"
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr "The price is deviating quite a lot from that market price, please be careful!"
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
 msgstr "The token list \"{0}\" has been updated to <0>{1}</0>."

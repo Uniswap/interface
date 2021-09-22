@@ -799,3 +799,18 @@ export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
     '0x535a99a079d64b8c3f4cc264eba70d82992b224b'
   ]
 }
+
+export const COINGECKO_NETWORK_ID = {
+  [ChainId.MAINNET]: 'ethereum',
+  [ChainId.BSCMAINNET]: 'binance-smart-chain',
+  [ChainId.MATIC]: 'polygon-pos',
+  [ChainId.AVAXMAINNET]: 'avalanche',
+
+  [ChainId.ROPSTEN]: '',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.AVAXTESTNET]: ''
+}
