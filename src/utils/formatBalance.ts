@@ -52,3 +52,8 @@ export const formatTokenBalance = (balance: number): string => {
 
   return balance.toFixed(3)
 }
+
+export const fixedFormatting = (value: BigNumber, decimals: number) => {
+  const res = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toFixed(6)
+  return parseFloat(res).toString()
+}

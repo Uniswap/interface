@@ -8,15 +8,15 @@ export const PageWrapper = styled.div`
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
+    padding: 0 12rem 100px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
+    padding: 0 4em 100px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
+    padding: 0 0 100px 0;
   `};
 `
 

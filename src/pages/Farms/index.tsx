@@ -12,7 +12,7 @@ import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
 import { useBlockNumber, useFarmHistoryModalToggle } from 'state/application/hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECSS, FAIRLAUNCH_ADDRESSES } from '../../constants'
+import { AVERAGE_BLOCK_TIME_IN_SECS, FAIRLAUNCH_ADDRESSES } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
@@ -43,7 +43,7 @@ import {
   HistoryButton
 } from './styleds'
 import { formattedNum, getTokenSymbol } from 'utils'
-import Vesting from './vesting'
+import Vesting from 'components/Vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import RainMakerBannel from '../../assets/images/rain-maker.png'
 import RainMakerMobileBanner from '../../assets/images/rain-maker-mobile.png'
@@ -53,18 +53,21 @@ import { Reward } from 'state/farms/types'
 import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import useFairLaunch from 'hooks/useFairLaunch'
+import { useSelector } from 'react-redux'
+import { AppState } from 'state'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const lgBreakpoint = useMedia('(min-width: 992px)')
   const { loading, data: farms } = useFarmsData()
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(1)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
   const fairLaunchContracts = useFairLaunchContracts()
   const { harvestMultiplePools } = useFairLaunch(FAIRLAUNCH_ADDRESSES[chainId as ChainId]?.[0])
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
+  const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)
 
   const totalRewards = useFarmRewards(farms)
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
@@ -79,12 +82,12 @@ const Farms = () => {
 
     if (!isFarmStarted) {
       remainingBlocks = farm && blockNumber && farm.startBlock - blockNumber
-      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId]
       formattedEstimatedRemainingTime =
         estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
     } else {
       remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
-      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECSS[chainId as ChainId]
+      estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS[chainId as ChainId]
       formattedEstimatedRemainingTime =
         estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
     }
@@ -148,9 +151,12 @@ const Farms = () => {
               </PoolTitleContainer>
             </Tab>
             <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
-              <div>
-                <Trans>Vesting</Trans>
-              </div>
+              <PoolTitleContainer>
+                <span style={{ marginRight: '4px' }}>
+                  <Trans>Vesting</Trans>
+                </span>
+                {vestingLoading && <Loader />}
+              </PoolTitleContainer>
             </Tab>
             {activeTab === 0 && (
               <StakedOnlyToggleWrapper>
