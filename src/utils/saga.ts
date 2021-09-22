@@ -4,7 +4,7 @@ import { logger } from 'src/utils/logger'
 import { errorToString } from 'src/utils/validation'
 
 /**
- * A convinence utility to create a saga and trigger action
+ * A convenience utility to create a saga and trigger action
  * Use to create simple sagas, for more complex ones use createMonitoredSaga.
  * Note: the wrapped saga this returns must be added to rootSaga.ts
  */
