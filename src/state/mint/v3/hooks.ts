@@ -1,37 +1,38 @@
 import { t } from '@lingui/macro'
-import { BIG_INT_ZERO } from '../../../constants/misc'
-import { getTickToPrice } from 'utils/getTickToPrice'
-import JSBI from 'jsbi'
-import { PoolState } from '../../../hooks/usePools'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
-  Pool,
+  encodeSqrtRatioX96,
   FeeAmount,
+  nearestUsableTick,
+  Pool,
   Position,
   priceToClosestTick,
+  TICK_SPACINGS,
   TickMath,
   tickToPrice,
-  TICK_SPACINGS,
-  encodeSqrtRatioX96,
-  nearestUsableTick,
 } from '@uniswap/v3-sdk/dist/'
-import { Currency, Token, CurrencyAmount, Price, Rounding } from '@uniswap/sdk-core'
+import { usePool } from 'hooks/usePools'
+import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { getTickToPrice } from 'utils/getTickToPrice'
+
+import { BIG_INT_ZERO } from '../../../constants/misc'
+import { PoolState } from '../../../hooks/usePools'
 import { useActiveWeb3React } from '../../../hooks/web3'
 import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
 import {
-  Field,
   Bound,
+  Field,
+  setFullRange,
   typeInput,
-  typeStartPriceInput,
   typeLeftRangeInput,
   typeRightRangeInput,
-  setFullRange,
+  typeStartPriceInput,
 } from './actions'
 import { tryParseTick } from './utils'
-import { usePool } from 'hooks/usePools'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useV3MintState(): AppState['mintV3'] {
   return useAppSelector((state) => state.mintV3)

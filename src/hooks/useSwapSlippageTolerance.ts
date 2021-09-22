@@ -1,10 +1,11 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { useMemo } from 'react'
+
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import { useActiveWeb3React } from './web3'
-import { L2_CHAIN_IDS } from 'constants/chains'
 
 const V2_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%

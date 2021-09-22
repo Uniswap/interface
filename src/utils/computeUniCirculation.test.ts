@@ -1,6 +1,7 @@
-import JSBI from 'jsbi'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
+import JSBI from 'jsbi'
+
 import { ZERO_ADDRESS } from '../constants/misc'
 import { computeUniCirculation } from './computeUniCirculation'
 
