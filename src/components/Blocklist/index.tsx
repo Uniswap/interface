@@ -11,6 +11,7 @@ const BLOCKED_ADDRESSES: string[] = [
   '0xA7e5d5A720f06526557c513402f2e6B5fA20b008',
   '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C',
   '0xC8a65Fadf0e0dDAf421F28FEAb69Bf6E2E589963',
+  '0x9f4cda013e354b8fc285bf4b9a60460cee7f7ea9',
 ]
 
 export default function Blocklist({ children }: { children: ReactNode }) {
