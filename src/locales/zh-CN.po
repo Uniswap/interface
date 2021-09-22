@@ -1272,6 +1272,10 @@ msgstr ""
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "由于交易规模，造成市场价格与您的价格之间的差异。 调整右上角配置中的价格影响容忍度。"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
 msgstr "代币列表“{0}”已更新为 <0>{1}</0>。"
