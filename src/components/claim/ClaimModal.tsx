@@ -169,7 +169,14 @@ export default function ClaimModal({
             <TYPE.white fontWeight={600} fontSize="11px" lineHeight="13px" letterSpacing="0.08em" color="text4">
               TOTAL SWPR ON CURRENT NETWORK
             </TYPE.white>
-            <AddTokenButton />
+            <AddTokenButton
+              active={
+                !debouncedAvailableClaim &&
+                !debouncedIsOldSwaprLP &&
+                oldSwprBalance?.equalTo('0') &&
+                newSwprBalance?.greaterThan('0')
+              }
+            />
           </UpperAutoColumn>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             {debouncedAvailableClaim && !correctNetwork && (
