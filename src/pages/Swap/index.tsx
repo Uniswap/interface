@@ -295,6 +295,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
+                    alt="SwapIcon"
                   />
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (

@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Token } from 'libs/sdk/src'
 import { AutoRow, RowFixed } from 'components/Row'
 import { AutoColumn } from 'components/Column'

@@ -65,6 +65,13 @@ export const BSC_MAINNET_TOKEN_LIST = {
       symbol: 'HERO',
       name: 'HERO',
       decimals: 18
+    },
+    {
+      chainId: 56,
+      address: '0xD6Cce248263ea1e2b8cB765178C944Fc16Ed0727',
+      symbol: 'CTR',
+      name: 'Creator Chain',
+      decimals: 18
     }
   ],
   version: {

@@ -2,12 +2,11 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from 'libs/sdk/src'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../state'
 import { isMobile } from 'react-device-detect'
 import { injected, NETWORK_URLS } from '../connectors'
-import { NetworkContextName } from '../constants'
 import { ethers } from 'ethers'
 
 const simpleRpcProvider = new ethers.providers.JsonRpcProvider(

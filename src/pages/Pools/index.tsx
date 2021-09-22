@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
-import { Currency, Token } from 'libs/sdk/src'
+import { Currency } from 'libs/sdk/src'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
@@ -13,9 +13,9 @@ import Search from 'components/Search'
 import LocalLoader from 'components/LocalLoader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useActiveWeb3React } from 'hooks'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useETHPrice } from 'state/application/hooks'
-import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
+import { useDerivedPairInfo } from 'state/pair/hooks'
 import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
 import { currencyId, currencyIdFromAddress } from 'utils/currencyId'
@@ -52,7 +52,7 @@ const Pools = ({
   const above1400 = useMedia('(min-width: 1401px)')
 
   // Pool selection
-  const { onCurrencySelection } = usePairActionHandlers()
+  // const { onCurrencySelection } = usePairActionHandlers()
   // const {
   //   [Field.CURRENCY_A]: { currencyId: currencyIdA },
   //   [Field.CURRENCY_B]: { currencyId: currencyIdB }
@@ -94,7 +94,7 @@ const Pools = ({
   const poolsList = useMemo(
     () =>
       pairs
-        .map(([pairState, pair]) => pair)
+        .map(([_, pair]) => pair)
         .filter(pair => pair !== null)
         .filter(pair => {
           if (searchValue) {
@@ -112,10 +112,7 @@ const Pools = ({
   useResetPools(currencyA ?? undefined, currencyB ?? undefined)
 
   // get data for every pool in list
-  const { loading: loadingPoolsData, error: errorPoolsData, data: poolsData } = useBulkPoolData(
-    formattedPools,
-    ethPrice.currentPrice
-  )
+  const { loading: loadingPoolsData, data: poolsData } = useBulkPoolData(formattedPools, ethPrice.currentPrice)
 
   // const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
   const temp = useUserLiquidityPositions(account)
@@ -214,8 +211,8 @@ const Pools = ({
                   width="148px"
                   padding="12px 18px"
                   as={Link}
-                  to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
-                    currencyIdB == '' ? undefined : currencyIdB
+                  to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
+                    currencyIdB === '' ? undefined : currencyIdB
                   }`}
                   style={{ float: 'right' }}
                 >
@@ -233,8 +230,8 @@ const Pools = ({
                   width="98px"
                   padding="10px 12px"
                   as={Link}
-                  to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
-                    currencyIdB == '' ? undefined : currencyIdB
+                  to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
+                    currencyIdB === '' ? undefined : currencyIdB
                   }`}
                   style={{ float: 'right' }}
                 >

@@ -303,7 +303,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 }
 
 export default function Header() {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 

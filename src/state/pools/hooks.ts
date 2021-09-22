@@ -157,7 +157,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
     let poolData
     const [t1] = getTimestampsForChanges()
     const blocks = await getBlocksFromTimestamps([t1], chainId)
-    if (blocks.length == 0) {
+    if (!blocks.length) {
       return current.data.pools
     } else {
       const [{ number: b1 }] = blocks

@@ -14,7 +14,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonOutlined } from '../Button'
+import { ButtonPrimary, ButtonEmpty } from '../Button'
 import { CardNoise } from '../earn/styled'
 
 import { useColor } from '../../hooks/useColor'
@@ -45,21 +45,6 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   overflow: hidden;
   border-radius: 8px;
 `
-
-const ButtonSecondary2 = styled(ButtonSecondary)`
-  border: none;
-  :hover {
-    border: none;
-  }
-`
-const ButtonOutlined2 = styled(ButtonOutlined)`
-  font-size: inherit;
-`
-
-// export enum LPType {
-//   DMM = 'DMM',
-//   UNI = 'UNI'
-// }
 
 interface PositionCardProps {
   pair: Pair

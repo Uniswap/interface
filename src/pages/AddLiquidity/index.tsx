@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { Plus } from 'react-feather'
+import { Plus, AlertTriangle } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text, Flex } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -23,7 +23,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useTokensPrice, useWalletModalToggle } from '../../state/application/hooks'
+import { useTokensPrice, useWalletModalToggle, useTokensMarketPrice } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
@@ -83,6 +83,13 @@ const USDPrice = styled.div`
   letter-spacing: normal;
   padding-left: 8px;
   color: ${({ theme }) => theme.primaryText2};
+`
+
+const Warning = styled.div`
+  display: flex;
+  background: ${({ theme }) => `${theme.warning}20`};
+  border-radius: 0.625rem;
+  padding: 0.75rem 1rem;
 `
 
 export default function AddLiquidity({
@@ -488,6 +495,12 @@ export default function AddLiquidity({
   )
 
   const usdPrices = useTokensPrice(tokens)
+  const marketPrices = useTokensMarketPrice(tokens)
+
+  const poolRatio = Number(pairAddress ? currentPrice?.toSignificant(6) : price?.toSignificant(6))
+  const marketRatio = marketPrices[1] && marketPrices[0] / marketPrices[1]
+
+  const showSanityPriceWarning = !!(poolRatio && marketRatio && Math.abs(poolRatio - marketRatio) / marketRatio > 0.05)
 
   return (
     <>
@@ -568,6 +581,7 @@ export default function AddLiquidity({
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
+                disableCurrencySelect={!!pairAddress}
                 showCommonBases
               />
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
@@ -577,6 +591,7 @@ export default function AddLiquidity({
 
                 {pairAddress && chainId && (currencyAIsWETH || currencyAIsETHER) && (
                   <StyledInternalLink
+                    replace
                     to={`/add/${
                       currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
                     }/${currencyIdB}/${pairAddress}`}
@@ -599,6 +614,7 @@ export default function AddLiquidity({
                 }}
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                 currency={currencies[Field.CURRENCY_B]}
+                disableCurrencySelect={!!pairAddress}
                 id="add-liquidity-input-tokenb"
                 showCommonBases
               />
@@ -609,6 +625,7 @@ export default function AddLiquidity({
 
                 {pairAddress && chainId && (currencyBIsWETH || currencyBIsETHER) && (
                   <StyledInternalLink
+                    replace
                     to={`/add/${currencyIdA}/${
                       currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
                     }/${pairAddress}`}
@@ -709,6 +726,15 @@ export default function AddLiquidity({
               </OutlineCard2>
             )}
 
+            {showSanityPriceWarning && (
+              <Warning>
+                <AlertTriangle color={theme.yellow2} />
+                <Text fontSize="0.75rem" marginLeft="0.75rem">
+                  <Trans>The price is deviating quite a lot from that market price, please be careful!</Trans>
+                </Text>
+              </Warning>
+            )}
+
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>
                 <Trans>Connect Wallet</Trans>
@@ -749,6 +775,7 @@ export default function AddLiquidity({
                       )}
                     </RowBetween>
                   )}
+
                 <ButtonError
                   onClick={() => {
                     expertMode ? onAdd() : setShowConfirm(true)

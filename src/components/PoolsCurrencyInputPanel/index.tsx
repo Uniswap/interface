@@ -8,7 +8,6 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { useActiveWeb3React } from 'hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -118,7 +117,6 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases
 }: CurrencyInputPanelProps) {
-  const { account, chainId } = useActiveWeb3React()
   const [modalOpen, setModalOpen] = useState(false)
 
   const handleDismissSearch = useCallback(() => {

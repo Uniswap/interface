@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from 'libs
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
-import { usePair, usePairByAddress } from '../../data/Reserves'
+import { usePairByAddress } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'

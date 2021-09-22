@@ -4,7 +4,7 @@ import style from './about.module.scss'
 
 import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import Loader from 'components/Loader'
@@ -58,7 +58,7 @@ export default function About() {
 
   const globalData = data && data.dmmFactories[0]
 
-  const { loading: loadingPoolFarm, data: farms } = useFarmsData()
+  const { data: farms } = useFarmsData()
   const [maxApr, setMaxApr] = useState<number>(-1)
   const [indexx, setIndexx] = useState<number>(0)
   return (
@@ -273,7 +273,7 @@ export default function About() {
       </Text>
       <div style={{ padding: '0 24px' }}>
         <Box width={['100%', 780]} mx="auto">
-          <img src={require('../../assets/svg/permissionless_frictionless.svg')} />
+          <img src={require('../../assets/svg/permissionless_frictionless.svg')} alt="" />
           <Text mt={[16, 20]} color="#c9d2d7" lineHeight="26px">
             <Trans>
               Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
@@ -376,26 +376,26 @@ export default function About() {
             <Trans>Code Audited</Trans>
           </Text>
           <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
-            <img src={require('../../assets/svg/chainsecurity.svg')} />
+            <img src={require('../../assets/svg/chainsecurity.svg')} alt="" />
           </ExternalLink>
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
             <Trans>On-chain and Open Source</Trans>
           </Text>
-          <img src={require('../../assets/svg/about_icon_github.jpg')} />
+          <img src={require('../../assets/svg/about_icon_github.jpg')} alt="" />
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
             <Trans>Bug Bounty</Trans>
           </Text>
-          <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
+          <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} alt="" />
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
             <Trans>Insured by</Trans>
           </Text>
-          <img src={require('../../assets/svg/unslashed.svg')} />
+          <img src={require('../../assets/svg/unslashed.svg')} alt="" />
         </div>
       </div>
 
@@ -403,11 +403,11 @@ export default function About() {
         <Trans>Powered by</Trans>
       </Text>
       <div className={style.powered}>
-        <img src={require('../../assets/svg/about_icon_kyber.svg')} />
-        <img src={require('../../assets/svg/about_icon_ethereum.png')} />
-        <img src={require('../../assets/svg/about_icon_polygon.png')} />
-        <img src={require('../../assets/svg/about_icon_avalanche.png')} />
-        <img src={require('../../assets/svg/about_icon_bsc.png')} />
+        <img src={require('../../assets/svg/about_icon_kyber.svg')} alt="" />
+        <img src={require('../../assets/svg/about_icon_ethereum.png')} alt="" />
+        <img src={require('../../assets/svg/about_icon_polygon.png')} alt="" />
+        <img src={require('../../assets/svg/about_icon_avalanche.png')} alt="" />
+        <img src={require('../../assets/svg/about_icon_bsc.png')} alt="" />
       </div>
       <div className={style.footer}>
         <div className={style.content}>
@@ -468,7 +468,7 @@ export default function About() {
           </div>
           {farms.map(
             (farm, index) =>
-              index == indexx && (
+              index === indexx && (
                 <Apr
                   key={farm.id}
                   farm={farm}
@@ -490,7 +490,7 @@ export default function About() {
 function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
   const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
   const poolAddressChecksum = isAddressString(farm.id)
-  const { value: userTokenBalance, decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
+  const { decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
     farm.totalStake.toString(),

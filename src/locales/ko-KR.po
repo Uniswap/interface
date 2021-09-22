@@ -1272,6 +1272,10 @@ msgstr ""
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "거래 규모로 인한 시장 가격과 귀하의 가격 간의 차이입니다. 오른쪽 상단 구성에서 슬립피지 가격 영향 허용 범위를 조정합니다."
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr ""
+
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
 msgstr "토큰 목록 \"{0}\"이(가) <0>{1}(으)로 업데이트되었습니다.</0> ."

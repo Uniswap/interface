@@ -378,7 +378,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         </DataText>
         <APY grid-area="apy">
           {apr.toFixed(2)}%
-          {apr != 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
+          {apr !== 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
         </APY>
         <DataText
           grid-area="reward"
@@ -638,7 +638,7 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataTitle>
           <DataText grid-area="apy">
             <APY grid-area="apy">{apr.toFixed(2)}%</APY>
-            {apr != 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
+            {apr !== 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
           </DataText>
         </GridItem>
 
@@ -647,7 +647,7 @@ const ListItem = ({ farm }: ListItemProps) => {
             <Trans>My Rewards</Trans>
           </DataTitle>
           <DataText style={{ display: 'flex', flexDirection: 'column' }}>
-            {farmRewards.map((reward, index) => {
+            {farmRewards.map(reward => {
               return (
                 <div key={reward.token.address} style={{ marginTop: '2px' }}>
                   <Flex style={{ alignItems: 'center' }}>

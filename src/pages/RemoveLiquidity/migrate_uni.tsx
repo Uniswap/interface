@@ -2,7 +2,7 @@ import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { ETHER, WETH, CurrencyAmount, JSBI, Token } from 'libs/sdk/src'
-import { currencyEquals, Pair, Percent } from '@uniswap/sdk'
+import { Pair, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
@@ -53,9 +53,8 @@ const DashedLine = styled.div`
 `
 
 export default function MigrateLiquidity({
-  history,
   match: {
-    params: { currencyIdA, currencyIdB, pairAddress }
+    params: { currencyIdA, currencyIdB }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
@@ -104,7 +103,6 @@ export default function MigrateLiquidity({
     [Field.CURRENCY_B]:
       independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
   }
-  const atMaxAmount = parsedAmounts[Field.LIQUIDITY_PERCENT]?.equalTo(new Percent('1'))
 
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
@@ -241,12 +239,12 @@ export default function MigrateLiquidity({
             [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
           }
     const {
-      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
+      // [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
       [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
     } = parsedAmountsMaxA
     const {
-      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
-      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
+      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB
+      // [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
     } = parsedAmountsMaxB
 
     if (
@@ -318,9 +316,6 @@ export default function MigrateLiquidity({
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
-
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -504,11 +499,6 @@ export default function MigrateLiquidity({
   )
 
   const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB)))
-  )
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Box, Text } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 
-import { ChainId, Currency, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER } from 'libs/sdk/src'
 import { ZERO_ADDRESS } from 'constants/index'
 import Modal from 'components/Modal'
 import Loader from 'components/Loader'
