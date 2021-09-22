@@ -498,7 +498,7 @@ export default function AddLiquidity({
   const marketPrices = useTokensMarketPrice(tokens)
 
   const poolRatio = Number(pairAddress ? currentPrice?.toSignificant(6) : price?.toSignificant(6))
-  const marketRatio = marketPrices[0] && marketPrices[1] / marketPrices[0]
+  const marketRatio = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolRatio && marketRatio && Math.abs(poolRatio - marketRatio) / marketRatio > 0.05)
 
@@ -581,7 +581,7 @@ export default function AddLiquidity({
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
-                disableCurrencySelect={!!pairs}
+                disableCurrencySelect={!!pairAddress}
                 showCommonBases
               />
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
@@ -614,7 +614,7 @@ export default function AddLiquidity({
                 }}
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                 currency={currencies[Field.CURRENCY_B]}
-                disableCurrencySelect={!!pairs}
+                disableCurrencySelect={!!pairAddress}
                 id="add-liquidity-input-tokenb"
                 showCommonBases
               />
