@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-09-22 01:26\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -266,15 +266,15 @@ msgstr "正在批准 {0}"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
-msgstr "阿比斯坎"
+msgstr "Arbiscan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "仲裁桥"
+msgstr "Arbitrum桥"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum 处于测试阶段，可能会遇到停机时间。在停机期间，您的头寸不会赚取费用，您将无法移除流动性。 <0>阅读更多。</0>"
+msgstr "Arbitrum 处于 Beta 阶段，可能会遇到停机问题。在停机期间，您的头寸不会赚取费用，您将无法移除流动性。 <0>了解更多信息。</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -375,7 +375,7 @@ msgstr "领取"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "要求 <0/> 为 {0}"
+msgstr "领取 <0/> {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -391,7 +391,7 @@ msgstr "领取 UNI 代币"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0}索取 UNI 奖励"
+msgstr "{0} 领取 UNI 奖励"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -412,7 +412,7 @@ msgstr "已领取 UNI 代币！"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "声称！"
+msgstr "已领取！"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -465,7 +465,7 @@ msgstr "收取手续费"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "收取 {0}/{1}"
+msgstr "收集 {0}/{1} 手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
