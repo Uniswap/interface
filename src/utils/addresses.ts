@@ -2,7 +2,7 @@ import { utils } from 'ethers'
 import { logger } from 'src/utils/logger'
 
 export function isValidAddress(address: string) {
-  // Need to catch because ethers' isAddres throws in some cases (bad checksum)
+  // Need to catch because ethers' isAddress throws in some cases (bad checksum)
   try {
     const isValid = address && utils.isAddress(address)
     return !!isValid
