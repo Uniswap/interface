@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import styled, { DefaultTheme } from 'styled-components/macro'
+
 import { ProposalState } from '../../state/governance/hooks'
 
 const handleColorType = (status: ProposalState, theme: DefaultTheme) => {

@@ -5,6 +5,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components/macro'
+
 import { TYPE } from '../../theme'
 import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { AutoColumn } from '../Column'

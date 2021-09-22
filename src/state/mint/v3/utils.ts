@@ -1,12 +1,12 @@
+import { Price, Token } from '@uniswap/sdk-core'
 import {
-  priceToClosestTick,
-  nearestUsableTick,
-  FeeAmount,
-  TICK_SPACINGS,
   encodeSqrtRatioX96,
+  FeeAmount,
+  nearestUsableTick,
+  priceToClosestTick,
+  TICK_SPACINGS,
   TickMath,
 } from '@uniswap/v3-sdk/dist/'
-import { Price, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {

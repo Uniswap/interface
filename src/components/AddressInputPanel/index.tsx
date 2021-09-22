@@ -1,6 +1,7 @@
 import { t, Trans } from '@lingui/macro'
-import { useContext, useCallback, ReactNode } from 'react'
+import { ReactNode, useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
+
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'

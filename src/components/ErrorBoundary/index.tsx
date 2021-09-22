@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
+import ReactGA from 'react-ga'
+import styled from 'styled-components/macro'
+
 import store, { AppState } from '../../state'
 import { ExternalLink, TYPE } from '../../theme'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components/macro'
-import ReactGA from 'react-ga'
 import { getUserAgent } from '../../utils/getUserAgent'
+import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
 const FallbackWrapper = styled.div`

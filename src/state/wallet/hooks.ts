@@ -1,18 +1,19 @@
-import { Currency, Token, CurrencyAmount, Ether } from '@uniswap/sdk-core'
+import { Interface } from '@ethersproject/abi'
+import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
+import ERC20ABI from 'abis/erc20.json'
+import { Erc20Interface } from 'abis/types/Erc20'
+import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+
 import { UNI } from '../../constants/tokens'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useMulticall2Contract } from '../../hooks/useContract'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
-import { Interface } from '@ethersproject/abi'
-import ERC20ABI from 'abis/erc20.json'
-import { Erc20Interface } from 'abis/types/Erc20'
-import { SupportedChainId } from 'constants/chains'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */

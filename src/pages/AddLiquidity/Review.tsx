@@ -1,9 +1,10 @@
-import { Bound, Field } from '../../state/mint/v3/actions'
-import { AutoColumn } from 'components/Column'
-import styled from 'styled-components/macro'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import { AutoColumn } from 'components/Column'
 import { PositionPreview } from 'components/PositionPreview'
+import styled from 'styled-components/macro'
+
+import { Bound, Field } from '../../state/mint/v3/actions'
 
 const Wrapper = styled.div`
   padding-top: 12px;
