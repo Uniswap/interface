@@ -581,6 +581,7 @@ export default function AddLiquidity({
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
+                disableCurrencySelect={!!pairs}
                 showCommonBases
               />
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
@@ -590,6 +591,7 @@ export default function AddLiquidity({
 
                 {pairAddress && chainId && (currencyAIsWETH || currencyAIsETHER) && (
                   <StyledInternalLink
+                    replace
                     to={`/add/${
                       currencyAIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
                     }/${currencyIdB}/${pairAddress}`}
@@ -612,6 +614,7 @@ export default function AddLiquidity({
                 }}
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                 currency={currencies[Field.CURRENCY_B]}
+                disableCurrencySelect={!!pairs}
                 id="add-liquidity-input-tokenb"
                 showCommonBases
               />
@@ -622,6 +625,7 @@ export default function AddLiquidity({
 
                 {pairAddress && chainId && (currencyBIsWETH || currencyBIsETHER) && (
                   <StyledInternalLink
+                    replace
                     to={`/add/${currencyIdA}/${
                       currencyBIsETHER ? currencyId(WETH[chainId], chainId) : currencyId(ETHER, chainId)
                     }/${pairAddress}`}
