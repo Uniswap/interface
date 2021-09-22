@@ -20,10 +20,10 @@ import {
   SerializedToken,
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
+  updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserClientSideRouter,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'

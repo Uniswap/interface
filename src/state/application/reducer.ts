@@ -2,13 +2,13 @@ import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import {
   addPopup,
+  ApplicationModal,
   PopupContent,
   removePopup,
-  updateBlockNumber,
-  ApplicationModal,
-  setOpenModal,
-  updateChainId,
   setChainConnectivityWarning,
+  setOpenModal,
+  updateBlockNumber,
+  updateChainId,
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>

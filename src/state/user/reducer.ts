@@ -12,11 +12,11 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateMatchesDarkMode,
+  updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
   updateUserLocale,
-  updateUserClientSideRouter,
   updateUserSlippageTolerance,
 } from './actions'
 

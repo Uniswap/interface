@@ -11,16 +11,15 @@ import {
   PoolProvider,
   QuoteProvider,
   setGlobalMetric,
-  SubgraphProvider,
   SwapRoute,
   TokenListProvider,
   UniswapMulticallProvider,
 } from '@uniswap/smart-order-router'
 import { Trade } from '@uniswap/v3-sdk'
-import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
 import { V3TradeState } from 'state/routing/types'
 import { useFreshData } from 'state/routing/useRoutingAPITrade'
+import { URISubgraphProvider } from './URISubgraphProvider'
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
@@ -56,7 +55,13 @@ function useRouter() {
   //   [chainId]
   // )
 
-  const subgraphProvider = useMemo(() => (chainId ? new SubgraphProvider(chainId, 1, ms`2m`) : undefined), [chainId])
+  const subgraphProvider = useMemo(
+    () =>
+      chainId
+        ? new URISubgraphProvider(chainId, 'https://ipfs.io/ipfs/QmfArMYESGVJpPALh4eQXnjF8HProSF1ky3v8RmuYLJZT4')
+        : undefined,
+    [chainId]
+  )
 
   const multicall2Provider = useMemo(
     () => (chainId && provider ? new UniswapMulticallProvider(chainId, provider, 375_000) : undefined),
