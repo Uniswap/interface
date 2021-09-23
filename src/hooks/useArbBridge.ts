@@ -1,4 +1,4 @@
-import { Bridge } from 'arb-ts'
+import { Bridge, OutgoingMessageState } from 'arb-ts'
 import { useDispatch } from 'react-redux'
 import { useCallback, useEffect, useState } from 'react'
 import { providers, Signer, utils } from 'ethers'
@@ -9,6 +9,10 @@ import { NETWORK_DETAIL } from '../constants'
 import { INFURA_PROJECT_ID } from '../connectors'
 import { addBridgeTxn, updateBridgeTxnReceipt, updateBridgeTxnL2Hash } from '../state/bridgeTransactions/actions'
 import { BridgeAssetType } from '../state/bridgeTransactions/types'
+
+const wait = (ms = 0) => {
+  return new Promise(res => setTimeout(res, ms || 10000))
+}
 
 const addInfuraKey = (rpcUrl: string) => {
   if (rpcUrl.includes('infura')) {
@@ -139,7 +143,122 @@ export const useArbBridge = () => {
     [account, bridge, chainId, dispatch]
   )
 
+const withdrawEth = useCallback(
+  async (value: string) => {
+    if (!bridge || !chainId || !account) return
+    const { partnerChainId } = NETWORK_DETAIL[chainId]
+
+    if (!partnerChainId) return
+    const weiValue = utils.parseEther(value)
+
+    try {
+      // L2
+      const withdrawTx = await bridge.withdrawETH(weiValue)
+      console.log('dispacz addBridgeTxn')
+      dispatch(
+        addBridgeTxn({
+          assetName: 'ETH',
+          assetType: BridgeAssetType.ETH,
+          type: 'withdraw',
+          value,
+          txHash: withdrawTx.hash,
+          status: 'l1-pending',
+          from: chainId,
+          to: partnerChainId,
+          sender: account
+        })
+      )
+
+      const withdrawReceipt = await withdrawTx.wait()
+      console.log('dispacz updateBridgeTxnReceipt')
+      dispatch(
+        updateBridgeTxnReceipt({
+          chainId,
+          txHash: withdrawTx.hash,
+          layer: 2,
+          receipt: withdrawReceipt
+        })
+      )
+      console.log('hash', withdrawTx.hash)
+      //withdrawal event
+      const l2ToL2EventData = await bridge.getWithdrawalsInL2Transaction(withdrawReceipt)
+      
+      if (l2ToL2EventData.length === 0)
+      throw new Error(`Txn ${withdrawTx} did not initiate an outgoing messages`)
+
+      if (l2ToL2EventData.length === 1) {
+        //const l2ToL2EventDataResult = l2ToL2EventData[0]
+        const { batchNumber, indexInBatch } = l2ToL2EventData[0]
+
+        let outgoingMessageState = await bridge.getOutGoingMessageState(
+          batchNumber,
+          indexInBatch
+        )
+
+        console.log(
+          `Waiting for message to be confirmed: Batchnumber: ${batchNumber}, IndexInBatch ${indexInBatch}`
+        )
+        console.log('outgoing message state', outgoingMessageState)
+        
+        while (outgoingMessageState !== OutgoingMessageState.CONFIRMED) {
+          await wait(1000 * 5)
+          outgoingMessageState = await bridge.getOutGoingMessageState(
+            batchNumber,
+            indexInBatch
+          )
+          
+          switch (outgoingMessageState) {
+            case OutgoingMessageState.NOT_FOUND: {
+              console.log('Message not found; something strange and bad happened')
+              break
+            }
+            case OutgoingMessageState.EXECUTED: {
+              console.log(`Message already executed! Nothing else to do here`)
+              break
+            }
+            case OutgoingMessageState.UNCONFIRMED: {
+              console.log(`Message not yet confirmed; we'll wait a bit and try again`)
+              break
+            }
+      
+            default:
+              break
+          }
+        }
+        console.log('outgoing message state', outgoingMessageState)
+        
+        /**
+         * Now that its confirmed, we can retrieve the Merkle proof data from the chain, and execute our message in its outbox entry.
+         * triggerL2ToL1Transaction handles these steps
+         */
+        const res = await bridge.triggerL2ToL1Transaction(batchNumber, indexInBatch)
+        console.log('Transaction triggered. Waiting.')
+        const rec = await res.wait()
+      
+        console.log('Done! Your transaction is executed')
+        console.log(rec)
+        
+
+      }
+      // update balance
+    } catch (err) {
+      throw err
+    }
+  },
+  [account, bridge, chainId, dispatch]
+)
+
+
+
+
+
+
+
+
+
+
   return {
-    depositEth
+    depositEth,
+    withdrawEth
   }
 }

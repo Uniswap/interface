@@ -3563,10 +3563,10 @@ aproba@^1.1.1:
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
   integrity sha512-Y9J6ZjXtoYh8RnXVCMOU/ttDmk1aBjunq9vO0ta5x85WDQiQfUF9sIPBITdbiiIVcBo03Hi3jMxigBtsddlXRw==
 
-arb-ts@^0.0.39:
-  version "0.0.39"
-  resolved "https://registry.yarnpkg.com/arb-ts/-/arb-ts-0.0.39.tgz#914ed9cdac3a591f862ea9eb149f8e9ecbde13aa"
-  integrity sha512-XFkD+BtpMtQ3UCedTMJMkwHvAoEol2ImtZ/lFonxoQtHntryCGKuKM12/LqFWhwnUSGtrnARwo072eCGxackEQ==
+arb-ts@^0.0.42:
+  version "0.0.42"
+  resolved "https://registry.yarnpkg.com/arb-ts/-/arb-ts-0.0.42.tgz#c29ce19897c636aa7b8fb6f1dbb0076e15eed1e3"
+  integrity sha512-QbUf1iQR9YsuD0RutZD/evRUrIipVPyBegNzjGheEwDtSlZ2djMWKWrvkJnAXnmP5qKjVYLVCeJFxkvORKKPvw==
   dependencies:
     "@ethersproject/address" "^5.0.8"
     "@ethersproject/bignumber" "^5.1.1"

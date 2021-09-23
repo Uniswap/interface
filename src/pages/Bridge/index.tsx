@@ -137,9 +137,11 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
-  const { depositEth } = useArbBridge()
+  // const { depositEth, withdrawEth } = useArbBridge()
+  const { withdrawEth } = useArbBridge()
 
-  const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
+  // const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
+  const handleWithdraw = useCallback(() => withdrawEth(typedValue), [withdrawEth, typedValue])
 
   return (
     <>
@@ -210,7 +212,7 @@ export default function Bridge() {
         ) : step === Step.Collect ? (
           <NetworkSwitcher sendToId={toNetwork.chainId} onCollectClick={() => setStep(Step.Success)} />
         ) : (
-          <BridgeButton onClick={handleDeposit} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
+          <BridgeButton onClick={handleWithdraw} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!typedValue
               ? 'Enter ETH amount'
               : `Brigde to ${getNetworkOptionById(toNetwork.chainId, toOptions)?.header}`}

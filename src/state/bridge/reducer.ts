@@ -63,7 +63,6 @@ export default createReducer<BridgeState>(initialState, builder =>
     })
     .addCase(swapBridgeNetworks, (state) => {
       const { fromNetwork: { chainId: fromChainId }, toNetwork: { chainId: toChainId } } = state
-      console.log({ fromChainId, toChainId })
       return {
         ...state,
         fromNetwork: {
