@@ -1514,10 +1514,6 @@ msgstr "You are creating a new pool and will be the first liquidity provider. Th
 msgid "You are creating a pool"
 msgstr "You are creating a pool"
 
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "You are currently browsing DMM on the {0}"
-
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "You don’t have liquidity in this {type} pool yet."

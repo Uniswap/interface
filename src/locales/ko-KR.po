@@ -1514,10 +1514,6 @@ msgstr ""
 msgid "You are creating a pool"
 msgstr ""
 
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다"
-
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "이 {type} 풀에는 아직 유동성이 없습니다."

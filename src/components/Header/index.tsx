@@ -142,25 +142,25 @@ const HideSmall = styled.span`
 `
 
 const HideText = styled.span`
-  @media (max-width: 1440px) {
+  @media (max-width: 1400px) {
     display: none;
   }
 `
 
 const AnalyticsWrapper = styled.span`
-  @media (max-width: 1310px) {
+  @media (max-width: 1100px) {
     display: none;
   }
 `
 
 const MigrateLiquidityWrapper = styled.span`
-  @media (max-width: 1355px) {
+  @media (max-width: 1250px) {
     display: none;
   }
 `
 
 const AboutWrapper = styled.span`
-  @media (max-width: 1500px) {
+  @media (max-width: 1320px) {
     display: none;
   }
 `

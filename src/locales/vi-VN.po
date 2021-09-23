@@ -1514,10 +1514,6 @@ msgstr ""
 msgid "You are creating a pool"
 msgstr ""
 
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "Bạn hiện đang duyệt DMM trên mạng {0}"
-
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "Bạn chưa có thanh khoản trong nhóm {type} này."
