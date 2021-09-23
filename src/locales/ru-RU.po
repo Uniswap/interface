@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-09-22 19:04\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -266,11 +266,11 @@ msgstr "Идёт одобрение {0}"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
-msgstr "Арбискан"
+msgstr "Arbiscan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "Арбитрум мост"
+msgstr "Мост в Arbitrum"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -294,7 +294,7 @@ msgstr "Авто"
 
 #: src/components/Settings/index.tsx
 msgid "Auto Router"
-msgstr "Авто Маршрутизатор"
+msgstr "Автомаршрутизатор"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -375,7 +375,7 @@ msgstr "Востребовать"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "Требовать <0 /> для {0}"
+msgstr "Востребовать <0 /> за {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -391,7 +391,7 @@ msgstr "Claim UNI Token"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "Получить награду UNI за {0}"
+msgstr "Востребовать награду UNI за {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -412,7 +412,7 @@ msgstr "Вы востребовали UNI!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "Заявлено!"
+msgstr "Востребовано!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -626,7 +626,7 @@ msgstr "Делегировать голоса"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr "Делегировать право голоса на {0}"
+msgstr "Делегировать право голоса {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -649,7 +649,7 @@ msgstr "Внесите суммы"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
-msgstr "Депозитные активы"
+msgstr "Внести активы"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -798,7 +798,7 @@ msgstr "Исследуйте популярные пулы в Uniswap Analytics.
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
-msgstr "Исследователь"
+msgstr "Обозреватель"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -839,7 +839,7 @@ msgstr "Получите поддержку в Discord"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Help Center"
-msgstr "Центр помощи"
+msgstr "Центр поддержки"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
@@ -953,7 +953,7 @@ msgstr "Узнать больше"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Learn More"
-msgstr "Учить больше"
+msgstr "Узнать больше"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1076,7 +1076,7 @@ msgstr "Перенесите ваши токены ликвидности из U
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
-msgstr "Миграция {0}/{1} ликвидность V3"
+msgstr "Перенести ликвидность {0}/{1} в V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -1105,7 +1105,7 @@ msgstr "Ещё"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Network Warning"
-msgstr "Предупреждение сети"
+msgstr "Предупреждение о сети"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1182,7 +1182,7 @@ msgstr "Шлюз в Optimism"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Оптимистичный Ethereum находится на стадии бета-тестирования и может испытывать простои. Оптимизм ожидает запланированного простоя для обновления сети в ближайшем будущем. Во время простоя ваша позиция не будет получать комиссию, и вы не сможете удалить ликвидность. <0> Читать дальше.</0>"
+msgstr "Оптимистичный Ethereum находится на стадии бета-тестирования и может испытывать простои. В ближайшем будущем ожидается запланированный простой Optimism для обновления сети. Во время простоя ваша позиция не будет зарабатывать комиссии, и вы не сможете удалить ликвидность. <0>Читать дальше.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1377,7 +1377,7 @@ msgstr "Удалить"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "Удалите <0 /> и <1 />"
+msgstr "Удалить <0 /> и <1 />"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1536,7 +1536,7 @@ msgstr "Обменять"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "Заменить <0 /> ровно на <1 />"
+msgstr "Обменять <0 /> на ровно <1 />"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1545,7 +1545,7 @@ msgstr "Всё равно обменять"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "Заменить ровно <0 /> на <1 />"
+msgstr "Обменять ровно <0 /> на <1 />"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1613,7 +1613,7 @@ msgstr "Этот пул необходимо инициализировать в
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Этот маршрут оптимизирует вашу цену, учитывая разделенные маршруты, несколько участков и стоимость газа."
+msgstr "Этот маршрут оптимизирует для вас цену, оценивая возможность разделения маршрутов, сложные маршруты, а также стоимость газа."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1648,7 +1648,7 @@ msgstr "На токены (минимум)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Чтобы начать торговлю на {0}, сначала соедините свои активы с L1 на L2. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
+msgstr "Чтобы начать торговлю на {0}, вам нужно перенести свои активы с L1 на L2 через мост. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1676,7 +1676,7 @@ msgstr "Всего внесено"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "Торговый путь"
+msgstr "Маршрут обмена"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
@@ -1839,7 +1839,7 @@ msgstr "Обновить список"
 
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Используйте API Uniswap Labs, чтобы получить более выгодную цену за счет более эффективного маршрута."
+msgstr "Использовать API Uniswap Labs, чтобы получить более выгодную цену за счет более эффективного маршрута."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -1923,7 +1923,7 @@ msgstr "Проголосовать против предложения {proposal
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr "Проголосовать против предложения {proposalKey} причине \"{0}\""
+msgstr "Проголосовать против предложения {proposalKey} по причине \"{0}\""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1936,7 +1936,7 @@ msgstr "Проголосовать за предложение {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "Проголосуйте за предложение {proposalKey} причине \"{0}\""
+msgstr "Проголосуйте за предложение {proposalKey} по причине \"{0}\""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1949,7 +1949,7 @@ msgstr "Воздержаться при голосовании по предло
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "Проголосовать за воздержание по предложению {proposalKey} причине \"{0}\""
+msgstr "Проголосовать за воздержание по предложению {proposalKey} по причине \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -2014,7 +2014,7 @@ msgstr "Завернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to WETH"
-msgstr "Обернуть <0 /> в WETH"
+msgstr "Завернуть <0 /> в WETH"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -2055,11 +2055,11 @@ msgstr "У вас пока нет ликвидности в этом пуле."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Возможно, вы потеряли сетевое соединение или {label} сейчас не работает."
+msgstr "Возможно, у вас отсутствует соединение с интернетом, или {label} сейчас не работает."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
-msgstr "Возможно, вы потеряли сетевое соединение."
+msgstr "Возможно, у вас отсутствует соединение с интернетом."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
