@@ -2,24 +2,31 @@ import { JSBI, Pair, Percent, TokenAmount } from '@swapr/sdk'
 import React, { useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
+import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
+import { ArrowUpRight } from 'react-feather'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonDark } from '../Button'
+import { ButtonDark, ButtonGrey } from '../Button'
 
 import Card, { GreyCard, OutlineCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
+import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 20px;
+`
+
+const StyledStatsLinkIcon = styled(ArrowUpRight)`
+  color: ${props => props.theme.text4};
 `
 
 export const HoverCard = styled(Card)`
@@ -100,7 +107,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Min
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
-                  Your pool's share:
+                  Your pool&apos;s share:
                 </TYPE.body>
                 <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
@@ -150,6 +157,38 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Min
   )
 }
 
+const AccountAnalyticsButton = ({
+  account,
+  chainId,
+  fullWidth
+}: {
+  account?: string | null
+  chainId?: number
+  fullWidth?: boolean
+}) => (
+  <ButtonGrey
+    width={fullWidth ? undefined : 'auto'}
+    style={{ padding: '8px 12px' }}
+    as={ExternalLink}
+    href={
+      account
+        ? `https://dxstats.eth.link/#/account/${account}?chainId=${chainId}`
+        : `https://dxstats.eth.link/#/accounts?chainId=${chainId}`
+    }
+  >
+    <Flex alignItems="center">
+      <Box mr="4px">
+        <TYPE.small color="text4" fontSize="12px" letterSpacing="0.08em">
+          Account analytics
+        </TYPE.small>
+      </Box>
+      <Box>
+        <StyledStatsLinkIcon size="12px" />
+      </Box>
+    </Flex>
+  </ButtonGrey>
+)
+
 interface FullPositionCardProps {
   pair?: Pair
   showUnwrapped?: boolean
@@ -157,13 +196,15 @@ interface FullPositionCardProps {
 }
 
 export default function FullPositionCard({ pair, border }: FullPositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair?.token0)
   const currency1 = unwrappedToken(pair?.token1)
 
   const userPoolBalance = useTokenBalance(account ?? undefined, pair?.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
+
+  const mobile = useIsMobileByMedia()
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens
@@ -192,10 +233,11 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
     <StyledPositionCard border={border}>
       <AutoColumn gap="12px">
         <AutoColumn gap="11px">
-          <FixedHeightRow>
+          <FixedHeightRow justifyContent="space-between">
             <TYPE.body color="white" fontSize="16px" lineHeight="20px" fontWeight="500">
               My position
             </TYPE.body>
+            {!mobile && <AccountAnalyticsButton account={account} chainId={chainId} />}
           </FixedHeightRow>
           <FixedHeightRow marginTop="12px">
             <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px">
@@ -265,7 +307,7 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
               style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
               width={showRemoveButton ? '48%' : '100%'}
             >
-              ADD
+              ADD LIQUIDITY
             </ButtonDark>
             {showRemoveButton && (
               <ButtonDark
@@ -275,10 +317,11 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
                 to={currency0 && currency1 ? `/remove/${currencyId(currency0)}/${currencyId(currency1)}` : ''}
                 style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
               >
-                REMOVE
+                REMOVE LIQUIDITY
               </ButtonDark>
             )}
           </RowBetween>
+          {mobile && <AccountAnalyticsButton fullWidth account={account} chainId={chainId} />}
         </AutoColumn>
       </AutoColumn>
     </StyledPositionCard>

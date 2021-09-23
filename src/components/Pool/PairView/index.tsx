@@ -18,11 +18,18 @@ import { usePrevious } from 'react-use'
 import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 import { formatCurrencyAmount } from '../../../utils'
 import { unwrappedToken } from '../../../utils/wrappedCurrency'
+import { TYPE } from '../../../theme'
+import { ArrowUpRight } from 'react-feather'
+import { ExternalLink } from '../../../theme'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
     background: ${props => props.theme.bg1};
   }
+`
+
+const StyledStatsLinkIcon = styled(ArrowUpRight)`
+  color: ${props => props.theme.text4};
 `
 
 const DataText = styled.div`
@@ -92,6 +99,28 @@ function PairView({ loading, pair }: PairViewProps) {
               <Text fontSize="16px" fontWeight="600" lineHeight="20px">
                 {pair ? `${unwrappedToken0?.symbol}/${unwrappedToken1?.symbol}` : <Skeleton width="60px" />}
               </Text>
+            </Box>
+            <Box marginLeft="auto">
+              <ButtonGrey
+                style={{ padding: '8px 12px' }}
+                as={ExternalLink}
+                href={
+                  pair?.liquidityToken.address
+                    ? `https://dxstats.eth.link/#/pair/${pair?.liquidityToken.address}?chainId=${chainId}`
+                    : `https://dxstats.eth.link/#/pairs?chainId=${chainId}`
+                }
+              >
+                <Flex>
+                  <Box mr="4px">
+                    <TYPE.small color="text4" fontSize="12px" letterSpacing="0.08em">
+                      Stats
+                    </TYPE.small>
+                  </Box>
+                  <Box>
+                    <StyledStatsLinkIcon size="12px" />
+                  </Box>
+                </Flex>
+              </ButtonGrey>
             </Box>
           </Flex>
           <DataRow loading={overallLoading} title="Liquidity:" value={`$${formatCurrencyAmount(liquidityUSD)}`} />

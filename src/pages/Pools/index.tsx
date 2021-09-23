@@ -235,7 +235,7 @@ export default function Pools() {
           <ButtonWithLink
             link={`https://dxstats.eth.link/#/account/${account}?chainId=${chainId}`}
             text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
-            marginTop="32px"
+            style={{ marginTop: '32px' }}
           />
         )}
         {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
