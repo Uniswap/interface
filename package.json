@@ -71,6 +71,7 @@
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
+    "comlink": "^4.3.1",
     "copy-to-clipboard": "^3.2.0",
     "cypress": "^7.7.0",
     "d3": "^7.0.0",
@@ -123,7 +124,8 @@
     "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
     "workbox-precaching": "^6.1.0",
-    "workbox-routing": "^6.1.0"
+    "workbox-routing": "^6.1.0",
+    "worker-loader": "^3.0.8"
   },
   "resolutions": {
     "@walletconnect/ethereum-provider": "1.6.5"

@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
   AlphaRouter,
   AlphaRouterConfig,
+  CachingTokenListProvider,
   EIP1559GasPriceProvider,
   HeuristicGasModelFactory,
+  ICache,
   ID_TO_CHAIN_ID,
   IMetric,
   MetricLoggerUnit,
@@ -12,7 +15,6 @@ import {
   QuoteProvider,
   setGlobalMetric,
   SwapRoute,
-  TokenListProvider,
   UniswapMulticallProvider,
   URISubgraphProvider,
 } from '@uniswap/smart-order-router'
@@ -20,6 +22,7 @@ import { Trade } from '@uniswap/v3-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import { V3TradeState } from 'state/routing/types'
 import { useFreshData } from 'state/routing/useRoutingAPITrade'
+
 import { useActiveWeb3React } from './web3'
 
 const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
@@ -34,6 +37,18 @@ const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   minSplits: 1,
   maxSplits: 7,
   distributionPercent: 5,
+}
+
+class Cache<T> implements ICache<T> {
+  async get(key: string) {
+    return undefined
+  }
+  async set(key: string, value: T) {
+    return false
+  }
+  async has(key: string) {
+    return false
+  }
 }
 
 class MetricLogger extends IMetric {
@@ -76,7 +91,7 @@ function useRouter() {
   const gasStationProvider = useMemo(() => (provider ? new EIP1559GasPriceProvider(provider) : undefined), [provider])
 
   const tokenListProvider = useMemo(
-    () => (chainId ? new TokenListProvider(chainId, DEFAULT_TOKEN_LIST) : undefined),
+    () => (chainId ? new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new Cache()) : undefined),
     [chainId]
   )
 
