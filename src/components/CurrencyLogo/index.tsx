@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
@@ -7,8 +8,10 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
 
-export const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+type Network = 'ethereum' | 'arbitrum' | 'optimism'
+
+export const getTokenLogoURL = (address: string, network: Network = 'ethereum') =>
+  `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${network}/assets/${address}/logo.png`
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -24,6 +27,19 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   background-color: ${({ theme }) => theme.white};
 `
+
+function chainIdToNetwork(networkId: SupportedChainId): Network {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return 'ethereum'
+    case SupportedChainId.ARBITRUM_ONE:
+      return 'arbitrum'
+    case SupportedChainId.OPTIMISM:
+      return 'optimism'
+    default:
+      return 'ethereum'
+  }
+}
 
 export default function CurrencyLogo({
   currency,
@@ -41,7 +57,12 @@ export default function CurrencyLogo({
     if (!currency || currency.isNative) return []
 
     if (currency.isToken) {
-      const defaultUrls = currency.chainId === 1 ? [getTokenLogoURL(currency.address)] : []
+      const defaultUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM].includes(
+        currency.chainId
+      )
+        ? [getTokenLogoURL(currency.address, chainIdToNetwork(currency.chainId))]
+        : []
+
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, ...defaultUrls]
       }

@@ -1,14 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import QuestionHelper from 'components/QuestionHelper'
+import { AutoRow } from 'components/Row'
+import { COMMON_BASES } from 'constants/routing'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-
-import { COMMON_BASES } from '../../constants/routing'
-import { currencyId } from '../../utils/currencyId'
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../CurrencyLogo'
-import QuestionHelper from '../QuestionHelper'
-import { AutoRow } from '../Row'
+import { currencyId } from 'utils/currencyId'
 
 const MobileWrapper = styled(AutoColumn)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
