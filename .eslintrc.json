@@ -38,6 +38,10 @@
       {
         "paths": [
           {
+            "name": "lodash",
+            "message": "Please import lodash modules directly (lodash/module)."
+          },
+          {
             "name": "styled-components",
             "message": "Please import from styled-components/macro."
           }
