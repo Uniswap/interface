@@ -10,8 +10,29 @@ import Logo from '../Logo'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism'
 
-export const getTokenLogoURL = (address: string, network: Network = 'ethereum') =>
-  `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${network}/assets/${address}/logo.png`
+function chainIdToNetworkName(networkId: SupportedChainId): Network {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return 'ethereum'
+    case SupportedChainId.ARBITRUM_ONE:
+      return 'arbitrum'
+    case SupportedChainId.OPTIMISM:
+      return 'optimism'
+    default:
+      return 'ethereum'
+  }
+}
+
+export const getTokenLogoURL = (
+  address: string,
+  chainId: SupportedChainId = SupportedChainId.MAINNET
+): string | void => {
+  const networkName = chainIdToNetworkName(chainId)
+  const networksWithUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM]
+  if (networksWithUrls.includes(chainId)) {
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+  }
+}
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -27,19 +48,6 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   background-color: ${({ theme }) => theme.white};
 `
-
-function chainIdToNetwork(networkId: SupportedChainId): Network {
-  switch (networkId) {
-    case SupportedChainId.MAINNET:
-      return 'ethereum'
-    case SupportedChainId.ARBITRUM_ONE:
-      return 'arbitrum'
-    case SupportedChainId.OPTIMISM:
-      return 'optimism'
-    default:
-      return 'ethereum'
-  }
-}
 
 export default function CurrencyLogo({
   currency,
@@ -57,12 +65,11 @@ export default function CurrencyLogo({
     if (!currency || currency.isNative) return []
 
     if (currency.isToken) {
-      const defaultUrls = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.MAINNET, SupportedChainId.OPTIMISM].includes(
-        currency.chainId
-      )
-        ? [getTokenLogoURL(currency.address, chainIdToNetwork(currency.chainId))]
-        : []
-
+      const defaultUrls = []
+      const url = getTokenLogoURL(currency.address, currency.chainId)
+      if (url) {
+        defaultUrls.push(url)
+      }
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, ...defaultUrls]
       }
