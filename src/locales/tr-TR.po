@@ -232,7 +232,7 @@ msgstr "Bu listeyi ekleyerek, verilerin doğru olduğuna dolaylı olarak güveni
 msgid "CLAIM"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "CLAIMED"
 msgstr "ALINDI"
 
@@ -256,15 +256,15 @@ msgstr "Değiştir"
 msgid "Checking allowance..."
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "Talep Et"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
 msgid "Claim All"
 msgstr "Tümünü Talep Et"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Claimed Rewards"
 msgstr "Talep Edilen Ödüller"
 
@@ -435,7 +435,7 @@ msgstr "Belgeler"
 msgid "Don't see a pool you joined?"
 msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Duration: {duration}"
 msgstr ""
 
@@ -459,7 +459,7 @@ msgstr "Dinamik Ücretler"
 #~ msgid "ENDING IN"
 #~ msgstr "BİTİYOR"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
@@ -544,7 +544,7 @@ msgstr "Etkin olmayan Token Listelerinden genişletilmiş sonuçlar"
 msgid "Explore pools"
 msgstr "Havuzları keşfedin"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "TAM KİLİT AÇMA"
 
@@ -584,7 +584,7 @@ msgstr "Kimden (tahmini)"
 msgid "Fully On-chain; <0/> Straightforward Integration"
 msgstr "Tamamen Zincir Üzerinde; <0/> Açık Entegrasyon"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Fully Vested"
 msgstr "Tamamen Hak Kazanılmış"
 
@@ -741,7 +741,7 @@ msgstr "KyberDMM işlem ücretleri zincir içi piyasa koşullarına göre <0>din
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
 msgstr "KyberDMM'nin Programlanabilir Fiyatlandırma Eğrisi, likidite havuzu oluşturucularının uygun bir fiyatlandırma eğrisi belirlemesine ve önceden güçlendirilmiş havuzlar oluşturmasına olanak tanır"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "KİLİTLİ"
 
@@ -779,7 +779,7 @@ msgstr "Yüklendi"
 msgid "Loading"
 msgstr "Yükleniyor"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Locked Rewards"
 msgstr "Kilitli Ödüller"
 
@@ -909,6 +909,10 @@ msgstr "Kayıt bulunamadı."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
+
+#: src/components/Vesting/RewardLockerSchedules.tsx
+msgid "No vesting schedule!"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "No {type} pool found."
@@ -1150,7 +1154,7 @@ msgstr "{0} {1} ve {2} {3} kaldırılıyor"
 msgid "Reward"
 msgstr "Ödül"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Rewards: {0} {1}"
 msgstr "Ödüller: {0} {1}"
 
@@ -1252,7 +1256,7 @@ msgstr "Takas"
 msgid "Swap Anyway"
 msgstr "Yine de Takası Yap"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "TOPLAM HASAT ÖDÜLLERİ"
 
@@ -1409,7 +1413,7 @@ msgstr "Tipik AMM"
 msgid "UNKNOWN"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "UNLOCKED"
 msgstr "KİLİDİ AÇILDI"
 
@@ -1421,11 +1425,15 @@ msgstr "Bilinmeyen"
 msgid "Unknown Source"
 msgstr "Bilinmeyen Kaynak"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Unlocked"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
 msgid "Unlocked Rewards"
 msgstr "Kilidi Açılmış Ödüller"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Unlocked: {0} {1}"
 msgstr "Kilidi açık: {0} {1}"
 
@@ -1451,15 +1459,15 @@ msgstr "Arayüzde otomatik olarak görünmeyen çiftleri bulmak için bu aracı 
 msgid "V1"
 msgstr "V1"
 
-#: src/pages/Farms/vesting.tsx
-msgid "VESTING SCHEDULES"
+#: src/components/Vesting/index.tsx
+msgid "VESTING PERIODS"
 msgstr "VESTING PROGRAMLARI"
 
 #: src/pages/Farms/index.tsx
 msgid "Vesting"
 msgstr "Vesting (Hak kazanma süreci)"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "Hak kazanma süreci (Vesting) başladı: {0}"
 
@@ -1492,7 +1500,8 @@ msgstr "Onay Bekliyor"
 msgid "Wallet Address or ENS name"
 msgstr "Cüzdan Adresi veya ENS Adı"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
+#: src/components/Vesting/index.tsx
 msgid "What can KNC be used for?"
 msgstr ""
 
@@ -1511,10 +1520,6 @@ msgstr ""
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are creating a pool"
 msgstr ""
-
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "Şu anda {0} ağında DMM'ye göz atıyorsunuz"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
@@ -1548,7 +1553,7 @@ msgstr "Pozisyonun"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 

@@ -232,7 +232,7 @@ msgstr "Bằng cách thêm vào danh sách này, bạn hoàn toàn tin tưởng 
 msgid "CLAIM"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "CLAIMED"
 msgstr "ĐÃ NHẬN"
 
@@ -256,15 +256,15 @@ msgstr "Thay đổi"
 msgid "Checking allowance..."
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "Nhận"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
 msgid "Claim All"
 msgstr "Nhận Hết"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Claimed Rewards"
 msgstr "Đã Nhận Phần Thưởng"
 
@@ -435,7 +435,7 @@ msgstr "Văn bản"
 msgid "Don't see a pool you joined?"
 msgstr "Không thấy Pool mà bạn đã tham gia?"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Duration: {duration}"
 msgstr ""
 
@@ -459,7 +459,7 @@ msgstr "Các Phí Linh Động"
 #~ msgid "ENDING IN"
 #~ msgstr "KẾT THÚC TRONG"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
@@ -544,7 +544,7 @@ msgstr "Kết quả mở rộng từ Danh sách các token không hoạt động
 msgid "Explore pools"
 msgstr "Khám phá các Pool"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "MỞ KHÓA HOÀN TOÀN"
 
@@ -584,7 +584,7 @@ msgstr "Đến từ (ước tính)"
 msgid "Fully On-chain; <0/> Straightforward Integration"
 msgstr "Hoàn toàn trên chuỗi On-chain; <0 /> Tích hợp thẳng"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Fully Vested"
 msgstr "Hoàn toàn được xác nhận"
 
@@ -741,7 +741,7 @@ msgstr "Phí giao dịch KyberDMM được <0> điều chỉnh linh động </0>
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
 msgstr "Đường cong Định giá có thể Lập trình được của KyberDMM cho phép người tạo pool thanh khoản đặt đường cong định giá phù hợp và tạo trước và khả năng của nhóm khuếch đại amplified pool"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "ĐÃ KHÓA"
 
@@ -779,7 +779,7 @@ msgstr "Đã tải"
 msgid "Loading"
 msgstr "Đang tải"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Locked Rewards"
 msgstr "Các Phần thưởng Đã Khóa"
 
@@ -909,6 +909,10 @@ msgstr "Không có dữ liệu được tìm thấy."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
+
+#: src/components/Vesting/RewardLockerSchedules.tsx
+msgid "No vesting schedule!"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "No {type} pool found."
@@ -1150,7 +1154,7 @@ msgstr "Xóa {0} {1} và {2} {3}"
 msgid "Reward"
 msgstr "Phần thưởng"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Rewards: {0} {1}"
 msgstr "Phần thưởng: {0} {1}"
 
@@ -1252,7 +1256,7 @@ msgstr "Chuyển đổi"
 msgid "Swap Anyway"
 msgstr "Vẫn chuyển đổi"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "TỔNG PHẦN THƯỞNG THU HOẠCH"
 
@@ -1409,7 +1413,7 @@ msgstr "AMM điển hình"
 msgid "UNKNOWN"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "UNLOCKED"
 msgstr "ĐÃ MỞ KHÓA"
 
@@ -1421,11 +1425,15 @@ msgstr "Không xác định"
 msgid "Unknown Source"
 msgstr "Nguồn không rõ"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Unlocked"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
 msgid "Unlocked Rewards"
 msgstr "Phần thưởng đã mở khóa"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Unlocked: {0} {1}"
 msgstr "Đã mở khóa: {0} {1}"
 
@@ -1451,15 +1459,15 @@ msgstr "Sử dụng công cụ này để tìm các cặp không tự động xu
 msgid "V1"
 msgstr "V1"
 
-#: src/pages/Farms/vesting.tsx
-msgid "VESTING SCHEDULES"
+#: src/components/Vesting/index.tsx
+msgid "VESTING PERIODS"
 msgstr "LỊCH VESTING"
 
 #: src/pages/Farms/index.tsx
 msgid "Vesting"
 msgstr "Vesting"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "Vesting đã bắt đầu: {0}"
 
@@ -1492,7 +1500,8 @@ msgstr "Chờ xác nhận"
 msgid "Wallet Address or ENS name"
 msgstr "Địa chỉ Ví hoặc tên ENS"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
+#: src/components/Vesting/index.tsx
 msgid "What can KNC be used for?"
 msgstr ""
 
@@ -1511,10 +1520,6 @@ msgstr ""
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are creating a pool"
 msgstr ""
-
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "Bạn hiện đang duyệt DMM trên mạng {0}"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
@@ -1548,7 +1553,7 @@ msgstr "Vị trí của bạn"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 

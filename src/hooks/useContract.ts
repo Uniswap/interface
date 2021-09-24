@@ -15,10 +15,11 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract, getContractForReading } from '../utils'
 import { providers, useActiveWeb3React } from './index'
-import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, REWARD_LOCKER_ADDRESS } from '../constants'
+import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
+import { useRewardLockerAddresses } from 'state/vesting/hooks'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -170,16 +171,19 @@ export function useFairLaunchContracts(
 }
 
 export function useFairLaunchContract(address: string, withSignerIfPossible?: boolean): Contract | null {
-  const fairLaunchContracts = useFairLaunchContracts(withSignerIfPossible)
-
-  if (!fairLaunchContracts) {
-    return null
-  }
-
-  return fairLaunchContracts[address]
+  return useContract(address, FAIRLAUNCH_ABI, withSignerIfPossible)
 }
 
-export function useRewardLockerContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId && REWARD_LOCKER_ADDRESS[chainId], REWARD_LOCKER_ABI, withSignerIfPossible)
+export function useRewardLockerContracts(
+  withSignerIfPossible?: boolean
+): {
+  [key: string]: Contract
+} | null {
+  const rewardLockerAddresses = useRewardLockerAddresses()
+
+  return useMultipleContracts(rewardLockerAddresses, REWARD_LOCKER_ABI, withSignerIfPossible)
+}
+
+export function useRewardLockerContract(address: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, REWARD_LOCKER_ABI, withSignerIfPossible)
 }

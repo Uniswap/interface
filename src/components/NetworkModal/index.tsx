@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 
 import { NETWORK_ICON, NETWORK_LABEL } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from '../../state/application/hooks'
@@ -19,12 +19,12 @@ const ModalContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 24px;
+  padding: 20px;
   width: 100%;
   background-color: ${({ theme }) => theme.bg19};
   color: ${({ theme }) => theme.text1};
-  min-width: 272px;
-  max-width: 272px;
+  min-width: 180px;
+  max-width: 180px;
   border-radius: 16px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -32,11 +32,6 @@ const ModalContentWrapper = styled.div`
     bottom: 52px;
     left: 0;
   `};
-`
-
-const InstructionText = styled.div`
-  margin-bottom: 24px;
-  font-size: 14px;
 `
 
 const NetworkList = styled.div`
@@ -51,8 +46,8 @@ const ListItem = styled.div<{ selected?: boolean }>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 4px;
   background-color: ${({ theme, selected }) => (selected ? theme.bg8 : theme.bg12)};
 `
 
@@ -73,7 +68,7 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   &:hover {
     text-decoration: none;
     border: 1px solid ${({ theme }) => theme.primary1};
-    border-radius: 8px;
+    border-radius: 4px;
   }
   &:active {
     text-decoration: none;
@@ -96,17 +91,13 @@ export default function NetworkModal(): JSX.Element | null {
     <ModalContentWrapper>
       <ModalHeader title={t`Select a Network`} />
 
-      <InstructionText>
-        <Trans>You are currently browsing DMM on the {NETWORK_LABEL[chainId]}</Trans>
-      </InstructionText>
-
       <NetworkList>
         {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
           if (chainId === key) {
             return (
               <SelectNetworkButton key={i} padding="0">
                 <ListItem selected>
-                  <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '12px' }} />
+                  <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
                   <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
                 </ListItem>
               </SelectNetworkButton>
@@ -123,7 +114,7 @@ export default function NetworkModal(): JSX.Element | null {
               }}
             >
               <ListItem>
-                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '12px' }} />
+                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
                 <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
               </ListItem>
             </SelectNetworkButton>

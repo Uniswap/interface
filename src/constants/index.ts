@@ -250,8 +250,7 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS = 14
-export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
+export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]: number } = {
   [ChainId.MAINNET]: 13.13,
   [ChainId.RINKEBY]: 13.13,
   [ChainId.ROPSTEN]: 13.13,
@@ -266,17 +265,17 @@ export const AVERAGE_BLOCK_TIME_IN_SECSS: { [chainId in ChainId]: number } = {
 }
 
 export const BLOCKS_PER_YEAR: { [chainId in ChainId]: number } = {
-  [ChainId.MAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MAINNET]) * 60 * 24 * 365),
-  [ChainId.RINKEBY]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.RINKEBY]) * 60 * 24 * 365),
-  [ChainId.ROPSTEN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.ROPSTEN]) * 60 * 24 * 365),
-  [ChainId.GÖRLI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.GÖRLI]) * 60 * 24 * 365),
-  [ChainId.KOVAN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.KOVAN]) * 60 * 24 * 365),
-  [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MATIC]) * 60 * 24 * 365),
-  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.MUMBAI]) * 60 * 24 * 365),
-  [ChainId.BSCTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCTESTNET]) * 60 * 24 * 365),
-  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.BSCMAINNET]) * 60 * 24 * 365),
-  [ChainId.AVAXTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.AVAXTESTNET]) * 60 * 24 * 365),
-  [ChainId.AVAXMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECSS[ChainId.AVAXMAINNET]) * 60 * 24 * 365)
+  [ChainId.MAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MAINNET]) * 60 * 24 * 365),
+  [ChainId.RINKEBY]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.RINKEBY]) * 60 * 24 * 365),
+  [ChainId.ROPSTEN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.ROPSTEN]) * 60 * 24 * 365),
+  [ChainId.GÖRLI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.GÖRLI]) * 60 * 24 * 365),
+  [ChainId.KOVAN]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.KOVAN]) * 60 * 24 * 365),
+  [ChainId.MATIC]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MATIC]) * 60 * 24 * 365),
+  [ChainId.MUMBAI]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.MUMBAI]) * 60 * 24 * 365),
+  [ChainId.BSCTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BSCTESTNET]) * 60 * 24 * 365),
+  [ChainId.BSCMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.BSCMAINNET]) * 60 * 24 * 365),
+  [ChainId.AVAXTESTNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXTESTNET]) * 60 * 24 * 365),
+  [ChainId.AVAXMAINNET]: Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS[ChainId.AVAXMAINNET]) * 60 * 24 * 365)
 }
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
@@ -704,29 +703,6 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
         ],
   [ChainId.AVAXTESTNET]: ['0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'],
   [ChainId.AVAXMAINNET]: ['0x98910F7f13496fcDE2ade93648F05b4854Fc99D9', '0x854Cf246b09c7366AEe5abce92fA167bfE7f3E75']
-}
-
-export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
-      : '0xfab5186A194588F5AD5074Bd52659302906B4522',
-  [ChainId.ROPSTEN]: '0x912d70CeDbE55e9aB36431E3a86baD5351Da80B3',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD'
-      : '0x063DD8b5a42AaE93a014ce5FAbB5B70474667961',
-  [ChainId.MUMBAI]: '0x467E5df4fCCB44Af4C5904F7eafb94e3503Bd391',
-  [ChainId.BSCTESTNET]: '0x08Db265fE1C49fDCfEb775971abc2EcD1164a12d',
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x51E8D106C646cA58Caf32A47812e95887C071a62'
-      : '0xfab5186A194588F5AD5074Bd52659302906B4522',
-  [ChainId.AVAXTESTNET]: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
-  [ChainId.AVAXMAINNET]: '0xf530a090EF6481cfB33F98c63532E7745abab58A'
 }
 
 export const FARMING_POOLS: { [chainId in ChainId]: string[] } = {
