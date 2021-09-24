@@ -91,7 +91,7 @@ export default function SwapModalFooter({
                 : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
             </TYPE.black>
             <TYPE.black fontSize={14} marginLeft={'4px'}>
-              {trade.tradeType === TradeType.EXACT_INPUT ? nativeInput?.symbol : nativeOutput?.symbol}
+              {trade.tradeType === TradeType.EXACT_INPUT ? nativeOutput?.symbol : nativeInput?.symbol}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
