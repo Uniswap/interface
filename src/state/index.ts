@@ -13,6 +13,7 @@ import multicall from './multicall/reducer'
 import pair from './pair/reducer'
 import pools from './pools/reducer'
 import farms from './farms/reducer'
+import vesting from './vesting/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -29,7 +30,8 @@ const store = configureStore({
     lists,
     pair,
     pools,
-    farms
+    farms,
+    vesting
   },
   middleware: [
     ...getDefaultMiddleware({

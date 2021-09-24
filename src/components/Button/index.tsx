@@ -1,9 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'
-import { ChevronDown } from 'react-feather'
+import { ChevronUp, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 
 const Base = styled(RebassButton)<{
@@ -301,14 +301,43 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export function ButtonDropdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+export const StyledButtonDropdown = styled(Base)`
+  background-color: ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.primary1};
+  border-radius: 4px;
+  border: none;
+  font-size: 12px;
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+  }
+  &:hover {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+  }
+  &:active {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export function ButtonDropdown({
+  expanded = true,
+  disabled = false,
+  children,
+  ...rest
+}: { expanded: boolean; disabled?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
+
   return (
-    <ButtonPrimary {...rest} disabled={disabled}>
+    <StyledButtonDropdown {...rest} disabled={disabled}>
       <RowBetween>
         <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
-        <ChevronDown size={24} />
+        {expanded ? <ChevronUp size="18" color={theme.text1} /> : <ChevronDown size="18" color="white" />}
       </RowBetween>
-    </ButtonPrimary>
+    </StyledButtonDropdown>
   )
 }
 

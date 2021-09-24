@@ -8,6 +8,9 @@ export const getBscMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0x633237c6fa30fae46cc5bb22014da30e50a718cc') {
     //fiwa
     uri = `https://bscscan.com/token/images/defiwarrior_32b.png`
+  } else if (address?.toLowerCase() === '0xd6cce248263ea1e2b8cb765178c944fc16ed0727') {
+    //CTR
+    uri = `https://assets.coingecko.com/coins/images/18252/small/logo_%281%29.png`
   }
 
   if (!uri) {

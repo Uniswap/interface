@@ -212,8 +212,6 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "余额：{0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "桥接资产"
 
@@ -234,7 +232,7 @@ msgstr "通过添加此列表，您信任数据是正确的。 任何人都可�
 msgid "CLAIM"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "CLAIMED"
 msgstr "领取"
 
@@ -258,15 +256,15 @@ msgstr "改变"
 msgid "Checking allowance..."
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "领取"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
 msgid "Claim All"
 msgstr "领取全部"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Claimed Rewards"
 msgstr "领取奖励"
 
@@ -437,7 +435,7 @@ msgstr "文挡"
 msgid "Don't see a pool you joined?"
 msgstr "没看到您加入的池吗?"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Duration: {duration}"
 msgstr ""
 
@@ -461,7 +459,7 @@ msgstr "动态费用"
 #~ msgid "ENDING IN"
 #~ msgstr "截止"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
@@ -546,7 +544,7 @@ msgstr "非活动代币列表的扩展结果"
 msgid "Explore pools"
 msgstr "探索池"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "完全解锁"
 
@@ -586,7 +584,7 @@ msgstr "來自（估計）"
 msgid "Fully On-chain; <0/> Straightforward Integration"
 msgstr "完全链上； <0/> 直接整合"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Fully Vested"
 msgstr "完全释放"
 
@@ -743,7 +741,7 @@ msgstr "KyberDMM 交易费用根据链上市场情况<0>动态调整</0>。 在�
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
 msgstr "KyberDMM 的可编程定价曲线使流动性池创建者能够设置合适的定价曲线并提前创建放大池，实现"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "锁定"
 
@@ -781,7 +779,7 @@ msgstr "已加载"
 msgid "Loading"
 msgstr "加载中"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Locked Rewards"
 msgstr "锁定奖励"
 
@@ -911,6 +909,10 @@ msgstr "没有找到记录。"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "未找到结果。"
+
+#: src/components/Vesting/RewardLockerSchedules.tsx
+msgid "No vesting schedule!"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "No {type} pool found."
@@ -1152,7 +1154,7 @@ msgstr "删除 {0} {1} 和 {2} {3}"
 msgid "Reward"
 msgstr "奖励"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Rewards: {0} {1}"
 msgstr "奖励: {0} {1}"
 
@@ -1254,7 +1256,7 @@ msgstr "兑换"
 msgid "Swap Anyway"
 msgstr "Swap Anyway"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "总收成奖励"
 
@@ -1271,6 +1273,10 @@ msgstr ""
 #: src/components/swap/SwapModalFooter.tsx
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "由于交易规模，造成市场价格与您的价格之间的差异。 调整右上角配置中的价格影响容忍度。"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
@@ -1407,7 +1413,7 @@ msgstr "典型AMM"
 msgid "UNKNOWN"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "UNLOCKED"
 msgstr "解锁"
 
@@ -1419,11 +1425,15 @@ msgstr "未知"
 msgid "Unknown Source"
 msgstr "未知的来源"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Unlocked"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
 msgid "Unlocked Rewards"
 msgstr "解锁奖励"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Unlocked: {0} {1}"
 msgstr "解锁: {0} {1}"
 
@@ -1449,15 +1459,15 @@ msgstr "使用此工具查找不会自动出现在界面中的交易对。"
 msgid "V1"
 msgstr "V1"
 
-#: src/pages/Farms/vesting.tsx
-msgid "VESTING SCHEDULES"
+#: src/components/Vesting/index.tsx
+msgid "VESTING PERIODS"
 msgstr "释放日程"
 
 #: src/pages/Farms/index.tsx
 msgid "Vesting"
 msgstr "释放"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "释放开始: {0}"
 
@@ -1490,7 +1500,8 @@ msgstr "等待确认"
 msgid "Wallet Address or ENS name"
 msgstr "钱包地址或 ENS 名称"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
+#: src/components/Vesting/index.tsx
 msgid "What can KNC be used for?"
 msgstr ""
 
@@ -1509,10 +1520,6 @@ msgstr ""
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are creating a pool"
 msgstr ""
-
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "您当前正在 {0} 网络上浏览 DMM"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
@@ -1546,7 +1553,7 @@ msgstr "您的头寸"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 

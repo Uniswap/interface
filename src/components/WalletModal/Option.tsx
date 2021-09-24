@@ -49,6 +49,10 @@ const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
 
+const StyledLink = styled(ExternalLink)`
+  width: 100%;
+`
+
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
@@ -124,7 +128,7 @@ export default function Option({
     </OptionCardClickable>
   )
   if (link) {
-    return <ExternalLink href={link}>{content}</ExternalLink>
+    return <StyledLink href={link}>{content}</StyledLink>
   }
 
   return content

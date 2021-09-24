@@ -212,8 +212,6 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "잔액: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "브릿지 애셋"
 
@@ -234,7 +232,7 @@ msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적
 msgid "CLAIM"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "CLAIMED"
 msgstr "청구됨"
 
@@ -258,15 +256,15 @@ msgstr "변경"
 msgid "Checking allowance..."
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Claim"
 msgstr "클레임하기"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
 msgid "Claim All"
 msgstr "모두 클레임하기"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Claimed Rewards"
 msgstr "클레임된 보상"
 
@@ -437,7 +435,7 @@ msgstr "문서"
 msgid "Don't see a pool you joined?"
 msgstr "예치한 풀이 보이지 않습니까?"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Duration: {duration}"
 msgstr ""
 
@@ -461,7 +459,7 @@ msgstr "동적 수수료"
 #~ msgid "ENDING IN"
 #~ msgstr "종료"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
@@ -546,7 +544,7 @@ msgstr "비활성 토큰 목록 확장하기"
 msgid "Explore pools"
 msgstr "풀 둘러보기"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "전체 잠금 해제"
 
@@ -586,7 +584,7 @@ msgstr "부터(예상)"
 msgid "Fully On-chain; <0/> Straightforward Integration"
 msgstr "완전한 온체인; <0/> 간단한 연동"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Fully Vested"
 msgstr "베스팅 완료됨"
 
@@ -743,7 +741,7 @@ msgstr "카이버DMM 거래 수수료는 <0>동적으로 조정됩니다.</0> �
 msgid "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators to set a suitable pricing curve and create amplified pools in advance, achieving"
 msgstr "카이버DMM의 프로그래밍 가능한 가격 곡선을 통해 유동성 풀 생성자는 적절한 가격 곡선을 설정하고 사전에 증폭된 풀을 생성하여"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "잠김"
 
@@ -781,7 +779,7 @@ msgstr "불러움"
 msgid "Loading"
 msgstr "로딩중"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Locked Rewards"
 msgstr "잠긴 보상"
 
@@ -911,6 +909,10 @@ msgstr "기록이 없습니다."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "결과를 발견하지 못했습니다."
+
+#: src/components/Vesting/RewardLockerSchedules.tsx
+msgid "No vesting schedule!"
+msgstr ""
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "No {type} pool found."
@@ -1152,7 +1154,7 @@ msgstr "{0} {1} 및 {2} {3} 제거"
 msgid "Reward"
 msgstr "보상"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Rewards: {0} {1}"
 msgstr "보상: {0} {1}"
 
@@ -1254,7 +1256,7 @@ msgstr "토큰 스왑"
 msgid "Swap Anyway"
 msgstr "스왑하기"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
 msgstr "총 수확된 보상"
 
@@ -1271,6 +1273,10 @@ msgstr ""
 #: src/components/swap/SwapModalFooter.tsx
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "거래 규모로 인한 시장 가격과 귀하의 가격 간의 차이입니다. 오른쪽 상단 구성에서 슬립피지 가격 영향 허용 범위를 조정합니다."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "The price is deviating quite a lot from that market price, please be careful!"
+msgstr ""
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
@@ -1407,7 +1413,7 @@ msgstr "일반적인 AMM"
 msgid "UNKNOWN"
 msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "UNLOCKED"
 msgstr "잠금 해제"
 
@@ -1419,11 +1425,15 @@ msgstr "알 수 없음"
 msgid "Unknown Source"
 msgstr "불분명 한 출처"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/UnlockedBlock.tsx
+msgid "Unlocked"
+msgstr ""
+
+#: src/components/Vesting/index.tsx
 msgid "Unlocked Rewards"
 msgstr "잠금 해제된 보상"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Unlocked: {0} {1}"
 msgstr "잠금 해제: {0} {1}"
 
@@ -1449,15 +1459,15 @@ msgstr "이 도구를 사용하여 인터페이스에 자동으로 나타나지 
 msgid "V1"
 msgstr "V1"
 
-#: src/pages/Farms/vesting.tsx
-msgid "VESTING SCHEDULES"
+#: src/components/Vesting/index.tsx
+msgid "VESTING PERIODS"
 msgstr "베스팅 일정"
 
 #: src/pages/Farms/index.tsx
 msgid "Vesting"
 msgstr "베스팅"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "베스팅 시작됨: {0}"
 
@@ -1490,7 +1500,8 @@ msgstr "확인 대기 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
+#: src/components/Vesting/index.tsx
 msgid "What can KNC be used for?"
 msgstr ""
 
@@ -1509,10 +1520,6 @@ msgstr ""
 #: src/pages/AddLiquidity/index.tsx
 msgid "You are creating a pool"
 msgstr ""
-
-#: src/components/NetworkModal/index.tsx
-msgid "You are currently browsing DMM on the {0}"
-msgstr "현재 {0} 네트워크에서 DMM을 탐색 중입니다"
 
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "You don’t have liquidity in this {type} pool yet."
@@ -1546,7 +1553,7 @@ msgstr "당신의 위치"
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Farms/vesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
