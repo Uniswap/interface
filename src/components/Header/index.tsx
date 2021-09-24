@@ -309,6 +309,28 @@ export default function Header() {
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
 
+  const getBridgeLink = () => {
+    switch (chainId) {
+      case ChainId.MATIC:
+        return 'https://wallet.matic.network/bridge'
+      case ChainId.MUMBAI:
+        return 'https://wallet.matic.network/bridge'
+      case ChainId.BSCMAINNET:
+        return 'https://www.binance.org/en/bridge'
+      case ChainId.BSCTESTNET:
+        return 'https://www.binance.org/en/bridge'
+
+      case ChainId.AVAXMAINNET:
+        return 'https://bridge.avax.network'
+      case ChainId.AVAXTESTNET:
+        return 'https://bridge.avax.network'
+      default:
+        return ''
+    }
+  }
+
+  const bridgeLink = getBridgeLink()
+
   return (
     <HeaderFrame>
       <HeaderRow>
@@ -379,9 +401,9 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          {chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
+          {bridgeLink && (
             <HideExtraSmall>
-              <BridgeExternalLink href={'https://wallet.matic.network/bridge'}>
+              <BridgeExternalLink href={bridgeLink}>
                 <HideText>
                   <Trans>Bridge Assets</Trans>
                 </HideText>
@@ -389,27 +411,6 @@ export default function Header() {
               </BridgeExternalLink>
             </HideExtraSmall>
           )}
-          {chainId && [ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId) && (
-            <HideExtraSmall>
-              <BridgeExternalLink href={'https://www.binance.org/en/bridge'}>
-                <HideText>
-                  <Trans>Bridge Assets</Trans>
-                </HideText>
-                ↗
-              </BridgeExternalLink>
-            </HideExtraSmall>
-          )}
-          {chainId && [ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId) && (
-            <HideExtraSmall>
-              <BridgeExternalLink href={'https://bridge.avax.network'}>
-                <HideText>
-                  <Trans>Bridge Assets</Trans>
-                </HideText>
-                ↗
-              </BridgeExternalLink>
-            </HideExtraSmall>
-          )}
-
           <Web3Network />
 
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>

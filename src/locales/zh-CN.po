@@ -212,8 +212,6 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "余额：{0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "桥接资产"
 
