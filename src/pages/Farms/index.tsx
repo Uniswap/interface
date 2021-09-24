@@ -61,7 +61,7 @@ const Farms = () => {
   const blockNumber = useBlockNumber()
   const lgBreakpoint = useMedia('(min-width: 992px)')
   const { loading, data: farms } = useFarmsData()
-  const [activeTab, setActiveTab] = useState(1)
+  const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
   const fairLaunchContracts = useFairLaunchContracts()
