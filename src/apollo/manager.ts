@@ -35,12 +35,12 @@ export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
       }
     case ChainId.ROPSTEN:
       return EXCHANGE_SUBGRAPH_URLS.ropsten
-    case ChainId.RINKEBY:
-      return EXCHANGE_SUBGRAPH_URLS.ropsten
-    case ChainId.GÖRLI:
-      return EXCHANGE_SUBGRAPH_URLS.ropsten
-    case ChainId.KOVAN:
-      return EXCHANGE_SUBGRAPH_URLS.ropsten
+    // case ChainId.RINKEBY:
+    //   return EXCHANGE_SUBGRAPH_URLS.ropsten
+    // case ChainId.GÖRLI:
+    //   return EXCHANGE_SUBGRAPH_URLS.ropsten
+    // case ChainId.KOVAN:
+    //   return EXCHANGE_SUBGRAPH_URLS.ropsten
 
     case ChainId.MATIC:
       if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
@@ -114,4 +114,22 @@ export async function getExchangeSubgraphClient(chainId: ChainId): Promise<Apoll
   }
 
   return subgraphClients[bestIndex]
+}
+
+export const getExchangeSubgraphClients = async () => {
+  const chainIds = [
+    ChainId.MAINNET,
+    ChainId.ROPSTEN,
+    ChainId.MATIC,
+    ChainId.MUMBAI,
+    ChainId.BSCMAINNET,
+    ChainId.BSCTESTNET,
+    ChainId.AVAXMAINNET,
+    ChainId.AVAXTESTNET
+  ]
+  const promises = chainIds.map(chainId => getExchangeSubgraphClient(chainId))
+
+  const res = await Promise.all(promises)
+
+  return chainIds.reduce((obj, key, index) => ({ ...obj, [key]: res[index] }), {})
 }

@@ -257,7 +257,7 @@ export const useFarmHistories = (isModalOpen: boolean) => {
     }
 
     fetchFarmHistories()
-  }, [chainId, account, isModalOpen])
+  }, [chainId, account, isModalOpen, apolloClient])
 
   return { loading, data: histories }
 }

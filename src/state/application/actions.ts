@@ -51,6 +51,6 @@ export const updateKNCPrice = createAction<string | undefined>('application/upda
 
 export const updateChainIdWhenNotConnected = createAction<ChainId>('application/updateChainIdWhenNotConnected')
 
-export const setExchangeSubgraphClient = createAction<ApolloClient<NormalizedCacheObject>>(
+export const setExchangeSubgraphClient = createAction<{ [key: string]: ApolloClient<NormalizedCacheObject> }>(
   'application/setExchangeSubgraphClient'
 )
