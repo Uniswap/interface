@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-24 11:05\n"
+"PO-Revision-Date: 2021-09-24 12:05\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -89,7 +89,7 @@ msgstr "<0/> Mapendekezo Yote"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> Kura"
+msgstr "<0/> Kura"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -97,7 +97,7 @@ msgstr "<0>Uchanganuzi wa akaunti na makato iliyokusanywa</0><1> ↗ </1>"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
-msgstr "<0>Bei ya Sasa:</0><1><2 /></1><3>{0} kwa {1}</3>"
+msgstr "<0>Bei ya Sasa:</0><1><2/></1><3>{0} kwa {1}</3>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -109,23 +109,23 @@ msgstr "<0>Kidokezo:</0> Chagua kitendo na ueleze pendekezo lako kwa jamii. Pend
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Kidokezo:</0> Tumia zana hii kupata mabwawa ya v2 ambayo hayaonekani kiotomatiki kwenye kiolesura."
+msgstr "<0> Kidokezo:</0> Tumia zana hii kupata shares ya v2 ambayo hayaonekani kiotomatiki kwenye muonekano wa nje."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> Kidokezo:</0> Unapoongeza ukwasi, utapokea ishara za dimbwi zinazowakilisha msimamo wako. Hizi ishara moja kwa moja hupata ada kulingana na sehemu yako ya dimbwi, na inaweza kukombolewa wakati wowote."
+msgstr "<0>Kidokezo:</0> Unapoongeza mtaji, utapokea ishara za share zinazowakilisha msimamo wako. Hizi ishara moja kwa moja hupata ada kulingana na sehemu yako ya share, na inaweza kubadilika kwa matumisi kwa wakati wowote."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0> Kufungua upigaji kura</0> kujiandaa kwa pendekezo linalofuata."
+msgstr "<0>Kufungua upigaji kura</0> kujiandaa kwa pendekezo linalofuata."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0> 🎉</0> Karibu kwenye timu ya Unicorn :) <1> 🎉</1>"
+msgstr "<0>🎉 </0>Karibu kwenye timu ya Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Kizingiti cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
+msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -152,11 +152,11 @@ msgstr "Ongeza"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Ongeza <0 /> na <1 /> ili Kubadilisha V2"
+msgstr "Ongeza <0/> na <1/> kwenye Uniswap V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Ongeza Ujumbe +"
+msgstr "Ongeza Mjumbe +"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -181,11 +181,11 @@ msgstr "Ongeza {0} kwa Metamask <0/>"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Ongeza ukwasi {0}-{1}"
+msgstr "Ongeza mtaji {0}-{1}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Kuongeza {0}/{1} V3 ukwasi"
+msgstr "Kuongeza {0}/{1} V3 mtaji"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -383,11 +383,11 @@ msgstr "Dai <0 /> kwa {0}"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Dai UNI"
+msgstr "Chukua UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Dai Mshahara wa UNI"
+msgstr "Chukua UNI tokeni"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
@@ -399,25 +399,25 @@ msgstr "Ada ya madai"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Dai dai ishara zako za UNI"
+msgstr "Chukua UNI tokeni yako"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Alidai"
+msgstr "Ushachukua"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "UNI inayodaiwa!"
+msgstr "Ushachukua UNI!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "Alidai!"
+msgstr "Ushachukua!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
-msgstr "Kudai"
+msgstr "Inachukuliwa"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
@@ -426,7 +426,7 @@ msgstr "Kudai UNI"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Kudai {0} UNI"
+msgstr "Inachukuliwa {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
