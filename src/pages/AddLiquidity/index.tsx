@@ -440,7 +440,7 @@ export default function AddLiquidity({
         history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, history, currencyIdA, chainId]
+    [currencyIdB, history, currencyIdA, isWrappedTokenInPool, currencyA, pairAddress, chainId]
   )
   const handleCurrencyBSelect = useCallback(
     (selectedCurrencyB: Currency) => {
@@ -458,7 +458,7 @@ export default function AddLiquidity({
         history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB, chainId]
+    [currencyIdA, history, currencyIdB, isWrappedTokenInPool, currencyB, pairAddress, chainId]
   )
 
   const handleDismissConfirmation = useCallback(() => {

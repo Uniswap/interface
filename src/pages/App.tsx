@@ -29,7 +29,6 @@ const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ 
 const PoolFinderExternal = lazy(() =>
   import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal')
 )
-const Vesting = lazy(() => import(/* webpackChunkName: 'vesting-page' */ './Farms/vesting'))
 const Migration = lazy(() => import(/* webpackChunkName: 'migration-page' */ './Pool/lp'))
 const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page' */ './AddLiquidity'))
 const RemoveLiquidity = lazy(() => import(/* webpackChunkName: 'remove-liquidity-page' */ './RemoveLiquidity'))
@@ -153,7 +152,6 @@ export default function App() {
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
                     <Route exact strict path="/farms" component={Farms} />
-                    <Route exact strict path="/farms/:lp" component={Vesting} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <Route exact strict path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />

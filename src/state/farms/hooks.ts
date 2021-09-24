@@ -148,7 +148,7 @@ export const useFarmsData = () => {
 
         dispatch(setFarmsData({ farms }))
       } catch (error) {
-        dispatch(setError(error))
+        dispatch(setError(error as Error))
       }
 
       dispatch(setLoading(false))

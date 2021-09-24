@@ -8,11 +8,11 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 `
 
 function ModalHeader({ title = undefined }: { title?: string }): JSX.Element {
-  return <Wrapper>{title && <TYPE.mediumHeader>{title}</TYPE.mediumHeader>}</Wrapper>
+  return <Wrapper>{title && <TYPE.body>{title}</TYPE.body>}</Wrapper>
 }
 
 export default ModalHeader

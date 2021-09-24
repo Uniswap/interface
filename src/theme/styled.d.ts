@@ -63,6 +63,7 @@ export interface Colors {
 
   // border colors
   border: Color
+  border2: Color
 
   // table colors
   oddRow: Color

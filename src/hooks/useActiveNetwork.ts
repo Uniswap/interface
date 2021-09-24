@@ -8,6 +8,7 @@ import useParsedQueryString from './useParsedQueryString'
 import { ChainId } from 'libs/sdk/src'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
+import { isMobile } from 'react-device-detect'
 
 export const SWITCH_NETWORK_PARAMS: {
   [chainId in ChainId]?: {
@@ -96,7 +97,7 @@ function parseNetworkId(maybeSupportedNetwork: string): SupportedNetwork | undef
 }
 
 export function useActiveNetwork() {
-  const { chainId, library, account } = useActiveWeb3React()
+  const { chainId, library, account, connector } = useActiveWeb3React()
   const history = useHistory()
   const location = useLocation()
   const qs = useParsedQueryString()
@@ -112,10 +113,19 @@ export function useActiveNetwork() {
 
   const changeNetwork = useCallback(
     async (chainId: ChainId) => {
+      // Disconnect wallet on mobile when switch chain
+      if (isMobile && (connector as any)?.close) {
+        await (connector as any).close()
+        dispatch(updateChainIdWhenNotConnected(chainId))
+        return
+      }
+
       const isNotConnected = !(library && library.provider && library.provider.isMetaMask)
       if (isNotConnected) {
         dispatch(updateChainIdWhenNotConnected(chainId))
-        setTimeout(() => history.push(target), 3000)
+        setTimeout(() => {
+          history.push(target)
+        }, 3000)
         return
       }
 
