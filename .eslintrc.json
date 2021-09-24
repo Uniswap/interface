@@ -44,6 +44,10 @@
           {
             "name": "styled-components",
             "message": "Please import from styled-components/macro."
+          },
+          {
+            "name": "ethers",
+            "message": "Please import from @ethersproject."
           }
         ],
         "patterns": ["!styled-components/macro"]

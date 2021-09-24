@@ -1384,14 +1384,16 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@davatar/react@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.1.0.tgz#8fdeee6ebecd8da3e7c7d1de0df5db60919517c6"
-  integrity sha512-TYgLp3xDl5+jPRK9HO7viegl9o98MKquJK0HRP3iUycePEMag/z5nSQKiwtQaUh+dJZtuPkq2FjkHdIyw8qAPQ==
+"@davatar/react@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.6.0.tgz#5bcff32ae4cf79398e86bc58a1596301f72c8e9f"
+  integrity sha512-C0AM4NWkE6lNAtc2ItD4yApnumj8WzpViIpr58ofDqv7dSBf9CPiZY42OrwZkIGN+UC+k2tNtUEmbneF2L2LaA==
   dependencies:
+    "@ethersproject/providers" "^5.4.5"
+    "@types/react-blockies" "^1.4.1"
     color "^3.2.1"
-    ethers "^5.4.6"
     mersenne-twister "^1.1.0"
+    react-blockies "^1.4.1"
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -1724,7 +1726,7 @@
   dependencies:
     "@ethersproject/logger" "^5.4.0"
 
-"@ethersproject/providers@5.4.5":
+"@ethersproject/providers@5.4.5", "@ethersproject/providers@^5.4.5":
   version "5.4.5"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.4.5.tgz#eb2ea2a743a8115f79604a8157233a3a2c832928"
   integrity sha512-1GkrvkiAw3Fj28cwi1Sqm8ED1RtERtpdXmRfwIBGmqBSN5MoeRUHuwHPppMtbPayPgpFcvD7/Gdc9doO5fGYgw==
@@ -3753,6 +3755,13 @@
   version "6.9.7"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
   integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
+
+"@types/react-blockies@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@types/react-blockies/-/react-blockies-1.4.1.tgz#d5f6fff8ece3e90f2e7708f8f3156c87333312df"
+  integrity sha512-aDX0g0hwzdodkGLSDNUQr6gXxwclGjnhS8jhsR8uQhAfe/7i3GZD/NDcSlQ2SiQiLhfRxX3NlY+nvBwf5Y0tTg==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dom@>=16.9.0", "@types/react-dom@^17.0.1":
   version "17.0.9"
@@ -15398,7 +15407,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -15641,6 +15650,13 @@ react-app-polyfill@^2.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
+
+react-blockies@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-blockies/-/react-blockies-1.4.1.tgz#d4f0faf95ac197213a297a370a4d7f77ea3d0b08"
+  integrity sha512-4N015X5oPNnD3xQPsiqolOFzPZSSWyc5mJhJUZShUCHtiGUxVN+1qsWTcglkHMNySux9hUofaispqcw9QkWP5Q==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-clientside-effect@^1.2.2:
   version "1.2.5"
@@ -18355,9 +18371,9 @@ typical@^2.6.0, typical@^2.6.1:
   resolved "https://registry.yarnpkg.com/typical/-/typical-2.6.1.tgz#5c080e5d661cbbe38259d2e70a3c7253e873881d"
   integrity sha1-XAgOXWYcu+OCWdLnCjxyU+hziB0=
 
-ua-parser-js@^0.7.28:
+ua-parser-js@^0.7.18, ua-parser-js@^0.7.28:
   version "0.7.28"
-  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.28.tgz"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
 
 uint8arrays@^2.1.3:
