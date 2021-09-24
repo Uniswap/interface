@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
-import { exchangeClient } from 'apollo/client'
 import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
 import { ChainId, Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
 import { updatePools, setLoading, setError } from './actions'
 import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get24hValue } from 'utils'
 import { useActiveWeb3React } from 'hooks'
+import { useExchangeClient } from 'state/application/hooks'
 
 export interface SubgraphPoolData {
   id: string
@@ -145,9 +145,14 @@ function parseData(data: any, oneDayData: any, ethPrice: any, oneDayBlock: any, 
   return data
 }
 
-export async function getBulkPoolData(poolList: string[], ethPrice?: string, chainId?: ChainId): Promise<any> {
+export async function getBulkPoolData(
+  poolList: string[],
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  ethPrice?: string,
+  chainId?: ChainId
+): Promise<any> {
   try {
-    const current = await exchangeClient[chainId as ChainId].query({
+    const current = await apolloClient.query({
       query: POOLS_BULK,
       variables: {
         allPools: poolList
@@ -164,7 +169,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
 
       const [oneDayResult] = await Promise.all(
         [b1].map(async block => {
-          const result = exchangeClient[chainId as ChainId].query({
+          const result = apolloClient.query({
             query: POOLS_HISTORICAL_BULK(block, poolList),
             fetchPolicy: 'network-only'
           })
@@ -182,7 +187,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string, cha
             let data = { ...pool }
             let oneDayHistory = oneDayData?.[pool.id]
             if (!oneDayHistory) {
-              const newData = await exchangeClient[chainId as ChainId].query({
+              const newData = await apolloClient.query({
                 query: POOL_DATA(pool.id, b1),
                 fetchPolicy: 'network-only'
               })
@@ -213,6 +218,7 @@ export function useBulkPoolData(
 } {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
+  const apolloClient = useExchangeClient()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -223,7 +229,7 @@ export function useBulkPoolData(
       try {
         if (poolList.length > 0 && !error && poolsData.length === 0) {
           dispatch(setLoading(true))
-          const pools = await getBulkPoolData(poolList as string[], ethPrice, chainId)
+          const pools = await getBulkPoolData(poolList as string[], apolloClient, ethPrice, chainId)
           dispatch(updatePools({ pools }))
         }
       } catch (error) {

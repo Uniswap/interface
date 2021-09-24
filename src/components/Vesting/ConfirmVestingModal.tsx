@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { t } from '@lingui/macro'
 
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { AppState } from 'state'

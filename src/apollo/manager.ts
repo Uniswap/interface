@@ -7,14 +7,14 @@ const EXCHANGE_SUBGRAPH_URLS = {
   mainnetStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'],
   ropsten: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten'],
   polygon: [
-    'https://polygon-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
-    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic'
+    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
+    'https://polygon-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-matic'
   ],
   polygonStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'],
   mumbai: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'],
   bsc: [
-    'https://bsc-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-bsc',
-    'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-bsc'
+    'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-bsc',
+    'https://bsc-subgraph.dmm.exchange/subgraphs/name/dynamic-amm/dmm-exchange-bsc'
   ],
   bscStaging: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'],
   bscTestnet: ['https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten'],
@@ -35,6 +35,13 @@ export function getExchangeSubgraphUrls(networkId: ChainId): string[] {
       }
     case ChainId.ROPSTEN:
       return EXCHANGE_SUBGRAPH_URLS.ropsten
+    case ChainId.RINKEBY:
+      return EXCHANGE_SUBGRAPH_URLS.ropsten
+    case ChainId.GÖRLI:
+      return EXCHANGE_SUBGRAPH_URLS.ropsten
+    case ChainId.KOVAN:
+      return EXCHANGE_SUBGRAPH_URLS.ropsten
+
     case ChainId.MATIC:
       if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
         return EXCHANGE_SUBGRAPH_URLS.polygonStaging
@@ -78,24 +85,31 @@ export async function getExchangeSubgraphClient(chainId: ChainId): Promise<Apoll
       })
   )
 
+  const subgraphPromises = subgraphClients.map(client =>
+    client
+      .query({
+        query: SUBGRAPH_BLOCK_NUMBER(),
+        fetchPolicy: 'network-only'
+      })
+      .catch(e => {
+        console.error(e)
+        return e
+      })
+  )
+
+  const subgraphQueryResults = await Promise.all(subgraphPromises)
+
+  const subgraphBlockNumbers = subgraphQueryResults.map(res =>
+    res instanceof Error ? 0 : res?.data?._meta?.block?.number || 0
+  )
+
   let bestIndex = 0
   let maxBlockNumber = 0
 
   for (let i = 0; i < subgraphClients.length; i += 1) {
-    try {
-      const result = await subgraphClients[i].query({
-        query: SUBGRAPH_BLOCK_NUMBER(),
-        fetchPolicy: 'network-only'
-      })
-
-      const blockNumber = result?.data?._meta?.block?.number
-
-      if (blockNumber && blockNumber > maxBlockNumber) {
-        maxBlockNumber = blockNumber
-        bestIndex = i
-      }
-    } catch (err) {
-      console.error(err)
+    if (subgraphBlockNumbers[i] > maxBlockNumber) {
+      maxBlockNumber = subgraphBlockNumbers[i]
+      bestIndex = i
     }
   }
 

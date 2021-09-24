@@ -2,7 +2,6 @@ import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
-import { exchangeClient } from 'apollo/client'
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
 import { ChainId, Token, WETH, ETHER } from 'libs/sdk/src'
 import { KNC, ZERO_ADDRESS, COINGECKO_NETWORK_ID } from '../../constants'
@@ -19,6 +18,11 @@ import {
 } from './actions'
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
 import { useDeepCompareEffect } from 'react-use'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+
+export function useExchangeClient() {
+  return useSelector((state: AppState) => state.application.exchangeSubgraphClient)
+}
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
@@ -119,7 +123,7 @@ export function useActivePopups(): AppState['application']['popupList'] {
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
-const getEthPrice = async (chainId?: ChainId) => {
+const getEthPrice = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime
     .subtract(1, 'day')
@@ -132,11 +136,11 @@ const getEthPrice = async (chainId?: ChainId) => {
 
   try {
     const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
-    const result = await exchangeClient[chainId as ChainId].query({
+    const result = await apolloClient.query({
       query: ETH_PRICE(),
       fetchPolicy: 'network-only'
     })
-    const resultOneDay = await exchangeClient[chainId as ChainId].query({
+    const resultOneDay = await apolloClient.query({
       query: ETH_PRICE(oneDayBlock),
       fetchPolicy: 'network-only'
     })
@@ -157,12 +161,13 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
+  const apolloClient = useExchangeClient()
 
   const ethPrice = useSelector((state: AppState) => state.application.ethPrice)
 
   useEffect(() => {
     async function checkForEthPrice() {
-      const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice(chainId as ChainId)
+      const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice(chainId as ChainId, apolloClient)
       dispatch(
         updateETHPrice({
           currentPrice: (newPrice ? newPrice : 0).toString(),
@@ -172,7 +177,7 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
       )
     }
     checkForEthPrice()
-  }, [ethPrice, dispatch, chainId, blockNumber])
+  }, [ethPrice, dispatch, chainId, blockNumber, apolloClient])
 
   return ethPrice
 }
@@ -180,11 +185,11 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
 /**
  * Gets the current price of KNC by ETH
  */
-const getKNCPriceByETH = async (chainId?: ChainId) => {
+const getKNCPriceByETH = async (chainId: ChainId, apolloClient: ApolloClient<NormalizedCacheObject>) => {
   let kncPriceByETH = 0
 
   try {
-    const result = await exchangeClient[chainId as ChainId].query({
+    const result = await apolloClient.query({
       query: TOKEN_DERIVED_ETH(KNC[chainId as ChainId].address),
       fetchPolicy: 'no-cache'
     })
@@ -204,17 +209,18 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
   const ethPrice = useETHPrice()
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
+  const apolloClient = useExchangeClient()
 
   const kncPrice = useSelector((state: AppState) => state.application.kncPrice)
 
   useEffect(() => {
     async function checkForKNCPrice() {
-      const kncPriceByETH = await getKNCPriceByETH(chainId)
+      const kncPriceByETH = await getKNCPriceByETH(chainId as ChainId, apolloClient)
       const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
       dispatch(updateKNCPrice(kncPrice?.toString()))
     }
     checkForKNCPrice()
-  }, [kncPrice, dispatch, ethPrice.currentPrice, chainId, blockNumber])
+  }, [kncPrice, dispatch, ethPrice.currentPrice, chainId, blockNumber, apolloClient])
 
   return kncPrice
 }
@@ -222,11 +228,11 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
 /**
  * Gets the current price of KNC by ETH
  */
-const getTokenPriceByETH = async (tokenAddress: string, chainId?: ChainId) => {
+const getTokenPriceByETH = async (tokenAddress: string, apolloClient: ApolloClient<NormalizedCacheObject>) => {
   let tokenPriceByETH = 0
 
   try {
-    const result = await exchangeClient[chainId as ChainId].query({
+    const result = await apolloClient.query({
       query: TOKEN_DERIVED_ETH(tokenAddress),
       fetchPolicy: 'no-cache'
     })
@@ -245,6 +251,7 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
   const ethPrice = useETHPrice()
   const { chainId } = useActiveWeb3React()
   const [prices, setPrices] = useState<number[]>([])
+  const apolloClient = useExchangeClient()
 
   useDeepCompareEffect(() => {
     async function checkForTokenPrice() {
@@ -261,7 +268,7 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
           return parseFloat(ethPrice.currentPrice)
         }
 
-        const tokenPriceByETH = await getTokenPriceByETH(token?.address, chainId)
+        const tokenPriceByETH = await getTokenPriceByETH(token?.address, apolloClient)
         const tokenPrice = tokenPriceByETH * parseFloat(ethPrice.currentPrice)
 
         return tokenPrice
