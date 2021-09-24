@@ -117,12 +117,13 @@ const RewardLockerSchedules = ({
     dispatch(setTxHash(''))
 
     try {
-      const addresses = Object.keys(info).map(k => info[k].token.address)
+      const addresses = Object.values(info)
+        .filter(item => item.vestableIndexes.length > 0)
+        .map(item => item.token.address)
       const indices = Object.keys(info).reduce<number[][]>((acc, k) => {
-        acc.push(info[k].vestableIndexes)
+        if (info[k].vestableIndexes.length > 0) acc.push(info[k].vestableIndexes)
         return acc
       }, [])
-
       const txHash = await vestMultipleTokensAtIndices(addresses, indices)
       dispatch(setTxHash(txHash))
     } catch (err) {
