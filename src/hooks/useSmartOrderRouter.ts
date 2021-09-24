@@ -22,6 +22,7 @@ import { Trade } from '@uniswap/v3-sdk'
 import { useEffect, useMemo, useState } from 'react'
 import { V3TradeState } from 'state/routing/types'
 import { useFreshData } from 'state/routing/useRoutingAPITrade'
+import {getQuote} from 'utils/routerWorkerWrapper'
 
 import { useActiveWeb3React } from './web3'
 

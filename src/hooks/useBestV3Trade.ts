@@ -4,9 +4,9 @@ import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 
-import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
+import { useSmartOrderTrade } from './useSmartOrderRouterWorker'
 
 /**
  * Returns the best v3 trade for a desired swap.
@@ -51,7 +51,7 @@ export function useBestV3Trade(
   const useFallback = !routingAPIEnabled || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed
-  const bestV3Trade = useClientSideV3Trade(
+  const bestV3Trade = useSmartOrderTrade(
     tradeType,
     useFallback ? debouncedAmount : undefined,
     useFallback ? otherCurrency : undefined

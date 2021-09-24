@@ -6,6 +6,6 @@ const worker = new Worker()
 const obj = Comlink.wrap(worker) as any
 
 export async function getQuote({ type }: { type: TradeType }) {
-  const quote = await obj.getQuote(type)
-  console.log(quote)
+  const quote = await obj.getQuote({type})
+  console.log('judo',quote)
 }
