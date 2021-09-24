@@ -5,11 +5,22 @@ import { AppDispatch, AppState } from '../index'
 import { ApplicationModal, MainnetGasPrice, PopupContent, setOpenModal } from './actions'
 import { toast } from 'react-toastify'
 import PopupItem from '../../components/Popups/PopupItem'
+import { useBridge } from '../../hooks/useArbBridge'
 
 export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
+}
+
+export function useBlockNumberPair() {
+  const {
+    chainIdPair: { l1ChainId, l2ChainId }
+  } = useBridge()
+  const l1BlockNumber = useSelector((state: AppState) => state.application.blockNumber[l1ChainId ?? -1])
+  const l2BlockNumber = useSelector((state: AppState) => state.application.blockNumber[l2ChainId ?? -1])
+
+  return [l1BlockNumber, l2BlockNumber]
 }
 
 export function useMainnetGasPrices(): { [speed in MainnetGasPrice]: string } | null {

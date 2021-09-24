@@ -5,9 +5,9 @@ import { BridgeTxn, BridgeTxnStatus } from './types'
 
 const PREFIX = 'bridgeTxn/'
 
-export const addBridgeTxn = createAction<Omit<BridgeTxn, 'timestampCreated' | 'timestampResolved'>>(
-  PREFIX + 'addTransaction'
-)
+export const addBridgeTxn = createAction<
+  Omit<BridgeTxn, 'timestampCreated' | 'timestampResolved' | 'status' | 'withdrawalData'>
+>(PREFIX + 'addTransaction')
 export const updateBridgeTxnStatus = createAction<{ chainId: ChainId; txHash: string; status: BridgeTxnStatus }>(
   PREFIX + 'updateStatus'
 )
@@ -20,9 +20,8 @@ export const updateBridgeTxnResolvedTimestamp = createAction<{ chainId: ChainId;
 export const updateBridgeTxnReceipt = createAction<{
   chainId: ChainId
   txHash: string
-  layer: 1 | 2
   receipt: SerializableTransactionReceipt
 }>(PREFIX + 'updateReceipt')
-export const updateBridgeTxnL2Hash = createAction<{ chainId: ChainId; txHash: string; l2Hash: string }>(
-  PREFIX + 'updateL2Hash'
+export const updateBridgeTxnPartnerHash = createAction<{ chainId: ChainId; txHash: string; partnerTxHash: string }>(
+  PREFIX + 'updatePartnerHash'
 )
