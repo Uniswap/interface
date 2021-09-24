@@ -115,7 +115,8 @@ export function useActiveNetwork() {
     async (chainId: ChainId) => {
       // Disconnect wallet on mobile when switch chain
       if (isMobile && (connector as any)?.close) {
-        ;(connector as any).close()
+        await (connector as any).close()
+        dispatch(updateChainIdWhenNotConnected(chainId))
         return
       }
 
