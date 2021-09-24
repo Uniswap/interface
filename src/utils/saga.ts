@@ -58,7 +58,7 @@ interface MonitoredSagaOptions {
 }
 
 /**
- * A convinence utility to create a wrapped saga that handles common concerns like
+ * A convenience utility to create a wrapped saga that handles common concerns like
  * trigger watching, cancel watching, timeout, progress updates, and success/fail updates.
  * Use to create complex sagas that need more coordination with the UI.
  * Note: the wrapped saga and reducer this returns must be added to rootSaga.ts
