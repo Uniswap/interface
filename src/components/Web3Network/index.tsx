@@ -10,7 +10,6 @@ import DropdownSVG from 'assets/svg/dropdown.svg'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { ApplicationModal } from 'state/application/actions'
-import { isMobile } from 'react-device-detect'
 
 const NetworkSwitchContainer = styled.div`
   display: flex;
@@ -55,15 +54,13 @@ const NetworkLabel = styled.div`
 `
 
 function Web3Network(): JSX.Element | null {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, networkModalOpen ? toggleNetworkModal : undefined)
 
   if (!chainId) return null
-
-  if (isMobile && account) return null
 
   return (
     <NetworkCard onClick={() => toggleNetworkModal()} ref={node as any}>
