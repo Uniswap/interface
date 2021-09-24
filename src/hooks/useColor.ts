@@ -1,9 +1,9 @@
-import { useState, useLayoutEffect } from 'react'
-import { shade } from 'polished'
-import Vibrant from 'node-vibrant'
-import { hex } from 'wcag-contrast'
 import { Token } from '@uniswap/sdk-core'
+import Vibrant from 'node-vibrant'
+import { shade } from 'polished'
+import { useLayoutEffect, useState } from 'react'
 import uriToHttp from 'utils/uriToHttp'
+import { hex } from 'wcag-contrast'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId !== 1) {

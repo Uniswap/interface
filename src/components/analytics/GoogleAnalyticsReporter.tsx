@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import ReactGA from 'react-ga'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 import { RouteComponentProps } from 'react-router-dom'
+import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 function reportWebVitals({ name, delta, id }: Metric) {
   ReactGA.timing({

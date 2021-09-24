@@ -1,8 +1,8 @@
-import React, { FC, ReactElement, ReactNode } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
-import ThemeProvider from 'theme'
-import store from 'state'
+import React, { FC, ReactElement, ReactNode } from 'react'
 import { Provider } from 'react-redux'
+import store from 'state'
+import ThemeProvider from 'theme'
 
 const WithProviders: FC = ({ children }: { children?: ReactNode }) => {
   return (
