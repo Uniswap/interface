@@ -68,9 +68,9 @@ function getEtherscanDomain(chainId: ChainId): string {
     case ChainId.BSCMAINNET:
       return 'https://bscscan.com'
     case ChainId.AVAXTESTNET:
-      return 'https://cchain.explorer.avax-test.network/'
+      return 'https://cchain.explorer.avax-test.network'
     case ChainId.AVAXMAINNET:
-      return 'https://cchain.explorer.avax.network/'
+      return 'https://cchain.explorer.avax.network'
   }
 }
 
