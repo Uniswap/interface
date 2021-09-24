@@ -14,6 +14,7 @@ public class MainActivity extends ReactActivity {
     return "Uniswap";
   }
 
+  // Required for react-navigation to work on Android
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);
