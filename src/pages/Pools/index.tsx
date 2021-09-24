@@ -13,7 +13,6 @@ import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
 import { ChevronDown, X } from 'react-feather'
-import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { Currency, Token } from '@swapr/sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
@@ -23,12 +22,12 @@ import { useLPPairs } from '../../hooks/useLiquidityPositions'
 import PairsList from '../../components/Pool/PairsList'
 import CurrencyLogo from '../../components/CurrencyLogo'
 
-const VoteCard = styled.div`
+/* const VoteCard = styled.div`
   overflow: hidden;
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid ${({ theme }) => theme.bg2};
   border-radius: 8px;
-`
+` */
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -245,7 +244,7 @@ export default function Pools() {
             Import it.
           </StyledInternalLink>
         </TYPE.body> */}
-        <VoteCard style={{ marginTop: '32px' }}>
+        {/* <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
@@ -265,7 +264,7 @@ export default function Pools() {
               </RowBetween>
             </AutoColumn>
           </CardSection>
-        </VoteCard>
+        </VoteCard> */}
       </PageWrapper>
     </>
   )
