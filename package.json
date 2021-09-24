@@ -127,19 +127,18 @@
     "@walletconnect/ethereum-provider": "1.6.5"
   },
   "scripts": {
-    "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
-    "compile-external-abi-types": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
-    "compile-v3-contract-types": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
-    "build": "yarn compile-contract-types && yarn graphql:generate && yarn i18n:extract && yarn i18n:compile && react-scripts build",
-    "i18n:extract": "lingui extract --locale en-US",
-    "i18n:compile": "lingui compile",
-    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
+    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
+    "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "graphql:generate": "graphql-codegen --config codegen.yml",
-    "postinstall": "yarn compile-contract-types",
-    "start": "yarn compile-contract-types && react-scripts start",
-    "test": "react-scripts test --env=./custom-test-env.js",
     "prei18n:extract": "touch src/locales/en-US.po",
-    "prestart": "yarn graphql:generate && yarn prei18n:extract && yarn i18n:compile"
+    "i18n:extract": "lingui extract --locale en-US",
+    "i18n:compile": "yarn i18n:extract && lingui compile",
+    "postinstall": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=./custom-test-env.js",
+    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
   },
   "eslintConfig": {
     "extends": "react-app",
