@@ -1,3 +1,4 @@
+import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga'
@@ -24,7 +25,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
 
   const { chainId } = useActiveWeb3React()
   useEffect(() => {
-    ReactGA.set({ ['Chain ID']: chainId ?? 1 })
+    ReactGA.set({ ['Chain ID']: chainId ?? SupportedChainId.MAINNET })
   }, [chainId])
 
   useEffect(() => {
