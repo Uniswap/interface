@@ -1,5 +1,6 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { call, spawn } from 'redux-saga/effects'
+import { transferToken } from 'src/features/transfer/transferToken'
 import { createAccount } from 'src/features/wallet/createAccount'
 import { createMonitoredSaga, SagaActions, SagaState } from 'src/utils/saga'
 
@@ -23,6 +24,7 @@ export const monitoredSagas: {
   [name: string]: MonitoredSaga
 } = {
   createAccount: createMonitoredSaga(createAccount, 'createAccount'),
+  transferToken: createMonitoredSaga(transferToken, 'transferToken'),
 }
 
 type MonitoredSagaReducer = Reducer<Record<string, SagaState>>
