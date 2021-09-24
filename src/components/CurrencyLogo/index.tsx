@@ -3,7 +3,7 @@ import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import EtherLogo from '../../assets/images/ether-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
 import SWPRLogo from '../../assets/images/swpr-logo.png'
@@ -50,10 +50,10 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
-  [ChainId.ARBITRUM_ONE]: EthereumLogo,
-  [ChainId.ARBITRUM_RINKEBY]: EthereumLogo,
-  [ChainId.MAINNET]: EthereumLogo,
-  [ChainId.RINKEBY]: EthereumLogo,
+  [ChainId.ARBITRUM_ONE]: EtherLogo,
+  [ChainId.ARBITRUM_RINKEBY]: EtherLogo,
+  [ChainId.MAINNET]: EtherLogo,
+  [ChainId.RINKEBY]: EtherLogo,
   [ChainId.XDAI]: XDAILogo
 }
 

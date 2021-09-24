@@ -10,8 +10,8 @@ export interface FeesState {
         }
       }
     | undefined
-  readonly protocolFeeDenominator: Number
-  readonly protocolFeeTo: String | undefined
+  readonly protocolFeeDenominator: number
+  readonly protocolFeeTo: string | undefined
 }
 
 const initialState: FeesState = {
