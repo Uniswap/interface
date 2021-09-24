@@ -212,8 +212,6 @@ msgid "Balance: {0} {1}-{2} LP"
 msgstr "잔액: {0} {1}-{2} LP"
 
 #: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
-#: src/components/Header/index.tsx
 msgid "Bridge Assets"
 msgstr "브릿지 애셋"
 
