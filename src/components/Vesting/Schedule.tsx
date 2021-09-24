@@ -121,7 +121,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   )
 
   const claimBlock = !fullyVestedAlready && (
-    <AutoRow gap={'5px'} style={{ flex: '1' }}>
+    <AutoRow justify="center" style={{ flex: '1' }}>
       <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
         <Trans>
           Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}

@@ -58,7 +58,7 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
         </RowBetween>
       </Tag>
 
-      {Object.keys(info).length > 0 && (
+      {Object.keys(info).length > 0 && unlockedUSD > 0 && (
         <div>
           <ButtonPrimary height="30px" borderRadius="4px" onClick={onClaimAll}>
             <Trans>Claim All</Trans>

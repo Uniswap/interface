@@ -115,7 +115,9 @@ const FarmsList = ({ farms }: FarmsListProps) => {
       {renderHeader()}
       {farms.map((farm, index) => {
         if (farm) {
-          return <ListItem key={farm.stakeToken} farm={farm} oddRow={(index + 1) % 2 !== 0} />
+          return (
+            <ListItem key={`${farm.fairLaunchAddress}_${farm.stakeToken}`} farm={farm} oddRow={(index + 1) % 2 !== 0} />
+          )
         }
 
         return null
