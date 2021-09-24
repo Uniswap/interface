@@ -125,15 +125,15 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
           </MobileHidden>
           <Box>
             <AutoColumn gap="6px">
-              {staked && (
-                <PositiveBadgeRoot>
-                  <BadgeText>STAKING</BadgeText>
-                </PositiveBadgeRoot>
-              )}
               {apy.greaterThan('0') && (
                 <BadgeWrapper>
                   <ApyBadge apy={apy} />
                 </BadgeWrapper>
+              )}
+              {staked && (
+                <PositiveBadgeRoot>
+                  <BadgeText>STAKING</BadgeText>
+                </PositiveBadgeRoot>
               )}
             </AutoColumn>
           </Box>
