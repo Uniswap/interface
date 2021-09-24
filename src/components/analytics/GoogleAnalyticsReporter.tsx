@@ -1,3 +1,4 @@
+import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -20,6 +21,11 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
     getLCP(reportWebVitals)
     getCLS(reportWebVitals)
   }, [])
+
+  const { chainId } = useActiveWeb3React()
+  useEffect(() => {
+    ReactGA.set({ ['Chain ID']: chainId ?? 1 })
+  }, [chainId])
 
   useEffect(() => {
     ReactGA.pageview(`${pathname}${search}`)
