@@ -310,23 +310,11 @@ export default function Header() {
   const poolsMenuLink = getPoolsMenuLink(chainId)
 
   const getBridgeLink = () => {
-    switch (chainId) {
-      case ChainId.MATIC:
-        return 'https://wallet.matic.network/bridge'
-      case ChainId.MUMBAI:
-        return 'https://wallet.matic.network/bridge'
-      case ChainId.BSCMAINNET:
-        return 'https://www.binance.org/en/bridge'
-      case ChainId.BSCTESTNET:
-        return 'https://www.binance.org/en/bridge'
-
-      case ChainId.AVAXMAINNET:
-        return 'https://bridge.avax.network'
-      case ChainId.AVAXTESTNET:
-        return 'https://bridge.avax.network'
-      default:
-        return ''
-    }
+    if (!chainId) return ''
+    if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
+    if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
+    if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
+    return ''
   }
 
   const bridgeLink = getBridgeLink()
