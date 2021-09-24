@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 
 import store, { AppState } from '../../state'
 import { ExternalLink, TYPE } from '../../theme'
-import { getUserAgent } from '../../utils/getUserAgent'
+import { userAgent } from '../../utils/userAgent'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
@@ -137,7 +137,7 @@ function getRelevantState(): null | keyof AppState {
 
 function issueBody(error: Error): string {
   const relevantState = getRelevantState()
-  const deviceData = getUserAgent()
+  const deviceData = userAgent
   return `## URL
   
 ${window.location.href}

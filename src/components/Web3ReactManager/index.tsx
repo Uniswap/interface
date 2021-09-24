@@ -1,12 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 import { network } from '../../connectors'
 import { NetworkContextName } from '../../constants/misc'
 import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
-import Loader from '../Loader'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -36,25 +35,8 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   // when there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
   useInactiveListener(!triedEager)
 
-  // handle delayed loader state
-  const [showLoader, setShowLoader] = useState(false)
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowLoader(true)
-    }, 600)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [])
-
-  // on page load, do nothing until we've tried to connect to the injected connector
-  if (!triedEager) {
-    return null
-  }
-
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
-  if (!active && networkError) {
+  if (triedEager && !active && networkError) {
     return (
       <MessageWrapper>
         <Message>
@@ -64,15 +46,6 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
         </Message>
       </MessageWrapper>
     )
-  }
-
-  // if neither context is active, spin
-  if (!active && !networkActive) {
-    return showLoader ? (
-      <MessageWrapper>
-        <Loader />
-      </MessageWrapper>
-    ) : null
   }
 
   return children

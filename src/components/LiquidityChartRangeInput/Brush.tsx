@@ -43,8 +43,16 @@ const FLIP_HANDLE_THRESHOLD_PX = 20
 // margin to prevent tick snapping from putting the brush off screen
 const BRUSH_EXTENT_MARGIN_PX = 2
 
-const compare = (a1: [number, number], a2: [number, number], xScale: ScaleLinear<number, number>): boolean =>
-  xScale(a1[0]) !== xScale(a2[0]) || xScale(a1[1]) !== xScale(a2[1])
+/**
+ * Returns true if every element in `a` maps to the
+ * same pixel coordinate as elements in `b`
+ */
+const compare = (a: [number, number], b: [number, number], xScale: ScaleLinear<number, number>): boolean => {
+  // normalize pixels to 1 decimals
+  const aNorm = a.map((x) => xScale(x).toFixed(1))
+  const bNorm = b.map((x) => xScale(x).toFixed(1))
+  return aNorm.every((v, i) => v === bNorm[i])
+}
 
 export const Brush = ({
   id,
@@ -91,7 +99,7 @@ export const Brush = ({
       const scaled = (selection as [number, number]).map(xScale.invert) as [number, number]
 
       // avoid infinite render loop by checking for change
-      if (type === 'end' && compare(brushExtent, scaled, xScale)) {
+      if (type === 'end' && !compare(brushExtent, scaled, xScale)) {
         setBrushExtent(scaled, mode)
       }
 

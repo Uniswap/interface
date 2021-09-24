@@ -5,6 +5,7 @@ import { SupportedChainId } from './chains'
 import {
   AMPL,
   DAI,
+  DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
   ETH2X_FLI,
   ExtendedEther,
@@ -15,8 +16,10 @@ import {
   TRIBE,
   USDC,
   USDT,
+  USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
   WBTC,
+  WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
   WETH9_EXTENDED,
 } from './tokens'
@@ -38,6 +41,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
   [SupportedChainId.OPTIMISM]: [...WETH_ONLY[SupportedChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
+  [SupportedChainId.ARBITRUM_ONE]: [
+    ...WETH_ONLY[SupportedChainId.ARBITRUM_ONE],
+    DAI_ARBITRUM_ONE,
+    USDT_ARBITRUM_ONE,
+    WBTC_ARBITRUM_ONE,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [SupportedChainId.MAINNET]: {
@@ -84,14 +93,26 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.KOVAN]: [ExtendedEther.onChain(SupportedChainId.KOVAN), WETH9_EXTENDED[SupportedChainId.KOVAN]],
   [SupportedChainId.ARBITRUM_ONE]: [
     ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
+    DAI_ARBITRUM_ONE,
+    USDT_ARBITRUM_ONE,
+    WBTC_ARBITRUM_ONE,
     WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
     ExtendedEther.onChain(SupportedChainId.ARBITRUM_RINKEBY),
     WETH9_EXTENDED[SupportedChainId.ARBITRUM_RINKEBY],
   ],
-  [SupportedChainId.OPTIMISM]: [ExtendedEther.onChain(SupportedChainId.OPTIMISM)],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
+  [SupportedChainId.OPTIMISM]: [
+    ExtendedEther.onChain(SupportedChainId.OPTIMISM),
+    DAI_OPTIMISM,
+    USDT_OPTIMISM,
+    WBTC_OPTIMISM,
+    WETH9_EXTENDED[SupportedChainId.OPTIMISM],
+  ],
+  [SupportedChainId.OPTIMISTIC_KOVAN]: [
+    ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN),
+    WETH9_EXTENDED[SupportedChainId.OPTIMISTIC_KOVAN],
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

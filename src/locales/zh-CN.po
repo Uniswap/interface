@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-22 02:15\n"
+"PO-Revision-Date: 2021-09-22 18:04\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -274,7 +274,7 @@ msgstr "Arbitrum桥"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum 处于 Beta 阶段，可能会遇到停机问题。在停机期间，您的头寸不会赚取费用，您将无法移除流动性。 <0>阅读更多。</0>"
+msgstr "Arbitrum 处于 Beta 阶段，可能会遇到停机问题。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -375,7 +375,7 @@ msgstr "领取"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "领取 <0/> {0}"
+msgstr "为 {0} 领取 <0/>"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -465,7 +465,7 @@ msgstr "收取手续费"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "收集 {0}/{1} 手续费"
+msgstr "收取 {0}/{1} 手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -1182,7 +1182,7 @@ msgstr "Optimism 网关"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Optimistic 以太坊处于 Beta 阶段，可能会遇到停机问题。Optimistic 可能在近期停机升级网络。在停机期间，您的头寸不会赚取费用，您将无法移除流动性。 <0>阅读更多。</0>"
+msgstr "Optimistic 以太坊处于 Beta 阶段，可能会遇到停机问题。Optimistic 计划近期会停机升级网络。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1536,7 +1536,7 @@ msgstr "兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "将 <0/> 换为 <1/>"
+msgstr "将 <0/> 兑换成恰好 <1/>"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1545,7 +1545,7 @@ msgstr "仍要兑换"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "将 <0/> 换为 <1/>"
+msgstr "将恰好 <0/> 兑换成 <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1648,7 +1648,7 @@ msgstr "兑换到(至少数额)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "在 {0} 上开始交易，首先将您的资产从 L1 桥接到 L2。请将此视为 Beta 版并在使用 {1} 之前了解风险。"
+msgstr "在 {0} 上交易，首先须将您的资产从 L1 桥接到 L2。请将此视为 Beta 版并在使用 {1} 之前了解风险。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1827,7 +1827,7 @@ msgstr "展开"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to ETH"
-msgstr "将 <0/> 换为 ETH"
+msgstr "将 <0/> 换回为 ETH"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1932,11 +1932,11 @@ msgstr "投票赞成提案 {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr "为提案 {proposalKey} 投票"
+msgstr "投票赞成提案 {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "以“{0}”为由为提案 {proposalKey} 投票"
+msgstr "以“{0}”为由赞成提案 {proposalKey}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1945,7 +1945,7 @@ msgstr "针对提案 {proposalId} 投弃权票"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "为 {proposalKey} 投弃权票"
+msgstr "为提案 {proposalKey} 投弃权票"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
@@ -2055,7 +2055,7 @@ msgstr "您在此流动池中还未有流动资金。"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "您可能已经失去了网络连接，或者 {label} 可能正在关闭。"
+msgstr "您的网络连接可能已断开，或者 {label} 可能正处停机状态。"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."

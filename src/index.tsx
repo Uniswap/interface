@@ -4,7 +4,6 @@ import 'polyfills'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
-import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
@@ -25,6 +24,7 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
+import { isMobile } from './utils/userAgent'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
