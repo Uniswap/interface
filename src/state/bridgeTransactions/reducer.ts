@@ -2,10 +2,9 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   addBridgeTxn,
   updateBridgeTxnStatus,
-  //   updateBridgeTxnBlockNumber,
   updateBridgeTxnResolvedTimestamp,
   updateBridgeTxnReceipt,
-  updateBridgeTxnL2Hash
+  updateBridgeTxnPartnerHash
 } from './actions'
 import { BridgeTxnsState, BridgeTxnType } from './types'
 
@@ -34,19 +33,20 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
     .addCase(addBridgeTxn, (state, { payload: txn }) => {
       if (!txn.txHash) return
 
-      const { from, txHash } = txn
+      const { txHash, chainId } = txn
 
-      if (state[from]?.[txHash]) {
+      if (state[chainId]?.[txHash]) {
         throw Error('Attempted to add existing bridge transaction.')
       }
-      const transactions = state[from] ?? {}
+      const transactions = state[chainId] ?? {}
 
       transactions[txHash] = {
         ...txn,
+        status: 'pending',
         timestampCreated: now()
       }
 
-      state[from] = transactions
+      state[chainId] = transactions
     })
     .addCase(updateBridgeTxnStatus, (state, { payload: { chainId, txHash, status } }) => {
       if (!state[chainId]?.[txHash]) {
@@ -62,28 +62,36 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
 
       state[chainId][txHash].timestampResolved = timestamp
     })
-    .addCase(updateBridgeTxnReceipt, (state, { payload: { chainId, layer, receipt, txHash } }) => {
+    .addCase(updateBridgeTxnReceipt, (state, { payload: { chainId, receipt, txHash } }) => {
       if (!state[chainId]?.[txHash]) {
         throw Error('Transaction not found' + txHash)
       }
       const txn = state[chainId][txHash]
-      const resolvedLayer = `l${layer}Receipt` as 'l1Receipt' | 'l2Receipt'
 
-      txn[resolvedLayer] = receipt
-      txn.status = layer === 1 ? 'l1-confirmed' : 'l2-confirmed'
+      txn.receipt = receipt
 
+      switch (receipt.status) {
+        case 0: {
+          txn.status = 'failure'
+          break
+        }
+        case 1: {
+          txn.status = 'confirmed'
+          break
+        }
+        default:
+          console.warn('*** Status not included in transaction receipt *** ')
+          break
+      }
+
+      txn.timestampResolved = now()
       state[chainId][txHash] = txn
     })
-    .addCase(updateBridgeTxnL2Hash, (state, { payload: { chainId, txHash, l2Hash } }) => {
+    .addCase(updateBridgeTxnPartnerHash, (state, { payload: { chainId, txHash, partnerTxHash } }) => {
       if (!state[chainId]?.[txHash]) {
         throw Error('Transaction not found' + txHash)
       }
 
-      const txn = state[chainId][txHash]
-
-      txn.l2TxHash = l2Hash
-      txn.status = 'l2-pending'
-
-      state[chainId][txHash] = txn
+      state[chainId][txHash].partnerTxHash = partnerTxHash
     })
 )

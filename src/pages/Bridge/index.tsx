@@ -7,9 +7,9 @@ import AppBody from '../AppBody'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
-import { FooterBridgeSelector } from './FooterBridgeSelector'
+// import { FooterBridgeSelector } from './FooterBridgeSelector'
 import { FooterPending } from './FooterPending'
-import { FooterReady } from './FooterReady'
+// import { FooterReady } from './FooterReady'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgeButton } from './BridgeButton'
@@ -25,6 +25,8 @@ import {
   networkOptionsPreset,
   NetworkOptionProps
 } from '../../components/NetworkSwitcher'
+import { useArbBridge } from '../../hooks/useArbBridge'
+import { useBridgeTransactionsStatuses } from '../../state/bridgeTransactions/hooks'
 
 const Title = styled.p`
   margin: 0;
@@ -96,7 +98,6 @@ export default function Bridge() {
   } = useBridgeActionHandlers()
 
   const [step, setStep] = useState(Step.Initial)
-  const [bridge, setBridge] = useState('Swapr Fast Exit')
 
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
@@ -118,7 +119,6 @@ export default function Bridge() {
     onUserInput('')
     setStep(Step.Initial)
   }
-  const handleBridgeRadioChange = useCallback(event => setBridge(event.target.value), [])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -135,6 +135,11 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
+
+  const { depositEth } = useArbBridge()
+  const bridgeTransactions = useBridgeTransactionsStatuses()
+
+  const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
 
   return (
     <>
@@ -205,20 +210,20 @@ export default function Bridge() {
         ) : step === Step.Collect ? (
           <NetworkSwitcher sendToId={toNetwork.chainId} onCollectClick={() => setStep(Step.Success)} />
         ) : (
-          <BridgeButton onClick={() => setStep(Step.Pending)} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
+          <BridgeButton onClick={handleDeposit} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
             {!typedValue
               ? 'Enter ETH amount'
               : `Brigde to ${getNetworkOptionById(toNetwork.chainId, toOptions)?.header}`}
           </BridgeButton>
         )}
       </AppBody>
-      {step === Step.Initial && !!typedValue && (
+      {/* {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
-      )}
-      {step === Step.Pending && <FooterPending amount={typedValue} show />}
-      {step === Step.Ready && (
+      )} */}
+      <FooterPending show transactions={bridgeTransactions} />
+      {/* {step === Step.Ready && (
         <FooterReady amount={typedValue} show onCollectButtonClick={() => setStep(Step.Collect)} />
-      )}
+      )} */}
       <BridgeSuccesModal
         isOpen={step === Step.Success}
         onDismiss={handleResetBridge}
