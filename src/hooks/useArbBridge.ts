@@ -154,7 +154,8 @@ const withdrawEth = useCallback(
     try {
       // L2
       const withdrawTx = await bridge.withdrawETH(weiValue)
-      console.log('dispacz addBridgeTxn')
+      console.log('Call withdrawETH', withdrawTx)
+      console.log('Withdraw hash', withdrawTx.hash)
       dispatch(
         addBridgeTxn({
           assetName: 'ETH',
@@ -170,7 +171,7 @@ const withdrawEth = useCallback(
       )
 
       const withdrawReceipt = await withdrawTx.wait()
-      console.log('dispacz updateBridgeTxnReceipt')
+      console.log('Get withdraw receipt', withdrawReceipt)
       dispatch(
         updateBridgeTxnReceipt({
           chainId,
@@ -179,26 +180,25 @@ const withdrawEth = useCallback(
           receipt: withdrawReceipt
         })
       )
-      console.log('hash', withdrawTx.hash)
+      
       //withdrawal event
       const l2ToL2EventData = await bridge.getWithdrawalsInL2Transaction(withdrawReceipt)
-      
-      if (l2ToL2EventData.length === 0)
-      throw new Error(`Txn ${withdrawTx} did not initiate an outgoing messages`)
-
+      console.log("Call getWithdrawalsInL2Transaction and get event data")
+      // if (l2ToL2EventData.length === 0)
+      // throw new Error(`Txn ${withdrawTx} did not initiate an outgoing messages`)
+      console.log('Event data length:',l2ToL2EventData.length)
       if (l2ToL2EventData.length === 1) {
-        //const l2ToL2EventDataResult = l2ToL2EventData[0]
         const { batchNumber, indexInBatch } = l2ToL2EventData[0]
 
         let outgoingMessageState = await bridge.getOutGoingMessageState(
           batchNumber,
           indexInBatch
         )
-
+        console.log('Call getOutGoingMessageState: ', outgoingMessageState)
         console.log(
           `Waiting for message to be confirmed: Batchnumber: ${batchNumber}, IndexInBatch ${indexInBatch}`
         )
-        console.log('outgoing message state', outgoingMessageState)
+        
         
         while (outgoingMessageState !== OutgoingMessageState.CONFIRMED) {
           await wait(1000 * 5)
@@ -206,7 +206,8 @@ const withdrawEth = useCallback(
             batchNumber,
             indexInBatch
           )
-          
+          console.log('Updated outgoing message state', outgoingMessageState)
+
           switch (outgoingMessageState) {
             case OutgoingMessageState.NOT_FOUND: {
               console.log('Message not found; something strange and bad happened')
@@ -225,7 +226,7 @@ const withdrawEth = useCallback(
               break
           }
         }
-        console.log('outgoing message state', outgoingMessageState)
+        console.log('Outgoing message state after waiting for confirmation:', outgoingMessageState)
         
         /**
          * Now that its confirmed, we can retrieve the Merkle proof data from the chain, and execute our message in its outbox entry.
@@ -236,11 +237,9 @@ const withdrawEth = useCallback(
         const rec = await res.wait()
       
         console.log('Done! Your transaction is executed')
-        console.log(rec)
-        
-
+        console.log(rec)  
       }
-      // update balance
+      return withdrawReceipt
     } catch (err) {
       throw err
     }
