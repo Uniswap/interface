@@ -111,7 +111,7 @@ export default function Menu() {
 
   return (
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton onClick={toggle} aria-label="Menu">
         <StyledMenuIcon />
       </StyledMenuButton>
 

@@ -178,7 +178,7 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
+      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Settings">
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
