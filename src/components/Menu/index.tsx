@@ -16,6 +16,7 @@ import {
   Image,
   BarChart,
   Tool,
+  Watch,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -322,10 +323,12 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div>
                     <ChevronRight size={16} opacity={0.6} />
                   </ToggleMenuItem>
-                  <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
-                  </ToggleMenuItem>
+                  <InternalLinkMenuItem to="/donation-tracker">
+                   <div>
+                      <Trans>Donation Tracker</Trans>
+                   </div>
+                   <Watch style={{position:'relative', left: 10}} opacity={0.6} size={16} />
+                </InternalLinkMenuItem>
                 </MenuFlyout>
               )
           }

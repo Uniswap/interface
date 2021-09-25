@@ -1,6 +1,7 @@
 import { BigintIsh, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
+import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
 import Row from 'components/Row'
 import { USDC } from 'constants/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
@@ -184,6 +185,7 @@ const { account } = useWeb3React()
               <Route exact strict path="/themed-background" render={(props) => (
                 <ThemedBg theme={theme} setTheme={setThemeCb} />
               )} />
+              <Route exact strict path="/donation-tracker" component={DonationTracker} />
               <Route exact strict path="/proposal/create" component={AddProposal} />
               <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
               <Route exact strict path="/gains-tracker" component={GainsTracker} />
