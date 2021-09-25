@@ -6,11 +6,8 @@ import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import Settings from '../Settings'
 import Menu from '../Menu'
@@ -304,7 +301,6 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [isDark] = useDarkModeManager()
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
 
@@ -323,7 +319,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <IconImage src={isDark ? Logo : LogoDark} alt="logo" />
+            <IconImage src="images/159x108_App_Icon.png" alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>

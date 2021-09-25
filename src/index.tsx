@@ -1,6 +1,6 @@
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
-import React, { StrictMode } from 'react'
+import React, { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
@@ -58,28 +58,42 @@ if (process.env.REACT_APP_MAINNET_ENV === 'production') {
   initGoogleAnalytics()
 }
 
-ReactDOM.render(
-  <StrictMode>
-    <SEO
-      title="KyberDMM - Powering decentralized token exchange and liquidity"
-      description="KyberDMM is DeFi’s first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber’s liquidity hub."
-    />
-    <FixedGlobalStyle />
-    <Provider store={store}>
-      <HashRouter>
-        <LanguageProvider>
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <Web3ProviderNetwork getLibrary={getLibrary}>
-              <Updaters />
-              <ThemeProvider>
-                <ThemedGlobalStyle />
-                <App />
-              </ThemeProvider>
-            </Web3ProviderNetwork>
-          </Web3ReactProvider>
-        </LanguageProvider>
-      </HashRouter>
-    </Provider>
-  </StrictMode>,
-  document.getElementById('root')
-)
+const preloadhtml = document.querySelector('.preloadhtml')
+const preloadhtmlStyle = document.querySelector('.preloadhtml-style')
+const hideLoader = () => {
+  setTimeout(() => {
+    preloadhtml?.remove()
+    preloadhtmlStyle?.remove()
+  }, 100)
+}
+
+const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
+  useEffect(hideLoader, [])
+
+  return (
+    <StrictMode>
+      <SEO
+        title="KyberDMM - Powering decentralized token exchange and liquidity"
+        description="KyberDMM is DeFi‚Äôs first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber‚Äôs liquidity hub."
+      />
+      <FixedGlobalStyle />
+      <Provider store={store}>
+        <HashRouter>
+          <LanguageProvider>
+            <Web3ReactProvider getLibrary={getLibrary}>
+              <Web3ProviderNetwork getLibrary={getLibrary}>
+                <Updaters />
+                <ThemeProvider>
+                  <ThemedGlobalStyle />
+                  <App />
+                </ThemeProvider>
+              </Web3ProviderNetwork>
+            </Web3ReactProvider>
+          </LanguageProvider>
+        </HashRouter>
+      </Provider>
+    </StrictMode>
+  )
+}
+
+ReactDOM.render(<ReactApp hideLoader={hideLoader} />, document.getElementById('root'))
