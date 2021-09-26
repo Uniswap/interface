@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-24 13:08\n"
+"PO-Revision-Date: 2021-09-26 11:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -448,7 +448,7 @@ msgstr "Imefungwa"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
-msgstr "Kanuni"
+msgstr "Code"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
