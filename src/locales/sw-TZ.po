@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-26 11:06\n"
+"PO-Revision-Date: 2021-09-26 16:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -234,11 +234,11 @@ msgstr "Takwimu"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
-msgstr "Idhinisha"
+msgstr "Sibitisha"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr "Idhinisha Ishara"
+msgstr "Sibitisha Tokeni"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -246,23 +246,23 @@ msgstr "Idhinisha Ishara"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "Idhinisha {0}"
+msgstr "Sibitisha {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
-msgstr "Imeidhinishwa"
+msgstr "Imesibitishwa"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "Kuidhinisha"
+msgstr "Kusibitisha"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "Kuidhinisha {0}"
+msgstr "Kusibitisha {0}"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
@@ -306,11 +306,11 @@ msgstr "Nyuma"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
-msgstr "Usawa:"
+msgstr "Kiasi:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "Usawa: {0} {1}"
+msgstr "Kiasi: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
@@ -349,7 +349,7 @@ msgstr "Kwa kuunganisha mkoba, unakubali Sheria na Masharti ya Maabara yasiyobad
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
-msgstr "Imeghairiwa"
+msgstr "Imeghairishwa"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -465,7 +465,7 @@ msgstr "Kusanya makato"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "Kukusanya {0}/{1} ada"
+msgstr "Kukusanya {0}/{1} makato"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -477,7 +477,7 @@ msgstr "Kusanya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Kukusanya ada"
+msgstr "Kukusanya makato"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
@@ -693,7 +693,7 @@ msgstr "Tenganisha"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Utata"
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
