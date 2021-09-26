@@ -9,6 +9,7 @@ import { NETWORK_DETAIL } from '../constants'
 import { getChainPair, ChainIdPair } from '../utils/arbitrum'
 import { useDispatch } from 'react-redux'
 import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
+import { POOLING_INTERVAL } from '../utils/getLibrary'
 
 type BridgeContextType = {
   bridge: Bridge | null
@@ -72,13 +73,16 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
         // Withdraw
         if (isArbitrum) {
           const rpcUrl = NETWORK_DETAIL[partnerChainId].rpcUrls[0]
-
-          l1Signer = new providers.JsonRpcProvider(addInfuraKey(rpcUrl)).getSigner(account)
+          const l1Provider = new providers.JsonRpcProvider(addInfuraKey(rpcUrl))
+          l1Provider.pollingInterval = POOLING_INTERVAL
+          l1Signer = l1Provider.getSigner(account)
           l2Signer = library.getSigner()
           // Deposit
         } else {
+          const l2Provider = new providers.JsonRpcProvider(NETWORK_DETAIL[partnerChainId].rpcUrls[0])
+          l2Provider.pollingInterval = POOLING_INTERVAL
           l1Signer = library.getSigner()
-          l2Signer = new providers.JsonRpcProvider(NETWORK_DETAIL[partnerChainId].rpcUrls[0]).getSigner(account)
+          l2Signer = l2Provider.getSigner(account)
         }
 
         if (l1Signer && l2Signer) {
