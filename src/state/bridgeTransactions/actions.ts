@@ -1,7 +1,8 @@
 import { createAction } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
-import { SerializableTransactionReceipt } from '../transactions/actions'
 import { BridgeTxn } from './types'
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { OutgoingMessageState } from 'arb-ts'
 
 const PREFIX = 'bridgeTxn/'
 
@@ -17,7 +18,7 @@ export const updateBridgeTxnResolvedTimestamp = createAction<{ chainId: ChainId;
 export const updateBridgeTxnReceipt = createAction<{
   chainId: ChainId
   txHash: string
-  receipt: SerializableTransactionReceipt
+  receipt: TransactionReceipt
   seqNum?: number
 }>(PREFIX + 'updateReceipt')
 export const updateBridgeTxnPartnerHash = createAction<{
@@ -26,3 +27,11 @@ export const updateBridgeTxnPartnerHash = createAction<{
   partnerChainId: ChainId
   partnerTxHash: string
 }>(PREFIX + 'updatePartnerTxHash')
+
+export const updateBridgeTxnWithdrawalInfo = createAction<{
+  chainId: ChainId
+  txHash: string
+  batchIndex?: string
+  batchNumber?: string
+  outgoingMessageState: OutgoingMessageState
+}>(PREFIX + 'updateWithdrawalInfo')

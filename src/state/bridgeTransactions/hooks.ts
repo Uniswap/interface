@@ -1,3 +1,4 @@
+import { OutgoingMessageState } from 'arb-ts'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '..'
@@ -111,6 +112,31 @@ export const useBridgeL1Deposits = () => {
   }, [l1ChainId, l2ChainId, state])
 }
 
+
+export const useBridgePendingWithdrawals = () => {
+  const {
+    chainIdPair: { l2ChainId }
+  } = useBridge()
+  const state = useSelector<AppState, AppState['bridgeTransactions']>(state => state.bridgeTransactions)
+
+  return useMemo(() => {
+    let transactions: BridgeTxn[] = []
+
+    if (l2ChainId && state[l2ChainId]) {
+      const l2Txs = state[l2ChainId]
+
+      transactions = Object.values(l2Txs).filter(tx => (
+        tx.type === 'withdraw' &&
+        tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
+        tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
+      ))
+
+    }
+
+    return transactions
+  }, [l2ChainId, state])
+}
+
 export const useBridgeTransactionsSummary = () => {
   const {
     chainIdPair: { l1ChainId, l2ChainId }
@@ -189,6 +215,19 @@ export const useBridgeTransactionsSummary = () => {
         }
 
         if (!tx.partnerTxHash || !l1Txs[tx.partnerTxHash]) {
+          // display state of outgoing message state when withdrawal
+          if (tx.type === 'withdraw') {
+            switch (tx.outgoingMessageState) {
+              case OutgoingMessageState.CONFIRMED:
+                summary.status = 'confirmed'
+                break
+              case OutgoingMessageState.EXECUTED:
+                summary.status = 'failed'
+                break
+              default:
+                summary.status = 'pending'
+            }
+          }
           summary.log = createBridgeLog([tx])
           txMap[l2ChainId][tx.txHash] = tx.txHash
           total.push(summary)

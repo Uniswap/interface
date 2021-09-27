@@ -135,9 +135,8 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
-  // const { depositEth, withdrawEth } = useArbBridge()
+  // const { depositEth } = useArbBridge()
   const { withdrawEth } = useArbBridge()
-
   // const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
   const handleWithdraw = useCallback(() => withdrawEth(typedValue), [withdrawEth, typedValue])
 
