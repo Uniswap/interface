@@ -1,4 +1,3 @@
-import { SupportedChainId } from 'constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect } from 'react'
 import ReactGA from 'react-ga'
