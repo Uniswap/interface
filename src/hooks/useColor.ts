@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import Vibrant from 'node-vibrant'
+import Vibrant from 'node-vibrant/lib/bundle'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
 import uriToHttp from 'utils/uriToHttp'
