@@ -466,21 +466,23 @@ export default function About() {
               (c) dmm.exchange
             </Text>
           </div>
-          {farms.map(
-            (farm, index) =>
-              index === indexx && (
-                <Apr
-                  key={farm.id}
-                  farm={farm}
-                  onAprUpdate={(value: any) => {
-                    if (!!maxApr && value > maxApr) {
-                      setMaxApr(value)
-                      setIndexx(indexx + 1)
-                    }
-                  }}
-                />
-              )
-          )}
+          {Object.values(farms)
+            .flat()
+            .map(
+              (farm, index) =>
+                index === indexx && (
+                  <Apr
+                    key={farm.id}
+                    farm={farm}
+                    onAprUpdate={(value: any) => {
+                      if (!!maxApr && value > maxApr) {
+                        setMaxApr(value)
+                        setIndexx(indexx + 1)
+                      }
+                    }}
+                  />
+                )
+            )}
         </div>
       </div>
     </div>

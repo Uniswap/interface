@@ -2,20 +2,24 @@ import styled from 'styled-components'
 import { Flex } from 'rebass'
 
 export const PageWrapper = styled.div`
-  padding: 0 20rem;
+  padding: 12px 16px 100px;
   width: 100%;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
-  `};
+  @media only screen and (min-width: 768px) {
+    padding: 16px 16px 100px;
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
-  `};
+  @media only screen and (min-width: 1000px) {
+    padding: 16px 32px 100px;
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-  `};
+  @media only screen and (min-width: 1366px) {
+    padding: 16px 215px 50px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    padding: 16px 252px 50px;
+  }
 `
 
 export const GlobalDataContainer = styled.div`
