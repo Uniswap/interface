@@ -25,7 +25,7 @@ export default function GoogleAnalyticsReporter({ location: { pathname, search }
 
   const { chainId } = useActiveWeb3React()
   useEffect(() => {
-    ReactGA.set({ ['Chain ID']: chainId ?? SupportedChainId.MAINNET })
+    ReactGA.set({ ['Chain ID']: chainId ?? 0 })
   }, [chainId])
 
   useEffect(() => {
