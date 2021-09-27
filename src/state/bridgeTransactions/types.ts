@@ -27,17 +27,16 @@ export type BridgeTxnsState = {
 
 export type BridgeTxn = {
   type: BridgeTxnType
-  status: BridgeTxnStatus
   chainId: ChainId
   sender: string
   assetName: string
   assetType: BridgeAssetType
   value: string
   txHash: string
-  partnerTxHash?: string
   blockNumber?: number
   timestampResolved?: number
   timestampCreated: number
   receipt?: SerializableTransactionReceipt
-  withdrawalData?: Record<'batchNumber' | 'index', number>
+  seqNum?: number
+  partnerTxHash?: string
 }
