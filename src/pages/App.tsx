@@ -128,13 +128,13 @@ export default function App() {
     <>
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
         <ApolloProvider client={apolloClient || defaultExchangeClient}>
-          <Suspense fallback={<Loader />}>
-            <Route component={DarkModeQueryParamReader} />
-            <AppWrapper>
-              <URLWarning />
-              <HeaderWrapper>
-                <Header />
-              </HeaderWrapper>
+          <Route component={DarkModeQueryParamReader} />
+          <AppWrapper>
+            <URLWarning />
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <Suspense fallback={<Loader />}>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
                 <KNCPrice />
                 <Popups />
@@ -191,8 +191,8 @@ export default function App() {
                 </Web3ReactManager>
                 <Marginer />
               </BodyWrapper>
-            </AppWrapper>
-          </Suspense>
+            </Suspense>
+          </AppWrapper>
         </ApolloProvider>
       )}
     </>

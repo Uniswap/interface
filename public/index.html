@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="159x108" href="%PUBLIC_URL%/images/159x108_App_Icon.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ff007a" />
+    <meta name="theme-color" content="#08a1e7" />
     <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
     <meta
       name="description"
@@ -28,13 +28,100 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <title>KyberDMM - Powering decentralized token exchange and liquidity</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <style type="text/css" class="preloadhtml-style">
+      .preloadhtml {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #11171a;
+        font-family: 'Work Sans', 'Inter', sans-serif;
+      }
+
+      .preloadhtml-header {
+        display: flex;
+        padding: 1rem;
+        background-color: #233035;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        z-index: 2;
+      }
+
+      .preloadhtml-logo {
+        transition: transform 0.3s ease;
+        :hover {
+          transform: rotate(-5deg);
+        }
+      }
+
+      .preloadhtml-header-link {
+        display: flex;
+        align-items: center;
+        margin-left: 12px;
+        color: #c3c5cb;
+      }
+
+      .preloadhtml-header-link-item {
+        padding: 10px 12px;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        60% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+    <div class="preloadhtml">
+      <div class="preloadhtml-header">
+        <div>
+          <img width="100px" height="44px" src="./images/159x108_App_Icon.png" alt="DmmLogo" />
+        </div>
+        <div class="preloadhtml-header-link">
+          <div style="color: #fff; font-weight: 500;" class="preloadhtml-header-link-item">Swap</div>
+          <div class="preloadhtml-header-link-item">Pools</div>
+          <div class="preloadhtml-header-link-item" style="position: relative; margin-right: 16px;">
+            Yield
+            <div
+              style="position: absolute;
+                     top: 0;
+                     right: -4px;
+                     font-size: 10px;
+                     font-weight: 500;
+                     color: #ff537b;"
+            >
+              New
+            </div>
+          </div>
+          <div class="preloadhtml-header-link-item">My Dashboard</div>
+          <div class="preloadhtml-header-link-item">Analytics</div>
+          <div class="preloadhtml-header-link-item">Migrate Liquidity</div>
+          <div class="preloadhtml-header-link-item">About</div>
+        </div>
+      </div>
+      <div style="margin-top: 100px; display: flex;">
+        <img
+          style="animation: pulse 800ms linear infinite; margin: auto; "
+          width="72px"
+          src="./images/159x108_App_Icon.png"
+          alt="DmmLogo"
+        />
+      </div>
+    </div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

@@ -12,7 +12,7 @@ import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import useVesting from 'hooks/useVesting'
 import useTheme from 'hooks/useTheme'
 import { useAppDispatch } from 'state/hooks'
-import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
+import { useBlockNumber, useTokensPrice } from 'state/application/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
 import { TYPE } from 'theme'
 import { getTokenSymbol } from 'utils'
@@ -25,12 +25,9 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const { account, chainId } = useActiveWeb3React()
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useTheme()
-  const kncPrice = useKNCPrice()
+  const tokenPrices = useTokensPrice([schedule[4]])
   const { vestAtIndex } = useVesting(rewardLockerAddress)
-  const toUSD = useCallback(
-    value => kncPrice && value && `$${(parseFloat(kncPrice) * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
-    [kncPrice]
-  )
+
   const startTimestamp = useTimestampFromBlock(BigNumber.from(schedule[0]).toNumber())
   const endTimestamp =
     useTimestampFromBlock(BigNumber.from(schedule[1]).toNumber()) ||
@@ -80,6 +77,11 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const unvestableAmount = BigNumber.from(schedule[2])
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
     .div(100)
+
+  const toUSD: (value: BigNumber) => string | 0 = useCallback(
+    value => tokenPrices[0] && value && `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
+    [tokenPrices]
+  )
 
   const onVest = async () => {
     if (!chainId || !account) {
