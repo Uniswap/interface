@@ -1,132 +1,127 @@
-export const elo = 1
-// import { ChainId } from '@swapr/sdk'
-// import { providers, Signer } from 'ethers'
-// import { useCallback, useEffect, useMemo } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
-// import { useActiveWeb3React } from '../../hooks'
-// import { useBridge } from '../../hooks/useArbBridge'
-// import { retry, RetryableError, RetryOptions } from '../../utils/retry'
-// import { updateBlockNumber } from '../application/actions'
-// import { useAddPopup, useBlockNumber, useBlockNumberPair } from '../application/hooks'
-// import { AppState } from '../index'
-// import { checkedTransaction, finalizeTransaction } from './actions'
-// import { useBridgeTransactions } from './hooks'
+import { BigNumber } from 'ethers'
+import { useCallback, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
-// interface TxInterface {
-//   addedTime: number
-//   receipt?: Record<string, any>
-//   lastCheckedBlockNumber?: number
-// }
+import { useBridge } from '../../hooks/useArbBridge'
+import { addBridgeTxn, updateBridgeTxnPartnerHash, updateBridgeTxnReceipt } from './actions'
 
-// export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
-//   if (tx.receipt) return false
-//   if (!tx.lastCheckedBlockNumber) return true
-//   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
-//   if (blocksSinceCheck < 1) return false
-//   const minutesPending = (new Date().getTime() - tx.addedTime) / 1000 / 60
-//   if (minutesPending > 60) {
-//     // every 10 blocks if pending for longer than an hour
-//     return blocksSinceCheck > 9
-//   } else if (minutesPending > 5) {
-//     // every 3 blocks if pending more than 5 minutes
-//     return blocksSinceCheck > 2
-//   } else {
-//     // otherwise every block
-//     return true
-//   }
-// }
+import { useBridgePendingTransactions, useBridgeL1Deposits, useBridgeTransactions } from './hooks'
+import { txnTypeToLayer } from './reducer'
+import { BridgeTxn } from './types'
 
-// const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
-//   [ChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
-//   [ChainId.ARBITRUM_RINKEBY]: { n: 10, minWait: 250, maxWait: 1000 }
-// }
-// const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
+export default function Updater(): null {
+  const {
+    bridge,
+    chainIdPair: { l1ChainId, l2ChainId }
+  } = useBridge()
+  const dispatch = useDispatch()
 
-// export default function Updater(): null {
-//   const { chainId } = useActiveWeb3React()
-//   const bridge = useBridge()
-//   const [l1lastBlockNumber, l2lastBlockNumber] = useBlockNumberPair()
-//   const transactions = useBridgeTransactions()
+  const allTransactions = useBridgeTransactions()
+  const depositTransactions = useBridgeL1Deposits()
+  const pendingTransactions = useBridgePendingTransactions()
 
-//   const dispatch = useDispatch()
+  // Pending updater
+  const getReceipt = useCallback(
+    (tx: BridgeTxn) => {
+      const provider = txnTypeToLayer(tx.type) === 2 ? bridge?.l2Provider : bridge?.l1Provider
+      if (!provider) throw new Error('No provider on bridge')
 
-//   // show popup on confirm
-//   const addPopup = useAddPopup()
+      return provider.getTransactionReceipt(tx.txHash)
+    },
+    [bridge?.l1Provider, bridge?.l2Provider]
+  )
 
-//   const getReceipt = useCallback(
-//     (hash: string, provider: providers.JsonRpcProvider) => {
-//       if (!bridge || !chainId) throw new Error('No bridge or chainId')
-//       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
-//       return retry(
-//         () =>
-//           provider.getTransactionReceipt(hash).then(receipt => {
-//             if (receipt === null) {
-//               console.debug('Retrying for hash', hash)
-//               throw new RetryableError()
-//             }
-//             return receipt
-//           }),
-//         retryOptions
-//       )
-//     },
-//     [bridge, chainId]
-//   )
+  const pendingTxListener = useCallback(async () => {
+    if (!pendingTransactions.length) return
+    const receipts = await Promise.all(pendingTransactions.map(getReceipt))
+    receipts.forEach((txReceipt, index) => {
+      if (txReceipt) {
+        dispatch(
+          updateBridgeTxnReceipt({
+            chainId: pendingTransactions[index].chainId,
+            txHash: txReceipt.transactionHash,
+            receipt: txReceipt
+          })
+        )
+      }
+    })
+  }, [dispatch, getReceipt, pendingTransactions])
 
-//   useEffect(() => {
-//     if (!chainId || !bridge || !l1lastBlockNumber || !l2lastBlockNumber) return
+  useEffect(() => {
+    const intervalId = setInterval(pendingTxListener, 5000)
+    return () => clearInterval(intervalId)
+  }, [l1ChainId, l2ChainId, pendingTxListener])
 
-//     const cancels = Object.keys(transactions)
-//       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
-//       .map(hash => {
-//         const { promise, cancel } = getReceipt(hash)
-//         promise
-//           .then(receipt => {
-//             if (receipt) {
-//               dispatch(
-//                 finalizeTransaction({
-//                   chainId,
-//                   hash,
-//                   receipt: {
-//                     blockHash: receipt.blockHash,
-//                     blockNumber: receipt.blockNumber,
-//                     contractAddress: receipt.contractAddress,
-//                     from: receipt.from,
-//                     status: receipt.status,
-//                     to: receipt.to,
-//                     transactionHash: receipt.transactionHash,
-//                     transactionIndex: receipt.transactionIndex
-//                   }
-//                 })
-//               )
+  // Deposits updater
 
-//               addPopup({
-//                 txn: {
-//                   hash,
-//                   success: receipt.status === 1,
-//                   summary: transactions[hash]?.summary
-//                 }
-//               })
+  const getL2TxnHash = useCallback(
+    async (txn: BridgeTxn) => {
+      if (!bridge || !l2ChainId) {
+        return null
+      }
+      let seqNum: BigNumber
+      if (txn.seqNum) {
+        seqNum = BigNumber.from(txn.seqNum)
+      } else {
+        const rec = await bridge.l1Provider.getTransactionReceipt(txn.txHash)
+        const seqNumArray = await bridge.getInboxSeqNumFromContractTransaction(rec)
+        if (!seqNumArray || seqNumArray.length === 0) {
+          return null
+        }
+        ;[seqNum] = seqNumArray
+      }
+      const l2ChainIdBN = BigNumber.from(l2ChainId)
+      const retryableTicketHash = await bridge.calculateL2TransactionHash(seqNum, l2ChainIdBN)
 
-//               // the receipt was fetched before the block, fast forward to that block to trigger balance updates
-//               if (receipt.blockNumber > lastBlockNumber) {
-//                 dispatch(updateBlockNumber({ chainId, blockNumber: receipt.blockNumber }))
-//               }
-//             } else {
-//               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
-//             }
-//           })
-//           .catch(error => {
-//             if (!error.isCancelledError) {
-//               console.error(`Failed to check transaction hash: ${hash}`, error)
-//             }
-//           })
-//         return cancel
-//       })
+      return {
+        retryableTicketHash,
+        seqNum
+      }
+    },
+    [bridge, l2ChainId]
+  )
 
-//     return () => {
-//       cancels.forEach(cancel => cancel())
-//     }
-//   }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt])
+  const l2DepositsListener = useCallback(async () => {
+    const depositHashes = await Promise.all(depositTransactions.map(getL2TxnHash))
+    if (!l1ChainId || !l2ChainId) return
 
-//   return null
-// }
+    depositTransactions.forEach((txn, index) => {
+      const txnHash = depositHashes[index]
+      if (txnHash === null) {
+        return
+      }
+
+      const { retryableTicketHash, seqNum } = txnHash
+
+      if (!allTransactions[l1ChainId]?.[retryableTicketHash] && !allTransactions[l2ChainId]?.[retryableTicketHash]) {
+        dispatch(
+          addBridgeTxn({
+            ...txn,
+            receipt: undefined,
+            chainId: l2ChainId,
+            type: 'deposit-l2',
+            txHash: retryableTicketHash,
+            seqNum: seqNum.toNumber(),
+            blockNumber: undefined
+          })
+        )
+
+        dispatch(
+          updateBridgeTxnPartnerHash({
+            chainId: l2ChainId,
+            txHash: retryableTicketHash,
+            partnerTxHash: txn.txHash,
+            partnerChainId: l1ChainId
+          })
+        )
+      }
+    })
+  }, [allTransactions, depositTransactions, dispatch, getL2TxnHash, l1ChainId, l2ChainId])
+
+  useEffect(() => {
+    const intervalId = window.setInterval(l2DepositsListener, 5000)
+    return () => window.clearInterval(intervalId)
+  }, [l1ChainId, l2ChainId, l2DepositsListener])
+
+  return null
+}

@@ -60,7 +60,6 @@ export default createReducer<BridgeState>(initialState, builder =>
         fromNetwork: { chainId: fromChainId },
         toNetwork: { chainId: toChainId }
       } = state
-      console.log({ fromChainId, toChainId })
       return {
         ...state,
         fromNetwork: {

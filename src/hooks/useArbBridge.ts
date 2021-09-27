@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '.'
 
 import { BridgeContext } from '../contexts/BridgeProvider'
 import { BridgeAssetType } from '../state/bridgeTransactions/types'
-import { addBridgeTxn, updateBridgeTxnReceipt, updateBridgeTxnPartnerHash } from '../state/bridgeTransactions/actions'
+import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
 
 export const useBridge = () => {
   return useContext(BridgeContext)
@@ -51,44 +51,42 @@ export const useArbBridge = () => {
             receipt: l1Receipt
           })
         )
-        //updateEthBalance
-        const seqNum = await bridge.getInboxSeqNumFromContractTransaction(l1Receipt)
-        if (!seqNum) return
+        // const seqNum = await bridge.getInboxSeqNumFromContractTransaction(l1Receipt)
+        // if (!seqNum) return
 
-        const l2TxnHash = await bridge.calculateL2TransactionHash(seqNum[0])
+        // const l2TxnHash = await bridge.calculateL2TransactionHash(seqNum[0])
 
-        dispatch(
-          updateBridgeTxnPartnerHash({
-            chainId: l1ChainId,
-            txHash: txn.hash,
-            partnerTxHash: l2TxnHash
-          })
-        )
+        // dispatch(
+        //   addBridgeTxn({
+        //     assetName: 'ETH',
+        //     assetType: BridgeAssetType.ETH,
+        //     type: 'deposit-l2',
+        //     value,
+        //     txHash: l2TxnHash,
+        //     chainId: l2ChainId,
+        //     sender: account,
+        //     seqNum: seqNum[0].toNumber()
+        //   })
+        // )
 
-        dispatch(
-          addBridgeTxn({
-            assetName: 'ETH',
-            assetType: BridgeAssetType.ETH,
-            type: 'deposit-l2',
-            value,
-            txHash: l2TxnHash,
-            partnerTxHash: txn.hash,
-            chainId: l2ChainId,
-            sender: account
-          })
-        )
-
-        // L2
-        const l2Receipt = await bridge.l2Bridge.l2Provider.waitForTransaction(l2TxnHash, undefined, 1000 * 60 * 15)
-
-        dispatch(
-          updateBridgeTxnReceipt({
-            chainId: l2ChainId,
-            txHash: l2TxnHash,
-            receipt: l2Receipt
-          })
-        )
-        // update balance
+        // // L2
+        // const l2Receipt = await bridge.l2Bridge.l2Provider.waitForTransaction(l2TxnHash, undefined, 1000 * 60 * 15)
+        // dispatch(
+        //   updateBridgeTxnReceipt({
+        //     chainId: l2ChainId,
+        //     txHash: l2TxnHash,
+        //     receipt: l2Receipt
+        //   })
+        // )
+        // dispatch(
+        //   updateBridgeTxnPartnerHash({
+        //     chainId: l1ChainId,
+        //     txHash: txn.hash,
+        //     partnerTxHash: l2TxnHash,
+        //     partnerChainId: l2ChainId
+        //   })
+        // )
+        // // update balance
       } catch (err) {
         throw err
       }

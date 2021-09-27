@@ -2,12 +2,11 @@ import React from 'react'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
-// import { TagPending } from '../../components/Tag'
-import { CombinedBridgeTxn } from '../../state/bridgeTransactions/hooks'
+import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
 import { TYPE } from '../../theme'
 
 interface FooterPendingProps extends HideableAutoColumnProps {
-  transactions: CombinedBridgeTxn[]
+  transactions: BridgeTransactionSummary[]
 }
 
 export const FooterPending = ({ show, transactions }: FooterPendingProps) => {
@@ -24,11 +23,11 @@ export const FooterPending = ({ show, transactions }: FooterPendingProps) => {
             </tr>
           </thead>
           <tbody>
-            {Object.values(transactions).map(tx => {
-              const { assetName, fromName, status, toName, value, txHash } = tx
+            {Object.values(transactions).map((tx, index) => {
+              const { assetName, fromName, status, toName, value } = tx
 
               return (
-                <tr key={txHash} style={{ lineHeight: '22px' }}>
+                <tr key={index} style={{ lineHeight: '22px' }}>
                   <td>
                     <TYPE.main color="white" fontSize="14px" lineHeight="14px" fontWeight="600">
                       {`${value} ${assetName}`}

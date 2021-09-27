@@ -1,7 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import {
   addBridgeTxn,
-  updateBridgeTxnStatus,
   updateBridgeTxnResolvedTimestamp,
   updateBridgeTxnReceipt,
   updateBridgeTxnPartnerHash
@@ -42,18 +41,10 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
 
       transactions[txHash] = {
         ...txn,
-        status: 'pending',
         timestampCreated: now()
       }
 
       state[chainId] = transactions
-    })
-    .addCase(updateBridgeTxnStatus, (state, { payload: { chainId, txHash, status } }) => {
-      if (!state[chainId]?.[txHash]) {
-        throw Error('Transaction not found' + txHash)
-      }
-
-      state[chainId][txHash].status = status
     })
     .addCase(updateBridgeTxnResolvedTimestamp, (state, { payload: { chainId, txHash, timestamp } }) => {
       if (!state[chainId]?.[txHash]) {
@@ -62,36 +53,29 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
 
       state[chainId][txHash].timestampResolved = timestamp
     })
-    .addCase(updateBridgeTxnReceipt, (state, { payload: { chainId, receipt, txHash } }) => {
+    .addCase(updateBridgeTxnReceipt, (state, { payload: { chainId, receipt, txHash, seqNum } }) => {
       if (!state[chainId]?.[txHash]) {
         throw Error('Transaction not found' + txHash)
       }
       const txn = state[chainId][txHash]
-
+      if (txn.receipt) return
       txn.receipt = receipt
 
-      switch (receipt.status) {
-        case 0: {
-          txn.status = 'failure'
-          break
-        }
-        case 1: {
-          txn.status = 'confirmed'
-          break
-        }
-        default:
-          console.warn('*** Status not included in transaction receipt *** ')
-          break
+      if (seqNum) {
+        txn.seqNum = seqNum
       }
 
       txn.timestampResolved = now()
       state[chainId][txHash] = txn
     })
-    .addCase(updateBridgeTxnPartnerHash, (state, { payload: { chainId, txHash, partnerTxHash } }) => {
-      if (!state[chainId]?.[txHash]) {
-        throw Error('Transaction not found' + txHash)
-      }
+    .addCase(updateBridgeTxnPartnerHash, (state, { payload: { chainId, txHash, partnerChainId, partnerTxHash } }) => {
+      const tx = state[chainId][txHash]
+      tx.partnerTxHash = partnerTxHash
 
-      state[chainId][txHash].partnerTxHash = partnerTxHash
+      const partnerTx = state[partnerChainId][partnerTxHash]
+      partnerTx.partnerTxHash = txHash
+
+      state[chainId][txHash] = tx
+      state[partnerChainId][partnerTxHash] = partnerTx
     })
 )

@@ -26,7 +26,7 @@ import {
   NetworkOptionProps
 } from '../../components/NetworkSwitcher'
 import { useArbBridge } from '../../hooks/useArbBridge'
-import { useBridgeTransactionsStatuses } from '../../state/bridgeTransactions/hooks'
+import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 
 const Title = styled.p`
   margin: 0;
@@ -137,9 +137,10 @@ export default function Bridge() {
   })
 
   const { depositEth } = useArbBridge()
-  const bridgeTransactions = useBridgeTransactionsStatuses()
 
   const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
+
+  const bridgeSummaries = useBridgeTransactionsSummary()
 
   return (
     <>
@@ -220,7 +221,7 @@ export default function Bridge() {
       {/* {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
       )} */}
-      <FooterPending show transactions={bridgeTransactions} />
+      <FooterPending show transactions={bridgeSummaries} />
       {/* {step === Step.Ready && (
         <FooterReady amount={typedValue} show onCollectButtonClick={() => setStep(Step.Collect)} />
       )} */}
