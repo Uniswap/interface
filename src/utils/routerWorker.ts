@@ -1,5 +1,5 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import {
   AlphaRouter,
   AlphaRouterConfig,
@@ -17,10 +17,9 @@ import {
   URISubgraphProvider,
 } from '@uniswap/smart-order-router'
 import * as Comlink from 'comlink'
+import { NETWORK_URLS } from 'connectors/constants'
 import { ethers } from 'ethers'
-
-import { NETWORK_URLS } from '../connectors'
-
+import JSBI from 'jsbi'
 class MetricLogger extends IMetric {
   putDimensions() {
     return
@@ -105,14 +104,20 @@ const router = new AlphaRouter({
  
 
 const obj = {
-  getQuote(
+  async getQuote(
     tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT,
-    tokenIn: string,
-    tokenOut: string,
-    amount: string,
-    chainId: number,
+    tokenIn: Pick<Token, 'address' | 'chainId' | 'decimals' | 'symbol'>,
+    tokenOut: Pick<Token, 'address' | 'chainId' | 'decimals' | 'symbol'>,
+    amount: BigintIsh
   ) {
-    return [tradeType, tokenIn, tokenOut, amount, chainId]
+    const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
+    const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
+    const currencyAmount = CurrencyAmount.fromRawAmount(currencyIn, JSBI.BigInt(amount))
+
+    const res = tradeType === TradeType.EXACT_INPUT ? await router.routeExactIn(currencyIn, currencyOut, currencyAmount, undefined, DEFAULT_ROUTING_CONFIG)
+      : await router.routeExactOut(currencyIn, currencyOut, currencyAmount, undefined, DEFAULT_ROUTING_CONFIG)
+
+   return JSON.stringify(res)
   },
 }
 

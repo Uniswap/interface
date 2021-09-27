@@ -42,7 +42,7 @@ function useTrade(
       console.time('smart order router')
 
       try {
-        const swapRouteResponse = await worker.getQuote(tradeType, currencyIn.wrapped.address, currencyOut.wrapped.address, amount.toSignificant(), chainId)
+        const swapRouteResponse = await worker.getQuote(tradeType, currencyIn.wrapped, currencyOut.wrapped, amount.toExact())
         console.log(swapRouteResponse)
         setSwapRoute(swapRouteResponse ?? undefined)
       } catch (e) {
