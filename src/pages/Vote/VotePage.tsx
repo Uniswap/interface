@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { DateTime } from 'luxon/src/luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
@@ -145,19 +145,32 @@ export default function VotePage({
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
-  const endDate: DateTime | undefined =
+  const now = new Date()
+  const endDate: Date | undefined =
     proposalData && currentTimestamp && currentBlock
-      ? DateTime.fromSeconds(
-          currentTimestamp
-            .add(
-              BigNumber.from(
-                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
-              ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
-            )
-            .toNumber()
-        )
+      ? (() => {
+          const date = new Date()
+          date.setTime(
+            currentTimestamp
+              .add(
+                BigNumber.from(
+                  (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
+                ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
+              )
+              .toNumber() * 1000
+          )
+          return date
+        })()
       : undefined
-  const now: DateTime = DateTime.local()
+  const locale = useActiveLocale()
+  const dateFormat: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZoneName: 'short',
+  }
 
   // get total votes and format percentages for UI
   const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
@@ -224,13 +237,12 @@ export default function VotePage({
             <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
             <RowBetween>
               <TYPE.main>
-                {endDate && endDate < now ? (
-                  <Trans>Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                ) : proposalData ? (
-                  <Trans>Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
-                ) : (
-                  ''
-                )}
+                {endDate &&
+                  (endDate < now ? (
+                    <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ) : (
+                    <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ))}
               </TYPE.main>
             </RowBetween>
             {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
