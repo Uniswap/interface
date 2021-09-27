@@ -146,6 +146,11 @@ export const useBridgeTransactionsSummary = () => {
 
         if (!tx.partnerTxHash || !l2Txs[tx.partnerTxHash]) {
           summary.log = createBridgeLog([tx])
+
+          // deposits on l1 should never show confirmed on UI
+          if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
+            summary.status = 'pending'
+          }
           txMap[l1ChainId][tx.txHash] = tx.txHash
 
           total.push(summary)

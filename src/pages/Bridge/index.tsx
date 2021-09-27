@@ -8,8 +8,6 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
 // import { FooterBridgeSelector } from './FooterBridgeSelector'
-import { FooterPending } from './FooterPending'
-// import { FooterReady } from './FooterReady'
 import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgeButton } from './BridgeButton'
@@ -27,6 +25,7 @@ import {
 } from '../../components/NetworkSwitcher'
 import { useArbBridge } from '../../hooks/useArbBridge'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
+import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 
 const Title = styled.p`
   margin: 0;
@@ -220,12 +219,9 @@ export default function Bridge() {
           </BridgeButton>
         )}
       </AppBody>
+      <BridgeTransactionsSummary show transactions={bridgeSummaries} />
       {/* {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
-      )} */}
-      <FooterPending show transactions={bridgeSummaries} />
-      {/* {step === Step.Ready && (
-        <FooterReady amount={typedValue} show onCollectButtonClick={() => setStep(Step.Collect)} />
       )} */}
       <BridgeSuccesModal
         isOpen={step === Step.Success}

@@ -4,12 +4,13 @@ import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Co
 import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
 import { TYPE } from '../../theme'
+import { BridgeStatusTag } from './BridgeStatusTag'
 
-interface FooterPendingProps extends HideableAutoColumnProps {
+interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
 }
 
-export const FooterPending = ({ show, transactions }: FooterPendingProps) => {
+export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransactionsSummaryProps) => {
   return (
     <HideableAutoColumn show={show}>
       <AdvancedDetailsFooter fullWidth padding="16px">
@@ -17,9 +18,9 @@ export const FooterPending = ({ show, transactions }: FooterPendingProps) => {
           <thead>
             <tr>
               <Th>Bridging</Th>
-              <Th align="right">From</Th>
-              <Th align="right">To</Th>
-              <Th align="right">Status</Th>
+              <Th align="left">From</Th>
+              <Th align="left">To</Th>
+              <Th align="left">Status</Th>
             </tr>
           </thead>
           <tbody>
@@ -33,19 +34,18 @@ export const FooterPending = ({ show, transactions }: FooterPendingProps) => {
                       {`${value} ${assetName}`}
                     </TYPE.main>
                   </td>
-                  <td align="right">
-                    <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
+                  <td align="left">
+                    <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
                       {fromName}
                     </TYPE.main>
                   </td>
-                  <td align="right">
-                    <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
+                  <td align="left">
+                    <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
                       {toName}
                     </TYPE.main>
                   </td>
-                  <td align="right">
-                    {/* <TagPending /> */}
-                    {status}
+                  <td align="left">
+                    <BridgeStatusTag status={status} />
                   </td>
                 </tr>
               )
