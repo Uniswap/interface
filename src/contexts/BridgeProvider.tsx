@@ -20,7 +20,8 @@ const defaultValue: BridgeContextType = {
   bridge: null,
   chainIdPair: {
     l1ChainId: undefined,
-    l2ChainId: undefined
+    l2ChainId: undefined,
+    chainId: undefined
   }
 }
 
@@ -45,7 +46,8 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
   const [bridge, setBridge] = useState<Bridge | null>(null)
   const [chainIdPair, setChainIdPair] = useState<ChainIdPair>({
     l1ChainId: undefined,
-    l2ChainId: undefined
+    l2ChainId: undefined,
+    chainId: undefined
   })
   const dispatch = useDispatch()
 
