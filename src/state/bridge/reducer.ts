@@ -1,12 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
-import {
-  selectCurrency,
-  typeInput,
-  setFromBridgeNetwork,
-  setToBridgeNetwork,
-  swapBridgeNetworks,
-} from './actions'
+import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks } from './actions'
 
 export interface BridgeNetworkInput {
   readonly chainId: ChainId
@@ -48,7 +42,7 @@ export default createReducer<BridgeState>(initialState, builder =>
         ...state,
         fromNetwork: {
           ...state.fromNetwork,
-          chainId: chainId ? chainId : state.fromNetwork.chainId,
+          chainId: chainId ? chainId : state.fromNetwork.chainId
         }
       }
     })
@@ -57,13 +51,16 @@ export default createReducer<BridgeState>(initialState, builder =>
         ...state,
         toNetwork: {
           ...state.fromNetwork,
-          chainId: chainId ? chainId : state.toNetwork.chainId,
+          chainId: chainId ? chainId : state.toNetwork.chainId
         }
       }
     })
-    .addCase(swapBridgeNetworks, (state) => {
-      const { fromNetwork: { chainId: fromChainId }, toNetwork: { chainId: toChainId } } = state
-      console.log({ fromChainId, toChainId })
+    .addCase(swapBridgeNetworks, state => {
+      const {
+        fromNetwork: { chainId: fromChainId },
+        toNetwork: { chainId: toChainId }
+      } = state
+
       return {
         ...state,
         fromNetwork: {
