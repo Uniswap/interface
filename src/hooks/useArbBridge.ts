@@ -1,4 +1,4 @@
-import { Bridge, OutgoingMessageState } from 'arb-ts'
+import { Bridge, OutgoingMessageState, networks } from 'arb-ts'
 import { useDispatch } from 'react-redux'
 import { useCallback, useEffect, useState } from 'react'
 import { providers, Signer, utils } from 'ethers'
@@ -65,7 +65,7 @@ export const useArbBridge = () => {
         }
 
         if (l1Signer && l2Signer) {
-          initBridge(l1Signer, l2Signer)
+          initBridge(l1Signer, l2Signer, networks[chainId].tokenBridge.l1GatewayRouter, networks[chainId].tokenBridge.l2GatewayRouter)
         }
       }
     }
@@ -194,11 +194,10 @@ const withdrawEth = useCallback(
           batchNumber,
           indexInBatch
         )
-        console.log('Call getOutGoingMessageState: ', outgoingMessageState)
+        console.log('Call getOutGoingMessageState ', outgoingMessageState)
         console.log(
           `Waiting for message to be confirmed: Batchnumber: ${batchNumber}, IndexInBatch ${indexInBatch}`
         )
-        
         
         while (outgoingMessageState !== OutgoingMessageState.CONFIRMED) {
           await wait(1000 * 5)
