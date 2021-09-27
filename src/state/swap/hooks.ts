@@ -160,7 +160,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   // skip if other version is toggled
   const v2Trade = useBestV2Trade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    parsedAmount,
+    toggledVersion !== Version.v3 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined
   )
   const v3Trade = useBestV3Trade(
