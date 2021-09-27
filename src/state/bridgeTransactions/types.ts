@@ -1,14 +1,7 @@
 import { ChainId } from '@swapr/sdk'
 import { SerializableTransactionReceipt } from '../transactions/actions'
 
-export type BridgeTxnStatus =
-  | 'l1-pending'
-  | 'l1-confirmed'
-  | 'l1-failed'
-  | 'l2-pending'
-  | 'l2-confirmed'
-  | 'l2-failed'
-  | 'success'
+export type BridgeTxnStatus = 'pending' | 'confirmed' | 'failure' | 'disupte_period'
 
 export type BridgeTxnType =
   | 'deposit'
@@ -34,18 +27,16 @@ export type BridgeTxnsState = {
 
 export type BridgeTxn = {
   type: BridgeTxnType
-  from: ChainId
-  to: ChainId
-  status: BridgeTxnStatus
-  value: string | null
-  txHash?: string
-  l2TxHash?: string
+  chainId: ChainId
+  sender: string
   assetName: string
   assetType: BridgeAssetType
-  sender: string
+  value: string
+  txHash: string
   blockNumber?: number
   timestampResolved?: number
-  timestampCreated?: number
-  l1Receipt?: SerializableTransactionReceipt
-  l2Receipt?: SerializableTransactionReceipt
+  timestampCreated: number
+  receipt?: SerializableTransactionReceipt
+  seqNum?: number
+  partnerTxHash?: string
 }

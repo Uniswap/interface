@@ -1,15 +1,18 @@
+<<<<<<< HEAD
 import { Bridge, OutgoingMessageState, networks } from 'arb-ts'
+=======
+>>>>>>> feature/bridge-eth-deposit
 import { useDispatch } from 'react-redux'
-import { useCallback, useEffect, useState } from 'react'
-import { providers, Signer, utils } from 'ethers'
+import { useCallback, useContext } from 'react'
+import { utils } from 'ethers'
 
 import { useActiveWeb3React } from '.'
 
-import { NETWORK_DETAIL } from '../constants'
-import { INFURA_PROJECT_ID } from '../connectors'
-import { addBridgeTxn, updateBridgeTxnReceipt, updateBridgeTxnL2Hash } from '../state/bridgeTransactions/actions'
+import { BridgeContext } from '../contexts/BridgeProvider'
 import { BridgeAssetType } from '../state/bridgeTransactions/types'
+import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
 
+<<<<<<< HEAD
 const wait = (ms = 0) => {
   return new Promise(res => setTimeout(res, ms || 10000))
 }
@@ -26,12 +29,19 @@ const addInfuraKey = (rpcUrl: string) => {
   }
 
   return rpcUrl
+=======
+export const useBridge = () => {
+  return useContext(BridgeContext)
+>>>>>>> feature/bridge-eth-deposit
 }
 
 export const useArbBridge = () => {
-  const { library, chainId, account } = useActiveWeb3React()
-  const [bridge, setBridge] = useState<Bridge | null>(null)
+  const {
+    bridge,
+    chainIdPair: { l1ChainId, l2ChainId }
+  } = useBridge()
   const dispatch = useDispatch()
+<<<<<<< HEAD
 
   useEffect(() => {
     const initBridge = async (
@@ -72,19 +82,20 @@ export const useArbBridge = () => {
   }, [chainId, library, account])
 
   // Methods
+=======
+  const { account } = useActiveWeb3React()
+>>>>>>> feature/bridge-eth-deposit
 
   const depositEth = useCallback(
     async (value: string) => {
-      if (!bridge || !chainId || !account) return
-      const { partnerChainId } = NETWORK_DETAIL[chainId]
+      if (!account || !bridge || !l1ChainId || !l2ChainId) return
 
-      if (!partnerChainId) return
       const weiValue = utils.parseEther(value)
 
       try {
         // L1
         const txn = await bridge.depositETH(weiValue)
-        console.log('dispacz addBridgeTxn')
+
         dispatch(
           addBridgeTxn({
             assetName: 'ETH',
@@ -92,55 +103,61 @@ export const useArbBridge = () => {
             type: 'deposit-l1',
             value,
             txHash: txn.hash,
-            status: 'l1-pending',
-            from: chainId,
-            to: partnerChainId,
+            chainId: l1ChainId,
             sender: account
           })
         )
 
         const l1Receipt = await txn.wait()
-        console.log('dispacz updateBridgeTxnReceipt')
+
         dispatch(
           updateBridgeTxnReceipt({
-            chainId,
+            chainId: l1ChainId,
             txHash: txn.hash,
-            layer: 1,
             receipt: l1Receipt
           })
         )
-        //updateEthBalance
-        const seqNum = await bridge.getInboxSeqNumFromContractTransaction(l1Receipt)
-        if (!seqNum) return
+        // const seqNum = await bridge.getInboxSeqNumFromContractTransaction(l1Receipt)
+        // if (!seqNum) return
 
-        const l2TxnHash = await bridge.calculateL2TransactionHash(seqNum[0])
-        console.log('dispacz updateBridgeTxnL2Hash', l2TxnHash)
-        dispatch(
-          updateBridgeTxnL2Hash({
-            chainId,
-            txHash: txn.hash,
-            l2Hash: l2TxnHash
-          })
-        )
+        // const l2TxnHash = await bridge.calculateL2TransactionHash(seqNum[0])
 
-        // L2
-        const l2Receipt = await bridge.l2Bridge.l2Provider.waitForTransaction(l2TxnHash, undefined, 1000 * 60 * 15)
-        console.log('dispacz updateBridgeTxnReceipt')
+        // dispatch(
+        //   addBridgeTxn({
+        //     assetName: 'ETH',
+        //     assetType: BridgeAssetType.ETH,
+        //     type: 'deposit-l2',
+        //     value,
+        //     txHash: l2TxnHash,
+        //     chainId: l2ChainId,
+        //     sender: account,
+        //     seqNum: seqNum[0].toNumber()
+        //   })
+        // )
 
-        dispatch(
-          updateBridgeTxnReceipt({
-            chainId,
-            txHash: txn.hash,
-            layer: 2,
-            receipt: l2Receipt
-          })
-        )
-        // update balance
+        // // L2
+        // const l2Receipt = await bridge.l2Bridge.l2Provider.waitForTransaction(l2TxnHash, undefined, 1000 * 60 * 15)
+        // dispatch(
+        //   updateBridgeTxnReceipt({
+        //     chainId: l2ChainId,
+        //     txHash: l2TxnHash,
+        //     receipt: l2Receipt
+        //   })
+        // )
+        // dispatch(
+        //   updateBridgeTxnPartnerHash({
+        //     chainId: l1ChainId,
+        //     txHash: txn.hash,
+        //     partnerTxHash: l2TxnHash,
+        //     partnerChainId: l2ChainId
+        //   })
+        // )
+        // // update balance
       } catch (err) {
         throw err
       }
     },
-    [account, bridge, chainId, dispatch]
+    [account, bridge, dispatch, l1ChainId, l2ChainId]
   )
 
 const withdrawEth = useCallback(
