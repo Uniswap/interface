@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { Bridge, OutgoingMessageState, networks } from 'arb-ts'
-=======
->>>>>>> feature/bridge-eth-deposit
 import { useDispatch } from 'react-redux'
 import { useCallback, useContext } from 'react'
 import { utils } from 'ethers'
@@ -12,27 +8,8 @@ import { BridgeContext } from '../contexts/BridgeProvider'
 import { BridgeAssetType } from '../state/bridgeTransactions/types'
 import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
 
-<<<<<<< HEAD
-const wait = (ms = 0) => {
-  return new Promise(res => setTimeout(res, ms || 10000))
-}
-
-const addInfuraKey = (rpcUrl: string) => {
-  if (rpcUrl.includes('infura')) {
-    let updatedUrl = rpcUrl
-
-    if (!rpcUrl.endsWith('/')) {
-      updatedUrl = rpcUrl + '/'
-    }
-
-    return updatedUrl + INFURA_PROJECT_ID
-  }
-
-  return rpcUrl
-=======
 export const useBridge = () => {
   return useContext(BridgeContext)
->>>>>>> feature/bridge-eth-deposit
 }
 
 export const useArbBridge = () => {
@@ -41,50 +18,7 @@ export const useArbBridge = () => {
     chainIdPair: { l1ChainId, l2ChainId }
   } = useBridge()
   const dispatch = useDispatch()
-<<<<<<< HEAD
-
-  useEffect(() => {
-    const initBridge = async (
-      ethSigner: Signer,
-      arbSigner: Signer,
-      l1GatewayRouterAddress?: string | undefined,
-      l2GatewayRouterAddress?: string | undefined
-    ) => {
-      const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
-      setBridge(bridge)
-    }
-
-    // Setting the bridge
-    if (library && account && chainId) {
-      const { partnerChainId, isArbitrum } = NETWORK_DETAIL[chainId]
-      let l1Signer: providers.JsonRpcSigner, l2Signer: providers.JsonRpcSigner
-
-      // Has arbitrum support
-      if (partnerChainId) {
-        // Withdraw
-        if (isArbitrum) {
-          const rpcUrl = NETWORK_DETAIL[partnerChainId].rpcUrls[0]
-          console.log('Withdraw mode')
-          l1Signer = new providers.JsonRpcProvider(addInfuraKey(rpcUrl)).getSigner(account)
-          l2Signer = library.getSigner()
-          // Deposit
-        } else {
-          console.log('Deposit mode')
-          l1Signer = library.getSigner()
-          l2Signer = new providers.JsonRpcProvider(NETWORK_DETAIL[partnerChainId].rpcUrls[0]).getSigner(account)
-        }
-
-        if (l1Signer && l2Signer) {
-          initBridge(l1Signer, l2Signer, networks[chainId].tokenBridge.l1GatewayRouter, networks[chainId].tokenBridge.l2GatewayRouter)
-        }
-      }
-    }
-  }, [chainId, library, account])
-
-  // Methods
-=======
   const { account } = useActiveWeb3React()
->>>>>>> feature/bridge-eth-deposit
 
   const depositEth = useCallback(
     async (value: string) => {
