@@ -1,3 +1,4 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
 import { ChainId } from 'libs/sdk/src'
@@ -49,3 +50,7 @@ export const updateETHPrice = createAction<{
 export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')
 
 export const updateChainIdWhenNotConnected = createAction<ChainId>('application/updateChainIdWhenNotConnected')
+
+export const setExchangeSubgraphClient = createAction<{ [key: string]: ApolloClient<NormalizedCacheObject> }>(
+  'application/setExchangeSubgraphClient'
+)

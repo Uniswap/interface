@@ -1,3 +1,4 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { ChainId } from 'libs/sdk/src'
 import {
@@ -9,8 +10,10 @@ import {
   setOpenModal,
   updateETHPrice,
   updateKNCPrice,
-  updateChainIdWhenNotConnected
+  updateChainIdWhenNotConnected,
+  setExchangeSubgraphClient
 } from './actions'
+import { exchangeClients } from 'apollo/client'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -27,6 +30,7 @@ export interface ApplicationState {
   readonly ethPrice: ETHPrice
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
+  exchangeSubgraphClients: { [key: string]: ApolloClient<NormalizedCacheObject> }
 }
 
 const initialState: ApplicationState = {
@@ -35,7 +39,8 @@ const initialState: ApplicationState = {
   openModal: null,
   ethPrice: {},
   kncPrice: '',
-  chainIdWhenNotConnected: ChainId.MAINNET
+  chainIdWhenNotConnected: ChainId.MAINNET,
+  exchangeSubgraphClients: exchangeClients
 }
 
 export default createReducer(initialState, builder =>
@@ -78,5 +83,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateChainIdWhenNotConnected, (state, { payload: chainId }) => {
       state.chainIdWhenNotConnected = chainId
+    })
+    .addCase(setExchangeSubgraphClient, (state, { payload: exchangeSubgraphClients }) => {
+      state.exchangeSubgraphClients = exchangeSubgraphClients as any
     })
 )

@@ -13,7 +13,7 @@ import { useActiveWeb3React } from 'hooks'
 import useFairLaunch from 'hooks/useFairLaunch'
 import { useAppDispatch } from 'state/hooks'
 import { useBlockNumber } from 'state/application/hooks'
-import { Farm, Reward } from 'state/farms/types'
+import { Farm } from 'state/farms/types'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
 import { ExternalLink } from 'theme'
 import { getEtherscanLink, shortenAddress } from 'utils'
@@ -67,12 +67,6 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
     }
 
     dispatch(setAttemptingTxn(false))
-  }
-
-  const canHarvest = (rewards: Reward[]): boolean => {
-    const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
-
-    return canHarvest
   }
 
   const farmsList = (farms || []).map(farm => {

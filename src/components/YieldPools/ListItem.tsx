@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { ethers } from 'ethers'
 import { MaxUint256 } from '@ethersproject/constants'
@@ -148,7 +147,6 @@ const ListItem = ({ farm }: ListItemProps) => {
   const amp = farm.amp / 10000
 
   const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
-  const [pendingTx, setPendingTx] = useState(false)
   const [depositValue, setDepositValue] = useState('')
   const [withdrawValue, setWithdrawValue] = useState('')
   const pairAddressChecksum = isAddressString(farm.id)
@@ -175,7 +173,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     isStakeInvalidAmount = true
   }
 
-  const isStakeDisabled = pendingTx || isStakeInvalidAmount
+  const isStakeDisabled = isStakeInvalidAmount
 
   let isUnstakeInvalidAmount
 
@@ -188,7 +186,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     isUnstakeInvalidAmount = true
   }
 
-  const isUnstakeDisabled = pendingTx || isUnstakeInvalidAmount
+  const isUnstakeDisabled = isUnstakeInvalidAmount
 
   const canHarvest = (rewards: Reward[]): boolean => {
     const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
@@ -196,7 +194,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     return canHarvest
   }
 
-  const isHarvestDisabled = pendingTx || !canHarvest(farmRewards)
+  const isHarvestDisabled = !canHarvest(farmRewards)
 
   const { deposit, withdraw, harvest } = useFairLaunch(farm.fairLaunchAddress)
 
@@ -743,7 +741,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
                 <RewardBalanceWrapper>
                   <div>
-                    {farmRewards?.map((reward, index) => {
+                    {farmRewards?.map(reward => {
                       return (
                         <div key={reward.token.address} style={{ marginTop: '2px' }}>
                           <Flex style={{ alignItems: 'center' }}>

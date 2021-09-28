@@ -4,7 +4,6 @@ import { Contract } from '@ethersproject/contracts'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Interface } from '@ethersproject/abi'
 
-import { exchangeCient } from 'apollo/client'
 import { FARM_HISTORIES } from 'apollo/queries'
 import { ChainId, WETH } from 'libs/sdk/src'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
@@ -12,7 +11,7 @@ import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
-import { useBlockNumber, useETHPrice } from 'state/application/hooks'
+import { useBlockNumber, useETHPrice, useExchangeClient } from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
@@ -49,6 +48,7 @@ export const useFarmsData = () => {
   const allTokens = useAllTokens()
   const blockNumber = useBlockNumber()
 
+  const apolloClient = useExchangeClient()
   const farmsData = useSelector((state: AppState) => state.farms.data)
   const loading = useSelector((state: AppState) => state.farms.loading)
   const error = useSelector((state: AppState) => state.farms.error)
@@ -89,7 +89,7 @@ export const useFarmsData = () => {
 
       const poolAddresses = poolInfos.map(poolInfo => poolInfo.stakeToken.toLowerCase())
 
-      const farmsData = await getBulkPoolData(poolAddresses, ethPrice.currentPrice, chainId)
+      const farmsData = await getBulkPoolData(poolAddresses, apolloClient, ethPrice.currentPrice, chainId)
 
       const rewardTokens = rewardTokenAddresses.map(address =>
         address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address]
@@ -154,6 +154,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
   const { chainId, account } = useActiveWeb3React()
   const [histories, setHistories] = useState<FarmHistory[]>([])
   const [loading, setLoading] = useState(false)
+  const apolloClient = useExchangeClient()
 
   useEffect(() => {
     async function fetchFarmHistories() {
@@ -164,7 +165,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
       setLoading(true)
 
       try {
-        const result = await exchangeCient[chainId as ChainId].query<FarmHistoriesSubgraphResult>({
+        const result = await apolloClient.query<FarmHistoriesSubgraphResult>({
           query: FARM_HISTORIES,
           variables: {
             user: account
@@ -258,7 +259,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
     }
 
     fetchFarmHistories()
-  }, [chainId, account, isModalOpen])
+  }, [chainId, account, isModalOpen, apolloClient])
 
   return { loading, data: histories }
 }

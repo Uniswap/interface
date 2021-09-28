@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import ReactPlayer from 'react-player/lazy'
 import style from './about.module.scss'
 
@@ -61,6 +61,17 @@ export default function About() {
   const { data: farms } = useFarmsData()
   const [maxApr, setMaxApr] = useState<number>(-1)
   const [indexx, setIndexx] = useState<number>(0)
+
+  const handleAprUpdate = useCallback(
+    (value: any) => {
+      if (!!maxApr && value > maxApr) {
+        setMaxApr(value)
+        setIndexx(indexx + 1)
+      }
+    },
+    [maxApr, indexx]
+  )
+
   return (
     <div className={style.wrapper}>
       <div className={style.image1}></div>
@@ -474,12 +485,7 @@ export default function About() {
                   <Apr
                     key={farm.id}
                     farm={farm}
-                    onAprUpdate={(value: any) => {
-                      if (!!maxApr && value > maxApr) {
-                        setMaxApr(value)
-                        setIndexx(indexx + 1)
-                      }
-                    }}
+                    onAprUpdate={handleAprUpdate}
                   />
                 )
             )}
@@ -518,6 +524,6 @@ function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
 
   useEffect(() => {
     onAprUpdate(apr)
-  }, [apr])
+  }, [apr, onAprUpdate])
   return <></>
 }

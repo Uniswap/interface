@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
-import { defaultExchangeClient, exchangeCient } from 'apollo/client'
+import { defaultExchangeClient } from 'apollo/client'
 import Loader from 'components/LocalLoader'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
@@ -16,10 +16,10 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId } from 'libs/sdk/src'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 
 import KNCPrice from 'components/KNCPrice'
+import { useExchangeClient } from 'state/application/hooks'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -115,9 +115,9 @@ const Marginer = styled.div`
 
 export default function App() {
   useActiveNetwork()
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const aboutPage = useRouteMatch('/about')
-  const apolloClient = exchangeCient[chainId as ChainId]
+  const apolloClient = useExchangeClient()
 
   return (
     <>

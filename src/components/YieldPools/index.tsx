@@ -32,7 +32,7 @@ import TotalRewardsDetail from './TotalRewardsDetail'
 const YieldPools = ({ stakedOnly }: { stakedOnly: boolean }) => {
   const { chainId } = useActiveWeb3React()
   const lgBreakpoint = useMedia('(min-width: 992px)')
-  const { loading, data: farmsByFairLaunch } = useFarmsData()
+  const { data: farmsByFairLaunch } = useFarmsData()
   const totalRewards = useFarmRewards(Object.values(farmsByFairLaunch).flat())
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
 
