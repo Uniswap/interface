@@ -25,12 +25,12 @@ export const PageWrapper = styled.div`
 export const GlobalDataContainer = styled.div`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   margin-bottom: 1rem;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 1fr;
-  `};
+  @media only screen and (min-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
 
 export const GlobalDataItem = styled.div`
@@ -81,17 +81,14 @@ export const ToolbarWrapper = styled.div`
 
 export const CurrencyWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 0;
+  margin-bottom: 15px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 8px;
-    flex-direction: column;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToXL`
-    margin-bottom: 15px;
-  `};
+  @media only screen and (min-width: 1000px) {
+    flex-direction: row;
+    margin-bottom: 0;
+  }
 `
 
 export const SearchWrapper = styled(Flex)`

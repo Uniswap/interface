@@ -47,16 +47,7 @@ const Pools = ({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
-
-  const above992 = useMedia('(min-width: 993px)')
-  const above1400 = useMedia('(min-width: 1401px)')
-
-  // Pool selection
-  // const { onCurrencySelection } = usePairActionHandlers()
-  // const {
-  //   [Field.CURRENCY_A]: { currencyId: currencyIdA },
-  //   [Field.CURRENCY_B]: { currencyId: currencyIdB }
-  // } = usePairState()
+  const above1000 = useMedia('(min-width: 1000px)')
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -166,7 +157,7 @@ const Pools = ({
           </AddLiquidityInstructionText>
         </AddLiquidityInstructionContainer>
 
-        {above1400 ? (
+        {above1000 ? (
           <>
             <div style={{ marginBottom: '16px' }}>
               <Trans>Select Pair</Trans>
@@ -245,7 +236,7 @@ const Pools = ({
                 otherCurrency={currencies[Field.CURRENCY_B]}
                 id="input-tokena"
               />
-              {above992 && <span style={{ margin: '0 8px' }}>/</span>}
+              {above1000 && <span style={{ margin: '0 8px' }}>/</span>}
               <PoolsCurrencyInputPanel
                 onCurrencySelect={handleCurrencyBSelect}
                 currency={currencies[Field.CURRENCY_B]}
