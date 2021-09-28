@@ -43,6 +43,12 @@ function getToken0MinPrice(pool: Pair): Fraction {
 
 function getToken0MaxPrice(pool: Pair): Fraction {
   const temp = pool.virtualReserve0.subtract(pool.reserve0)
+
+  // Avoid error division by 0
+  if (temp.equalTo(new Fraction('0'))) {
+    return new Fraction('-1')
+  }
+
   return pool.virtualReserve0
     .multiply(pool.virtualReserve1)
     .divide(temp)
@@ -59,6 +65,12 @@ function getToken1MinPrice(pool: Pair): Fraction {
 
 function getToken1MaxPrice(pool: Pair): Fraction {
   const temp = pool.virtualReserve1.subtract(pool.reserve1)
+
+  // Avoid error division by 0
+  if (temp.equalTo(new Fraction('0'))) {
+    return new Fraction('-1')
+  }
+
   return pool.virtualReserve0
     .multiply(pool.virtualReserve1)
     .divide(temp)
