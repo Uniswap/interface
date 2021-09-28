@@ -1,135 +1,68 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, SwapQuoter, Trade } from '@uniswap/v3-sdk'
-import { SupportedChainId } from 'constants/chains'
-import JSBI from 'jsbi'
+import { Trade } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
+import { computeRoutes } from 'state/routing/computeRoutes'
 import { V3TradeState } from 'state/routing/types'
+import { useClientSideSmartOrderRouter } from 'worker/useSmartOrderRouter'
 
-import { useSingleContractWithCallData } from '../state/multicall/hooks'
-import { useAllV3Routes } from './useAllV3Routes'
-import { useV3Quoter } from './useContract'
-import { useActiveWeb3React } from './web3'
-
-const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
-  [SupportedChainId.OPTIMISM]: 6_000_000,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
-}
-
-const DEFAULT_GAS_QUOTE = 2_000_000
 
 /**
- * Returns the best v3 trade for a desired swap
+ * Returns the best v3 trade by invoking the routing api
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
-export function useClientSideV3Trade<TTradeType extends TradeType>(
-  tradeType: TTradeType,
+export function useClientSideV3Trade(
+  tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
-  const [currencyIn, currencyOut] = useMemo(
+): {
+  state: V3TradeState
+  trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null
+} {
+  const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [tradeType, amountSpecified, otherCurrency]
+    [amountSpecified, otherCurrency, tradeType]
   )
-  const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut)
 
-  const quoter = useV3Quoter()
-  const { chainId } = useActiveWeb3React()
-  const quotesResults = useSingleContractWithCallData(
-    quoter,
-    amountSpecified
-      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
-      : [],
-    {
-      gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
-    }
+  const { isLoading, isError, quote } = useClientSideSmartOrderRouter(tradeType, amountSpecified, currencyIn, currencyOut)
+
+  const routes = useMemo(
+    () => computeRoutes(currencyIn, currencyOut, quote),
+    [currencyIn, currencyOut, quote]
   )
 
   return useMemo(() => {
-    if (
-      !amountSpecified ||
-      !currencyIn ||
-      !currencyOut ||
-      quotesResults.some(({ valid }) => !valid) ||
-      // skip when tokens are the same
-      (tradeType === TradeType.EXACT_INPUT
-        ? amountSpecified.currency.equals(currencyOut)
-        : amountSpecified.currency.equals(currencyIn))
-    ) {
+    if (!currencyIn || !currencyOut) {
       return {
         state: V3TradeState.INVALID,
         trade: null,
       }
     }
 
-    if (routesLoading || quotesResults.some(({ loading }) => loading)) {
+    if (isLoading) {
       return {
         state: V3TradeState.LOADING,
         trade: null,
       }
     }
 
-    const { bestRoute, amountIn, amountOut } = quotesResults.reduce(
-      (
-        currentBest: {
-          bestRoute: Route<Currency, Currency> | null
-          amountIn: CurrencyAmount<Currency> | null
-          amountOut: CurrencyAmount<Currency> | null
-        },
-        { result },
-        i
-      ) => {
-        if (!result) return currentBest
-
-        // overwrite the current best if it's not defined or if this route is better
-        if (tradeType === TradeType.EXACT_INPUT) {
-          const amountOut = CurrencyAmount.fromRawAmount(currencyOut, result.amountOut.toString())
-          if (currentBest.amountOut === null || JSBI.lessThan(currentBest.amountOut.quotient, amountOut.quotient)) {
-            return {
-              bestRoute: routes[i],
-              amountIn: amountSpecified,
-              amountOut,
-            }
-          }
-        } else {
-          const amountIn = CurrencyAmount.fromRawAmount(currencyIn, result.amountIn.toString())
-          if (currentBest.amountIn === null || JSBI.greaterThan(currentBest.amountIn.quotient, amountIn.quotient)) {
-            return {
-              bestRoute: routes[i],
-              amountIn,
-              amountOut: amountSpecified,
-            }
-          }
-        }
-
-        return currentBest
-      },
-      {
-        bestRoute: null,
-        amountIn: null,
-        amountOut: null,
-      }
-    )
-
-    if (!bestRoute || !amountIn || !amountOut) {
+    if (isError || !routes || routes.length === 0) {
       return {
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: null,
       }
     }
 
+    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType>({routes,tradeType})
+
     return {
+      // always return VALID regardless of isFetching status
       state: V3TradeState.VALID,
-      trade: Trade.createUncheckedTrade({
-        route: bestRoute,
-        tradeType,
-        inputAmount: amountIn,
-        outputAmount: amountOut,
-      }),
+      trade,
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
+  }, [currencyIn, currencyOut, isLoading, isError, routes, tradeType])
 }

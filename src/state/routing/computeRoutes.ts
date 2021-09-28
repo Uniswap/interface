@@ -1,10 +1,28 @@
-import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
+import { SwapRoute } from '@uniswap/smart-order-router'
+import { FeeAmount, Pool, Route, Trade } from '@uniswap/v3-sdk'
 
 import { GetQuoteResult } from './types'
 
-/**
- * Transforms a Routing API quote into an array of routes that
+// parses swap route
+export function formatRoutes(currencyIn: Currency, currencyOut: Currency, swapRoute: SwapRoute<TradeType.EXACT_INPUT> | SwapRoute<TradeType.EXACT_OUTPUT>) {
+  return Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType>(
+    {
+      routes: swapRoute.trade.swaps.map(({ route, inputAmount, outputAmount }) => {
+        return ({
+          route: new Route(route.pools.map(({ token0, token1, fee, sqrtRatioX96, liquidity, tickCurrent, tickDataProvider }) =>
+            new Pool(token0, token1, fee, sqrtRatioX96, liquidity, tickCurrent, tickDataProvider)),
+            route.input,
+            route.output),
+          inputAmount: CurrencyAmount.fromRawAmount(inputAmount.currency, inputAmount.toExact()),
+          outputAmount: CurrencyAmount.fromRawAmount(outputAmount.currency, outputAmount.toExact()),
+        })
+      }),
+      tradeType: swapRoute.trade.tradeType
+    })
+}
+
+/* Transforms a Routing API quote into an array of routes that
  * can be used to create a V3 `Trade`.
  */
 export function computeRoutes(
@@ -13,10 +31,10 @@ export function computeRoutes(
   quoteResult: Pick<GetQuoteResult, 'route'> | undefined
 ):
   | {
-      route: Route<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
+    route: Route<Currency, Currency>
+    inputAmount: CurrencyAmount<Currency>
+    outputAmount: CurrencyAmount<Currency>
+  }[]
   | undefined {
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
