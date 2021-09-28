@@ -9,10 +9,6 @@ import { isMobile } from 'react-device-detect'
 import { injected, NETWORK_URLS } from '../connectors'
 import { ethers } from 'ethers'
 
-const simpleRpcProvider = new ethers.providers.JsonRpcProvider(
-  'https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'
-)
-
 export const providers: {
   [chainId in ChainId]?: any
 } = {

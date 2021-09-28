@@ -83,7 +83,7 @@ export const portis = new PortisConnector({
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'DmmExchange',
-  appLogoUrl: 'https://i.ibb.co/yYH3kwL/favicon.png'
+  appLogoUrl: 'https://dmm.exchange/favicon.png'
 })
 
 export const ledger = new LedgerConnector({
