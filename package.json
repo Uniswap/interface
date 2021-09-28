@@ -1,7 +1,14 @@
 {
   "name": "@uniswap/interface",
   "description": "Uniswap Interface",
-  "homepage": ".",
+  "homepage": "https://github.com/Uniswap/interface",
+  "main": "dist/interface.js",
+  "module": "dist/interface.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
   "private": true,
   "devDependencies": {
     "@davatar/react": "1.6.2",
@@ -85,6 +92,7 @@
     "inter-ui": "^3.13.1",
     "jest-styled-components": "^7.0.5",
     "luxon": "^1.25.0",
+    "microbundle": "^0.13.3",
     "ms.macro": "^2.0.0",
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
@@ -138,7 +146,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
+    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
+    "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs"
   },
   "eslintConfig": {
     "extends": "react-app",
