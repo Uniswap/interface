@@ -189,9 +189,7 @@ const ListItem = ({ farm }: ListItemProps) => {
   const isUnstakeDisabled = isUnstakeInvalidAmount
 
   const canHarvest = (rewards: Reward[]): boolean => {
-    const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
-
-    return canHarvest
+    return rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
   }
 
   const isHarvestDisabled = !canHarvest(farmRewards)

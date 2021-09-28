@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Trans } from '@lingui/macro'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Flex } from 'rebass'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { ButtonPrimary } from 'components/Button'
 import { AutoRow, RowBetween } from 'components/Row'
@@ -18,6 +19,10 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
   const [open, setOpen] = useState<boolean>(false)
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
 
+  const canHarvestAll = (rewards: Reward[]): boolean => {
+    return rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
+  }
+
   return (
     <AutoRow width="fit-content">
       <Tag>
@@ -30,7 +35,7 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
               {formattedNum(totalRewardsUSD.toString(), true)}
             </TYPE.body>
-            {totalRewardsUSD > 0 && (
+            {canHarvestAll(totalRewards) && (
               <span onClick={() => setOpen(!open)}>
                 {open ? (
                   <ChevronUp size="14" color={theme.text1} style={{ margin: '0.15rem 0 0 0.25rem' }} />
@@ -43,17 +48,23 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
 
           {open && (
             <MenuFlyout>
-              {totalRewards.map(reward => (
-                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={reward.token.address}>
-                  {fixedFormatting(reward.amount, 18)} {reward.token.symbol}
-                </TYPE.body>
-              ))}
+              {totalRewards.map(reward => {
+                if (!reward || !reward.amount || reward.amount.lte(0)) {
+                  return null
+                }
+
+                return (
+                  <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={reward.token.address}>
+                    {fixedFormatting(reward.amount, 18)} {reward.token.symbol}
+                  </TYPE.body>
+                )
+              })}
             </MenuFlyout>
           )}
         </RowBetween>
       </Tag>
 
-      {totalRewards.length > 0 && totalRewardsUSD > 0 && (
+      {canHarvestAll(totalRewards) && (
         <div>
           <ButtonPrimary height="30px" borderRadius="4px" onClick={onHarvestAll}>
             <Trans>Harvest All</Trans>
