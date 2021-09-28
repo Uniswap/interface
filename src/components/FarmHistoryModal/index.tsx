@@ -13,7 +13,7 @@ import { useToken } from 'hooks/Tokens'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useFarmHistoryModalToggle } from 'state/application/hooks'
 import { Farm, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
-import { useFarmHistories } from 'state/farms/hooks'
+import { useYieldHistories } from 'state/farms/hooks'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 
@@ -91,7 +91,7 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
   const { chainId } = useActiveWeb3React()
   const farmHistoryModalOpen = useModalOpen(ApplicationModal.FARM_HISTORY)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
-  const { loading, data: histories } = useFarmHistories(farmHistoryModalOpen)
+  const { loading, data: histories } = useYieldHistories(farmHistoryModalOpen)
 
   const tokenToFarm = useCallback(
     (id: string) => {

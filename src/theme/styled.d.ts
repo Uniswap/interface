@@ -7,6 +7,8 @@ export interface Colors {
   black: Color
 
   // text
+  text: Color
+  subText: Color
   text1: Color
   text2: Color
   text3: Color
@@ -22,6 +24,8 @@ export interface Colors {
   text13: Color
 
   // backgrounds / greys
+  tableHeader: Color
+  background: Color
   bg1: Color
   bg2: Color
   bg3: Color
@@ -64,6 +68,7 @@ export interface Colors {
   // border colors
   border: Color
   border2: Color
+  border3: Color
 
   // table colors
   oddRow: Color

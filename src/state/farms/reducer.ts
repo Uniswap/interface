@@ -1,26 +1,32 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import { Farm } from 'state/farms/types'
-import { setFarmsData, setLoading, setError } from './actions'
+import { setFarmsData, setLoading, setShowConfirm, setAttemptingTxn, setTxHash, setYieldPoolsError } from './actions'
 
 export interface FarmsState {
-  readonly data: Farm[]
+  readonly data: { [key: string]: Farm[] }
   readonly loading: boolean
-  readonly error?: Error
+  readonly showConfirm: boolean
+  readonly attemptingTxn: boolean
+  readonly txHash: string
+  readonly error: string
 }
 
 const initialState: FarmsState = {
-  data: [],
+  data: {},
   loading: false,
-  error: undefined
+  showConfirm: false,
+  attemptingTxn: false,
+  txHash: '',
+  error: ''
 }
 
 export default createReducer<FarmsState>(initialState, builder =>
   builder
-    .addCase(setFarmsData, (state, { payload: { farms } }) => {
+    .addCase(setFarmsData, (state, { payload: data }) => {
       return {
         ...state,
-        data: farms
+        data
       }
     })
     .addCase(setLoading, (state, { payload: loading }) => {
@@ -29,7 +35,16 @@ export default createReducer<FarmsState>(initialState, builder =>
         loading
       }
     })
-    .addCase(setError, (state, { payload: error }) => {
+    .addCase(setShowConfirm, (state, { payload: showConfirm }) => {
+      state.showConfirm = showConfirm
+    })
+    .addCase(setAttemptingTxn, (state, { payload: attemptingTxn }) => {
+      state.attemptingTxn = attemptingTxn
+    })
+    .addCase(setTxHash, (state, { payload: txHash }) => {
+      state.txHash = txHash
+    })
+    .addCase(setYieldPoolsError, (state, { payload: error }) => {
       return {
         ...state,
         error

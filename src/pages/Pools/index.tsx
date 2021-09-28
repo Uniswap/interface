@@ -227,7 +227,6 @@ const Pools = ({
               <Trans>Select Pair</Trans>
               <SearchWrapper>
                 <ButtonOutlined
-                  width="98px"
                   padding="10px 12px"
                   as={Link}
                   to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
@@ -284,9 +283,11 @@ const Pools = ({
           {loadingPoolFarm && <Loader />}
         </div>
         <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
-          {farms.map((farm, index) => (
-            <PoolFarm key={index} farm={farm} />
-          ))}
+          {Object.values(farms)
+            .flat()
+            .map((farm, index) => (
+              <PoolFarm key={index} farm={farm} />
+            ))}
         </Flex>
       </PageWrapper>
       <SwitchLocaleLink />

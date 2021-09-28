@@ -477,9 +477,18 @@ export default function About() {
               (c) dmm.exchange
             </Text>
           </div>
-          {farms.map(
-            (farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />
-          )}
+          {Object.values(farms)
+            .flat()
+            .map(
+              (farm, index) =>
+                index === indexx && (
+                  <Apr
+                    key={farm.id}
+                    farm={farm}
+                    onAprUpdate={handleAprUpdate}
+                  />
+                )
+            )}
         </div>
       </div>
     </div>

@@ -52,7 +52,7 @@ msgstr "Một phần phí của mỗi giao dịch ({0}%) được chuyển đế
 msgid "AMP"
 msgstr "AMP"
 
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = Hệ số khuếch đại Amplification factor. Pool khuếch đại có hiệu quả sử dụng vốn cao hơn. AMP cao hơn, hiệu quả sử dụng vốn cao hơn và tăng tính thanh khoản trong một phạm vi giá."
 
@@ -66,10 +66,10 @@ msgstr "Tính thanh khoản của Hệ Số Khuyếch Đại AMP"
 msgid "AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity."
 msgstr "Yếu tố AMP x Tính thanh khoản trong pool. Các pool khuếch đại có hiệu quả sử dụng vốn và tính thanh khoản cao hơn."
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/index.tsx
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "APY"
 msgstr "APY"
 
@@ -166,8 +166,8 @@ msgstr "Phân tích"
 msgid "Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps, aggregators, end users) can source liquidity from the DMM."
 msgstr "Bất kỳ ai cũng có thể cung cấp thanh khoản bằng cách gửi token vào các pool khác nhau và bất kỳ người sử dụng thanh khoản nào (ví dụ: Dapps, người tổng hợp, người dùng cuối) đều có thể lấy thanh khoản từ DMM."
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -185,8 +185,8 @@ msgstr "Chấp nhận {0}"
 msgid "Approved"
 msgstr "Đã chấp nhận"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -206,8 +206,8 @@ msgstr "Quay lại"
 msgid "Balance: {0}"
 msgstr "Số dư: {0}"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Balance: {0} {1}-{2} LP"
 msgstr "Số dư: {0} {1} - {2} LP"
 
@@ -400,8 +400,8 @@ msgstr "Bảng điều khiển"
 msgid "DeFi's First Multi-Chain"
 msgstr ""
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Deposit: {0} {1}-{2} LP"
 msgstr "Gửi: {0} {1} - {2} LP"
 
@@ -455,10 +455,6 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "Các Phí Linh Động"
 
-#: 
-#~ msgid "ENDING IN"
-#~ msgstr "KẾT THÚC TRONG"
-
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
@@ -471,7 +467,7 @@ msgstr ""
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Farms/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "Eligible Pools"
 msgstr "Các Pool Đủ Điều Kiện"
 
@@ -483,9 +479,10 @@ msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạ
 msgid "Encourage trading"
 msgstr "Khuyến khích giao dịch"
 
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Ending In"
-msgstr ""
+msgstr "KẾT THÚC TRONG"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -532,7 +529,7 @@ msgstr "Lỗi khi kết nối. Hãy thử làm mới trang."
 msgid "Estimated Refund"
 msgstr "Khoản tiền hoàn lại ước tính"
 
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "Tổng lợi nhuận ước tính hàng năm từ phí + phần thưởng"
 
@@ -588,8 +585,8 @@ msgstr "Hoàn toàn trên chuỗi On-chain; <0 /> Tích hợp thẳng"
 msgid "Fully Vested"
 msgstr "Hoàn toàn được xác nhận"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
 msgstr "Nhận {0} - {1} LP ↗"
 
@@ -602,18 +599,18 @@ msgstr "Github"
 msgid "HARVEST"
 msgstr ""
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Harvest"
 msgstr "Thu hoạch"
 
-#: src/pages/Farms/index.tsx
+#: src/components/YieldPools/HarvestAll.tsx
 msgid "Harvest All"
 msgstr "Thu hoạch tất cả"
 
-#: src/pages/Farms/index.tsx
-msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
-msgstr "Thu thập phần thưởng của bạn bằng cách nhấp vào một hoặc nhiều Pool đủ điều kiện của bạn trong danh sách bên dưới."
+#: 
+#~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
+#~ msgstr "Thu thập phần thưởng của bạn bằng cách nhấp vào một hoặc nhiều Pool đủ điều kiện của bạn trong danh sách bên dưới."
 
 #: src/pages/Pool/index.tsx
 msgid "Here you can view all your liquidity positions and remove/add more liquidity."
@@ -624,7 +621,7 @@ msgid "Higher earnings potential for liquidity providers, reducing the impact of
 msgstr "Tiềm năng thu nhập cao hơn cho các nhà cung cấp thanh khoản, giảm tác động của IL"
 
 #: src/components/FarmHistoryModal/index.tsx
-#: src/pages/Farms/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "History"
 msgstr "Lịch sử"
 
@@ -745,7 +742,7 @@ msgstr "Đường cong Định giá có thể Lập trình được của KyberD
 msgid "LOCKED"
 msgstr "ĐÃ KHÓA"
 
-#: src/pages/Farms/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "Tìm hiểu thêm →"
 
@@ -862,8 +859,8 @@ msgstr "Đã nhận Tối thiểu"
 msgid "My Dashboard"
 msgstr "Quản lý"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Deposit"
 msgstr "Tiền gửi của tôi"
 
@@ -875,12 +872,12 @@ msgstr "Các Pool Thanh khoản của tôi"
 msgid "My Pools on External Platforms"
 msgstr "Các Pool của tôi trên các Nền tảng Bên ngoài"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "My Rewards"
 msgstr "Các Phần thưởng của tôi"
 
-#: src/pages/Farms/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Total Rewards"
 msgstr "Tổng các Phần thưởng của tôi"
 
@@ -1029,7 +1026,7 @@ msgstr "Đã gộp chung {0}:"
 msgid "Pools"
 msgstr "Các Pool"
 
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
@@ -1149,10 +1146,14 @@ msgstr "Việc xóa token Pool sẽ chuyển đổi vị trí của bạn trở 
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Xóa {0} {1} và {2} {3}"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Reward"
 msgstr "Phần thưởng"
+
+#: src/components/YieldPools/HarvestAll.tsx
+msgid "Rewards"
+msgstr ""
 
 #: src/components/Vesting/Schedule.tsx
 msgid "Rewards: {0} {1}"
@@ -1230,16 +1231,16 @@ msgstr "Trượt Giá Cho Phép:"
 msgid "Slippage tolerance"
 msgstr "Trượt giá cho phép"
 
-#: src/pages/Farms/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
 msgstr "Stake token thanh khoản LP DMM của bạn để kiếm các phần thưởng token."
 
-#: src/pages/Farms/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "Staked Only"
 msgstr "Chỉ Stake"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/index.tsx
+#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "TVL đã Stake"
 
@@ -1355,7 +1356,7 @@ msgstr "Tổng Giá trị Đã khóa"
 msgid "Total Value Locked:"
 msgstr "Tổng Giá trị Đã khóa:"
 
-#: src/pages/Farms/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
@@ -1463,7 +1464,7 @@ msgstr "V1"
 msgid "VESTING PERIODS"
 msgstr "LỊCH VESTING"
 
-#: src/pages/Farms/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "Vesting"
 msgstr "Vesting"
 
@@ -1656,8 +1657,8 @@ msgstr "{0} đã bị loại bỏ"
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
-#: src/components/FarmsList/ListItem.tsx
-#: src/components/FarmsList/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr ""
 
