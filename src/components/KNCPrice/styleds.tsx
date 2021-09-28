@@ -13,4 +13,8 @@ export const KNCPriceContainer = styled.div`
 export const KNCPriceWrapper = styled.div`
   display: flex;
   align-items: center;
+
+  img {
+    margin-right: 4px;
+  }
 `
