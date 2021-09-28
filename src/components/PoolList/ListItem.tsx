@@ -153,6 +153,14 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
     true
   )
 
+  const formatPriceMin = (price?: Fraction) => {
+    return price?.toSignificant(6) ?? '0'
+  }
+
+  const formatPriceMax = (price?: Fraction) => {
+    return !price ? '' : price.equalTo(new Fraction('-1')) ? '♾️' : price.toSignificant(6)
+  }
+
   return (
     <div>
       {isFarmingPool && (
@@ -284,12 +292,12 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
             <Trans>Price Range</Trans>
           </DataTitle>
           <DataText>
-            {pool.token0.symbol}/{pool.token1.symbol}: {priceRangeCalcByPair(pool)[0][0]?.toSignificant(6) ?? '0'} -{' '}
-            {priceRangeCalcByPair(pool)[0][1]?.toSignificant(6) ?? '♾️'}
+            {pool.token0.symbol}/{pool.token1.symbol}: {formatPriceMin(priceRangeCalcByPair(pool)[0][0])} -{' '}
+            {formatPriceMax(priceRangeCalcByPair(pool)[0][1])}
           </DataText>
           <DataText>
-            {pool.token1.symbol}/{pool.token0.symbol}: {priceRangeCalcByPair(pool)[1][0]?.toSignificant(6) ?? '0'} -{' '}
-            {priceRangeCalcByPair(pool)[1][1]?.toSignificant(6) ?? '♾️'}
+            {pool.token1.symbol}/{pool.token0.symbol}: {formatPriceMin(priceRangeCalcByPair(pool)[1][0])} -{' '}
+            {formatPriceMax(priceRangeCalcByPair(pool)[1][1])}
           </DataText>
         </GridItem>
         <GridItem noBorder>
