@@ -249,24 +249,6 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
  * @returns
  */
 
-//  const tokenPrices = useTokensPrice((rewards || []).map(item => item.token))
-//  if (!rewards) {
-//    return 0
-//  }
-
-//  const rewardUSD = rewards.reduce((total, reward, index) => {
-//    if (!reward || !reward.amount || !reward.token) {
-//      return total
-//    }
-
-//    if (chainId && tokenPrices[index]) {
-//      total += parseFloat(getFullDisplayBalance(reward.amount)) * tokenPrices[index]
-//    }
-
-//    return total
-//  }, 0)
-
-//  return rewardUSD
 export function useFarmApr(
   rewardPerBlocks: RewardPerBlock[],
   poolLiquidityUsd: string,
