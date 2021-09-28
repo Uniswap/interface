@@ -19,6 +19,7 @@ import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hoo
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeActionPanel } from './BridgeActionPanel'
+import { NETWORK_DETAIL } from '../../constants'
 
 const Title = styled.p`
   margin: 0;
@@ -60,7 +61,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth, withdrawEth } = useArbBridge()
+  const { depositEth, withdrawEth, triggerOutboxEth } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -72,8 +73,6 @@ export default function Bridge() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
-  const onCollect = () => console.log('collect')
-
   const handleResetBridge = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
@@ -84,14 +83,15 @@ export default function Bridge() {
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
   const handleSubmit = useCallback(() => {
-    if (chainId === fromNetwork.chainId) {
+    if (!chainId) return
+    if (!NETWORK_DETAIL[chainId].isArbitrum) {
       handleResetBridge()
       return depositEth(typedValue)
     } else {
       handleResetBridge()
       return withdrawEth(typedValue)
     }
-  }, [chainId, depositEth, fromNetwork.chainId, handleResetBridge, typedValue, withdrawEth])
+  }, [chainId, depositEth, handleResetBridge, typedValue, withdrawEth])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -170,7 +170,7 @@ export default function Bridge() {
         />
       </AppBody>
       {chainId && !!bridgeSummaries.length && (
-        <BridgeTransactionsSummary show transactions={bridgeSummaries} onCollect={onCollect} />
+        <BridgeTransactionsSummary show transactions={bridgeSummaries} onCollect={triggerOutboxEth} />
       )}
 
       {/* {step === Step.Initial && !!typedValue && (

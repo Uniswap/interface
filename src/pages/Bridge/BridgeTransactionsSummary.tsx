@@ -4,12 +4,13 @@ import { ButtonPrimary } from '../../components/Button'
 import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
+import { BridgeTxn } from '../../state/bridgeTransactions/types'
 import { TYPE } from '../../theme'
 import { BridgeStatusTag } from './BridgeStatusTag'
 
 interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
-  onCollect: () => void
+  onCollect: ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => void
 }
 
 export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: BridgeTransactionsSummaryProps) => {
@@ -29,7 +30,7 @@ export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: Bri
           </thead>
           <tbody>
             {Object.values(transactions).map((tx, index) => {
-              const { assetName, fromName, status, toName, value } = tx
+              const { assetName, fromName, status, toName, value, batchIndex, batchNumber } = tx
 
               return (
                 <tr key={index} style={{ lineHeight: '22px' }}>
@@ -49,7 +50,7 @@ export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: Bri
                     </TYPE.main>
                   </td>
                   <td align="left">
-                    <BridgeStatusTag status={status} onCollect={onCollect} />
+                    <BridgeStatusTag status={status} onCollect={() => onCollect({ value, batchIndex, batchNumber })} />
                   </td>
                 </tr>
               )
@@ -57,7 +58,16 @@ export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: Bri
           </tbody>
         </Table>
         {selectedTx && (
-          <ButtonPrimary onClick={onCollect} mt="12px">
+          <ButtonPrimary
+            onClick={() =>
+              onCollect({
+                value: selectedTx.value,
+                batchIndex: selectedTx.batchIndex,
+                batchNumber: selectedTx.batchNumber
+              })
+            }
+            mt="12px"
+          >
             Collect
           </ButtonPrimary>
         )}

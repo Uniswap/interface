@@ -8,7 +8,7 @@ import { BridgeTxn, BridgeTxnsState, BridgeTxnType } from './types'
 
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
-export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value'> & {
+export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
   fromName: string
   toName: string
   log: BridgeTransactionLog[]
@@ -112,7 +112,6 @@ export const useBridgeL1Deposits = () => {
   }, [l1ChainId, l2ChainId, state])
 }
 
-
 export const useBridgePendingWithdrawals = () => {
   const {
     chainIdPair: { l2ChainId }
@@ -125,12 +124,12 @@ export const useBridgePendingWithdrawals = () => {
     if (l2ChainId && state[l2ChainId]) {
       const l2Txs = state[l2ChainId]
 
-      transactions = Object.values(l2Txs).filter(tx => (
-        tx.type === 'withdraw' &&
-        tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
-        tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
-      ))
-
+      transactions = Object.values(l2Txs).filter(
+        tx =>
+          tx.type === 'withdraw' &&
+          tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
+          tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
+      )
     }
 
     return transactions
@@ -167,6 +166,8 @@ export const useBridgeTransactionsSummary = () => {
           toName: NETWORK_DETAIL[to].chainName,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
+          batchIndex: tx.batchIndex,
+          batchNumber: tx.batchNumber,
           log: []
         }
 

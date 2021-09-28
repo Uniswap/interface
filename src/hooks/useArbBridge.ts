@@ -5,10 +5,8 @@ import { utils, BigNumber } from 'ethers'
 import { useActiveWeb3React } from '.'
 
 import { BridgeContext } from '../contexts/BridgeProvider'
-import { BridgeAssetType } from '../state/bridgeTransactions/types'
+import { BridgeAssetType, BridgeTxn } from '../state/bridgeTransactions/types'
 import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
-import { useBridgePendingWithdrawals } from '../state/bridgeTransactions/hooks'
-import { ChainId } from '@swapr/sdk'
 
 export const useBridge = () => {
   return useContext(BridgeContext)
@@ -19,9 +17,9 @@ export const useArbBridge = () => {
     bridge,
     chainIdPair: { l1ChainId, l2ChainId }
   } = useBridge()
+
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
-  const bridgePendingWithdrawals = useBridgePendingWithdrawals()
 
   const depositEth = useCallback(
     async (value: string) => {
@@ -63,15 +61,12 @@ export const useArbBridge = () => {
 
   const withdrawEth = useCallback(
     async (value: string) => {
-      if (!account || !bridge || !l1ChainId || !l2ChainId) return
+      if (!account || !bridge || !l2ChainId) return
       const weiValue = utils.parseEther(value)
 
       try {
         // L2
         const txn = await bridge.withdrawETH(weiValue)
-
-        console.log('Call withdrawETH', txn)
-        console.log('Withdraw hash', txn.hash)
 
         dispatch(
           addBridgeTxn({
@@ -86,7 +81,6 @@ export const useArbBridge = () => {
         )
 
         const withdrawReceipt = await txn.wait()
-        console.log('Get withdraw receipt', withdrawReceipt)
 
         dispatch(
           updateBridgeTxnReceipt({
@@ -95,23 +89,21 @@ export const useArbBridge = () => {
             receipt: withdrawReceipt
           })
         )
-        return withdrawReceipt
       } catch (err) {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId, l2ChainId]
+    [account, bridge, dispatch, l2ChainId]
   )
 
   const triggerOutboxEth = useCallback(
-    async (id: ChainId) => {
-      if (!account || !bridge || !l1ChainId) return
+    async ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => {
+      if (!account || !bridge || !l1ChainId || batchIndex || batchNumber || value) return
 
-      const batchNumber = BigNumber.from(bridgePendingWithdrawals[id].batchNumber)
-      const batchIndex = BigNumber.from(bridgePendingWithdrawals[id].batchIndex)
-      const value = bridgePendingWithdrawals[id].value
+      const batchNumberBN = BigNumber.from(batchNumber)
+      const batchIndexBN = BigNumber.from(batchIndex)
 
-      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumber, batchIndex, true)
+      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
 
       dispatch(
         addBridgeTxn({
@@ -139,7 +131,7 @@ export const useArbBridge = () => {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId, bridgePendingWithdrawals]
+    [account, bridge, dispatch, l1ChainId]
   )
 
   return {
