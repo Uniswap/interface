@@ -8,7 +8,6 @@ import { useRouteMatch } from 'react-router'
 
 const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
   display: flex;
-  padding: 20px 18px;
   opacity: 0.8;
   transition: opacity 0.25s ease;
   :hover {
@@ -17,7 +16,6 @@ const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
 
   ${({ theme, isAboutpage }) => theme.mediaWidth.upToLarge`
     ${isAboutpage ? `display: none;` : ``}
-    padding: 0 18px;
     height: fit-content;
     z-index: 99;
   `}

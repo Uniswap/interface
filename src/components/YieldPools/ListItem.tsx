@@ -24,6 +24,8 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
+import { useAppDispatch } from 'state/hooks'
+import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
 import { formattedNum, getTokenLogoURL, isAddressString, shortenAddress } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
@@ -32,6 +34,25 @@ import { currencyIdFromAddress } from 'utils/currencyId'
 import { useBlockNumber } from 'state/application/hooks'
 import { t, Trans } from '@lingui/macro'
 import InfoHelper from 'components/InfoHelper'
+import {
+  TableRow,
+  ExpandedSection,
+  ExpandedContent,
+  StakeGroup,
+  BalanceInfo,
+  GreyText,
+  LPInfoContainer,
+  LPInfo,
+  GetLP,
+  StyledItemCard,
+  RewardBalanceWrapper,
+  PoolRewardUSD,
+  DataText,
+  APY,
+  GridItem,
+  DataTitle,
+  Seperator
+} from './styleds'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -43,179 +64,17 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
   return fraction.toFixed(18)
 }
 
-const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
-  display: grid;
-  grid-gap: 3rem;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr 0.25fr;
-  grid-template-areas: 'pools liq end apy reward staked_balance expand';
-  padding: 15px 36px 13px 26px;
-  font-size: 14px;
-  align-items: center;
-  height: fit-content;
-  position: relative;
-  opacity: ${({ fade }) => (fade ? '0.6' : '1')};
-  background-color: ${({ theme }) => theme.bg15};
-  border: 1px solid transparent;
-  border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? 'transparent' : theme.advancedBorder)};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-gap: 1rem;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-gap: 1.5rem;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-gap: 1.5rem;
-  `};
-
-  &:hover {
-    cursor: pointer;
-  }
-`
-
-const ExpandedSection = styled.div`
-  background-color: ${({ theme }) => theme.bg15};
-  padding: 0 36px;
-`
-
-export const ExpandedContent = styled.div`
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.bg6};
-  font-size: 14px;
-  font-weight: 500;
-  padding: 16px 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    background-color: ${({ theme }) => theme.evenRow};
-    margin-bottom: 1rem;
-  `};
-`
-
-const StakeGroup = styled.div`
-  display: grid;
-  grid-gap: 1.5rem;
-  grid-template-columns: 3fr 3fr 2fr;
-  grid-template-areas: 'stake unstake harvest';
-  margin-bottom: 8px;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 1fr;
-    grid-template-areas: 'stake';
-    grid-gap: 1rem;
-  `};
-`
-
-const BalanceInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-const GreyText = styled.div`
-  color: ${({ theme }) => theme.primaryText2};
-  margin-bottom: 8px;
-`
-
-const LPInfoContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  `};
-`
-
-const LPInfo = styled.div`
-  margin-right: 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #08a1e7;
-  line-height: 2;
-`
-
-const GetLP = styled.span`
-  font-size: 14px;
-  font-weight: 600;
-`
-
-const StyledItemCard = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 4px;
-  border-radius: 10px;
-  margin-bottom: 0;
-  padding: 8px 20px 4px 20px;
-  background-color: ${({ theme }) => theme.bg13};
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin-bottom: 20px;
-  `}
-`
-
-const RewardBalanceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-`
-
-const RewardUSD = styled.div`
-  color: ${({ theme }) => theme.primaryText2};
-`
-
-const DataText = styled(Flex)<{ align?: string }>`
-  color: ${({ theme }) => theme.text7};
-  justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
-  font-weight: 500;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    font-size: 14px;
-  `}
-`
-
-const APY = styled(DataText)`
-  color: ${({ theme }) => theme.text12};
-`
-
-const GridItem = styled.div<{ noBorder?: boolean }>`
-  position: relative;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
-  padding-bottom: 12px;
-`
-
-const DataTitle = styled.div`
-  display: flex;
-  align-items: flex-start;
-  color: ${({ theme }) => theme.text6};
-  &:hover {
-    opacity: 0.6;
-  }
-  user-select: none;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-size: 12px;
-`
-
-const Seperator = styled.div`
-  border: 1px solid ${({ theme }) => theme.bg14};
-`
-
 interface ListItemProps {
   farm: Farm
   oddRow?: boolean
 }
 
 const ListItem = ({ farm }: ListItemProps) => {
-  const { chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [expand, setExpand] = useState<boolean>(false)
-  const xxlBreakpoint = useMedia('(min-width: 1200px)')
+  const breakpoint = useMedia('(min-width: 1000px)')
   const currentBlock = useBlockNumber()
+  const dispatch = useAppDispatch()
 
   const currency0 = useToken(farm.token0?.id) as Token
   const currency1 = useToken(farm.token1?.id) as Token
@@ -341,25 +200,67 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const { deposit, withdraw, harvest } = useFairLaunch(farm.fairLaunchAddress)
 
-  const handleClickStake = async (pid: number) => {
-    setPendingTx(true)
-    await deposit(pid, ethers.utils.parseUnits(depositValue, balance.decimals), pairSymbol, false)
-    setPendingTx(false)
+  const handleStake = async (pid: number) => {
+    if (!chainId || !account) {
+      return
+    }
+
+    dispatch(setShowConfirm(true))
+    dispatch(setAttemptingTxn(true))
+    dispatch(setTxHash(''))
+
+    try {
+      const txHash = await deposit(pid, ethers.utils.parseUnits(depositValue, balance.decimals), pairSymbol, false)
+      dispatch(setTxHash(txHash))
+    } catch (err) {
+      console.error(err)
+      dispatch(setYieldPoolsError((err as Error).message))
+    }
+
+    dispatch(setAttemptingTxn(false))
   }
 
-  const handleWithdraw = async (pid: number) => {
-    setPendingTx(true)
-    await withdraw(pid, ethers.utils.parseUnits(withdrawValue, staked.decimals), pairSymbol)
-    setPendingTx(false)
+  const handleUnstake = async (pid: number) => {
+    if (!chainId || !account) {
+      return
+    }
+
+    dispatch(setShowConfirm(true))
+    dispatch(setAttemptingTxn(true))
+    dispatch(setTxHash(''))
+
+    try {
+      const txHash = await withdraw(pid, ethers.utils.parseUnits(withdrawValue, staked.decimals), pairSymbol)
+      dispatch(setTxHash(txHash))
+    } catch (err) {
+      console.error(err)
+      dispatch(setYieldPoolsError((err as Error).message))
+    }
+
+    dispatch(setAttemptingTxn(false))
   }
 
-  const handleClickHarvest = async (pid: number) => {
-    setPendingTx(true)
-    await harvest(pid, pairSymbol)
-    setPendingTx(false)
+  const handleHarvest = async (pid: number) => {
+    if (!chainId || !account) {
+      return
+    }
+
+    dispatch(setShowConfirm(true))
+    dispatch(setAttemptingTxn(true))
+    dispatch(setTxHash(''))
+
+    try {
+      const txHash = await harvest(pid, pairSymbol)
+      dispatch(setTxHash(txHash))
+    } catch (err) {
+      console.error(err)
+      dispatch(setYieldPoolsError((err as Error).message))
+    }
+
+    dispatch(setAttemptingTxn(false))
   }
 
-  return xxlBreakpoint ? (
+  return breakpoint ? (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
         <DataText grid-area="pools">
@@ -373,10 +274,10 @@ const ListItem = ({ farm }: ListItemProps) => {
           </div>
         </DataText>
         <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
-        <DataText grid-area="liq" align="right" style={{ textAlign: 'right' }}>
+        <DataText grid-area="end" align="right" style={{ textAlign: 'right' }}>
           {farm.time}
         </DataText>
-        <APY grid-area="apy">
+        <APY grid-area="apy" align="right">
           {apr.toFixed(2)}%
           {apr !== 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
         </APY>
@@ -492,7 +393,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                             disabled={isStakeDisabled}
                             padding="12px"
                             margin="14px 0"
-                            onClick={() => handleClickStake(farm.pid)}
+                            onClick={() => handleStake(farm.pid)}
                           >
                             {depositValue && isStakeInvalidAmount ? 'Invalid Amount' : 'Stake'}
                           </ButtonPrimary>
@@ -525,7 +426,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                             disabled={isUnstakeDisabled}
                             padding="12px"
                             margin="14px 0"
-                            onClick={() => handleWithdraw(farm.pid)}
+                            onClick={() => handleUnstake(farm.pid)}
                           >
                             {withdrawValue && isUnstakeInvalidAmount ? 'Invalid Amount' : 'Unstake'}
                           </ButtonPrimary>
@@ -553,13 +454,13 @@ const ListItem = ({ farm }: ListItemProps) => {
                             )
                           })}
                         </div>
-                        <RewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</RewardUSD>
+                        <PoolRewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</PoolRewardUSD>
                       </RewardBalanceWrapper>
                       <ButtonPrimary
                         disabled={isHarvestDisabled}
                         padding="12px"
                         margin="15px 0"
-                        onClick={() => handleClickHarvest(farm.pid)}
+                        onClick={() => handleHarvest(farm.pid)}
                       >
                         <Trans>Harvest</Trans>
                       </ButtonPrimary>
@@ -642,7 +543,7 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataText>
         </GridItem>
 
-        <GridItem noBorder>
+        <GridItem>
           <DataTitle>
             <Trans>My Rewards</Trans>
           </DataTitle>
@@ -667,11 +568,23 @@ const ListItem = ({ farm }: ListItemProps) => {
           </DataText>
         </GridItem>
 
-        <GridItem noBorder>
+        <GridItem>
           <DataTitle>
             <Trans>My Deposit</Trans>
           </DataTitle>
           <DataText>{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
+        </GridItem>
+
+        <GridItem noBorder>
+          <DataTitle>
+            <span>
+              <Trans>Ending In</Trans>
+            </span>
+          </DataTitle>
+        </GridItem>
+
+        <GridItem noBorder>
+          <DataText>{farm.time}</DataText>
         </GridItem>
       </StyledItemCard>
 
@@ -735,7 +648,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                         disabled={isStakeDisabled}
                         padding="12px"
                         margin="14px 0"
-                        onClick={() => handleClickStake(farm.pid)}
+                        onClick={() => handleStake(farm.pid)}
                       >
                         {depositValue && isStakeInvalidAmount ? 'Invalid Amount' : 'Stake'}
                       </ButtonPrimary>
@@ -809,7 +722,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                       disabled={isUnstakeDisabled}
                       padding="12px"
                       margin="14px 0"
-                      onClick={() => handleWithdraw(farm.pid)}
+                      onClick={() => handleUnstake(farm.pid)}
                     >
                       {withdrawValue && isUnstakeInvalidAmount ? 'Invalid Amount' : 'Unstake'}
                     </ButtonPrimary>
@@ -848,13 +761,13 @@ const ListItem = ({ farm }: ListItemProps) => {
                       )
                     })}
                   </div>
-                  <RewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</RewardUSD>
+                  <PoolRewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</PoolRewardUSD>
                 </RewardBalanceWrapper>
                 <ButtonPrimary
                   disabled={isHarvestDisabled}
                   padding="12px"
                   margin="15px 0"
-                  onClick={() => handleClickHarvest(farm.pid)}
+                  onClick={() => handleHarvest(farm.pid)}
                 >
                   <Trans>Harvest</Trans>
                 </ButtonPrimary>

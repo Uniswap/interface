@@ -23,9 +23,25 @@ import { useToV2LiquidityTokens, useLiquidityPositionTokenPairs } from 'state/us
 import { useStakingInfo } from 'state/stake/hooks'
 import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 
-const PageWrapper = styled(AutoColumn)`
-  max-width: 720px;
+export const PageWrapper = styled(AutoColumn)`
+  padding: 12px 16px 100px;
   width: 100%;
+
+  @media only screen and (min-width: 768px) {
+    padding: 16px 16px 100px;
+  }
+
+  @media only screen and (min-width: 1000px) {
+    padding: 16px 32px 100px;
+  }
+
+  @media only screen and (min-width: 1366px) {
+    padding: 16px 215px 50px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    padding: 16px 252px 50px;
+  }
 `
 
 const VoteCard = styled(DataCard)`

@@ -42,6 +42,8 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
+    text: darkMode ? '#ffffff' : '#3a3a3a',
+    subText: darkMode ? '#A7B6BD' : '#5C6468',
     text1: darkMode ? '#FFFFFF' : '#000000',
     text2: darkMode ? '#C3C5CB' : '#565A69',
     text3: darkMode ? '#6C7284' : '#888D9B',
@@ -57,6 +59,8 @@ export function colors(darkMode: boolean): Colors {
     text13: darkMode ? '#f5f5f5' : '#3a3a3a',
 
     // backgrounds
+    tableHeader: darkMode ? '#303E46' : '#F9F9F9',
+    background: darkMode ? '#243036' : '#ffffff',
     bg1: darkMode ? '#212429' : '#FFFFFF',
     bg2: darkMode ? '#222c31' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#dcdbdc',
@@ -101,6 +105,7 @@ export function colors(darkMode: boolean): Colors {
     // border colors
     border: darkMode ? '#4c5f69' : '#859aa5',
     border2: darkMode ? '#404b51' : '#c2c2c2',
+    border3: darkMode ? '#40505A' : 'transparent',
 
     // table colors
     oddRow: darkMode ? '#283339' : '#f4f4f4',

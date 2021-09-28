@@ -40,20 +40,17 @@ const useFairLaunch = (address: string) => {
       return rewardTokens
     } catch (err) {
       console.error(err)
-      return err
+      return []
     }
   }, [fairLaunchContract])
 
   // Deposit
   const deposit = useCallback(
     async (pid: number, amount: BigNumber, name: string, shouldHaverst = false) => {
-      try {
-        const tx = await fairLaunchContract?.deposit(pid, amount, shouldHaverst)
-        return addTransaction(tx, { summary: `Deposit ${name}` })
-      } catch (e) {
-        console.error(e)
-        return e
-      }
+      const tx = await fairLaunchContract?.deposit(pid, amount, shouldHaverst)
+      addTransaction(tx, { summary: `Deposit ${name}` })
+
+      return tx.hash
     },
     [addTransaction, fairLaunchContract]
   )
@@ -61,39 +58,30 @@ const useFairLaunch = (address: string) => {
   // Withdraw
   const withdraw = useCallback(
     async (pid: number, amount: BigNumber, name: string) => {
-      try {
-        const tx = await fairLaunchContract?.withdraw(pid, amount)
-        return addTransaction(tx, { summary: `Withdraw ${name}` })
-      } catch (e) {
-        console.error(e)
-        return e
-      }
+      const tx = await fairLaunchContract?.withdraw(pid, amount)
+      addTransaction(tx, { summary: `Withdraw ${name}` })
+
+      return tx.hash
     },
     [addTransaction, fairLaunchContract]
   )
 
   const harvest = useCallback(
     async (pid: number, name: string) => {
-      try {
-        const tx = await fairLaunchContract?.harvest(pid)
-        return addTransaction(tx, { summary: `Harvest ${name}` })
-      } catch (e) {
-        console.error(e)
-        return e
-      }
+      const tx = await fairLaunchContract?.harvest(pid)
+      addTransaction(tx, { summary: `Harvest ${name}` })
+
+      return tx.hash
     },
     [addTransaction, fairLaunchContract]
   )
 
   const harvestMultiplePools = useCallback(
     async (pids: number[]) => {
-      try {
-        const tx = await fairLaunchContract?.harvestMultiplePools(pids)
-        return addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
-      } catch (e) {
-        console.error(e)
-        return e
-      }
+      const tx = await fairLaunchContract?.harvestMultiplePools(pids)
+      addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
+
+      return tx.hash
     },
     [addTransaction, fairLaunchContract]
   )

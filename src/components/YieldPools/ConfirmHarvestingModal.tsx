@@ -4,25 +4,26 @@ import { useSelector } from 'react-redux'
 import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
-import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
+import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
 
-export default function ConfirmVestingModal() {
-  const showConfirm = useSelector<AppState, boolean>(state => state.vesting.showConfirm)
-  const attemptingTxn = useSelector<AppState, boolean>(state => state.vesting.attemptingTxn)
-  const txHash = useSelector<AppState, string>(state => state.vesting.txHash)
-  const vestingError = useSelector<AppState, string>(state => state.vesting.error)
+export default function ConfirmHarvestingModal() {
+  const showConfirm = useSelector<AppState, boolean>(state => state.farms.showConfirm)
+  const attemptingTxn = useSelector<AppState, boolean>(state => state.farms.attemptingTxn)
+  const txHash = useSelector<AppState, string>(state => state.farms.txHash)
+  const yieldPoolsError = useSelector<AppState, string>(state => state.farms.error)
   const dispatch = useAppDispatch()
 
   const handleConfirmDismiss = useCallback(() => {
     dispatch(setShowConfirm(false))
     dispatch(setAttemptingTxn(false))
     dispatch(setTxHash(''))
-    dispatch(setVestingError(''))
+    dispatch(setYieldPoolsError(''))
   }, [dispatch])
 
   const confirmationContent = useCallback(
-    () => (vestingError ? <TransactionErrorContent onDismiss={handleConfirmDismiss} message={vestingError} /> : null),
-    [handleConfirmDismiss, vestingError]
+    () =>
+      yieldPoolsError ? <TransactionErrorContent onDismiss={handleConfirmDismiss} message={yieldPoolsError} /> : null,
+    [handleConfirmDismiss, yieldPoolsError]
   )
 
   return (

@@ -78,8 +78,9 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
     .div(100)
 
-  const toUSD: (value: BigNumber) => string | 0 = useCallback(
-    value => tokenPrices[0] && value && `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
+  const toUSD: (value: BigNumber) => string = useCallback(
+    value =>
+      tokenPrices[0] && value ? `$${(tokenPrices[0] * parseFloat(fixedFormatting(value, 18))).toFixed(2)}` : '',
     [tokenPrices]
   )
 

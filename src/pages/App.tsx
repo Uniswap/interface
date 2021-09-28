@@ -24,7 +24,7 @@ import KNCPrice from 'components/KNCPrice'
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
 const Pool = lazy(() => import(/* webpackChunkName: 'pool-page' */ './Pool'))
-const Farms = lazy(() => import(/* webpackChunkName: 'farms-page' */ './Farms'))
+const Yield = lazy(() => import(/* webpackChunkName: 'yield-page' */ './Yield'))
 const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ './PoolFinder'))
 const PoolFinderExternal = lazy(() =>
   import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal')
@@ -64,6 +64,7 @@ const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
+  z-index: 3;
 `
 
 const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
@@ -71,47 +72,41 @@ const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
   position: relative;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 10;
-
-  ${({ theme, isAboutpage }) => theme.mediaWidth.upToSmall`
-    ${isAboutpage ? `` : `padding: 16px;`}
-    padding-top: 2rem;
-  `};
   z-index: 1;
 `
 
-const UtilitiesWrapper = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  top: 0;
-  right: 0;
+const UtilitiesWrapper = styled.div<{ isAboutpage?: boolean }>`
+  display: ${({ isAboutpage }) => (isAboutpage ? 'none' : 'flex')};
+  justify-content: space-between;
+  width: 100%;
+  height: fit-content;
+  padding: 12px 16px 16px;
+  z-index: -2;
   opacity: 0.8;
   transition: opacity 0.25s ease;
   :hover {
     opacity: 1;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    position: fixed;
-    top: auto;
-    bottom: 5.5rem;
-    left: 0;
-    right: auto;
-    height: fit-content;
-    z-index: 99;
-  `}
+  @media only screen and (min-width: 768px) {
+    padding: 16px;
+  }
+
+  @media only screen and (min-width: 1000px) {
+    padding: 16px 32px;
+  }
+
+  @media only screen and (min-width: 1366px) {
+    padding: 16px 215px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    padding: 16px 252px;
+  }
 `
 
 const Marginer = styled.div`
@@ -136,12 +131,12 @@ export default function App() {
             </HeaderWrapper>
             <Suspense fallback={<Loader />}>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
-                <KNCPrice />
                 <Popups />
-                <UtilitiesWrapper>
+                <UtilitiesWrapper isAboutpage={aboutPage?.isExact}>
+                  <KNCPrice />
                   <Utilities />
-                  <PoweredBy />
                 </UtilitiesWrapper>
+                <PoweredBy />
                 <Web3ReactManager>
                   <Switch>
                     <Route exact strict path="/swap" component={Swap} />
@@ -151,7 +146,7 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
-                    <Route exact strict path="/farms" component={Farms} />
+                    <Route exact strict path="/farms" component={Yield} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <Route exact strict path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />
