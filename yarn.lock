@@ -1384,10 +1384,10 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@davatar/react@1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.6.0.tgz#5bcff32ae4cf79398e86bc58a1596301f72c8e9f"
-  integrity sha512-C0AM4NWkE6lNAtc2ItD4yApnumj8WzpViIpr58ofDqv7dSBf9CPiZY42OrwZkIGN+UC+k2tNtUEmbneF2L2LaA==
+"@davatar/react@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.6.2.tgz#27ccb5e653dae1a525368daf82d801812f44b240"
+  integrity sha512-BQIP6fg8xoUgTleLUk91kItpDYpyXAkFYl04W+86LfYBahr1zBe4lvWZqVypMR36YASa4qn2yIyaaVHLgDOeqQ==
   dependencies:
     "@ethersproject/providers" "^5.4.5"
     "@types/react-blockies" "^1.4.1"
