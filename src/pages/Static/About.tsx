@@ -137,17 +137,19 @@ export default function About() {
           </div>
         </div>
 
-        <div className={`${style.section_number} ${style.trading_volume_section}`}>
-          <div>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
-              {maxApr < 0 ? <Loader /> : `${maxApr.toFixed(2)}%`}
-            </Text>
-            <Text fontSize={14} mt={2}>
-              <Trans>Max APY</Trans>
-            </Text>
-            <Text fontSize={14}>&nbsp;</Text>
+        {maxApr >= 0 && (
+          <div className={`${style.section_number} ${style.trading_volume_section}`}>
+            <div>
+              <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+                {maxApr.toFixed(2)}%
+              </Text>
+              <Text fontSize={14} mt={2}>
+                <Trans>Max APY</Trans>
+              </Text>
+              <Text fontSize={14}>&nbsp;</Text>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={style.panel0}>
