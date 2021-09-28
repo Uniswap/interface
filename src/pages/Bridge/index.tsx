@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { ChainId, CurrencyAmount } from '@swapr/sdk'
+import { CurrencyAmount } from '@swapr/sdk'
 import QuestionHelper from '../../components/QuestionHelper'
 import { RowBetween } from '../../components/Row'
 import AppBody from '../AppBody'
@@ -8,24 +8,17 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
 // import { FooterBridgeSelector } from './FooterBridgeSelector'
-import { NetworkSwitcher } from './NetworkSwitcher'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
-import { BridgeButton } from './BridgeButton'
-import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
-import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
 
-import {
-  NetworkSwitcher as NetworkSwitcherPopover,
-  networkOptionsPreset,
-  NetworkOptionProps
-} from '../../components/NetworkSwitcher'
+import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
 import { useArbBridge } from '../../hooks/useArbBridge'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
+import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeActionPanel } from './BridgeActionPanel'
 
 const Title = styled.p`
   margin: 0;
@@ -49,44 +42,8 @@ const SwapButton = styled.button`
   cursor: pointer;
 `
 
-enum Step {
-  Initial,
-  Pending,
-  Ready,
-  Collect,
-  Success
-}
-
-const createNetworkOptions = ({
-  value,
-  setValue,
-  activeChainId
-}: {
-  value: ChainId
-  setValue: (chainId: ChainId) => void
-  activeChainId: ChainId | undefined
-}): Array<NetworkOptionProps & { chainId: ChainId }> => {
-  return networkOptionsPreset.map(option => {
-    const { chainId: optionChainId, logoSrc, name } = option
-
-    return {
-      chainId: optionChainId,
-      header: name,
-      logoSrc: logoSrc,
-      active: value === activeChainId,
-      disabled: value === optionChainId,
-      onClick: () => setValue(optionChainId)
-    }
-  })
-}
-
-const getNetworkOptionById = (chainId: ChainId, options: ReturnType<typeof createNetworkOptions>) =>
-  options.find(option => option.chainId === chainId)
-
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
-  const { selectEthereum, selectNetwork } = useNetworkSwitch()
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
     onUserInput,
@@ -96,32 +53,45 @@ export default function Bridge() {
     onSwapBridgeNetworks
   } = useBridgeActionHandlers()
 
-  const [step, setStep] = useState(Step.Initial)
-
-  const [showToList, setShowToList] = useState(false)
-  const [showFromList, setShowFromList] = useState(false)
-
   const toPanelRef = useRef(null)
   const fromPanelRef = useRef(null)
 
+  const [step, setStep] = useState(BridgeStep.Initial)
+  const [showToList, setShowToList] = useState(false)
+  const [showFromList, setShowFromList] = useState(false)
+
+  const { depositEth } = useArbBridge()
+  const bridgeSummaries = useBridgeTransactionsSummary()
+
   useEffect(() => {
-    const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000)
+    const timer = setTimeout(() => step === BridgeStep.Pending && setStep(BridgeStep.Ready), 2000)
     return () => clearTimeout(timer)
   }, [step])
 
   const isNetworkConnected = fromNetwork.chainId === chainId
-  const isButtonDisabled = !typedValue || step !== Step.Initial
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
-  const handleResetBridge = () => {
+  const onCollect = () => console.log('collect')
+
+  const handleResetBridge = useCallback(() => {
     onUserInput('')
-    setStep(Step.Initial)
-  }
+    setStep(BridgeStep.Initial)
+  }, [onUserInput])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
   }, [maxAmountInput, isNetworkConnected, onUserInput])
+
+  const handleSubmit = useCallback(() => {
+    if (chainId === fromNetwork.chainId) {
+      handleResetBridge()
+      return depositEth(typedValue)
+    } else {
+      handleResetBridge()
+      return console.log('withdrawal')
+    }
+  }, [chainId, depositEth, fromNetwork.chainId, handleResetBridge, typedValue])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -135,17 +105,11 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
-  const { depositEth } = useArbBridge()
-
-  const handleDeposit = useCallback(() => depositEth(typedValue), [depositEth, typedValue])
-
-  const bridgeSummaries = useBridgeTransactionsSummary()
-
   return (
     <>
       <AppBody>
         <RowBetween mb="12px">
-          <Title>{step === Step.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
+          <Title>{step === BridgeStep.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
@@ -189,40 +153,31 @@ export default function Bridge() {
           onUserInput={onUserInput}
           onMax={handleMaxInput}
           onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={step !== Step.Initial}
-          disabled={step !== Step.Initial}
+          disableCurrencySelect={step !== BridgeStep.Initial}
+          disabled={step !== BridgeStep.Initial}
           hideBalance={!isNetworkConnected}
-          id="brdige-currency-input"
+          id="bridge-currency-input"
         />
-        {!account ? (
-          <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
-            Connect Wallet
-          </ButtonPrimary>
-        ) : !isNetworkConnected ? (
-          <ButtonPrimary
-            mt="12px"
-            onClick={
-              fromNetwork.chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(fromNetwork.chainId)
-            }
-          >
-            Connect to {getNetworkOptionById(fromNetwork.chainId, fromOptions)?.header}
-          </ButtonPrimary>
-        ) : step === Step.Collect ? (
-          <NetworkSwitcher sendToId={toNetwork.chainId} onCollectClick={() => setStep(Step.Success)} />
-        ) : (
-          <BridgeButton onClick={handleDeposit} disabled={isButtonDisabled} from="Arbitrum" to="Ethereum">
-            {!typedValue
-              ? 'Enter ETH amount'
-              : `Brigde to ${getNetworkOptionById(toNetwork.chainId, toOptions)?.header}`}
-          </BridgeButton>
-        )}
+        <BridgeActionPanel
+          account={account}
+          fromNetworkChainId={fromNetwork.chainId}
+          toNetworkChainId={toNetwork.chainId}
+          handleSubmit={handleSubmit}
+          isNetworkConnected={isNetworkConnected}
+          step={step}
+          setStep={setStep}
+          typedValue={typedValue}
+        />
       </AppBody>
-      <BridgeTransactionsSummary show transactions={bridgeSummaries} />
+      {chainId && !!bridgeSummaries.length && (
+        <BridgeTransactionsSummary show transactions={bridgeSummaries} onCollect={onCollect} />
+      )}
+
       {/* {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
       )} */}
       <BridgeSuccesModal
-        isOpen={step === Step.Success}
+        isOpen={step === BridgeStep.Success}
         onDismiss={handleResetBridge}
         onTradeButtonClick={handleResetBridge}
         onBackButtonClick={handleResetBridge}
