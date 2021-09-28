@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
+import { ButtonPrimary } from '../../components/Button'
 import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
@@ -8,9 +9,12 @@ import { BridgeStatusTag } from './BridgeStatusTag'
 
 interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
+  onCollect: () => void
 }
 
-export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransactionsSummaryProps) => {
+export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: BridgeTransactionsSummaryProps) => {
+  const [selectedTx] = useState(() => transactions.filter(tx => tx.status === 'redeem')[0] || undefined)
+
   return (
     <HideableAutoColumn show={show}>
       <AdvancedDetailsFooter fullWidth padding="16px">
@@ -45,13 +49,18 @@ export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransact
                     </TYPE.main>
                   </td>
                   <td align="left">
-                    <BridgeStatusTag status={status} />
+                    <BridgeStatusTag status={status} onCollect={onCollect} />
                   </td>
                 </tr>
               )
             })}
           </tbody>
         </Table>
+        {selectedTx && (
+          <ButtonPrimary onClick={onCollect} mt="12px">
+            Collect
+          </ButtonPrimary>
+        )}
       </AdvancedDetailsFooter>
     </HideableAutoColumn>
   )

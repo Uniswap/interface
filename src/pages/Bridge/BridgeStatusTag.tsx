@@ -22,14 +22,18 @@ const TagWarning = styled(Tag)`
   background: rgba(242, 153, 74, 0.16);
 `
 
-export type BridgeStatusTagProps = Pick<BridgeTransactionSummary, 'status'>
+export type BridgeStatusTagProps = Pick<BridgeTransactionSummary, 'status'> & {
+  onCollect: () => void
+}
 
-export const BridgeStatusTag = ({ status }: BridgeStatusTagProps) => {
+export const BridgeStatusTag = ({ status, onCollect }: BridgeStatusTagProps) => {
   switch (status) {
     case 'confirmed':
       return <TagSuccess>Confirmed</TagSuccess>
     case 'pending':
       return <TagWarning>Pending</TagWarning>
+    case 'redeem':
+      return <TagSuccess onClick={onCollect}>Collect</TagSuccess>
     default:
       return <div>status</div>
   }
