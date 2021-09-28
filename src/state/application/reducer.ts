@@ -13,7 +13,7 @@ import {
   updateChainIdWhenNotConnected,
   setExchangeSubgraphClient
 } from './actions'
-import { exchangeCients } from 'apollo/client'
+import { exchangeClients } from 'apollo/client'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
@@ -40,7 +40,7 @@ const initialState: ApplicationState = {
   ethPrice: {},
   kncPrice: '',
   chainIdWhenNotConnected: ChainId.MAINNET,
-  exchangeSubgraphClients: exchangeCients
+  exchangeSubgraphClients: exchangeClients
 }
 
 export default createReducer(initialState, builder =>
