@@ -5,7 +5,6 @@ import { computeRoutes } from 'state/routing/computeRoutes'
 import { V3TradeState } from 'state/routing/types'
 import { useClientSideSmartOrderRouter } from 'worker/useSmartOrderRouter'
 
-
 /**
  * Returns the best v3 trade for a desired swap
  * @param tradeType whether the swap is an exact in/out
@@ -28,12 +27,14 @@ export function useClientSideV3Trade(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const { isLoading, isError, quote } = useClientSideSmartOrderRouter(tradeType, amountSpecified, currencyIn, currencyOut)
-
-  const routes = useMemo(
-    () => computeRoutes(currencyIn, currencyOut, quote),
-    [currencyIn, currencyOut, quote]
+  const { isLoading, isError, quote } = useClientSideSmartOrderRouter(
+    tradeType,
+    amountSpecified,
+    currencyIn,
+    currencyOut
   )
+
+  const routes = useMemo(() => computeRoutes(currencyIn, currencyOut, quote), [currencyIn, currencyOut, quote])
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
@@ -57,7 +58,7 @@ export function useClientSideV3Trade(
       }
     }
 
-    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType>({routes,tradeType})
+    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TradeType>({ routes, tradeType })
 
     return {
       // always return VALID regardless of isFetching status

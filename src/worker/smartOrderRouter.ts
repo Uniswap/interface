@@ -14,8 +14,10 @@ import {
   PoolProvider,
   QuoteProvider,
   routeAmountsToString,
-  setGlobalMetric, SwapRoute, UniswapMulticallProvider,
-  URISubgraphProvider
+  setGlobalMetric,
+  SwapRoute,
+  UniswapMulticallProvider,
+  URISubgraphProvider,
 } from '@uniswap/smart-order-router'
 import * as Comlink from 'comlink'
 import { NETWORK_URLS } from 'connectors/constants'
@@ -78,10 +80,12 @@ class Cache<T> implements ICache<T> {
 const chainId = 1
 const provider = new ethers.providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
-const subgraphProvider = new URISubgraphProvider(chainId, 'https://ipfs.io/ipfs/QmfArMYESGVJpPALh4eQXnjF8HProSF1ky3v8RmuYLJZT4')
+const subgraphProvider = new URISubgraphProvider(
+  chainId,
+  'https://ipfs.io/ipfs/QmfArMYESGVJpPALh4eQXnjF8HProSF1ky3v8RmuYLJZT4'
+)
 
-const multicall2Provider =
-  new UniswapMulticallProvider(chainId, provider, 375_000)
+const multicall2Provider = new UniswapMulticallProvider(chainId, provider, 375_000)
 
 const poolProvider = new PoolProvider(ID_TO_CHAIN_ID(chainId), multicall2Provider)
 
@@ -119,7 +123,8 @@ const router = new AlphaRouter({
 })
 
 // transforms a SwapRoute into a GetQuoteResult
-function processSwapRoute(tradeType: TradeType,
+function processSwapRoute(
+  tradeType: TradeType,
   amount: CurrencyAmount<Currency>,
   {
     quote,
@@ -131,57 +136,58 @@ function processSwapRoute(tradeType: TradeType,
     gasPriceWei,
     methodParameters,
     blockNumber,
-  }: SwapRoute<TradeType.EXACT_INPUT> | SwapRoute<TradeType.EXACT_OUTPUT>): GetQuoteResult {
-  const routeResponse: Array<PoolInRoute[]> = [];
+  }: SwapRoute<TradeType.EXACT_INPUT> | SwapRoute<TradeType.EXACT_OUTPUT>
+): GetQuoteResult {
+  const routeResponse: Array<PoolInRoute[]> = []
 
   for (const subRoute of route) {
     const {
       route: { tokenPath, pools },
       amount,
       quote,
-    } = subRoute;
+    } = subRoute
 
-    const curRoute: PoolInRoute[] = [];
+    const curRoute: PoolInRoute[] = []
     for (let i = 0; i < pools.length; i++) {
-      const nextPool = pools[i];
-      const tokenIn = tokenPath[i];
-      const tokenOut = tokenPath[i + 1];
+      const nextPool = pools[i]
+      const tokenIn = tokenPath[i]
+      const tokenOut = tokenPath[i + 1]
 
-      let edgeAmountIn = undefined;
+      let edgeAmountIn = undefined
       if (i == 0) {
-        edgeAmountIn =
-          tradeType === TradeType.EXACT_INPUT
-            ? amount.quotient.toString()
-            : quote.quotient.toString();
+        edgeAmountIn = tradeType === TradeType.EXACT_INPUT ? amount.quotient.toString() : quote.quotient.toString()
       }
 
-      let edgeAmountOut = undefined;
+      let edgeAmountOut = undefined
       if (i == pools.length - 1) {
-        edgeAmountOut =
-          tradeType === TradeType.EXACT_OUTPUT
-            ? quote.quotient.toString()
-            : amount.quotient.toString();
+        edgeAmountOut = tradeType === TradeType.EXACT_OUTPUT ? quote.quotient.toString() : amount.quotient.toString()
       }
 
       curRoute.push({
         type: 'v3-pool',
-        address: poolProvider.getPoolAddress(
-          nextPool.token0,
-          nextPool.token1,
-          nextPool.fee
-        ).poolAddress,
-        tokenIn: { chainId: tokenIn.chainId, decimals: tokenIn.decimals, address: tokenIn.address, symbol: tokenIn.symbol },
-        tokenOut: { chainId: tokenOut.chainId, decimals: tokenOut.decimals, address: tokenOut.address, symbol: tokenOut.symbol },
+        address: poolProvider.getPoolAddress(nextPool.token0, nextPool.token1, nextPool.fee).poolAddress,
+        tokenIn: {
+          chainId: tokenIn.chainId,
+          decimals: tokenIn.decimals,
+          address: tokenIn.address,
+          symbol: tokenIn.symbol,
+        },
+        tokenOut: {
+          chainId: tokenOut.chainId,
+          decimals: tokenOut.decimals,
+          address: tokenOut.address,
+          symbol: tokenOut.symbol,
+        },
         fee: nextPool.fee.toString(),
         liquidity: nextPool.liquidity.toString(),
         sqrtRatioX96: nextPool.sqrtRatioX96.toString(),
         tickCurrent: nextPool.tickCurrent.toString(),
         amountIn: edgeAmountIn,
         amountOut: edgeAmountOut,
-      });
+      })
     }
 
-    routeResponse.push(curRoute);
+    routeResponse.push(curRoute)
   }
 
   const result: GetQuoteResult = {
@@ -200,7 +206,7 @@ function processSwapRoute(tradeType: TradeType,
     gasPriceWei: gasPriceWei.toString(),
     route: routeResponse,
     routeString: routeAmountsToString(route),
-  };
+  }
 
   return result
 }
@@ -213,17 +219,18 @@ const service = {
     amount: amountRaw,
   }: {
     tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT
-    tokenIn: { address: string, chainId: number, decimals: number, symbol?: string }
-    tokenOut: { address: string, chainId: number, decimals: number, symbol?: string }
+    tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
+    tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
   }) {
     const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
     const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
     const amount = CurrencyAmount.fromRawAmount(currencyIn, JSBI.BigInt(amountRaw))
 
-    const swapRoute = tradeType === TradeType.EXACT_INPUT ?
-      await router.routeExactIn(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG) :
-      await router.routeExactOut(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
+    const swapRoute =
+      tradeType === TradeType.EXACT_INPUT
+        ? await router.routeExactIn(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
+        : await router.routeExactOut(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
 
     // return GetQuoteResult for consistency with Routing API and WebWorker compat
     return swapRoute ? processSwapRoute(tradeType, amount, swapRoute) : undefined

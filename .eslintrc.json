@@ -21,12 +21,12 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["simple-import-sort", "prettier"],
+  "plugins": ["simple-import-sort"],
   "rules": {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "prettier/prettier": "off",
+    "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
