@@ -1,10 +1,12 @@
 import React from 'react'
-import { useKNCPrice } from 'state/application/hooks'
-import { KNCPriceContainer, KNCPriceWrapper } from './styleds'
-import Loader from 'components/Loader'
-import { formattedNum } from 'utils'
-import { useActiveWeb3React } from 'hooks'
+
 import { ChainId } from 'libs/sdk/src'
+import { KNC_ADDRESS } from 'constants/index'
+import Loader from 'components/Loader'
+import { useActiveWeb3React } from 'hooks'
+import { useKNCPrice } from 'state/application/hooks'
+import { formattedNum, getTokenLogoURL } from 'utils'
+import { KNCPriceContainer, KNCPriceWrapper } from './styleds'
 
 export default function KNCPice() {
   const { chainId } = useActiveWeb3React()
@@ -18,12 +20,7 @@ export default function KNCPice() {
     <KNCPriceContainer>
       {kncPrice ? (
         <KNCPriceWrapper>
-          <img
-            src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202/logo.png`}
-            alt="knc-logo"
-            width="20px"
-            height="20px"
-          />
+          <img src={`${getTokenLogoURL(KNC_ADDRESS, ChainId.MAINNET)}`} alt="knc-logo" width="20px" height="20px" />
           {formattedNum(kncPrice, true)}
         </KNCPriceWrapper>
       ) : (

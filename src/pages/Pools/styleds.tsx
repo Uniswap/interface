@@ -2,31 +2,35 @@ import styled from 'styled-components'
 import { Flex } from 'rebass'
 
 export const PageWrapper = styled.div`
-  padding: 0 20rem;
+  padding: 12px 16px 100px;
   width: 100%;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
-  `};
+  @media only screen and (min-width: 768px) {
+    padding: 16px 16px 100px;
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
-  `};
+  @media only screen and (min-width: 1000px) {
+    padding: 16px 32px 100px;
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-  `};
+  @media only screen and (min-width: 1366px) {
+    padding: 16px 215px 50px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    padding: 16px 252px 50px;
+  }
 `
 
 export const GlobalDataContainer = styled.div`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   margin-bottom: 1rem;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 1fr;
-  `};
+  @media only screen and (min-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
 
 export const GlobalDataItem = styled.div`
@@ -77,17 +81,14 @@ export const ToolbarWrapper = styled.div`
 
 export const CurrencyWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 0;
+  margin-bottom: 15px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 8px;
-    flex-direction: column;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToXL`
-    margin-bottom: 15px;
-  `};
+  @media only screen and (min-width: 1000px) {
+    flex-direction: row;
+    margin-bottom: 0;
+  }
 `
 
 export const SearchWrapper = styled(Flex)`

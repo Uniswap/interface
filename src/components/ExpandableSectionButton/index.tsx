@@ -11,7 +11,7 @@ export interface ExpandableSectionButtonProps {
 }
 
 const StyledIcon = styled.div<{ color?: string }>`
-  color: ${({ color }) => color || 'white'};
+  color: ${({ theme, color }) => color || theme.text};
 `
 
 const ExpandableSectionButton = ({ onClick, expanded }: ExpandableSectionButtonProps) => {

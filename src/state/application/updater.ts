@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { updateBlockNumber } from './actions'
+import { updateBlockNumber, setExchangeSubgraphClient } from './actions'
 import { useDispatch } from 'react-redux'
+import { getExchangeSubgraphClients } from 'apollo/manager'
 
 export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
@@ -15,6 +16,15 @@ export default function Updater(): null {
     chainId,
     blockNumber: null
   })
+
+  useEffect(() => {
+    const getBestSubgraph = async () => {
+      const exchangeClients = await getExchangeSubgraphClients()
+      dispatch(setExchangeSubgraphClient(exchangeClients))
+    }
+
+    getBestSubgraph()
+  }, [dispatch])
 
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {

@@ -9,12 +9,12 @@ export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
   cache: new InMemoryCache()
 })
 
-export const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten',
   cache: new InMemoryCache()
 })
 
-export const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'
@@ -22,7 +22,7 @@ export const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
   cache: new InMemoryCache()
 })
 
-export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'
@@ -30,15 +30,15 @@ export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new Apol
   cache: new InMemoryCache()
 })
 
-export const mumbaiExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const mumbaiExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai',
   cache: new InMemoryCache()
 })
-export const bscTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const bscTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-ropsten',
   cache: new InMemoryCache()
 })
-export const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dynamic-amm-bsc-staging'
@@ -46,11 +46,11 @@ export const bscMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new
   cache: new InMemoryCache()
 })
 
-export const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const avaxTestnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/dmm-exchange-fuij',
   cache: new InMemoryCache()
 })
-export const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
       ? ''
@@ -58,7 +58,7 @@ export const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = ne
   cache: new InMemoryCache()
 })
 
-export const exchangeCient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
+export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
   [ChainId.RINKEBY]: ropstenExchangeClient,
@@ -72,40 +72,40 @@ export const exchangeCient: { [chainId in ChainId]: ApolloClient<NormalizedCache
   [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient
 }
 
-export const ropstenBlockClient = new ApolloClient({
+const ropstenBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks',
   cache: new InMemoryCache()
 })
 
-export const mainnetBlockClient = new ApolloClient({
+const mainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   cache: new InMemoryCache()
 })
 
-export const maticBlockClient = new ApolloClient({
+const maticBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ord786/matic-blocks',
   cache: new InMemoryCache()
 })
 
-export const mumbaiBlockClient = new ApolloClient({
+const mumbaiBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks',
   cache: new InMemoryCache()
 })
-export const bscTestnetBlockClient = new ApolloClient({
+const bscTestnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsctestnet',
   cache: new InMemoryCache()
 })
-export const bscMainnetBlockClient = new ApolloClient({
+const bscMainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsc',
   cache: new InMemoryCache()
 })
 
-export const avaxTestnetBlockClient = new ApolloClient({
+const avaxTestnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji',
   cache: new InMemoryCache()
 })
 
-export const avaxMainnetBlockClient = new ApolloClient({
+const avaxMainnetBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/avalache-blocks',
   cache: new InMemoryCache()
 })
