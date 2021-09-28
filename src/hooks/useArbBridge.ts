@@ -7,8 +7,6 @@ import { useActiveWeb3React } from '.'
 import { BridgeContext } from '../contexts/BridgeProvider'
 import { BridgeAssetType } from '../state/bridgeTransactions/types'
 import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
-import { useBridgePendingWithdrawals } from '../state/bridgeTransactions/hooks'
-import { ChainId } from '@swapr/sdk'
 
 export const useBridge = () => {
   return useContext(BridgeContext)
@@ -21,7 +19,6 @@ export const useArbBridge = () => {
   } = useBridge()
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
-  const bridgePendingWithdrawals = useBridgePendingWithdrawals()
 
   const depositEth = useCallback(
     async (value: string) => {
@@ -95,7 +92,6 @@ export const useArbBridge = () => {
             receipt: withdrawReceipt
           })
         )
-        return withdrawReceipt
       } catch (err) {
         throw err
       }
@@ -104,14 +100,13 @@ export const useArbBridge = () => {
   )
 
   const triggerOutboxEth = useCallback(
-    async (id: ChainId) => {
+    async (batchNumber: string, batchIndex: string, value: string) => {
       if (!account || !bridge || !l1ChainId) return
 
-      const batchNumber = BigNumber.from(bridgePendingWithdrawals[id].batchNumber)
-      const batchIndex = BigNumber.from(bridgePendingWithdrawals[id].batchIndex)
-      const value = bridgePendingWithdrawals[id].value
+      const batchNumberBN = BigNumber.from(batchNumber)
+      const batchIndexBN = BigNumber.from(batchIndex)
 
-      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumber, batchIndex, true)
+      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
 
       dispatch(
         addBridgeTxn({
@@ -139,7 +134,7 @@ export const useArbBridge = () => {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId, bridgePendingWithdrawals]
+    [account, bridge, dispatch, l1ChainId]
   )
 
   return {

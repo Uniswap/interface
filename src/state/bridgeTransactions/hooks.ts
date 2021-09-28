@@ -8,7 +8,7 @@ import { BridgeTxn, BridgeTxnsState, BridgeTxnType } from './types'
 
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
-export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value'> & {
+export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchNumber' | 'batchIndex'> & {
   fromName: string
   toName: string
   log: BridgeTransactionLog[]
@@ -163,10 +163,12 @@ export const useBridgeTransactionsSummary = () => {
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
+          value: tx.value,
+          batchNumber: tx.batchNumber,
+          batchIndex: tx.batchIndex,
           fromName: NETWORK_DETAIL[from].chainName,
           toName: NETWORK_DETAIL[to].chainName,
           status: getBridgeTxStatus(tx.receipt?.status),
-          value: tx.value,
           log: []
         }
 
@@ -207,10 +209,12 @@ export const useBridgeTransactionsSummary = () => {
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
+          value: tx.value,
+          batchNumber: tx.batchNumber,
+          batchIndex: tx.batchIndex,
           fromName: NETWORK_DETAIL[from].chainName,
           toName: NETWORK_DETAIL[to].chainName,
           status: getBridgeTxStatus(tx.receipt?.status),
-          value: tx.value,
           log: []
         }
 
