@@ -1,6 +1,6 @@
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ChainId } from '@swapr/sdk'
-import { SerializableTransactionReceipt } from '../transactions/actions'
-
+import { OutgoingMessageState } from 'arb-ts'
 export type BridgeTxnStatus = 'pending' | 'confirmed' | 'failure' | 'disupte_period'
 
 export type BridgeTxnType =
@@ -36,7 +36,10 @@ export type BridgeTxn = {
   blockNumber?: number
   timestampResolved?: number
   timestampCreated: number
-  receipt?: SerializableTransactionReceipt
+  receipt?: TransactionReceipt
   seqNum?: number
   partnerTxHash?: string
+  batchIndex?: string
+  batchNumber?: string
+  outgoingMessageState?: OutgoingMessageState
 }

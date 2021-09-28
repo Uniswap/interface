@@ -60,7 +60,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth } = useArbBridge()
+  const { depositEth, withdrawEth } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -89,9 +89,9 @@ export default function Bridge() {
       return depositEth(typedValue)
     } else {
       handleResetBridge()
-      return console.log('withdrawal')
+      return withdrawEth(typedValue)
     }
-  }, [chainId, depositEth, fromNetwork.chainId, handleResetBridge, typedValue])
+  }, [chainId, depositEth, fromNetwork.chainId, handleResetBridge, typedValue, withdrawEth])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,

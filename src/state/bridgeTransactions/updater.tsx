@@ -1,24 +1,33 @@
+import { ChainId } from '@swapr/sdk'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-
+import { useActiveWeb3React } from '../../hooks'
 import { useBridge } from '../../hooks/useArbBridge'
-import { addBridgeTxn, updateBridgeTxnPartnerHash, updateBridgeTxnReceipt } from './actions'
+import {
+  addBridgeTxn,
+  updateBridgeTxnPartnerHash,
+  updateBridgeTxnReceipt,
+  updateBridgeTxnWithdrawalInfo
+} from './actions'
 
-import { useBridgePendingTransactions, useBridgeL1Deposits, useBridgeTransactions } from './hooks'
+import { useBridgePendingTransactions, useBridgeL1Deposits, useBridgeTransactions, useBridgePendingWithdrawals } from './hooks'
 import { txnTypeToLayer } from './reducer'
 import { BridgeTxn } from './types'
 
 export default function Updater(): null {
+  const { account } = useActiveWeb3React()
   const {
     bridge,
     chainIdPair: { l1ChainId, l2ChainId }
   } = useBridge()
+  const [initialPendingWithdrawalsChecked, setInitialPendingWithdrawalsChecked] = useState<ChainId>(-1)
   const dispatch = useDispatch()
 
   const allTransactions = useBridgeTransactions()
   const depositTransactions = useBridgeL1Deposits()
   const pendingTransactions = useBridgePendingTransactions()
+  const pendingWithdrawals = useBridgePendingWithdrawals()
 
   // Pending updater
   const getReceipt = useCallback(
@@ -122,6 +131,70 @@ export default function Updater(): null {
     const intervalId = window.setInterval(l2DepositsListener, 5000)
     return () => window.clearInterval(intervalId)
   }, [l1ChainId, l2ChainId, l2DepositsListener])
+
+  const getOutgoingMessageState = useCallback(async (tx: BridgeTxn) => {
+    const retVal: Partial<Pick<BridgeTxn, 'batchIndex' | 'batchNumber'>> & Pick<BridgeTxn, 'txHash' | 'outgoingMessageState'> = {
+      batchNumber: tx.batchNumber,
+      batchIndex: tx.batchIndex,
+      outgoingMessageState: undefined,
+      txHash: tx.txHash
+    }
+
+    if (!bridge || !l2ChainId || !tx.receipt) {
+      return retVal
+    }
+
+    if (!retVal.batchNumber || !retVal.batchIndex) {
+      const l2ToL2EventData = await bridge.getWithdrawalsInL2Transaction(tx.receipt)
+      if (l2ToL2EventData.length === 1) {
+        const { batchNumber, indexInBatch } = l2ToL2EventData[0]
+        const outgoingMessageState = await bridge.getOutGoingMessageState(
+          batchNumber,
+          indexInBatch
+        )
+
+        retVal.batchIndex = indexInBatch.toHexString()
+        retVal.batchNumber = batchNumber.toHexString()
+        retVal.outgoingMessageState = outgoingMessageState
+      }
+    } else {
+      const retValbatchNr = BigNumber.from(retVal.batchNumber)
+      const retValbatchIndex = BigNumber.from(retVal.batchIndex)
+      const outgoingMessageState = await bridge.getOutGoingMessageState(retValbatchNr, retValbatchIndex)
+      retVal.outgoingMessageState = outgoingMessageState
+    }
+    return retVal
+  }, [l2ChainId, bridge])
+
+  const updatePendingWithdrawals = useCallback(async () => {
+    if (bridge && l2ChainId && account) {
+      const promises = pendingWithdrawals.map(getOutgoingMessageState)
+      const withdrawalsInfo = await Promise.all(promises)
+
+      withdrawalsInfo.forEach((withdrawalInfo) => {
+        const { outgoingMessageState, batchNumber, batchIndex, txHash } = withdrawalInfo
+
+        if (outgoingMessageState !== undefined) {
+          dispatch(updateBridgeTxnWithdrawalInfo({
+            chainId: l2ChainId,
+            outgoingMessageState,
+            txHash,
+            batchIndex: batchIndex,
+            batchNumber: batchNumber
+          }))
+        }
+      })
+    }
+  }, [bridge, l2ChainId, account, pendingWithdrawals, getOutgoingMessageState])
+
+  useEffect(() => {
+    if (l2ChainId) {
+      if (initialPendingWithdrawalsChecked !== l2ChainId) {
+        updatePendingWithdrawals()
+        setInitialPendingWithdrawalsChecked(l2ChainId)
+      }
+    }
+  }, [l1ChainId, l2ChainId, updatePendingWithdrawals])
 
   return null
 }
