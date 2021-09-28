@@ -5,14 +5,14 @@ import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { MainnetGasPrice, updateBlockNumber, updateMainnetGasPrices } from './actions'
 import { useDispatch } from 'react-redux'
 import { ChainId } from '@swapr/sdk'
-import { useBridge } from '../../hooks/useArbBridge'
+// import { useBridge } from '../../hooks/useArbBridge'
 
 export default function Updater(): null {
-  const { library } = useActiveWeb3React()
+  const { library, chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
-  const {
-    chainIdPair: { l1ChainId: chainId }
-  } = useBridge()
+  // const {
+  //   chainIdPair: { l1ChainId: chainId }
+  // } = useBridge()
 
   const windowVisible = useIsWindowVisible()
 
