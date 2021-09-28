@@ -7,7 +7,7 @@ import { useClientSideSmartOrderRouter } from 'worker/useSmartOrderRouter'
 
 
 /**
- * Returns the best v3 trade by invoking the routing api
+ * Returns the best v3 trade for a desired swap
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency

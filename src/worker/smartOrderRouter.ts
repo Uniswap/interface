@@ -24,6 +24,7 @@ import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 
 type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+
 type PoolInRoute = {
   type: 'v3-pool'
   address: string
@@ -117,6 +118,7 @@ const router = new AlphaRouter({
   tokenProvider: tokenListProvider,
 })
 
+// transforms a SwapRoute into a GetQuoteResult
 function processSwapRoute(tradeType: TradeType,
   amount: CurrencyAmount<Currency>,
   {
@@ -129,7 +131,7 @@ function processSwapRoute(tradeType: TradeType,
     gasPriceWei,
     methodParameters,
     blockNumber,
-  }: SwapRoute<TradeType.EXACT_INPUT> | SwapRoute<TradeType.EXACT_OUTPUT>) {
+  }: SwapRoute<TradeType.EXACT_INPUT> | SwapRoute<TradeType.EXACT_OUTPUT>): GetQuoteResult {
   const routeResponse: Array<PoolInRoute[]> = [];
 
   for (const subRoute of route) {
@@ -223,6 +225,7 @@ const service = {
       await router.routeExactIn(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG) :
       await router.routeExactOut(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
 
+    // return GetQuoteResult for consistency with Routing API and WebWorker compat
     return swapRoute ? processSwapRoute(tradeType, amount, swapRoute) : undefined
   },
 }
