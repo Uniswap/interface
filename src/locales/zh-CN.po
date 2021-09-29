@@ -388,6 +388,10 @@ msgstr "DMM 白皮书"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM 的资本效率可以比典型的 AMM 高 100 倍"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "仪表板"
@@ -745,6 +749,10 @@ msgstr "KyberDMM 的可编程定价曲线使流动性池创建者能够设置合
 msgid "LOCKED"
 msgstr "锁定"
 
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "了解更多 →"
@@ -1035,6 +1043,10 @@ msgstr "池| 放大系数"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

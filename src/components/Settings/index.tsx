@@ -1,20 +1,31 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserTransactionTTL, useUserSlippageTolerance } from '../../state/user/hooks'
+import {
+  useExpertModeManager,
+  useUserTransactionTTL,
+  useUserSlippageTolerance,
+  useDarkModeManager,
+  useUserLocale
+} from 'state/user/hooks'
 import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
+import { ButtonEmpty, ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import ThemeToggle from 'components/Toggle/ThemeToggle'
+import useTheme from 'hooks/useTheme'
+import ArrowRight from 'components/Icons/ArrowRight'
+import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import LanguageSelector from 'components/LanguageSelector'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -81,9 +92,8 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg14};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  background-color: ${({ theme }) => theme.background};
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -98,7 +108,7 @@ const MenuFlyout = styled.span`
     right: -46px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     min-width: 18.125rem;
     top: -22rem;
   `};
@@ -120,11 +130,12 @@ const ModalContentWrapper = styled.div`
 `
 
 export default function SettingsTab() {
+  const theme = useTheme()
+  const [darkMode, toggleSetDarkMode] = useDarkModeManager()
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
-
-  const theme = useContext(ThemeContext)
+  const userLocale = useUserLocale()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -133,6 +144,8 @@ export default function SettingsTab() {
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
+
+  const [isSelectingLanguage, setIsSelectingLanguage] = useState(false)
 
   useOnClickOutside(node, open ? toggle : undefined)
 
@@ -188,42 +201,87 @@ export default function SettingsTab() {
           </EmojiWrapper>
         ) : null}
       </StyledMenuButton>
+
       {open && (
         <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14} color={theme.text11}>
-              <Trans>Preferences</Trans>
-            </Text>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-                  <Trans>Advanced Mode</Trans>
-                </TYPE.black>
-                <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
-              </RowFixed>
-              <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
+          {!isSelectingLanguage ? (
+            <AutoColumn gap="md" style={{ padding: '20px' }}>
+              <Text fontWeight={600} fontSize={14} color={theme.text11}>
+                <Trans>Preferences</Trans>
+              </Text>
+
+              <AutoColumn
+                style={{
+                  borderTop: `1px solid ${theme.border3}`,
+                  borderBottom: `1px solid ${theme.border3}`,
+                  padding: '16px 0 20px'
+                }}
+              >
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                      <Trans>Dark Mode</Trans>
+                    </TYPE.black>
+                  </RowFixed>
+                  <ThemeToggle id="toggle-dark-mode-button" isDarkMode={darkMode} toggle={toggleSetDarkMode} />
+                </RowBetween>
+
+                <RowBetween style={{ marginTop: '20px' }}>
+                  <RowFixed>
+                    <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                      <Trans>Language</Trans>
+                    </TYPE.black>
+                  </RowFixed>
+                  <ButtonEmpty
+                    padding="0"
+                    width="fit-content"
+                    style={{ color: theme.text, textDecoration: 'none', fontSize: '14px' }}
+                    onClick={() => setIsSelectingLanguage(true)}
+                  >
+                    <span style={{ marginRight: '10px' }}>
+                      {LOCALE_LABEL[userLocale as SupportedLocale] || LOCALE_LABEL['en-US']}
+                    </span>
+                    <ArrowRight fill={theme.text} />
+                  </ButtonEmpty>
+                </RowBetween>
+              </AutoColumn>
+
+              <TransactionSettings
+                rawSlippage={userSlippageTolerance}
+                setRawSlippage={setUserslippageTolerance}
+                deadline={ttl}
+                setDeadline={setTtl}
               />
-            </RowBetween>
-          </AutoColumn>
+
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                    <Trans>Advanced Mode</Trans>
+                  </TYPE.black>
+                  <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
+                </RowFixed>
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={expertMode}
+                  toggle={
+                    expertMode
+                      ? () => {
+                          toggleExpertMode()
+                          setShowConfirmation(false)
+                        }
+                      : () => {
+                          toggle()
+                          setShowConfirmation(true)
+                        }
+                  }
+                />
+              </RowBetween>
+            </AutoColumn>
+          ) : (
+            <AutoColumn gap="md" style={{ padding: '20px' }}>
+              <LanguageSelector setIsSelectingLanguage={setIsSelectingLanguage} />
+            </AutoColumn>
+          )}
         </MenuFlyout>
       )}
     </StyledMenu>

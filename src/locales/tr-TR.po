@@ -388,6 +388,10 @@ msgstr "DMM Litepaper"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM, tipik AMM'lere kıyasla 100 kata kadar daha fazla sermaye verimli olabilir"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Kontrol Paneli"
@@ -745,6 +749,10 @@ msgstr "KyberDMM'nin Programlanabilir Fiyatlandırma Eğrisi, likidite havuzu ol
 msgid "LOCKED"
 msgstr "KİLİTLİ"
 
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "Daha Fazla Bilgi →"
@@ -1035,6 +1043,10 @@ msgstr "Havuzlar | AMP"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

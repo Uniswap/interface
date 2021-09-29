@@ -388,6 +388,10 @@ msgstr "DMM Litepaper"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM có thể có hiệu quả sử dụng vốn vốn gấp 100 lần so với AMM thông thường"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
@@ -745,6 +749,10 @@ msgstr "Đường cong Định giá có thể Lập trình được của KyberD
 msgid "LOCKED"
 msgstr "ĐÃ KHÓA"
 
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
+
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "Tìm hiểu thêm →"
@@ -1035,6 +1043,10 @@ msgstr "Pools | AMP"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx
