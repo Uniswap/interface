@@ -14,3 +14,17 @@ Follow the general [React Native setup instructions](https://reactnative.dev/doc
 ### Running
 
 Start the mobile app by running `yarn ios` or `yarn android`. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
+
+### E2E Tests
+
+The e2e tests use [detox](https://github.com/wix/Detox). To run them, you need to build:
+
+```
+detox build --config ios
+```
+
+And then run:
+
+```
+detox test --config ios
+```
