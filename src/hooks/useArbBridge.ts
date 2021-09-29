@@ -5,7 +5,7 @@ import { utils, BigNumber } from 'ethers'
 import { useActiveWeb3React } from '.'
 
 import { BridgeContext } from '../contexts/BridgeProvider'
-import { BridgeAssetType } from '../state/bridgeTransactions/types'
+import { BridgeAssetType, BridgeTxn } from '../state/bridgeTransactions/types'
 import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
 
 export const useBridge = () => {
@@ -17,6 +17,7 @@ export const useArbBridge = () => {
     bridge,
     chainIdPair: { l1ChainId, l2ChainId }
   } = useBridge()
+
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
 
@@ -60,15 +61,12 @@ export const useArbBridge = () => {
 
   const withdrawEth = useCallback(
     async (value: string) => {
-      if (!account || !bridge || !l1ChainId || !l2ChainId) return
+      if (!account || !bridge || !l2ChainId) return
       const weiValue = utils.parseEther(value)
 
       try {
         // L2
         const txn = await bridge.withdrawETH(weiValue)
-
-        console.log('Call withdrawETH', txn)
-        console.log('Withdraw hash', txn.hash)
 
         dispatch(
           addBridgeTxn({
@@ -83,7 +81,6 @@ export const useArbBridge = () => {
         )
 
         const withdrawReceipt = await txn.wait()
-        console.log('Get withdraw receipt', withdrawReceipt)
 
         dispatch(
           updateBridgeTxnReceipt({
@@ -96,12 +93,12 @@ export const useArbBridge = () => {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId, l2ChainId]
+    [account, bridge, dispatch, l2ChainId]
   )
 
   const triggerOutboxEth = useCallback(
-    async (batchNumber: string, batchIndex: string, value: string) => {
-      if (!account || !bridge || !l1ChainId) return
+    async ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => {
+      if (!account || !bridge || !l1ChainId || batchIndex || batchNumber || value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)

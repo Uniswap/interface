@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
+import { ButtonPrimary } from '../../components/Button'
 import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
+import { BridgeTxn } from '../../state/bridgeTransactions/types'
 import { TYPE } from '../../theme'
 import { BridgeStatusTag } from './BridgeStatusTag'
 
 interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
+  onCollect: ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => void
 }
 
-export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransactionsSummaryProps) => {
+export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: BridgeTransactionsSummaryProps) => {
+  const [selectedTx] = useState(() => transactions.filter(tx => tx.status === 'redeem')[0] || undefined)
+
   return (
     <HideableAutoColumn show={show}>
       <AdvancedDetailsFooter fullWidth padding="16px">
@@ -25,7 +30,7 @@ export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransact
           </thead>
           <tbody>
             {Object.values(transactions).map((tx, index) => {
-              const { assetName, fromName, status, toName, value } = tx
+              const { assetName, fromName, status, toName, value, batchIndex, batchNumber } = tx
 
               return (
                 <tr key={index} style={{ lineHeight: '22px' }}>
@@ -45,13 +50,27 @@ export const BridgeTransactionsSummary = ({ show, transactions }: BridgeTransact
                     </TYPE.main>
                   </td>
                   <td align="left">
-                    <BridgeStatusTag status={status} />
+                    <BridgeStatusTag status={status} onCollect={() => onCollect({ value, batchIndex, batchNumber })} />
                   </td>
                 </tr>
               )
             })}
           </tbody>
         </Table>
+        {selectedTx && (
+          <ButtonPrimary
+            onClick={() =>
+              onCollect({
+                value: selectedTx.value,
+                batchIndex: selectedTx.batchIndex,
+                batchNumber: selectedTx.batchNumber
+              })
+            }
+            mt="12px"
+          >
+            Collect
+          </ButtonPrimary>
+        )}
       </AdvancedDetailsFooter>
     </HideableAutoColumn>
   )
