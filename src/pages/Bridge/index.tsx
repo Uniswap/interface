@@ -15,7 +15,7 @@ import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks
 
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
 import { useArbBridge } from '../../hooks/useArbBridge'
-import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
+import { BridgeTransactionSummary, useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeActionPanel } from './BridgeActionPanel'
@@ -61,7 +61,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth, withdrawEth, triggerOutboxEth } = useArbBridge()
+  const { depositEth, withdrawEth } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -104,6 +104,14 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
+
+  const [collectableTx, setCollectableTx ] = useState(() => bridgeSummaries.filter(tx => tx.status === 'pending')[0] || undefined)
+
+  const handleCollect = useCallback((tx: BridgeTransactionSummary) => {
+    setStep(BridgeStep.Collect)
+    setCollectableTx(tx)
+  },[setStep, setCollectableTx]
+  )
 
   return (
     <>
@@ -170,7 +178,7 @@ export default function Bridge() {
         />
       </AppBody>
       {chainId && !!bridgeSummaries.length && (
-        <BridgeTransactionsSummary show transactions={bridgeSummaries} onCollect={triggerOutboxEth} />
+        <BridgeTransactionsSummary show transactions={bridgeSummaries} collectableTx={collectableTx} onCollect={handleCollect} />
       )}
 
       {/* {step === Step.Initial && !!typedValue && (
