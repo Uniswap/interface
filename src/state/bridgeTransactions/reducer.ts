@@ -8,7 +8,6 @@ import {
 } from './actions'
 import { BridgeTxnsState, BridgeTxnType } from './types'
 
-
 export const txnTypeToLayer = (txnType: BridgeTxnType): 1 | 2 => {
   switch (txnType) {
     case 'deposit':
@@ -80,13 +79,16 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
       state[chainId][txHash] = tx
       state[partnerChainId][partnerTxHash] = partnerTx
     })
-    .addCase(updateBridgeTxnWithdrawalInfo, (state, { payload: { chainId, outgoingMessageState, txHash, batchIndex, batchNumber } }) => {
-      const tx = state[chainId][txHash]
-      tx.outgoingMessageState = outgoingMessageState
-      if (batchIndex && batchNumber) {
-        tx.batchNumber = batchNumber
-        tx.batchIndex = batchIndex
+    .addCase(
+      updateBridgeTxnWithdrawalInfo,
+      (state, { payload: { chainId, outgoingMessageState, txHash, batchIndex, batchNumber } }) => {
+        const tx = state[chainId][txHash]
+        tx.outgoingMessageState = outgoingMessageState
+        if (batchIndex && batchNumber) {
+          tx.batchNumber = batchNumber
+          tx.batchIndex = batchIndex
+        }
+        state[chainId][txHash] = tx
       }
-      state[chainId][txHash] = tx
-    })
+    )
 )
