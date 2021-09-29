@@ -125,10 +125,10 @@ export default function Earn() {
           </TYPE.mediumHeader>
         </DataRow>
         {tripleRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
-        {tripleRewards.map((x) => {
+        {tripleRewards.map((x, i) => {
           return (
             x[1] && (
-              <PoolSection>
+              <PoolSection key={i}>
                 <ErrorBoundary>
                   <TriplePoolCard
                     poolAddress={x[0].address}
@@ -151,10 +151,10 @@ export default function Earn() {
             </TYPE.mediumHeader>
           </DataRow>
           {dualRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
-          {dualRewards.map((x) => {
+          {dualRewards.map((x, i) => {
             return (
               x[1] && (
-                <PoolSection>
+                <PoolSection key={i}>
                   <ErrorBoundary>
                     <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
                   </ErrorBoundary>
@@ -223,10 +223,10 @@ export default function Earn() {
                 <PoolCard stakingInfo={pool} />
               </ErrorBoundary>
             ))}
-            {inactiveTripleRewards.map((x) => {
+            {inactiveTripleRewards.map((x, i) => {
               return (
                 x[1] && (
-                  <PoolSection>
+                  <PoolSection key={i}>
                     <ErrorBoundary>
                       <TriplePoolCard
                         poolAddress={x[0].address}
@@ -239,10 +239,10 @@ export default function Earn() {
                 )
               )
             })}
-            {inactiveDualRewards.map((x) => {
+            {inactiveDualRewards.map((x, i) => {
               return (
                 x[1] && (
-                  <PoolSection>
+                  <PoolSection key={i}>
                     <ErrorBoundary>
                       <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
                     </ErrorBoundary>
