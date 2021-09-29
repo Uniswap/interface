@@ -109,6 +109,7 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+  color: ${({ theme }) => theme.white};
 `
 
 const NetworkIcon = styled(Activity)`

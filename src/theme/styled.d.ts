@@ -47,6 +47,7 @@ export interface Colors {
   bg19: Color
   buttonGray: Color
   poweredBy: Color
+  poweredByMobile: Color
 
   modalBG: Color
   advancedBG: Color
