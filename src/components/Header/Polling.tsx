@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
@@ -85,7 +85,7 @@ export default function Polling() {
   )
 
   return (
-    <ExternalLink href={chainId && blockNumber ? getBlockscoutLink(chainId, blockNumber.toString(), 'block') : ''}>
+    <ExternalLink href={chainId && blockNumber ? `${network.explorer}/blocks` : ''}>
       <StyledPolling>
         <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>

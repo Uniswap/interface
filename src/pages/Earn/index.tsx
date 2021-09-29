@@ -1,5 +1,7 @@
 import { ErrorBoundary } from '@sentry/react'
 import { JSBI } from '@ubeswap/sdk'
+import ChangeNetworkModal from 'components/ChangeNetworkModal'
+import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import { partition } from 'lodash'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -45,6 +47,7 @@ flex-direction: column;
 
 export default function Earn() {
   const { t } = useTranslation()
+  const isSupportedNetwork = useIsSupportedNetwork()
   // staking info for connected account
   const stakingInfos = useStakingInfo()
 
@@ -80,6 +83,10 @@ export default function Earn() {
     multiRewards.filter(([pool]) => pool.numRewards === 3),
     ([pool]) => pool.active
   )
+
+  if (!isSupportedNetwork) {
+    return <ChangeNetworkModal />
+  }
 
   return (
     <PageWrapper gap="lg" justify="center">

@@ -1,7 +1,9 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { Contract } from '@ethersproject/contracts'
 import { Percent, Token } from '@ubeswap/sdk'
+import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import { useDoTransaction } from 'components/swap/routing'
+import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -44,6 +46,7 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { address: account, network, connect } = useContractKit()
+  const isSupportedNetwork = useIsSupportedNetwork()
   const library = useProvider()
   const chainId = network.chainId
   const [tokenA, tokenB] = [currencyA, currencyB]
@@ -309,6 +312,10 @@ export default function RemoveLiquidity({
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  if (!isSupportedNetwork) {
+    return <ChangeNetworkModal />
+  }
 
   return (
     <>

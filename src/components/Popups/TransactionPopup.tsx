@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
@@ -34,9 +34,7 @@ export default function TransactionPopup({
       </div>
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</TYPE.body>
-        {chainId && (
-          <ExternalLink href={getBlockscoutLink(chainId, hash, 'transaction')}>View on Celo Explorer</ExternalLink>
-        )}
+        {chainId && <ExternalLink href={`${network.explorer}/tx/${hash}`}>View on Celo Explorer</ExternalLink>}
       </AutoColumn>
     </RowNoFlex>
   )

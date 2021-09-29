@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
@@ -62,7 +62,7 @@ export function SubmittedView({
       <AutoColumn gap="100px" justify={'center'}>
         {children}
         {chainId && hash && (
-          <ExternalLink href={getBlockscoutLink(chainId, hash, 'transaction')} style={{ marginLeft: '4px' }}>
+          <ExternalLink href={`${network.explorer}/tx/${hash}`} style={{ marginLeft: '4px' }}>
             <TYPE.subHeader>View transaction on Celo Explorer</TYPE.subHeader>
           </ExternalLink>
         )}

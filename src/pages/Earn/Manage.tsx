@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { cUSD, JSBI } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, cUSD, JSBI } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -121,7 +121,7 @@ export default function Manage({
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
 
-  const token = tokenA === cUSD[chainId] ? tokenB : tokenA
+  const token = tokenA === cUSD[chainId as unknown as UbeswapChainId] ? tokenB : tokenA
   const backgroundColor = useColor(token ?? undefined)
 
   // get CUSD value of staked LP tokens

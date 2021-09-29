@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React from 'react'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components'
@@ -50,7 +50,7 @@ export default function Transaction({ hash }: { hash: string }) {
 
   return (
     <TransactionWrapper>
-      <TransactionState href={getBlockscoutLink(chainId, hash, 'transaction')} pending={pending} success={success}>
+      <TransactionState href={`${network.explorer}/tx/${hash}`} pending={pending} success={success}>
         <RowFixed>
           <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         </RowFixed>

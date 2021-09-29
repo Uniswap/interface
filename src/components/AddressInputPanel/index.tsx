@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
@@ -81,7 +81,7 @@ export default function AddressInputPanel({
   const chainId = network.chainId as unknown as ChainId
   const theme = useContext(ThemeContext)
 
-  const { address, loading, name } = useENS(value)
+  const { address, loading } = useENS(value)
 
   const handleInput = useCallback(
     (event) => {
@@ -104,10 +104,7 @@ export default function AddressInputPanel({
                 Recipient
               </TYPE.black>
               {address && chainId && (
-                <ExternalLink
-                  href={getBlockscoutLink(chainId, name ?? address, 'address')}
-                  style={{ fontSize: '14px' }}
-                >
+                <ExternalLink href={`${network.explorer}/address/${address}`} style={{ fontSize: '14px' }}>
                   (View on Celo Explorer)
                 </ExternalLink>
               )}
@@ -119,7 +116,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="Wallet Address or ENS name"
+              placeholder="Wallet Address"
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

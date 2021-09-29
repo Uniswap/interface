@@ -13,12 +13,18 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapHeader({ title = 'Swap' }: { title?: string }) {
+export default function SwapHeader({
+  title = 'Swap',
+  hideSettings = false,
+}: {
+  title?: string
+  hideSettings?: boolean
+}) {
   return (
     <StyledSwapHeader>
       <RowBetween>
         <TYPE.black fontWeight={500}>{title}</TYPE.black>
-        <Settings />
+        {hideSettings || <Settings />}
       </RowBetween>
     </StyledSwapHeader>
   )

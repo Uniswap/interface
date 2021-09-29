@@ -1,5 +1,5 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
-import { CELO, ChainId, TokenAmount } from '@ubeswap/sdk'
+import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
+import { CELO, ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import { CardNoise } from 'components/earn/styled'
 import Modal from 'components/Modal'
 import usePrevious from 'hooks/usePrevious'
@@ -16,6 +16,7 @@ import { TYPE } from 'theme'
 import { ExternalLink } from 'theme/components'
 import { CountUp } from 'use-count-up'
 
+import Icon from '../../assets/svg/icon-ube.svg'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo-dark.svg'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -259,8 +260,11 @@ export const StyledMenuButton = styled.button`
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.ALFAJORES]: 'Alfajores',
-  [ChainId.BAKLAVA]: 'Baklava',
+  [ChainId.CeloMainnet]: 'Celo',
+  [ChainId.Alfajores]: 'Alfajores',
+  [ChainId.Baklava]: 'Baklava',
+  [ChainId.EthereumMainnet]: 'Ethereum',
+  [ChainId.Kovan]: 'Kovan',
 }
 
 export default function Header() {
@@ -268,7 +272,7 @@ export default function Header() {
   const chainId = network.chainId
   const { t } = useTranslation()
 
-  const userCELOBalance = useTokenBalance(account ?? undefined, CELO[chainId])
+  const userCELOBalance = useTokenBalance(account ?? undefined, CELO[chainId as unknown as UbeswapChainId])
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [showUbeBalanceModal, setShowUbeBalanceModal] = useState<boolean>(false)
   const aggregateBalance: TokenAmount | undefined = useAggregateUbeBalance()
@@ -283,13 +287,10 @@ export default function Header() {
       <HeaderRow>
         <Title to="/">
           <UbeIcon>
-            <img width={'140px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+            <img width={isMobile ? '32px' : '140px'} src={isMobile ? Icon : darkMode ? LogoDark : Logo} alt="logo" />
           </UbeIcon>
         </Title>
         <HeaderLinks>
-          {isMobile && chainId && NETWORK_LABELS[chainId] && (
-            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-          )}
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
@@ -308,6 +309,9 @@ export default function Header() {
           </StyledNavLink>
           <StyledNavLink id="farm-nav-link" to="/farm">
             {t('farm')}
+          </StyledNavLink>
+          <StyledNavLink id={`bridge-nav-link`} to={'/bridge'}>
+            {t('bridge')}
           </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://info.ubeswap.org'}>
             {t('charts')} <span style={{ fontSize: '11px' }}>↗</span>

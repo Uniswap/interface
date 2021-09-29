@@ -1,12 +1,13 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { UBE } from 'constants/tokens'
-import { useMemo } from 'react'
+import { useAsyncState } from 'hooks/useAsyncState'
+import { useCallback, useMemo } from 'react'
+import { AbiItem } from 'web3-utils'
 
-import ERC20_INTERFACE from '../../constants/abis/erc20'
+import { ERC20_ABI } from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
-import { useMultipleContractSingleData } from '../multicall/hooks'
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
@@ -15,6 +16,8 @@ export function useTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Token | undefined)[]
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
+  const { kit } = useContractKit()
+
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens]
@@ -22,16 +25,32 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+  const call = useCallback(
+    async () => {
+      return await Promise.all(
+        validatedTokenAddresses.map((tokenAddress) => {
+          const token = new kit.web3.eth.Contract(ERC20_ABI as AbiItem[], tokenAddress)
+          return token.methods.balanceOf(address).call()
+        })
+      )
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [kit, validatedTokenAddresses[0]]
+  )
+  const [balances] = useAsyncState(
+    validatedTokenAddresses.map(() => null),
+    call
+  )
 
-  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
+  // const balances = validatedTokenAddresses.map(() => null)
+  const anyLoading: boolean = useMemo(() => balances.some((balance) => balance === null), [balances])
 
   return [
     useMemo(
       () =>
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = balances?.[i]?.result?.[0]
+              const value = balances?.[i]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
               if (amount) {
                 memo[token.address] = new TokenAmount(token, amount)
@@ -98,7 +117,7 @@ export function useAggregateUbeBalance(): TokenAmount | undefined {
     network: { chainId },
   } = useContractKit()
 
-  const ube = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
 
   const ubeBalance: TokenAmount | undefined = useTokenBalance(address ?? undefined, ube)
 

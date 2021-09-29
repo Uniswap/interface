@@ -1,17 +1,26 @@
+import { useContractKit } from '@celo-tools/use-contractkit'
 import { Token, TokenAmount } from '@ubeswap/sdk'
-import { useMemo } from 'react'
+import { useAsyncState } from 'hooks/useAsyncState'
+import { useCallback, useMemo } from 'react'
+import { AbiItem } from 'web3-utils'
 
-import { useTokenContract } from '../hooks/useContract'
-import { useSingleCallResult } from '../state/multicall/hooks'
+import ERC20_ABI from '../constants/abis/erc20.json'
 
-export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount | undefined {
-  const contract = useTokenContract(token?.address, false)
+export function useTokenAllowance(
+  token?: Token,
+  owner?: string,
+  spender?: string
+): [TokenAmount | undefined, () => void] {
+  const { kit } = useContractKit()
 
-  const inputs = useMemo(() => [owner, spender], [owner, spender])
-  const allowance = useSingleCallResult(contract, 'allowance', inputs).result
+  const call = useCallback(async () => {
+    const tokenContract = new kit.web3.eth.Contract(ERC20_ABI as AbiItem[], token?.address)
+    return await tokenContract.methods.allowance(owner, spender).call()
+  }, [owner, spender, token, kit])
+  const [allowance, refetchAllowance] = useAsyncState('0', call)
 
   return useMemo(
-    () => (token && allowance ? new TokenAmount(token, allowance.toString()) : undefined),
-    [token, allowance]
+    () => [token && allowance ? new TokenAmount(token, allowance.toString()) : undefined, refetchAllowance],
+    [token, allowance, refetchAllowance]
   )
 }

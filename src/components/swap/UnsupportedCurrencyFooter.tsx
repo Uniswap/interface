@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { ChainId, Token } from '@ubeswap/sdk'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -74,7 +74,7 @@ export default function UnsupportedCurrencyFooter({
                         <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
                       </AutoRow>
                       {chainId && (
-                        <ExternalLink href={getBlockscoutLink(chainId, token.address, 'address')}>
+                        <ExternalLink href={`${network.explorer}/address/${token.address}`}>
                           <AddressText>{token.address}</AddressText>
                         </ExternalLink>
                       )}

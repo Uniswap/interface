@@ -186,9 +186,11 @@ interface UnclaimedInfo {
 export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
   const { network } = useContractKit()
   const { chainId } = network
-  const ube = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
-  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.Baklava ? POOL_MANAGER[chainId] : undefined)
+  const poolManagerContract = usePoolManagerContract(
+    [ChainId.CeloMainnet, ChainId.Alfajores].includes(chainId) ? POOL_MANAGER[chainId] : undefined
+  )
   const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
     | BigNumber
     | undefined
@@ -475,7 +477,7 @@ export function usePairDataFromAddresses(
 export function useTotalUbeEarned(): TokenAmount | undefined {
   const { network } = useContractKit()
   const { chainId } = network
-  const ube = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const stakingInfos = useStakingInfo()
 
   return useMemo(() => {

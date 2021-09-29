@@ -1,6 +1,6 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
 import { parseUnits } from '@ethersproject/units'
-import { CELO, cEUR, ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
+import { CELO, cEUR, ChainId as UbeswapChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
 import { UbeswapTrade } from 'components/swap/routing/trade'
 import { ParsedQs } from 'qs'
@@ -83,7 +83,7 @@ export function tryParseAmount(value?: string, currency?: Token): TokenAmount | 
     console.debug(`Failed to parse input amount: "${value}"`, error)
   }
   // necessary for all paths to return a value
-  return undefined
+  return new TokenAmount(currency as Token, JSBI.BigInt(0))
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
@@ -191,9 +191,9 @@ export function useDerivedSwapInfo(): {
   let showRamp = false
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     if (
-      amountIn.currency.address === cUSD[network.chainId as unknown as ChainId].address ||
-      amountIn.currency.address === CELO[network.chainId as unknown as ChainId].address ||
-      amountIn.currency.address === cEUR[network.chainId as unknown as ChainId].address
+      amountIn.currency.address === cUSD[network.chainId as unknown as UbeswapChainId].address ||
+      amountIn.currency.address === CELO[network.chainId as unknown as UbeswapChainId].address ||
+      amountIn.currency.address === cEUR[network.chainId as unknown as UbeswapChainId].address
     ) {
       showRamp = true
     }
@@ -210,12 +210,15 @@ export function useDerivedSwapInfo(): {
   }
 }
 
-function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId): string {
+function parseCurrencyFromURLParameter(urlParam: any, chainId: UbeswapChainId): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
     if (urlParam.toUpperCase() === 'CUSD') return cUSD[chainId].address
     if (valid === false) return cUSD[chainId].address
+  }
+  if ([ChainId.EthereumMainnet, ChainId.Kovan].includes(chainId as unknown as ChainId)) {
+    return ''
   }
   return cUSD[chainId].address ?? ''
 }
@@ -239,7 +242,7 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: UbeswapChainId): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
@@ -270,7 +273,7 @@ export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
   const { network } = useContractKit()
-  const chainId = network.chainId as unknown as ChainId
+  const chainId = network.chainId as unknown as UbeswapChainId
   const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<

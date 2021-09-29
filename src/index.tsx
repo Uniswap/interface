@@ -6,7 +6,7 @@ import { ContractKitProvider } from '@celo-tools/use-contractkit'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { ChainId } from '@ubeswap/sdk'
-import { NETWORK, NETWORK_CHAIN_ID, NETWORK_CHAIN_NAME } from 'connectors/index'
+import { NETWORK_CHAIN_ID, NETWORK_CHAIN_NAME } from 'connectors/index'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
@@ -106,7 +106,6 @@ ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
     <ContractKitProvider
-      networks={[NETWORK]}
       dapp={{
         name: 'Ubeswap',
         description:

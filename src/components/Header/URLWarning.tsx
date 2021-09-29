@@ -24,7 +24,9 @@ export const StyledClose = styled(X)`
   }
 `
 
-const appURL: { [id in ChainId]: string } = {
+const defaultAppUrl = 'app.ubeswap.org'
+
+const appURL: Record<string, string> = {
   [ChainId.MAINNET]: 'app.ubeswap.org',
   [ChainId.ALFAJORES]: 'app-alfajores.ubeswap.org',
   [ChainId.BAKLAVA]: 'app-baklava.ubeswap.org',
@@ -40,7 +42,9 @@ export default function URLWarning() {
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>{appURL[chainId]}</code>
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>
+          {appURL[chainId] || defaultAppUrl}
+        </code>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
@@ -48,8 +52,10 @@ export default function URLWarning() {
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>{appURL[chainId]}</code> - bookmark it
-        to be safe.
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>
+          {appURL[chainId] || defaultAppUrl}
+        </code>{' '}
+        - bookmark it to be safe.
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>

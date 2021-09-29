@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, TokenAmount } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import React from 'react'
 import { X } from 'react-feather'
@@ -43,7 +43,7 @@ const StyledClose = styled(X)`
 export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowUbeBalanceModal: any }) {
   const { address: account, network } = useContractKit()
   const chainId = network.chainId
-  const ube = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
 
   const total = useAggregateUbeBalance()
   const ubeBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, ube)
@@ -108,7 +108,7 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
               <TYPE.white color="white">Total Supply</TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' }) ?? <Loader />}</TYPE.white>
             </RowBetween>
-            {ube && ube.chainId === ChainId.MAINNET ? (
+            {ube && ube.chainId === UbeswapChainId.MAINNET ? (
               <ExternalLink href={`https://info.ubeswap.org/token/${ube.address}`}>View UBE Analytics</ExternalLink>
             ) : null}
           </AutoColumn>

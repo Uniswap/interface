@@ -56,11 +56,14 @@ export const useMoolaConfig = () => {
   const chainId = network.chainId as unknown as ChainId
   // TODO(igm): this breaks on baklava
   const chainCfg = moolaLendingPools[chainId as IMoolaChain]
-  const { lendingPool, lendingPoolCore } = chainCfg
-  return {
-    lendingPoolCore,
-    lendingPool,
+  if (chainCfg) {
+    const { lendingPool, lendingPoolCore } = chainCfg
+    return {
+      lendingPoolCore,
+      lendingPool,
+    }
   }
+  return null
 }
 
 export const useLendingPool = (): LendingPool => {

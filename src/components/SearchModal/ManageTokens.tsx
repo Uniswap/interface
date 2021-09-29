@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { ChainId, Token } from '@ubeswap/sdk'
 import Card from 'components/Card'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -79,7 +79,7 @@ export default function ManageTokens({
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />
-            <ExternalLink href={getBlockscoutLink(chainId, token.address, 'address')}>
+            <ExternalLink href={`${network.explorer}/address/${token.address}`}>
               <TYPE.main ml={'10px'} fontWeight={600}>
                 {token.symbol}
               </TYPE.main>
@@ -87,12 +87,12 @@ export default function ManageTokens({
           </RowFixed>
           <RowFixed>
             <TrashIcon onClick={() => removeToken(chainId, token.address)} />
-            <ExternalLinkIcon href={getBlockscoutLink(chainId, token.address, 'address')} />
+            <ExternalLinkIcon href={`${network.explorer}/address/${token.address}`} />
           </RowFixed>
         </RowBetween>
       ))
     )
-  }, [userAddedTokens, chainId, removeToken])
+  }, [userAddedTokens, removeToken, network, chainId])
 
   return (
     <Wrapper>

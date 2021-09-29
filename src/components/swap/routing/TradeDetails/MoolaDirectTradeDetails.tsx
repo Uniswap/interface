@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { CELO, cUSD, Fraction, TokenAmount, TradeType } from '@ubeswap/sdk'
+import { CELO, ChainId as UbeswapChainId, cUSD, Fraction, TokenAmount, TradeType } from '@ubeswap/sdk'
 import { ErrorText } from 'components/swap/styleds'
 import { usePair } from 'data/Reserves'
 import { BigNumber } from 'ethers'
@@ -22,9 +22,9 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   const lendingPool = useLendingPool()
   const theme = useContext(ThemeContext)
 
-  const celo = CELO[chainId]
-  const [, pair] = usePair(celo, cUSD[chainId])
-  const cusdPrice = pair?.priceOf(cUSD[chainId])
+  const celo = CELO[chainId as unknown as UbeswapChainId]
+  const [, pair] = usePair(celo, cUSD[chainId as unknown as UbeswapChainId])
+  const cusdPrice = pair?.priceOf(cUSD[chainId as unknown as UbeswapChainId])
 
   const [userData, setUserData] = useState<{
     totalLiquidityETH: BigNumber

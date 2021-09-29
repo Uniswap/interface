@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { JSBI, TokenAmount } from '@ubeswap/sdk'
+import { ChainId as UbeswapChainId, JSBI, TokenAmount } from '@ubeswap/sdk'
 import { UBE } from 'constants/tokens'
 import { BigNumber } from 'ethers'
 import { useReleaseUbeContract, useTokenContract } from 'hooks/useContract'
@@ -23,7 +23,7 @@ const nonCirculatingAddresses = {
 export const useCirculatingSupply = (): TokenAmount | undefined => {
   const { network } = useContractKit()
   const chainId = network.chainId
-  const ube = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId as unknown as UbeswapChainId] : undefined
   const ubeContract = useTokenContract(ube?.address)
   const releaseUbe = useReleaseUbeContract()
 

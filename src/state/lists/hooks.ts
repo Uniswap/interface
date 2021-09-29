@@ -1,5 +1,7 @@
-import DEFAULT_TOKEN_LIST from '@ubeswap/default-token-list'
-import { ChainId, Token } from '@ubeswap/sdk'
+import { ChainId } from '@celo-tools/use-contractkit'
+import UBESWAP_TOKEN_LIST from '@ubeswap/default-token-list'
+import { Token } from '@ubeswap/sdk'
+import UNISWAP_TOKEN_LIST from '@uniswap/default-token-list'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -39,9 +41,11 @@ export type TokenAddressMap = Readonly<{
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.MAINNET]: {},
-  [ChainId.ALFAJORES]: {},
-  [ChainId.BAKLAVA]: {},
+  [ChainId.CeloMainnet]: {},
+  [ChainId.Alfajores]: {},
+  [ChainId.Baklava]: {},
+  [ChainId.EthereumMainnet]: {},
+  [ChainId.Kovan]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -93,9 +97,11 @@ export function useAllLists(): {
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
-    [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
-    [ChainId.ALFAJORES]: { ...map1[ChainId.ALFAJORES], ...map2[ChainId.ALFAJORES] },
-    [ChainId.BAKLAVA]: { ...map1[ChainId.BAKLAVA], ...map2[ChainId.BAKLAVA] },
+    [ChainId.CeloMainnet]: { ...map1[ChainId.CeloMainnet], ...map2[ChainId.CeloMainnet] },
+    [ChainId.Alfajores]: { ...map1[ChainId.Alfajores], ...map2[ChainId.Alfajores] },
+    [ChainId.Baklava]: { ...map1[ChainId.Baklava], ...map2[ChainId.Baklava] },
+    [ChainId.EthereumMainnet]: { ...map1[ChainId.EthereumMainnet], ...map2[ChainId.EthereumMainnet] },
+    [ChainId.Kovan]: { ...map1[ChainId.Kovan], ...map2[ChainId.Kovan] },
   }
 }
 
@@ -143,7 +149,7 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  const defaultTokenMap = listToTokenMap(DEFAULT_TOKEN_LIST)
+  const defaultTokenMap = listToTokenMap({ ...UBESWAP_TOKEN_LIST, ...UNISWAP_TOKEN_LIST })
   return combineMaps(activeTokens, defaultTokenMap)
 }
 
@@ -155,7 +161,7 @@ export function useCombinedInactiveList(): TokenAddressMap {
 
 // used to hide warnings on import for default tokens
 export function useDefaultTokenList(): TokenAddressMap {
-  return listToTokenMap(DEFAULT_TOKEN_LIST)
+  return { ...listToTokenMap(UBESWAP_TOKEN_LIST), ...listToTokenMap(UNISWAP_TOKEN_LIST) }
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds

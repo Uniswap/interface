@@ -1,4 +1,12 @@
 {
+  "unsupportedNetwork": "Unsupported network",
+  "unsupportedNetworkDesc": "Please switch your network to Celo on your wallet to use this feature.",
+  "approve": "Approve",
+  "bridge": "Bridge",
+  "bridgeDesc": "Bridge tokens between Celo and other networks. Please use at your own risk.",
+  "bridgeReadMore": "Read more about Optics",
+  "amount": "Amount",
+  "changeNetwork": "Change network to",
   "connectWallet": "Connect Wallet",
   "yourLiquidity": "Your liquidity",
   "liquidityMining": "liquidity mining",

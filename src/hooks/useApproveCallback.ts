@@ -32,7 +32,7 @@ export function useApproveCallback(
 
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const [minApprove] = useUserMinApprove()
-  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const [currentAllowance, refetchAllowance] = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 
   // check the current approval status
@@ -93,6 +93,8 @@ export function useApproveCallback(
         approval: { tokenAddress: token.address, spender: spender },
       })
     }
+    // TODO(bl) Approve is still stuck despite this refetch
+    refetchAllowance()
   }, [
     approvalState,
     token,
@@ -102,6 +104,7 @@ export function useApproveCallback(
     getConnectedSigner,
     minApprove,
     doTransaction,
+    refetchAllowance,
   ])
 
   return [approvalState, approve]

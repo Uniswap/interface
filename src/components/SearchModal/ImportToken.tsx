@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { ChainId, Token } from '@ubeswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -88,7 +88,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                   <TYPE.darkGray fontWeight={300}>{token.name}</TYPE.darkGray>
                 </AutoRow>
                 {chainId && (
-                  <ExternalLink href={getBlockscoutLink(chainId, token.address, 'address')}>
+                  <ExternalLink href={`${network.explorer}/address/${token.address}`}>
                     <AddressText>{token.address}</AddressText>
                   </ExternalLink>
                 )}

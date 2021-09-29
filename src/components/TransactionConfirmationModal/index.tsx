@@ -1,5 +1,5 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, getBlockscoutLink } from '@ubeswap/sdk'
+import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
 import { Text } from 'rebass'
@@ -69,6 +69,7 @@ function TransactionSubmittedContent({
   chainId: ChainId
 }) {
   const theme = useContext(ThemeContext)
+  const { network } = useContractKit()
 
   return (
     <Wrapper>
@@ -85,7 +86,7 @@ function TransactionSubmittedContent({
             Transaction Submitted
           </Text>
           {chainId && hash && (
-            <ExternalLink href={getBlockscoutLink(chainId, hash, 'transaction')}>
+            <ExternalLink href={`${network.explorer}/tx/${hash}`}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                 View on Celo Explorer
               </Text>
