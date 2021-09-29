@@ -45,6 +45,8 @@ export interface Colors {
   bg17: Color
   bg18: Color
   bg19: Color
+  buttonGray: Color
+  poweredBy: Color
 
   modalBG: Color
   advancedBG: Color

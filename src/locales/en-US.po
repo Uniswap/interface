@@ -388,6 +388,10 @@ msgstr "DMM Litepaper"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM can be up to 100x more capital efficient than typical AMMs"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr "Dark Mode"
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -745,6 +749,10 @@ msgstr "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators 
 msgid "LOCKED"
 msgstr "LOCKED"
 
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr "Language"
+
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "Learn More →"
@@ -1036,6 +1044,10 @@ msgstr "Pools | AMP"
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
 msgstr "Popular Pairs"
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
+msgstr "Powered By"
 
 #: src/pages/Static/About.tsx
 msgid "Powered by"
