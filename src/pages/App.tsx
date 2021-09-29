@@ -20,6 +20,7 @@ import { useActiveNetwork } from 'hooks/useActiveNetwork'
 
 import KNCPrice from 'components/KNCPrice'
 import { useExchangeClient } from 'state/application/hooks'
+import OnlyEthereumRoute from 'components/OnlyEthereumRoute'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -142,13 +143,13 @@ export default function App() {
                     <Route exact strict path="/swap" component={Swap} />
                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/find" component={PoolFinder} />
-                    <Route exact strict path="/findExternal" component={PoolFinderExternal} />
+                    <OnlyEthereumRoute exact path="/findExternal" component={PoolFinderExternal} />
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
                     <Route exact strict path="/farms" component={Yield} />
                     <Route exact strict path="/myPools" component={Pool} />
-                    <Route exact strict path="/migration" component={Migration} />
+                    <OnlyEthereumRoute exact path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />
                     <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                     <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />

@@ -712,6 +712,7 @@ msgstr ""
 msgid "Insured by"
 msgstr "보험 제공"
 
+#: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Invalid amount"
 msgstr ""
