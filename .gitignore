@@ -16,9 +16,6 @@
 # production
 /build
 
-# bundle
-/dist
-
 # misc
 .DS_Store
 .env.local
