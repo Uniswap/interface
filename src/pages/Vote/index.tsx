@@ -11,8 +11,9 @@ import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
+import CreateProposal from 'pages/CreateProposal'
 import { darken } from 'polished'
-import { Link } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleDelegateModal } from 'state/application/hooks'
@@ -26,6 +27,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
+import VotePage from './VotePage'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -122,6 +124,8 @@ export default function Vote() {
 
   return (
     <>
+      <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
+      <Route exact strict path="/create-proposal" component={CreateProposal} />
       <PageWrapper gap="lg" justify="center">
         <DelegateModal
           isOpen={showDelegateModal}
