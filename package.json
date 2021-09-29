@@ -1,7 +1,14 @@
 {
   "name": "@uniswap/interface",
   "description": "Uniswap Interface",
-  "homepage": ".",
+  "homepage": "https://github.com/Uniswap/interface",
+  "main": "dist/interface.js",
+  "module": "dist/interface.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
   "private": true,
   "devDependencies": {
     "@davatar/react": "1.6.2",
@@ -71,6 +78,7 @@
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",
+    "cross-env": "^7.0.3",
     "cypress": "^7.7.0",
     "d3": "^7.0.0",
     "eslint": "^7.11.0",
@@ -85,6 +93,7 @@
     "inter-ui": "^3.13.1",
     "jest-styled-components": "^7.0.5",
     "luxon": "^1.25.0",
+    "microbundle": "^0.13.3",
     "ms.macro": "^2.0.0",
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
@@ -95,6 +104,7 @@
     "qs": "^6.9.4",
     "react": "^17.0.1",
     "react-confetti": "^6.0.0",
+    "react-cosmos": "^5.6.3",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
@@ -138,7 +148,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
-    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'"
+    "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
+    "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
+    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
   },
   "eslintConfig": {
     "extends": "react-app",
