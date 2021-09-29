@@ -106,7 +106,7 @@ export default function Bridge() {
   })
 
   const [collectableTx, setCollectableTx] = useState(
-    () => bridgeSummaries.filter(tx => tx.status === 'pending')[0] || undefined
+    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
 
   const handleCollect = useCallback(

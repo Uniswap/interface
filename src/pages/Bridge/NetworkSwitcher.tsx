@@ -9,9 +9,10 @@ import { ChainLabel } from '../../constants'
 interface NetworkSwitcherProps {
   sendToId: number
   onCollectClick: () => void
+  onSwitchClick: () => void
 }
 
-export const NetworkSwitcher = ({ sendToId, onCollectClick }: NetworkSwitcherProps) => {
+export const NetworkSwitcher = ({ sendToId, onCollectClick, onSwitchClick }: NetworkSwitcherProps) => {
   const { chainId: networkConnectorChainId } = useActiveWeb3React()
   if (!networkConnectorChainId) return null
 
@@ -20,7 +21,7 @@ export const NetworkSwitcher = ({ sendToId, onCollectClick }: NetworkSwitcherPro
   return (
     <>
       <RowBetween mt="22px">
-        <SwitchButton onClick={() => null} disabled={networkConnectorChainId === sendToId}>
+        <SwitchButton onClick={onSwitchClick} disabled={networkConnectorChainId === sendToId}>
           Switch to {ChainLabel[sendToId]}
         </SwitchButton>
         <CollectButton onClick={onCollectClick} disabled={networkConnectorChainId !== sendToId}>
