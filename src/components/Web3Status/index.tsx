@@ -109,6 +109,9 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+`
+
+const TextWhite = styled(Text)`
   color: ${({ theme }) => theme.white};
 `
 
@@ -209,9 +212,9 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>
+        <TextWhite>
           <Trans>Connect Wallet</Trans>
-        </Text>
+        </TextWhite>
       </Web3StatusConnect>
     )
   }

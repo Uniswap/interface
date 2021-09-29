@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouteMatch } from 'react-router'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
@@ -6,9 +7,10 @@ import { useMedia } from 'react-use'
 import PoweredByIconLight from 'components/Icons/PoweredByIconLight'
 import PoweredByIconDark from 'components/Icons/PoweredByIconDark'
 import { useDarkModeManager } from 'state/user/hooks'
+import { ExternalLink } from 'theme'
 import SocialLinks from './SocialLinks'
 
-const StyledPoweredBy = styled.div`
+const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   position: fixed;
   bottom: 96px;
   right: 16px;
@@ -16,9 +18,9 @@ const StyledPoweredBy = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 8px 16px;
   border-radius: 4px;
-  background: ${({ theme }) => theme.poweredByMobile};
+  background: ${({ theme, isAboutpage }) => (isAboutpage ? theme.poweredByAbout : theme.poweredByMobile)};
 
   @media only screen and (min-width: 768px) {
     position: fixed;
@@ -40,7 +42,7 @@ const StyledPoweredBy = styled.div`
   }
 
   @media only screen and (min-width: 1366px) {
-    background: ${({ theme }) => theme.poweredBy};
+    background: ${({ theme, isAboutpage }) => (isAboutpage ? theme.poweredByAbout : theme.poweredBy)};
     padding: 16px;
     flex-direction: column;
     position: absolute;
@@ -50,7 +52,7 @@ const StyledPoweredBy = styled.div`
   }
 `
 
-const PoweredByWrapper = styled.div`
+const PoweredByLink = styled(ExternalLink)`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -94,11 +96,12 @@ const SocialLinksWrapper = styled.div`
 
 export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
+  const aboutPage = useRouteMatch('/about')
   const above768 = useMedia('(min-width: 768px)')
 
   return (
-    <StyledPoweredBy>
-      <PoweredByWrapper>
+    <StyledPoweredBy isAboutpage={aboutPage?.isExact}>
+      <PoweredByLink href="https://kyber.network/">
         <PoweredByText>
           <Trans>Powered By</Trans>
         </PoweredByText>
@@ -115,7 +118,7 @@ export default function PoweredBy() {
             <PoweredByIconLight width={48} />
           )}
         </div>
-      </PoweredByWrapper>
+      </PoweredByLink>
       <SocialLinksWrapper>
         <SocialLinks />
       </SocialLinksWrapper>
