@@ -4,11 +4,6 @@
     "jsx": "preserve",
     "baseUrl": "src/lib"
   },
-  "exclude": [
-    "node_modules",
-    "src/lib/**/*.test.*"
-  ],
-  "include": [
-    "src/lib/**/*"
-  ]
+  "exclude": ["node_modules", "src/lib/**/*.test.*"],
+  "include": ["src/lib/**/*"]
 }
