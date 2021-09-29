@@ -105,12 +105,16 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
-  const [collectableTx, setCollectableTx ] = useState(() => bridgeSummaries.filter(tx => tx.status === 'pending')[0] || undefined)
+  const [collectableTx, setCollectableTx] = useState(
+    () => bridgeSummaries.filter(tx => tx.status === 'pending')[0] || undefined
+  )
 
-  const handleCollect = useCallback((tx: BridgeTransactionSummary) => {
-    setStep(BridgeStep.Collect)
-    setCollectableTx(tx)
-  },[setStep, setCollectableTx]
+  const handleCollect = useCallback(
+    (tx: BridgeTransactionSummary) => {
+      setStep(BridgeStep.Collect)
+      setCollectableTx(tx)
+    },
+    [setStep, setCollectableTx]
   )
 
   return (
@@ -178,7 +182,12 @@ export default function Bridge() {
         />
       </AppBody>
       {chainId && !!bridgeSummaries.length && (
-        <BridgeTransactionsSummary show transactions={bridgeSummaries} collectableTx={collectableTx} onCollect={handleCollect} />
+        <BridgeTransactionsSummary
+          show
+          transactions={bridgeSummaries}
+          collectableTx={collectableTx}
+          onCollect={handleCollect}
+        />
       )}
 
       {/* {step === Step.Initial && !!typedValue && (

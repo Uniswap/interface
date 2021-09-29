@@ -11,7 +11,12 @@ import {
   updateBridgeTxnWithdrawalInfo
 } from './actions'
 
-import { useBridgePendingTransactions, useBridgeL1Deposits, useBridgeTransactions, useBridgePendingWithdrawals } from './hooks'
+import {
+  useBridgePendingTransactions,
+  useBridgeL1Deposits,
+  useBridgeTransactions,
+  useBridgePendingWithdrawals
+} from './hooks'
 import { txnTypeToLayer } from './reducer'
 import { BridgeTxn } from './types'
 
@@ -37,7 +42,7 @@ export default function Updater(): null {
 
       return provider.getTransactionReceipt(tx.txHash)
     },
-    [bridge?.l1Provider, bridge?.l2Provider]
+    [bridge]
   )
 
   const pendingTxListener = useCallback(async () => {
@@ -132,60 +137,63 @@ export default function Updater(): null {
     return () => window.clearInterval(intervalId)
   }, [l1ChainId, l2ChainId, l2DepositsListener])
 
-  const getOutgoingMessageState = useCallback(async (tx: BridgeTxn) => {
-    const retVal: Partial<Pick<BridgeTxn, 'batchIndex' | 'batchNumber'>> & Pick<BridgeTxn, 'txHash' | 'outgoingMessageState'> = {
-      batchNumber: tx.batchNumber,
-      batchIndex: tx.batchIndex,
-      outgoingMessageState: undefined,
-      txHash: tx.txHash
-    }
+  const getOutgoingMessageState = useCallback(
+    async (tx: BridgeTxn) => {
+      const retVal: Partial<Pick<BridgeTxn, 'batchIndex' | 'batchNumber'>> &
+        Pick<BridgeTxn, 'txHash' | 'outgoingMessageState'> = {
+        batchNumber: tx.batchNumber,
+        batchIndex: tx.batchIndex,
+        outgoingMessageState: undefined,
+        txHash: tx.txHash
+      }
 
-    if (!bridge || !l2ChainId || !tx.receipt) {
-      return retVal
-    }
+      if (!bridge || !l2ChainId || !tx.receipt) {
+        return retVal
+      }
 
-    if (!retVal.batchNumber || !retVal.batchIndex) {
-      const l2ToL2EventData = await bridge.getWithdrawalsInL2Transaction(tx.receipt)
-      if (l2ToL2EventData.length === 1) {
-        const { batchNumber, indexInBatch } = l2ToL2EventData[0]
-        const outgoingMessageState = await bridge.getOutGoingMessageState(
-          batchNumber,
-          indexInBatch
-        )
+      if (!retVal.batchNumber || !retVal.batchIndex) {
+        const l2ToL2EventData = await bridge.getWithdrawalsInL2Transaction(tx.receipt)
+        if (l2ToL2EventData.length === 1) {
+          const { batchNumber, indexInBatch } = l2ToL2EventData[0]
+          const outgoingMessageState = await bridge.getOutGoingMessageState(batchNumber, indexInBatch)
 
-        retVal.batchIndex = indexInBatch.toHexString()
-        retVal.batchNumber = batchNumber.toHexString()
+          retVal.batchIndex = indexInBatch.toHexString()
+          retVal.batchNumber = batchNumber.toHexString()
+          retVal.outgoingMessageState = outgoingMessageState
+        }
+      } else {
+        const retValbatchNr = BigNumber.from(retVal.batchNumber)
+        const retValbatchIndex = BigNumber.from(retVal.batchIndex)
+        const outgoingMessageState = await bridge.getOutGoingMessageState(retValbatchNr, retValbatchIndex)
         retVal.outgoingMessageState = outgoingMessageState
       }
-    } else {
-      const retValbatchNr = BigNumber.from(retVal.batchNumber)
-      const retValbatchIndex = BigNumber.from(retVal.batchIndex)
-      const outgoingMessageState = await bridge.getOutGoingMessageState(retValbatchNr, retValbatchIndex)
-      retVal.outgoingMessageState = outgoingMessageState
-    }
-    return retVal
-  }, [l2ChainId, bridge])
+      return retVal
+    },
+    [l2ChainId, bridge]
+  )
 
   const updatePendingWithdrawals = useCallback(async () => {
     if (bridge && l2ChainId && account) {
       const promises = pendingWithdrawals.map(getOutgoingMessageState)
       const withdrawalsInfo = await Promise.all(promises)
 
-      withdrawalsInfo.forEach((withdrawalInfo) => {
+      withdrawalsInfo.forEach(withdrawalInfo => {
         const { outgoingMessageState, batchNumber, batchIndex, txHash } = withdrawalInfo
 
         if (outgoingMessageState !== undefined) {
-          dispatch(updateBridgeTxnWithdrawalInfo({
-            chainId: l2ChainId,
-            outgoingMessageState,
-            txHash,
-            batchIndex: batchIndex,
-            batchNumber: batchNumber
-          }))
+          dispatch(
+            updateBridgeTxnWithdrawalInfo({
+              chainId: l2ChainId,
+              outgoingMessageState,
+              txHash,
+              batchIndex: batchIndex,
+              batchNumber: batchNumber
+            })
+          )
         }
       })
     }
-  }, [bridge, l2ChainId, account, pendingWithdrawals, getOutgoingMessageState])
+  }, [bridge, l2ChainId, account, pendingWithdrawals, getOutgoingMessageState, dispatch])
 
   useEffect(() => {
     if (l2ChainId) {
@@ -194,7 +202,7 @@ export default function Updater(): null {
         setInitialPendingWithdrawalsChecked(l2ChainId)
       }
     }
-  }, [l1ChainId, l2ChainId, updatePendingWithdrawals])
+  }, [initialPendingWithdrawalsChecked, l1ChainId, l2ChainId, updatePendingWithdrawals])
 
   return null
 }
