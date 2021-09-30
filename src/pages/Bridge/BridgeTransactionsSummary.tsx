@@ -8,12 +8,16 @@ import { TYPE } from '../../theme'
 import { BridgeStatusTag } from './BridgeStatusTag'
 interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
-  collectableTx: BridgeTransactionSummary,
+  collectableTx: BridgeTransactionSummary
   onCollect: (tx: BridgeTransactionSummary) => void
 }
 
-export const BridgeTransactionsSummary = ({ show, transactions, collectableTx, onCollect }: BridgeTransactionsSummaryProps) => {
-
+export const BridgeTransactionsSummary = ({
+  show,
+  transactions,
+  collectableTx,
+  onCollect
+}: BridgeTransactionsSummaryProps) => {
   return (
     <HideableAutoColumn show={show}>
       <AdvancedDetailsFooter fullWidth padding="16px">
@@ -56,12 +60,7 @@ export const BridgeTransactionsSummary = ({ show, transactions, collectableTx, o
           </tbody>
         </Table>
         {collectableTx && (
-          <ButtonPrimary
-            onClick={() =>
-              onCollect(collectableTx)
-            }
-            mt="12px"
-          >
+          <ButtonPrimary onClick={() => onCollect(collectableTx)} mt="12px">
             Collect
           </ButtonPrimary>
         )}
