@@ -369,20 +369,8 @@ export const KNC: { [chainId in ChainId]: Token } = {
     'KNC',
     'Kyber Network Crystal'
   ),
-  [ChainId.AVAXTESTNET]: new Token(
-    ChainId.AVAXTESTNET,
-    '0x0000000000000000000000000000000000000000',
-    18,
-    'KNC',
-    'Kyber Network Crystal'
-  ),
-  [ChainId.AVAXMAINNET]: new Token(
-    ChainId.AVAXMAINNET,
-    '0x0000000000000000000000000000000000000000',
-    18,
-    'KNC',
-    'Kyber Network Crystal'
-  )
+  [ChainId.AVAXTESTNET]: new Token(ChainId.AVAXTESTNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.AVAXMAINNET]: new Token(ChainId.AVAXMAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal')
 }
 
 export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
