@@ -44,9 +44,9 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
-const HeaderRow = styled.div`
+const HeaderRow = styled.div<{ padding?: string }>`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 3rem 2rem 0 2rem;
+  padding: ${({ padding }) => padding ?? ' 3rem 2rem 0 2rem'};
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -54,9 +54,9 @@ const HeaderRow = styled.div`
   `};
 `
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{ padding?: string }>`
   background-color: ${({ theme }) => theme.bg6};
-  padding: 2rem 2rem 8px 2rem;
+  padding: ${({ padding }) => padding ?? '2rem 2rem 8px 2rem'};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -295,11 +295,13 @@ export default function WalletModal({
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
-          <ContentWrapper>
+          <HeaderRow padding="1rem">
+            {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+          </HeaderRow>
+          <ContentWrapper padding="1rem 1.5rem 1.5rem">
             {error instanceof UnsupportedChainIdError ? (
               <h5>
-                <Trans>Please connect to the appropriate Ethereum network.</Trans>
+                <Trans>Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network.</Trans>
               </h5>
             ) : (
               t`Error connecting. Try refreshing the page.`
@@ -362,10 +364,7 @@ export default function WalletModal({
               <Trans>Terms of Use</Trans>
             </ExternalLink>{' '}
             <Trans>and</Trans>{' '}
-            <ExternalLink
-              href="http://files.dmm.exchange/privacy.pdf
-"
-            >
+            <ExternalLink href="http://files.dmm.exchange/privacy.pdf">
               <Trans>Privacy Policy</Trans>
             </ExternalLink>
           </ToSText>
