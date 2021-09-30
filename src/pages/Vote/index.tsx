@@ -125,137 +125,139 @@ export default function Vote() {
   return (
     <>
       <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
-      <Route exact strict path="/create-proposal" component={CreateProposal} />
-      <PageWrapper gap="lg" justify="center">
-        <DelegateModal
-          isOpen={showDelegateModal}
-          onDismiss={toggleDelegateModal}
-          title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
-        />
-        <TopSection gap="md">
-          <VoteCard>
-            <CardBGImage />
-            <CardNoise />
-            <CardSection>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <TYPE.white fontWeight={600}>
-                    <Trans>Uniswap Governance</Trans>
-                  </TYPE.white>
-                </RowBetween>
-                <RowBetween>
-                  <TYPE.white fontSize={14}>
+      <Route exact strict path="/vote/create-proposal" component={CreateProposal} />
+      <Route exact strict path="/vote">
+        <PageWrapper gap="lg" justify="center">
+          <DelegateModal
+            isOpen={showDelegateModal}
+            onDismiss={toggleDelegateModal}
+            title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
+          />
+          <TopSection gap="md">
+            <VoteCard>
+              <CardBGImage />
+              <CardNoise />
+              <CardSection>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <TYPE.white fontWeight={600}>
+                      <Trans>Uniswap Governance</Trans>
+                    </TYPE.white>
+                  </RowBetween>
+                  <RowBetween>
+                    <TYPE.white fontSize={14}>
+                      <Trans>
+                        UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
+                        or delegate your votes to a third party.
+                      </Trans>
+                    </TYPE.white>
+                  </RowBetween>
+                  <ExternalLink
+                    style={{ color: 'white', textDecoration: 'underline' }}
+                    href="https://uniswap.org/blog/uni"
+                    target="_blank"
+                  >
+                    <TYPE.white fontSize={14}>
+                      <Trans>Read more about Uniswap governance</Trans>
+                    </TYPE.white>
+                  </ExternalLink>
+                </AutoColumn>
+              </CardSection>
+              <CardBGImage />
+              <CardNoise />
+            </VoteCard>
+          </TopSection>
+          <TopSection gap="2px">
+            <WrapSmall>
+              <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
+                <Trans>Proposals</Trans>
+              </TYPE.mediumHeader>
+              <AutoRow gap="6px" justify="flex-end">
+                {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
+                {showUnlockVoting ? (
+                  <ButtonPrimary
+                    style={{ width: 'fit-content' }}
+                    padding="8px"
+                    $borderRadius="8px"
+                    onClick={toggleDelegateModal}
+                  >
+                    <Trans>Unlock Voting</Trans>
+                  </ButtonPrimary>
+                ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
+                  <TYPE.body fontWeight={500} mr="6px">
                     <Trans>
-                      UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
-                      or delegate your votes to a third party.
+                      <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
                     </Trans>
-                  </TYPE.white>
-                </RowBetween>
-                <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline' }}
-                  href="https://uniswap.org/blog/uni"
-                  target="_blank"
-                >
-                  <TYPE.white fontSize={14}>
-                    <Trans>Read more about Uniswap governance</Trans>
-                  </TYPE.white>
-                </ExternalLink>
-              </AutoColumn>
-            </CardSection>
-            <CardBGImage />
-            <CardNoise />
-          </VoteCard>
-        </TopSection>
-        <TopSection gap="2px">
-          <WrapSmall>
-            <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
-              <Trans>Proposals</Trans>
-            </TYPE.mediumHeader>
-            <AutoRow gap="6px" justify="flex-end">
-              {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
-              {showUnlockVoting ? (
-                <ButtonPrimary
-                  style={{ width: 'fit-content' }}
-                  padding="8px"
-                  $borderRadius="8px"
-                  onClick={toggleDelegateModal}
-                >
-                  <Trans>Unlock Voting</Trans>
-                </ButtonPrimary>
-              ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
-                  <Trans>
-                    <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                  </Trans>
-                </TYPE.body>
-              ) : uniBalance &&
-                userDelegatee &&
-                userDelegatee !== ZERO_ADDRESS &&
-                JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-                <TYPE.body fontWeight={500} mr="6px">
-                  <Trans>
-                    <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-                  </Trans>
-                </TYPE.body>
-              ) : (
-                ''
-              )}
-              <ButtonPrimary
-                as={Link}
-                to="/create-proposal"
-                style={{ width: 'fit-content', borderRadius: '8px' }}
-                padding="8px"
-              >
-                <Trans>Create Proposal</Trans>
-              </ButtonPrimary>
-            </AutoRow>
-          </WrapSmall>
-          {!showUnlockVoting && (
-            <RowBetween>
-              <div />
-              {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
-                <RowFixed>
-                  <TYPE.body fontWeight={500} mr="4px">
-                    <Trans>Delegated to:</Trans>
                   </TYPE.body>
-                  <AddressButton>
-                    <StyledExternalLink
-                      href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
-                      style={{ margin: '0 4px' }}
-                    >
-                      {userDelegatee === account ? <Trans>Self</Trans> : shortenAddress(userDelegatee)}
-                    </StyledExternalLink>
-                    <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
-                      <Trans>(edit)</Trans>
-                    </TextButton>
-                  </AddressButton>
-                </RowFixed>
-              ) : (
-                ''
-              )}
-            </RowBetween>
-          )}
-          {allProposals?.length === 0 && <ProposalEmptyState />}
-          {allProposals
-            ?.slice(0)
-            ?.reverse()
-            ?.map((p: ProposalData) => {
-              return (
-                <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
-                  <ProposalNumber>
-                    {p.governorIndex}.{p.id}
-                  </ProposalNumber>
-                  <ProposalTitle>{p.title}</ProposalTitle>
-                  <ProposalStatus status={p.status} />
-                </Proposal>
-              )
-            })}
-        </TopSection>
-        <TYPE.subHeader color="text3">
-          <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
-        </TYPE.subHeader>
-      </PageWrapper>
-      <SwitchLocaleLink />
+                ) : uniBalance &&
+                  userDelegatee &&
+                  userDelegatee !== ZERO_ADDRESS &&
+                  JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
+                  <TYPE.body fontWeight={500} mr="6px">
+                    <Trans>
+                      <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+                    </Trans>
+                  </TYPE.body>
+                ) : (
+                  ''
+                )}
+                <ButtonPrimary
+                  as={Link}
+                  to="/create-proposal"
+                  style={{ width: 'fit-content', borderRadius: '8px' }}
+                  padding="8px"
+                >
+                  <Trans>Create Proposal</Trans>
+                </ButtonPrimary>
+              </AutoRow>
+            </WrapSmall>
+            {!showUnlockVoting && (
+              <RowBetween>
+                <div />
+                {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
+                  <RowFixed>
+                    <TYPE.body fontWeight={500} mr="4px">
+                      <Trans>Delegated to:</Trans>
+                    </TYPE.body>
+                    <AddressButton>
+                      <StyledExternalLink
+                        href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
+                        style={{ margin: '0 4px' }}
+                      >
+                        {userDelegatee === account ? <Trans>Self</Trans> : shortenAddress(userDelegatee)}
+                      </StyledExternalLink>
+                      <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
+                        <Trans>(edit)</Trans>
+                      </TextButton>
+                    </AddressButton>
+                  </RowFixed>
+                ) : (
+                  ''
+                )}
+              </RowBetween>
+            )}
+            {allProposals?.length === 0 && <ProposalEmptyState />}
+            {allProposals
+              ?.slice(0)
+              ?.reverse()
+              ?.map((p: ProposalData) => {
+                return (
+                  <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
+                    <ProposalNumber>
+                      {p.governorIndex}.{p.id}
+                    </ProposalNumber>
+                    <ProposalTitle>{p.title}</ProposalTitle>
+                    <ProposalStatus status={p.status} />
+                  </Proposal>
+                )
+              })}
+          </TopSection>
+          <TYPE.subHeader color="text3">
+            <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
+          </TYPE.subHeader>
+        </PageWrapper>
+        <SwitchLocaleLink />
+      </Route>
     </>
   )
 }
