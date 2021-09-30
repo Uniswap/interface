@@ -786,3 +786,6 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.BSCTESTNET]: '',
   [ChainId.AVAXTESTNET]: ''
 }
+
+export const KYBER_NETWORK_DISCORD_URL = 'https://discord.gg/fQjDvdkc'
+export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'

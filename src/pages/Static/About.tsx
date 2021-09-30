@@ -12,7 +12,7 @@ import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId, ETHER, Fraction, JSBI } from 'libs/sdk/src'
-import { DMM_ANALYTICS_URL, KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC, KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
@@ -374,7 +374,7 @@ export default function About() {
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
-          href={`https://discord.com/invite/HdXWUb2pQM`}
+          href={KYBER_NETWORK_DISCORD_URL}
           style={{ width: 'auto', fontSize: '16px' }}
         >
           <Trans>Developer Support</Trans>
@@ -467,10 +467,10 @@ export default function About() {
             </Text>
           </div>
           <div className={style.right}>
-            <ExternalLink href={`https://twitter.com/KyberNetwork/`}>
+            <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
               <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
             </ExternalLink>
-            <ExternalLink href={`https://discord.gg/HdXWUb2pQM`}>
+            <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
               <Image src={require('../../assets/svg/about_icon_discord.svg')} />
             </ExternalLink>
             <ExternalLink href={`https://blog.kyber.network`}>
