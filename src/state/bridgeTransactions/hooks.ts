@@ -6,6 +6,12 @@ import { NETWORK_DETAIL } from '../../constants'
 import { useBridge } from '../../hooks/useArbBridge'
 import { BridgeTxn, BridgeTxnsState, BridgeTxnType } from './types'
 
+export const PendingReasons = {
+  TX_UNCONFIRMED: 'Transaction has not been confirmed yet',
+  DESPOSIT: 'Waiting for deposit to be processed on L2 (~10 minutes)',
+  WITHDRAWAL: 'Waiting for confirmation (~7 days of dispute period)'
+}
+
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
 export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
@@ -13,9 +19,10 @@ export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | '
   toName: string
   log: BridgeTransactionLog[]
   status: BridgeTransactionStatus
+  pendingReason?: string
 }
 
-export type BridgeTransactionLog = Pick<BridgeTxn, 'timestampCreated' | 'timestampResolved' | 'txHash'> & {
+export type BridgeTransactionLog = Pick<BridgeTxn, 'txHash' | 'chainId' | 'type'> & {
   status: BridgeTransactionStatus
 }
 
@@ -32,9 +39,9 @@ export const getBridgeTxStatus = (txStatus: number | undefined): BridgeTransacti
 
 export const createBridgeLog = (transactions: BridgeTxn[]): BridgeTransactionLog[] => {
   return transactions.map(tx => ({
-    timestampCreated: tx.timestampCreated,
-    timestampResolved: tx.timestampResolved,
     txHash: tx.txHash,
+    chainId: tx.chainId,
+    type: tx.type,
     status: getBridgeTxStatus(tx.receipt?.status)
   }))
 }
@@ -168,6 +175,7 @@ export const useBridgeTransactionsSummary = () => {
           value: tx.value,
           batchIndex: tx.batchIndex,
           batchNumber: tx.batchNumber,
+          pendingReason: tx.receipt?.status ? undefined : PendingReasons.TX_UNCONFIRMED,
           log: []
         }
 
@@ -177,6 +185,7 @@ export const useBridgeTransactionsSummary = () => {
           // deposits on l1 should never show confirmed on UI
           if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
             summary.status = 'pending'
+            summary.pendingReason = PendingReasons.DESPOSIT
           }
           txMap[l1ChainId][tx.txHash] = tx.txHash
 
@@ -189,6 +198,7 @@ export const useBridgeTransactionsSummary = () => {
           const status = l2Txs[tx.partnerTxHash].receipt?.status
           summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
           summary.status = getBridgeTxStatus(status)
+          summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
 
           txMap[l1ChainId][tx.txHash] = tx.txHash
           txMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
@@ -220,13 +230,14 @@ export const useBridgeTransactionsSummary = () => {
           if (tx.type === 'withdraw') {
             switch (tx.outgoingMessageState) {
               case OutgoingMessageState.CONFIRMED:
-                summary.status = 'confirmed'
+                summary.status = 'redeem'
                 break
               case OutgoingMessageState.EXECUTED:
                 summary.status = 'failed'
                 break
               default:
                 summary.status = 'pending'
+                summary.pendingReason = PendingReasons.WITHDRAWAL
             }
           }
           summary.log = createBridgeLog([tx])

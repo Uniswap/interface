@@ -30,7 +30,7 @@ export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: Bri
           </thead>
           <tbody>
             {Object.values(transactions).map((tx, index) => {
-              const { assetName, fromName, status, toName, value, batchIndex, batchNumber } = tx
+              const { assetName, fromName, status, toName, value, batchIndex, batchNumber, pendingReason } = tx
 
               return (
                 <tr key={index} style={{ lineHeight: '22px' }}>
@@ -50,7 +50,11 @@ export const BridgeTransactionsSummary = ({ show, transactions, onCollect }: Bri
                     </TYPE.main>
                   </td>
                   <td align="left">
-                    <BridgeStatusTag status={status} onCollect={() => onCollect({ value, batchIndex, batchNumber })} />
+                    <BridgeStatusTag
+                      status={status}
+                      pendingReason={pendingReason}
+                      onCollect={() => onCollect({ value, batchIndex, batchNumber })}
+                    />
                   </td>
                 </tr>
               )
