@@ -64,7 +64,7 @@ export default function About() {
 
   const handleAprUpdate = useCallback(
     (value: any) => {
-      if (!!maxApr && value > maxApr) {
+      if (value > 0 && value > maxApr) {
         setMaxApr(value)
         setIndexx(indexx + 1)
       }
@@ -137,17 +137,19 @@ export default function About() {
           </div>
         </div>
 
-        <div className={`${style.section_number} ${style.trading_volume_section}`}>
-          <div>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
-              {maxApr < 0 ? <Loader /> : `${maxApr.toFixed(2)}%`}
-            </Text>
-            <Text fontSize={14} mt={2}>
-              <Trans>Max APY</Trans>
-            </Text>
-            <Text fontSize={14}>&nbsp;</Text>
+        {maxApr >= 0 && (
+          <div className={`${style.section_number} ${style.trading_volume_section}`}>
+            <div>
+              <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+                {maxApr.toFixed(2)}%
+              </Text>
+              <Text fontSize={14} mt={2}>
+                <Trans>Max APY</Trans>
+              </Text>
+              <Text fontSize={14}>&nbsp;</Text>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={style.panel0}>
@@ -479,16 +481,7 @@ export default function About() {
           </div>
           {Object.values(farms)
             .flat()
-            .map(
-              (farm, index) =>
-                index === indexx && (
-                  <Apr
-                    key={farm.id}
-                    farm={farm}
-                    onAprUpdate={handleAprUpdate}
-                  />
-                )
-            )}
+            .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
         </div>
       </div>
     </div>
@@ -521,7 +514,6 @@ function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
   const apr = farmAPR + tradingFeeAPR
-
   useEffect(() => {
     onAprUpdate(apr)
   }, [apr, onAprUpdate])

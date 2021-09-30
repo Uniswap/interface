@@ -388,6 +388,10 @@ msgstr "DMM Litepaper"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM, tipik AMM'lere kıyasla 100 kata kadar daha fazla sermaye verimli olabilir"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Kontrol Paneli"
@@ -492,6 +496,8 @@ msgstr "Bir alıcı girin"
 msgid "Enter a valid slippage percentage"
 msgstr "Geçerli bir kayma yüzdesi girin"
 
+#: src/hooks/useWrapCallback.ts
+#: src/hooks/useWrapCallback.ts
 #: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
@@ -710,6 +716,7 @@ msgstr ""
 msgid "Insured by"
 msgstr "tarafından sigortalıdır"
 
+#: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Invalid amount"
 msgstr ""
@@ -741,6 +748,10 @@ msgstr "KyberDMM'nin Programlanabilir Fiyatlandırma Eğrisi, likidite havuzu ol
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "KİLİTLİ"
+
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
@@ -1032,6 +1043,10 @@ msgstr "Havuzlar | AMP"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

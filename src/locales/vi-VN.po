@@ -388,6 +388,10 @@ msgstr "DMM Litepaper"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM có thể có hiệu quả sử dụng vốn vốn gấp 100 lần so với AMM thông thường"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
@@ -492,6 +496,8 @@ msgstr "Nhập người nhận"
 msgid "Enter a valid slippage percentage"
 msgstr "Nhập phần trăm trượt giá hợp lệ"
 
+#: src/hooks/useWrapCallback.ts
+#: src/hooks/useWrapCallback.ts
 #: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
@@ -710,6 +716,7 @@ msgstr ""
 msgid "Insured by"
 msgstr "Được bảo hiểm bởi"
 
+#: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Invalid amount"
 msgstr ""
@@ -741,6 +748,10 @@ msgstr "Đường cong Định giá có thể Lập trình được của KyberD
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "ĐÃ KHÓA"
+
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
@@ -1032,6 +1043,10 @@ msgstr "Pools | AMP"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

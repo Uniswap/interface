@@ -24,6 +24,7 @@ import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
 import { TYPE } from '../../theme'
 import { tokenSushiToDmm } from 'utils/dmm'
+import useTheme from 'hooks/useTheme'
 
 enum Fields {
   TOKEN0 = 0,
@@ -69,6 +70,7 @@ function usePoolSUSHI(currency0: Currency | null, currency1: Currency | null) {
 
 export default function PoolFinderExternal() {
   const { account } = useActiveWeb3React()
+  const theme = useTheme()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
@@ -175,7 +177,7 @@ export default function PoolFinderExternal() {
       <AutoColumn style={{ padding: '1rem' }} gap="md">
         <BlueCard>
           <AutoColumn gap="10px">
-            <TYPE.link fontWeight={400} color={'primaryText1'}>
+            <TYPE.link fontWeight={400} color={theme.text}>
               <Trans>
                 <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the interface.
               </Trans>

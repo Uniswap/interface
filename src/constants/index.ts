@@ -574,7 +574,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     name: 'Open in Coinbase Wallet',
     iconName: 'wallet-link.svg',
     description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
+    // To get this link: go to Coinbase app -> Dapp Browser -> go to dmm.exchange -> click "..." button -> share -> copy link
+    href: 'https://go.cb-w.com/S7mannYpWjb',
     color: '#315CF5',
     mobile: true,
     mobileOnly: true

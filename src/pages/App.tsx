@@ -9,7 +9,6 @@ import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-import Utilities from 'components/Footer/Utilities'
 import PoweredBy from 'components/Footer/PoweredBy'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Swap from './Swap'
@@ -17,9 +16,8 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
-
-import KNCPrice from 'components/KNCPrice'
 import { useExchangeClient } from 'state/application/hooks'
+import OnlyEthereumRoute from 'components/OnlyEthereumRoute'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -79,36 +77,6 @@ const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
   z-index: 1;
 `
 
-const UtilitiesWrapper = styled.div<{ isAboutpage?: boolean }>`
-  display: ${({ isAboutpage }) => (isAboutpage ? 'none' : 'flex')};
-  justify-content: space-between;
-  width: 100%;
-  height: fit-content;
-  padding: 12px 16px 16px;
-  z-index: -2;
-  opacity: 0.8;
-  transition: opacity 0.25s ease;
-  :hover {
-    opacity: 1;
-  }
-
-  @media only screen and (min-width: 768px) {
-    padding: 16px;
-  }
-
-  @media only screen and (min-width: 1000px) {
-    padding: 16px 32px;
-  }
-
-  @media only screen and (min-width: 1366px) {
-    padding: 16px 215px;
-  }
-
-  @media only screen and (min-width: 1440px) {
-    padding: 16px 252px;
-  }
-`
-
 const Marginer = styled.div`
   margin-top: 5rem;
 `
@@ -132,23 +100,19 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               <BodyWrapper isAboutpage={aboutPage?.isExact}>
                 <Popups />
-                <UtilitiesWrapper isAboutpage={aboutPage?.isExact}>
-                  <KNCPrice />
-                  <Utilities />
-                </UtilitiesWrapper>
                 <PoweredBy />
                 <Web3ReactManager>
                   <Switch>
                     <Route exact strict path="/swap" component={Swap} />
                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/find" component={PoolFinder} />
-                    <Route exact strict path="/findExternal" component={PoolFinderExternal} />
+                    <OnlyEthereumRoute exact path="/findExternal" component={PoolFinderExternal} />
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
                     <Route exact strict path="/farms" component={Yield} />
                     <Route exact strict path="/myPools" component={Pool} />
-                    <Route exact strict path="/migration" component={Migration} />
+                    <OnlyEthereumRoute exact path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />
                     <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                     <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />

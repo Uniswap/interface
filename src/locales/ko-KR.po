@@ -388,6 +388,10 @@ msgstr "DMM 라이트페이퍼"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM은 일반적인 AMM보다 자본 효율성이 최대 100배 더 높을 수 있습니다"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "대시보드"
@@ -492,6 +496,8 @@ msgstr "받는 사람을 입력하세요"
 msgid "Enter a valid slippage percentage"
 msgstr "유효한 슬립페지 비율을 입력하십시오"
 
+#: src/hooks/useWrapCallback.ts
+#: src/hooks/useWrapCallback.ts
 #: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
@@ -710,6 +716,7 @@ msgstr ""
 msgid "Insured by"
 msgstr "보험 제공"
 
+#: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Invalid amount"
 msgstr ""
@@ -741,6 +748,10 @@ msgstr "카이버DMM의 프로그래밍 가능한 가격 곡선을 통해 유동
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "잠김"
+
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
@@ -1032,6 +1043,10 @@ msgstr "Pools | AMP"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

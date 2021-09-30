@@ -111,6 +111,10 @@ const Text = styled.p`
   font-weight: 500;
 `
 
+const TextWhite = styled(Text)`
+  color: ${({ theme }) => theme.white};
+`
+
 const NetworkIcon = styled(Activity)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
@@ -208,9 +212,9 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>
+        <TextWhite>
           <Trans>Connect Wallet</Trans>
-        </Text>
+        </TextWhite>
       </Web3StatusConnect>
     )
   }

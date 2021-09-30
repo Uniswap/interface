@@ -56,7 +56,9 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance
+        inputError: !typedValue
+          ? t`Enter an amount`
+          : sufficientBalance
           ? undefined
           : t`Insufficient ${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
       }
@@ -74,12 +76,14 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance
+        inputError: !typedValue
+          ? t`Enter an amount`
+          : sufficientBalance
           ? undefined
           : t`Insufficient W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol} balance`
       }
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction, typedValue])
 }

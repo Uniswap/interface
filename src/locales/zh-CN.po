@@ -388,6 +388,10 @@ msgstr "DMM 白皮书"
 msgid "DMM can be up to 100x more capital efficient than typical AMMs"
 msgstr "DMM 的资本效率可以比典型的 AMM 高 100 倍"
 
+#: src/components/Settings/index.tsx
+msgid "Dark Mode"
+msgstr ""
+
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "仪表板"
@@ -492,6 +496,8 @@ msgstr "输入收件人"
 msgid "Enter a valid slippage percentage"
 msgstr "输入有效的滑点百分比"
 
+#: src/hooks/useWrapCallback.ts
+#: src/hooks/useWrapCallback.ts
 #: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
@@ -710,6 +716,7 @@ msgstr ""
 msgid "Insured by"
 msgstr "承保"
 
+#: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Invalid amount"
 msgstr ""
@@ -741,6 +748,10 @@ msgstr "KyberDMM 的可编程定价曲线使流动性池创建者能够设置合
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "锁定"
+
+#: src/components/Settings/index.tsx
+msgid "Language"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
@@ -1032,6 +1043,10 @@ msgstr "池| 放大系数"
 
 #: src/pages/Pools/index.tsx
 msgid "Popular Pairs"
+msgstr ""
+
+#: src/components/Footer/PoweredBy.tsx
+msgid "Powered By"
 msgstr ""
 
 #: src/pages/Static/About.tsx

@@ -7,18 +7,16 @@ import { ExternalLink } from 'theme'
 
 const StyledSocialLinks = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  margin-left: 8px;
-  padding: 6px 9px 6px 10px;
   border-radius: 5px;
-  background-color: ${({ theme }) => theme.bg13};
 `
 
 const StyledTwitterIcon = styled.div`
   display: flex;
   align-items: center;
   padding-right: 6px;
-  border-right: solid 0.6px #859aa5;
+  border-right: solid 0.6px ${({ theme }) => theme.subText};
 `
 
 const StyledDiscordIcon = styled.div`

@@ -330,7 +330,6 @@ export const Tag = styled.div<{ tag?: string }>`
   font-size: 14px;
   color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
   background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg11)};
-  z-index: 9999;
   box-sizing: border-box;
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);

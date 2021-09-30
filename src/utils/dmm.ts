@@ -7,12 +7,12 @@ import { formattedNum } from 'utils'
 import { TokenAmount as TokenAmountSUSHI, Token as TokenSUSHI, ChainId as ChainIdSUSHI } from '@sushiswap/sdk'
 import { TokenAmount as TokenAmountUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
 import { Token as TokenDMM, TokenAmount as TokenAmountDMM, ChainId as ChainIdDMM } from 'libs/sdk/src'
-import { BLOCKS_PER_YEAR, FARMING_POOLS, KNC, ZERO_ADDRESS } from '../constants'
+import { BLOCKS_PER_YEAR, FARMING_POOLS, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
 import { useRewardTokens } from 'state/farms/hooks'
-import { useETHPrice, useKNCPrice, useTokensPrice } from 'state/application/hooks'
+import { useTokensPrice } from 'state/application/hooks'
 import { getFullDisplayBalance } from './formatBalance'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
@@ -43,6 +43,12 @@ function getToken0MinPrice(pool: Pair): Fraction {
 
 function getToken0MaxPrice(pool: Pair): Fraction {
   const temp = pool.virtualReserve0.subtract(pool.reserve0)
+
+  // Avoid error division by 0
+  if (temp.equalTo(new Fraction('0'))) {
+    return new Fraction('-1')
+  }
+
   return pool.virtualReserve0
     .multiply(pool.virtualReserve1)
     .divide(temp)
@@ -59,6 +65,12 @@ function getToken1MinPrice(pool: Pair): Fraction {
 
 function getToken1MaxPrice(pool: Pair): Fraction {
   const temp = pool.virtualReserve1.subtract(pool.reserve1)
+
+  // Avoid error division by 0
+  if (temp.equalTo(new Fraction('0'))) {
+    return new Fraction('-1')
+  }
+
   return pool.virtualReserve0
     .multiply(pool.virtualReserve1)
     .divide(temp)
@@ -248,23 +260,14 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
  * @param poolLiquidityUsd Total pool liquidity in USD
  * @returns
  */
+
 export function useFarmApr(
   rewardPerBlocks: RewardPerBlock[],
   poolLiquidityUsd: string,
   isLiquidityMiningActive?: boolean
 ): number {
   const { chainId } = useActiveWeb3React()
-  const ethPrice = useETHPrice()
-  const kncPrice = useKNCPrice()
-  const tokenPrices = useTokensPrice(
-    rewardPerBlocks
-      .map(item => item.token)
-      .filter(
-        token =>
-          token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-          token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase()
-      )
-  )
+  const tokenPrices = useTokensPrice((rewardPerBlocks || []).map(item => item.token))
 
   if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
     return 0
@@ -274,38 +277,16 @@ export function useFarmApr(
     return 0
   }
 
-  const yearlyRewardUSD = rewardPerBlocks.reduce((total, rewardPerBlock) => {
+  const yearlyRewardUSD = rewardPerBlocks.reduce((total, rewardPerBlock, index) => {
     if (!rewardPerBlock || !rewardPerBlock.amount) {
       return total
     }
 
-    if (
-      chainId &&
-      ethPrice.currentPrice &&
-      rewardPerBlock.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-    ) {
+    if (chainId && tokenPrices[index]) {
       const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
       const yearlyETHRewardAllocation =
         parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
-      total += yearlyETHRewardAllocation * parseFloat(ethPrice.currentPrice)
-    }
-    if (kncPrice && rewardPerBlock.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
-      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
-      const yearlyKNCRewardAllocation =
-        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
-      total += yearlyKNCRewardAllocation * parseFloat(kncPrice)
-    }
-
-    if (
-      chainId &&
-      rewardPerBlock.token.address.toLowerCase() !== WETH[chainId as ChainId].address.toLowerCase() &&
-      rewardPerBlock.token.address.toLowerCase() !== KNC[chainId as ChainId].address.toLowerCase() &&
-      tokenPrices[0]
-    ) {
-      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
-      const yearlyKNCRewardAllocation =
-        parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR[chainId as ChainId]
-      total += yearlyKNCRewardAllocation * tokenPrices[0]
+      total += yearlyETHRewardAllocation * tokenPrices[index]
     }
 
     return total
