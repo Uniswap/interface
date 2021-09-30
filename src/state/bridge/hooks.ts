@@ -60,6 +60,7 @@ export function useBridgeActionHandlers(): {
 
   const onCurrencySelection = useCallback(
     (currency: Currency) => {
+      console.log({ currency })
       dispatch(
         selectCurrency({
           currencyId: currencyId(currency)

@@ -36,11 +36,11 @@ const Row = styled(RowBetween)`
   }
 `
 
-const SwapButton = styled.button`
+const SwapButton = styled.button<{ disabled: boolean }>`
   padding: 0 16px;
   border: none;
   background: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 `
 
 export default function Bridge() {
@@ -117,6 +117,8 @@ export default function Bridge() {
     [setStep, setCollectableTx]
   )
 
+  // const collectedCurrency = useCurrency(collectableTx.assetName)
+
   return (
     <>
       <AppBody>
@@ -130,6 +132,7 @@ export default function Bridge() {
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
               onClick={() => setShowFromList(val => !val)}
+              disabled={step === BridgeStep.Collect}
             />
             <NetworkSwitcherPopover
               show={showFromList}
@@ -139,7 +142,7 @@ export default function Bridge() {
               parentRef={fromPanelRef}
             />
           </div>
-          <SwapButton onClick={onSwapBridgeNetworks}>
+          <SwapButton onClick={onSwapBridgeNetworks} disabled={step === BridgeStep.Collect}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
           <div ref={toPanelRef}>
@@ -147,6 +150,7 @@ export default function Bridge() {
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
               onClick={() => setShowToList(val => !val)}
+              disabled={step === BridgeStep.Collect}
             />
             <NetworkSwitcherPopover
               show={showToList}
@@ -159,14 +163,14 @@ export default function Bridge() {
         </Row>
         <CurrencyInputPanel
           label="Amount"
-          value={typedValue}
+          value={step === BridgeStep.Collect ? collectableTx.value : typedValue}
           showMaxButton={!atMaxAmountInput}
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={handleMaxInput}
           onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={step !== BridgeStep.Initial}
-          disabled={step !== BridgeStep.Initial}
+          disableCurrencySelect={step === BridgeStep.Collect}
+          disabled={step === BridgeStep.Collect}
           hideBalance={!isNetworkConnected}
           id="bridge-currency-input"
         />

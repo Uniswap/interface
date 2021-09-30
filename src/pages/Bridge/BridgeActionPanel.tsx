@@ -34,8 +34,8 @@ export const BridgeActionPanel = ({
 
   const isButtonDisabled = !typedValue || step !== BridgeStep.Initial
 
-  const handleSwitchNetwork = () =>
-    fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
+  // const handleSwitchNetwork = () =>
+  //   fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
 
   const chooseButton = () => {
     if (!account) {
@@ -48,7 +48,12 @@ export const BridgeActionPanel = ({
 
     if (!isNetworkConnected) {
       return (
-        <ButtonPrimary mt="12px" onClick={handleSwitchNetwork}>
+        <ButtonPrimary
+          mt="12px"
+          onClick={() =>
+            fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
+          }
+        >
           Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
         </ButtonPrimary>
       )
@@ -59,7 +64,9 @@ export const BridgeActionPanel = ({
         return (
           <NetworkSwitcher
             sendToId={toNetworkChainId}
-            onSwitchClick={handleSwitchNetwork}
+            onSwitchClick={() =>
+              toNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(toNetworkChainId)
+            }
             onCollectClick={() => setStep(BridgeStep.Success)}
           />
         )
