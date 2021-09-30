@@ -78,7 +78,9 @@ export default function Updater(): null {
         seqNum = BigNumber.from(txn.seqNum)
       } else {
         const rec = await bridge.l1Provider.getTransactionReceipt(txn.txHash)
+        if (!rec) return null
         const seqNumArray = await bridge.getInboxSeqNumFromContractTransaction(rec)
+
         if (!seqNumArray || seqNumArray.length === 0) {
           return null
         }

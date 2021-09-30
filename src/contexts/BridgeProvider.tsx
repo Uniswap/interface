@@ -55,17 +55,18 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
     const initBridge = async (
       ethSigner: Signer,
       arbSigner: Signer,
+      chainPair: ChainIdPair,
       l1GatewayRouterAddress?: string | undefined,
       l2GatewayRouterAddress?: string | undefined
     ) => {
       const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
+      setChainIdPair(chainPair)
       setBridge(bridge)
     }
 
     // Setting the bridge
     if (library && account && chainId) {
       const resolvedChainIdPair = getChainPair(chainId)
-      setChainIdPair(resolvedChainIdPair)
 
       const { partnerChainId, isArbitrum } = NETWORK_DETAIL[chainId]
       let l1Signer: providers.JsonRpcSigner, l2Signer: providers.JsonRpcSigner
@@ -88,7 +89,7 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
         }
 
         if (l1Signer && l2Signer) {
-          initBridge(l1Signer, l2Signer)
+          initBridge(l1Signer, l2Signer, resolvedChainIdPair)
           dispatch(setFromBridgeNetwork({ chainId }))
           dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
