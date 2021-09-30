@@ -23,7 +23,8 @@ import MultiChainLinksUpdater from './state/multi-chain-links/updater'
 import ClaimUpdater from './state/claim/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
-
+import { BridgeProvider } from './contexts/BridgeProvider'
+import BridgeTransactionsUpdater from './state/bridgeTransactions/updater'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 if ('ethereum' in window) {
@@ -40,6 +41,7 @@ function Updaters() {
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
+      <BridgeTransactionsUpdater />
       <MulticallUpdater />
       <FeesUpdater />
       <TokenListUpdater />
@@ -54,14 +56,16 @@ ReactDOM.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Provider store={store}>
-          <Updaters />
-          <ThemeProvider>
-            <ThemedGlobalStyle />
-            <HashRouter>
-              <MultiChainLinksUpdater />
-              <App />
-            </HashRouter>
-          </ThemeProvider>
+          <BridgeProvider>
+            <Updaters />
+            <ThemeProvider>
+              <ThemedGlobalStyle />
+              <HashRouter>
+                <MultiChainLinksUpdater />
+                <App />
+              </HashRouter>
+            </ThemeProvider>
+          </BridgeProvider>
         </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>

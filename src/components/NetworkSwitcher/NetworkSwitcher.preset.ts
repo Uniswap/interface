@@ -8,16 +8,31 @@ export const networkOptionsPreset = [
   {
     chainId: ChainId.MAINNET,
     name: 'Ethereum',
-    logoSrc: EthereumLogo
+    logoSrc: EthereumLogo,
+    color: '#627EEA'
   },
   {
     chainId: ChainId.ARBITRUM_ONE,
     name: 'Arbitrum one',
-    logoSrc: ArbitrumLogo
+    logoSrc: ArbitrumLogo,
+    color: '#2C374B'
   },
   {
     chainId: ChainId.XDAI,
     name: 'xDai',
-    logoSrc: XDAILogo
+    logoSrc: XDAILogo,
+    color: '#49A9A7'
+  },
+  {
+    chainId: ChainId.RINKEBY,
+    name: 'Rinkeby',
+    logoSrc: EthereumLogo,
+    color: '#443780'
+  },
+  {
+    chainId: ChainId.ARBITRUM_RINKEBY,
+    name: 'Arbitrum Rinkeby',
+    logoSrc: ArbitrumLogo,
+    color: '#b1a5e6'
   }
 ]
