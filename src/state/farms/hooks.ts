@@ -5,13 +5,19 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Interface } from '@ethersproject/abi'
 
 import { FARM_HISTORIES } from 'apollo/queries'
-import { ChainId, WETH } from 'libs/sdk/src'
+import { ChainId, Token, WETH } from 'libs/sdk/src'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
-import { useBlockNumber, useETHPrice, useExchangeClient } from 'state/application/hooks'
+import {
+  useBlockNumber,
+  useETHPrice,
+  useExchangeClient,
+  useTokensMarketPrice,
+  useTokensPrice
+} from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
@@ -38,6 +44,13 @@ export const useRewardTokens = () => {
 
     return result
   }, [rewardTokensMulticallResult])
+}
+
+export const useRewardTokenPrices = (tokens: (Token | undefined)[]) => {
+  const tokenPrices = useTokensPrice(tokens)
+  const marketPrices = useTokensMarketPrice(tokens)
+
+  return tokenPrices.map((price, index) => price || marketPrices[index] || 0)
 }
 
 export const useFarmsData = () => {
