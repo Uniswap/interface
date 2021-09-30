@@ -1,8 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
-import { Button, StyleSheet, Text } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { RootStackParamList } from 'src/app/navTypes'
+import { Button } from 'src/components/buttons/Button'
+import { Box } from 'src/components/layout/Box'
+import { Screen } from 'src/components/layout/Screen'
+import { Text } from 'src/components/Text'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
 
@@ -12,17 +14,13 @@ export function HomeScreen({ navigation }: Props) {
   }
 
   return (
-    <SafeAreaView style={styles.contentContainer}>
-      <Text>Hi!</Text>
-      <Button title="Send Tokens" onPress={onClickSend} />
-    </SafeAreaView>
+    <Screen>
+      <Box alignItems="center">
+        <Text textAlign="center" mt="xl">
+          Hi!
+        </Text>
+        <Button label="Send Tokens" onPress={onClickSend} mt="md" />
+      </Box>
+    </Screen>
   )
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
