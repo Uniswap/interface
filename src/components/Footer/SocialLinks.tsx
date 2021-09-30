@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
 import TwitterIcon from 'components/Icons/TwitterIcon'
 import DiscordIcon from 'components/Icons/DiscordIcon'
 import { ExternalLink } from 'theme'
@@ -28,12 +29,12 @@ const StyledDiscordIcon = styled.div`
 export default function SocialLinks() {
   return (
     <StyledSocialLinks>
-      <ExternalLink href="https://twitter.com/kybernetwork">
+      <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
         <StyledTwitterIcon>
           <TwitterIcon />
         </StyledTwitterIcon>
       </ExternalLink>
-      <ExternalLink href="https://discord.gg/HdXWUb2pQM">
+      <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
         <StyledDiscordIcon>
           <DiscordIcon />
         </StyledDiscordIcon>

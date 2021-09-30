@@ -1,7 +1,12 @@
+import { ZERO_ADDRESS } from 'constants/index'
+
 export const getBscMainnetTokenLogoURL = (address: string) => {
   let uri
 
-  if (address?.toLowerCase() === '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b') {
+  if (address?.toLowerCase() === ZERO_ADDRESS) {
+    //native token
+    address = `0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c`
+  } else if (address?.toLowerCase() === '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b') {
     //knc
     address = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
