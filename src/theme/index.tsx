@@ -110,6 +110,7 @@ export function colors(darkMode: boolean): Colors {
     border: darkMode ? '#4c5f69' : '#859aa5',
     border2: darkMode ? '#404b51' : '#c2c2c2',
     border3: darkMode ? '#40505A' : 'transparent',
+    border4: darkMode ? '#40505A' : '#C2C2C2',
 
     // table colors
     oddRow: darkMode ? '#283339' : '#f4f4f4',

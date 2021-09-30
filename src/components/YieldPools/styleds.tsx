@@ -25,6 +25,13 @@ export const PageWrapper = styled.div`
   }
 `
 
+export const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+`
+
 export const TabContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -229,6 +236,8 @@ export const HistoryButton = styled.div`
   border-radius: 4px;
   margin-left: auto;
   cursor: pointer;
+  white-space: nowrap;
+
   img {
     vertical-align: bottom;
     margin-right: 8px;

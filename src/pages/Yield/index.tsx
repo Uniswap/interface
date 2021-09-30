@@ -12,6 +12,7 @@ import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
 import {
   PageWrapper,
+  TopBar,
   TabContainer,
   TabWrapper,
   Tab,
@@ -26,6 +27,7 @@ import FarmHistoryModal from 'components/FarmHistoryModal'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import YieldPools from 'components/YieldPools'
+import RewardTokenPrices from 'components/RewardTokenPrices'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
@@ -66,6 +68,14 @@ const Farms = () => {
   return (
     <>
       <PageWrapper>
+        <TopBar>
+          <RewardTokenPrices />
+          <HistoryButton onClick={toggleFarmHistoryModal} style={{ marginLeft: '16px' }}>
+            <img src={HistoryImg} alt="HistoryImg" />
+            <Trans>History</Trans>
+          </HistoryButton>
+        </TopBar>
+
         <TabContainer>
           <TabWrapper>
             <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
@@ -97,12 +107,6 @@ const Farms = () => {
               </StakedOnlyToggleWrapper>
             )}
           </TabWrapper>
-          <div>
-            <HistoryButton onClick={toggleFarmHistoryModal}>
-              <img src={HistoryImg} alt="HistoryImg" />
-              <Trans>History</Trans>
-            </HistoryButton>
-          </div>
         </TabContainer>
 
         {activeTab === 0 ? <YieldPools stakedOnly={stakedOnly} /> : <Vesting />}

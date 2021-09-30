@@ -8,6 +8,7 @@
     "@lingui/cli": "^3.10.2",
     "@lingui/loader": "^3.10.2",
     "@lingui/macro": "^3.10.2",
+    "@pangolindex/web3-react-injected-connector": "1.0.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -41,7 +42,6 @@
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@walletconnect/web3-provider": "^1.5.0",
-    "@pangolindex/web3-react-injected-connector": "1.0.1",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
@@ -148,6 +148,7 @@
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^2.1.8",
     "react-helmet": "^6.1.0",
+    "react-indiana-drag-scroll": "^2.0.1",
     "react-player": "^2.9.0",
     "react-use": "^15.3.4",
     "toformat": "^2.0.0"
