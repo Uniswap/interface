@@ -6,6 +6,8 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === ZERO_ADDRESS) {
     //native token
     uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/avax-network.png`
+  } else if (address?.toLowerCase() === '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7') {
+    uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/avax-network.png`
   } else if (address?.toLowerCase() === '0xc7198437980c041c805a1edcba50c1ce5db95118') {
     //usdt
     address = '0xde3A24028580884448a5397872046a019649b084'
