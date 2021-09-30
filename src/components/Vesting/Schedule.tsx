@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -12,7 +12,8 @@ import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import useVesting from 'hooks/useVesting'
 import useTheme from 'hooks/useTheme'
 import { useAppDispatch } from 'state/hooks'
-import { useBlockNumber, useTokensPrice } from 'state/application/hooks'
+import { useBlockNumber } from 'state/application/hooks'
+import { useRewardTokenPrices } from 'state/farms/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
 import { TYPE } from 'theme'
 import { getTokenSymbol } from 'utils'
@@ -25,7 +26,9 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   const { account, chainId } = useActiveWeb3React()
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useTheme()
-  const tokenPrices = useTokensPrice([schedule[4]])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const rewardTokens = useMemo(() => [schedule[4]], [JSON.stringify(schedule)])
+  const tokenPrices = useRewardTokenPrices(rewardTokens)
   const { vestAtIndex } = useVesting(rewardLockerAddress)
 
   const startTimestamp = useTimestampFromBlock(BigNumber.from(schedule[0]).toNumber())
