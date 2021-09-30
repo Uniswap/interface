@@ -1,11 +1,13 @@
 import { Formik } from 'formik'
 import React, { useState } from 'react'
 import { Text } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { SubmitButton } from 'src/components/buttons/SubmitButton'
 import { AddressInput } from 'src/components/input/AddressInput'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
 import { Modal } from 'src/components/modals/Modal'
+import { transferTokenActions } from 'src/features/transfer/transferToken'
 
 const initialValues = {
   tokenId: '',
@@ -17,10 +19,12 @@ type FormValues = typeof initialValues
 
 export function TransferTokenForm() {
   const [showModal, setShowModal] = useState(false)
+  const dispatch = useAppDispatch()
 
   const onSubmit = (values: FormValues) => {
     console.log(JSON.stringify(values))
     setShowModal(true)
+    dispatch(transferTokenActions.trigger(values))
   }
 
   return (

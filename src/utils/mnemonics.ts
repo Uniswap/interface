@@ -1,5 +1,5 @@
 import { utils } from 'ethers'
-import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/consts'
+import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
 
 export function isValidMnemonic(mnemonic: string | null | undefined) {
   if (!mnemonic) return false

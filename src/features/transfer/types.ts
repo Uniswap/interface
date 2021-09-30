@@ -1,6 +1,5 @@
 export interface TransferTokenParams {
-  from: string
-  to: string
-  amountInWei: string
   tokenId: string
+  amount: string
+  toAddress: string
 }

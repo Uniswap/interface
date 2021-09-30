@@ -1,5 +1,5 @@
 import { utils, Wallet } from 'ethers'
-import { ETHEREUM_DERIVATION_PATH } from 'src/consts'
+import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
 import { setAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 import { put } from 'typed-redux-saga'
