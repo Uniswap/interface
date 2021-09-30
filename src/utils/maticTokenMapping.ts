@@ -8,7 +8,7 @@ export const getMaticTokenLogoURL = (address: string) => {
     uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/polygon-network.png`
   }
   if (address?.toLowerCase() === '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270') {
-    address = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
+    uri = `https://raw.githubusercontent.com/dynamic-amm/dmm-interface/main/src/assets/networks/polygon-network.png`
   } else if (
     process.env.REACT_APP_MAINNET_ENV === 'staging' &&
     address?.toLowerCase() === '0x51e8d106c646ca58caf32a47812e95887c071a62'

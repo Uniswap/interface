@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import MaticLogo from '../../assets/images/matic-logo.png'
+import MaticLogo from '../../assets/networks/polygon-network.png'
 import BnbLogo from '../../assets/images/bnb-logo.png'
 import AvaxLogo from '../../assets/networks/avax-network.png'
 import useHttpLocations from '../../hooks/useHttpLocations'

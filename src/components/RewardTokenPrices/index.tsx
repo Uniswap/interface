@@ -54,6 +54,12 @@ const TokenWrapper = styled.div<{ isFirstItem?: boolean; isLastItem?: boolean }>
   white-space: nowrap;
 `
 
+const TokenSymbol = styled.span`
+  font-size: 14px;
+  font-weight: 400;
+  margin-right: 4px;
+`
+
 const RewardTokenPrices = () => {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokensFullInfo()
@@ -106,7 +112,7 @@ const RewardTokenPrices = () => {
                   width="20px"
                   style={{ marginRight: '4px' }}
                 />
-                <span style={{ marginRight: '4px' }}>{token.symbol}:</span>
+                <TokenSymbol>{token.symbol}:</TokenSymbol>
                 <span>
                   {rewardTokenPrices[index] ? formattedNum(rewardTokenPrices[index]?.toString(), true) : 'N/A'}
                 </span>
