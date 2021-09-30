@@ -222,7 +222,7 @@ export const useBridgeTransactionsSummary = () => {
           if (tx.type === 'withdraw') {
             switch (tx.outgoingMessageState) {
               case OutgoingMessageState.CONFIRMED:
-                summary.status = 'confirmed'
+                summary.status = 'redeem'
                 break
               case OutgoingMessageState.EXECUTED:
                 summary.status = 'failed'
