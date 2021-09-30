@@ -30,7 +30,10 @@ export function useTokenBalancesWithLoadingIndicator(
       return await Promise.all(
         validatedTokenAddresses.map((tokenAddress) => {
           const token = new kit.web3.eth.Contract(ERC20_ABI as AbiItem[], tokenAddress)
-          return token.methods.balanceOf(address).call()
+          return token.methods
+            .balanceOf(address)
+            .call()
+            .catch(() => undefined)
         })
       )
     },
