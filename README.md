@@ -15,6 +15,11 @@ Follow the general [React Native setup instructions](https://reactnative.dev/doc
 
 Start the mobile app by running `yarn ios` or `yarn android`. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
 
+### I18n
+
+Stubs for new i18n strings used throughout the app can be generated automatically. Use the string as you would normally (e.g. `t('id')`) and then run `yarn i18n:extract`.
+If Typescript in VSCode is slow to see the change, you can restart the typescript server.
+
 ### E2E Tests
 
 The e2e tests use [detox](https://github.com/wix/Detox). To run them, you need to build:

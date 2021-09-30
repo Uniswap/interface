@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
@@ -12,14 +13,17 @@ export function HomeScreen({ navigation }: Props) {
   const onClickSend = () => {
     navigation.navigate('Transfer')
   }
-
+  const { t } = useTranslation()
   return (
     <Screen>
       <Box alignItems="center">
         <Text textAlign="center" mt="xl">
-          Hi!
+          {t('Hello world')}
         </Text>
-        <Button label="Send Tokens" onPress={onClickSend} mt="md" />
+        <Text textAlign="center" mt="xl">
+          {t('Interpolated {{text}}', { text: 'myString' })}
+        </Text>
+        <Button label={t('Send')} onPress={onClickSend} mt="md" />
       </Box>
     </Screen>
   )

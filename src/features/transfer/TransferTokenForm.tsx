@@ -32,7 +32,6 @@ export function TransferTokenForm() {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <Box alignItems="center" justifyContent="center">
-            <Text>Send Form</Text>
             <Box flexDirection="row" alignItems="center" justifyContent="flex-end" mt="md">
               <Text>Address: </Text>
               <AddressInput
