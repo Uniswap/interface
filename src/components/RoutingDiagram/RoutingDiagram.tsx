@@ -42,7 +42,7 @@ const PoolBadge = styled(Badge)`
 const DottedLine = styled.div`
   border-color: ${({ theme }) => theme.bg4};
   border-top-style: dotted;
-  border-top-width: 5px;
+  border-top-width: max(0.3vw, 5px);
   height: 0px;
   position: absolute;
   width: calc(100%);
