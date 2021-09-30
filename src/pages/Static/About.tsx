@@ -59,6 +59,7 @@ export default function About() {
   const globalData = data && data.dmmFactories[0]
 
   const { data: farms } = useFarmsData()
+
   const [maxApr, setMaxApr] = useState<number>(-1)
   const [indexx, setIndexx] = useState<number>(0)
 
@@ -514,8 +515,9 @@ function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
   const apr = farmAPR + tradingFeeAPR
+
   useEffect(() => {
-    onAprUpdate(apr)
-  }, [apr, onAprUpdate])
+    if (farmAPR > 0) onAprUpdate(apr)
+  }, [apr, onAprUpdate, farmAPR])
   return <></>
 }
