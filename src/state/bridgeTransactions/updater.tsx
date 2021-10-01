@@ -198,13 +198,13 @@ export default function Updater(): null {
   }, [bridge, l2ChainId, account, pendingWithdrawals, getOutgoingMessageState, dispatch])
 
   useEffect(() => {
-    if (l2ChainId) {
+    if (bridge && l2ChainId) {
       if (initialPendingWithdrawalsChecked !== l2ChainId) {
         updatePendingWithdrawals()
         setInitialPendingWithdrawalsChecked(l2ChainId)
       }
     }
-  }, [initialPendingWithdrawalsChecked, l1ChainId, l2ChainId, updatePendingWithdrawals])
+  }, [bridge, initialPendingWithdrawalsChecked, l2ChainId, updatePendingWithdrawals])
 
   return null
 }
