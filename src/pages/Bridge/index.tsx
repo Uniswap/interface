@@ -111,6 +111,16 @@ export const Bridge: React.FC = () => {
           )}
         </ButtonPrimary>
       )
+    } else if (
+      (isNaN(Number(amount)) ? 0 : Number(amount)) < 10 &&
+      currency.symbol?.toLowerCase() === 'usdc' &&
+      destChain.name === 'ethereum'
+    ) {
+      button = (
+        <ButtonPrimary onClick={onBridgeClick} disabled={true}>
+          Must bridge an amount {'>-'} 10
+        </ButtonPrimary>
+      )
     } else {
       button = (
         <ButtonPrimary onClick={onBridgeClick} disabled={!isAddress(recipient)}>
