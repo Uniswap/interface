@@ -117,8 +117,6 @@ export default function Bridge() {
     [setStep, setCollectableTx]
   )
 
-  // const collectedCurrency = useCurrency(collectableTx.assetName)
-
   return (
     <>
       <AppBody>
@@ -177,7 +175,7 @@ export default function Bridge() {
         <BridgeActionPanel
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
-          toNetworkChainId={toNetwork.chainId}
+          toNetworkChainId={step === BridgeStep.Collect ? collectableTx.toChainId : toNetwork.chainId}
           handleSubmit={handleSubmit}
           isNetworkConnected={isNetworkConnected}
           step={step}

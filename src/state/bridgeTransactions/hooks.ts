@@ -1,3 +1,4 @@
+import { ChainId } from '@swapr/sdk'
 import { OutgoingMessageState } from 'arb-ts'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -11,6 +12,7 @@ export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'rede
 export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
   fromName: string
   toName: string
+  toChainId: ChainId
   log: BridgeTransactionLog[]
   status: BridgeTransactionStatus
 }
@@ -164,6 +166,7 @@ export const useBridgeTransactionsSummary = () => {
           assetName: tx.assetName,
           fromName: NETWORK_DETAIL[from].chainName,
           toName: NETWORK_DETAIL[to].chainName,
+          toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
           batchIndex: tx.batchIndex,
@@ -213,6 +216,7 @@ export const useBridgeTransactionsSummary = () => {
           batchIndex: tx.batchIndex,
           fromName: NETWORK_DETAIL[from].chainName,
           toName: NETWORK_DETAIL[to].chainName,
+          toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           log: []
         }
