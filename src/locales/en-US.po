@@ -99,7 +99,7 @@ msgstr "Account"
 msgid "Active"
 msgstr "Active"
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Active Price Range"
 msgstr "Active Price Range"
 
@@ -145,6 +145,7 @@ msgstr "Always make sure the URL is<0>dmm.exchange</0> - bookmark it to be safe.
 #: src/components/PoolList/index.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
 msgstr "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
 
@@ -306,6 +307,7 @@ msgstr "Confirm this transaction in your wallet"
 
 #: src/components/Web3Status/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -350,6 +352,10 @@ msgstr "Copied"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copy Address"
+
+#: src/pages/CreatePool/index.tsx
+msgid "Create"
+msgstr "Create"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new pool"
@@ -452,6 +458,7 @@ msgid "Dynamic"
 msgstr "Dynamic"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Dynamic Fee Range"
 msgstr "Dynamic Fee Range"
 
@@ -495,6 +502,10 @@ msgstr "Enter a recipient"
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Enter a valid slippage percentage"
+
+#: src/pages/CreatePool/index.tsx
+msgid "Enter amp (>=1)"
+msgstr "Enter amp (>=1)"
 
 #: src/hooks/useWrapCallback.ts
 #: src/hooks/useWrapCallback.ts
@@ -560,6 +571,7 @@ msgid "Fee Range"
 msgstr "Fee Range"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
 msgstr "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
 
@@ -734,6 +746,7 @@ msgid "Invalid recipient"
 msgstr "Invalid recipient"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "Inventory ratio:"
 
@@ -926,7 +939,7 @@ msgstr "No vesting schedule!"
 msgid "No {type} pool found."
 msgstr "No {type} pool found."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Note: There are existing pools for this token pair. Please check"
 msgstr "Note: There are existing pools for this token pair. Please check"
 
@@ -1019,8 +1032,8 @@ msgstr "Pool share"
 msgid "Pool tokens in rewards pool:"
 msgstr "Pool tokens in rewards pool:"
 
-#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
-#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -1111,7 +1124,7 @@ msgstr "Providing frictionless crypto liquidity with greater flexibility and ext
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "Ratio"
 
@@ -1224,7 +1237,7 @@ msgstr "Select a token"
 msgid "Select a token to find your liquidity."
 msgstr "Select a token to find your liquidity."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr "Share of Pool"
 
@@ -1295,6 +1308,7 @@ msgid "The difference between the market price and your price due to trade size.
 msgstr "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "The price is deviating quite a lot from that market price, please be careful!"
 msgstr "The price is deviating quite a lot from that market price, please be careful!"
 
@@ -1392,7 +1406,7 @@ msgstr "Total rewards that can be harvested. Harvested rewards are locked and ve
 msgid "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 
@@ -1463,11 +1477,15 @@ msgstr "Update list"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Use Native Token"
 msgstr "Use Native Token"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Use Wrapped Token"
 msgstr "Use Wrapped Token"
 
@@ -1533,11 +1551,11 @@ msgstr "Wrong Network"
 msgid "Yield"
 msgstr "Yield"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 msgstr "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "You are creating a pool"
 msgstr "You are creating a pool"
 
@@ -1605,6 +1623,7 @@ msgid "and"
 msgstr "and"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr "and Pool share"
 
@@ -1620,7 +1639,7 @@ msgstr "for providers and"
 msgid "for users compared to AMMs."
 msgstr "for users compared to AMMs."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "here"
 msgstr "here"
 
@@ -1642,8 +1661,8 @@ msgstr "much higher capital efficiency"
 msgid "or the transaction will revert."
 msgstr "or the transaction will revert."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "per"
 msgstr "per"
 
