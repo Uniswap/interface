@@ -1,17 +1,19 @@
+import { API_URL, DEBUG, VERSION } from 'react-native-dotenv'
+
 interface Config {
   debug: boolean
   version: string
+  apiUrl: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const configProd: Config = {
-  debug: false,
-  version: '0.0.1',
+const _config: Config = {
+  debug: parseBoolean(DEBUG),
+  version: VERSION,
+  apiUrl: API_URL,
 }
 
-const configDev: Config = {
-  debug: true,
-  version: '0.0.1',
+function parseBoolean(value: string): boolean {
+  return value?.toLowerCase() === 'true'
 }
 
-export const config = Object.freeze(configDev)
+export const config = Object.freeze(_config)

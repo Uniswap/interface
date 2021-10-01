@@ -5,7 +5,8 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "NODE_ENV=development react-native start",
+    "start:production": "NODE_ENV=production react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "debug": "react-devtools",
@@ -46,6 +47,7 @@
     "metro-react-native-babel-preset": "^0.66.0",
     "react-devtools": "^4.18.0",
     "react-native-codegen": "^0.0.7",
+    "react-native-dotenv": "^3.2.0",
     "react-test-renderer": "17.0.2",
     "typescript": "^4.4.3"
   },
