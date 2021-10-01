@@ -118,7 +118,7 @@ export const Bridge: React.FC = () => {
     ) {
       button = (
         <ButtonPrimary onClick={onBridgeClick} disabled={true}>
-          Must bridge an amount {'>-'} 10
+          Must bridge an amount {'>='} 10
         </ButtonPrimary>
       )
     } else {
