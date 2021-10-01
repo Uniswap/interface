@@ -327,7 +327,8 @@ export const useTokensMarketPrice = (tokens: (Token | null | undefined)[]) => {
     }
 
     getMarketPrice()
-  }, [chainId, tokens])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId, JSON.stringify(tokens)])
 
   return marketPrices
 }
