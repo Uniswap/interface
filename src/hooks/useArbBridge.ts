@@ -28,7 +28,6 @@ export const useArbBridge = () => {
       const weiValue = utils.parseEther(value)
 
       try {
-        // L1
         const txn = await bridge.depositETH(weiValue)
 
         dispatch(
@@ -65,7 +64,6 @@ export const useArbBridge = () => {
       const weiValue = utils.parseEther(value)
 
       try {
-        // L2
         const txn = await bridge.withdrawETH(weiValue)
 
         dispatch(
@@ -134,9 +132,94 @@ export const useArbBridge = () => {
     [account, bridge, dispatch, l1ChainId]
   )
 
+  const withdrawERC20 = useCallback(
+    async (l1TokenAddress: string, value: string) => {
+      if (!account || !bridge || !l2ChainId) return
+      const tokenData = (await bridge.getAndUpdateL1TokenData(l1TokenAddress)).ERC20
+      if (!tokenData) {
+        throw new Error("Can't withdraw; token not found")
+      }
+
+      const weiValue = utils.parseUnits(value, tokenData.decimals)
+
+      try {
+        const txn = await bridge.withdrawERC20(l1TokenAddress, weiValue)
+        dispatch(
+          addBridgeTxn({
+            assetName: tokenData.symbol,
+            assetType: BridgeAssetType.ERC20,
+            type: 'withdraw',
+            value,
+            txHash: txn.hash,
+            chainId: l2ChainId,
+            sender: account
+          })
+        )
+
+        const withdrawReceipt = await txn.wait()
+
+        dispatch(
+          updateBridgeTxnReceipt({
+            chainId: l2ChainId,
+            txHash: txn.hash,
+            receipt: withdrawReceipt
+          })
+        )
+      } catch (err) {
+        throw err
+      }
+    },
+    [account, bridge, dispatch, l2ChainId]
+  )
+
+  const triggerOutboxERC20 = useCallback(
+    async ({
+      batchIndex,
+      batchNumber,
+      value,
+      assetName
+    }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value' | 'assetName'>) => {
+      if (!account || !bridge || !l1ChainId || batchIndex || batchNumber || value) return
+
+      const batchNumberBN = BigNumber.from(batchNumber)
+      const batchIndexBN = BigNumber.from(batchIndex)
+
+      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+
+      dispatch(
+        addBridgeTxn({
+          assetName,
+          assetType: BridgeAssetType.ERC20,
+          type: 'outbox',
+          value,
+          txHash: l2ToL1.hash,
+          chainId: l1ChainId,
+          sender: account
+        })
+      )
+
+      try {
+        const l2ToL1Receipt = await l2ToL1.wait()
+        dispatch(
+          updateBridgeTxnReceipt({
+            chainId: l1ChainId,
+            txHash: l2ToL1.hash,
+            receipt: l2ToL1Receipt
+          })
+        )
+        return l2ToL1Receipt
+      } catch (err) {
+        throw err
+      }
+    },
+    [account, bridge, dispatch, l1ChainId]
+  )
+
   return {
     depositEth,
     withdrawEth,
-    triggerOutboxEth
+    triggerOutboxEth,
+    withdrawERC20,
+    triggerOutboxERC20
   }
 }

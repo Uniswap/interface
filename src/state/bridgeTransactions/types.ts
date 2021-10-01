@@ -15,8 +15,9 @@ export type BridgeTxnType =
   | 'deposit-l2-auto-redeem'
 
 export enum BridgeAssetType {
-  ETH = 'ETH'
-  //ERC20, ERC721
+  ETH = 'ETH',
+  ERC20 = 'ERC20',
+  ERC721 = 'ERC721'
 }
 
 export type BridgeTxnsState = {
