@@ -982,9 +982,13 @@ msgstr "Thanh khoản Không xin phép và Dễ dàng cho DeFi"
 msgid "Please Confirm"
 msgstr "Vui lòng xác nhận"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum network."
+#~ msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
+msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx

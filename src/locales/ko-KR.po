@@ -982,9 +982,13 @@ msgstr "DeFi를 위한 무허가 및 풍부한 유동성"
 msgid "Please Confirm"
 msgstr "확인해주세요"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum network."
+#~ msgstr "이더리움 네트워크에 연결하십시오."
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "이더리움 네트워크에 연결하십시오."
+msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx

@@ -982,9 +982,13 @@ msgstr "Permissionless and Frictionless Liquidity for DeFi"
 msgid "Please Confirm"
 msgstr "Please Confirm"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum network."
+#~ msgstr "Please connect to the appropriate Ethereum network."
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Please connect to the appropriate Ethereum network."
+msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgstr "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx

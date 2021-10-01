@@ -280,9 +280,9 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
         return tokenPrice
       })
 
-      Promise.all(tokensPrice).then(result => {
-        setPrices(result)
-      })
+      const result = await Promise.all(tokensPrice)
+
+      setPrices(result)
     }
 
     checkForTokenPrice()
@@ -299,31 +299,36 @@ export const useTokensMarketPrice = (tokens: (Token | null | undefined)[]) => {
     const getMarketPrice = async () => {
       if (!chainId || (chainId && !COINGECKO_NETWORK_ID[chainId])) return
 
-      const tokenAddress = tokens
-        .filter(Boolean)
-        .map(token => (token === ETHER ? WETH[chainId].address : token?.address))
+      try {
+        const tokenAddress = tokens
+          .filter(Boolean)
+          .map(token => (token === ETHER ? WETH[chainId].address : token?.address))
 
-      const res = await fetch(
-        `https://api.coingecko.com/api/v3/simple/token_price/${
-          COINGECKO_NETWORK_ID[chainId]
-        }?contract_addresses=${tokenAddress.join()}&vs_currencies=usd`
-      )
+        const res = await fetch(
+          `https://api.coingecko.com/api/v3/simple/token_price/${
+            COINGECKO_NETWORK_ID[chainId]
+          }?contract_addresses=${tokenAddress.join()}&vs_currencies=usd`
+        )
 
-      const data = await res.json()
+        const data = await res.json()
 
-      setMarketPrices(
-        tokens.map(token => {
-          if (!token) return 0
+        setMarketPrices(
+          tokens.map(token => {
+            if (!token) return 0
 
-          if (token === ETHER) return data[WETH[chainId].address.toLowerCase()]?.usd ?? 0
+            if (token === ETHER) return data[WETH[chainId].address.toLowerCase()]?.usd ?? 0
 
-          return data[token?.address.toLowerCase()]?.usd ?? 0
-        })
-      )
+            return data[token?.address.toLowerCase()]?.usd ?? 0
+          })
+        )
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     getMarketPrice()
-  }, [chainId, tokens])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId, JSON.stringify(tokens)])
 
   return marketPrices
 }

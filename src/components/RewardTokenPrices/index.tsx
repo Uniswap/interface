@@ -4,7 +4,7 @@ import ScrollContainer from 'react-indiana-drag-scroll'
 
 import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'
-import { useTokensPrice } from 'state/application/hooks'
+import { useRewardTokenPrices } from 'state/farms/hooks'
 import { formattedNum, getTokenLogoURL } from 'utils'
 import { useRewardTokensFullInfo } from 'utils/dmm'
 
@@ -63,7 +63,7 @@ const TokenSymbol = styled.span`
 const RewardTokenPrices = () => {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokensFullInfo()
-  const rewardTokenPrices = useTokensPrice(rewardTokens)
+  const rewardTokenPrices = useRewardTokenPrices(rewardTokens)
 
   const scrollRef = useRef(null)
   const contentRef: any = useRef(null)
