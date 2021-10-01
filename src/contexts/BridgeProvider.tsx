@@ -8,7 +8,6 @@ import { INFURA_PROJECT_ID } from '../connectors'
 import { NETWORK_DETAIL } from '../constants'
 import { getChainPair, ChainIdPair } from '../utils/arbitrum'
 import { useDispatch } from 'react-redux'
-import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
 
 type BridgeContextType = {
@@ -59,6 +58,7 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
       l1GatewayRouterAddress?: string | undefined,
       l2GatewayRouterAddress?: string | undefined
     ) => {
+      setBridge(null)
       const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
       setChainIdPair(chainPair)
       setBridge(bridge)
@@ -90,8 +90,6 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
 
         if (l1Signer && l2Signer) {
           initBridge(l1Signer, l2Signer, resolvedChainIdPair)
-          dispatch(setFromBridgeNetwork({ chainId }))
-          dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
       }
     }
