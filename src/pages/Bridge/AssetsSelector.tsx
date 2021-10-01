@@ -5,14 +5,14 @@ import { NetworkOptionProps } from '../../components/NetworkSwitcher'
 import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
 
-const Section = styled.button`
+const Section = styled.button<{ disabled: boolean }>`
   width: 100%;
   padding: 12px 19px 15px;
   background: ${({ theme }) => theme.bg1And2};
   border-radius: 12px;
   border: none;
   text-align: left;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 `
 
 const SmallLabel = styled.p`
@@ -66,11 +66,12 @@ interface AssetSelectorProps {
   label: string
   selectedNetwork: Partial<NetworkOptionProps> | undefined
   onClick: () => void
+  disabled?: boolean
 }
 
-export const AssetSelector = ({ label, selectedNetwork, onClick }: AssetSelectorProps) => {
+export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = false }: AssetSelectorProps) => {
   return (
-    <Section onClick={onClick}>
+    <Section disabled={disabled} onClick={disabled ? undefined : onClick}>
       <Row>
         <IconWrapper>
           <img src={selectedNetwork?.logoSrc} alt={`${selectedNetwork?.header} logo`} />

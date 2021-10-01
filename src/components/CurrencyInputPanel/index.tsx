@@ -51,7 +51,7 @@ const Aligner = styled.span`
   justify-content: space-between;
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0 0 5px;
   height: 11px;
   width: 11px;
@@ -180,7 +180,13 @@ export default function CurrencyInputPanel({
                     fontSize="11px"
                     lineHeight="13px"
                     letterSpacing="0.08em"
-                    style={{ display: 'inline', cursor: 'pointer' }}
+                    style={{
+                      display: 'inline',
+                      cursor:
+                        !hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
+                          ? 'pointer'
+                          : 'auto'
+                    }}
                   >
                     <UppercaseHelper>
                       {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
@@ -233,8 +239,8 @@ export default function CurrencyInputPanel({
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                      '...' +
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
                       : currency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}

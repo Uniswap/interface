@@ -1,16 +1,16 @@
+import { ChainId } from '@swapr/sdk'
 import { OutgoingMessageState } from 'arb-ts'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '..'
-import { NETWORK_DETAIL } from '../../constants'
 import { useBridge } from '../../hooks/useArbBridge'
 import { BridgeTxn, BridgeTxnsState, BridgeTxnType } from './types'
 
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
 export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
-  fromName: string
-  toName: string
+  fromChainId: ChainId
+  toChainId: ChainId
   log: BridgeTransactionLog[]
   status: BridgeTransactionStatus
 }
@@ -162,8 +162,8 @@ export const useBridgeTransactionsSummary = () => {
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          fromName: NETWORK_DETAIL[from].chainName,
-          toName: NETWORK_DETAIL[to].chainName,
+          fromChainId: from,
+          toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
           batchIndex: tx.batchIndex,
@@ -208,10 +208,12 @@ export const useBridgeTransactionsSummary = () => {
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          fromName: NETWORK_DETAIL[from].chainName,
-          toName: NETWORK_DETAIL[to].chainName,
-          status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
+          batchNumber: tx.batchNumber,
+          batchIndex: tx.batchIndex,
+          fromChainId: from,
+          toChainId: to,
+          status: getBridgeTxStatus(tx.receipt?.status),
           log: []
         }
 
@@ -220,7 +222,7 @@ export const useBridgeTransactionsSummary = () => {
           if (tx.type === 'withdraw') {
             switch (tx.outgoingMessageState) {
               case OutgoingMessageState.CONFIRMED:
-                summary.status = 'confirmed'
+                summary.status = 'redeem'
                 break
               case OutgoingMessageState.EXECUTED:
                 summary.status = 'failed'

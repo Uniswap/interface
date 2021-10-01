@@ -14,8 +14,8 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
 
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
-import { useArbBridge } from '../../hooks/useArbBridge'
-import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
+import { useArbBridge, useBridge } from '../../hooks/useArbBridge'
+import { BridgeTransactionSummary, useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeActionPanel } from './BridgeActionPanel'
@@ -36,15 +36,16 @@ const Row = styled(RowBetween)`
   }
 `
 
-const SwapButton = styled.button`
+const SwapButton = styled.button<{ disabled: boolean }>`
   padding: 0 16px;
   border: none;
   background: none;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 `
 
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
+  const { bridge } = useBridge()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
     onUserInput,
@@ -61,7 +62,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth, withdrawEth, triggerOutboxEth } = useArbBridge()
+  const { depositEth, withdrawEth } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -72,6 +73,7 @@ export default function Bridge() {
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
+  const isCollecting = step === BridgeStep.Collect
 
   const handleResetBridge = useCallback(() => {
     onUserInput('')
@@ -105,11 +107,32 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
+  const [collectableTx, setCollectableTx] = useState(
+    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
+  )
+
+  const handleCollect = useCallback(
+    (tx: BridgeTransactionSummary) => {
+      setStep(BridgeStep.Collect)
+      setCollectableTx(tx)
+      onFromNetworkChange(tx.fromChainId)
+      onToNetworkChange(tx.toChainId)
+      onCurrencySelection(tx.assetName)
+    },
+    [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
+  )
+
+  useEffect(() => {
+    if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
+      setStep(BridgeStep.Initial)
+    }
+  }, [chainId, collectableTx, isCollecting, step])
+
   return (
     <>
       <AppBody>
         <RowBetween mb="12px">
-          <Title>{step === BridgeStep.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
+          <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
@@ -118,6 +141,7 @@ export default function Bridge() {
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
               onClick={() => setShowFromList(val => !val)}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
               show={showFromList}
@@ -127,7 +151,7 @@ export default function Bridge() {
               parentRef={fromPanelRef}
             />
           </div>
-          <SwapButton onClick={onSwapBridgeNetworks}>
+          <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
           <div ref={toPanelRef}>
@@ -135,6 +159,7 @@ export default function Bridge() {
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
               onClick={() => setShowToList(val => !val)}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
               show={showToList}
@@ -147,21 +172,21 @@ export default function Bridge() {
         </Row>
         <CurrencyInputPanel
           label="Amount"
-          value={typedValue}
-          showMaxButton={!atMaxAmountInput}
+          value={isCollecting ? collectableTx.value : typedValue}
+          showMaxButton={!isCollecting && !atMaxAmountInput}
           currency={bridgeCurrency}
           onUserInput={onUserInput}
-          onMax={handleMaxInput}
+          onMax={!isCollecting ? handleMaxInput : undefined}
           onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={step !== BridgeStep.Initial}
-          disabled={step !== BridgeStep.Initial}
+          disableCurrencySelect={isCollecting}
+          disabled={isCollecting}
           hideBalance={!isNetworkConnected}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
-          toNetworkChainId={toNetwork.chainId}
+          toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
           handleSubmit={handleSubmit}
           isNetworkConnected={isNetworkConnected}
           step={step}
@@ -169,8 +194,13 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {chainId && !!bridgeSummaries.length && (
-        <BridgeTransactionsSummary show transactions={bridgeSummaries} onCollect={triggerOutboxEth} />
+      {bridge && chainId && !!bridgeSummaries.length && (
+        <BridgeTransactionsSummary
+          show
+          transactions={bridgeSummaries}
+          collectableTx={collectableTx}
+          onCollect={handleCollect}
+        />
       )}
 
       {/* {step === Step.Initial && !!typedValue && (

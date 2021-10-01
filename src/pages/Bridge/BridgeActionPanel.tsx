@@ -43,11 +43,13 @@ export const BridgeActionPanel = ({
       )
     }
 
-    if (!isNetworkConnected) {
+    if (!isNetworkConnected && step !== BridgeStep.Collect) {
       return (
         <ButtonPrimary
           mt="12px"
-          onClick={fromNetworkChainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(fromNetworkChainId)}
+          onClick={() =>
+            fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
+          }
         >
           Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
         </ButtonPrimary>
@@ -56,7 +58,15 @@ export const BridgeActionPanel = ({
 
     switch (step) {
       case BridgeStep.Collect:
-        return <NetworkSwitcher sendToId={toNetworkChainId} onCollectClick={() => setStep(BridgeStep.Success)} />
+        return (
+          <NetworkSwitcher
+            sendToId={toNetworkChainId}
+            onSwitchClick={() =>
+              toNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(toNetworkChainId)
+            }
+            onCollectClick={() => setStep(BridgeStep.Success)}
+          />
+        )
     }
 
     return (
