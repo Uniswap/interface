@@ -982,9 +982,13 @@ msgstr "DeFi 的无权准入和无摩擦的流动性"
 msgid "Please Confirm"
 msgstr "请确认"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum network."
+#~ msgstr "请连接到适合的以太坊网络。"
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "请连接到适合的以太坊网络。"
+msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx

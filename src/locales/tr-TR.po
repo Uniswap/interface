@@ -982,9 +982,13 @@ msgstr "DeFi için İzin Gerektirmeyen ve Sorunsuz Likidite"
 msgid "Please Confirm"
 msgstr "Lütfen onaylayın"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum network."
+#~ msgstr "Lütfen uygun Ethereum ağına bağlanın."
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum network."
-msgstr "Lütfen uygun Ethereum ağına bağlanın."
+msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx
