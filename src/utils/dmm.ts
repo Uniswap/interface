@@ -11,8 +11,7 @@ import { BLOCKS_PER_YEAR, FARMING_POOLS, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
-import { useRewardTokens } from 'state/farms/hooks'
-import { useTokensPrice } from 'state/application/hooks'
+import { useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
 import { getFullDisplayBalance } from './formatBalance'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
@@ -267,7 +266,7 @@ export function useFarmApr(
   isLiquidityMiningActive?: boolean
 ): number {
   const { chainId } = useActiveWeb3React()
-  const tokenPrices = useTokensPrice((rewardPerBlocks || []).map(item => item.token))
+  const tokenPrices = useRewardTokenPrices((rewardPerBlocks || []).map(item => item.token))
 
   if (parseFloat(poolLiquidityUsd) === 0 || !isLiquidityMiningActive) {
     return 0
@@ -345,7 +344,7 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
 
 export function useFarmRewardsUSD(rewards?: Reward[]): number {
   const { chainId } = useActiveWeb3React()
-  const tokenPrices = useTokensPrice((rewards || []).map(item => item.token))
+  const tokenPrices = useRewardTokenPrices((rewards || []).map(item => item.token))
   if (!rewards) {
     return 0
   }
