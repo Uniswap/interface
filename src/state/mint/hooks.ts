@@ -140,11 +140,14 @@ export function useDerivedMintInfo(
   const liquidityMinted = useMemo(() => {
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [currencyAAmount, currencyBAmount]
-    if (pair && totalSupply && tokenAmountA && tokenAmountB) {
-      return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
-    } else {
-      return undefined
+    try {
+      if (pair && totalSupply && tokenAmountA && tokenAmountB) {
+        return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
+      }
+    } catch (e) {
+      console.warn(e)
     }
+    return undefined
   }, [parsedAmounts, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
