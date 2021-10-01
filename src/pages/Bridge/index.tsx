@@ -14,7 +14,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
 
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
-import { useArbBridge } from '../../hooks/useArbBridge'
+import { useArbBridge, useBridge } from '../../hooks/useArbBridge'
 import { BridgeTransactionSummary, useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
@@ -45,6 +45,7 @@ const SwapButton = styled.button<{ disabled: boolean }>`
 
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
+  const { bridge } = useBridge()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
     onUserInput,
@@ -72,6 +73,7 @@ export default function Bridge() {
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
+  const isCollecting = step === BridgeStep.Collect
 
   const handleResetBridge = useCallback(() => {
     onUserInput('')
@@ -113,15 +115,24 @@ export default function Bridge() {
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
+      onFromNetworkChange(tx.fromChainId)
+      onToNetworkChange(tx.toChainId)
+      onCurrencySelection(tx.assetName)
     },
-    [setStep, setCollectableTx]
+    [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
   )
+
+  useEffect(() => {
+    if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
+      setStep(BridgeStep.Initial)
+    }
+  }, [chainId, collectableTx, isCollecting, step])
 
   return (
     <>
       <AppBody>
         <RowBetween mb="12px">
-          <Title>{step === BridgeStep.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
+          <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
@@ -130,7 +141,7 @@ export default function Bridge() {
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
               onClick={() => setShowFromList(val => !val)}
-              disabled={step === BridgeStep.Collect}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
               show={showFromList}
@@ -140,7 +151,7 @@ export default function Bridge() {
               parentRef={fromPanelRef}
             />
           </div>
-          <SwapButton onClick={onSwapBridgeNetworks} disabled={step === BridgeStep.Collect}>
+          <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
           <div ref={toPanelRef}>
@@ -148,7 +159,7 @@ export default function Bridge() {
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
               onClick={() => setShowToList(val => !val)}
-              disabled={step === BridgeStep.Collect}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
               show={showToList}
@@ -161,21 +172,21 @@ export default function Bridge() {
         </Row>
         <CurrencyInputPanel
           label="Amount"
-          value={step === BridgeStep.Collect ? collectableTx.value : typedValue}
-          showMaxButton={!atMaxAmountInput}
+          value={isCollecting ? collectableTx.value : typedValue}
+          showMaxButton={!isCollecting && !atMaxAmountInput}
           currency={bridgeCurrency}
           onUserInput={onUserInput}
-          onMax={handleMaxInput}
+          onMax={!isCollecting ? handleMaxInput : undefined}
           onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={step === BridgeStep.Collect}
-          disabled={step === BridgeStep.Collect}
+          disableCurrencySelect={isCollecting}
+          disabled={isCollecting}
           hideBalance={!isNetworkConnected}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
-          toNetworkChainId={step === BridgeStep.Collect ? collectableTx.toChainId : toNetwork.chainId}
+          toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
           handleSubmit={handleSubmit}
           isNetworkConnected={isNetworkConnected}
           step={step}
@@ -183,7 +194,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {chainId && !!bridgeSummaries.length && (
+      {bridge && chainId && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           show
           transactions={bridgeSummaries}

@@ -34,9 +34,6 @@ export const BridgeActionPanel = ({
 
   const isButtonDisabled = !typedValue || step !== BridgeStep.Initial
 
-  // const handleSwitchNetwork = () =>
-  //   fromNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(fromNetworkChainId)
-
   const chooseButton = () => {
     if (!account) {
       return (
@@ -46,7 +43,7 @@ export const BridgeActionPanel = ({
       )
     }
 
-    if (!isNetworkConnected) {
+    if (!isNetworkConnected && step !== BridgeStep.Collect) {
       return (
         <ButtonPrimary
           mt="12px"

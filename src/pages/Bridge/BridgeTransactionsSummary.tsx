@@ -6,6 +6,8 @@ import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
 import { TYPE } from '../../theme'
 import { BridgeStatusTag } from './BridgeStatusTag'
+import { NETWORK_DETAIL } from '../../constants'
+
 interface BridgeTransactionsSummaryProps extends HideableAutoColumnProps {
   transactions: BridgeTransactionSummary[]
   collectableTx: BridgeTransactionSummary
@@ -32,7 +34,7 @@ export const BridgeTransactionsSummary = ({
           </thead>
           <tbody>
             {Object.values(transactions).map((tx, index) => {
-              const { assetName, fromName, status, toName, value } = tx
+              const { assetName, fromChainId, status, toChainId, value } = tx
 
               return (
                 <tr key={index} style={{ lineHeight: '22px' }}>
@@ -43,12 +45,12 @@ export const BridgeTransactionsSummary = ({
                   </td>
                   <td align="left">
                     <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
-                      {fromName}
+                      {NETWORK_DETAIL[fromChainId].chainName}
                     </TYPE.main>
                   </td>
                   <td align="left">
                     <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
-                      {toName}
+                      {NETWORK_DETAIL[toChainId].chainName}
                     </TYPE.main>
                   </td>
                   <td align="left">
