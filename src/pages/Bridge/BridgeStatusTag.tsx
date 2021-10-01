@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BridgeTransactionSummary } from '../../state/bridgeTransactions/hooks'
+import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
 
 const Tag = styled.div`
   display: inline-block;

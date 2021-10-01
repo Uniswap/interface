@@ -43,3 +43,17 @@ export type BridgeTxn = {
   batchNumber?: string
   outgoingMessageState?: OutgoingMessageState
 }
+
+export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
+
+export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
+  fromName: string
+  toName: string
+  log: BridgeTransactionLog[]
+  status: BridgeTransactionStatus
+  pendingReason?: string
+}
+
+export type BridgeTransactionLog = Pick<BridgeTxn, 'txHash' | 'chainId' | 'type'> & {
+  status: BridgeTransactionStatus
+}

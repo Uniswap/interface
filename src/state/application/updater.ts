@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { MainnetGasPrice, updateBlockNumber, updateMainnetGasPrices } from './actions'
+import { MainnetGasPrice, updateBlockNumber, updateMainnetGasPrices, setChainId } from './actions'
 import { useDispatch } from 'react-redux'
 import { ChainId } from '@swapr/sdk'
 
 export default function Updater(): null {
-  const { library, chainId } = useActiveWeb3React()
+  const { library, chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch()
 
   const windowVisible = useIsWindowVisible()
@@ -89,6 +89,12 @@ export default function Updater(): null {
     if (!debouncedState.chainId || !debouncedState.blockNumber) return
     dispatch(updateBlockNumber({ chainId: debouncedState.chainId, blockNumber: debouncedState.blockNumber }))
   }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId, debouncedMainnetGasPrices])
+
+  useEffect(() => {
+    if (chainId && account) {
+      dispatch(setChainId({ chainId }))
+    }
+  }, [account, chainId, dispatch])
 
   return null
 }

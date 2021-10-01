@@ -14,8 +14,8 @@ import {
 import {
   useBridgePendingTransactions,
   useBridgeL1Deposits,
-  useBridgeTransactions,
-  useBridgePendingWithdrawals
+  useBridgePendingWithdrawals,
+  useBridgeAllTransactions
 } from './hooks'
 import { txnTypeToLayer } from './reducer'
 import { BridgeTxn } from './types'
@@ -29,7 +29,7 @@ export default function Updater(): null {
   const [initialPendingWithdrawalsChecked, setInitialPendingWithdrawalsChecked] = useState<ChainId>(-1)
   const dispatch = useDispatch()
 
-  const allTransactions = useBridgeTransactions()
+  const allTransactions = useBridgeAllTransactions()
   const depositTransactions = useBridgeL1Deposits()
   const pendingTransactions = useBridgePendingTransactions()
   const pendingWithdrawals = useBridgePendingWithdrawals()
