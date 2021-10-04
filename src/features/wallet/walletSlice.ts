@@ -1,46 +1,50 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { areAddressesEqual, isValidAddress } from 'src/utils/addresses'
-import { isValidDerivationPath } from 'src/utils/mnemonics'
-import { assert } from 'src/utils/validation'
+import { SupportedChainId } from 'src/constants/chains'
+import { AccountStub } from 'src/features/wallet/accounts/types'
+import { getCaip10Id } from 'src/features/wallet/accounts/utils'
 
 interface Wallet {
   isUnlocked: boolean
-  currentAccount: {
-    address: string
-    derivationPath: string | null
-    chainId: number
-  } | null
-}
-
-interface SetAccountAction {
-  address: string
-  derivationPath: string
-  chainId: number
+  accounts: Record<string, AccountStub> // CAIP-10 id to stub
+  activeAccount: AccountStub | null
 }
 
 const initialState: Wallet = {
   isUnlocked: false,
-  currentAccount: null,
+  accounts: {},
+  activeAccount: null,
 }
 
 const slice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    setAccount: (state, action: PayloadAction<SetAccountAction>) => {
-      const { address, derivationPath, chainId } = action.payload
-      state.isUnlocked = true
-      assert(address && isValidAddress(address), `Invalid address ${address}`)
-      assert(isValidDerivationPath(derivationPath), `Invalid derivationPath ${derivationPath}`)
-      assert(chainId && chainId > 0, `Invalid chainId ${chainId}`)
-      if (state.currentAccount?.address && areAddressesEqual(state.currentAccount.address, address))
-        return
-      state.currentAccount = { address, derivationPath, chainId }
+    addAccount: (state, action: PayloadAction<AccountStub>) => {
+      const { address, chainId } = action.payload
+      const id = getCaip10Id(address, chainId)
+      state.accounts[id] = action.payload
+    },
+    removeAccount: (
+      state,
+      action: PayloadAction<{ address: string; chainId: SupportedChainId }>
+    ) => {
+      const { address, chainId } = action.payload
+      const id = getCaip10Id(address, chainId)
+      delete state.accounts[id]
+    },
+    activateAccount: (
+      state,
+      action: PayloadAction<{ address: string; chainId: SupportedChainId }>
+    ) => {
+      const { address, chainId } = action.payload
+      const id = getCaip10Id(address, chainId)
+      if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${address}`)
+      state.activeAccount = state.accounts[id]
     },
     resetWallet: () => initialState,
   },
 })
 
-export const { setAccount, resetWallet } = slice.actions
+export const { addAccount, removeAccount, activateAccount, resetWallet } = slice.actions
 
 export const walletReducer = slice.reducer

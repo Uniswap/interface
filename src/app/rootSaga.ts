@@ -1,19 +1,21 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
-import { call, spawn } from 'redux-saga/effects'
+import { spawn } from 'redux-saga/effects'
 import {
   transferTokenActions,
   transferTokenReducer,
   transferTokenSaga,
   transferTokenSagaName,
 } from 'src/features/transfer/transferToken'
-import { createAccount } from 'src/features/wallet/createAccount'
+import {
+  createAccountActions,
+  createAccountReducer,
+  createAccountSaga,
+  createAccountSagaName,
+} from 'src/features/wallet/createAccount'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // Things that should happen before other sagas start go here
-function* init() {
-  // TODO remove
-  yield call(createAccount)
-}
+function* init() {}
 
 // All regular sagas must be included here
 const sagas: any[] = []
@@ -29,6 +31,12 @@ interface MonitoredSaga {
 export const monitoredSagas: {
   [name: string]: MonitoredSaga
 } = {
+  [createAccountSagaName]: {
+    name: createAccountSagaName,
+    wrappedSaga: createAccountSaga,
+    reducer: createAccountReducer,
+    actions: createAccountActions,
+  },
   [transferTokenSagaName]: {
     name: transferTokenSagaName,
     wrappedSaga: transferTokenSaga,

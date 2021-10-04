@@ -27,3 +27,11 @@ export function toTitleCase(str: string) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   })
 }
+
+export function trimLeading0x(input: string) {
+  return input.startsWith('0x') ? input.substring(2) : input
+}
+
+export function ensureLeading0x(input: string) {
+  return input.startsWith('0x') ? input : `0x${input}`
+}

@@ -1,0 +1,54 @@
+import { utils } from 'ethers'
+import { logger } from 'src/utils/logger'
+import { ensureLeading0x } from 'src/utils/string'
+
+export enum AddressStringFormat {
+  lowercase,
+  uppercase,
+  checksum,
+  shortened,
+}
+
+export class Address {
+  private constructor(readonly address: string) {}
+
+  // Use this to instantiate new Addresses
+  public static from(address: string) {
+    if (!address || !utils.isAddress(address)) throw new Error(`Invalid address ${address}`)
+    return new Address(utils.getAddress(ensureLeading0x(address)))
+  }
+
+  public static isValid(address: string | null | undefined) {
+    // Need to catch because ethers' isAddress throws in some cases (bad checksum)
+    try {
+      const isValid = address && utils.isAddress(address)
+      return !!isValid
+    } catch (error) {
+      logger.warn('Invalid address', error, address)
+      return false
+    }
+  }
+
+  public toString(format = AddressStringFormat.checksum) {
+    switch (format) {
+      case AddressStringFormat.lowercase:
+        return this.address.toLowerCase()
+      case AddressStringFormat.uppercase:
+        return this.address.toUpperCase()
+      case AddressStringFormat.shortened:
+        return this.address.substr(0, 8)
+      case AddressStringFormat.checksum:
+      default:
+        return this.address
+    }
+  }
+
+  public equals(address2: string | Address) {
+    if (typeof address2 === 'string') {
+      if (!Address.isValid(address2)) throw new Error(`Invalid address ${address2}`)
+      return this.address === utils.getAddress(address2)
+    } else {
+      return this.address === address2.toString()
+    }
+  }
+}

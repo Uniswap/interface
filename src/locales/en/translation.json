@@ -1,7 +1,8 @@
 {
-  "Hello world": "Hello to the world",
-  "Interpolated {{text}}": "Interpolated {{text}}",
-  "Send": "Send",
+  "Your Account: {{addr}}": "Your Account: {{addr}}",
+  "Create Account": "Create Account",
+  "List Accounts": "List Accounts",
+  "Send Token": "Send Token",
   "Send those tokens around": "Send those tokens around",
   "Back": "Back"
 }
