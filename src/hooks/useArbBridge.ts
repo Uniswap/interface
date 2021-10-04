@@ -6,7 +6,13 @@ import { useActiveWeb3React } from '.'
 
 import { BridgeContext } from '../contexts/BridgeProvider'
 import { BridgeAssetType, BridgeTxn } from '../state/bridgeTransactions/types'
-import { addBridgeTxn, updateBridgeTxnReceipt } from '../state/bridgeTransactions/actions'
+import {
+  addBridgeTxn,
+  updateBridgeTxnPartnerHash,
+  updateBridgeTxnReceipt,
+  updateBridgeTxnWithdrawalInfo
+} from '../state/bridgeTransactions/actions'
+import { OutgoingMessageState } from 'arb-ts'
 
 export const useBridge = () => {
   return useContext(BridgeContext)
@@ -96,13 +102,14 @@ export const useArbBridge = () => {
 
   const triggerOutboxEth = useCallback(
     async ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => {
-      if (!account || !bridge || !l1ChainId || batchIndex || batchNumber || value) return
+      console.log({ account, bridge, l1ChainId, batchIndex, batchNumber, value })
+      if (!account || !bridge || !l1ChainId || !batchIndex || !batchNumber || !value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
 
       const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
-
+      console.log({ l2ToL1 })
       dispatch(
         addBridgeTxn({
           assetName: 'ETH',
@@ -124,12 +131,34 @@ export const useArbBridge = () => {
             receipt: l2ToL1Receipt
           })
         )
+        if (l1ChainId && l2ChainId) {
+          dispatch(
+            updateBridgeTxnPartnerHash({
+              chainId: l1ChainId,
+              txHash: l2ToL1.hash,
+              partnerTxHash: l2ToL1.hash,
+              partnerChainId: l2ChainId
+            })
+          )
+        }
+
+        dispatch(
+          updateBridgeTxnWithdrawalInfo({
+            chainId: l1ChainId,
+            txHash: l2ToL1.hash,
+            batchIndex,
+            batchNumber,
+            outgoingMessageState: OutgoingMessageState.EXECUTED
+          })
+        )
+
+        console.log({ l2ToL1, l2ToL1Receipt })
         return l2ToL1Receipt
       } catch (err) {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId]
+    [account, bridge, dispatch, l1ChainId, l2ChainId]
   )
 
   const withdrawERC20 = useCallback(
@@ -179,13 +208,12 @@ export const useArbBridge = () => {
       value,
       assetName
     }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value' | 'assetName'>) => {
-      if (!account || !bridge || !l1ChainId || batchIndex || batchNumber || value) return
+      if (!account || !bridge || !l1ChainId || !batchIndex || !batchNumber || !value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
 
       const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
-
       dispatch(
         addBridgeTxn({
           assetName,
@@ -207,6 +235,7 @@ export const useArbBridge = () => {
             receipt: l2ToL1Receipt
           })
         )
+
         return l2ToL1Receipt
       } catch (err) {
         throw err
