@@ -37,9 +37,9 @@ const Row = styled(RowBetween)`
     width: 100%;
   }
 
-  & > div > div,
-  & > div > div button {
-    height: 100%;
+  & > div,
+  & > div button {
+    min-height: 100%;
   }
 `
 
