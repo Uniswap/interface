@@ -60,6 +60,13 @@ const TokenSymbol = styled.span`
   margin-right: 4px;
 `
 
+const StyledImg = styled.img`
+  margin-right: 4px;
+  background: #fff;
+  border-radius: 50%;
+  object-fit: contain;
+`
+
 const RewardTokenPrices = () => {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokensFullInfo()
@@ -106,12 +113,7 @@ const RewardTokenPrices = () => {
                 isFirstItem={index === 0}
                 isLastItem={index === rewardTokens?.length - 1}
               >
-                <img
-                  src={`${getTokenLogoURL(token.address, chainId)}`}
-                  alt="logo"
-                  width="20px"
-                  style={{ marginRight: '4px' }}
-                />
+                <StyledImg src={`${getTokenLogoURL(token.address, chainId)}`} alt="logo" width="20px" height="20px" />
                 <TokenSymbol>{token.symbol}:</TokenSymbol>
                 <span>
                   {rewardTokenPrices[index] ? formattedNum(rewardTokenPrices[index]?.toString(), true) : 'N/A'}
