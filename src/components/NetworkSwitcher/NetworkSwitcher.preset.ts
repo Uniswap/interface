@@ -1,8 +1,8 @@
 import { ChainId } from '@swapr/sdk'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import XDAILogo from '../../assets/images/xdai-stake-logo.png'
-import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
+import EthereumLogo from '../../assets/svg/ethereum-logo.svg'
+import XDAILogo from '../../assets/svg/xdai-logo.svg'
+import ArbitrumLogo from '../../assets/svg/arbitrum-one-logo.svg'
 
 export const networkOptionsPreset = [
   {
