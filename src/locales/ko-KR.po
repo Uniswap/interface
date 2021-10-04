@@ -99,7 +99,7 @@ msgstr "계정"
 msgid "Active"
 msgstr "활성"
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Active Price Range"
 msgstr ""
 
@@ -145,6 +145,7 @@ msgstr "URL이 <0>dmm.exchange인지 항상 확인하십시오.</0> - 안전을 
 #: src/components/PoolList/index.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
 msgstr "증폭 계수. 증폭된 풀은 높은 자본 효율성을 제공합니다. 높은 AMP는 높은 자본 효율성을 제공하기 위해서 정해진 가격 범위 안에서 유동성을 증폭시킵니다. 스테이블 토큰같이 안정적인 토큰 쌍에 더 높은 AMP를 사용할 수 있고 가격 변동이 심한 쌍에는 낮은 AMP가 권장됩니다."
 
@@ -306,6 +307,7 @@ msgstr "지갑에서 이 거래를 승인하세요"
 
 #: src/components/Web3Status/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -350,6 +352,10 @@ msgstr "복사됨"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "주소 복사"
+
+#: src/pages/CreatePool/index.tsx
+msgid "Create"
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new pool"
@@ -452,6 +458,7 @@ msgid "Dynamic"
 msgstr "동적"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Dynamic Fee Range"
 msgstr ""
 
@@ -495,6 +502,10 @@ msgstr "받는 사람을 입력하세요"
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "유효한 슬립페지 비율을 입력하십시오"
+
+#: src/pages/CreatePool/index.tsx
+msgid "Enter amp (>=1)"
+msgstr ""
 
 #: src/hooks/useWrapCallback.ts
 #: src/hooks/useWrapCallback.ts
@@ -560,6 +571,7 @@ msgid "Fee Range"
 msgstr "수수료 범위"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
 msgstr "수수료는 유동성 공급자의 수익을 극대화하기 위해 시장 상황에 따라 동적으로 조정됩니다."
 
@@ -734,6 +746,7 @@ msgid "Invalid recipient"
 msgstr "잘못된 수신자"
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "재고 비율:"
 
@@ -926,7 +939,7 @@ msgstr ""
 msgid "No {type} pool found."
 msgstr "{type} 풀을 찾을 수 없습니다."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Note: There are existing pools for this token pair. Please check"
 msgstr ""
 
@@ -1019,8 +1032,8 @@ msgstr "풀 비율"
 msgid "Pool tokens in rewards pool:"
 msgstr "보상 된 풀 토큰:"
 
-#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
-#: src/pages/AddLiquidity/ConfirmAddModalBottom.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -1111,7 +1124,7 @@ msgstr "더 큰 유연성과 매우 높은 자본 효율성으로 마찰 없는 
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "비율"
 
@@ -1224,7 +1237,7 @@ msgstr "토큰 선택"
 msgid "Select a token to find your liquidity."
 msgstr "유동성을 찾기 위해 토큰을 선택하십시오."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
 msgstr ""
 
@@ -1295,6 +1308,7 @@ msgid "The difference between the market price and your price due to trade size.
 msgstr "거래 규모로 인한 시장 가격과 귀하의 가격 간의 차이입니다. 오른쪽 상단 구성에서 슬립피지 가격 영향 허용 범위를 조정합니다."
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "The price is deviating quite a lot from that market price, please be careful!"
 msgstr ""
 
@@ -1392,7 +1406,7 @@ msgstr ""
 msgid "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "AMP를 기반으로 한 이 쌍의 거래 가능한 가격대. 가격이 이 범위보다 낮거나 높으면 풀이 비활성화될 수 있습니다."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr ""
 
@@ -1463,11 +1477,15 @@ msgstr "목록 업데이트"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Use Native Token"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "Use Wrapped Token"
 msgstr ""
 
@@ -1533,11 +1551,11 @@ msgstr "잘못된 네트워크"
 msgid "Yield"
 msgstr "유동성 마이닝"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "You are creating a pool"
 msgstr ""
 
@@ -1605,6 +1623,7 @@ msgid "and"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr ""
 
@@ -1620,7 +1639,7 @@ msgstr "제공자 및"
 msgid "for users compared to AMMs."
 msgstr "다른 AMM에 비해서는"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/CreatePool/index.tsx
 msgid "here"
 msgstr ""
 
@@ -1642,8 +1661,8 @@ msgstr "훨씬 더 높은 자본 효율성"
 msgid "or the transaction will revert."
 msgstr "그렇지 않으면 거래가 거절될것입니다."
 
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
-#: src/pages/AddLiquidity/PoolPriceBar.tsx
+#: src/components/PoolPriceBar/index.tsx
+#: src/components/PoolPriceBar/index.tsx
 msgid "per"
 msgstr ""
 

@@ -7,7 +7,7 @@ import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import { PoolPriceRangeBar } from './PoolPriceBar'
+import { PoolPriceRangeBar } from 'components/PoolPriceBar'
 import styled from 'styled-components'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 

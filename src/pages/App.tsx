@@ -28,8 +28,23 @@ const PoolFinderExternal = lazy(() =>
   import(/* webpackChunkName: 'pool-finder-external-page' */ './PoolFinder/PoolFinderExternal')
 )
 const Migration = lazy(() => import(/* webpackChunkName: 'migration-page' */ './Pool/lp'))
+
+const CreatePool = lazy(() => import(/* webpackChunkName: 'create-pool-page' */ './CreatePool'))
+const RedirectCreatePoolDuplicateTokenIds = lazy(() =>
+  import(
+    /* webpackChunkName: 'redirect-create-pool-duplicate-token-ids-page' */ './CreatePool/RedirectDuplicateTokenIds'
+  )
+)
+const RedirectOldCreatePoolPathStructure = lazy(() =>
+  import(
+    /* webpackChunkName: 'redirect-old-create-pool-path-structure-page' */ './CreatePool/RedirectOldCreatePoolPathStructure'
+  )
+)
+
 const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page' */ './AddLiquidity'))
+
 const RemoveLiquidity = lazy(() => import(/* webpackChunkName: 'remove-liquidity-page' */ './RemoveLiquidity'))
+
 const MigrateLiquidityUNI = lazy(() =>
   import(/* webpackChunkName: 'migrate-uni-page' */ './RemoveLiquidity/migrate_uni')
 )
@@ -37,20 +52,6 @@ const MigrateLiquiditySUSHI = lazy(() =>
   import(/* webpackChunkName: 'migrate-sushi-page' */ './RemoveLiquidity/migrate_sushi')
 )
 const About = lazy(() => import(/* webpackChunkName: 'about-page' */ './Static/About'))
-const RedirectToAddLiquidity = lazy(() =>
-  import(/* webpackChunkName: 'redirect-add-liquidity-page' */ './AddLiquidity/redirects')
-)
-const RedirectDuplicateTokenIds = lazy(() =>
-  import(/* webpackChunkName: 'redirect-duplicate-token-ids-page' */ './AddLiquidity/RedirectDuplicateTokenIds')
-)
-const RedirectOldAddLiquidityPathStructure = lazy(() =>
-  import(
-    /* webpackChunkName: 'redirect-old-add-liquidity-path-structure-page' */ './AddLiquidity/RedirectOldAddLiquidityPathStructure'
-  )
-)
-const RedirectOldRemoveLiquidityPathStructure = lazy(() =>
-  import(/* webpackChunkName: 'redirect-old-remove-liquidity-path-structure-page' */ './RemoveLiquidity/redirects')
-)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -113,30 +114,26 @@ export default function App() {
                     <Route exact strict path="/farms" component={Yield} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <OnlyEthereumRoute exact path="/migration" component={Migration} />
-                    <Route exact path="/add" component={AddLiquidity} />
-                    <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                    <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+
+                    {/* Create new pool */}
+                    <Route exact path="/create" component={CreatePool} />
+                    <Route exact path="/create/:currencyIdA" component={RedirectOldCreatePoolPathStructure} />
                     <Route
                       exact
-                      path="/add/:currencyIdA/:currencyIdB/:pairAddress"
-                      component={RedirectDuplicateTokenIds}
+                      path="/create/:currencyIdA/:currencyIdB"
+                      component={RedirectCreatePoolDuplicateTokenIds}
                     />
-                    <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+
+                    {/* Add liquidity */}
+                    <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={AddLiquidity} />
+
                     <Route
                       exact
                       strict
                       path="/remove/:currencyIdA/:currencyIdB/:pairAddress"
                       component={RemoveLiquidity}
                     />
-                    <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                    <Route exact path="/create" component={AddLiquidity} />
-                    <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                    <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                    <Route
-                      exact
-                      path="/add/:currencyIdA/:currencyIdB/:pairAddress"
-                      component={RedirectDuplicateTokenIds}
-                    />
+
                     <Route
                       exact
                       strict
