@@ -38,7 +38,7 @@ export const BridgeActionPanel = ({
     if (!account) {
       return (
         <ButtonPrimary mt="12px" onClick={toggleWalletSwitcherPopover}>
-          Connect Wallet
+          Connect to {networkOptionsPreset.find(network => network.chainId === fromNetworkChainId)?.name}
         </ButtonPrimary>
       )
     }
