@@ -1,14 +1,14 @@
 import { useSelector } from 'react-redux'
 import {
   bridgePendingTxsSelector,
-  bridgeAllTxsSelector,
+  bridgeOwnedTxsSelector,
   bridgeL1DepositsSelector,
   bridgePendingWithdrawalsSelector,
   bridgeTxsSummarySelector
 } from './selectors'
 
 export const useBridgeAllTransactions = () => {
-  return useSelector(bridgeAllTxsSelector)
+  return useSelector(bridgeOwnedTxsSelector)
 }
 
 export const useBridgePendingTransactions = () => {

@@ -3,20 +3,31 @@ import { OutgoingMessageState } from 'arb-ts'
 import { AppState } from '..'
 import { NETWORK_DETAIL } from '../../constants'
 import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
-import { chainIdSelector } from '../application/selectors'
+import { chainIdSelector, accountSelector } from '../application/selectors'
 import { BridgeTransactionLog, BridgeTransactionSummary, BridgeTxn, BridgeTxnsState } from './types'
 
 export const bridgeTxsSelector = (state: AppState) => state.bridgeTransactions
 
-export const bridgeAllTxsSelector = createSelector(
+export const bridgeOwnedTxsSelector = createSelector(
   chainIdSelector,
+  accountSelector,
   bridgeTxsSelector,
-  ({ l1ChainId, l2ChainId }, txs) => {
+  ({ l1ChainId, l2ChainId }, account, txs) => {
     const transactions: BridgeTxnsState = {}
 
-    if (l1ChainId && l2ChainId) {
-      transactions[l1ChainId] = txs[l1ChainId]
-      transactions[l2ChainId] = txs[l2ChainId]
+    if (l1ChainId && l2ChainId && account && txs) {
+      const chains = [l1ChainId, l2ChainId]
+
+      chains.forEach(chainId => {
+        const txPerChain: { [hash: string]: BridgeTxn } = {}
+
+        Object.values(txs[chainId]).forEach(tx => {
+          if (tx.sender !== account) return
+          txPerChain[tx.txHash] = tx
+        })
+
+        transactions[chainId] = txPerChain
+      })
     }
 
     return transactions
@@ -25,7 +36,7 @@ export const bridgeAllTxsSelector = createSelector(
 
 export const bridgePendingTxsSelector = createSelector(
   chainIdSelector,
-  bridgeTxsSelector,
+  bridgeOwnedTxsSelector,
   ({ l1ChainId, l2ChainId }, txs) => {
     let transactions: BridgeTxn[] = []
 
@@ -42,7 +53,7 @@ export const bridgePendingTxsSelector = createSelector(
 
 export const bridgeL1DepositsSelector = createSelector(
   chainIdSelector,
-  bridgeTxsSelector,
+  bridgeOwnedTxsSelector,
   ({ l1ChainId, l2ChainId }, txs) => {
     let transactions: BridgeTxn[] = []
 
@@ -60,7 +71,7 @@ export const bridgeL1DepositsSelector = createSelector(
 
 export const bridgePendingWithdrawalsSelector = createSelector(
   chainIdSelector,
-  bridgeTxsSelector,
+  bridgeOwnedTxsSelector,
   ({ l2ChainId }, txs) => {
     let transactions: BridgeTxn[] = []
 
@@ -90,7 +101,7 @@ export const createBridgeLog = (transactions: BridgeTxn[]): BridgeTransactionLog
 
 export const bridgeTxsSummarySelector = createSelector(
   chainIdSelector,
-  bridgeTxsSelector,
+  bridgeOwnedTxsSelector,
   ({ l1ChainId, l2ChainId }, txs) => {
     if (l1ChainId && l2ChainId && txs[l1ChainId] && txs[l2ChainId]) {
       const l1Txs = txs[l1ChainId]
