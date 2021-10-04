@@ -1,4 +1,4 @@
-import './set-addresses'
+import './log-addresses'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import '@fontsource/montserrat/400.css'

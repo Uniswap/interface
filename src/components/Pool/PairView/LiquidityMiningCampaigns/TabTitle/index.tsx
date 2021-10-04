@@ -25,23 +25,29 @@ const NumberBadge = styled.div<NumberBadgeProps>`
     font-size: 11px;
   }
   
-  ${({badgeTheme: theme}) => theme === 'green' && css`
-    background: rgba(14, 159, 110, 0.08);
-    border: 1px solid rgba(14, 159, 110, 0.65);
-    color: #0E9F6E;
-  `}
+  ${({ badgeTheme: theme }) =>
+    theme === 'green' &&
+    css`
+      background: rgba(14, 159, 110, 0.08);
+      border: 1px solid rgba(14, 159, 110, 0.65);
+      color: #0e9f6e;
+    `}
   
-  ${({badgeTheme}) => badgeTheme === 'orange' && css`
-    background: rgba(242, 153, 74, 0.08);
-    border: 1px solid rgba(242, 153, 74, 0.65);
-    color: #F2994A;
-  `}
+  ${({ badgeTheme }) =>
+    badgeTheme === 'orange' &&
+    css`
+      background: rgba(242, 153, 74, 0.08);
+      border: 1px solid rgba(242, 153, 74, 0.65);
+      color: #f2994a;
+    `}
 
-  ${({badgeTheme}) => badgeTheme === 'red' && css`
-    background: rgba(240, 46, 81, 0.08);
-    border: 1px solid rgba(240, 46, 81, 0.65);
-    color: #F02E51;
-  `}
+  ${({ badgeTheme }) =>
+    badgeTheme === 'red' &&
+    css`
+      background: rgba(240, 46, 81, 0.08);
+      border: 1px solid rgba(240, 46, 81, 0.65);
+      color: #f02e51;
+    `}
 `
 
 interface TabTitleProps extends NumberBadgeProps {
@@ -59,10 +65,7 @@ export default function TabTitle({ itemsAmount, children, loadingAmount, badgeTh
           {loadingAmount ? (
             <Skeleton circle width="16px" height="16px" />
           ) : (
-            <NumberBadge
-              style={itemsAmount === 0 ? {opacity: 0.5} : {}}
-              badgeTheme={badgeTheme}
-            >
+            <NumberBadge style={itemsAmount === 0 ? { opacity: 0.5 } : {}} badgeTheme={badgeTheme}>
               <span>{itemsAmount}</span>
             </NumberBadge>
           )}

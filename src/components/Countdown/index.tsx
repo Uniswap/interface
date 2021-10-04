@@ -5,16 +5,27 @@ import { useInterval } from 'react-use'
 
 interface CountdownProps {
   to: number
+  onEnd?: () => void
 }
 
-export default function Countdown({ to }: CountdownProps) {
-  const [isRunning] = useState(to * 1000 > Date.now())
-  const [duration, setDuration] = useState(Duration.fromMillis(isRunning ? to * 1000 - Date.now() : 0))
+export default function Countdown({ to, onEnd }: CountdownProps) {
+  const [isRunning, setIsRunning] = useState(false)
+  const [duration, setDuration] = useState(Duration.fromMillis(0))
   const [durationText, setDurationText] = useState('')
+
+  useEffect(() => {
+    const isRunning = to * 1000 > Date.now() - 1000 // more than one second required
+    setIsRunning(isRunning)
+    setDuration(Duration.fromMillis(isRunning ? to * 1000 - Date.now() : 0))
+  }, [to])
 
   useInterval(
     () => {
-      setDuration(duration.minus(1000))
+      const newDuration = duration.minus(1000)
+      if (onEnd && newDuration.toMillis() <= 1000) {
+        onEnd()
+        setDuration(Duration.fromMillis(0))
+      } else setDuration(newDuration)
     },
     isRunning ? 1000 : null
   )

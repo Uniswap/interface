@@ -23,7 +23,6 @@ import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 import { providers } from 'ethers'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const CLAIM_LEAVES_IPFS_HASH = process.env.REACT_APP_SWPR_AIRDROP_WHITELIST_IPFS_HASH
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -58,6 +57,13 @@ export const USDT: { [key: number]: Token } = {
     6,
     'USDT',
     'Tether USD from Ethereum'
+  ),
+  [ChainId.ARBITRUM_ONE]: new Token(
+    ChainId.ARBITRUM_ONE,
+    '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+    6,
+    'USDT',
+    'Tether USD'
   )
 }
 
@@ -114,7 +120,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     WETH[ChainId.ARBITRUM_ONE],
     DXD[ChainId.ARBITRUM_ONE],
     USDC[ChainId.ARBITRUM_ONE],
-    WBTC[ChainId.ARBITRUM_ONE]
+    WBTC[ChainId.ARBITRUM_ONE],
+    USDT[ChainId.ARBITRUM_ONE]
   ],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [
@@ -148,7 +155,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
     DXD[ChainId.ARBITRUM_ONE],
     SWPR[ChainId.ARBITRUM_ONE],
     WBTC[ChainId.ARBITRUM_ONE],
-    USDC[ChainId.ARBITRUM_ONE]
+    USDC[ChainId.ARBITRUM_ONE],
+    USDT[ChainId.ARBITRUM_ONE]
   ],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
   [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
@@ -248,7 +256,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmYuv9sUoYk2QquQuWZW3JqCiZC4F5HR9tMgYgF7x5nKs5'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmPQcxPxytZEGBdNSj1gu9QNQScXVVZNat3VcqzdDyR8QU'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
@@ -349,4 +357,23 @@ export const ChainLabel: any = {
   [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
   [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
   [ChainId.XDAI]: 'xDai'
+}
+
+export const OLD_SWPR: { [key: number]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xe54942077Df7b8EEf8D4e6bCe2f7B58B0082b0cd', 18, 'SWPR', 'Swapr'),
+  [ChainId.ARBITRUM_ONE]: new Token(
+    ChainId.ARBITRUM_ONE,
+    '0x955b9fe60a5b5093df9Dc4B1B18ec8e934e77162',
+    18,
+    'SWPR',
+    'Swapr'
+  ),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xA271cCbC126a41f04BAe8fdBDbCEfCF10Bf59a48', 18, 'SWPR', 'Swapr'),
+  [ChainId.ARBITRUM_RINKEBY]: new Token(
+    ChainId.ARBITRUM_RINKEBY,
+    '0xFe45504a21EA46C194000403B43f6DDBA2DCcC80',
+    18,
+    'SWPR',
+    'Swapr'
+  )
 }

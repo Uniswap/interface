@@ -79,8 +79,6 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
 
         if (l1Signer && l2Signer) {
           initBridge(l1Signer, l2Signer)
-          dispatch(setFromBridgeNetwork({ chainId }))
-          dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
       }
     }

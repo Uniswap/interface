@@ -9,27 +9,26 @@ import { ChainLabel } from '../../constants'
 interface NetworkSwitcherProps {
   sendToId: number
   onCollectClick: () => void
+  onSwitchClick: () => void
 }
 
-export const NetworkSwitcher = ({ sendToId, onCollectClick }: NetworkSwitcherProps) => {
+export const NetworkSwitcher = ({ sendToId, onCollectClick, onSwitchClick }: NetworkSwitcherProps) => {
   const { chainId: networkConnectorChainId } = useActiveWeb3React()
   if (!networkConnectorChainId) return null
-
-  const isActiveClassName = networkConnectorChainId === sendToId ? 'active' : ''
 
   return (
     <>
       <RowBetween mt="22px">
-        <SwitchButton onClick={() => null} disabled={networkConnectorChainId === sendToId}>
+        <SwitchButton onClick={onSwitchClick} disabled={networkConnectorChainId === sendToId}>
           Switch to {ChainLabel[sendToId]}
         </SwitchButton>
         <CollectButton onClick={onCollectClick} disabled={networkConnectorChainId !== sendToId}>
           Collect
         </CollectButton>
       </RowBetween>
-      <Row className={isActiveClassName}>
-        <Number className={isActiveClassName}>1</Number>
-        <Number>2</Number>
+      <Row>
+        <Number className={networkConnectorChainId === sendToId ? 'active' : ''}>1</Number>
+        <Number className={networkConnectorChainId === sendToId ? '' : 'disabled'}>2</Number>
       </Row>
     </>
   )
@@ -93,4 +92,7 @@ const Number = styled.div`
   &.active {
     background: #163430;
   }
+  &.disabled {
+    background-color: ${({ theme }) => theme.purple5};
+    color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
 `

@@ -47,8 +47,8 @@ export type BridgeTxn = {
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
 export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
-  fromName: string
-  toName: string
+  fromChainId: ChainId
+  toChainId: ChainId
   log: BridgeTransactionLog[]
   status: BridgeTransactionStatus
   pendingReason?: string

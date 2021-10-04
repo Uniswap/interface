@@ -14,7 +14,7 @@ export function useBridgeState(): AppState['bridge'] {
 }
 
 export function useBridgeActionHandlers(): {
-  onCurrencySelection: (currency: Currency) => void
+  onCurrencySelection: (currency: Currency | string) => void
   onUserInput: (typedValue: string) => void
   onFromNetworkChange: (chainId: ChainId) => void
   onToNetworkChange: (chainId: ChainId) => void
@@ -59,10 +59,10 @@ export function useBridgeActionHandlers(): {
   }, [dispatch])
 
   const onCurrencySelection = useCallback(
-    (currency: Currency) => {
+    (currency: Currency | string) => {
       dispatch(
         selectCurrency({
-          currencyId: currencyId(currency)
+          currencyId: currency instanceof Currency ? currencyId(currency) : currency
         })
       )
     },

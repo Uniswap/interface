@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import React, { MutableRefObject, useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
@@ -34,6 +34,7 @@ export interface PopoverProps {
   className?: string
   offsetX?: number
   offsetY?: number
+  styled?: CSSProperties
 }
 
 export default function Popover({
@@ -44,7 +45,8 @@ export default function Popover({
   placement = 'auto',
   className,
   offsetY = 8,
-  offsetX = 0
+  offsetX = 0,
+  styled
 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
@@ -67,7 +69,7 @@ export default function Popover({
             className={className}
             show={show}
             ref={setPopperElement as any}
-            style={styles.popper}
+            style={{ ...styles.popper, ...styled }}
             {...attributes.popper}
           >
             {content}

@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from "styled-components";
-import QuestionHelper from '../QuestionHelper';
+import styled from 'styled-components'
+import QuestionHelper from '../QuestionHelper'
 import arrowIcon from '../../assets/svg/arrow-bright.svg'
 
 const Tag = styled.div`
@@ -11,22 +11,23 @@ const Tag = styled.div`
   line-height: 11px;
   text-transform: uppercase;
   border-radius: 4px;
-`;
+`
 
 export const TagPrimary = styled(Tag)`
   background: rgba(104, 110, 148, 0.2);
   border: 1px solid rgba(104, 110, 148, 0.2);
   color: ${({ theme }) => theme.bg5};
-`;
+`
 
 export const TagSuccess = styled(Tag)`
   color: #118761;
   background: rgba(14, 159, 110, 0.15);
-`;
+`
 
 export const TagSuccessArrow = styled(TagSuccess)`
   position: relative;
   padding-right: 20px;
+  cursor: pointer;
 
   &::after {
     content: '';
@@ -46,23 +47,20 @@ const TagWarning = styled(Tag)`
   align-items: center;
   color: #a86e3f;
   background: rgba(242, 153, 74, 0.16);
-`;
+  display: flex;
+  justify-content: space-between;
+`
 
 const QuestionHelperWarning = styled(QuestionHelper)`
   width: 10px;
   height: 10px;
   color: #a86e3f;
   margin-left: 3px;
-`;
+`
 
-export const TagPending = () => (
-  <TagWarning>
+export const TagPending = ({ text }: { text?: string }) => (
+  <TagWarning style={{ width: '67px' }}>
     Pending
-    <QuestionHelperWarning
-      text="Lorem ipsum Lorem ipsum Lorem ipsum"
-    />
+    <QuestionHelperWarning text={text ?? ''} />
   </TagWarning>
 )
-
-
-

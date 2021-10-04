@@ -22,7 +22,6 @@ import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { DarkCard } from '../Card'
 import { transparentize } from 'polished'
-import { useDisclaimerBar } from '../../hooks/useShowDisclaimerBar'
 
 const StyledMenuIconContainer = styled.div`
   display: flex;
@@ -84,10 +83,10 @@ const StyledMenu = styled.button`
   outline: none;
 `
 
-const MenuModal = styled(Modal)<{ disclaimerBar: boolean }>`
+const MenuModal = styled(Modal)`
   && {
     position: absolute;
-    top: ${props => (props.disclaimerBar ? '112px' : '95px')};
+    top: 95px;
     right: 20px;
     max-width: 322px;
 
@@ -187,7 +186,6 @@ export default function SettingsTab() {
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
-  const showDisclaimerBar = useDisclaimerBar()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -242,7 +240,7 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         )}
-        <MenuModal isOpen={open} onDismiss={toggle} disclaimerBar={showDisclaimerBar}>
+        <MenuModal isOpen={open} onDismiss={toggle}>
           <MenuModalContentWrapper>
             <MenuModalHeader>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">

@@ -49,7 +49,7 @@ export default function useClaimCallback(account: string | null | undefined): ()
         console.warn('no claim whitelist available')
         return
       }
-      const whitelistItem = whitelist.find(item => item.account === account)
+      const whitelistItem = whitelist.find(item => item.account.toLowerCase() === account?.toLowerCase())
       if (!whitelistItem) {
         console.warn('no claim available for', account)
         return
