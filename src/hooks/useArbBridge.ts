@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { utils, BigNumber } from 'ethers'
 
 import { useActiveWeb3React } from '.'
@@ -28,14 +28,20 @@ export const useArbBridge = () => {
   const dispatch = useDispatch()
   const { account } = useActiveWeb3React()
 
+  const [isPending, setIsPending] = useState(false)
+  const [isBridgeInitiated, setIsBridgeInitiated] = useState(false)
+
   const depositEth = useCallback(
     async (value: string) => {
       if (!account || !bridge || !l1ChainId || !l2ChainId) return
+      setIsPending(true)
 
       const weiValue = utils.parseEther(value)
 
       try {
         const txn = await bridge.depositETH(weiValue)
+        setIsPending(false)
+        setIsBridgeInitiated(true)
 
         dispatch(
           addBridgeTxn({
@@ -59,6 +65,7 @@ export const useArbBridge = () => {
           })
         )
       } catch (err) {
+        setIsPending(false)
         throw err
       }
     },
@@ -68,10 +75,14 @@ export const useArbBridge = () => {
   const withdrawEth = useCallback(
     async (value: string) => {
       if (!account || !bridge || !l2ChainId) return
+      setIsPending(true)
+
       const weiValue = utils.parseEther(value)
 
       try {
         const txn = await bridge.withdrawETH(weiValue)
+        setIsPending(false)
+        setIsBridgeInitiated(true)
 
         dispatch(
           addBridgeTxn({
@@ -95,6 +106,7 @@ export const useArbBridge = () => {
           })
         )
       } catch (err) {
+        setIsPending(false)
         throw err
       }
     },
@@ -261,6 +273,10 @@ export const useArbBridge = () => {
     withdrawEth,
     triggerOutboxEth,
     withdrawERC20,
-    triggerOutboxERC20
+    triggerOutboxERC20,
+    isPending,
+    setIsPending,
+    isBridgeInitiated,
+    setIsBridgeInitiated
   }
 }

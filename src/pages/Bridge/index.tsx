@@ -8,7 +8,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
 // import { FooterBridgeSelector } from './FooterBridgeSelector'
-import { BridgeSuccesModal } from './BridgeSuccesModal'
+import { BridgeSuccesModal } from './BridgeModals/BridgeSuccesModal'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
@@ -20,6 +20,9 @@ import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeActionPanel } from './BridgeActionPanel'
 import { NETWORK_DETAIL } from '../../constants'
+import { BridgeErrorModal } from './BridgeModals/BridgeErrorModal'
+import { BridgePendingModal } from './BridgeModals/BridgePendingModal'
+import { BridgingInitiatedModal } from './BridgeModals/BridgingInitiatedModal'
 
 const Title = styled.p`
   margin: 0;
@@ -69,7 +72,15 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth, withdrawEth, triggerOutboxEth } = useArbBridge()
+  const {
+    depositEth,
+    withdrawEth,
+    triggerOutboxEth,
+    isPending,
+    setIsPending,
+    isBridgeInitiated,
+    setIsBridgeInitiated
+  } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -91,14 +102,21 @@ export default function Bridge() {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
+  const [bridgeError, setBridgeError] = useState<string | null>(null)
+  const handleError = (error: any) => {
+    if (error?.code === 4001) {
+      setBridgeError('Transaction rejected')
+    } else setBridgeError(`Bridge failed: ${error.message}`)
+  }
+
   const handleSubmit = useCallback(() => {
     if (!chainId) return
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       handleResetBridge()
-      return depositEth(typedValue)
+      return depositEth(typedValue).catch(handleError)
     } else {
       handleResetBridge()
-      return withdrawEth(typedValue)
+      return withdrawEth(typedValue).catch(handleError)
     }
   }, [chainId, depositEth, handleResetBridge, typedValue, withdrawEth])
 
@@ -139,6 +157,9 @@ export default function Bridge() {
       setStep(BridgeStep.Initial)
     }
   }, [chainId, collectableTx, isCollecting, step])
+
+  const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
+  const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
 
   return (
     <>
@@ -215,10 +236,23 @@ export default function Bridge() {
           onCollect={handleCollect}
         />
       )}
-
       {/* {step === Step.Initial && !!typedValue && (
         <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
       )} */}
+      <BridgePendingModal
+        isOpen={isPending}
+        onDismiss={() => setIsPending(false)}
+        pendingText={`1 ETH from ${fromNetworkName} to ${toNetworkName}`}
+      />
+      <BridgeErrorModal isOpen={!!bridgeError} onDismiss={() => setBridgeError(null)} error={bridgeError || ''} />
+      <BridgingInitiatedModal
+        isOpen={isBridgeInitiated}
+        onDismiss={() => setIsBridgeInitiated(false)}
+        amount={'1'}
+        assetType={'ETH'}
+        fromNetworkName={fromNetworkName}
+        toNetworkName={toNetworkName}
+      />
       <BridgeSuccesModal
         isOpen={step === BridgeStep.Success}
         onDismiss={handleResetBridge}
