@@ -54,7 +54,7 @@ export const AVAX_MAINNET_TOKEN_LIST = {
     },
     {
       chainId: 43114,
-      address: '0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17',
+      address: '0x961C8c0B1aaD0c0b10a51FeF6a867E3091BCef17',
       symbol: 'DYP',
       name: 'DeFiYieldProtocol',
       decimals: 18
