@@ -1,7 +1,7 @@
 {
   "name": "@uniswap/interface",
   "description": "Uniswap Interface",
-  "homepage": "https://github.com/Uniswap/interface",
+  "homepage": ".",
   "main": "dist/interface.js",
   "module": "dist/interface.esm.js",
   "types": "dist/index.d.ts",
