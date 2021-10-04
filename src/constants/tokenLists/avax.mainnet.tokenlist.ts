@@ -51,6 +51,13 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'APEIN',
       name: 'Ape In',
       decimals: 18
+    },
+    {
+      chainId: 43114,
+      address: '0x961C8c0B1aaD0c0b10a51FeF6a867E3091BCef17',
+      symbol: 'DYP',
+      name: 'DeFiYieldProtocol',
+      decimals: 18
     }
   ],
   version: {
