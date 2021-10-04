@@ -94,6 +94,14 @@ export const MATIC_TOKEN_LIST = {
       name: 'Rai Reflex Index',
       decimals: 18,
       logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334' 
+    },
+    {
+      chainId: 137,
+      address: '0xfAdE2934b8E7685070149034384fB7863860D86e',
+      symbol: 'AUR-0112',
+      name: 'Aureus',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/PyipL43.png',
     }
   ],
   version: {
