@@ -1,6 +1,6 @@
 {
   "name": "@swapr/frontend",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.6",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
@@ -11,9 +11,9 @@
     "@reach/portal": "^0.10.3",
     "@react-spring/web": "^9.2.4",
     "@reduxjs/toolkit": "^1.6.1",
-    "@swapr/core": "^0.3.11",
-    "@swapr/periphery": "^0.3.15",
-    "@swapr/sdk": "^0.10.4",
+    "@swapr/core": "^0.3.18",
+    "@swapr/periphery": "^0.3.20",
+    "@swapr/sdk": "^0.10.7",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",

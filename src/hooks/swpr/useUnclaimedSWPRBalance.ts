@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
-import { ChainId, SWPR, TokenAmount } from '@swapr/sdk'
+import { ChainId, TokenAmount } from '@swapr/sdk'
 import { useClaimWhitelist } from '../../state/claim/hooks'
 import { BigNumber } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import useHasClaimed from './useHasClaimed'
+import { OLD_SWPR } from '../../constants'
 
 export default function useUnclaimedSWPRBalance(
   account: string | null | undefined
 ): { loading: boolean; unclaimedBalance: TokenAmount | null } {
-  const swpr = SWPR[ChainId.ARBITRUM_ONE]
+  const swpr = OLD_SWPR[ChainId.ARBITRUM_ONE]
   const whitelist = useClaimWhitelist()
   const { loading: loadingHasClaimed, claimed } = useHasClaimed(account)
 

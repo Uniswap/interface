@@ -57,7 +57,7 @@ const DataRow = styled(Flex)`
       text-align: left;
     }
   `}
-`;
+`
 
 const TokenAmountBlock = styled(TokenAmountDisplayer)`
   && {
@@ -67,7 +67,7 @@ const TokenAmountBlock = styled(TokenAmountDisplayer)`
       justify-content: start;
     `}
   }
-`;
+`
 
 const ButtonsRow = styled(RowBetween)`
   & > button + button {
@@ -85,7 +85,7 @@ const ButtonsRow = styled(RowBetween)`
       margin: 8px 0 0;
     }
   `}
-`;
+`
 
 const StyledButtonDark = styled(ButtonDark)`
   width: 100%;
@@ -95,10 +95,10 @@ const StyledButtonDark = styled(ButtonDark)`
   line-height: 15px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #C0BAF7;
-  border: 1px solid #2A2F42;
-  background: #191A24;
-`;
+  color: #c0baf7;
+  border: 1px solid #2a2f42;
+  background: #191a24;
+`
 
 interface FullPositionCardProps {
   campaign?: LiquidityMiningCampaign
@@ -338,11 +338,11 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                     <AutoColumn gap="4px">
                       {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
                         <>
-                          <Row justifyContent="flex-end">
+                          <Row>
                             <Skeleton width="40px" height="14px" />
                             <CurrencyLogo marginLeft={4} loading size="14px" />
                           </Row>
-                          <Row justifyContent="flex-end">
+                          <Row>
                             <Skeleton width="40px" height="14px" />
                             <CurrencyLogo marginLeft={4} loading size="14px" />
                           </Row>
@@ -429,30 +429,18 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
             </DataRow>
           </Flex>
           <ButtonsRow>
-            <StyledButtonDark
-              disabled={disabledStaking}
-              onClick={handleStakingRequest}
-            >
+            <StyledButtonDark disabled={disabledStaking} onClick={handleStakingRequest}>
               Deposit and stake
             </StyledButtonDark>
-            <StyledButtonDark
-              disabled={disabledClaim}
-              onClick={handleClaimRequest}
-            >
+            <StyledButtonDark disabled={disabledClaim} onClick={handleClaimRequest}>
               Claim rewards
             </StyledButtonDark>
           </ButtonsRow>
           <ButtonsRow>
-            <StyledButtonDark
-              disabled={disabledWithdrawing}
-              onClick={handleWithdrawalRequest}
-            >
+            <StyledButtonDark disabled={disabledWithdrawing} onClick={handleWithdrawalRequest}>
               Withdraw
             </StyledButtonDark>
-            <StyledButtonDark
-              disabled={disabledExit}
-              onClick={handleExitRequest}
-            >
+            <StyledButtonDark disabled={disabledExit} onClick={handleExitRequest}>
               Claim and withdraw
             </StyledButtonDark>
           </ButtonsRow>

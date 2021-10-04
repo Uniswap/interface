@@ -14,13 +14,7 @@ interface DataDisplayerProps {
 function DataDisplayer({ title, dataTextSize, data, fontWeight, color }: DataDisplayerProps) {
   return (
     <AutoColumn gap="4px">
-      <TYPE.small
-        fontWeight="600"
-        fontSize="11px"
-        lineHeight="13px"
-        letterSpacing="0.06em"
-        color="text5"
-      >
+      <TYPE.small fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.06em" color="text5">
         {title}
       </TYPE.small>
       <TYPE.small
