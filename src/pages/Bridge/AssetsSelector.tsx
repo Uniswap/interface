@@ -52,9 +52,8 @@ const AssetName = styled.p`
   &::after {
     content: '';
     position: absolute;
-    top: 50%;
+    top: 4px;
     right: 0;
-    transform: translateY(-50%);
     width: 10px;
     height: 10px;
     background: url(${TriangleIcon}) center no-repeat;

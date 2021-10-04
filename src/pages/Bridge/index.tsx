@@ -31,8 +31,15 @@ const Title = styled.p`
 `
 
 const Row = styled(RowBetween)`
+  align-items: stretch;
+
   & > div {
     width: 100%;
+  }
+
+  & > div > div,
+  & > div > div button {
+    height: 100%;
   }
 `
 
