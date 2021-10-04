@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Bridge } from 'arb-ts'
 import { providers, Signer } from 'ethers'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../hooks'
-
-import { INFURA_PROJECT_ID } from '../connectors'
 import { NETWORK_DETAIL } from '../constants'
-import { getChainPair, ChainIdPair } from '../utils/arbitrum'
-import { useDispatch } from 'react-redux'
-import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
+import { ChainIdPair } from '../utils/arbitrum'
+import { INFURA_PROJECT_ID } from '../connectors'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
+import { chainIdSelector } from '../state/application/selectors'
+import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
 
 type BridgeContextType = {
   bridge: Bridge | null
@@ -44,43 +44,32 @@ const addInfuraKey = (rpcUrl: string) => {
 export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => {
   const { library, chainId, account } = useActiveWeb3React()
   const [bridge, setBridge] = useState<Bridge | null>(null)
-  const [chainIdPair, setChainIdPair] = useState<ChainIdPair>({
-    l1ChainId: undefined,
-    l2ChainId: undefined,
-    chainId: undefined
-  })
+  const chains = useSelector(chainIdSelector)
   const dispatch = useDispatch()
 
   useEffect(() => {
     const initBridge = async (
       ethSigner: Signer,
       arbSigner: Signer,
-      chainPair: ChainIdPair,
       l1GatewayRouterAddress?: string | undefined,
       l2GatewayRouterAddress?: string | undefined
     ) => {
+      setBridge(null)
       const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
-      setChainIdPair(chainPair)
       setBridge(bridge)
     }
 
-    // Setting the bridge
     if (library && account && chainId) {
-      const resolvedChainIdPair = getChainPair(chainId)
-
       const { partnerChainId, isArbitrum } = NETWORK_DETAIL[chainId]
       let l1Signer: providers.JsonRpcSigner, l2Signer: providers.JsonRpcSigner
 
-      // Has arbitrum support
       if (partnerChainId) {
-        // Withdraw
         if (isArbitrum) {
           const rpcUrl = NETWORK_DETAIL[partnerChainId].rpcUrls[0]
           const l1Provider = new providers.JsonRpcProvider(addInfuraKey(rpcUrl))
           l1Provider.pollingInterval = POOLING_INTERVAL
           l1Signer = l1Provider.getSigner(account)
           l2Signer = library.getSigner()
-          // Deposit
         } else {
           const l2Provider = new providers.JsonRpcProvider(NETWORK_DETAIL[partnerChainId].rpcUrls[0])
           l2Provider.pollingInterval = POOLING_INTERVAL
@@ -89,7 +78,7 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
         }
 
         if (l1Signer && l2Signer) {
-          initBridge(l1Signer, l2Signer, resolvedChainIdPair)
+          initBridge(l1Signer, l2Signer)
           dispatch(setFromBridgeNetwork({ chainId }))
           dispatch(setToBridgeNetwork({ chainId: partnerChainId }))
         }
@@ -97,7 +86,9 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
     }
   }, [chainId, library, account, dispatch])
 
-  return (
-    <BridgeContext.Provider value={{ bridge: bridge, chainIdPair: chainIdPair }}>{children}</BridgeContext.Provider>
-  )
+  return <BridgeContext.Provider value={{ bridge: bridge, chainIdPair: chains }}>{children}</BridgeContext.Provider>
+}
+
+export const useBridge = () => {
+  return useContext(BridgeContext)
 }
