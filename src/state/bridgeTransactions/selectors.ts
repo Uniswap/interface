@@ -1,7 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { OutgoingMessageState } from 'arb-ts'
 import { AppState } from '..'
-import { NETWORK_DETAIL } from '../../constants'
 import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
 import { chainIdSelector, accountSelector } from '../application/selectors'
 import { BridgeTransactionLog, BridgeTransactionSummary, BridgeTxn, BridgeTxnsState } from './types'
@@ -21,7 +20,7 @@ export const bridgeOwnedTxsSelector = createSelector(
       chains.forEach(chainId => {
         const txPerChain: { [hash: string]: BridgeTxn } = {}
 
-        Object.values(txs[chainId]).forEach(tx => {
+        Object.values(txs[chainId] ?? {}).forEach(tx => {
           if (tx.sender !== account) return
           txPerChain[tx.txHash] = tx
         })
@@ -78,7 +77,7 @@ export const bridgePendingWithdrawalsSelector = createSelector(
     if (l2ChainId && txs[l2ChainId]) {
       const l2Txs = txs[l2ChainId]
 
-      transactions = Object.values(l2Txs).filter(
+      transactions = Object.values(l2Txs ?? {}).filter(
         tx =>
           tx.type === 'withdraw' &&
           tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
@@ -103,7 +102,7 @@ export const bridgeTxsSummarySelector = createSelector(
   chainIdSelector,
   bridgeOwnedTxsSelector,
   ({ l1ChainId, l2ChainId }, txs) => {
-    if (l1ChainId && l2ChainId && txs[l1ChainId] && txs[l2ChainId]) {
+    if (l1ChainId && l2ChainId) {
       const l1Txs = txs[l1ChainId]
       const l2Txs = txs[l2ChainId]
 
@@ -113,7 +112,7 @@ export const bridgeTxsSummarySelector = createSelector(
         }
       } = { [l1ChainId]: {}, [l2ChainId]: {} }
 
-      const l1Summaries = Object.values(l1Txs).reduce<BridgeTransactionSummary[]>((total, tx) => {
+      const l1Summaries = Object.values(l1Txs ?? {}).reduce<BridgeTransactionSummary[]>((total, tx) => {
         const from = txnTypeToOrigin(tx.type) === 1 ? l1ChainId : l2ChainId
         const to = from === l1ChainId ? l2ChainId : l1ChainId
 
@@ -122,8 +121,8 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          fromName: NETWORK_DETAIL[from].chainName,
-          toName: NETWORK_DETAIL[to].chainName,
+          fromChainId: from,
+          toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
           batchIndex: tx.batchIndex,
@@ -162,7 +161,7 @@ export const bridgeTxsSummarySelector = createSelector(
         return total
       }, [])
 
-      const l2Summaries = Object.values(l2Txs).reduce<BridgeTransactionSummary[]>((total, tx) => {
+      const l2Summaries = Object.values(l2Txs ?? {}).reduce<BridgeTransactionSummary[]>((total, tx) => {
         // No pair
         const from = txnTypeToOrigin(tx.type) === 1 ? l1ChainId : l2ChainId
         const to = from === l1ChainId ? l2ChainId : l1ChainId
@@ -171,8 +170,8 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
-          fromName: NETWORK_DETAIL[from].chainName,
-          toName: NETWORK_DETAIL[to].chainName,
+          fromChainId: from,
+          toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
           log: []

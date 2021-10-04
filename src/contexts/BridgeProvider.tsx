@@ -9,7 +9,6 @@ import { ChainIdPair } from '../utils/arbitrum'
 import { INFURA_PROJECT_ID } from '../connectors'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
 import { chainIdSelector } from '../state/application/selectors'
-import { setFromBridgeNetwork, setToBridgeNetwork } from '../state/bridge/actions'
 
 type BridgeContextType = {
   bridge: Bridge | null
