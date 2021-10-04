@@ -52,6 +52,7 @@ import {
   DataTitle,
   Seperator
 } from './styleds'
+import CurrencyLogo from 'components/CurrencyLogo'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -288,12 +289,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 <Flex style={{ alignItems: 'center' }}>
                   {getFullDisplayBalance(reward?.amount)}
                   {chainId && reward.token.address && (
-                    <img
-                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                      alt="logo"
-                      width="20px"
-                      style={{ marginLeft: '3px' }}
-                    />
+                    <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
                   )}
                 </Flex>
               </div>
@@ -438,12 +434,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                                 <Flex style={{ alignItems: 'center' }}>
                                   {getFullDisplayBalance(reward?.amount)}
                                   {chainId && reward.token.address && (
-                                    <img
-                                      src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                                      alt="logo"
-                                      width="20px"
-                                      style={{ marginLeft: '3px' }}
-                                    />
+                                    <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
                                   )}
                                 </Flex>
                               </div>
@@ -550,12 +541,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <Flex style={{ alignItems: 'center' }}>
                     {getFullDisplayBalance(reward?.amount)}
                     {chainId && reward.token.address && (
-                      <img
-                        src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                        alt="logo"
-                        width="20px"
-                        style={{ marginLeft: '3px' }}
-                      />
+                      <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
                     )}
                   </Flex>
                 </div>
@@ -745,12 +731,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                           <Flex style={{ alignItems: 'center' }}>
                             {getFullDisplayBalance(reward?.amount)}
                             {chainId && reward.token.address && (
-                              <img
-                                src={`${getTokenLogoURL(reward.token.address, chainId)}`}
-                                alt="logo"
-                                width="20px"
-                                style={{ marginLeft: '3px' }}
-                              />
+                              <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
                             )}
                           </Flex>
                         </div>
