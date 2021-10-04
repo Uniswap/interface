@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { MainnetGasPrice, updateBlockNumber, updateMainnetGasPrices, setChainId } from './actions'
+import { MainnetGasPrice, updateBlockNumber, updateMainnetGasPrices, setConnectorInfo } from './actions'
 import { useDispatch } from 'react-redux'
 import { ChainId } from '@swapr/sdk'
 
@@ -92,7 +92,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (chainId && account) {
-      dispatch(setChainId({ chainId }))
+      dispatch(setConnectorInfo({ chainId, account }))
     }
   }, [account, chainId, dispatch])
 

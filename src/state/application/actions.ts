@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ChainId } from '@swapr/sdk'
 import { TokenList } from '@uniswap/token-lists'
+import { ApplicationState } from './reducer'
 
 export type PopupContent =
   | {
@@ -45,4 +45,6 @@ export const updateMainnetGasPrices = createAction<{ [variant in MainnetGasPrice
   'application/updateMainnetGasPrices'
 )
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
-export const setChainId = createAction<{ chainId: ChainId | undefined }>('application/setChainId')
+export const setConnectorInfo = createAction<Pick<ApplicationState, 'account' | 'chainId'>>(
+  'application/setConnectorInfo'
+)
