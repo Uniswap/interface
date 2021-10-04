@@ -82,9 +82,24 @@ export const PoolTitleContainer = styled.div`
   align-items: center;
 `
 
+export const UpcomingPoolsWrapper = styled.div`
+  position: relative;
+  padding: 8px 16px 8px 0;
+`
+
+export const NewText = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  font-weight: 500;
+  color: #ff537b;
+`
+
 export const StakedOnlyToggleWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 `
 
 export const StakedOnlyToggle = styled(Switch)`
@@ -303,7 +318,7 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 export const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.text6};
+  color: ${({ theme }) => theme.subText};
   &:hover {
     cursor: pointer;
     opacity: 0.6;

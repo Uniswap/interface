@@ -110,7 +110,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
           />
         </Flex>
 
-        <Flex grid-area="liq" alignItems="center" justifyContent="flex-center">
+        <Flex grid-area="liq" alignItems="center" justifyContent="flex-start">
           <ClickableText>
             <Trans>Staked TVL</Trans>
           </ClickableText>

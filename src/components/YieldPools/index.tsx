@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 
@@ -23,18 +23,22 @@ import {
   TotalRewardsContainer,
   TotalRewardsTitleWrapper,
   TotalRewardsTitle,
-  TotalRewardUSD
+  TotalRewardUSD,
+  StakedOnlyToggleWrapper,
+  StakedOnlyToggle,
+  StakedOnlyToggleText
 } from './styleds'
 import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 import { Flex } from 'rebass'
 import TotalRewardsDetail from './TotalRewardsDetail'
 
-const YieldPools = ({ stakedOnly }: { stakedOnly: boolean }) => {
+const YieldPools = () => {
   const { chainId } = useActiveWeb3React()
   const lgBreakpoint = useMedia('(min-width: 992px)')
   const { data: farmsByFairLaunch } = useFarmsData()
   const totalRewards = useFarmRewards(Object.values(farmsByFairLaunch).flat())
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
+  const [stakedOnly, setStakedOnly] = useState(false)
 
   return (
     <>
@@ -71,6 +75,17 @@ const YieldPools = ({ stakedOnly }: { stakedOnly: boolean }) => {
           </TotalRewardsContainer>
         </HarvestAllContainer>
       </HeadingContainer>
+
+      <StakedOnlyToggleWrapper>
+        <StakedOnlyToggle
+          className="staked-only-switch"
+          checked={stakedOnly}
+          onClick={() => setStakedOnly(!stakedOnly)}
+        />
+        <StakedOnlyToggleText>
+          <Trans>Staked Only</Trans>
+        </StakedOnlyToggleText>
+      </StakedOnlyToggleWrapper>
 
       {FAIRLAUNCH_ADDRESSES[chainId as ChainId].map(fairLaunchAddress => {
         return (
