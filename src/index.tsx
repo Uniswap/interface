@@ -24,6 +24,7 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
+import { isMobile } from './utils/userAgent'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 

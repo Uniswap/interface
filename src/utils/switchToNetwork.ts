@@ -1,6 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexStripZeros } from '@ethersproject/bytes'
 import { Web3Provider } from '@ethersproject/providers'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { BigNumber, utils } from 'ethers'
 
 import { addNetwork } from './addNetwork'
 
@@ -18,7 +19,7 @@ export async function switchToNetwork({ library, chainId }: SwitchNetworkArgumen
   if (!chainId && library?.getNetwork) {
     ;({ chainId } = await library.getNetwork())
   }
-  const formattedChainId = utils.hexStripZeros(BigNumber.from(chainId).toHexString())
+  const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
   try {
     await library?.provider.request({
       method: 'wallet_switchEthereumChain',

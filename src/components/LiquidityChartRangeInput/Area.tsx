@@ -1,5 +1,4 @@
 import { area, curveStepAfter, ScaleLinear } from 'd3'
-import inRange from 'lodash/inRange'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
@@ -36,7 +35,10 @@ export const Area = ({
             .x((d: unknown) => xScale(xValue(d as ChartEntry)))
             .y1((d: unknown) => yScale(yValue(d as ChartEntry)))
             .y0(yScale(0))(
-            series.filter((d) => inRange(xScale(xValue(d)), 0, innerWidth)) as Iterable<[number, number]>
+            series.filter((d) => {
+              const value = xScale(xValue(d))
+              return value > 0 && value <= innerWidth
+            }) as Iterable<[number, number]>
           ) ?? undefined
         }
       />
