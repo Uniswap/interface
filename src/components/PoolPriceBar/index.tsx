@@ -20,7 +20,7 @@ const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
 
 const Section = styled(Card)`
-  padding: 0.75rem 1.5rem;
+  padding: 16px;
   border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
 `
@@ -100,7 +100,7 @@ export function PoolPriceBar({
       {noLiquidity && (
         <>
           <PoolPriceBarItem>
-            <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
+            <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
               {nativeB?.symbol} <Trans>per</Trans> {nativeA?.symbol}
             </Text>
             <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
@@ -109,7 +109,7 @@ export function PoolPriceBar({
           </PoolPriceBarItem>
 
           <PoolPriceBarItem>
-            <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
+            <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
               {nativeA?.symbol} <Trans>per</Trans> {nativeB?.symbol}
             </Text>
             <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
@@ -120,7 +120,7 @@ export function PoolPriceBar({
       )}
 
       <PoolPriceBarItem isAdd={!noLiquidity}>
-        <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
+        <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
           <Trans>Share of Pool</Trans>
         </Text>
         <TYPE.black fontWeight={500} color={theme.text} fontSize={14}>
@@ -147,7 +147,7 @@ export function ToggleComponent({
   const [showDetails, setShowDetails] = useState(true)
   return (
     <>
-      <FixedHeightRow>
+      <FixedHeightRow style={{ marginBottom: '16px' }}>
         <AutoRow>
           <Text fontWeight={500} fontSize={14} color={theme.text2}>
             {title}

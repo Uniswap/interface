@@ -75,7 +75,7 @@ export const ActiveText = styled.div`
 `
 
 export const Section = styled(Card)`
-  padding: 12px 16px;
+  padding: 16px;
   border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
 `

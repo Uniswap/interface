@@ -59,7 +59,7 @@ const RowFlat2 = (props: { children: React.ReactNode }) => {
 }
 
 const Section = styled(Card)`
-  padding: 12px 16px;
+  padding: 16px;
   border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
 `
@@ -125,10 +125,7 @@ export default function AddLiquidity({
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
 
-  const [amp, setAmp] = useState('')
-  const onAmpChange = (e: any) => {
-    if (e.toString().length < 20) setAmp(e)
-  }
+  const amp = pair?.amp || JSBI.BigInt(0)
 
   const ampConvertedInBps = !!amp.toString()
     ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
@@ -361,7 +358,6 @@ export default function AddLiquidity({
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
-    setAmp('')
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
