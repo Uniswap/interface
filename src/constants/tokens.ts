@@ -40,7 +40,7 @@ export const USDC = new Token(
 )
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
-  '0xe865dF68133fcEd7c2285ff3896B406CAfAa2dB8',
+  '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
   6,
   'USDC',
   'USD//C'
