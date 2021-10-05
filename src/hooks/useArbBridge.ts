@@ -13,6 +13,7 @@ import {
   updateBridgeTxnWithdrawalInfo
 } from '../state/bridgeTransactions/actions'
 import { OutgoingMessageState } from 'arb-ts'
+import { BridgeTransactionSummary } from '../state/bridgeTransactions/hooks'
 
 export const useBridge = () => {
   return useContext(BridgeContext)
@@ -101,42 +102,43 @@ export const useArbBridge = () => {
   )
 
   const triggerOutboxEth = useCallback(
-    async ({ batchIndex, batchNumber, value }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => {
-      console.log({ account, bridge, l1ChainId, batchIndex, batchNumber, value })
+    async (l2Tx: BridgeTransactionSummary) => {
+      const { batchIndex, batchNumber, value } = l2Tx
       if (!account || !bridge || !l1ChainId || !batchIndex || !batchNumber || !value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
+      console.log({ l2Tx })
 
-      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
-      console.log({ l2ToL1 })
+      const l1Tx = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+
       dispatch(
         addBridgeTxn({
           assetName: 'ETH',
           assetType: BridgeAssetType.ETH,
           type: 'outbox',
           value,
-          txHash: l2ToL1.hash,
+          txHash: l1Tx.hash,
           chainId: l1ChainId,
           sender: account
         })
       )
 
       try {
-        const l2ToL1Receipt = await l2ToL1.wait()
+        const l1Receipt = await l1Tx.wait()
         dispatch(
           updateBridgeTxnReceipt({
             chainId: l1ChainId,
-            txHash: l2ToL1.hash,
-            receipt: l2ToL1Receipt
+            txHash: l1Tx.hash,
+            receipt: l1Receipt
           })
         )
         if (l1ChainId && l2ChainId) {
           dispatch(
             updateBridgeTxnPartnerHash({
               chainId: l1ChainId,
-              txHash: l2ToL1.hash,
-              partnerTxHash: l2ToL1.hash,
+              txHash: l1Tx.hash,
+              partnerTxHash: l2Tx.txHash,
               partnerChainId: l2ChainId
             })
           )
@@ -145,15 +147,11 @@ export const useArbBridge = () => {
         dispatch(
           updateBridgeTxnWithdrawalInfo({
             chainId: l1ChainId,
-            txHash: l2ToL1.hash,
-            batchIndex,
-            batchNumber,
+            txHash: l1Tx.hash,
             outgoingMessageState: OutgoingMessageState.EXECUTED
           })
         )
-
-        console.log({ l2ToL1, l2ToL1Receipt })
-        return l2ToL1Receipt
+        return l1Receipt
       } catch (err) {
         throw err
       }

@@ -123,8 +123,7 @@ export default function Bridge() {
   )
 
   const handleCollectConfirm = useCallback(async () => {
-    const { batchIndex, batchNumber, value } = collectableTx
-    await triggerOutboxEth({ batchIndex, batchNumber, value })
+    await triggerOutboxEth(collectableTx)
     setStep(BridgeStep.Success)
   }, [collectableTx, triggerOutboxEth])
 

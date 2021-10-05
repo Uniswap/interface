@@ -14,7 +14,10 @@ export const PendingReasons = {
 
 export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
 
-export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
+export type BridgeTransactionSummary = Pick<
+  BridgeTxn,
+  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber'
+> & {
   fromChainId: ChainId
   toChainId: ChainId
   log: BridgeTransactionLog[]
@@ -173,6 +176,7 @@ export const useBridgeTransactionsSummary = () => {
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
+          txHash: tx.txHash,
           batchIndex: tx.batchIndex,
           batchNumber: tx.batchNumber,
           pendingReason: tx.receipt?.status ? undefined : PendingReasons.TX_UNCONFIRMED,
@@ -219,6 +223,7 @@ export const useBridgeTransactionsSummary = () => {
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
           value: tx.value,
+          txHash: tx.txHash,
           batchNumber: tx.batchNumber,
           batchIndex: tx.batchIndex,
           fromChainId: from,
