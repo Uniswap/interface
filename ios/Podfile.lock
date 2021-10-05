@@ -2,6 +2,17 @@ PODS:
   - boost-for-react-native (1.63.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - ExpoModulesCore (0.2.0):
+    - ExpoModulesCore/Core (= 0.2.0)
+    - ExpoModulesCore/Interfaces (= 0.2.0)
+    - UMCore
+  - ExpoModulesCore/Core (0.2.0):
+    - UMCore
+  - ExpoModulesCore/Interfaces (0.2.0):
+    - ExpoModulesCore/Core
+    - UMCore
+  - EXSecureStore (10.2.0):
+    - UMCore
   - FBLazyVector (0.65.1)
   - FBReactNativeSpec (0.65.1):
     - RCT-Folly (= 2021.04.26.00)
@@ -342,12 +353,22 @@ PODS:
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.0)
+  - UMAppLoader (2.2.0)
+  - UMCore (7.1.2)
+  - UMReactNativeAdapter (6.3.9):
+    - ExpoModulesCore
+    - React-Core
+    - UMCore
+  - UMTaskManagerInterface (6.2.0):
+    - UMCore
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
+  - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Flipper (= 0.111.0)
@@ -400,6 +421,10 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
+  - "UMCore (from `../node_modules/@unimodules/core/ios`)"
+  - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
+  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -424,6 +449,10 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  ExpoModulesCore:
+    :path: "../node_modules/expo-modules-core/ios"
+  EXSecureStore:
+    :path: "../node_modules/expo-secure-store/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -482,6 +511,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  UMAppLoader:
+    :path: "../node_modules/unimodules-app-loader/ios"
+  UMCore:
+    :path: "../node_modules/@unimodules/core/ios"
+  UMReactNativeAdapter:
+    :path: "../node_modules/@unimodules/react-native-adapter/ios"
+  UMTaskManagerInterface:
+    :path: "../node_modules/unimodules-task-manager-interface/ios"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -489,6 +526,8 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
+  ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
+  EXSecureStore: 1aa80d49a3a101418bbd2675e2a0d32dceea10c2
   FBLazyVector: 33c82491102f20ecddb6c6a2c273696ace3191e0
   FBReactNativeSpec: df8f81d2a7541ee6755a047b398a5cb5a72acd0e
   Flipper: 4cc0b8f0141f9042f1fae58dbd0cc3c7bd948ed6
@@ -531,9 +570,13 @@ SPEC CHECKSUMS:
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   RNScreens: 0591543e343c7444ea1756b6265d81a4295922c9
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  UMAppLoader: 21af63390e55c82e037fb9752d93114a80ecf16e
+  UMCore: ce3a4faa010239063b8343895b29a6d97b01069d
+  UMReactNativeAdapter: d03cefd0e4e4179ab8c490408589f1c8a6c8b785
+  UMTaskManagerInterface: 2be431101b73604e64fbfffcf759336f9d8fccbb
   Yoga: aa0cb45287ebe1004c02a13f279c55a95f1572f4
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 5f7ca9734bf4db0724cfbbfe66b2043c09601c0f
+PODFILE CHECKSUM: 1469d752528390ff4b914b0a6394b9f15d2ce0c9
 
 COCOAPODS: 1.11.2
