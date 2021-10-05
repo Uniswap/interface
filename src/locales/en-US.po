@@ -746,7 +746,6 @@ msgid "Invalid recipient"
 msgstr "Invalid recipient"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "Inventory ratio:"
 
@@ -1106,6 +1105,10 @@ msgstr "Price:"
 msgid "Prices"
 msgstr "Prices"
 
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr "Prices and Pool share"
+
 #: src/pages/Static/About.tsx
 msgid "Privacy"
 msgstr "Privacy"
@@ -1124,7 +1127,6 @@ msgstr "Providing frictionless crypto liquidity with greater flexibility and ext
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "Ratio"
 
@@ -1623,7 +1625,6 @@ msgid "and"
 msgstr "and"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr "and Pool share"
 

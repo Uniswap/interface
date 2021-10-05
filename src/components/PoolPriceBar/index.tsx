@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { ButtonEmpty } from 'components/Button'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import { FixedHeightRow } from 'components/PositionCard'
 import QuestionHelper from 'components/QuestionHelper'
 import { Currency, Fraction, JSBI, Pair, Percent, Price } from 'libs/sdk/src'
@@ -19,14 +19,13 @@ import { TYPE } from '../../theme'
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
 
-const OutlineCard2 = styled(OutlineCard)`
+const Section = styled(Card)`
   padding: 0.75rem 1.5rem;
-  border: 2px solid ${({ theme }) => theme.bg3};
-  border-style: dashed;
+  border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
 `
 
-const OutlineCard3 = styled(OutlineCard2)`
+const OutlineCard3 = styled(Section)`
   text-align: left;
 `
 
@@ -43,11 +42,39 @@ export const Separator = styled.div`
   background-color: ${({ theme }) => theme.border};
 `
 
+const PoolPriceBarWrapper = styled.div<{ isAdd?: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 8px;
+
+  @media only screen and (min-width: 1000px) {
+    grid-template-columns: ${({ isAdd }) => (isAdd ? '1fr' : 'repeat(3, 1fr)')};
+  }
+`
+
+const PoolPriceBarItem = styled.div<{ isAdd?: boolean }>`
+  display: flex;
+  justify-content: space-between;
+
+  @media only screen and (min-width: 1000px) {
+    flex-direction: ${({ isAdd }) => (isAdd ? 'row' : 'column-reverse')};
+  }
+`
+
 export const DefaultPriceRange = () => {
   return (
     <>
       <TYPE.black>Max: {DEFAULT_MAX_PRICE}</TYPE.black>
       <TYPE.black>Min: {DEFAULT_MIN_PRICE}</TYPE.black>
+    </>
+  )
+}
+
+export const InvalidAMPPriceRange = () => {
+  return (
+    <>
+      <TYPE.black>-</TYPE.black>
+      <TYPE.black>-</TYPE.black>
     </>
   )
 }
@@ -69,43 +96,41 @@ export function PoolPriceBar({
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
   return (
-    <AutoColumn gap="md">
+    <PoolPriceBarWrapper isAdd={!noLiquidity}>
       {noLiquidity && (
         <>
-          <AutoRow justify="space-between" gap="4px">
-            <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+          <PoolPriceBarItem>
+            <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
               {nativeB?.symbol} <Trans>per</Trans> {nativeA?.symbol}
             </Text>
-            <TYPE.black fontWeight={500} fontSize={14}>
+            <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
               {price?.toSignificant(6) ?? '-'}
             </TYPE.black>
-          </AutoRow>
+          </PoolPriceBarItem>
 
-          <AutoRow justify="space-between" gap="4px">
-            <Text fontWeight={500} fontSize={12} color={theme.text2} pt={1}>
+          <PoolPriceBarItem>
+            <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
               {nativeA?.symbol} <Trans>per</Trans> {nativeB?.symbol}
             </Text>
-            <TYPE.black fontWeight={500} fontSize={14}>
+            <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
               {price?.invert()?.toSignificant(6) ?? '-'}
             </TYPE.black>
-          </AutoRow>
-
-          <Separator />
+          </PoolPriceBarItem>
         </>
       )}
 
-      <AutoRow justify="space-between" gap="4px">
-        <Text fontWeight={500} fontSize={14} color={theme.primaryText2} pt={1}>
-          <Trans>Share of Pool</Trans>:
+      <PoolPriceBarItem isAdd={!noLiquidity}>
+        <Text fontWeight={500} fontSize={14} color={theme.text} pt={1}>
+          <Trans>Share of Pool</Trans>
         </Text>
-        <TYPE.black fontWeight={500} fontSize={14}>
+        <TYPE.black fontWeight={500} color={theme.text} fontSize={14}>
           {noLiquidity && price
             ? '100'
             : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
           %
         </TYPE.black>
-      </AutoRow>
-    </AutoColumn>
+      </PoolPriceBarItem>
+    </PoolPriceBarWrapper>
   )
 }
 
@@ -184,29 +209,30 @@ export function PoolPriceRangeBar({
   amplification?: Fraction
 }) {
   const theme = useContext(ThemeContext)
-  // const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
-  // const show = !!priceRangeCalc(price, amp)[0]
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 
   const existedPriceRange = () => {
+    const amp = amplification?.divide(JSBI.BigInt(10000))
     const show = !!pair && !!priceRangeCalcByPair(pair)[0][0]
     return (
       <AutoColumn gap="md">
         <AutoRow justify="space-between" gap="4px">
-          <AutoColumn>
+          <AutoColumn gap="sm">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
-            {show && !!pair ? (
+            {!amp || amp.lessThan('1') ? (
+              <InvalidAMPPriceRange />
+            ) : show && !!pair ? (
               <>
-                <TYPE.black>
+                <TYPE.black color={theme.text}>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
-                <TYPE.black>
+                <TYPE.black color={theme.text}>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
@@ -217,19 +243,21 @@ export function PoolPriceRangeBar({
               <DefaultPriceRange />
             )}
           </AutoColumn>
-          <AutoColumn justify="end">
+          <AutoColumn gap="sm" justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeB?.symbol}/{nativeA?.symbol}
             </Text>
-            {show && !!pair ? (
+            {!amp || amp.lessThan('1') ? (
+              <InvalidAMPPriceRange />
+            ) : show && !!pair ? (
               <>
-                <TYPE.black>
+                <TYPE.black color={theme.text}>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
-                <TYPE.black>
+                <TYPE.black color={theme.text}>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
@@ -251,27 +279,39 @@ export function PoolPriceRangeBar({
     return (
       <AutoColumn gap="md">
         <AutoRow justify="space-between" gap="4px">
-          <AutoColumn>
+          <AutoColumn gap="sm">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
-            {show ? (
+            {!amp || amp.lessThan('1') ? (
+              <InvalidAMPPriceRange />
+            ) : show ? (
               <>
-                <TYPE.black>Max: {priceRangeCalc(price, amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-                <TYPE.black>Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
+                <TYPE.black color={theme.text}>
+                  Max: {priceRangeCalc(price, amp)[0]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+                <TYPE.black color={theme.text}>
+                  Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
               </>
             ) : (
               <DefaultPriceRange />
             )}
           </AutoColumn>
-          <AutoColumn justify="end">
+          <AutoColumn gap="sm" justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeB?.symbol}/{nativeA?.symbol}
             </Text>
-            {show ? (
+            {!amp || amp.lessThan('1') ? (
+              <InvalidAMPPriceRange />
+            ) : show ? (
               <>
-                <TYPE.black>Max: {priceRangeCalc(price?.invert(), amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-                <TYPE.black>Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
+                <TYPE.black color={theme.text}>
+                  Max: {priceRangeCalc(price?.invert(), amp)[0]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+                <TYPE.black color={theme.text}>
+                  Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
               </>
             ) : (
               <DefaultPriceRange />

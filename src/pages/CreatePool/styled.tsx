@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { AutoColumn } from 'components/Column'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import NumericalInput from 'components/NumericalInput'
 
 export const PageWrapper = styled.div`
@@ -74,10 +74,9 @@ export const ActiveText = styled.div`
   font-size: 16px;
 `
 
-export const OutlineCard2 = styled(OutlineCard)`
+export const Section = styled(Card)`
   padding: 12px 16px;
-  border: 2px solid ${({ theme }) => theme.bg3};
-  border-style: dashed;
+  border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
 `
 
