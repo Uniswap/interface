@@ -62,7 +62,7 @@ export function useClientSideSmartOrderRouter(
           },
           amount: amount.quotient.toString(),
         })
-        setQuote(quote)
+        // setQuote(quote)
       } catch (e) {
         setIsError(true)
         setQuote(undefined)

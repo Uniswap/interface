@@ -1,17 +1,12 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import {
-    IPoolProvider,
-    routeAmountsToString,
-    SwapRoute
-} from '@uniswap/smart-order-router'
+import { IPoolProvider, routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { GetQuoteResult } from 'state/routing/types'
 
-import { PoolInRoute } from './types'
-
+import { PoolInRoute } from '../worker/smartOrderRouter/types'
 
 // transforms a SwapRoute into a GetQuoteResult
 export function processSwapRoute(
-  tradeType: TradeType,
+  type: 'exactIn' | 'exactOut',
   amount: CurrencyAmount<Currency>,
   poolProvider: IPoolProvider,
   {
@@ -43,12 +38,13 @@ export function processSwapRoute(
 
       let edgeAmountIn = undefined
       if (i == 0) {
-        edgeAmountIn = tradeType === TradeType.EXACT_INPUT ? amount.quotient.toString() : quote.quotient.toString()
+        edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
       }
 
       let edgeAmountOut = undefined
       if (i == pools.length - 1) {
-        edgeAmountOut = tradeType === TradeType.EXACT_OUTPUT ? quote.quotient.toString() : amount.quotient.toString()
+        //todo validate in/out
+        edgeAmountOut = type === 'exactOut' ? quote.quotient.toString() : amount.quotient.toString()
       }
 
       curRoute.push({

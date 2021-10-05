@@ -19,8 +19,10 @@ import {
   UniswapMulticallProvider,
   URISubgraphProvider,
 } from '@uniswap/smart-order-router'
+import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
 import { ethers } from 'ethers'
+
 
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
@@ -44,8 +46,12 @@ class MetricLogger extends IMetric {
   }
 
   putMetric(key: string, value: number, unit?: MetricLoggerUnit) {
-    //TODO(judo): log GA event
-    console.info({ key, value, unit }, `[Metric]: ${key}: ${value} | ${unit ? unit : ''}`)
+    timing({
+      category: 'Routing API',
+      variable: `${key} | ${unit}`,
+      value,
+      label: 'client'
+    })
   }
 }
 setGlobalMetric(new MetricLogger())

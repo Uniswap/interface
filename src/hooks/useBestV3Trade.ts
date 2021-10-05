@@ -23,6 +23,7 @@ export function useBestV3Trade(
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
 } {
+  // TODO(judo): differentiate between setting and support
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
@@ -30,7 +31,7 @@ export function useBestV3Trade(
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+    isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
 
@@ -51,6 +52,7 @@ export function useBestV3Trade(
   const useFallback = !routingAPIEnabled || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
 
   // only use client side router if routing api trade failed
+  // TODO(judo): should use old v3 algorithm for l2s
   const bestV3Trade = useClientSideV3Trade(
     tradeType,
     useFallback ? debouncedAmount : undefined,
