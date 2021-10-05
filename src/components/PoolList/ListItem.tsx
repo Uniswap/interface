@@ -158,7 +158,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
   }
 
   const formatPriceMax = (price?: Fraction) => {
-    return !price ? '' : price.equalTo(new Fraction('-1')) ? '♾️' : price.toSignificant(6)
+    return !price || price.equalTo(new Fraction('-1')) ? '♾️' : price.toSignificant(6)
   }
 
   return (
