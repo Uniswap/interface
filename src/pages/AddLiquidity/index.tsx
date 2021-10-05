@@ -3,13 +3,13 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus, AlertTriangle } from 'react-feather'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text, Flex } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard, OutlineCard } from '../../components/Card'
+import Card from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -35,15 +35,13 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
-import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
+import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar, PoolPriceRangeBarToggle } from './PoolPriceBar'
+import { PoolPriceBar, PoolPriceRangeBarToggle } from 'components/PoolPriceBar'
 import QuestionHelper from 'components/QuestionHelper'
-import NumericalInput from 'components/NumericalInput'
 import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
 import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
-import { useDerivedPairInfo } from 'state/pair/hooks'
 import Loader from 'components/Loader'
 import CurrentPrice from 'components/CurrentPrice'
 
@@ -60,16 +58,10 @@ const RowFlat2 = (props: { children: React.ReactNode }) => {
   )
 }
 
-const OutlineCard2 = styled(OutlineCard)`
-  padding: 12px 16px;
-  border: 2px solid ${({ theme }) => theme.bg3};
-  border-style: dashed;
+const Section = styled(Card)`
+  padding: 16px;
+  border: 1px solid ${({ theme }) => theme.border4};
   border-radius: 8px;
-`
-
-const NumericalInput2 = styled(NumericalInput)`
-  width: 100%;
-  height: 60px;
 `
 
 const USDPrice = styled.div`
@@ -95,16 +87,12 @@ const Warning = styled.div`
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
-  },
-  history
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; pairAddress?: string }>) {
+  }
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
-  const isCreate = !pairAddress
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
-
-  const { pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const currencyAIsETHER = !!(chainId && currencyA && currencyEquals(currencyA, ETHER))
   const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
@@ -137,13 +125,7 @@ export default function AddLiquidity({
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
 
-  const [amp, setAmp] = useState('')
-  const onAmpChange = (e: any) => {
-    if (e.toString().length < 20) setAmp(e)
-  }
-
-  const poolsList = useMemo(() => pairs.map(([, pair]) => pair).filter(pair => pair !== null), [pairs])
-  const isPoolExisted = poolsList.length > 0
+  const amp = pair?.amp || JSBI.BigInt(0)
 
   const ampConvertedInBps = !!amp.toString()
     ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
@@ -156,7 +138,7 @@ export default function AddLiquidity({
     !isZero(unAmplifiedPairAddress)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
-  const isValid = !(error || (!pairAddress && +amp < 1 ? 'Enter amp (>=1)' : ''))
+  const isValid = !error
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -222,117 +204,84 @@ export default function AddLiquidity({
       args: Array<string | string[] | number>,
       value: BigNumber | null
 
-    if (pairAddress) {
-      if (!pair) return
+    if (!pair) return
 
-      if (currencyA === ETHER || currencyB === ETHER) {
-        const tokenBIsETH = currencyB === ETHER
+    if (currencyA === ETHER || currencyB === ETHER) {
+      const tokenBIsETH = currencyB === ETHER
 
-        const virtualReserveToken = pair.virtualReserveOf(
-          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token
-        )
-        const virtualReserveETH = pair.virtualReserveOf(
-          wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token
-        )
+      const virtualReserveToken = pair.virtualReserveOf(
+        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token
+      )
+      const virtualReserveETH = pair.virtualReserveOf(
+        wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token
+      )
 
-        const currentRate = JSBI.divide(
-          JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-          virtualReserveToken.raw
-        )
+      const currentRate = JSBI.divide(
+        JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+        virtualReserveToken.raw
+      )
 
-        const allowedSlippageAmount = JSBI.divide(
-          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-          JSBI.BigInt(10000)
-        )
+      const allowedSlippageAmount = JSBI.divide(
+        JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+        JSBI.BigInt(10000)
+      )
 
-        const vReserveRatioBounds = [
-          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-          JSBI.add(currentRate, allowedSlippageAmount).toString()
-        ]
+      const vReserveRatioBounds = [
+        JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+        JSBI.add(currentRate, allowedSlippageAmount).toString()
+      ]
 
-        estimate = router.estimateGas.addLiquidityETH
-        method = router.addLiquidityETH
-        args = [
-          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-          pair.address,
-          // 40000,                                                                              //ampBps
-          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-          vReserveRatioBounds,
-          account,
-          deadline.toHexString()
-        ]
-        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
-      } else {
-        const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
-        const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
-
-        const currentRate = JSBI.divide(
-          JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-          virtualReserveA.raw
-        )
-
-        const allowedSlippageAmount = JSBI.divide(
-          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-          JSBI.BigInt(10000)
-        )
-
-        const vReserveRatioBounds = [
-          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-          JSBI.add(currentRate, allowedSlippageAmount).toString()
-        ]
-
-        estimate = router.estimateGas.addLiquidity
-        method = router.addLiquidity
-        args = [
-          wrappedCurrency(currencyA, chainId)?.address ?? '',
-          wrappedCurrency(currencyB, chainId)?.address ?? '',
-          pair.address,
-          // 40000,                                                                              //ampBps
-          parsedAmountA.raw.toString(),
-          parsedAmountB.raw.toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
-          amountsMin[Field.CURRENCY_B].toString(),
-          vReserveRatioBounds,
-          account,
-          deadline.toHexString()
-        ]
-        value = null
-      }
+      estimate = router.estimateGas.addLiquidityETH
+      method = router.addLiquidityETH
+      args = [
+        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+        pair.address,
+        // 40000,                                                                              //ampBps
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+        vReserveRatioBounds,
+        account,
+        deadline.toHexString()
+      ]
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      if (!ampConvertedInBps) return
-      if (currencyA === ETHER || currencyB === ETHER) {
-        const tokenBIsETH = currencyB === ETHER
-        estimate = router.estimateGas.addLiquidityNewPoolETH
-        method = router.addLiquidityNewPoolETH
-        args = [
-          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-          ampConvertedInBps.toSignificant(5), //ampBps
-          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-          account,
-          deadline.toHexString()
-        ]
-        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
-      } else {
-        estimate = router.estimateGas.addLiquidityNewPool
-        method = router.addLiquidityNewPool
-        args = [
-          wrappedCurrency(currencyA, chainId)?.address ?? '',
-          wrappedCurrency(currencyB, chainId)?.address ?? '',
-          ampConvertedInBps.toSignificant(5), //ampBps
-          parsedAmountA.raw.toString(),
-          parsedAmountB.raw.toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
-          amountsMin[Field.CURRENCY_B].toString(),
-          account,
-          deadline.toHexString()
-        ]
-        value = null
-      }
+      const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
+      const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+
+      const currentRate = JSBI.divide(
+        JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+        virtualReserveA.raw
+      )
+
+      const allowedSlippageAmount = JSBI.divide(
+        JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+        JSBI.BigInt(10000)
+      )
+
+      const vReserveRatioBounds = [
+        JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+        JSBI.add(currentRate, allowedSlippageAmount).toString()
+      ]
+
+      estimate = router.estimateGas.addLiquidity
+      method = router.addLiquidity
+      args = [
+        wrappedCurrency(currencyA, chainId)?.address ?? '',
+        wrappedCurrency(currencyB, chainId)?.address ?? '',
+        pair.address,
+        // 40000,                                                                              //ampBps
+        parsedAmountA.raw.toString(),
+        parsedAmountB.raw.toString(),
+        amountsMin[Field.CURRENCY_A].toString(),
+        amountsMin[Field.CURRENCY_B].toString(),
+        vReserveRatioBounds,
+        account,
+        deadline.toHexString()
+      ]
+      value = null
     }
+
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -370,15 +319,7 @@ export default function AddLiquidity({
   }
 
   const modalHeader = () => {
-    return isCreate ? (
-      <AutoColumn gap="5px">
-        <RowFlat>
-          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {nativeA?.symbol + '/' + nativeB?.symbol}
-          </Text>
-        </RowFlat>
-      </AutoColumn>
-    ) : (
+    return (
       <AutoColumn gap="5px">
         <RowFlat style={{ marginTop: '20px' }}>
           <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
@@ -403,7 +344,7 @@ export default function AddLiquidity({
         price={price}
         currencies={currencies}
         parsedAmounts={parsedAmounts}
-        noLiquidity={isCreate}
+        noLiquidity={false}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
         amplification={ampConvertedInBps}
@@ -415,55 +356,8 @@ export default function AddLiquidity({
     nativeA?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${nativeB?.symbol}`
 
-  const isWrappedTokenInPool = useCallback(
-    (currency: Currency | null | undefined, selectedCurrency: Currency) => {
-      return (
-        pairAddress &&
-        chainId &&
-        currency &&
-        ((currencyEquals(currency, ETHER) && currencyEquals(selectedCurrency, WETH[chainId])) ||
-          (currencyEquals(currency, WETH[chainId]) && currencyEquals(selectedCurrency, ETHER)))
-      )
-    },
-    [chainId, pairAddress]
-  )
-  const handleCurrencyASelect = useCallback(
-    (selectedCurrencyA: Currency) => {
-      const newCurrencyIdA = currencyId(selectedCurrencyA, chainId)
-
-      // support WETH
-      if (isWrappedTokenInPool(currencyA, selectedCurrencyA)) {
-        history.push(`/add/${newCurrencyIdA}/${currencyIdB}/${pairAddress}`)
-      } else if (newCurrencyIdA === currencyIdB) {
-        history.push(`/add/${currencyIdB}/${currencyIdA}`)
-      } else {
-        history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
-      }
-    },
-    [currencyIdB, history, currencyIdA, isWrappedTokenInPool, currencyA, pairAddress, chainId]
-  )
-  const handleCurrencyBSelect = useCallback(
-    (selectedCurrencyB: Currency) => {
-      const newCurrencyIdB = currencyId(selectedCurrencyB, chainId)
-
-      if (isWrappedTokenInPool(currencyB, selectedCurrencyB)) {
-        history.push(`/add/${currencyIdA}/${newCurrencyIdB}/${pairAddress}`)
-      } else if (newCurrencyIdB === currencyIdA) {
-        if (currencyIdB) {
-          history.push(`/add/${currencyIdB}/${currencyIdA}`)
-        } else {
-          history.push(`/add/${newCurrencyIdB}`)
-        }
-      } else {
-        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
-      }
-    },
-    [currencyIdA, history, currencyIdB, isWrappedTokenInPool, currencyB, pairAddress, chainId]
-  )
-
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
-    setAmp('')
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
@@ -505,7 +399,7 @@ export default function AddLiquidity({
   return (
     <>
       <AppBody>
-        <AddRemoveTabs creating={isCreate} adding={true} />
+        <AddRemoveTabs creating={false} adding={true} />
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -515,7 +409,7 @@ export default function AddLiquidity({
             content={() =>
               !linkToUnamplifiedPool ? (
                 <ConfirmationModalContent
-                  title={isCreate ? t`You are creating a pool` : t`You will receive`}
+                  title={t`You will receive`}
                   onDismiss={handleDismissConfirmation}
                   topContent={modalHeader}
                   bottomContent={modalBottom}
@@ -547,29 +441,6 @@ export default function AddLiquidity({
             pendingText={pendingText}
           />
           <AutoColumn gap="20px">
-            {isCreate && (
-              <ColumnCenter>
-                <BlueCard>
-                  <AutoColumn gap="10px">
-                    {isPoolExisted && (
-                      <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                        <Trans>Note: There are existing pools for this token pair. Please check</Trans>{' '}
-                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>
-                          <Trans>here</Trans>
-                        </Link>
-                      </TYPE.link>
-                    )}
-                    <TYPE.link fontSize="14px" lineHeight="22px" color={'text1'} fontWeight="normal">
-                      <Trans>
-                        You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
-                        supply below will set the initial price of this pool. Once you are satisfied with the rate,
-                        proceed to supply liquidity.
-                      </Trans>
-                    </TYPE.link>
-                  </AutoColumn>
-                </BlueCard>
-              </ColumnCenter>
-            )}
             <div>
               <CurrencyInputPanel
                 value={formattedAmounts[Field.CURRENCY_A]}
@@ -577,11 +448,10 @@ export default function AddLiquidity({
                 onMax={() => {
                   onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                 }}
-                onCurrencySelect={handleCurrencyASelect}
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
-                disableCurrencySelect={!!pairAddress}
+                disableCurrencySelect={true}
                 showCommonBases
               />
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
@@ -608,13 +478,12 @@ export default function AddLiquidity({
               <CurrencyInputPanel
                 value={formattedAmounts[Field.CURRENCY_B]}
                 onUserInput={onFieldBInput}
-                onCurrencySelect={handleCurrencyBSelect}
                 onMax={() => {
                   onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                 }}
                 showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                 currency={currencies[Field.CURRENCY_B]}
-                disableCurrencySelect={!!pairAddress}
+                disableCurrencySelect={true}
                 id="add-liquidity-input-tokenb"
                 showCommonBases
               />
@@ -637,16 +506,16 @@ export default function AddLiquidity({
             </div>
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <OutlineCard2 padding="0px" borderRadius={'20px'}>
-                <Row padding="0 0 1rem 0" style={{ justifyContent: 'center' }}>
-                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                    {noLiquidity ? t`Ratio` : t`Prices`} <Trans>and Pool share</Trans>
+              <Section padding="0px" borderRadius={'20px'}>
+                <Row padding="0 0 1rem 0">
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
+                    <Trans>Prices and Pool share</Trans>
                   </TYPE.subHeader>
                 </Row>
 
                 {!noLiquidity && (
                   <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
-                    <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                    <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
                       <Trans>Current Price:</Trans>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={500} fontSize={14}>
@@ -660,7 +529,7 @@ export default function AddLiquidity({
                 )}
 
                 <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
-                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
                     <Trans>Inventory ratio:</Trans>
                   </TYPE.subHeader>
                   <TYPE.black fontWeight={500} fontSize={14}>
@@ -675,7 +544,7 @@ export default function AddLiquidity({
                   price={price}
                   pair={pair}
                 />
-              </OutlineCard2>
+              </Section>
             )}
 
             <RowFlat2>
@@ -693,11 +562,6 @@ export default function AddLiquidity({
               />
             </RowFlat2>
 
-            {!pairAddress && (
-              <LightCard padding="0 0.75rem" borderRadius={'10px'}>
-                <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
-              </LightCard>
-            )}
             {currencies[Field.CURRENCY_A] &&
               currencies[Field.CURRENCY_B] &&
               pairState !== PairState.INVALID &&
@@ -711,7 +575,7 @@ export default function AddLiquidity({
               )}
 
             {(!!pairAddress || +amp >= 1) && (
-              <OutlineCard2>
+              <Section>
                 <AutoRow>
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
                     <Trans>Dynamic Fee Range</Trans>:{' '}
@@ -723,7 +587,7 @@ export default function AddLiquidity({
                     text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
                   />
                 </AutoRow>
-              </OutlineCard2>
+              </Section>
             )}
 
             {showSanityPriceWarning && (

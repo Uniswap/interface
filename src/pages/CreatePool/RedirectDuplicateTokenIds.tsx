@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
-import AddLiquidity from './index'
+import CreatePool from './index'
 
 export default function RedirectDuplicateTokenIds(
   props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>
@@ -11,7 +11,7 @@ export default function RedirectDuplicateTokenIds(
     }
   } = props
   if (currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
-    return <Redirect to={`/add/${currencyIdA}`} />
+    return <Redirect to={`/create/${currencyIdA}`} />
   }
-  return <AddLiquidity {...props} />
+  return <CreatePool {...props} />
 }
