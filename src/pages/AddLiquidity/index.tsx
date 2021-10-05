@@ -508,14 +508,14 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <Section padding="0px" borderRadius={'20px'}>
                 <Row padding="0 0 1rem 0">
-                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                    {t`Prices`} <Trans>and Pool share</Trans>
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
+                    <Trans>Prices and Pool share</Trans>
                   </TYPE.subHeader>
                 </Row>
 
                 {!noLiquidity && (
                   <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
-                    <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                    <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
                       <Trans>Current Price:</Trans>
                     </TYPE.subHeader>
                     <TYPE.black fontWeight={500} fontSize={14}>
@@ -529,7 +529,7 @@ export default function AddLiquidity({
                 )}
 
                 <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
-                  <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
                     <Trans>Inventory ratio:</Trans>
                   </TYPE.subHeader>
                   <TYPE.black fontWeight={500} fontSize={14}>

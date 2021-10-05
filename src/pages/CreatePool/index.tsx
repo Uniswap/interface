@@ -509,7 +509,7 @@ export default function CreatePool({
                 {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
                   <Section padding="0px" borderRadius={'20px'}>
                     <Row padding="0 0 1rem 0">
-                      <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
+                      <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.subText}>
                         <Trans>Prices and Pool share</Trans>
                       </TYPE.subHeader>
                     </Row>
