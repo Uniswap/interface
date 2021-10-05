@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-04 16:06\n"
+"PO-Revision-Date: 2021-10-05 13:11\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -29,11 +29,11 @@ msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
-msgstr ""
+msgstr "(Max)"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
-msgstr ""
+msgstr "(Ogled v Raziskovalcu)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -41,22 +41,22 @@ msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr ""
+msgstr "(počisti vse)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr ""
+msgstr "(uredi)"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
-msgstr ""
+msgstr "- Odstrani prejemnika"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
-msgstr ""
+msgstr "0 UNI / teden"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -72,15 +72,15 @@ msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
-msgstr ""
+msgstr "25 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
-msgstr ""
+msgstr "50 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
-msgstr ""
+msgstr "75 %"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
