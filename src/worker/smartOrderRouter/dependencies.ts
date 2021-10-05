@@ -23,7 +23,6 @@ import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
 import { ethers } from 'ethers'
 
-
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
   topNDirectSwaps: 2,
@@ -50,7 +49,7 @@ class MetricLogger extends IMetric {
       category: 'Routing API',
       variable: `${key} | ${unit}`,
       value,
-      label: 'client'
+      label: 'client',
     })
   }
 }

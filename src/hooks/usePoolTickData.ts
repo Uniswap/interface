@@ -1,6 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, TICK_SPACINGS,tickToPrice } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import ms from 'ms.macro'
 import { useMemo } from 'react'

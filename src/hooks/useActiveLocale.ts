@@ -1,10 +1,9 @@
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES,SupportedLocale } from 'constants/locales'
 import { useMemo } from 'react'
 import store from 'state'
 import { useUserLocale } from 'state/user/hooks'
 
-import useParsedQueryString from './useParsedQueryString'
-import { parsedQueryString } from './useParsedQueryString'
+import useParsedQueryString, { parsedQueryString } from './useParsedQueryString'
 
 /**
  * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale
