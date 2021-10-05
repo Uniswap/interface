@@ -2653,6 +2653,11 @@
     "@babel/runtime" "^7.11.2"
     "@lingui/core" "^3.9.0"
 
+"@metamask/detect-provider@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
+  integrity sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==
+
 "@metamask/safe-event-emitter@2.0.0", "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz"
@@ -4548,10 +4553,23 @@
     "@web3-react/types" "^6.0.7"
     tiny-invariant "^1.0.6"
 
+"@web3-react/store@^8.0.2-alpha.0":
+  version "8.0.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.0.2-alpha.0.tgz#95fdb7620cec453a78e08856e2d01c177dfed78d"
+  integrity sha512-WkpLKujEDA2mE/e76DvDg7dLQxmb2hXEERnMbqornABNbKu1DsDALCV/DxEEsLJa+j1GZRtc6rK7SR5drFFm9g==
+  dependencies:
+    "@ethersproject/address" "^5.4.0"
+    "@web3-react/types" "^8.0.2-alpha.0"
+
 "@web3-react/types@^6.0.7":
   version "6.0.7"
   resolved "https://registry.npmjs.org/@web3-react/types/-/types-6.0.7.tgz"
   integrity sha512-ofGmfDhxmNT1/P/MgVa8IKSkCStFiyvXe+U5tyZurKdrtTDFU+wJ/LxClPDtFerWpczNFPUSrKcuhfPX1sI6+A==
+
+"@web3-react/types@^8.0.2-alpha.0":
+  version "8.0.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.0.2-alpha.0.tgz#db978bb2dfb8656429efab2b51806c2a26794aa0"
+  integrity sha512-7VkY3D42ARKfYaKR9WPuPMq258lv8++2mhH9fnidH01WAn1VeTlh4iZ8xrxow1LrB7Ibq76iOpqIXb9zMZN9zA==
 
 "@web3-react/walletconnect-connector@^7.0.2-alpha.0":
   version "7.0.2-alpha.0"
@@ -19992,6 +20010,22 @@ web-vitals@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.0.tgz#ebf5428875ab5bfc1056c2e80cd177001287de7b"
   integrity sha512-npEyJP8jHf3J71t1tRTEtz9FeKp8H2udWJUUq5ykfPhhstr//TUxiYhIEzLNwk4zv2ybAilMn7v7N6Mxmuitmg==
+
+"web3-react/core@npm:@web3-react/core@alpha":
+  version "8.0.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.2-alpha.0.tgz#65ad2cd844b51954b08c7a4879237ab7d5464482"
+  integrity sha512-oXC7d3kB0/WRs1AXUkHQQJwAesquO7Kw36TOy85qaV0ydEMG1Wc0xpV9zBwRMYM47HEvxs7BQ8tV6402S1KBfg==
+  dependencies:
+    "@web3-react/store" "^8.0.2-alpha.0"
+    "@web3-react/types" "^8.0.2-alpha.0"
+
+"web3-react/metamask@npm:@web3-react/metamask@alpha":
+  version "8.0.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.2-alpha.0.tgz#23f8bcf68eff85559898846f5e31c8cb696bac52"
+  integrity sha512-CWbOhBzK5WNxfYwWx5EGVNyotcFWltc3jSHFwK4KzFQxfLqjEUJ0bPZZBpJyZbMJuwT2iOd7NoG/o5BJS3VINA==
+  dependencies:
+    "@metamask/detect-provider" "^1.2.0"
+    "@web3-react/types" "^8.0.2-alpha.0"
 
 webidl-conversions@^5.0.0:
   version "5.0.0"
