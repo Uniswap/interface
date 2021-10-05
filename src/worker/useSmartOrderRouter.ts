@@ -3,23 +3,21 @@ import * as Comlink from 'comlink'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useEffect, useMemo, useState } from 'react'
 import { GetQuoteResult } from 'state/routing/types'
-import Worker from 'worker-loader!./smartOrderRouter'
+import Worker from 'worker-loader!./smartOrderRouter/worker'
 
-import { GetQuoteWorkerType } from './smartOrderRouter'
+import { GetQuoteWorkerType } from './smartOrderRouter/worker'
 
-function useWorker() {
-  const { chainId } = useActiveWeb3React()
+//TODO(judo): move to /hooks
 
+/** Wraps router worker in Comlink to simplify ui-worker comms */
+function useRouterWorker() {
   const worker = useMemo(() => {
     const worker = new Worker()
-    return Comlink.wrap<GetQuoteWorkerType>(worker) 
-    // update worker when chainId changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId])
+    return Comlink.wrap<GetQuoteWorkerType>(worker)
+  }, [])
 
   return worker
 }
-
 
 export function useClientSideSmartOrderRouter(
   tradeType: TradeType.EXACT_INPUT | TradeType.EXACT_OUTPUT,
@@ -27,39 +25,52 @@ export function useClientSideSmartOrderRouter(
   currencyIn?: Currency,
   currencyOut?: Currency
 ) {
-  // TODO interval update
+  const { chainId } = useActiveWeb3React()
+
   const [quote, setQuote] = useState<GetQuoteResult | undefined>(undefined)
 
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const worker = useWorker()
+  const router = useRouterWorker()
 
   useEffect(() => {
-    if (!currencyIn || !currencyOut || !amount) {
+    if (!currencyIn || !currencyOut || !amount || !chainId) {
       return
     }
 
     setIsLoading(true)
     setIsError(false)
 
-    ; (async () => {
-        try {
-          const quote = await worker.getQuote({
-            tradeType,
-            tokenIn: { address: currencyIn.wrapped.address, chainId: currencyIn.chainId, decimals: currencyIn.decimals, symbol: currencyIn.symbol },
-            tokenOut: { address: currencyOut.wrapped.address, chainId: currencyOut.chainId, decimals: currencyOut.decimals, symbol: currencyOut.symbol },
-            amount: amount.quotient.toString(),
-          })
-          setQuote(quote)
-        } catch (e) {
-          setIsError(true)
-          setQuote(undefined)
-        } finally {
-          setIsLoading(false)
-        }
-      })()
-  }, [amount, currencyIn, currencyOut, tradeType, worker])
+    // TODO interval update
+    ;(async () => {
+      try {
+        const quote = await router.getQuote({
+          tradeType,
+          chainId,
+          tokenIn: {
+            address: currencyIn.wrapped.address,
+            chainId: currencyIn.chainId,
+            decimals: currencyIn.decimals,
+            symbol: currencyIn.symbol,
+          },
+          tokenOut: {
+            address: currencyOut.wrapped.address,
+            chainId: currencyOut.chainId,
+            decimals: currencyOut.decimals,
+            symbol: currencyOut.symbol,
+          },
+          amount: amount.quotient.toString(),
+        })
+        setQuote(quote)
+      } catch (e) {
+        setIsError(true)
+        setQuote(undefined)
+      } finally {
+        setIsLoading(false)
+      }
+    })()
+  }, [amount, chainId, currencyIn, currencyOut, tradeType, router])
 
   return { quote, isLoading, isError }
 }
