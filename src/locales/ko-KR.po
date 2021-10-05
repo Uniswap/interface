@@ -746,7 +746,6 @@ msgid "Invalid recipient"
 msgstr "잘못된 수신자"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "재고 비율:"
 
@@ -1106,6 +1105,10 @@ msgstr "가격:"
 msgid "Prices"
 msgstr ""
 
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Privacy"
 msgstr "프라이버시"
@@ -1124,7 +1127,6 @@ msgstr "더 큰 유연성과 매우 높은 자본 효율성으로 마찰 없는 
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "비율"
 
@@ -1623,7 +1625,6 @@ msgid "and"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr ""
 

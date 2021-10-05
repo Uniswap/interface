@@ -746,7 +746,6 @@ msgid "Invalid recipient"
 msgstr "Geçersiz alıcı"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "Envanter oranı:"
 
@@ -1106,6 +1105,10 @@ msgstr "Fiyat:"
 msgid "Prices"
 msgstr ""
 
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Privacy"
 msgstr "Gizlilik"
@@ -1124,7 +1127,6 @@ msgstr "Daha fazla esneklik ve son derece yüksek sermaye verimliliği ile sorun
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "Oran"
 
@@ -1623,7 +1625,6 @@ msgid "and"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr ""
 

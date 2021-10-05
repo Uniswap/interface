@@ -746,7 +746,6 @@ msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "Tỷ lệ tồn kho:"
 
@@ -1106,6 +1105,10 @@ msgstr "Giá:"
 msgid "Prices"
 msgstr ""
 
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Privacy"
 msgstr "Riêng tư"
@@ -1124,7 +1127,6 @@ msgstr "Cung cấp tính thanh khoản crypto dễ dàng với tính linh hoạt
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "Tỷ lệ"
 
@@ -1623,7 +1625,6 @@ msgid "and"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr ""
 

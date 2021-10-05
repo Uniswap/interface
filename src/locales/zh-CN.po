@@ -746,7 +746,6 @@ msgid "Invalid recipient"
 msgstr "收件人无效"
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Inventory ratio:"
 msgstr "库存比例:"
 
@@ -1106,6 +1105,10 @@ msgstr "价格:"
 msgid "Prices"
 msgstr ""
 
+#: src/pages/CreatePool/index.tsx
+msgid "Prices and Pool share"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "Privacy"
 msgstr "隐私"
@@ -1124,7 +1127,6 @@ msgstr "以更大的灵活性和极高的资本效率提供无摩擦的加密货
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "Ratio"
 msgstr "比率"
 
@@ -1623,7 +1625,6 @@ msgid "and"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/CreatePool/index.tsx
 msgid "and Pool share"
 msgstr ""
 

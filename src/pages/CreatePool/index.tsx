@@ -49,7 +49,7 @@ import {
   TokenColumn,
   AMPColumn,
   ActiveText,
-  OutlineCard2,
+  Section,
   NumericalInput2,
   USDPrice,
   Warning
@@ -507,21 +507,12 @@ export default function CreatePool({
                 </div>
 
                 {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-                  <OutlineCard2 padding="0px" borderRadius={'20px'}>
-                    <Row padding="0 0 1rem 0" style={{ justifyContent: 'center' }}>
+                  <Section padding="0px" borderRadius={'20px'}>
+                    <Row padding="0 0 1rem 0">
                       <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                        {t`Ratio`} <Trans>and Pool share</Trans>
+                        <Trans>Prices and Pool share</Trans>
                       </TYPE.subHeader>
                     </Row>
-
-                    <AutoRow justify="space-between" gap="4px" style={{ paddingBottom: '12px' }}>
-                      <TYPE.subHeader fontWeight={500} fontSize={14} color={'primaryText2'}>
-                        <Trans>Inventory ratio:</Trans>
-                      </TYPE.subHeader>
-                      <TYPE.black fontWeight={500} fontSize={14}>
-                        {percentToken0}% {pair?.token0.symbol} - {percentToken1}% {pair?.token1.symbol}
-                      </TYPE.black>
-                    </AutoRow>
 
                     <PoolPriceBar
                       currencies={currencies}
@@ -530,7 +521,7 @@ export default function CreatePool({
                       price={price}
                       pair={pair}
                     />
-                  </OutlineCard2>
+                  </Section>
                 )}
               </TokenColumn>
 
@@ -554,7 +545,7 @@ export default function CreatePool({
                   />
                 </AutoRow>
 
-                <LightCard padding="0 0.75rem" borderRadius={'10px'}>
+                <LightCard padding="0 0.75rem" borderRadius={'10px'} style={{ background: theme.buttonBlack }}>
                   <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
                 </LightCard>
 
@@ -567,19 +558,24 @@ export default function CreatePool({
                   />
                 )}
 
-                <OutlineCard2>
+                <Section>
                   <AutoRow>
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
                       <Trans>Dynamic Fee Range</Trans>:{' '}
-                      {feeRangeCalc(
-                        !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
-                      )}
+                      {currencies[Field.CURRENCY_A] &&
+                      currencies[Field.CURRENCY_B] &&
+                      pairState !== PairState.INVALID &&
+                      +amp >= 1
+                        ? feeRangeCalc(
+                            !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
+                          )
+                        : '-'}
                     </Text>
                     <QuestionHelper
                       text={t`Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers.`}
                     />
                   </AutoRow>
-                </OutlineCard2>
+                </Section>
 
                 {showSanityPriceWarning && (
                   <Warning>
