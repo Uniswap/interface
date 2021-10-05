@@ -9,7 +9,7 @@ import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
-import { ReactComponent as DotLine } from '../../assets/images/dot_line.svg'
+import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 
 export interface RoutingDiagramEntry {
   percent: Percent
