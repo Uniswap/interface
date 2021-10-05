@@ -9,7 +9,7 @@ import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/R
 import { AutoRow, RowBetween } from 'components/Row'
 import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
-import { useRoutingAPIEnabled } from 'state/user/hooks'
+import { useRoutingAPISupported } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
@@ -31,7 +31,7 @@ export default memo(function SwapRoute({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
-  const routingAPIEnabled = useRoutingAPIEnabled()
+  const routingAPIEnabled = useRoutingAPISupported()
 
   return (
     <AutoColumn gap="12px">

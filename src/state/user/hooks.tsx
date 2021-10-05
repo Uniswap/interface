@@ -121,11 +121,10 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
   return [clientSideRouter, setClientSideRouter]
 }
 
-export function useRoutingAPIEnabled(): boolean {
+// TODO(judo): move to a different location
+export function useRoutingAPISupported(): boolean {
   const { chainId } = useActiveWeb3React()
-  const [clientSideRouter] = useClientSideRouter()
-
-  return chainId === SupportedChainId.MAINNET && !clientSideRouter
+  return chainId === SupportedChainId.MAINNET
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

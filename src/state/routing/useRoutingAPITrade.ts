@@ -50,7 +50,7 @@ function useRoutingAPIArguments({
 }
 
 /**
- * Returns the best v3 trade by invoking the routing api
+ * Returns the best v3 trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
