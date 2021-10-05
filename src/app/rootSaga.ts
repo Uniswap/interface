@@ -1,6 +1,12 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'redux-saga/effects'
 import {
+  importAccountActions,
+  importAccountReducer,
+  importAccountSaga,
+  importAccountSagaName,
+} from 'src/features/import/importAccount'
+import {
   transferTokenActions,
   transferTokenReducer,
   transferTokenSaga,
@@ -36,6 +42,12 @@ export const monitoredSagas: {
     wrappedSaga: createAccountSaga,
     reducer: createAccountReducer,
     actions: createAccountActions,
+  },
+  [importAccountSagaName]: {
+    name: importAccountSagaName,
+    wrappedSaga: importAccountSaga,
+    reducer: importAccountReducer,
+    actions: importAccountActions,
   },
   [transferTokenSagaName]: {
     name: transferTokenSagaName,

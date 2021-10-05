@@ -1,8 +1,8 @@
 import { Formik } from 'formik'
 import React, { useState } from 'react'
-import { Text } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { SubmitButton } from 'src/components/buttons/SubmitButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AddressInput } from 'src/components/input/AddressInput'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
@@ -48,12 +48,12 @@ export function TransferTokenForm() {
                 value={values.amount}
               />
             </Box>
-            <SubmitButton onPress={handleSubmit} label="Send" />
+            <PrimaryButton onPress={handleSubmit} label="Send" />
           </Box>
         )}
       </Formik>
-      <Modal title="Sending" hide={() => setShowModal(false)} visible={showModal}>
-        <Text>Sending that cash...</Text>
+      <Modal title="Importing" hide={() => setShowModal(false)} visible={showModal}>
+        <ActivityIndicator />
       </Modal>
     </>
   )

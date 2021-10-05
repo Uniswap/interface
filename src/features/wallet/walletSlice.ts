@@ -41,10 +41,14 @@ const slice = createSlice({
       if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${address}`)
       state.activeAccount = state.accounts[id]
     },
+    unlockWallet: (state) => {
+      state.isUnlocked = true
+    },
     resetWallet: () => initialState,
   },
 })
 
-export const { addAccount, removeAccount, activateAccount, resetWallet } = slice.actions
+export const { addAccount, removeAccount, activateAccount, unlockWallet, resetWallet } =
+  slice.actions
 
 export const walletReducer = slice.reducer

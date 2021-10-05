@@ -1,13 +1,13 @@
 import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet } from 'react-native'
-import { SubmitButton } from 'src/components/buttons/SubmitButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 
 interface Props extends ModalProps {
   title: string
-  hide: () => void
+  hide?: () => void
 }
 
 export function Modal(props: React.PropsWithChildren<Props>) {
@@ -22,7 +22,7 @@ export function Modal(props: React.PropsWithChildren<Props>) {
         <Box style={style.modalBox} backgroundColor="mainBackground">
           <Box flexDirection="row" alignItems="center" justifyContent="space-between" mb="md">
             <Text px="md">{title}</Text>
-            <SubmitButton label="Close" onPress={hide} />
+            {hide && <PrimaryButton label="Close" onPress={hide} />}
           </Box>
           {children}
         </Box>

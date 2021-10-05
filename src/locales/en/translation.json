@@ -3,6 +3,14 @@
   "Create Account": "Create Account",
   "List Accounts": "List Accounts",
   "Send Token": "Send Token",
+  "Enter your seed phrase (mnemonic):": "Enter your seed phrase (mnemonic):",
+  "Submit": "Submit",
+  "Required": "Required",
+  "Invalid Mnemonic": "Invalid Mnemonic",
+  "Import Your Account": "Import Your Account",
+  "Uniswap Wallet": "Uniswap Wallet",
+  "Create New Account": "Create New Account",
+  "Import Account": "Import Account",
   "Send those tokens around": "Send those tokens around",
   "Back": "Back"
 }
