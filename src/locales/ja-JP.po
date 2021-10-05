@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-04 16:06\n"
+"PO-Revision-Date: 2021-10-05 14:26\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -152,7 +152,7 @@ msgstr "追加"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "<0 />と<1 />をUniswapV2に追加します"
+msgstr "<0/>と<1/>をユニスワップV2に追加"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -270,7 +270,7 @@ msgstr "アルビスカン"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "アービトラムブリッジ"
+msgstr "Arbitrumブリッジ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -333,7 +333,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
-msgstr "橋"
+msgstr "ブリッジ"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -361,7 +361,7 @@ msgstr "チャート"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "ネットワークステータスを確認する"
+msgstr "ネットワークの状態を確認"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -375,7 +375,7 @@ msgstr "請求"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "以下のための請求<0 /> {0}"
+msgstr "{0} の <0/> を請求する"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -391,7 +391,7 @@ msgstr "UNIトークンを請求する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0}UNI報酬を請求する"
+msgstr "{0} のUNI報酬を請求する"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -412,7 +412,7 @@ msgstr "請求済みのUNI！"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "主張！"
+msgstr "請求済み"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -626,7 +626,7 @@ msgstr "投票を委任する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr "投票権を {0}"
+msgstr "{0} に投票権を委任する"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -649,7 +649,7 @@ msgstr "預け入れる数量"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
-msgstr "預金資産"
+msgstr "預け入れ資産"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -798,7 +798,7 @@ msgstr "Uniswap分析サイトで人気のあるプールを探しましょう�
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
-msgstr "冒険者"
+msgstr "エクスプローラー"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -1076,7 +1076,7 @@ msgstr "Uniswap V2からUniswap V3に流動性トークンを移行します。"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
-msgstr "移行 {0}/{1} V3への流動性"
+msgstr "{0}/{1} の流動性をV3へ移行"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -1178,7 +1178,7 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
-msgstr "オプティミズムゲートウェイ"
+msgstr "Optimismゲートウェイ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1377,7 +1377,7 @@ msgstr "削除"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "<0 />と<1 />を削除します"
+msgstr "<0/>と<1/>を削除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1500,7 +1500,7 @@ msgstr "ステップ1. UNI-V2流動性トークンを入手"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
-msgstr "新しい提案を送信する"
+msgstr "新しい提案を出す"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1536,7 +1536,7 @@ msgstr "スワップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "<0 />を正確に<1 />に交換します"
+msgstr "<0 />を正確に<1 />にスワップします"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1545,7 +1545,7 @@ msgstr "問題発生の可能性があるが、スワップする"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "正確に<0 />を<1 />に交換します"
+msgstr "正確に<0 />を<1 />にスワップします"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1605,11 +1605,11 @@ msgstr "これらのトークンは一般的に他のトークンとペアにな
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預金額を入力します。初期化取引のため、ガス料金は通常より高くなります。"
+msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預け入れ数量を入力します。初期化取引のため、ガス料金は通常より高くなります。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "流動性を追加する前に {0} に初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預金額を入力します。"
+msgstr "流動性を追加する前に {0} に初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預け入れ数量を入力します。"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1676,7 +1676,7 @@ msgstr "合計預入額"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "交易路"
+msgstr "取引ルート"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
@@ -1772,7 +1772,7 @@ msgstr "利用可能言語: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Uniswapガバナンスは、レイヤー1でのみ使用できます。ネットワークをEthereum Mainnetに切り替えて、提案と投票を表示します。"
+msgstr "Uniswapのガバナンスは、レイヤー1でのみ使用できます。提案と投票を表示するために、ネットワークをEthereumメインネットに切り替えて下さい。"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1919,11 +1919,11 @@ msgstr "提案 {proposalId} に反対票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey}"
-msgstr "{proposalKey}反対票を投じる"
+msgstr "提案 {proposalKey} に反対票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」 {proposalKey} 反対票を投じる"
+msgstr "「{0} 」という理由で提案 {proposalKey} に反対票を投じる"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1932,24 +1932,24 @@ msgstr "提案 {proposalId} に賛成票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr "{proposalKey}投票する"
+msgstr "提案{proposalKey} に賛成票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」で提案 {proposalKey}"
+msgstr "「{0} 」という理由で提案 {proposalKey} に賛成票を入れる"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr "{proposalId}を棄権するために投票する"
+msgstr "提案{proposalId} を棄権する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "{proposalKey}を棄権するために投票する"
+msgstr "提案{proposalKey} を棄権する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」 {proposalKey} を棄権することに投票する"
+msgstr "「{0} 」という理由で提案 {proposalKey} で棄権する"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
