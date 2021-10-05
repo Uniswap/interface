@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -13,7 +14,6 @@ import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
-import { ReactComponent as LogoDark } from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -248,6 +248,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
+  const { white, black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -269,11 +270,7 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          {darkMode ? (
-            <LogoDark width="24px" height="100%" title="logo" />
-          ) : (
-            <Logo width="24px" height="100%" title="logo" />
-          )}
+          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
         </UniIcon>
       </Title>
       <HeaderLinks>

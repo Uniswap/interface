@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-10-04 16:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -48,8 +48,8 @@ msgid "(edit)"
 msgstr "(편집)"
 
 #: src/pages/Swap/index.tsx
-msgid "- Remove send"
-msgstr "-보내기 제거"
+msgid "- Remove recipient"
+msgstr "- 받는 사람 제거"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx

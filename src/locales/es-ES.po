@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-10-04 16:06\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -48,8 +48,8 @@ msgid "(edit)"
 msgstr "(editar)"
 
 #: src/pages/Swap/index.tsx
-msgid "- Remove send"
-msgstr "- Eliminar envío"
+msgid "- Remove recipient"
+msgstr "- Eliminar destinatario"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
