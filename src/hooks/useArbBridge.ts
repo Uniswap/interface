@@ -104,7 +104,7 @@ export const useArbBridge = () => {
   const triggerOutboxEth = useCallback(
     async (l2Tx: BridgeTransactionSummary) => {
       const { batchIndex, batchNumber, value } = l2Tx
-      if (!account || !bridge || !l1ChainId || !batchIndex || !batchNumber || !value) return
+      if (!account || !bridge || !l1ChainId || !l2ChainId || !batchIndex || !batchNumber || !value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
@@ -134,16 +134,14 @@ export const useArbBridge = () => {
           })
         )
 
-        if (l1ChainId && l2ChainId) {
-          dispatch(
-            updateBridgeTxnPartnerHash({
-              chainId: l1ChainId,
-              txHash: l1Tx.hash,
-              partnerTxHash: l2Tx.txHash,
-              partnerChainId: l2ChainId
-            })
-          )
-        }
+        dispatch(
+          updateBridgeTxnPartnerHash({
+            chainId: l1ChainId,
+            txHash: l1Tx.hash,
+            partnerTxHash: l2Tx.txHash,
+            partnerChainId: l2ChainId
+          })
+        )
 
         dispatch(
           updateBridgeTxnWithdrawalInfo({
