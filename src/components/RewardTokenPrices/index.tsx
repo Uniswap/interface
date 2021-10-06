@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
 
+import { ChainId, WETH } from 'libs/sdk/src'
+import { KNC, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'
 import { useRewardTokenPrices } from 'state/farms/hooks'
@@ -70,6 +72,27 @@ const StyledImg = styled.img`
 const RewardTokenPrices = () => {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokensFullInfo()
+
+  // Sort the list of reward tokens in order: KNC -> Native token -> Other tokens
+  rewardTokens.sort(function(tokenA, tokenB) {
+    if (tokenA.address === KNC[chainId as ChainId].address) {
+      return -1
+    }
+
+    if (tokenB.address === KNC[chainId as ChainId].address) {
+      return 1
+    }
+
+    if (tokenA.address === ZERO_ADDRESS || tokenA.address === WETH[chainId as ChainId].address) {
+      return -1
+    }
+
+    if (tokenB.address === ZERO_ADDRESS || tokenB.address === WETH[chainId as ChainId].address) {
+      return 1
+    }
+
+    return 0
+  })
   const rewardTokenPrices = useRewardTokenPrices(rewardTokens)
 
   const scrollRef = useRef(null)
