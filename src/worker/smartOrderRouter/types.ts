@@ -1,4 +1,4 @@
-import { Token } from "@uniswap/sdk-core"
+import { Token } from '@uniswap/sdk-core'
 
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 

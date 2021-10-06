@@ -1,5 +1,5 @@
-import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
+import { isMobile } from 'utils/userAgent'
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
 if (typeof GOOGLE_ANALYTICS_ID === 'string') {

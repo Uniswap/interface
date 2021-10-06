@@ -1,5 +1,3 @@
-import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
-import { FetchBaseQueryError, FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react'
 import { BigintIsh, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import * as Comlink from 'comlink'
@@ -24,7 +22,7 @@ const service = {
     tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
     tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
     amount: BigintIsh
-  }): Promise<QueryReturnValue<GetQuoteResult, FetchBaseQueryError, FetchBaseQueryMeta>> {
+  }): Promise<{ data: GetQuoteResult; error?: unknown }> {
     const params = routerParamsByChain[chainId]
     if (!params) {
       throw new Error('Router dependencies not initialized.')

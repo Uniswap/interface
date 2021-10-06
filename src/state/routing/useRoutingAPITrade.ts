@@ -6,8 +6,8 @@ import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { computeRoutes } from './computeRoutes'
 import { V3TradeState } from './types'
+import { computeRoutes } from './utils'
 
 function useFreshData<T>(data: T, dataBlockNumber: number, maxBlockAge = 10): T | undefined {
   const localBlockNumber = useBlockNumber()
