@@ -43,8 +43,7 @@ export function processSwapRoute(
 
       let edgeAmountOut = undefined
       if (i == pools.length - 1) {
-        //todo validate in/out
-        edgeAmountOut = type === 'exactOut' ? quote.quotient.toString() : amount.quotient.toString()
+        edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
       }
 
       curRoute.push({
