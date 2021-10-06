@@ -3,15 +3,15 @@ import * as Comlink from 'comlink'
 import { SupportedChainId } from 'constants/chains'
 import qs from 'qs'
 import { AppState } from 'state'
-import { GetQuoteFunctionType } from 'worker/smartOrderRouter/router.worker'
+import { RouterType } from 'worker/smartOrderRouter/router.worker'
 import SmartOrderRouterWorker from 'worker-loader!worker/smartOrderRouter/router.worker'
 
 import { GetQuoteResult } from './types'
 
-let comlinkWorker: Comlink.Remote<GetQuoteFunctionType> | null = null
+let comlinkWorker: Comlink.Remote<RouterType> | null = null
 
 function getWorker() {
-  return comlinkWorker ?? (comlinkWorker = Comlink.wrap<GetQuoteFunctionType>(new SmartOrderRouterWorker()))
+  return comlinkWorker ?? (comlinkWorker = Comlink.wrap<RouterType>(new SmartOrderRouterWorker()))
 }
 
 export const routingApi = createApi({

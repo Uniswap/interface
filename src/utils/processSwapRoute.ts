@@ -1,8 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { IPoolProvider, routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
-import { GetQuoteResult } from 'state/routing/types'
-
-import { PoolInRoute } from '../worker/smartOrderRouter/types'
+import { GetQuoteResult, PoolInRoute } from 'state/routing/types'
 
 // transforms a SwapRoute into a GetQuoteResult
 export function processSwapRoute(

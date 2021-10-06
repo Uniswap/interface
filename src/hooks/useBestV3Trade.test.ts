@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'constants/tokens'
+import { useRoutingAPISupported } from 'hooks/useRoutingAPISupported'
 import { V3TradeState } from 'state/routing/types'
-import { useRoutingAPISupported } from 'state/user/hooks'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
 import { useBestV3Trade } from './useBestV3Trade'

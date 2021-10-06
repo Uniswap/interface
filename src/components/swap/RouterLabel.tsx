@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useRoutingAPISupported } from 'state/user/hooks'
+import { useRoutingAPISupported } from 'hooks/useRoutingAPISupported'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 

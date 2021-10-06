@@ -6,6 +6,7 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
+import { useRoutingAPISupported } from './useRoutingAPISupported'
 
 /**
  * Returns the best v3 trade for a desired swap.
@@ -22,12 +23,17 @@ export function useBestV3Trade(
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
 } {
+  const routingAPISupported = useRoutingAPISupported()
   const isWindowVisible = useIsWindowVisible()
 
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
   // TODO(judo): skip on l2
-  const routingAPITrade = useRoutingAPITrade(tradeType, isWindowVisible ? debouncedAmount : undefined, otherCurrency)
+  const routingAPITrade = useRoutingAPITrade(
+    tradeType,
+    routingAPISupported && isWindowVisible ? debouncedAmount : undefined,
+    otherCurrency
+  )
 
   const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
 
@@ -43,10 +49,9 @@ export function useBestV3Trade(
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
         !otherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
-  const useFallback = !debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND
+  const useFallback = !routingAPISupported || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
 
-  // only use client side router if routing api trade failed
-  // TODO(judo): should use old v3 algorithm for l2s
+  // only use client side router if routing api trade failed or is not supported
   const bestV3Trade = useClientSideV3Trade(
     tradeType,
     useFallback ? debouncedAmount : undefined,
