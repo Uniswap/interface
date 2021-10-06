@@ -22,7 +22,6 @@ import {
 import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
 import { providers } from 'ethers/lib/ethers'
-
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
   topNDirectSwaps: 2,
