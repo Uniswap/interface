@@ -1,7 +1,7 @@
 import '@reach/dialog/styles.css'
-import 'components/analytics'
 import 'inter-ui'
 import 'polyfills'
+import 'components/analytics'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
@@ -24,6 +24,7 @@ import UserUpdater from './state/user/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import getLibrary from './utils/getLibrary'
+import { isMobile } from './utils/userAgent'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 

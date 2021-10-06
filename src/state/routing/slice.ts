@@ -12,7 +12,8 @@ import { GetQuoteResult } from './types'
 let comlinkWorker: Comlink.Remote<GetQuoteWorkerType> | null = null
 
 function getWorker() {
-  return comlinkWorker ?? (comlinkWorker = Comlink.wrap<GetQuoteWorkerType>(new Worker()))
+  return comlinkWorker ??
+    (comlinkWorker = (Comlink.wrap<GetQuoteWorkerType>(new Worker())))
 }
 
 export const routingApi = createApi({
@@ -31,26 +32,23 @@ export const routingApi = createApi({
         type: 'exactIn' | 'exactOut'
       }
     >({
-      async queryFn(args, { getState }, extraOptions, fetch) {
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, type } = args
+      async queryFn(args, {getState}, extraOptions, fetch) {
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, type} = args
 
         const clientSideRouter = (getState() as AppState).user.userClientSideRouter
 
-        const result = (await (clientSideRouter
-          ? // TODO(judo): update worker when token list changes?
-            getWorker().getQuote({
+        const result = await
+          (clientSideRouter ?
+            // TODO(judo): update worker when token list changes?
+            (getWorker().getQuote({
               type,
               chainId: tokenInChainId as number,
               // TODO(judo): decimals and symbols
-              tokenIn: { address: tokenInAddress, chainId: tokenInChainId, decimals: 18 },
-              tokenOut: { address: tokenOutAddress, chainId: tokenOutChainId, decimals: 18 },
-              amount,
-            })
-          : fetch(`quote?${qs.stringify(args)}`))) as QueryReturnValue<
-          GetQuoteResult,
-          FetchBaseQueryError,
-          FetchBaseQueryMeta
-        >
+              tokenIn: { address: tokenInAddress, chainId: tokenInChainId, decimals: 18},
+              tokenOut: { address: tokenOutAddress, chainId: tokenOutChainId, decimals: 18},
+              amount
+            })) :
+           (fetch(`quote?${qs.stringify(args)}`))) as QueryReturnValue<GetQuoteResult, FetchBaseQueryError, FetchBaseQueryMeta>
 
         if (result.error) {
           throw result.error
@@ -58,7 +56,7 @@ export const routingApi = createApi({
 
         return { data: result.data as GetQuoteResult }
         // as QueryReturnValue<GetQuoteResult, FetchBaseQueryError, unknown>
-      },
+        }
     }),
   }),
 })

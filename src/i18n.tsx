@@ -35,7 +35,8 @@ import {
   vi,
   zh,
 } from 'make-plural/plurals'
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
+import { ReactNode } from 'react'
 import { useUserLocaleManager } from 'state/user/hooks'
 
 type LocalePlural = {
