@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
 import { parseBytes32String } from '@ethersproject/strings'
 import { currencyEquals, Token } from '@ubeswap/sdk'
 import { arrayify } from 'ethers/lib/utils'
@@ -13,9 +13,13 @@ import { TokenAddressMap, useDefaultTokenList, useUnsupportedTokenList } from '.
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
+function useTokensFromMap(
+  tokenMap: TokenAddressMap,
+  includeUserAdded: boolean,
+  chainIdOpt?: ChainId
+): { [address: string]: Token } {
   const { network } = useContractKit()
-  const chainId = network.chainId
+  const chainId = chainIdOpt || network.chainId
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
@@ -52,9 +56,9 @@ export function useDefaultTokens(): { [address: string]: Token } {
   return useTokensFromMap(defaultList, false)
 }
 
-export function useAllTokens(): { [address: string]: Token } {
+export function useAllTokens(chainId?: ChainId): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  return useTokensFromMap(allTokens, true)
+  return useTokensFromMap(allTokens, true, chainId)
 }
 
 export function useAllInactiveTokens(): { [address: string]: Token } {

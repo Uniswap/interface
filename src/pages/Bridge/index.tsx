@@ -181,7 +181,7 @@ export const Bridge: React.FC = () => {
               onMax={() => selectedCurrencyBalance && setAmount(selectedCurrencyBalance.toSignificant(6))}
               currency={currency}
               onCurrencySelect={setCurrency}
-              disableCurrencySelect={!correctNetwork}
+              chainId={homeChain.network.chainId}
               id="bridge-currency"
             />
           </div>

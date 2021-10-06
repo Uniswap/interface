@@ -6,7 +6,7 @@ export const UNSUPPORTED_LIST_URLS: string[] = []
 const UBESWAP_LIST = 'https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json'
 const UBESWAP_EXPERIMENTAL_LIST =
   'https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap-experimental.token-list.json'
-const UNISWAP_LIST = 'https://raw.githubusercontent.com/Uniswap/default-token-list/master/src/tokens/mainnet.json'
+const UNISWAP_LIST = 'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [

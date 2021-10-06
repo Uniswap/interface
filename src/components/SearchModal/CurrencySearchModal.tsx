@@ -1,3 +1,4 @@
+import { ChainId } from '@celo-tools/use-contractkit'
 import { Token } from '@ubeswap/sdk'
 import { TokenList } from '@uniswap/token-lists'
 import usePrevious from 'hooks/usePrevious'
@@ -17,6 +18,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Token) => void
   otherSelectedCurrency?: Token | null
   showCommonBases?: boolean
+  chainId?: ChainId
 }
 
 export enum CurrencyModalView {
@@ -33,6 +35,7 @@ export default function CurrencySearchModal({
   selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false,
+  chainId,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -77,6 +80,7 @@ export default function CurrencySearchModal({
           showImportView={() => setModalView(CurrencyModalView.importToken)}
           setImportToken={setImportToken}
           showManageView={() => setModalView(CurrencyModalView.manage)}
+          chainId={chainId}
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken

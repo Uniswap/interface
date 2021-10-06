@@ -1,4 +1,4 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, useContractKit } from '@celo-tools/use-contractkit'
 import { Pair, Token } from '@ubeswap/sdk'
 import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
@@ -130,6 +130,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  chainId?: ChainId
 }
 
 export default function CurrencyInputPanel({
@@ -148,6 +149,7 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
+  chainId,
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -242,6 +244,7 @@ export default function CurrencyInputPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          chainId={chainId}
         />
       )}
     </InputPanel>

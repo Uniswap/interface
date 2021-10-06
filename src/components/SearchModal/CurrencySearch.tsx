@@ -1,5 +1,5 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
-import { ChainId, cUSD, Token } from '@ubeswap/sdk'
+import { ChainId } from '@celo-tools/use-contractkit'
+import { ChainId as UbeswapChainId, cUSD, Token } from '@ubeswap/sdk'
 import { ButtonLight } from 'components/Button'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -51,6 +51,7 @@ interface CurrencySearchProps {
   showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
+  chainId?: ChainId
 }
 
 export function CurrencySearch({
@@ -63,10 +64,9 @@ export function CurrencySearch({
   showManageView,
   showImportView,
   setImportToken,
+  chainId = ChainId.CeloMainnet,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
-  const { network } = useContractKit()
-  const chainId = network.chainId as unknown as ChainId
   const theme = useTheme()
 
   // refs for fixed size lists
@@ -75,7 +75,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder] = useState<boolean>(false)
 
-  const allTokens = useAllTokens()
+  const allTokens = useAllTokens(chainId)
   // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
@@ -162,7 +162,7 @@ export function CurrencySearch({
       if (e.key === 'Enter') {
         const s = searchQuery.toLowerCase().trim()
         if (s === 'cusd') {
-          handleCurrencySelect(cUSD[chainId])
+          handleCurrencySelect(cUSD[chainId as unknown as UbeswapChainId])
         } else if (filteredSortedTokens.length > 0) {
           if (
             filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
@@ -214,7 +214,11 @@ export function CurrencySearch({
           />
         </Row>
         {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
+          <CommonBases
+            chainId={chainId as unknown as UbeswapChainId}
+            onSelect={handleCurrencySelect}
+            selectedCurrency={selectedCurrency}
+          />
         )}
       </PaddedColumn>
       <Separator />
