@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-06 09:06\n"
+"PO-Revision-Date: 2021-10-06 10:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -310,7 +310,7 @@ msgstr "Dobroimetje:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr ""
+msgstr "Dobroimetje: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
@@ -329,7 +329,7 @@ msgstr ""
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr ""
+msgstr "Blokiran naslov"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -337,15 +337,15 @@ msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr ""
+msgstr "Ko dodate likvidnost, boste služili provizijo 0,3 % od vseh poslov na tem paru sorazmerno z vašim deležem v skladu. Provozije se dodajajo v sklad v realnem času. Prevzamete jih, ko umaknete svojo likvidnost iz sklada."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr ""
+msgstr "Z dodajanjem tega seznama zaupate pravilnosti podatkov. Vsakdo lahko ustvari seznam; ustvari lahko tudi ponarejeno različico obstoječega seznama ali pa seznam, ki naj bi pripadal resničnemu projektu, ki nima uradnega seznama."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr ""
+msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitev Uniswap Labs</0> in potrjujete, da ste prebrali in razumeli <1>zavrnitev odgovornosti protokola Uniswap</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -353,7 +353,7 @@ msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr ""
+msgstr "Spremeni"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -371,7 +371,7 @@ msgstr ""
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr ""
+msgstr "Prevzemi"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
@@ -383,11 +383,11 @@ msgstr ""
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr ""
+msgstr "Prevzemi UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr ""
+msgstr "Prevzemi žetone UNI"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
@@ -395,7 +395,7 @@ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr ""
+msgstr "Prevzemi provizije"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -403,12 +403,12 @@ msgstr ""
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr ""
+msgstr "Prevzeto"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr ""
+msgstr "UNI pridobljeni!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
@@ -417,7 +417,7 @@ msgstr ""
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
-msgstr ""
+msgstr "Prevzem v teku"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
@@ -426,20 +426,20 @@ msgstr ""
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr ""
+msgstr "Prevzem {0} UNI v teku"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr ""
+msgstr "Počisti vse"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr ""
+msgstr "Počisti vse"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr ""
+msgstr "Zapri"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -448,20 +448,20 @@ msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Code"
-msgstr ""
+msgstr "Koda"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr ""
+msgstr "Prevzemi"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr ""
+msgstr "Prevzemi kot WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr ""
+msgstr "Prevzemi provizije"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
@@ -469,15 +469,15 @@ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr ""
+msgstr "Prevzeto"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr ""
+msgstr "Prevzem v teku"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr ""
+msgstr "Prevzem provizij v teku"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
@@ -489,7 +489,7 @@ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr ""
+msgstr "Potrdi"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Confirm Create"
@@ -915,7 +915,7 @@ msgstr ""
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr ""
+msgstr "Prenizko dobroimetje {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
