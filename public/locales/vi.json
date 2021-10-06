@@ -83,5 +83,6 @@
   "decimals": "Số thập phân",
   "enterTokenCont": "Nhập địa chỉ đồng tiền ảo để tiếp tục",
   "priceChange": "Trượt giá dự kiến",
-  "forAtLeast": "cho ít nhất "
+  "forAtLeast": "cho ít nhất ",
+  "bridge": "Bridge"
 }
