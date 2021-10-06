@@ -1,5 +1,5 @@
 import CurrencyInput from '../CurrencyInput'
 
-export default function Input() {
+export default function InputPanel() {
   return <CurrencyInput></CurrencyInput>
 }

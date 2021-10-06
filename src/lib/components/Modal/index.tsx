@@ -8,8 +8,8 @@ const Context = createContext<HTMLDivElement | null>(null)
 export const Provider = Context.Provider
 
 const Wrapper = themed.div`
-  background-color: ${({ theme }) => theme.modal};
-  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg1};
+  border-radius: ${({ theme }) => Math.max(theme.borderRadius - 4, 0)}px;
   box-sizing: border-box;
   height: calc(100% - 8px);
   left: 0;
@@ -20,11 +20,16 @@ const Wrapper = themed.div`
   z-index: 1;
 `
 
-export default function Modal({ children }: { children: ReactNode }) {
+interface ModalProps {
+  backgroundColor?: string
+  children: ReactNode
+}
+
+export default function Modal({ backgroundColor, children }: ModalProps) {
   const div = useContext(Context)
   if (!div) {
     return null
   }
 
-  return createPortal(<Wrapper>{children}</Wrapper>, div)
+  return createPortal(<Wrapper style={{ backgroundColor }}>{children}</Wrapper>, div)
 }

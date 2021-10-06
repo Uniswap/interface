@@ -12,6 +12,16 @@ const Wrapper = themed.div`
   padding: 0 8px;
 `
 
+const Toolbar = themed.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  > * {
+    margin-left: 8px;
+  }
+`
+
 const Title = themed.div`
   display: flex;
   user-select: none;
@@ -47,7 +57,7 @@ export default function Header({ path, title, children }: HeaderProps) {
         <span style={{ width: 8 }} />
         {title}
       </Title>
-      <div>{children}</div>
+      <Toolbar>{children}</Toolbar>
     </Wrapper>
   )
 }

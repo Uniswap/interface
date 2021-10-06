@@ -1,11 +1,13 @@
+import Wallet from '../Wallet'
 import WidgetHeader from '../Widget/Header'
+import Info from './Info'
 import Settings from './Settings'
 
 export default function Header() {
   return (
     <WidgetHeader path="swap" title="Swap">
-      {/* TODO: Wallet integration (from web3-react context) */}
-      {/* TODO: Info */ <></>}
+      <Wallet />
+      <Info />
       <Settings />
     </WidgetHeader>
   )

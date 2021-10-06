@@ -1,8 +1,10 @@
 import Widget from '../Widget'
 import Header from './Header'
-import Input from './Input'
-import Output from './Output'
-import Submit from './Submit'
+import InputPanel from './InputPanel'
+import OutputPanel from './OutputPanel'
+import ReverseButton from './ReverseButton'
+import { SwapStateProvider } from './state'
+import SubmitButton from './SubmitButton'
 
 export interface SwapProps {
   darkMode?: boolean
@@ -11,10 +13,13 @@ export interface SwapProps {
 export default function Swap({ darkMode = true }: SwapProps) {
   return (
     <Widget darkMode={darkMode}>
-      <Header></Header>
-      <Input></Input>
-      <Output></Output>
-      <Submit></Submit>
+      <SwapStateProvider>
+        <Header></Header>
+        <InputPanel></InputPanel>
+        <ReverseButton></ReverseButton>
+        <OutputPanel></OutputPanel>
+        <SubmitButton></SubmitButton>
+      </SwapStateProvider>
     </Widget>
   )
 }

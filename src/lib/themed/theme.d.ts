@@ -12,7 +12,7 @@ export interface Colors {
   // backgrounds
   bg1: Color
   bg2: Color
-  modal: Color
+  bg3: Color
 
   // statuses
   confirm: Color
@@ -23,4 +23,5 @@ export interface Colors {
 
 export interface Theme extends Colors {
   font: string
+  borderRadius: number
 }

@@ -5,7 +5,7 @@ import { Provider as ModalProvider } from '../Modal'
 
 const Wrapper = themed.div`
   background-color: ${({ theme }) => theme.bg1};
-  border-radius: 16px;
+  border-radius: ${({ theme }) => theme.borderRadius}px;
   box-sizing: border-box;
   font-family: ${({ theme }) => theme.font};
   font-size: 16px;

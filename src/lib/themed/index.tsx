@@ -23,7 +23,7 @@ function colors(darkMode: boolean): Colors {
 
     bg1: darkMode ? '#191B1F' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#EDEEF2',
-    modal: darkMode ? '#000000' : '#FFFFFF',
+    bg3: darkMode ? '#000000' : '#FFFFFF',
 
     confirm: darkMode ? '#2172E5' : '#E8006F',
     success: darkMode ? '#27AE60' : '#007D35',
@@ -36,6 +36,7 @@ export function getTheme(darkMode: boolean): Theme {
   return {
     ...colors(darkMode),
     font: '"Inter var", sans-serif',
+    borderRadius: 16,
   }
 }
 

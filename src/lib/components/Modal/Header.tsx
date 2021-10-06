@@ -1,6 +1,7 @@
 import { Icon } from 'react-feather'
 
 import themed from '../../themed'
+import { ThemedButton } from '../../themed/components'
 
 const Wrapper = themed.div`
   display: flex;
@@ -16,19 +17,6 @@ const Title = themed.div`
   color: ${({ theme }) => theme.text1};
 `
 
-const ThemedButton = themed.button`
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    opacity: 0.7;
-  }
-`
-
 export interface HeaderProps {
   title: string
   Icon?: Icon
@@ -36,21 +24,14 @@ export interface HeaderProps {
 }
 
 export default function Header({ title, Icon, onClick }: HeaderProps) {
-  const ThemedIcon = themed(Icon)`
-  height: 20px;
-  width: 20px;
-
-  > * {
-    stroke: ${({ theme }) => theme.icon1};
-  }
-  `
-
   return (
     <Wrapper>
       <Title>{title}</Title>
-      <ThemedButton onClick={onClick}>
-        <ThemedIcon />
-      </ThemedButton>
+      {Icon && (
+        <ThemedButton onClick={onClick}>
+          <Icon />
+        </ThemedButton>
+      )}
     </Wrapper>
   )
 }

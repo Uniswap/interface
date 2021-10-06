@@ -172,6 +172,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "jotai": "^1.3.7",
     "web3-react/core": "npm:@web3-react/core@alpha",
     "web3-react/metamask": "npm:@web3-react/metamask@alpha"
   }

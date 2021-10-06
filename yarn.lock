@@ -12697,6 +12697,11 @@ joi@^17.3.0:
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
 
+jotai@^1.3.7:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.3.7.tgz#527e9764a8a1f69d7c059545c4b3f651c18938a4"
+  integrity sha512-vLs/7CpXZy11REfeHaEUaXe3oqY9O0YwUAHUI/mph2Lujw4YqtyRk8r5qo0vq10nA9rESWHO+ky84Bf+lRG1lg==
+
 jpeg-js@0.4.2:
   version "0.4.2"
   resolved "https://registry.npmjs.org/jpeg-js/-/jpeg-js-0.4.2.tgz"
