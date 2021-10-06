@@ -22,6 +22,7 @@
     "@shopify/restyle": "^1.4.0",
     "ethers": "^5.4.7",
     "expo-secure-store": "^10.2.0",
+    "expo-splash-screen": "^0.11.4",
     "formik": "^2.2.9",
     "i18next": "^21.1.1",
     "react": "17.0.2",
