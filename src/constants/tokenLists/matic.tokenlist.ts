@@ -93,7 +93,7 @@ export const MATIC_TOKEN_LIST = {
       symbol: 'RAI',
       name: 'Rai Reflex Index',
       decimals: 18,
-      logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334' 
+      logoURI: 'https://assets.coingecko.com/coins/images/14004/small/RAI-logo-coin.png?1613592334'
     },
     {
       chainId: 137,
@@ -101,7 +101,7 @@ export const MATIC_TOKEN_LIST = {
       symbol: 'AUR-0112',
       name: 'Aureus',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/PyipL43.png',
+      logoURI: 'https://i.imgur.com/PyipL43.png'
     }
   ],
   version: {
