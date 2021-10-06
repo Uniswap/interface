@@ -8,6 +8,6 @@ describe('Example', () => {
   })
 
   it('should have welcome screen', async () => {
-    await expect(element(by.text('Uniswap'))).toBeVisible()
+    await expect(element(by.text('Uniswap Wallet'))).toBeVisible()
   })
 })
