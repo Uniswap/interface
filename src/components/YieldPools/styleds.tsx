@@ -484,7 +484,7 @@ export const PoolRewardUSD = styled.div`
 `
 
 export const DataText = styled(Flex)<{ align?: string }>`
-  color: ${({ theme }) => theme.text7};
+  color: ${({ theme }) => theme.text};
   justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
   font-weight: 500;
 
@@ -508,7 +508,7 @@ export const GridItem = styled.div<{ noBorder?: boolean }>`
 export const DataTitle = styled.div`
   display: flex;
   align-items: flex-start;
-  color: ${({ theme }) => theme.text6};
+  color: ${({ theme }) => theme.subText};
   &:hover {
     opacity: 0.6;
   }

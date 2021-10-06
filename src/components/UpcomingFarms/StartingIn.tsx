@@ -10,7 +10,7 @@ const StartingIn = ({ startingIn }: { startingIn?: string }) => {
 
   if (!startingIn) {
     return (
-      <Text color={theme.subText}>
+      <Text color={theme.text}>
         <Trans>Coming soon</Trans>
       </Text>
     )
@@ -28,7 +28,7 @@ const StartingIn = ({ startingIn }: { startingIn?: string }) => {
 
   const seconds = Math.abs(timeDiff) / 1000
 
-  return <Text color={theme.subText}>{getFormattedTimeFromSecond(seconds)}</Text>
+  return <Text color={theme.text}>{getFormattedTimeFromSecond(seconds)}</Text>
 }
 
 export default StartingIn

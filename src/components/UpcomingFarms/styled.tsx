@@ -95,6 +95,7 @@ export const PoolTokensText = styled.div`
   margin-left: 12px;
   font-size: 14px;
   font-weight: 400;
+  color: ${({ theme }) => theme.text};
 `
 
 export const NoFarmsWrapper = styled.div`
