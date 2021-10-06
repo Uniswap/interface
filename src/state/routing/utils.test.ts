@@ -31,6 +31,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
+            type: 'v3-pool',
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`5`,
@@ -59,6 +60,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
+            type: 'v3-pool',
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`5`,
             amountOut: amount`6`,
@@ -72,6 +74,7 @@ describe('#useRoute', () => {
         ],
         [
           {
+            type: 'v3-pool',
             address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`10`,
             amountOut: amount`1`,
@@ -83,6 +86,7 @@ describe('#useRoute', () => {
             tickCurrent: '-69633',
           },
           {
+            type: 'v3-pool',
             address: '0x3f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`200`,
@@ -118,6 +122,7 @@ describe('#useRoute', () => {
       route: [
         [
           {
+            type: 'v3-pool',
             address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`1`,
             amountOut: amount`5`,
@@ -131,6 +136,7 @@ describe('#useRoute', () => {
         ],
         [
           {
+            type: 'v3-pool',
             address: '0x2f8F72aA9304c8B593d555F12eF6589cC3A579A2',
             amountIn: amount`10`,
             amountOut: amount`50`,
@@ -162,6 +168,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
+              type: 'v3-pool',
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: (1e18).toString(),
               amountOut: amount`5`,
@@ -191,6 +198,7 @@ describe('#useRoute', () => {
         route: [
           [
             {
+              type: 'v3-pool',
               address: '0x1f8F72aA9304c8B593d555F12eF6589cC3A579A2',
               amountIn: amount`5`,
               amountOut: (1e18).toString(),
