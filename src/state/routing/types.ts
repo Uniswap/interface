@@ -7,9 +7,10 @@ export enum V3TradeState {
 }
 
 export interface GetQuoteResult {
+  quoteId?: string
   blockNumber: string
-  amount?: string
-  amountDecimals?: string
+  amount: string
+  amountDecimals: string
   gasPriceWei: string
   gasUseEstimate: string
   gasUseEstimateQuote: string
@@ -20,7 +21,6 @@ export interface GetQuoteResult {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  quoteId?: string
   route: {
     address: string
     amountIn?: string
