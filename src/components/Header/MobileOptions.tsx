@@ -46,7 +46,7 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
-const DisabledNavLink = styled(StyledNavLink)<{ isActive?: boolean }>`
+const DisabledNavLink = styled(StyledNavLink) <{ isActive?: boolean }>`
   color: ${({ theme }) => transparentize(0.6, theme.text5)} !important;
   font-weight: 400 !important;
 `
@@ -117,6 +117,7 @@ export default function MobileOptions() {
     switch (location.pathname) {
       case '/swap':
         return t('swap')
+      case '/bridge':
       case '/pools':
       case '/add':
       case '/remove':
@@ -138,6 +139,11 @@ export default function MobileOptions() {
               <ListItem>
                 <StyledNavLink id="swap-nav-link" to="/swap" onClick={closeModals} activeClassName="active">
                   {t('swap')}
+                </StyledNavLink>
+              </ListItem>
+              <ListItem>
+                <StyledNavLink id="bridge-nav-link" to="/bridge" onClick={closeModals} activeClassName="active">
+                  {t('bridge')}
                 </StyledNavLink>
               </ListItem>
               <ListItem>
