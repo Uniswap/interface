@@ -133,6 +133,10 @@ msgstr "将 {0} 添加到Metamask"
 msgid "Advanced Mode"
 msgstr "进阶模式"
 
+#: src/pages/Yield/index.tsx
+msgid "All Farms"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing."
 msgstr "开发者将他们的 Dapp 连接到无摩擦的流动性以执行 DeFi 功能所需的所有文档和工具，例如代币兑换、闪贷、链上清算和投资组合再平衡。"
@@ -280,6 +284,10 @@ msgstr "关闭"
 #: src/pages/Static/About.tsx
 msgid "Code Audited"
 msgstr "代码审计"
+
+#: src/components/UpcomingFarms/StartingIn.tsx
+msgid "Coming soon"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Committed to Security"
@@ -478,9 +486,9 @@ msgstr ""
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "Eligible Pools"
-msgstr "符合条件的池"
+#: 
+#~ msgid "Eligible Pools"
+#~ msgstr "符合条件的池"
 
 #: src/components/Settings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -561,6 +569,10 @@ msgstr "探索池"
 #: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "完全解锁"
+
+#: src/components/Header/index.tsx
+msgid "Farm"
+msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee (24h)"
@@ -695,6 +707,11 @@ msgstr "在进阶模式下，“确认交易”提示被停用。 这可能导�
 msgid "Increase LP Profit"
 msgstr "增加 LP收益"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Information"
+msgstr ""
+
 #: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
@@ -768,6 +785,11 @@ msgstr ""
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "了解更多 →"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+msgid "Learn more"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Less tokens required for high liquidity"
@@ -878,9 +900,9 @@ msgstr "迁移     流动性"
 msgid "Minimum received"
 msgstr "收到的最小值"
 
-#: src/components/Header/index.tsx
-msgid "My Dashboard"
-msgstr "我的仪表板"
+#: 
+#~ msgid "My Dashboard"
+#~ msgstr "我的仪表板"
 
 #: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -890,6 +912,10 @@ msgstr "我的存款"
 #: src/pages/Pool/index.tsx
 msgid "My Liquidity Pools"
 msgstr "我的流动性池"
+
+#: src/components/Header/index.tsx
+msgid "My Pools"
+msgstr ""
 
 #: src/pages/Pool/lp.tsx
 msgid "My Pools on External Platforms"
@@ -910,6 +936,7 @@ msgid "My liquidity"
 msgstr "我的流动性"
 
 #: src/components/Header/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "New"
 msgstr "新"
 
@@ -1050,6 +1077,8 @@ msgid "Pooled {0}:"
 msgstr "Pooled {0}:"
 
 #: src/components/Header/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Pools"
 msgstr "池"
 
@@ -1101,10 +1130,11 @@ msgstr "价格范围 {0}/{1}"
 msgid "Price:"
 msgstr "价格:"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Prices"
-msgstr ""
+#: 
+#~ msgid "Prices"
+#~ msgstr ""
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Prices and Pool share"
 msgstr ""
@@ -1185,6 +1215,8 @@ msgstr "删除 {0} {1} 和 {2} {3}"
 msgid "Reward"
 msgstr "奖励"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr ""
@@ -1269,7 +1301,7 @@ msgstr "滑点容忍度"
 msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
 msgstr "质押您的 DMM 流动性提供者代币以获得代币奖励。"
 
-#: src/pages/Yield/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "仅质押"
 
@@ -1277,6 +1309,11 @@ msgstr "仅质押"
 #: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Starting In"
+msgstr ""
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1473,6 +1510,14 @@ msgstr "解锁奖励"
 msgid "Unlocked: {0} {1}"
 msgstr "解锁: {0} {1}"
 
+#: src/pages/Yield/index.tsx
+msgid "Upcoming Farms"
+msgstr ""
+
+#: 
+#~ msgid "Upcoming Pools"
+#~ msgstr ""
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "更新列表"
@@ -1549,9 +1594,9 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "错误的网络"
 
-#: src/components/Header/index.tsx
-msgid "Yield"
-msgstr "收益"
+#: 
+#~ msgid "Yield"
+#~ msgstr "收益"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1624,9 +1669,9 @@ msgstr "您的交易将显示在此处..."
 msgid "and"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "and Pool share"
-msgstr ""
+#: 
+#~ msgid "and Pool share"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "better slippage"

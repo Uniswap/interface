@@ -17,9 +17,8 @@ import {
   TabWrapper,
   Tab,
   PoolTitleContainer,
-  StakedOnlyToggleWrapper,
-  StakedOnlyToggle,
-  StakedOnlyToggleText,
+  UpcomingPoolsWrapper,
+  NewText,
   HistoryButton
 } from '../../components/YieldPools/styleds'
 import Vesting from 'components/Vesting'
@@ -28,13 +27,13 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import YieldPools from 'components/YieldPools'
 import RewardTokenPrices from 'components/RewardTokenPrices'
+import UpcomingFarms from 'components/UpcomingFarms'
 
 const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const { loading, data: farms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
-  const [stakedOnly, setStakedOnly] = useState(false)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
   const vestingLoading = useSelector<AppState, boolean>(state => state.vesting.loading)
 
@@ -65,6 +64,16 @@ const Farms = () => {
       }
     })
 
+  const renderTabContent = () => {
+    return activeTab === 0 ? (
+      <YieldPools />
+    ) : activeTab === 1 ? (
+      <Vesting />
+    ) : (
+      <UpcomingFarms setActiveTab={setActiveTab} />
+    )
+  }
+
   return (
     <>
       <PageWrapper>
@@ -81,7 +90,7 @@ const Farms = () => {
             <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
               <PoolTitleContainer>
                 <span style={{ marginRight: '4px' }}>
-                  <Trans>Eligible Pools</Trans>
+                  <Trans>All Farms</Trans>
                 </span>
                 {loading && <Loader />}
               </PoolTitleContainer>
@@ -94,22 +103,18 @@ const Farms = () => {
                 {vestingLoading && <Loader />}
               </PoolTitleContainer>
             </Tab>
-            {activeTab === 0 && (
-              <StakedOnlyToggleWrapper>
-                <StakedOnlyToggle
-                  className="staked-only-switch"
-                  checked={stakedOnly}
-                  onClick={() => setStakedOnly(!stakedOnly)}
-                />
-                <StakedOnlyToggleText>
-                  <Trans>Staked Only</Trans>
-                </StakedOnlyToggleText>
-              </StakedOnlyToggleWrapper>
-            )}
+            <Tab onClick={() => setActiveTab(2)} isActive={activeTab === 2}>
+              <UpcomingPoolsWrapper>
+                <Trans>Upcoming Farms</Trans>
+                <NewText>
+                  <Trans>New</Trans>
+                </NewText>
+              </UpcomingPoolsWrapper>
+            </Tab>
           </TabWrapper>
         </TabContainer>
 
-        {activeTab === 0 ? <YieldPools stakedOnly={stakedOnly} /> : <Vesting />}
+        {renderTabContent()}
       </PageWrapper>
       <FarmHistoryModal farms={farmsList} />
       <SwitchLocaleLink />

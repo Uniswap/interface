@@ -133,6 +133,10 @@ msgstr "메타마스크에 {0} 추가"
 msgid "Advanced Mode"
 msgstr "고급 모드"
 
+#: src/pages/Yield/index.tsx
+msgid "All Farms"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing."
 msgstr "개발자가 Dapp을 손쉽게 DMM 유동성에 연결하여 토큰 스왑, 플래시 대출, 온체인 청산 및 포트폴리오 재조정과 같은 DeFi 기능을 수행하는 데 필요한 모든 문서 및 도구가 준비되어 있습니다."
@@ -280,6 +284,10 @@ msgstr "닫기"
 #: src/pages/Static/About.tsx
 msgid "Code Audited"
 msgstr "코드 감사"
+
+#: src/components/UpcomingFarms/StartingIn.tsx
+msgid "Coming soon"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Committed to Security"
@@ -478,9 +486,9 @@ msgstr ""
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "Eligible Pools"
-msgstr "지정 풀"
+#: 
+#~ msgid "Eligible Pools"
+#~ msgstr "지정 풀"
 
 #: src/components/Settings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -561,6 +569,10 @@ msgstr "풀 둘러보기"
 #: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "전체 잠금 해제"
+
+#: src/components/Header/index.tsx
+msgid "Farm"
+msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee (24h)"
@@ -695,6 +707,11 @@ msgstr "고급 모드에서는 '트랜잭션 확인' 하기 버튼이 비활성�
 msgid "Increase LP Profit"
 msgstr "LP 수익 증대"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Information"
+msgstr ""
+
 #: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
@@ -768,6 +785,11 @@ msgstr ""
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "더 알아보기 →"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+msgid "Learn more"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Less tokens required for high liquidity"
@@ -878,9 +900,9 @@ msgstr "마이그레이션 유동성"
 msgid "Minimum received"
 msgstr "최소 수령"
 
-#: src/components/Header/index.tsx
-msgid "My Dashboard"
-msgstr "대시보드"
+#: 
+#~ msgid "My Dashboard"
+#~ msgstr "대시보드"
 
 #: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -890,6 +912,10 @@ msgstr "내 예치금"
 #: src/pages/Pool/index.tsx
 msgid "My Liquidity Pools"
 msgstr "내 유동성 풀"
+
+#: src/components/Header/index.tsx
+msgid "My Pools"
+msgstr ""
 
 #: src/pages/Pool/lp.tsx
 msgid "My Pools on External Platforms"
@@ -910,6 +936,7 @@ msgid "My liquidity"
 msgstr "나의 유동성"
 
 #: src/components/Header/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "New"
 msgstr "신규"
 
@@ -1050,6 +1077,8 @@ msgid "Pooled {0}:"
 msgstr "풀링된 {0}:"
 
 #: src/components/Header/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Pools"
 msgstr "풀"
 
@@ -1101,10 +1130,11 @@ msgstr "가격대 {0}/{1}"
 msgid "Price:"
 msgstr "가격:"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Prices"
-msgstr ""
+#: 
+#~ msgid "Prices"
+#~ msgstr ""
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Prices and Pool share"
 msgstr ""
@@ -1185,6 +1215,8 @@ msgstr "{0} {1} 및 {2} {3} 제거"
 msgid "Reward"
 msgstr "보상"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr ""
@@ -1269,7 +1301,7 @@ msgstr "슬립피지 범위"
 msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
 msgstr "DMM 유동성 공급자 토큰을 스테이킹하여 토큰 보상을 받으세요."
 
-#: src/pages/Yield/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "스테이킹 풀만 보기"
 
@@ -1277,6 +1309,11 @@ msgstr "스테이킹 풀만 보기"
 #: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "스테이킹된 TVL"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Starting In"
+msgstr ""
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1473,6 +1510,14 @@ msgstr "잠금 해제된 보상"
 msgid "Unlocked: {0} {1}"
 msgstr "잠금 해제: {0} {1}"
 
+#: src/pages/Yield/index.tsx
+msgid "Upcoming Farms"
+msgstr ""
+
+#: 
+#~ msgid "Upcoming Pools"
+#~ msgstr ""
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "목록 업데이트"
@@ -1549,9 +1594,9 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 
-#: src/components/Header/index.tsx
-msgid "Yield"
-msgstr "유동성 마이닝"
+#: 
+#~ msgid "Yield"
+#~ msgstr "유동성 마이닝"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1624,9 +1669,9 @@ msgstr "거래가 여기에 표시됩니다..."
 msgid "and"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "and Pool share"
-msgstr ""
+#: 
+#~ msgid "and Pool share"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "better slippage"
