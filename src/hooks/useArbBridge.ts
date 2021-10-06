@@ -5,7 +5,7 @@ import { utils, BigNumber } from 'ethers'
 import { useActiveWeb3React } from '.'
 
 import { BridgeContext } from '../contexts/BridgeProvider'
-import { BridgeAssetType, BridgeTxn } from '../state/bridgeTransactions/types'
+import { BridgeAssetType } from '../state/bridgeTransactions/types'
 import {
   addBridgeTxn,
   updateBridgeTxnPartnerHash,
@@ -108,7 +108,6 @@ export const useArbBridge = () => {
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
-      console.log({ l2Tx })
 
       const l1Tx = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
 
@@ -126,6 +125,7 @@ export const useArbBridge = () => {
 
       try {
         const l1Receipt = await l1Tx.wait()
+
         dispatch(
           updateBridgeTxnReceipt({
             chainId: l1ChainId,
@@ -133,6 +133,7 @@ export const useArbBridge = () => {
             receipt: l1Receipt
           })
         )
+
         if (l1ChainId && l2ChainId) {
           dispatch(
             updateBridgeTxnPartnerHash({
@@ -200,46 +201,61 @@ export const useArbBridge = () => {
   )
 
   const triggerOutboxERC20 = useCallback(
-    async ({
-      batchIndex,
-      batchNumber,
-      value,
-      assetName
-    }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value' | 'assetName'>) => {
+    async (l2Tx: BridgeTransactionSummary) => {
+      const { batchIndex, batchNumber, value } = l2Tx
       if (!account || !bridge || !l1ChainId || !batchIndex || !batchNumber || !value) return
 
       const batchNumberBN = BigNumber.from(batchNumber)
       const batchIndexBN = BigNumber.from(batchIndex)
 
-      const l2ToL1 = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+      const l1Tx = await bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+
       dispatch(
         addBridgeTxn({
-          assetName,
+          assetName: l2Tx.assetName,
           assetType: BridgeAssetType.ERC20,
           type: 'outbox',
           value,
-          txHash: l2ToL1.hash,
+          txHash: l1Tx.hash,
           chainId: l1ChainId,
           sender: account
         })
       )
 
       try {
-        const l2ToL1Receipt = await l2ToL1.wait()
+        const l1Receipt = await l1Tx.wait()
+
         dispatch(
           updateBridgeTxnReceipt({
             chainId: l1ChainId,
-            txHash: l2ToL1.hash,
-            receipt: l2ToL1Receipt
+            txHash: l1Tx.hash,
+            receipt: l1Receipt
           })
         )
+        if (l1ChainId && l2ChainId) {
+          dispatch(
+            updateBridgeTxnPartnerHash({
+              chainId: l1ChainId,
+              txHash: l1Tx.hash,
+              partnerTxHash: l2Tx.txHash,
+              partnerChainId: l2ChainId
+            })
+          )
+        }
 
-        return l2ToL1Receipt
+        dispatch(
+          updateBridgeTxnWithdrawalInfo({
+            chainId: l1ChainId,
+            txHash: l1Tx.hash,
+            outgoingMessageState: OutgoingMessageState.EXECUTED
+          })
+        )
+        return l1Receipt
       } catch (err) {
         throw err
       }
     },
-    [account, bridge, dispatch, l1ChainId]
+    [account, bridge, dispatch, l1ChainId, l2ChainId]
   )
 
   return {
