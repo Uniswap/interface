@@ -21,8 +21,7 @@ import {
 } from '@uniswap/smart-order-router'
 import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
-import { ethers } from 'ethers'
-
+import { providers } from 'ethers/lib/ethers'
 
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
@@ -50,7 +49,7 @@ class MetricLogger extends IMetric {
       category: 'Routing API',
       variable: `${key} | ${unit}`,
       value,
-      label: 'client'
+      label: 'client',
     })
   }
 }
@@ -73,7 +72,7 @@ export type Dependencies = { [chainId in ChainId]?: AlphaRouterParams }
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
   for (const chainId of SUPPORTED_CHAINS) {
-    const provider = new ethers.providers.JsonRpcProvider(NETWORK_URLS[chainId])
+    const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
     //todo: use fallback
     const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new Cache())
