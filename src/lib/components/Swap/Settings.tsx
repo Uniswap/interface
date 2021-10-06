@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Settings as Icon } from 'react-feather'
+import { Settings as SettingsIcon, X } from 'react-feather'
 
 import themed from '../../themed'
 import Modal from '../Modal'
+import ModalHeader from '../Modal/Header'
 
-const ThemedIcon = themed(Icon)`
+const ThemedSettingsIcon = themed(SettingsIcon)`
   height: 20px;
   width: 20px;
 
@@ -31,9 +32,13 @@ export default function Settings() {
   return (
     <>
       <ThemedButton onClick={() => setOpen(true)}>
-        <ThemedIcon />
+        <ThemedSettingsIcon />
       </ThemedButton>
-      {open && <Modal>Modal</Modal>}
+      {open && (
+        <Modal>
+          <ModalHeader title="Transaction Settings" Icon={X} onClick={() => setOpen(false)}></ModalHeader>
+        </Modal>
+      )}
     </>
   )
 }
