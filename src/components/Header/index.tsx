@@ -330,15 +330,6 @@ export default function Header() {
             <Trans>Pools</Trans>
           </StyledNavLink>
 
-          <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
-            <YieldMenuWrapper>
-              <Trans>Yield</Trans>
-              <NewText>
-                <Trans>New</Trans>
-              </NewText>
-            </YieldMenuWrapper>
-          </StyledNavLink>
-
           <HideSmall>
             <StyledNavLink
               id={`my-pools-nav-link`}
@@ -351,9 +342,18 @@ export default function Header() {
                 (pathname.startsWith('/find') && pathname.endsWith('find'))
               }
             >
-              <Trans>My Dashboard</Trans>
+              <Trans>My Pools</Trans>
             </StyledNavLink>
           </HideSmall>
+
+          <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
+            <YieldMenuWrapper>
+              <Trans>Farm</Trans>
+              <NewText>
+                <Trans>New</Trans>
+              </NewText>
+            </YieldMenuWrapper>
+          </StyledNavLink>
 
           <AnalyticsWrapper>
             <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>

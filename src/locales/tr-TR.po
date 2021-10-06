@@ -133,6 +133,10 @@ msgstr "{0} Meta Mask’a Eklensin"
 msgid "Advanced Mode"
 msgstr "Gelişmiş Mod"
 
+#: src/pages/Yield/index.tsx
+msgid "All Farms"
+msgstr ""
+
 #: src/pages/Static/About.tsx
 msgid "All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing."
 msgstr "Token takasları, flash krediler, zincir üzerinde tasfiye ve portföy yeniden dengeleme gibi DeFi işlevlerini gerçekleştirmek adına geliştiricilerin Dapp'lerini sorunsuz likiditeye bağlamaları için gerekli tüm belgeler ve araçlar."
@@ -280,6 +284,10 @@ msgstr "Kapat"
 #: src/pages/Static/About.tsx
 msgid "Code Audited"
 msgstr "Kod Denetlendi"
+
+#: src/components/UpcomingFarms/StartingIn.tsx
+msgid "Coming soon"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Committed to Security"
@@ -478,9 +486,9 @@ msgstr ""
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "Eligible Pools"
-msgstr "Uygun Havuzlar"
+#: 
+#~ msgid "Eligible Pools"
+#~ msgstr "Uygun Havuzlar"
 
 #: src/components/Settings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -561,6 +569,10 @@ msgstr "Havuzları keşfedin"
 #: src/components/Vesting/Schedule.tsx
 msgid "FULL UNLOCK"
 msgstr "TAM KİLİT AÇMA"
+
+#: src/components/Header/index.tsx
+msgid "Farm"
+msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
 msgid "Fee (24h)"
@@ -695,6 +707,11 @@ msgstr "Gelişmiş Modda, 'işlemi onayla' istemi devre dışı bırakılır. Bu
 msgid "Increase LP Profit"
 msgstr "LP Karını Artırın"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Information"
+msgstr ""
+
 #: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
@@ -768,6 +785,11 @@ msgstr ""
 #: src/components/YieldPools/index.tsx
 msgid "Learn More →"
 msgstr "Daha Fazla Bilgi →"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+msgid "Learn more"
+msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "Less tokens required for high liquidity"
@@ -878,9 +900,9 @@ msgstr "Likiditeyi     Taşı"
 msgid "Minimum received"
 msgstr "Minimum alındı"
 
-#: src/components/Header/index.tsx
-msgid "My Dashboard"
-msgstr "Gösterge Panelim"
+#: 
+#~ msgid "My Dashboard"
+#~ msgstr "Gösterge Panelim"
 
 #: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -890,6 +912,10 @@ msgstr "Yatırılan"
 #: src/pages/Pool/index.tsx
 msgid "My Liquidity Pools"
 msgstr "Likidite Havuzlarım"
+
+#: src/components/Header/index.tsx
+msgid "My Pools"
+msgstr ""
 
 #: src/pages/Pool/lp.tsx
 msgid "My Pools on External Platforms"
@@ -910,6 +936,7 @@ msgid "My liquidity"
 msgstr "Likiditem"
 
 #: src/components/Header/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "New"
 msgstr "Yeni"
 
@@ -1050,6 +1077,8 @@ msgid "Pooled {0}:"
 msgstr "{0} havuza alındı:"
 
 #: src/components/Header/index.tsx
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 msgid "Pools"
 msgstr "Havuzlar"
 
@@ -1101,10 +1130,11 @@ msgstr "Fiyat aralığı {0}/{1}"
 msgid "Price:"
 msgstr "Fiyat:"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Prices"
-msgstr ""
+#: 
+#~ msgid "Prices"
+#~ msgstr ""
 
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Prices and Pool share"
 msgstr ""
@@ -1185,6 +1215,8 @@ msgstr "{0} {1} ve {2} {3} kaldırılıyor"
 msgid "Reward"
 msgstr "Ödül"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Rewards"
 msgstr ""
@@ -1269,7 +1301,7 @@ msgstr "Kayma toleransı"
 msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
 msgstr "Token ödülleri kazanmak için DMM Likidite Sağlayıcı token’larınızı kullanın."
 
-#: src/pages/Yield/index.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "Sadece Stake Edilen"
 
@@ -1277,6 +1309,11 @@ msgstr "Sadece Stake Edilen"
 #: src/components/YieldPools/ListItem.tsx
 msgid "Staked TVL"
 msgstr "Stake edilen TVL"
+
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Starting In"
+msgstr ""
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1473,6 +1510,14 @@ msgstr "Kilidi Açılmış Ödüller"
 msgid "Unlocked: {0} {1}"
 msgstr "Kilidi açık: {0} {1}"
 
+#: src/pages/Yield/index.tsx
+msgid "Upcoming Farms"
+msgstr ""
+
+#: 
+#~ msgid "Upcoming Pools"
+#~ msgstr ""
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "Güncelleme listesi"
@@ -1549,9 +1594,9 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "Yanlış Ağ"
 
-#: src/components/Header/index.tsx
-msgid "Yield"
-msgstr "Getiri"
+#: 
+#~ msgid "Yield"
+#~ msgstr "Getiri"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1624,9 +1669,9 @@ msgstr "İşlemleriniz burada görünecek..."
 msgid "and"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "and Pool share"
-msgstr ""
+#: 
+#~ msgid "and Pool share"
+#~ msgstr ""
 
 #: src/pages/Static/About.tsx
 msgid "better slippage"
