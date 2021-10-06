@@ -12,11 +12,11 @@ export const PendingReasons = {
   WITHDRAWAL: 'Waiting for confirmation (~7 days of dispute period)'
 }
 
-export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
+export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem' | 'claimed'
 
 export type BridgeTransactionSummary = Pick<
   BridgeTxn,
-  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber'
+  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber' | 'timestampResolved'
 > & {
   fromChainId: ChainId
   toChainId: ChainId
@@ -135,10 +135,7 @@ export const useBridgePendingWithdrawals = () => {
       const l2Txs = state[l2ChainId]
 
       transactions = Object.values(l2Txs).filter(
-        tx =>
-          tx.type === 'withdraw' &&
-          tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
-          tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
+        tx => tx.type === 'withdraw' && tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
       )
     }
 
@@ -180,6 +177,7 @@ export const useBridgeTransactionsSummary = () => {
           batchIndex: tx.batchIndex,
           batchNumber: tx.batchNumber,
           pendingReason: tx.receipt?.status ? undefined : PendingReasons.TX_UNCONFIRMED,
+          timestampResolved: tx.timestampResolved,
           log: []
         }
 
@@ -203,6 +201,7 @@ export const useBridgeTransactionsSummary = () => {
           summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
           summary.status = getBridgeTxStatus(status)
           summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
+          summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
 
           txMap[l1ChainId][tx.txHash] = tx.txHash
           txMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
@@ -229,6 +228,7 @@ export const useBridgeTransactionsSummary = () => {
           fromChainId: from,
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
+          timestampResolved: tx.timestampResolved,
           log: []
         }
 
@@ -238,13 +238,15 @@ export const useBridgeTransactionsSummary = () => {
             switch (tx.outgoingMessageState) {
               case OutgoingMessageState.CONFIRMED:
                 summary.status = 'redeem'
+                summary.timestampResolved = undefined
                 break
               case OutgoingMessageState.EXECUTED:
-                summary.status = 'failed'
+                summary.status = 'claimed'
                 break
               default:
                 summary.status = 'pending'
                 summary.pendingReason = PendingReasons.WITHDRAWAL
+                summary.timestampResolved = undefined
             }
           }
           summary.log = createBridgeLog([tx])
@@ -256,7 +258,12 @@ export const useBridgeTransactionsSummary = () => {
         return total
       }, [])
 
-      return [...l1Summaries, ...l2Summaries]
+      const passed24h = new Date().getTime() - 1000 * 60 * 24
+
+      return [...l1Summaries, ...l2Summaries].filter(summary => {
+        if (!summary.timestampResolved) return true
+        return summary.timestampResolved >= passed24h
+      })
     }
 
     return []
