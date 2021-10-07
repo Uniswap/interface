@@ -28,7 +28,6 @@ export function useBestV3Trade(
 
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
-  // TODO(judo): skip on l2
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
     routingAPISupported && isWindowVisible ? debouncedAmount : undefined,

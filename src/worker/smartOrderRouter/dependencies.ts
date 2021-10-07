@@ -22,11 +22,14 @@ import {
   UniswapMulticallProvider,
   URISubgraphProvider,
 } from '@uniswap/smart-order-router'
+import { TokenList } from '@uniswap/token-lists'
 import { Pool } from '@uniswap/v3-sdk'
 import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
 import { providers } from 'ethers/lib/ethers'
 import ms from 'ms.macro'
+
+import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
   topNDirectSwaps: 2,
@@ -67,10 +70,11 @@ class MemoryCache<T> implements ICache<T> {
 
   async get(key: string) {
     const rec = this.cache[key]
+
     if (this.ttl) {
-      return !(rec?.added && rec?.added + this.ttl > Date.now()) ? rec.val : undefined
+      return !(rec?.added && rec?.added + this.ttl > Date.now()) ? rec?.val : undefined
     } else {
-      return rec.val
+      return rec?.val
     }
   }
 
@@ -105,7 +109,6 @@ export function buildDependencies(): Dependencies {
   for (const chainId of SUPPORTED_CHAINS) {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
-    //todo: use fallback
     const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new MemoryCache<Token>())
 
     const tokenCache = new MemoryCache<Token>()
@@ -144,8 +147,11 @@ export function buildDependencies(): Dependencies {
     dependenciesByChain[chainId] = {
       chainId,
       provider,
-      // tokenListProvider,
-      blockedTokenListProvider: undefined,
+      blockedTokenListProvider: new CachingTokenListProvider(
+        chainId,
+        UNSUPPORTED_TOKEN_LIST as TokenList,
+        blockedTokenCache
+      ),
       multicall2Provider,
       poolProvider: new CachingPoolProvider(
         chainId,
@@ -157,7 +163,6 @@ export function buildDependencies(): Dependencies {
         chainId,
         'https://ipfs.io/ipfs/QmfArMYESGVJpPALh4eQXnjF8HProSF1ky3v8RmuYLJZT4'
       ),
-      // tokenProviderFromTokenList: tokenListProvider,
       quoteProvider,
       gasPriceProvider: new CachingGasStationProvider(
         chainId,
