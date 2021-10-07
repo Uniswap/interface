@@ -68,7 +68,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const BridgeService = useBridgeService()
+  const bridgeService = useBridgeService()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   const isNetworkConnected = fromNetwork.chainId === chainId
@@ -86,15 +86,15 @@ export default function Bridge() {
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
   const handleSubmit = useCallback(() => {
-    if (!chainId || !BridgeService) return
+    if (!chainId || !bridgeService) return
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       handleResetBridge()
-      return BridgeService.depositEth(typedValue)
+      return bridgeService.depositEth(typedValue)
     } else {
       handleResetBridge()
-      return BridgeService.withdrawEth(typedValue)
+      return bridgeService.withdrawEth(typedValue)
     }
-  }, [BridgeService, chainId, handleResetBridge, typedValue])
+  }, [bridgeService, chainId, handleResetBridge, typedValue])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -124,10 +124,10 @@ export default function Bridge() {
   )
 
   const handleCollectConfirm = useCallback(async () => {
-    if (!BridgeService) return
-    await BridgeService.triggerOutboxEth(collectableTx)
+    if (!bridgeService) return
+    await bridgeService.triggerOutboxEth(collectableTx)
     setStep(BridgeStep.Success)
-  }, [BridgeService, collectableTx])
+  }, [bridgeService, collectableTx])
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -202,7 +202,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {BridgeService && chainId && !!bridgeSummaries.length && (
+      {bridgeService && chainId && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           show
           transactions={bridgeSummaries}
