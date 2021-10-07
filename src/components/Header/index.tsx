@@ -319,7 +319,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <IconImage src="images/159x108_App_Icon.png" alt="logo" />
+            <IconImage src="logo.svg" alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>

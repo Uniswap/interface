@@ -130,6 +130,7 @@ export const HeadingContainer = styled.div`
   background-color: ${({ theme }) => theme.bg16};
   padding: 28px 32px;
   margin-bottom: 20px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 1fr;
@@ -262,22 +263,24 @@ export const HistoryButton = styled.div`
 
 export const FairLaunchPoolsWrapper = styled.div`
   background-color: ${({ theme }) => theme.background};
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   :last-child {
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
   }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     border-radius: 0.5rem;
     margin-bottom: 1.5rem;
   `};
 `
 
-export const FairLaunchPoolsTitle = styled.div`
+export const FairLaunchPoolsTitle = styled.div<{ backgroundColor: string }>`
   padding: 24px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background: ${({ theme }) => `${theme.bg12}40`};
+  background-color: ${({ backgroundColor }) => backgroundColor};
 `
 
 export const ListItemWrapper = styled.div`
@@ -309,6 +312,7 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   background-color: ${({ theme }) => theme.tableHeader};
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-gap: 1rem;
@@ -338,7 +342,7 @@ export const ClickableText = styled(Text)`
 export const MenuFlyout = styled.span`
   min-width: 15rem;
   background-color: ${({ theme }) => theme.background};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
   border-radius: 5px;
   padding: 19px 32px;
   display: flex;
@@ -362,8 +366,6 @@ export const Tag = styled.div<{ tag?: string }>`
   color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
   background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg11)};
   box-sizing: border-box;
-  box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 0px 1px rgba(0, 0, 0, 0.04);
   @media screen and (max-width: 500px) {
     box-shadow: none;
   }

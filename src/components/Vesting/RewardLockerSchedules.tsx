@@ -13,6 +13,8 @@ import { RewardLockerSchedulesWrapper, RewardLockerSchedulesTitle, ClaimAllSecti
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
 import { Text, Flex } from 'rebass'
 import { useMedia } from 'react-use'
+import useTheme from 'hooks/useTheme'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const RewardLockerSchedules = ({
   rewardLockerAddress,
@@ -23,6 +25,8 @@ const RewardLockerSchedules = ({
   schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number][]
   idx: number
 }) => {
+  const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const above500 = useMedia('(min-width: 500px)')
   const currentBlockNumber = useBlockNumber()
@@ -135,7 +139,7 @@ const RewardLockerSchedules = ({
 
   return (
     <RewardLockerSchedulesWrapper showBorder={!expanded}>
-      <RewardLockerSchedulesTitle>
+      <RewardLockerSchedulesTitle backgroundColor={isDarkMode ? `${theme.bg12}40` : `${theme.bg12}80`}>
         <Flex justifyContent="space-between" alignItems="center" width="100%" marginBottom={above500 ? 0 : '10px'}>
           <Text>Group {idx}</Text>
           {!above500 && (
