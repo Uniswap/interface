@@ -71,5 +71,6 @@
   "tokenAddress": "כתובת הטוקן",
   "label": "שם",
   "decimals": "ספרות עשרויות",
-  "enterTokenCont": "הכניסו כתובת טוקן כדי להמשיך"
+  "enterTokenCont": "הכניסו כתובת טוקן כדי להמשיך",
+  "bridge": "Bridge"
 }

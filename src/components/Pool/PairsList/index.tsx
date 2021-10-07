@@ -35,7 +35,7 @@ const PaginationRow = styled(Flex)`
   & ul {
     margin: 22px 0;
   }
-`;
+`
 
 interface PairsListProps {
   aggregatedPairs: {
@@ -53,12 +53,12 @@ export default function PairsList({ aggregatedPairs, loading, filter }: PairsLis
   const [page, setPage] = useState(1)
   const responsiveItemsPerPage = useResponsiveItemsPerPage()
   const itemsPage = usePage(aggregatedPairs, responsiveItemsPerPage, page, 0)
-  
+
   useEffect(() => {
     // reset page when connected chain or selected filter changes
     setPage(1)
   }, [chainId, filter, aggregatedPairs])
-  
+
   return (
     <Flex flexDirection="column">
       <Box>

@@ -13,7 +13,6 @@ import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
 import { ChevronDown, X } from 'react-feather'
-import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { Currency, Token } from '@swapr/sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
@@ -23,12 +22,12 @@ import { useLPPairs } from '../../hooks/useLiquidityPositions'
 import PairsList from '../../components/Pool/PairsList'
 import CurrencyLogo from '../../components/CurrencyLogo'
 
-const VoteCard = styled.div`
+/* const VoteCard = styled.div`
   overflow: hidden;
   background-color: ${({ theme }) => theme.bg1};
   border: 1px solid ${({ theme }) => theme.bg2};
   border-radius: 8px;
-`
+` */
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -126,41 +125,39 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggre
               /
             </Text>
           </Box>
-          {aggregatedDataFilter === PairsFilterType.MY
-            ? (
-              <Box>
-                <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
-                  MY PAIRS
-                </TYPE.mediumHeader>
-              </Box>
-            ) : (
-              <PointableFlex onClick={handleAllClick}>
-                {!filteredToken && (
-                  <Box mr="6px" height="21px">
-                    <img src={threeBlurredCircles} alt="Circles" />
-                  </Box>
-                )}
-                {filteredToken && (
-                  <Box mr="8px">
-                    <CurrencyLogo currency={filteredToken} size="21px" />
-                  </Box>
-                )}
-                <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                  {filteredToken ? filteredToken.symbol : 'ALL'}
-                </Text>
-                <Box>
-                  <ChevronDown size={12} />
+          {aggregatedDataFilter === PairsFilterType.MY ? (
+            <Box>
+              <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
+                MY PAIRS
+              </TYPE.mediumHeader>
+            </Box>
+          ) : (
+            <PointableFlex onClick={handleAllClick}>
+              {!filteredToken && (
+                <Box mr="6px" height="21px">
+                  <img src={threeBlurredCircles} alt="Circles" />
                 </Box>
-                {filteredToken && (
-                  <Box ml="6px">
-                    <ResetFilterIconContainer onClick={handleResetFilterLocal}>
-                      <ResetFilterIcon />
-                    </ResetFilterIconContainer>
-                  </Box>
-                )}
-              </PointableFlex>
-            )
-          }
+              )}
+              {filteredToken && (
+                <Box mr="8px">
+                  <CurrencyLogo currency={filteredToken} size="21px" />
+                </Box>
+              )}
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                {filteredToken ? filteredToken.symbol : 'ALL'}
+              </Text>
+              <Box>
+                <ChevronDown size={12} />
+              </Box>
+              {filteredToken && (
+                <Box ml="6px">
+                  <ResetFilterIconContainer onClick={handleResetFilterLocal}>
+                    <ResetFilterIcon />
+                  </ResetFilterIconContainer>
+                </Box>
+              )}
+            </PointableFlex>
+          )}
         </Flex>
         <ButtonRow>
           <ResponsiveButtonSecondary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
@@ -196,7 +193,7 @@ export default function Pools() {
     filterToken
   )
   const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
-  
+
   const handleCurrencySelect = useCallback(token => {
     setFilterToken(token as Token)
   }, [])
@@ -208,7 +205,7 @@ export default function Pools() {
   const handleFilterChange = useCallback(filter => {
     setAggregatedDataFilter(filter)
   }, [])
-  
+
   return (
     <>
       <PageWrapper>
@@ -222,23 +219,22 @@ export default function Pools() {
               onFilteredTokenReset={handleFilterTokenReset}
             />
             <ListFilter filter={aggregatedDataFilter} onFilterChange={handleFilterChange} />
-            {aggregatedDataFilter === PairsFilterType.MY
-              ? <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
-              : (
-                <PairsList
-                  loading={loadingUserLpPositions || loadingAggregatedData}
-                  aggregatedPairs={aggregatedData}
-                  filter={aggregatedDataFilter}
-                />
-              )
-            }
+            {aggregatedDataFilter === PairsFilterType.MY ? (
+              <PairsList loading={loadingUserLpPositions} aggregatedPairs={userLpPairs} />
+            ) : (
+              <PairsList
+                loading={loadingUserLpPositions || loadingAggregatedData}
+                aggregatedPairs={aggregatedData}
+                filter={aggregatedDataFilter}
+              />
+            )}
           </AutoColumn>
         </AutoColumn>
         {account && (
           <ButtonWithLink
             link={`https://dxstats.eth.link/#/account/${account}?chainId=${chainId}`}
             text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
-            marginTop="32px"
+            style={{ marginTop: '32px' }}
           />
         )}
         {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
@@ -248,7 +244,7 @@ export default function Pools() {
             Import it.
           </StyledInternalLink>
         </TYPE.body> */}
-        <VoteCard style={{ marginTop: '32px' }}>
+        {/* <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
@@ -268,7 +264,7 @@ export default function Pools() {
               </RowBetween>
             </AutoColumn>
           </CardSection>
-        </VoteCard>
+        </VoteCard> */}
       </PageWrapper>
     </>
   )
