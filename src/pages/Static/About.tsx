@@ -64,11 +64,11 @@ export default function About() {
   const [indexx, setIndexx] = useState<number>(0)
 
   const handleAprUpdate = useCallback(
-    (value: any) => {
-      if (value > 0 && value > maxApr) {
+    (value: number) => {
+      if (value > maxApr) {
         setMaxApr(value)
-        setIndexx(indexx + 1)
       }
+      setIndexx(prev => prev + 1)
     },
     [maxApr, indexx]
   )
