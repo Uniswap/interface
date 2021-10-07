@@ -123,6 +123,15 @@ export const useArbBridge = () => {
         })
       )
 
+      dispatch(
+        updateBridgeTxnPartnerHash({
+          chainId: l1ChainId,
+          txHash: l1Tx.hash,
+          partnerTxHash: l2Tx.txHash,
+          partnerChainId: l2ChainId
+        })
+      )
+
       try {
         const l1Receipt = await l1Tx.wait()
 
@@ -131,15 +140,6 @@ export const useArbBridge = () => {
             chainId: l1ChainId,
             txHash: l1Tx.hash,
             receipt: l1Receipt
-          })
-        )
-
-        dispatch(
-          updateBridgeTxnPartnerHash({
-            chainId: l1ChainId,
-            txHash: l1Tx.hash,
-            partnerTxHash: l2Tx.txHash,
-            partnerChainId: l2ChainId
           })
         )
 

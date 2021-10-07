@@ -196,6 +196,19 @@ export const useBridgeTransactionsSummary = () => {
         }
 
         // Has pair & is deposit
+        if (tx.type === 'outbox') {
+          const status = tx.receipt?.status
+          summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
+          summary.status = getBridgeTxStatus(status)
+          summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
+
+          txMap[l1ChainId][tx.txHash] = tx.txHash
+          txMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
+          total.push(summary)
+          return total
+        }
+
+        // Has pair & is deposit
         if (tx.receipt?.status === 1 && tx.type === 'deposit-l1') {
           const status = l2Txs[tx.partnerTxHash].receipt?.status
           summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
