@@ -69,7 +69,7 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const { depositEth, withdrawEth } = useArbBridge()
+  const { depositEth, withdrawEth, triggerOutboxEth } = useArbBridge()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function Bridge() {
   })
 
   const [collectableTx, setCollectableTx] = useState(
-    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
+    bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
 
   const handleCollect = useCallback(
@@ -128,6 +128,11 @@ export default function Bridge() {
     },
     [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
   )
+
+  const handleCollectConfirm = useCallback(async () => {
+    await triggerOutboxEth(collectableTx)
+    setStep(BridgeStep.Success)
+  }, [collectableTx, triggerOutboxEth])
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -195,6 +200,7 @@ export default function Bridge() {
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
           handleSubmit={handleSubmit}
+          handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
           setStep={setStep}

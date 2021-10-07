@@ -16,15 +16,16 @@ export type BridgeActionPanelProps = {
   step: BridgeStep
   setStep: (step: BridgeStep) => void
   handleSubmit: () => void
+  handleCollect: () => void
   typedValue: string
 }
 
 export const BridgeActionPanel = ({
   step,
-  setStep,
   account,
   typedValue,
   handleSubmit,
+  handleCollect,
   toNetworkChainId,
   fromNetworkChainId,
   isNetworkConnected
@@ -64,7 +65,7 @@ export const BridgeActionPanel = ({
             onSwitchClick={() =>
               toNetworkChainId === ChainId.MAINNET ? selectEthereum() : selectNetwork(toNetworkChainId)
             }
-            onCollectClick={() => setStep(BridgeStep.Success)}
+            onCollectClick={handleCollect}
           />
         )
     }

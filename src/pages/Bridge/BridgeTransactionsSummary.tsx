@@ -34,7 +34,7 @@ export const BridgeTransactionsSummary = ({
           </thead>
           <tbody>
             {Object.values(transactions).map((tx, index) => {
-              const { assetName, fromChainId, status, toChainId, value } = tx
+              const { assetName, fromChainId, status, toChainId, value, pendingReason } = tx
 
               return (
                 <tr key={index} style={{ lineHeight: '22px' }}>
@@ -54,7 +54,7 @@ export const BridgeTransactionsSummary = ({
                     </TYPE.main>
                   </td>
                   <td align="left">
-                    <BridgeStatusTag status={status} onCollect={() => onCollect(tx)} />
+                    <BridgeStatusTag status={status} pendingReason={pendingReason} onCollect={() => onCollect(tx)} />
                   </td>
                 </tr>
               )

@@ -1,7 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ChainId } from '@swapr/sdk'
 import { OutgoingMessageState } from 'arb-ts'
-export type BridgeTxnStatus = 'pending' | 'confirmed' | 'failure' | 'disupte_period'
+export type BridgeTxnStatus = 'pending' | 'confirmed' | 'failure' | 'dispute_period'
 
 export type BridgeTxnType =
   | 'deposit'
@@ -15,8 +15,9 @@ export type BridgeTxnType =
   | 'deposit-l2-auto-redeem'
 
 export enum BridgeAssetType {
-  ETH = 'ETH'
-  //ERC20, ERC721
+  ETH = 'ETH',
+  ERC20 = 'ERC20',
+  ERC721 = 'ERC721'
 }
 
 export type BridgeTxnsState = {
