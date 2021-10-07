@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Token } from '@uniswap/sdk-core'
 import * as Comlink from 'comlink'
 import qs from 'qs'
@@ -12,6 +12,28 @@ let comlinkWorker: Comlink.Remote<RouterType> | null = null
 
 function getWorker() {
   return comlinkWorker ?? (comlinkWorker = Comlink.wrap<RouterType>(new SmartOrderRouterWorker()))
+}
+
+async function getClientSideQuote({
+  tokenIn,
+  tokenOut,
+  amount,
+  type,
+}: {
+  // objects must be serializable in redux store
+  tokenIn: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+  tokenOut: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+  amount: string
+  type: 'exactIn' | 'exactOut'
+}) {
+  // TODO(judo): update worker when token list changes?
+  return getWorker().getQuote({
+    type,
+    chainId: tokenIn.chainId,
+    tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
+    tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
+    amount,
+  })
 }
 
 export const routingApi = createApi({
@@ -29,30 +51,25 @@ export const routingApi = createApi({
         type: 'exactIn' | 'exactOut'
       }
     >({
-      async queryFn(args, { getState }, extraOptions, fetch) {
+      async queryFn(args, { getState }, _, fetch) {
         const { tokenIn, tokenOut, amount, type } = args
-
         const useClientSideRouter: boolean = (getState() as AppState).user.userClientSideRouter
 
-        const result: { data?: unknown; error?: unknown } = await (useClientSideRouter
-          ? // TODO(judo): update worker when token list changes?
-            getWorker().getQuote({
-              type,
-              chainId: tokenIn.chainId,
-              tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
-              tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
+        let result
+        if (useClientSideRouter) {
+          result = await getClientSideQuote(args)
+        } else {
+          result = await fetch(
+            `quote?${qs.stringify({
+              tokenInAddress: tokenIn.address,
+              tokenInChainId: tokenIn.chainId,
+              tokenOutAddress: tokenOut.address,
+              tokenOutChainId: tokenOut.chainId,
               amount,
-            })
-          : fetch(
-              `quote?${qs.stringify({
-                tokenInAddress: tokenIn.address,
-                tokenInChainId: tokenIn.chainId,
-                tokenOutAddress: tokenOut.address,
-                tokenOutChainId: tokenOut.chainId,
-                amount,
-                type,
-              })}`
-            ))
+              type,
+            })}`
+          )
+        }
 
         if (result.error) {
           throw result.error
