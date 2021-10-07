@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "debug": "react-devtools",
+    "i18n:extract": "i18next",
     "ios": "react-native run-ios",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "NODE_ENV=development react-native start",
     "start:production": "NODE_ENV=production react-native start --reset-cache",
+    "tsc:compile": "tsc --project .",
     "test": "jest",
     "test:e2e:build": "detox build --configuration ios",
     "test:e2e:run": "detox test --configuration ios",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "debug": "react-devtools",
-    "i18n:extract": "i18next"
+    "test:e2e:packager": "cross-env REACT_DEBUGGER=\"echo nope\" node_modules/.bin/react-native start --no-interactive"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.4.0",
@@ -47,6 +49,7 @@
     "@types/react-native": "^0.65.0",
     "@types/react-test-renderer": "^17.0.1",
     "babel-jest": "^27.2.1",
+    "cross-env": "^7.0.3",
     "detox": "^18.22.1",
     "eslint": "^7.14.0",
     "i18next-parser": "^4.7.0",

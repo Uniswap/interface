@@ -27,7 +27,10 @@ target 'Uniswap' do
   # you should disable the next line.
   # Pinning fix for command line build
   # https://github.com/facebook/react-native/issues/31480#issuecomment-915583038
-  use_flipper!({'Flipper-Folly' => '2.6.9'})
+  
+  if !ENV['GITHUB_WORKFLOW']
+    use_flipper!({'Flipper-Folly' => '2.6.9'})
+  end
 
   post_install do |installer|
     react_native_post_install(installer)
