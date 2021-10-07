@@ -1,10 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { ThemeProvider } from '@shopify/restyle'
-import React from 'react'
+import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
+import ErrorBoundary from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { store } from 'src/app/store'
@@ -20,13 +21,17 @@ export function App() {
   const isDarkMode = useColorScheme() === 'dark'
 
   return (
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
-          <NavStack isDarkMode={isDarkMode} />
-        </ThemeProvider>
-      </Provider>
-    </SafeAreaProvider>
+    <StrictMode>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+            <ErrorBoundary>
+              <NavStack isDarkMode={isDarkMode} />
+            </ErrorBoundary>
+          </ThemeProvider>
+        </Provider>
+      </SafeAreaProvider>
+    </StrictMode>
   )
 }
 
