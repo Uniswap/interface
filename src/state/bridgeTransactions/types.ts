@@ -15,8 +15,9 @@ export type BridgeTxnType =
   | 'deposit-l2-auto-redeem'
 
 export enum BridgeAssetType {
-  ETH = 'ETH'
-  //ERC20, ERC721
+  ETH = 'ETH',
+  ERC20 = 'ERC20'
+  //ERC721
 }
 
 export type BridgeTxnsState = {
@@ -44,9 +45,12 @@ export type BridgeTxn = {
   outgoingMessageState?: OutgoingMessageState
 }
 
-export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem'
+export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem' | 'claimed'
 
-export type BridgeTransactionSummary = Pick<BridgeTxn, 'assetName' | 'value' | 'batchIndex' | 'batchNumber'> & {
+export type BridgeTransactionSummary = Pick<
+  BridgeTxn,
+  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber' | 'timestampResolved'
+> & {
   fromChainId: ChainId
   toChainId: ChainId
   log: BridgeTransactionLog[]

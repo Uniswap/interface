@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { OutgoingMessageState } from 'arb-ts'
 import {
   addBridgeTxn,
   updateBridgeTxnResolvedTimestamp,
@@ -84,6 +85,9 @@ export default createReducer<BridgeTxnsState>(initialState, builder =>
       (state, { payload: { chainId, outgoingMessageState, txHash, batchIndex, batchNumber } }) => {
         const tx = state[chainId][txHash]
         tx.outgoingMessageState = outgoingMessageState
+        if (outgoingMessageState === OutgoingMessageState.EXECUTED) {
+          tx.timestampResolved = now()
+        }
         if (batchIndex && batchNumber) {
           tx.batchNumber = batchNumber
           tx.batchIndex = batchIndex

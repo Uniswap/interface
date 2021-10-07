@@ -14,7 +14,7 @@ interface FooterBridgeSelectorProps {
 
 const StyledTable = styled(Table)`
   border-spacing: 0 8px;
-`;
+`
 
 const Footer = styled(AdvancedDetailsFooter)`
   display: flex;
@@ -23,7 +23,7 @@ const Footer = styled(AdvancedDetailsFooter)`
   background: none;
   border: none;
   box-shadow: none;
-`;
+`
 
 const ShowMoreButton = styled.button`
   position: relative;
@@ -43,13 +43,13 @@ const ShowMoreButton = styled.button`
   img {
     margin-left: 10px;
   }
-`;
+`
 
 const StyledHideableAutoColumn = styled(HideableAutoColumn)`
   display: flex;
   justify-content: center;
   width: 100%;
-`;
+`
 
 const bridges = [
   {
@@ -99,15 +99,15 @@ const bridges = [
     fee: 0.03,
     gas: 9,
     time: '6 days'
-  },
+  }
 ]
 
-export const FooterBridgeSelector = ({show, selectedBridge, onBridgeChange}: FooterBridgeSelectorProps) => {  
-  const [showMore, setShowMore] = useState(false);
+export const FooterBridgeSelector = ({ show, selectedBridge, onBridgeChange }: FooterBridgeSelectorProps) => {
+  const [showMore, setShowMore] = useState(false)
   const bridgesAmount = bridges.length
   const isAllItemsVisible = showMore || bridgesAmount <= 4
   const numberOfItems = isAllItemsVisible ? bridgesAmount : 4
-  
+
   return (
     <StyledHideableAutoColumn show={show}>
       <Footer fullWidth padding="0">
@@ -122,7 +122,7 @@ export const FooterBridgeSelector = ({show, selectedBridge, onBridgeChange}: Foo
           </thead>
           <tbody>
             {bridges.slice(0, numberOfItems).map((bridge, index) => {
-              const {name, fee, gas, time} = bridge;
+              const { name, fee, gas, time } = bridge
 
               return (
                 <BridgeOption
@@ -149,4 +149,3 @@ export const FooterBridgeSelector = ({show, selectedBridge, onBridgeChange}: Foo
     </StyledHideableAutoColumn>
   )
 }
-

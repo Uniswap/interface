@@ -7,7 +7,6 @@ import AppBody from '../AppBody'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
-// import { FooterBridgeSelector } from './FooterBridgeSelector'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -72,11 +71,6 @@ export default function Bridge() {
   const BridgeService = useBridgeService()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
-  useEffect(() => {
-    const timer = setTimeout(() => step === BridgeStep.Pending && setStep(BridgeStep.Ready), 2000)
-    return () => clearTimeout(timer)
-  }, [step])
-
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
@@ -128,6 +122,12 @@ export default function Bridge() {
     },
     [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
   )
+
+  const handleCollectConfirm = useCallback(async () => {
+    if (!BridgeService) return
+    await BridgeService.triggerOutboxEth(collectableTx)
+    setStep(BridgeStep.Success)
+  }, [BridgeService, collectableTx])
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -195,6 +195,7 @@ export default function Bridge() {
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
           handleSubmit={handleSubmit}
+          handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
           setStep={setStep}
@@ -209,10 +210,6 @@ export default function Bridge() {
           onCollect={handleCollect}
         />
       )}
-
-      {/* {step === Step.Initial && !!typedValue && (
-        <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
-      )} */}
       <BridgeSuccesModal
         isOpen={step === BridgeStep.Success}
         onDismiss={handleResetBridge}

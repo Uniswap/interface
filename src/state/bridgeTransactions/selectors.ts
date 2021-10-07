@@ -78,10 +78,7 @@ export const bridgePendingWithdrawalsSelector = createSelector(
       const l2Txs = txs[l2ChainId]
 
       transactions = Object.values(l2Txs ?? {}).filter(
-        tx =>
-          tx.type === 'withdraw' &&
-          tx.outgoingMessageState !== OutgoingMessageState.CONFIRMED &&
-          tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
+        tx => tx.type === 'withdraw' && tx.outgoingMessageState !== OutgoingMessageState.EXECUTED
       )
     }
 
@@ -125,9 +122,11 @@ export const bridgeTxsSummarySelector = createSelector(
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
           value: tx.value,
+          txHash: tx.txHash,
           batchIndex: tx.batchIndex,
           batchNumber: tx.batchNumber,
           pendingReason: tx.receipt?.status ? undefined : PendingReasons.TX_UNCONFIRMED,
+          timestampResolved: tx.timestampResolved,
           log: []
         }
 
@@ -145,12 +144,26 @@ export const bridgeTxsSummarySelector = createSelector(
           return total
         }
 
+        // l2 to l1 withdrawal
+        if (tx.type === 'outbox') {
+          const status = tx.receipt?.status
+          summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
+          summary.status = getBridgeTxStatus(status)
+          summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
+
+          processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
+          processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
+          total.push(summary)
+          return total
+        }
+
         // Has pair & is deposit
         if (tx.receipt?.status === 1 && tx.type === 'deposit-l1') {
           const status = l2Txs[tx.partnerTxHash].receipt?.status
           summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
           summary.status = getBridgeTxStatus(status)
           summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
+          summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
           processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
@@ -170,10 +183,14 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
+          value: tx.value,
+          txHash: tx.txHash,
+          batchNumber: tx.batchNumber,
+          batchIndex: tx.batchIndex,
           fromChainId: from,
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
-          value: tx.value,
+          timestampResolved: tx.timestampResolved,
           log: []
         }
 
@@ -183,13 +200,15 @@ export const bridgeTxsSummarySelector = createSelector(
             switch (tx.outgoingMessageState) {
               case OutgoingMessageState.CONFIRMED:
                 summary.status = 'redeem'
+                summary.timestampResolved = undefined
                 break
               case OutgoingMessageState.EXECUTED:
-                summary.status = 'failed'
+                summary.status = 'claimed'
                 break
               default:
                 summary.status = 'pending'
                 summary.pendingReason = PendingReasons.WITHDRAWAL
+                summary.timestampResolved = undefined
             }
           }
           summary.log = createBridgeLog([tx])

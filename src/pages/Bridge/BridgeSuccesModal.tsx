@@ -1,9 +1,9 @@
 import React from 'react'
-import { ArrowRightCircle } from 'react-feather';
-import styled from 'styled-components';
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button';
+import { ArrowRightCircle } from 'react-feather'
+import styled from 'styled-components'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Modal from '../../components/Modal'
-import { TYPE } from '../../theme';
+import { TYPE } from '../../theme'
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,30 +12,30 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 24px 12px 12px;
   background: #181920;
-`;
+`
 
 const TitleWrapper = styled.div`
   margin: 10px 0px;
-`;
+`
 
 const ButtonsWrapper = styled.div`
   width: 100%;
   margin-top: 24px;
-`;
+`
 
 const Button = styled(ButtonSecondary)`
   margin-top: 12px;
   font-weight: 500;
   font-size: 11px;
   line-height: 13px;
-`;
+`
 
 interface BridgeSuccesModalProps {
-  isOpen: boolean;
-  amount: string;
-  onDismiss: () => void;
-  onTradeButtonClick: () => void;
-  onBackButtonClick: () => void;
+  isOpen: boolean
+  amount: string
+  onDismiss: () => void
+  onTradeButtonClick: () => void
+  onBackButtonClick: () => void
 }
 
 export const BridgeSuccesModal = ({

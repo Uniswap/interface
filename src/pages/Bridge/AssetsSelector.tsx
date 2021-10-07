@@ -63,7 +63,7 @@ const AssetName = styled.p`
 
 interface AssetSelectorProps {
   label: string
-  selectedNetwork: Partial<NetworkOptionProps> | undefined
+  selectedNetwork?: Partial<NetworkOptionProps>
   onClick: () => void
   disabled?: boolean
 }

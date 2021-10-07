@@ -1,5 +1,5 @@
 import { utils } from 'ethers'
-import { Bridge } from 'arb-ts'
+import { Bridge, OutgoingMessageState } from 'arb-ts'
 import { ChainId } from '@swapr/sdk'
 import { Store } from '@reduxjs/toolkit'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -21,7 +21,7 @@ import {
 import { txnTypeToLayer } from '../state/bridgeTransactions/reducer'
 
 import { AppState } from '../state'
-import { BridgeAssetType, BridgeTxn } from '../state/bridgeTransactions/types'
+import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
 
 export class BridgeService {
   private l1ChainId: ChainId | undefined
@@ -260,17 +260,15 @@ export class BridgeService {
     }
   }
 
-  public triggerOutboxEth = async ({
-    batchIndex,
-    batchNumber,
-    value
-  }: Pick<BridgeTxn, 'batchIndex' | 'batchNumber' | 'value'>) => {
-    if (!this.account || !this.bridge || !this.l1ChainId || batchIndex || batchNumber || value) return
+  public triggerOutboxEth = async (l2Tx: BridgeTransactionSummary) => {
+    const { batchIndex, batchNumber, value } = l2Tx
+    if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId || !batchIndex || !batchNumber || !value)
+      return
 
     const batchNumberBN = BigNumber.from(batchNumber)
     const batchIndexBN = BigNumber.from(batchIndex)
 
-    const l2ToL1 = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+    const l1Tx = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
 
     this.store.dispatch(
       addBridgeTxn({
@@ -278,22 +276,132 @@ export class BridgeService {
         assetType: BridgeAssetType.ETH,
         type: 'outbox',
         value,
-        txHash: l2ToL1.hash,
+        txHash: l1Tx.hash,
+        chainId: this.l1ChainId,
+        sender: this.account
+      })
+    )
+
+    this.store.dispatch(
+      updateBridgeTxnPartnerHash({
+        chainId: this.l1ChainId,
+        txHash: l1Tx.hash,
+        partnerTxHash: l2Tx.txHash,
+        partnerChainId: this.l2ChainId
+      })
+    )
+
+    try {
+      const l1Receipt = await l1Tx.wait()
+
+      this.store.dispatch(
+        updateBridgeTxnReceipt({
+          chainId: this.l1ChainId,
+          txHash: l1Tx.hash,
+          receipt: l1Receipt
+        })
+      )
+
+      this.store.dispatch(
+        updateBridgeTxnWithdrawalInfo({
+          chainId: this.l1ChainId,
+          txHash: l1Tx.hash,
+          outgoingMessageState: OutgoingMessageState.EXECUTED
+        })
+      )
+      return l1Receipt
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public withdrawERC20 = async (l1TokenAddress: string, value: string) => {
+    if (!this.account || !this.bridge || !this.l2ChainId) return
+    const tokenData = (await this.bridge.getAndUpdateL1TokenData(l1TokenAddress)).ERC20
+    if (!tokenData) {
+      throw new Error("Can't withdraw; token not found")
+    }
+
+    const weiValue = utils.parseUnits(value, tokenData.decimals)
+
+    try {
+      const txn = await this.bridge.withdrawERC20(l1TokenAddress, weiValue)
+      this.store.dispatch(
+        addBridgeTxn({
+          assetName: tokenData.symbol,
+          assetType: BridgeAssetType.ERC20,
+          type: 'withdraw',
+          value,
+          txHash: txn.hash,
+          chainId: this.l2ChainId,
+          sender: this.account
+        })
+      )
+
+      const withdrawReceipt = await txn.wait()
+
+      this.store.dispatch(
+        updateBridgeTxnReceipt({
+          chainId: this.l2ChainId,
+          txHash: txn.hash,
+          receipt: withdrawReceipt
+        })
+      )
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public triggerOutboxERC20 = async (l2Tx: BridgeTransactionSummary) => {
+    const { batchIndex, batchNumber, value } = l2Tx
+    if (!this.account || !this.bridge || !this.l1ChainId || !batchIndex || !batchNumber || !value) return
+
+    const batchNumberBN = BigNumber.from(batchNumber)
+    const batchIndexBN = BigNumber.from(batchIndex)
+
+    const l1Tx = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: l2Tx.assetName,
+        assetType: BridgeAssetType.ERC20,
+        type: 'outbox',
+        value,
+        txHash: l1Tx.hash,
         chainId: this.l1ChainId,
         sender: this.account
       })
     )
 
     try {
-      const l2ToL1Receipt = await l2ToL1.wait()
+      const l1Receipt = await l1Tx.wait()
+
       this.store.dispatch(
         updateBridgeTxnReceipt({
           chainId: this.l1ChainId,
-          txHash: l2ToL1.hash,
-          receipt: l2ToL1Receipt
+          txHash: l1Tx.hash,
+          receipt: l1Receipt
         })
       )
-      return l2ToL1Receipt
+      if (this.l1ChainId && this.l2ChainId) {
+        this.store.dispatch(
+          updateBridgeTxnPartnerHash({
+            chainId: this.l1ChainId,
+            txHash: l1Tx.hash,
+            partnerTxHash: l2Tx.txHash,
+            partnerChainId: this.l2ChainId
+          })
+        )
+      }
+
+      this.store.dispatch(
+        updateBridgeTxnWithdrawalInfo({
+          chainId: this.l1ChainId,
+          txHash: l1Tx.hash,
+          outgoingMessageState: OutgoingMessageState.EXECUTED
+        })
+      )
+      return l1Receipt
     } catch (err) {
       throw err
     }

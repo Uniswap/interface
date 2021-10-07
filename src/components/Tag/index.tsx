@@ -24,6 +24,11 @@ export const TagSuccess = styled(Tag)`
   background: rgba(14, 159, 110, 0.15);
 `
 
+export const TagInfo = styled(Tag)`
+  color: #a2a832;
+  background: rgba(223, 235, 14, 0.15);
+`
+
 export const TagSuccessArrow = styled(TagSuccess)`
   position: relative;
   padding-right: 20px;
