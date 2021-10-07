@@ -79,7 +79,7 @@ const MoreLinksIcon = styled(HeaderElement)`
   `};
 `
 
-const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
+const HeaderRow = styled(RowFixed) <{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
@@ -242,6 +242,9 @@ function Header() {
         <HeaderLinks>
           <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
+          </StyledNavLink>
+          <StyledNavLink id="bridge-nav-link" to="/bridge" activeClassName="active">
+            {t('bridge')}
           </StyledNavLink>
           <StyledNavLink id="pool-nav-link" to="/pools" activeClassName="active">
             {t('pool')}

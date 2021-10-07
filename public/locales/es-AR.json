@@ -72,5 +72,6 @@
   "tokenAddress": "Dirección de Token",
   "label": "Etiqueta",
   "decimals": "Decimales",
-  "enterTokenCont": "Ingresá una dirección de token para continuar"
+  "enterTokenCont": "Ingresá una dirección de token para continuar",
+  "bridge": "Bridge"
 }

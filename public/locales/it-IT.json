@@ -83,5 +83,6 @@
   "decimals": "Decimali",
   "enterTokenCont": "Inserire un indirizzo token per continuare",
   "priceChange": "Scostamento del prezzo previsto",
-  "forAtLeast": "per almeno "
+  "forAtLeast": "per almeno ",
+  "bridge": "Bridge"
 }
