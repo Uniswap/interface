@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { Flex } from 'rebass'
 
 import { ButtonPrimary } from 'components/Button'
-import { AutoRow, RowBetween } from 'components/Row'
+import { RowBetween } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 import { Reward } from 'state/farms/types'
 import { TYPE } from 'theme'
@@ -24,9 +24,9 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
   )
 
   return (
-    <AutoRow width="fit-content">
+    <Flex width="fit-content" backgroundColor={theme.bg12} style={{ borderRadius: '4px' }}>
       <Tag>
-        <RowBetween style={{ position: 'relative' }}>
+        <RowBetween style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setOpen(prev => !prev)}>
           <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
             <Trans>Unlocked</Trans>:
           </TYPE.body>
@@ -36,13 +36,13 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
             {unlockedUSD > 0 && (
-              <span onClick={() => setOpen(!open)}>
+              <>
                 {open ? (
                   <ChevronUp size="14" color={theme.text1} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 ) : (
                   <ChevronDown size="14" color={theme.text1} style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 )}
-              </span>
+              </>
             )}
           </Flex>
 
@@ -59,13 +59,11 @@ const UnlockedBlock = ({ info, onClaimAll }: { info: any; onClaimAll?: () => voi
       </Tag>
 
       {Object.keys(info).length > 0 && unlockedUSD > 0 && (
-        <div>
-          <ButtonPrimary height="30px" borderRadius="4px" onClick={onClaimAll}>
-            <Trans>Claim All</Trans>
-          </ButtonPrimary>
-        </div>
+        <ButtonPrimary height="30px" borderRadius="4px" onClick={onClaimAll} width="max-content">
+          <Trans>Claim All</Trans>
+        </ButtonPrimary>
       )}
-    </AutoRow>
+    </Flex>
   )
 }
 

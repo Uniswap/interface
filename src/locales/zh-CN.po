@@ -52,7 +52,7 @@ msgstr "每笔交易的一部分费用({0}%) 作为协议激励给流动性提�
 msgid "AMP"
 msgstr "放大系数"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = 放大系数。放大池具有更高的資本效率。更高的 AMP，在價格範圍內具有更高的資本效率和流动性放大。"
 
@@ -68,8 +68,8 @@ msgstr "AMP 系数 x 池中的流动性。 放大池具有更高的资本效率�
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APY"
 msgstr "年收益"
 
@@ -498,8 +498,8 @@ msgstr "允许高滑点交易。使用的风险自负。"
 msgid "Encourage trading"
 msgstr "鼓勵交易"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "截止"
 
@@ -554,7 +554,7 @@ msgstr "错误连接。尝试更新页面。"
 msgid "Estimated Refund"
 msgstr "预计退还"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "费用 + 奖励的估计年化总收益"
 
@@ -614,6 +614,11 @@ msgstr "完全链上； <0/> 直接整合"
 #: src/components/Vesting/Schedule.tsx
 msgid "Fully Vested"
 msgstr "完全释放"
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+msgid "Get pool info"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -904,8 +909,8 @@ msgstr "收到的最小值"
 #~ msgid "My Dashboard"
 #~ msgstr "我的仪表板"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "我的存款"
 
@@ -921,8 +926,8 @@ msgstr ""
 msgid "My Pools on External Platforms"
 msgstr "我在外部平台上的池"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "我的奖励"
 
@@ -957,7 +962,7 @@ msgstr "没有找到记录。"
 msgid "No results found."
 msgstr "未找到结果。"
 
-#: src/components/Vesting/RewardLockerSchedules.tsx
+#: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
 msgstr ""
 
@@ -1082,7 +1087,7 @@ msgstr "Pooled {0}:"
 msgid "Pools"
 msgstr "池"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Pools | AMP"
 msgstr "池| 放大系数"
 
@@ -1305,8 +1310,8 @@ msgstr "质押您的 DMM 流动性提供者代币以获得代币奖励。"
 msgid "Staked Only"
 msgstr "仅质押"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
 

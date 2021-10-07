@@ -25,7 +25,7 @@ import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { useAppDispatch } from 'state/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
-import { formattedNum, getTokenLogoURL, isAddressString, shortenAddress } from 'utils'
+import { formattedNum, isAddressString } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
@@ -41,7 +41,6 @@ import {
   BalanceInfo,
   GreyText,
   LPInfoContainer,
-  LPInfo,
   GetLP,
   StyledItemCard,
   RewardBalanceWrapper,
@@ -261,14 +260,12 @@ const ListItem = ({ farm }: ListItemProps) => {
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
         <DataText grid-area="pools">
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <>
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-              <span>
-                {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
-              </span>
-            </>
-          </div>
+          <Flex alignItems="center">
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+            <span>
+              {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
+            </span>
+          </Flex>
         </DataText>
         <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
         <DataText grid-area="end" align="right" style={{ textAlign: 'right' }}>
@@ -286,10 +283,10 @@ const ListItem = ({ farm }: ListItemProps) => {
           {farmRewards.map(reward => {
             return (
               <div key={reward.token.address} style={{ marginTop: '2px' }}>
-                <Flex style={{ alignItems: 'center' }}>
+                <Flex alignItems="center">
                   {getFullDisplayBalance(reward?.amount)}
                   {chainId && reward.token.address && (
-                    <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
+                    <CurrencyLogo currency={reward.token} size="16px" style={{ marginLeft: '3px' }} />
                   )}
                 </Flex>
               </div>
@@ -431,7 +428,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                           {farmRewards?.map(reward => {
                             return (
                               <div key={reward.token.address}>
-                                <Flex style={{ alignItems: 'center' }}>
+                                <Flex alignItems="center">
                                   {getFullDisplayBalance(reward?.amount)}
                                   {chainId && reward.token.address && (
                                     <CurrencyLogo currency={reward.token} size="20px" style={{ marginLeft: '3px' }} />
@@ -458,7 +455,9 @@ const ListItem = ({ farm }: ListItemProps) => {
             </StakeGroup>
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
-                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+                <GetLP>
+                  <Trans>Get pool info</Trans> ↗
+                </GetLP>
               </ExternalLink>
               <Link
                 to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
@@ -492,14 +491,12 @@ const ListItem = ({ farm }: ListItemProps) => {
             />
           </DataTitle>
           <DataText grid-area="pools">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-                <span>
-                  {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
-                </span>
-              </>
-            </div>
+            <Flex alignItems="center">
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+              <span>
+                {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
+              </span>
+            </Flex>
           </DataText>
 
           <span style={{ position: 'absolute', top: '0', right: '0' }}>
@@ -642,7 +639,9 @@ const ListItem = ({ farm }: ListItemProps) => {
 
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
-                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+                <GetLP>
+                  <Trans>Get pool info</Trans> ↗
+                </GetLP>
               </ExternalLink>
               <Link
                 to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(

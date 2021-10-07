@@ -8,22 +8,22 @@ export const VestingHeader = styled.div`
   padding: 16px 24px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    background-color: ${({ theme }) => theme.evenRow};
     margin-bottom: 1rem;
   `};
 `
 
 export const VestPeriods = styled.div`
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  grid-template-areas: 'total vestable vest';
+  margin-top: 1.5rem;
+  background: ${({ theme }) => theme.bg6};
+  padding: 1.5rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 `
 
 export const MenuFlyout = styled.span`
   min-width: 15rem;
-  background-color: ${({ theme }) => theme.bg14};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  background-color: ${({ theme }) => theme.background};
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
   border-radius: 5px;
   padding: 19px 32px;
   display: flex;
@@ -36,7 +36,7 @@ export const MenuFlyout = styled.span`
 `
 
 export const Seperator = styled.div`
-  padding: 30px 0;
+  padding: 24px 0;
   border: 1px solid #404b51;
 `
 
@@ -50,7 +50,7 @@ export const Tag = styled.div<{ tag?: string }>`
   border-radius: 4px;
   font-size: 14px;
   color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
-  background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg11)};
+  background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg12)};
   box-sizing: border-box;
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);
@@ -59,22 +59,29 @@ export const Tag = styled.div<{ tag?: string }>`
   }
 `
 
-export const RewardLockerSchedulesWrapper = styled.div`
+export const RewardLockerSchedulesWrapper = styled.div<{ showBorder: boolean }>`
+  border-bottom: ${({ theme, showBorder }) => (showBorder ? `1px solid ${theme.border}` : 'none')};
+
   background: ${({ theme }) => theme.bg16};
-  padding: 24px 24px 0 24px;
-  border-radius: 8px;
-  margin-bottom: 24px;
+
+  :last-child {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom: none;
+  }
 `
 
 export const RewardLockerSchedulesTitle = styled.div<{ showBorder?: boolean }>`
-  border-bottom: ${({ theme, showBorder }) => (showBorder ? `1px solid ${theme.border2}` : 'none')};
-  padding-bottom: 24px;
+  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: ${({ theme }) => `${theme.bg12}40`};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
+    padding: 24px 16px;
+    align-items: flex-end;
   `};
 `
 
@@ -90,4 +97,22 @@ export const NoVestingSchedule = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: ${({ theme }) => `${theme.background}`};
+`
+
+export const ScheduleWrapper = styled.div`
+  padding: 24px 0;
+  margin: 0 24px;
+  padding-bottom: 48px;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+
+  border-top: 1px solid ${({ theme }) => theme.border};
+
+  :first-child,
+  :nth-child(2) {
+    border-top: none;
+  }
 `

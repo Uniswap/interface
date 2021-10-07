@@ -19,11 +19,13 @@ import { TYPE } from 'theme'
 import { getTokenSymbol } from 'utils'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { fixedFormatting } from 'utils/formatBalance'
-import { Tag } from './styleds'
+import { Tag, ScheduleWrapper } from './styleds'
+import { Flex, Text } from 'rebass'
 
 const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: string; schedule: any }) => {
   const dispatch = useAppDispatch()
   const { account, chainId } = useActiveWeb3React()
+  const above768 = useMedia('(min-width: 768px)') // Extra large screen
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useTheme()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +110,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
   }
 
   const rewardBlock = (
-    <AutoRow gap={'5px'} style={{ flex: '2' }}>
+    <Flex alignItems="center" style={{ gap: '8px' }} flexWrap="wrap">
       <TYPE.body color={theme.text11} fontWeight={400} fontSize={16}>
         <Trans>
           Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
@@ -118,17 +120,33 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
       <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
         {toUSD(BigNumber.from(schedule[2]))}
       </TYPE.body>
+
       {vestedAndVestablePercent === 100 && !fullyVestedAlready && (
-        <Tag tag={'active'} style={{ color: '#1f292e', fontSize: '14px', padding: '6px 20px' }}>
+        <Tag
+          style={{
+            color: '#1f292e',
+            fontSize: '14px',
+            padding: '6px 18px',
+            borderRadius: '999px',
+            backgroundColor: '#2FC99E'
+          }}
+        >
           <Trans>Fully Vested</Trans>
         </Tag>
       )}
-    </AutoRow>
+    </Flex>
   )
 
   const claimBlock = !fullyVestedAlready && (
-    <AutoRow justify="center" style={{ flex: '1' }}>
-      <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
+    <Flex
+      height="fit-content"
+      width="fit-content"
+      alignItems="center"
+      marginTop="10px"
+      backgroundColor={theme.bg12}
+      style={{ borderRadius: '4px' }}
+    >
+      <Tag>
         <Trans>
           Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
         </Trans>
@@ -137,7 +155,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
       <ButtonPrimary height="30px" onClick={onVest} style={{ flex: '1' }}>
         <Trans>Claim</Trans>
       </ButtonPrimary>
-    </AutoRow>
+    </Flex>
   )
 
   const duration =
@@ -149,30 +167,29 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
     )
 
   return (
-    <div style={{ padding: '20px 0 40px 0', borderTop: '1px solid #404b51' }}>
-      <TYPE.body color={theme.text11} fontWeight={400} fontSize={16} style={{ marginBottom: '10px' }}>
-        <Trans>Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}</Trans>
-      </TYPE.body>
-      <TYPE.body color={theme.text11} fontWeight={400} fontSize={16} style={{ marginBottom: '10px' }}>
-        <Trans>Duration: {duration}</Trans>
-      </TYPE.body>
+    <ScheduleWrapper>
+      <Flex
+        justifyContent="space-between"
+        alignItems={above768 ? 'flex-end' : 'flex-start'}
+        flexDirection={above768 ? 'row' : 'column'}
+      >
+        <div>
+          <TYPE.body color={theme.text11} fontWeight={400} fontSize={16} style={{ marginBottom: '10px' }}>
+            <Trans>Vesting started: {startTimestamp && new Date(startTimestamp * 1000).toLocaleDateString()}</Trans>
+          </TYPE.body>
+          <TYPE.body color={theme.text11} fontWeight={400} fontSize={16} style={{ marginBottom: '10px' }}>
+            <Trans>Duration: {duration}</Trans>
+          </TYPE.body>
+          {rewardBlock}
+        </div>
 
-      {above1400 ? (
-        <AutoRow margin="0 0 20px 0" justify="space-between">
-          {rewardBlock}
-          {claimBlock}
-        </AutoRow>
-      ) : (
-        <>
-          {rewardBlock}
-          <div style={{ margin: '10px 0 20px 0' }}>{claimBlock}</div>
-        </>
-      )}
+        {claimBlock}
+      </Flex>
 
       <div
         style={{
           position: 'relative',
-          margin: '50px 0 0 0'
+          margin: '60px 0 0 0'
         }}
       >
         <AutoRow>
@@ -181,14 +198,16 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
             <TYPE.body
               color={theme.text7}
               fontWeight={'normal'}
-              fontSize={14}
+              fontSize={12}
               style={{
                 position: 'absolute',
                 top: '-35px'
               }}
             >
               <Trans>CLAIMED</Trans> <br />
-              {fixedFormatting(BigNumber.from(schedule[3]), 18)}
+              <Text color={theme.text1} fontWeight={600} as="span">
+                {fixedFormatting(BigNumber.from(schedule[3]), 18)}
+              </Text>
             </TYPE.body>
             {/* <TYPE.body
                 color={theme.text7}
@@ -241,7 +260,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 <TYPE.body
                   color={theme.text7}
                   fontWeight={'normal'}
-                  fontSize={14}
+                  fontSize={12}
                   style={{
                     position: 'absolute',
                     top: '-35px',
@@ -249,7 +268,9 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                   }}
                 >
                   <Trans>UNLOCKED</Trans> <br />
-                  {fixedFormatting(vestableAmount, 18)}
+                  <Text color={theme.text1} fontWeight={600} as="span">
+                    {fixedFormatting(vestableAmount, 18)}
+                  </Text>
                 </TYPE.body>
               </>
             )}
@@ -259,7 +280,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 <TYPE.body
                   color={theme.text7}
                   fontWeight={'normal'}
-                  fontSize={14}
+                  fontSize={12}
                   style={{
                     position: 'absolute',
                     top: '13px',
@@ -268,7 +289,10 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                     left: `${vestedAndVestablePercent}%`
                   }}
                 >
-                  {fixedFormatting(unvestableAmount, 18)} <Trans>LOCKED</Trans>
+                  <Text color={theme.text1} fontWeight={600} as="span">
+                    {fixedFormatting(unvestableAmount, 18)}
+                  </Text>{' '}
+                  <Trans>LOCKED</Trans>
                 </TYPE.body>
 
                 {/* <TYPE.body
@@ -296,7 +320,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
             <TYPE.body
               color={theme.text7}
               fontWeight={'normal'}
-              fontSize={14}
+              fontSize={12}
               style={{
                 textAlign: 'end',
                 position: 'absolute',
@@ -304,17 +328,19 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 right: '0'
               }}
             >
-              <Trans>FULL UNLOCK</Trans> <br />
+              <Text fontSize={14}>
+                <Trans>FULL UNLOCK</Trans>
+              </Text>
               <span style={{ marginRight: '4px' }}>
                 {endTimestamp && `${new Date(endTimestamp * 1000).toLocaleDateString()}`}
               </span>
               <span>{!!endIn ? `(${getFormattedTimeFromSecond(endIn)} left)` : ''}</span>
             </TYPE.body>
-            <div style={{ height: '12px', width: '100%', zIndex: 1, background: '#33444d', borderRadius: '26px' }} />
+            <div style={{ height: '12px', width: '100%', zIndex: 1, background: '#33444d', borderRadius: '999px' }} />
           </AutoRow>
         </AutoRow>
       </div>
-    </div>
+    </ScheduleWrapper>
   )
 }
 
