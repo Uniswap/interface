@@ -9,5 +9,11 @@ module.exports = {
         allowUndefined: false,
       },
     ],
+    [
+      'react-native-reanimated/plugin',
+      {
+        globals: ['__scanOCR'],
+      },
+    ],
   ],
 }
