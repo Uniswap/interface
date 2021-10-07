@@ -14,6 +14,8 @@ import { useFarmRewards } from 'utils/dmm'
 import ListItem from './ListItem'
 import HarvestAll from './HarvestAll'
 import { FairLaunchPoolsWrapper, FairLaunchPoolsTitle, HarvestAllSection, ListItemWrapper } from './styleds'
+import useTheme from 'hooks/useTheme'
+import { useIsDarkMode } from 'state/user/hooks'
 
 interface FarmsListProps {
   fairLaunchAddress: string
@@ -24,6 +26,8 @@ interface FarmsListProps {
 const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProps) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
+  const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
   const blockNumber = useBlockNumber()
   const totalRewards = useFarmRewards(farms)
   const { harvestMultiplePools } = useFairLaunch(fairLaunchAddress)
@@ -91,7 +95,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
     <FairLaunchPoolsWrapper>
       {!!displayFarms.length && (
         <>
-          <FairLaunchPoolsTitle>
+          <FairLaunchPoolsTitle backgroundColor={isDarkMode ? `${theme.bg12}40` : `${theme.bg12}80`}>
             <HarvestAllSection>
               <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
             </HarvestAllSection>

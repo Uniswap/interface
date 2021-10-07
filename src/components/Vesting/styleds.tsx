@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const VestingHeader = styled.div`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.bg6};
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   font-size: 14px;
   font-weight: 500;
   padding: 16px 24px;
@@ -15,6 +16,7 @@ export const VestingHeader = styled.div`
 export const VestPeriods = styled.div`
   margin-top: 1.5rem;
   background: ${({ theme }) => theme.bg6};
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   padding: 1.5rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
@@ -23,7 +25,7 @@ export const VestPeriods = styled.div`
 export const MenuFlyout = styled.span`
   min-width: 15rem;
   background-color: ${({ theme }) => theme.background};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
   border-radius: 5px;
   padding: 19px 32px;
   display: flex;
@@ -52,8 +54,6 @@ export const Tag = styled.div<{ tag?: string }>`
   color: ${({ tag }) => (tag === 'active' ? '#1f292e' : 'inherit')};
   background-color: ${({ theme, tag }) => (tag === 'active' ? '#4aff8c' : theme.bg12)};
   box-sizing: border-box;
-  box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 0px 1px rgba(0, 0, 0, 0.04);
   @media screen and (max-width: 500px) {
     box-shadow: none;
   }
@@ -71,12 +71,12 @@ export const RewardLockerSchedulesWrapper = styled.div<{ showBorder: boolean }>`
   }
 `
 
-export const RewardLockerSchedulesTitle = styled.div<{ showBorder?: boolean }>`
+export const RewardLockerSchedulesTitle = styled.div<{ backgroundColor: string }>`
   padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => `${theme.bg12}40`};
+  background-color: ${({ backgroundColor }) => backgroundColor};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
@@ -85,7 +85,7 @@ export const RewardLockerSchedulesTitle = styled.div<{ showBorder?: boolean }>`
   `};
 `
 
-export const ClaimAllSection = styled.div<{ expanded?: boolean }>`
+export const ClaimAllSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

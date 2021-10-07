@@ -93,7 +93,7 @@ const StyledMenu = styled.div`
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.background};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.2));
   border-radius: 5px;
   display: flex;
   flex-direction: column;

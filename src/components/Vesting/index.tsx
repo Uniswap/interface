@@ -175,7 +175,12 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         <Trans>Locked Rewards</Trans>
       </TYPE.body>
 
-      <Flex marginTop="0.375rem" alignItems="center" onClick={() => lockedUSD > 0 && setOpen(open !== 1 ? 1 : -1)}>
+      <Flex
+        marginTop="0.375rem"
+        alignItems="center"
+        onClick={() => lockedUSD > 0 && setOpen(open !== 1 ? 1 : -1)}
+        sx={{ cursor: 'pointer' }}
+      >
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
           {formattedNum(lockedUSD.toString(), true)}
         </TYPE.body>
@@ -207,7 +212,12 @@ const Vesting = ({ loading }: { loading: boolean }) => {
         <Trans>Claimed Rewards</Trans>
       </TYPE.body>
 
-      <Flex onClick={() => claimedUSD > 0 && setOpen(open !== 2 ? 2 : -1)} alignItems="center" marginTop="6px">
+      <Flex
+        onClick={() => claimedUSD > 0 && setOpen(open !== 2 ? 2 : -1)}
+        alignItems="center"
+        marginTop="6px"
+        sx={{ cursor: 'pointer' }}
+      >
         <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
           {formattedNum(claimedUSD.toString(), true)}
         </TYPE.body>
@@ -242,7 +252,12 @@ const Vesting = ({ loading }: { loading: boolean }) => {
             <Trans>Unlocked Rewards</Trans>
           </TYPE.body>
 
-          <Flex onClick={() => setOpen(open !== 3 ? 3 : -1)} alignItems="center" marginTop="6px">
+          <Flex
+            onClick={() => setOpen(open !== 3 ? 3 : -1)}
+            alignItems="center"
+            marginTop="6px"
+            sx={{ cursor: 'pointer' }}
+          >
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
@@ -350,7 +365,13 @@ const Vesting = ({ loading }: { loading: boolean }) => {
           </NoVestingSchedule>
         )
       ) : (
-        <div style={{ backgroundColor: theme.background, borderRadius: '8px' }}>
+        <div
+          style={{
+            backgroundColor: theme.background,
+            borderRadius: '8px',
+            boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.04)'
+          }}
+        >
           {rewardLockerAddresses
             .filter(rewardLockerAddress => !!schedulesByRewardLocker[rewardLockerAddress]?.length)
             .map((rewardLockerAddress, index) => (

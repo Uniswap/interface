@@ -3,15 +3,8 @@
   "name": "DmmExchange",
   "icons": [
     {
-      "src": "./images/106x72_App_Icon.png",
-      "sizes": "106x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./images/159x108_App_Icon.png",
-      "sizes": "159x108",
-      "type": "image/png",
+      "src": "./favicon.svg",
+      "sizes": "any",
       "purpose": "any maskable"
     }
   ],
