@@ -53,10 +53,11 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
       l1GatewayRouterAddress?: string | undefined,
       l2GatewayRouterAddress?: string | undefined
     ) => {
-      setBridge(null)
       const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
       setBridge(bridge)
     }
+
+    setBridge(null)
 
     if (library && account && chainId) {
       const { partnerChainId, isArbitrum } = NETWORK_DETAIL[chainId]
