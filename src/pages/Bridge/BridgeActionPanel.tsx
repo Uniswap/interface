@@ -22,7 +22,6 @@ export type BridgeActionPanelProps = {
 
 export const BridgeActionPanel = ({
   step,
-  setStep,
   account,
   typedValue,
   handleSubmit,
