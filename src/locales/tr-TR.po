@@ -617,6 +617,11 @@ msgstr "Tamamen Hak Kazanılmış"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
+msgid "Get pool info"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
 msgstr "{0}-{1} LP alın ↗"
 

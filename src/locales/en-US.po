@@ -617,6 +617,11 @@ msgstr "Fully Vested"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
+msgid "Get pool info"
+msgstr "Get pool info"
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
 msgstr "Get {0}-{1} LP ↗"
 

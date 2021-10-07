@@ -25,7 +25,7 @@ import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { useAppDispatch } from 'state/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
-import { formattedNum, isAddressString, shortenAddress } from 'utils'
+import { formattedNum, isAddressString } from 'utils'
 import { formatTokenBalance, getFullDisplayBalance } from 'utils/formatBalance'
 import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import { ExternalLink } from 'theme'
@@ -41,7 +41,6 @@ import {
   BalanceInfo,
   GreyText,
   LPInfoContainer,
-  LPInfo,
   GetLP,
   StyledItemCard,
   RewardBalanceWrapper,
@@ -456,7 +455,9 @@ const ListItem = ({ farm }: ListItemProps) => {
             </StakeGroup>
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
-                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+                <GetLP>
+                  <Trans>Get pool info</Trans> ↗
+                </GetLP>
               </ExternalLink>
               <Link
                 to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
@@ -638,7 +639,9 @@ const ListItem = ({ farm }: ListItemProps) => {
 
             <LPInfoContainer>
               <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
-                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+                <GetLP>
+                  <Trans>Get pool info</Trans> ↗
+                </GetLP>
               </ExternalLink>
               <Link
                 to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
