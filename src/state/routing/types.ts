@@ -1,3 +1,5 @@
+import { Token } from '@uniswap/sdk-core'
+
 export enum V3TradeState {
   LOADING,
   INVALID,
@@ -6,39 +8,36 @@ export enum V3TradeState {
   SYNCING,
 }
 
+export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+
+export type PoolInRoute = {
+  type: 'v3-pool'
+  address: string
+  tokenIn: TokenInRoute
+  tokenOut: TokenInRoute
+  sqrtRatioX96: string
+  liquidity: string
+  tickCurrent: string
+  fee: string
+  amountIn?: string
+  amountOut?: string
+}
+
 export interface GetQuoteResult {
+  quoteId?: string
   blockNumber: string
+  amount: string
+  amountDecimals: string
   gasPriceWei: string
   gasUseEstimate: string
   gasUseEstimateQuote: string
   gasUseEstimateQuoteDecimals: string
   gasUseEstimateUSD: string
-  methodParameters: { calldata: string; value: string }
+  methodParameters?: { calldata: string; value: string }
   quote: string
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  quoteId: string
-  route: {
-    address: string
-    amountIn?: string
-    amountOut?: string
-    fee: string
-    liquidity: string
-    sqrtRatioX96: string
-    tickCurrent: string
-    tokenIn: {
-      address: string
-      chainId: number
-      decimals: string | number
-      symbol?: string
-    }
-    tokenOut: {
-      address: string
-      chainId: number
-      decimals: string | number
-      symbol?: string
-    }
-  }[][]
+  route: PoolInRoute[][]
   routeString: string
 }
