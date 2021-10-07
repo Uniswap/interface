@@ -268,7 +268,6 @@ export const FairLaunchPoolsWrapper = styled.div`
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
   }
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
     border-radius: 0.5rem;
     margin-bottom: 1.5rem;
