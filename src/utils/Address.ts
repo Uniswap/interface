@@ -29,6 +29,11 @@ export class Address {
     }
   }
 
+  public static normalize(address: string | null | undefined) {
+    if (!address || Address.isValid(address)) return null
+    else return utils.getAddress(ensureLeading0x(address))
+  }
+
   public toString(format = AddressStringFormat.checksum) {
     switch (format) {
       case AddressStringFormat.lowercase:
