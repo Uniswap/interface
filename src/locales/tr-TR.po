@@ -52,7 +52,7 @@ msgstr "Her ticaretin bir kısmı (%{0}), protokol teşviki olarak likidite sağ
 msgid "AMP"
 msgstr "AMP"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = Amplifikasyon faktörü. Güçlendirilmiş havuzlar daha yüksek sermaye verimliliğine sahiptir. Bir fiyat aralığında daha yüksek AMP, daha yüksek sermaye verimliliği ve güçlendirilmiş likiditeye işaret eder."
 
@@ -68,8 +68,8 @@ msgstr "AMP faktörü x Havuzdaki likidite. Güçlendirilmiş havuzlar daha yük
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APY"
 msgstr "Yıllık yüzde getiri (APY)"
 
@@ -498,8 +498,8 @@ msgstr "Yüksek kaymalı işlemlere olanak tanır. Kendi sorumluluğunuzda kulla
 msgid "Encourage trading"
 msgstr "Alım satımı teşvik edin"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "BİTİYOR"
 
@@ -554,7 +554,7 @@ msgstr "Bağlantı hatası. Sayfayı yenilemeyi deneyin."
 msgid "Estimated Refund"
 msgstr "Tahmini Geri Ödeme"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "Ücretler ve ödüllerden elde edilen tahmini toplam yıllık getiri"
 
@@ -904,8 +904,8 @@ msgstr "Minimum alındı"
 #~ msgid "My Dashboard"
 #~ msgstr "Gösterge Panelim"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "Yatırılan"
 
@@ -921,8 +921,8 @@ msgstr ""
 msgid "My Pools on External Platforms"
 msgstr "Dış Platformlardaki Havuzlarım"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "Ödüllerim"
 
@@ -957,7 +957,7 @@ msgstr "Kayıt bulunamadı."
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
 
-#: src/components/Vesting/RewardLockerSchedules.tsx
+#: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgstr "{0} havuza alındı:"
 msgid "Pools"
 msgstr "Havuzlar"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Pools | AMP"
 msgstr "Havuzlar | AMP"
 
@@ -1305,8 +1305,8 @@ msgstr "Token ödülleri kazanmak için DMM Likidite Sağlayıcı token’ların
 msgid "Staked Only"
 msgstr "Sadece Stake Edilen"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "Stake edilen TVL"
 

@@ -105,6 +105,7 @@ export const StakedOnlyToggleWrapper = styled.div`
 export const StakedOnlyToggle = styled(Switch)`
   transform: scale(0.7);
   color: ${({ theme }) => theme.bg14};
+  cursor: pointer;
 `
 
 export const StakedOnlyToggleText = styled.div`
@@ -188,7 +189,7 @@ export const TotalRewardsTitle = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: ${({ theme }) => theme.text11};
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 `
 
 export const HarvestAllButtonContainer = styled.div`
@@ -259,25 +260,31 @@ export const HistoryButton = styled.div`
   }
 `
 
-export const FairLaunchPoolsWrapper = styled.div<{ expanded: boolean }>`
-  padding: ${({ expanded }) => (expanded ? '24px' : '24px 24px 0 24px')};
+export const FairLaunchPoolsWrapper = styled.div`
   background-color: ${({ theme }) => theme.background};
-  margin-bottom: 24px;
-  border-radius: 8px;
-
-  ${({ theme, expanded }) => theme.mediaWidth.upToSmall`
-    padding: ${expanded ? '16px' : '24px 16px 0 16px'};
-  `}
+  :last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  `};
 `
 
 export const FairLaunchPoolsTitle = styled.div`
-  padding-bottom: 24px;
+  padding: 24px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  background: ${({ theme }) => `${theme.bg12}40`};
+`
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: column;
+export const ListItemWrapper = styled.div`
+  padding: 0 24px 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 16px;
   `};
 `
 
@@ -300,7 +307,8 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   position: relative;
   opacity: ${({ fade }) => (fade ? '0.6' : '1')};
   background-color: ${({ theme }) => theme.tableHeader};
-  border-radius: 8px;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-gap: 1rem;
@@ -367,7 +375,7 @@ export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   grid-gap: 3rem;
   grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr 0.25fr;
   grid-template-areas: 'pools liq end apy reward staked_balance expand';
-  padding: 15px 0 13px 24px;
+  padding: 15px 0 13px;
   font-size: 14px;
   align-items: center;
   height: fit-content;
@@ -406,7 +414,7 @@ export const ExpandedContent = styled.div`
   font-weight: 500;
   padding: 16px 24px;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`    
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 1rem;
   `};
 `
@@ -526,4 +534,5 @@ export const TotalRewardsDetailWrapper = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  cursor: pointer;
 `

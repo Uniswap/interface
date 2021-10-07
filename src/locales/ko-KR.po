@@ -52,7 +52,7 @@ msgstr "각 거래량의 일부가({0}%) 프로토콜 인센티브로써 유동�
 msgid "AMP"
 msgstr "AMP"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = 증폭 계수. 증폭된 풀은 높은 자본 효율성을 제공합니다. 높은 AMP는 높은 자본 효율성을 제공하기 위해서 정해진 가격 범위 안에서 유동성을 증폭시킵니다."
 
@@ -68,8 +68,8 @@ msgstr "AMP 계수와 풀에 있는 유동성을 곱한 값."
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APY"
 msgstr "APY"
 
@@ -498,8 +498,8 @@ msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. �
 msgid "Encourage trading"
 msgstr "거래 장려"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "종료"
 
@@ -554,7 +554,7 @@ msgstr "연결하는 동안 오류가 발생했습니다. 페이지를 새로고
 msgid "Estimated Refund"
 msgstr "예상 환불"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "수수료 + 보상에서 추정된 총 연간 수익률"
 
@@ -904,8 +904,8 @@ msgstr "최소 수령"
 #~ msgid "My Dashboard"
 #~ msgstr "대시보드"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "내 예치금"
 
@@ -921,8 +921,8 @@ msgstr ""
 msgid "My Pools on External Platforms"
 msgstr "외부 플랫폼의 내 풀"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "내 보상"
 
@@ -957,7 +957,7 @@ msgstr "기록이 없습니다."
 msgid "No results found."
 msgstr "결과를 발견하지 못했습니다."
 
-#: src/components/Vesting/RewardLockerSchedules.tsx
+#: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgstr "풀링된 {0}:"
 msgid "Pools"
 msgstr "풀"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
@@ -1305,8 +1305,8 @@ msgstr "DMM 유동성 공급자 토큰을 스테이킹하여 토큰 보상을 �
 msgid "Staked Only"
 msgstr "스테이킹 풀만 보기"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "스테이킹된 TVL"
 

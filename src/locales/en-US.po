@@ -52,7 +52,7 @@ msgstr "A portion of each trade ({0}%) goes to liquidity providers as a protocol
 msgid "AMP"
 msgstr "AMP"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 
@@ -68,8 +68,8 @@ msgstr "AMP factor x Liquidity in the pool. Amplified pools have higher capital 
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APY"
 msgstr "APY"
 
@@ -498,8 +498,8 @@ msgstr "Enables high slippage trades. Use at your own risk."
 msgid "Encourage trading"
 msgstr "Encourage trading"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "Ending In"
 
@@ -554,7 +554,7 @@ msgstr "Error connecting. Try refreshing the page."
 msgid "Estimated Refund"
 msgstr "Estimated Refund"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "Estimated total annualized yield from fees + rewards"
 
@@ -904,8 +904,8 @@ msgstr "Minimum received"
 #~ msgid "My Dashboard"
 #~ msgstr "My Dashboard"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "My Deposit"
 
@@ -921,8 +921,8 @@ msgstr "My Pools"
 msgid "My Pools on External Platforms"
 msgstr "My Pools on External Platforms"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "My Rewards"
 
@@ -957,7 +957,7 @@ msgstr "No records found."
 msgid "No results found."
 msgstr "No results found."
 
-#: src/components/Vesting/RewardLockerSchedules.tsx
+#: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
 msgstr "No vesting schedule!"
 
@@ -1082,7 +1082,7 @@ msgstr "Pooled {0}:"
 msgid "Pools"
 msgstr "Pools"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
@@ -1305,8 +1305,8 @@ msgstr "Stake your DMM Liquidity Provider tokens to earn token rewards."
 msgid "Staked Only"
 msgstr "Staked Only"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "Staked TVL"
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { useMedia } from 'react-use'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -8,7 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { Token } from 'libs/sdk/src'
 import { AutoRow, RowBetween } from 'components/Row'
 import InfoHelper from 'components/InfoHelper'
-import { VestingHeader, VestPeriods, MenuFlyout, Seperator, Tag } from 'components/Vesting/styleds'
+import { VestingHeader, VestPeriods, MenuFlyout, Seperator, Tag, NoVestingSchedule } from 'components/Vesting/styleds'
 import RewardLockerSchedules from 'components/Vesting/RewardLockerSchedules'
 import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
@@ -19,11 +19,13 @@ import { formattedNum } from 'utils'
 import { useFarmRewardsUSD } from 'utils/dmm'
 import { fixedFormatting } from 'utils/formatBalance'
 import ConfirmVestingModal from './ConfirmVestingModal'
+import LocalLoader from 'components/LocalLoader'
 
-const Vesting = () => {
+const Vesting = ({ loading }: { loading: boolean }) => {
   const { schedulesByRewardLocker } = useSchedules()
   const rewardLockerAddresses = useRewardLockerAddresses()
   const above768 = useMedia('(min-width: 768px)')
+  const above1000 = useMedia('(min-width: 1000px)') // Extra large screen
   const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
   const theme = useTheme()
   const currentBlockNumber = useBlockNumber()
@@ -126,8 +128,8 @@ const Vesting = () => {
 
   const totalBlock = (
     <div style={{ position: 'relative' }}>
-      <Flex>
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={24}>
+      <Flex alignItems="center">
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={28}>
           {formattedNum(totalUSD.toString(), true)}
         </TYPE.body>
         {totalUSD > 0 && (
@@ -136,7 +138,7 @@ const Vesting = () => {
               color={'#08a1e7'}
               fontWeight={'normal'}
               fontSize={14}
-              style={{ margin: '0.25rem 0.25rem 0.25rem 1rem' }}
+              style={{ margin: '0.25rem 0.25rem 0.25rem 1rem', cursor: 'pointer' }}
               onClick={() => setOpen(open !== 0 ? 0 : -1)}
             >
               Details
@@ -173,18 +175,18 @@ const Vesting = () => {
         <Trans>Locked Rewards</Trans>
       </TYPE.body>
 
-      <Flex>
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+      <Flex marginTop="0.375rem" alignItems="center" onClick={() => lockedUSD > 0 && setOpen(open !== 1 ? 1 : -1)}>
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
           {formattedNum(lockedUSD.toString(), true)}
         </TYPE.body>
         {lockedUSD > 0 && (
-          <span onClick={() => setOpen(open !== 1 ? 1 : -1)}>
+          <>
             {open === 1 ? (
               <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
             ) : (
               <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
             )}
-          </span>
+          </>
         )}
       </Flex>
       {open === 1 && (
@@ -205,18 +207,18 @@ const Vesting = () => {
         <Trans>Claimed Rewards</Trans>
       </TYPE.body>
 
-      <Flex>
-        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+      <Flex onClick={() => claimedUSD > 0 && setOpen(open !== 2 ? 2 : -1)} alignItems="center" marginTop="6px">
+        <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
           {formattedNum(claimedUSD.toString(), true)}
         </TYPE.body>
         {claimedUSD > 0 && (
-          <span onClick={() => setOpen(open !== 2 ? 2 : -1)}>
+          <>
             {open === 2 ? (
               <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
             ) : (
               <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
             )}
-          </span>
+          </>
         )}
       </Flex>
 
@@ -240,18 +242,18 @@ const Vesting = () => {
             <Trans>Unlocked Rewards</Trans>
           </TYPE.body>
 
-          <Flex>
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
+          <Flex onClick={() => setOpen(open !== 3 ? 3 : -1)} alignItems="center" marginTop="6px">
+            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={20}>
               {formattedNum(unlockedUSD.toString(), true)}
             </TYPE.body>
             {unlockedUSD > 0 && (
-              <span onClick={() => setOpen(open !== 3 ? 3 : -1)}>
+              <>
                 {open === 3 ? (
                   <ChevronUp size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 ) : (
                   <ChevronDown size="14" color="#08a1e7" style={{ margin: '0.15rem 0 0 0.25rem' }} />
                 )}
-              </span>
+              </>
             )}
           </Flex>
 
@@ -269,39 +271,35 @@ const Vesting = () => {
     </div>
   )
 
+  const noVesting = rewardLockerAddresses.every(
+    rewardLockerAddress => !schedulesByRewardLocker[rewardLockerAddress]?.length
+  )
+
   return (
     <>
       <ConfirmVestingModal />
       <VestingHeader>
         <RowBetween marginBottom="20px" align="center">
-          <TYPE.body color={theme.text11} fontWeight={600} fontSize={16}>
-            <Trans>TOTAL HARVESTED REWARDS</Trans>
+          <Flex color={theme.text11} fontSize={16}>
+            <Text fontWeight={600}>
+              <Trans>TOTAL HARVESTED REWARDS</Trans>
+            </Text>
             <InfoHelper
               text={t`Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline.`}
             />
-          </TYPE.body>
+          </Flex>
 
           {above768 && (
             <ExternalLink href="https://kyber.network/about/knc" style={{ textDecoration: 'none' }}>
               <Flex justifyContent="flex-end">
-                <Trans>What can KNC be used for? </Trans>
-                <Tag
-                  style={{
-                    padding: '2px 4px',
-                    marginLeft: '10px',
-                    color: '#08a1e7',
-                    fontSize: '12px',
-                    borderRadius: '4px'
-                  }}
-                >
-                  →
-                </Tag>
+                <Trans>What can KNC be used for? </Trans> →
               </Flex>
             </ExternalLink>
           )}
         </RowBetween>
-        {above1400 ? (
-          <AutoRow justify="space-between">
+
+        {above1000 ? (
+          <AutoRow justify="space-between" marginTop="1.5rem">
             {totalBlock}
             <Seperator />
             {lockedBlock}
@@ -311,8 +309,8 @@ const Vesting = () => {
           </AutoRow>
         ) : (
           <>
-            <div style={{ paddingBottom: '10px', borderBottom: '1px solid #404b51' }}>{totalBlock}</div>
-            <AutoRow justify="space-between" style={{ margin: '10px 0' }}>
+            <div style={{ paddingBottom: '1rem', borderBottom: '1px solid #404b51' }}>{totalBlock}</div>
+            <AutoRow justify="space-between" marginY="1.5rem">
               {lockedBlock}
               <Seperator />
               {claimedBlock}
@@ -324,24 +322,13 @@ const Vesting = () => {
         {!above768 && (
           <ExternalLink href="https://kyber.network/about/knc" style={{ textDecoration: 'none' }}>
             <Flex justifyContent="flex-end" style={{ marginTop: '20px' }}>
-              <Trans>What can KNC be used for? </Trans>
-              <Tag
-                style={{
-                  padding: '2px 4px',
-                  marginLeft: '10px',
-                  color: '#08a1e7',
-                  fontSize: '12px',
-                  borderRadius: '4px'
-                }}
-              >
-                →
-              </Tag>
+              <Trans>What can KNC be used for? </Trans> →
             </Flex>
           </ExternalLink>
         )}
       </VestingHeader>
 
-      <VestPeriods style={{ padding: '28px 0 20px 0' }}>
+      <VestPeriods>
         <AutoRow>
           <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} marginRight="6px">
             <Trans>VESTING PERIODS</Trans>
@@ -352,13 +339,30 @@ const Vesting = () => {
         </AutoRow>
       </VestPeriods>
 
-      {rewardLockerAddresses.map(rewardLockerAddress => (
-        <RewardLockerSchedules
-          key={rewardLockerAddress}
-          rewardLockerAddress={rewardLockerAddress}
-          schedules={schedulesByRewardLocker[rewardLockerAddress]}
-        />
-      ))}
+      {noVesting ? (
+        loading ? (
+          <Flex backgroundColor={theme.background}>
+            <LocalLoader />
+          </Flex>
+        ) : (
+          <NoVestingSchedule>
+            <Trans>No vesting schedule!</Trans>
+          </NoVestingSchedule>
+        )
+      ) : (
+        <div style={{ backgroundColor: theme.background, borderRadius: '8px' }}>
+          {rewardLockerAddresses
+            .filter(rewardLockerAddress => !!schedulesByRewardLocker[rewardLockerAddress]?.length)
+            .map((rewardLockerAddress, index) => (
+              <RewardLockerSchedules
+                idx={index + 1}
+                key={rewardLockerAddress}
+                rewardLockerAddress={rewardLockerAddress}
+                schedules={schedulesByRewardLocker[rewardLockerAddress]}
+              />
+            ))}
+        </div>
+      )}
     </>
   )
 }

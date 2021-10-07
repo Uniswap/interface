@@ -1,33 +1,32 @@
 import React, { useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMedia } from 'react-use'
-import { Trans } from '@lingui/macro'
 
-import { ChainId, Token } from 'libs/sdk/src'
+import { Token } from 'libs/sdk/src'
 import { ButtonDropdown } from 'components/Button'
-import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import useVesting from 'hooks/useVesting'
 import { useAppDispatch } from 'state/hooks'
 import { useBlockNumber } from 'state/application/hooks'
-import { ExternalLink } from 'theme'
-import { getEtherscanLink, shortenAddress } from 'utils'
 import Schedule from './Schedule'
 import UnlockedBlock from './UnlockedBlock'
-import { RewardLockerSchedulesWrapper, RewardLockerSchedulesTitle, ClaimAllSection, NoVestingSchedule } from './styleds'
+import { RewardLockerSchedulesWrapper, RewardLockerSchedulesTitle, ClaimAllSection } from './styleds'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
+import { Text, Flex } from 'rebass'
+import { useMedia } from 'react-use'
 
 const RewardLockerSchedules = ({
   rewardLockerAddress,
-  schedules
+  schedules,
+  idx
 }: {
   rewardLockerAddress: string
   schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number][]
+  idx: number
 }) => {
   const dispatch = useAppDispatch()
+  const above500 = useMedia('(min-width: 500px)')
   const currentBlockNumber = useBlockNumber()
   const { account, chainId } = useActiveWeb3React()
-  const above768 = useMedia('(min-width: 768px)')
   const [expanded, setExpanded] = useState<boolean>(true)
   const { vestMultipleTokensAtIndices } = useVesting(rewardLockerAddress)
 
@@ -135,58 +134,37 @@ const RewardLockerSchedules = ({
   }
 
   return (
-    <RewardLockerSchedulesWrapper>
-      <RewardLockerSchedulesTitle showBorder={expanded}>
-        {above768 ? (
-          <>
-            <span>
-              Contract:{' '}
-              <ExternalLink href={getEtherscanLink(chainId as ChainId, rewardLockerAddress, 'address')}>
-                {shortenAddress(rewardLockerAddress)}
-              </ExternalLink>
-            </span>
-            <ClaimAllSection>
-              <UnlockedBlock info={info} onClaimAll={onClaimAll} />
-              <ButtonDropdown
-                expanded={expanded}
-                marginLeft="8px"
-                padding="9px"
-                width="fit-content"
-                onClick={() => setExpanded(!expanded)}
-              />
-            </ClaimAllSection>
-          </>
-        ) : (
-          <>
-            <RowBetween marginBottom="1rem">
-              <span>
-                Contract:{' '}
-                <ExternalLink href={getEtherscanLink(chainId as ChainId, rewardLockerAddress, 'address')}>
-                  {shortenAddress(rewardLockerAddress)}
-                </ExternalLink>
-              </span>
-              <ButtonDropdown
-                expanded={expanded}
-                marginLeft="8px"
-                padding="9px"
-                width="fit-content"
-                onClick={() => setExpanded(!expanded)}
-              />
-            </RowBetween>
-            <AutoRow justify="flex-end">
-              <UnlockedBlock info={info} onClaimAll={onClaimAll} />
-            </AutoRow>
-          </>
-        )}
+    <RewardLockerSchedulesWrapper showBorder={!expanded}>
+      <RewardLockerSchedulesTitle>
+        <Flex justifyContent="space-between" alignItems="center" width="100%" marginBottom={above500 ? 0 : '10px'}>
+          <Text>Group {idx}</Text>
+          {!above500 && (
+            <ButtonDropdown
+              expanded={expanded}
+              marginLeft="8px"
+              padding="9px"
+              width="fit-content"
+              onClick={() => setExpanded(prev => !prev)}
+            />
+          )}
+        </Flex>
+
+        <ClaimAllSection>
+          <UnlockedBlock info={info} onClaimAll={onClaimAll} />
+
+          {above500 && (
+            <ButtonDropdown
+              expanded={expanded}
+              marginLeft="8px"
+              padding="9px"
+              width="fit-content"
+              onClick={() => setExpanded(prev => !prev)}
+            />
+          )}
+        </ClaimAllSection>
       </RewardLockerSchedulesTitle>
 
-      {expanded && schedules.length === 0 && (
-        <NoVestingSchedule>
-          <Trans>No vesting schedule!</Trans>
-        </NoVestingSchedule>
-      )}
-
-      {expanded && schedules.length > 0 && (
+      {expanded && (
         <>
           {schedules.map(
             (s, index) =>

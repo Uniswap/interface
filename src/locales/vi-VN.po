@@ -52,7 +52,7 @@ msgstr "Một phần phí của mỗi giao dịch ({0}%) được chuyển đế
 msgid "AMP"
 msgstr "AMP"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range."
 msgstr "AMP = Hệ số khuếch đại Amplification factor. Pool khuếch đại có hiệu quả sử dụng vốn cao hơn. AMP cao hơn, hiệu quả sử dụng vốn cao hơn và tăng tính thanh khoản trong một phạm vi giá."
 
@@ -68,8 +68,8 @@ msgstr "Yếu tố AMP x Tính thanh khoản trong pool. Các pool khuếch đ�
 
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "APY"
 msgstr "APY"
 
@@ -498,8 +498,8 @@ msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạ
 msgid "Encourage trading"
 msgstr "Khuyến khích giao dịch"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Ending In"
 msgstr "KẾT THÚC TRONG"
 
@@ -554,7 +554,7 @@ msgstr "Lỗi khi kết nối. Hãy thử làm mới trang."
 msgid "Estimated Refund"
 msgstr "Khoản tiền hoàn lại ước tính"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
 msgstr "Tổng lợi nhuận ước tính hàng năm từ phí + phần thưởng"
 
@@ -904,8 +904,8 @@ msgstr "Đã nhận Tối thiểu"
 #~ msgid "My Dashboard"
 #~ msgstr "Quản lý"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Deposit"
 msgstr "Tiền gửi của tôi"
 
@@ -921,8 +921,8 @@ msgstr ""
 msgid "My Pools on External Platforms"
 msgstr "Các Pool của tôi trên các Nền tảng Bên ngoài"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "My Rewards"
 msgstr "Các Phần thưởng của tôi"
 
@@ -957,7 +957,7 @@ msgstr "Không có dữ liệu được tìm thấy."
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
 
-#: src/components/Vesting/RewardLockerSchedules.tsx
+#: src/components/Vesting/index.tsx
 msgid "No vesting schedule!"
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgstr "Đã gộp chung {0}:"
 msgid "Pools"
 msgstr "Các Pool"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Pools | AMP"
 msgstr "Pools | AMP"
 
@@ -1305,8 +1305,8 @@ msgstr "Stake token thanh khoản LP DMM của bạn để kiếm các phần th
 msgid "Staked Only"
 msgstr "Chỉ Stake"
 
-#: src/components/YieldPools/FairLaunchPools.tsx
 #: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/index.tsx
 msgid "Staked TVL"
 msgstr "TVL đã Stake"
 

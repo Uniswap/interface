@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import YieldPools from 'components/YieldPools'
 import RewardTokenPrices from 'components/RewardTokenPrices'
+import { Text } from 'rebass'
 import UpcomingFarms from 'components/UpcomingFarms'
 
 const Farms = () => {
@@ -66,9 +67,9 @@ const Farms = () => {
 
   const renderTabContent = () => {
     return activeTab === 0 ? (
-      <YieldPools />
+      <YieldPools loading={loading} />
     ) : activeTab === 1 ? (
-      <Vesting />
+      <Vesting loading={vestingLoading} />
     ) : (
       <UpcomingFarms setActiveTab={setActiveTab} />
     )
@@ -97,9 +98,9 @@ const Farms = () => {
             </Tab>
             <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
               <PoolTitleContainer>
-                <span style={{ marginRight: '4px' }}>
+                <Text marginRight="0.25rem">
                   <Trans>Vesting</Trans>
-                </span>
+                </Text>
                 {vestingLoading && <Loader />}
               </PoolTitleContainer>
             </Tab>
