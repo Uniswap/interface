@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-06 10:06\n"
+"PO-Revision-Date: 2021-10-07 19:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -510,7 +510,7 @@ msgstr ""
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr ""
+msgstr "Odobrite to transakcijo in svoji denarnici"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
@@ -528,21 +528,21 @@ msgstr ""
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr ""
+msgstr "Poveži denarnico"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr ""
+msgstr "Poveži denarnico"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr ""
+msgstr "Povežite z denarnico"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr ""
+msgstr "Če želite poiskati sklade, povežite denarnico"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
@@ -571,7 +571,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr ""
+msgstr "Ustvari sklad & naloži"
 
 #: src/pages/CreateProposal/index.tsx
 #: src/pages/Vote/index.tsx
@@ -585,7 +585,7 @@ msgstr ""
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr ""
+msgstr "Ustvari sklad"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -593,11 +593,11 @@ msgstr ""
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr ""
+msgstr "Ustvari sklad in dodaj V3-likvidnost za {0}/{1}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr ""
+msgstr "Ustvari sklad."
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
@@ -814,7 +814,7 @@ msgstr ""
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr ""
+msgstr "Za vsak spodaj prikazani sklad s klikom na Migriraj odstranite svojo likvidnost iz Uniswap V2 in jo vložite v Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -871,7 +871,7 @@ msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr ""
+msgstr "Uvozi sklad"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
@@ -891,7 +891,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr ""
+msgstr "Začetne cene in delež v skladu"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -982,7 +982,7 @@ msgstr ""
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr ""
+msgstr "Ponudniki likvidnosti služijo provizijo 0,3 % od vseh poslov, sorazmerno s svojim deležem v skladu. Provozije se dodajajo v sklad in se nabirajo v realnem času, prevzamete pa jih, ko dvignete svojo likvidnost iz sklada."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1014,7 +1014,7 @@ msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr ""
+msgstr "Upravljanje likvidnosti v skladu nagrad"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1022,7 +1022,7 @@ msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr ""
+msgstr "Upravljaj s tem skladom."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1118,7 +1118,7 @@ msgstr ""
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr ""
+msgstr "Ni aktivnih skladov"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1130,7 +1130,7 @@ msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr ""
+msgstr "Ne najdem sklada."
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "No proposals found."
@@ -1211,7 +1211,7 @@ msgstr ""
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr ""
+msgstr "Sodelujoči skladi"
 
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
@@ -1236,24 +1236,24 @@ msgstr ""
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr ""
+msgstr "Skladi"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr ""
+msgstr "Sklad najden!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr ""
+msgstr "Cena v skladu"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr ""
+msgstr "Cena v skladu"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr ""
+msgstr "Žetoni sklada v skladu nagrad:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1264,11 +1264,11 @@ msgstr ""
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr ""
+msgstr "{0} v skladu:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr ""
+msgstr "Pregled skladov"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1305,7 +1305,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr ""
+msgstr "Cene in delež v skladu"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
@@ -1464,7 +1464,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr ""
+msgstr "Delež sklada:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1581,15 +1581,15 @@ msgstr ""
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr ""
+msgstr "Cena v tem skladu je izven območja, ki ste ga izbrali. Vaš vložek vam trenutno ne služi provizij."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr ""
+msgstr "Cena v tem skladu je trenutno znotraj območja, ki ste ga izbrali. Vaš vložek vam trenutno služi provizije. "
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr ""
+msgstr "Razmerje med žetoni, ki jih boste vložili, bo določilo začetno ceno v tem skladu."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1739,7 +1739,7 @@ msgstr ""
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr ""
+msgstr "Potrebni so žetoni likvidnosti (LP) UNI-V2. Če boste dodali likvidnost v sklad {0}-{1} , boste lahko na tej strani zastavili svoje žetone likvidnosti."
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1977,7 +1977,7 @@ msgstr ""
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr ""
+msgstr "Ko prevzamete brez dviga, vaša likvidnost ostane v rudarskem skladu."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1985,7 +1985,7 @@ msgstr ""
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr ""
+msgstr "Ko izvedete dvig, prevzamete svoje UNI, vaša likvidnost pa se odstrani iz rudarskega sklada."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -2027,11 +2027,11 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr ""
+msgstr "Ustvarjate sklad"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr ""
+msgstr "V tem skladu Uniswapa V3 ste prvi ponudnik likvidnosti. Vaša likvidnost bo migrirana po trenutni ceni {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -2051,7 +2051,7 @@ msgstr ""
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr ""
+msgstr "V tem skladu še nimate likvidnosti."
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
@@ -2106,7 +2106,7 @@ msgstr ""
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr ""
+msgstr "Vaš delež v skladu:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -2147,11 +2147,11 @@ msgstr ""
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr ""
+msgstr "Količina vaših žetonov sklada:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr ""
+msgstr "Cena vaše transakcije bo precej višja, ker vsebuje plin (gas) za ustvarjenje sklada."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -2364,5 +2364,5 @@ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr ""
+msgstr "← Nazaj na pregled skladov"
 
