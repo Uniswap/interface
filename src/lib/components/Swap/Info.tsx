@@ -8,6 +8,5 @@ const InfoMinus = inlaidIcon(Info, Minus)
 
 export default function ShowDetails() {
   const [showDetails, toggleShowDetails] = useShowDetails()
-
   return <ThemedButton onClick={toggleShowDetails}>{showDetails ? <InfoMinus /> : <InfoPlus />}</ThemedButton>
 }

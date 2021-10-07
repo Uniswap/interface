@@ -10,6 +10,5 @@ export const StoreAtomContext = createContext<WritableAtom<SwapState, AnyAction>
 export function SwapStateProvider({ children }: { children: ReactNode }) {
   const store = createStore(reducer)
   const storeAtom = atomWithStore(store)
-
   return <StoreAtomContext.Provider value={storeAtom}>{children}</StoreAtomContext.Provider>
 }
