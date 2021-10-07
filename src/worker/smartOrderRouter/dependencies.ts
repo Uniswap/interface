@@ -1,12 +1,15 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
+import { Token } from '@uniswap/sdk-core'
 import {
   AlphaRouterConfig,
   AlphaRouterParams,
   CachingGasStationProvider,
+  CachingPoolProvider,
   CachingTokenListProvider,
   CachingTokenProviderWithFallback,
   ChainId,
   EIP1559GasPriceProvider,
+  GasPrice,
   HeuristicGasModelFactory,
   ICache,
   ID_TO_CHAIN_ID,
@@ -19,9 +22,11 @@ import {
   UniswapMulticallProvider,
   URISubgraphProvider,
 } from '@uniswap/smart-order-router'
+import { Pool } from '@uniswap/v3-sdk'
 import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/constants'
 import { providers } from 'ethers/lib/ethers'
+import ms from 'ms.macro'
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
   topNDirectSwaps: 2,
@@ -38,7 +43,7 @@ export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
 
 const SUPPORTED_CHAINS: ChainId[] = [ChainId.MAINNET, ChainId.RINKEBY]
 
-class MetricLogger extends IMetric {
+class GAMetric extends IMetric {
   putDimensions() {
     return
   }
@@ -52,18 +57,44 @@ class MetricLogger extends IMetric {
     })
   }
 }
-setGlobalMetric(new MetricLogger())
+setGlobalMetric(new GAMetric())
 
-//TODO(judo): implement
-class Cache<T> implements ICache<T> {
-  async get() {
-    return undefined
+//TODO(judo): tests
+class MemoryCache<T> implements ICache<T> {
+  private cache: Record<string, { val: T; added: number; timeout?: ReturnType<typeof setTimeout> }> = {}
+
+  constructor(private ttl?: number) {}
+
+  async get(key: string) {
+    const rec = this.cache[key]
+    if (this.ttl) {
+      return !(rec?.added && rec?.added + this.ttl > Date.now()) ? rec.val : undefined
+    } else {
+      return rec.val
+    }
   }
-  async set() {
-    return false
+
+  async set(key: string, value: T) {
+    this.cache[key] = {
+      val: value,
+      added: Date.now(),
+      timeout: this.ttl ? setTimeout(() => this.del(key), this.ttl) : undefined,
+    }
+
+    return true
   }
-  async has() {
-    return false
+
+  async has(key: string) {
+    return Boolean(this.cache[key])
+  }
+
+  del(key: string) {
+    const rec = this.cache[key]
+
+    if (!rec) return
+    if (rec.timeout) clearTimeout(rec.timeout)
+
+    delete this.cache[key]
   }
 }
 
@@ -75,10 +106,10 @@ export function buildDependencies(): Dependencies {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
     //todo: use fallback
-    const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new Cache())
+    const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new MemoryCache<Token>())
 
-    const tokenCache = new Cache()
-    const blockedTokenCache = new Cache()
+    const tokenCache = new MemoryCache<Token>()
+    const blockedTokenCache = new MemoryCache<Token>()
 
     const multicall2Provider = new UniswapMulticallProvider(chainId, provider, 375_000)
     const tokenProvider = new CachingTokenProviderWithFallback(
@@ -116,7 +147,11 @@ export function buildDependencies(): Dependencies {
       // tokenListProvider,
       blockedTokenListProvider: undefined,
       multicall2Provider,
-      poolProvider: new PoolProvider(ID_TO_CHAIN_ID(chainId), multicall2Provider),
+      poolProvider: new CachingPoolProvider(
+        chainId,
+        new PoolProvider(ID_TO_CHAIN_ID(chainId), multicall2Provider),
+        new MemoryCache<Pool>()
+      ),
       tokenProvider,
       subgraphProvider: new URISubgraphProvider(
         chainId,
@@ -124,7 +159,11 @@ export function buildDependencies(): Dependencies {
       ),
       // tokenProviderFromTokenList: tokenListProvider,
       quoteProvider,
-      gasPriceProvider: new CachingGasStationProvider(chainId, new EIP1559GasPriceProvider(provider), new Cache()),
+      gasPriceProvider: new CachingGasStationProvider(
+        chainId,
+        new EIP1559GasPriceProvider(provider),
+        new MemoryCache<GasPrice>(ms`15s`)
+      ),
       gasModelFactory: new HeuristicGasModelFactory(),
     }
   }
