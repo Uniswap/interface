@@ -195,7 +195,7 @@ export const useBridgeTransactionsSummary = () => {
           return total
         }
 
-        // Has pair & is deposit
+        // l2 to l1 withdrawal
         if (tx.type === 'outbox') {
           const status = tx.receipt?.status
           summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
@@ -271,7 +271,7 @@ export const useBridgeTransactionsSummary = () => {
         return total
       }, [])
 
-      const passed24h = new Date().getTime() - 1000 * 60 * 24
+      const passed24h = new Date().getTime() - 1000 * 60 * 60 * 24
 
       return [...l1Summaries, ...l2Summaries].filter(summary => {
         if (!summary.timestampResolved) return true
