@@ -7,8 +7,8 @@ const EXCHANGE_SUBGRAPH_URLS = {
   mainnetStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-staging'],
   ropsten: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten'],
   polygon: [
-    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic',
-    'https://polygon-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-matic'
+    'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-matic'
+    // 'https://polygon-subgraph.knstats.com/subgraphs/name/dynamic-amm/dmm-exchange-matic'
   ],
   polygonStaging: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic-staging'],
   mumbai: ['https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai'],
