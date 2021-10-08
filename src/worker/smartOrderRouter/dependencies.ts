@@ -25,7 +25,7 @@ import {
 import { TokenList } from '@uniswap/token-lists'
 import { Pool } from '@uniswap/v3-sdk'
 import { timing } from 'components/analytics'
-import { NETWORK_URLS } from 'connectors/constants'
+import { NETWORK_URLS } from 'connectors/networkUrls'
 import { providers } from 'ethers/lib/ethers'
 import ms from 'ms.macro'
 
