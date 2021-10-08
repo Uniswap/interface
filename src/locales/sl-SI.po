@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 07:06\n"
+"PO-Revision-Date: 2021-10-08 08:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -84,7 +84,7 @@ msgstr "75 %"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr ""
+msgstr "<0/> Vse pobude"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
@@ -105,7 +105,7 @@ msgstr "<0>Komentar:</0> Odstranitev žetonov iz sklada pretvori vaša sredstva 
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr ""
+msgstr "<0>Komentar:</0> Izberite dejanje in za skupnost opišite svojo pobudo. Po oddaji pobude ni mogoče več spreminjati, zato pred oddajo preverite vse podatke. Glasovalno obdobje se začne takoj in traja 7 dni. Če želite predlagati dejanje po meri, <1>preberite dokumentacijo</1> ."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0> Komentar:</0> Ko dodate likvidnost, boste prejeli žetone sklada, ki
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr ""
+msgstr "<0>Odklenite glasovanje</0>, če se želite pripraviti na naslednjo pobudo."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -156,7 +156,7 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr ""
+msgstr "Dodaj zastopnika +"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -217,7 +217,7 @@ msgstr "Dovoljeno"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Allowed Slippage"
-msgstr ""
+msgstr "Dovoljeni zdrs"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -225,7 +225,7 @@ msgstr "Znesek"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste morali povečati toleranco do zdrsa. Če to ne deluje, je morda težava v nezdružljivosti z žetonom, s katerim trgujete. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -238,7 +238,7 @@ msgstr "Odobri"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Approve Token"
-msgstr ""
+msgstr "Odobri žeton"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -576,7 +576,7 @@ msgstr "Ustvari sklad & položi likvidnost"
 #: src/pages/CreateProposal/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "Create Proposal"
-msgstr ""
+msgstr "Ustvari pobudo"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -622,19 +622,19 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr ""
+msgstr "Glasovni zastopnikov"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr ""
+msgstr "Prenesi pravico glasovanja na zastopnika {0}"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
-msgstr ""
+msgstr "Zastopnik:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr ""
+msgstr "Pooblaščanje zastopnika"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
@@ -782,7 +782,7 @@ msgstr "Razširjeni rezultati z neaktivnih seznamov žetonov"
 
 #: src/components/Settings/index.tsx
 msgid "Expert Mode"
-msgstr "Način za strokovnjake"
+msgstr "Strokovni način"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1170,7 +1170,7 @@ msgstr "Ko ste zadovoljni s tečajem, kliknite Položi za pregled."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Do glasovanja so upravičeni samo glasovi UNI, ki so bili samopooblaščeni ali so pooblastili drug naslov pred blokom {0}."
+msgstr "Do glasovanja so upravičeni samo glasovi UNI, ki so bili samozastopani ali so pooblastili drugega zastopnika pred blokom {0}."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1272,12 +1272,12 @@ msgstr "Pregled skladov"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
-msgstr ""
+msgstr "Predogled"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
@@ -1285,15 +1285,15 @@ msgstr "Razlika v ceni:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr ""
+msgstr "Vpliv na ceno"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr ""
+msgstr "Vpliv na ceno previsok"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr ""
+msgstr "Cena posodobljena"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1301,7 +1301,7 @@ msgstr "Cenovni razpon"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr ""
+msgstr "Cena:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
@@ -1309,31 +1309,31 @@ msgstr "Cene in delež v skladu"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal"
-msgstr ""
+msgstr "Pobuda"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Proposal Submitted"
-msgstr ""
+msgstr "Pobuda predložena"
 
 #: src/pages/CreateProposal/ProposalEditor.tsx
 msgid "Proposal Title"
-msgstr ""
+msgstr "Naslov pobude"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
-msgstr ""
+msgstr "Pobude"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr ""
+msgstr "Pobude članov skupnosti bodo prikazane tukaj."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Proposed Action"
-msgstr ""
+msgstr "Predlagani ukrep"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr ""
+msgstr "Pobudnik"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
@@ -1385,7 +1385,7 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr ""
+msgstr "Odstrani zastopnika"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1406,19 +1406,19 @@ msgstr ""
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
-msgstr ""
+msgstr "Nazaj"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr ""
+msgstr "Poiščite ime ali prilepite naslov"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
-msgstr ""
+msgstr "Izberite par"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
-msgstr ""
+msgstr "Izberite omrežje"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1434,19 +1434,19 @@ msgstr "Za iskanje svoje likvidnosti V2 izberite žeton."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
-msgstr ""
+msgstr "Izberite dejanje"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
-msgstr ""
+msgstr "Izbrani razpon"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr ""
+msgstr "Sebi"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr ""
+msgstr "Samozastopanje"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1456,7 +1456,7 @@ msgstr "Nastavi razpon cene"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr ""
+msgstr "Nastavi začetno ceno"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1468,7 +1468,7 @@ msgstr "Delež sklada:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr ""
+msgstr "Prikaži Portis"
 
 #: src/pages/Pool/index.tsx
 msgid "Show closed positions"
@@ -1476,11 +1476,11 @@ msgstr "Pokaži zaprte položaje"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr ""
+msgstr "Enostavno"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Slippage tolerance"
-msgstr ""
+msgstr "Toleranca do zdrsa"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1492,31 +1492,31 @@ msgstr ""
 
 #: src/components/PositionList/index.tsx
 msgid "Status"
-msgstr ""
+msgstr "Stanje"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr ""
+msgstr "Korak 1. Pridobite žetone za likvidnost UNI-V2"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
-msgstr ""
+msgstr "Predloži novo pobudo"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
-msgstr ""
+msgstr "Predložitev pobude"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
-msgstr ""
+msgstr "Oddaja glasu"
 
 #: src/pages/Vote/styled.tsx
 msgid "Succeeded"
-msgstr ""
+msgstr "Uspelo"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Success"
-msgstr ""
+msgstr "Uspelo"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1532,36 +1532,36 @@ msgstr "Polog {0} {1} in {2} {3}"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr ""
+msgstr "Menjava"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr ""
+msgstr "Menjaj <0/> za natanko <1/>"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr ""
+msgstr "Vseeno zamenjaj"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr ""
+msgstr "Menjaj natanko <0/> za <1/>"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
-msgstr ""
+msgstr "Menjava {0} {1} za {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr ""
+msgstr "Hvala, ker ste del skupnosti Uniswap <0/>"
 
 #: src/components/FeeSelector/index.tsx
 msgid "The % you will earn in fees."
-msgstr ""
+msgstr "Odstotek, ki ga boste služili s provizijami."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr ""
+msgstr "Uniswapovi stalnici x*y = k s menjavo ni bilo zadoščeno. To običajno pomeni, da eden od žetonov, ki jih menjate, vključuje obnašanje po meri pri prenosih."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1593,7 +1593,7 @@ msgstr "Razmerje med žetoni, ki jih boste vložili, bo določilo začetno ceno 
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr ""
+msgstr "Transakcije ni bilo mogoče poslati, ker je rok potekel. Preverite, ali vaš transakcijski rok ni prekratek."
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
@@ -1601,7 +1601,7 @@ msgstr "Podatkov o likvidnosti ni."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr ""
+msgstr "To so žetoni, ki so pogosto v parih z drugimi žetoni."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
@@ -1625,11 +1625,11 @@ msgstr "To orodje poskrbi za varno migracijo vaših likvidnostnih žetonov {0} v
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Ta transakcija ne bo uspela zaradi premika cene. Poskusite povečati toleranco do zdrsa. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr ""
+msgstr "Ta transakcija ne bo uspela zaradi gibanja cene ali provizije za prenos. Poskusite povečati toleranco do zdrsa."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1695,7 +1695,7 @@ msgstr ""
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
-msgstr ""
+msgstr "Transakcija oddana"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction completed in"
@@ -1715,7 +1715,7 @@ msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
-msgstr ""
+msgstr "Vklopi strokovni način"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -1731,7 +1731,7 @@ msgstr ""
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr ""
+msgstr "Žetoni UNI predstavljajo delež glasovalnih pravic pri upravljanju sistema Uniswap. Za vsak predlog lahko glasujete sami ali pa svoje glasove prenesete na izbranega zastopnika."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1772,7 +1772,7 @@ msgstr ""
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr ""
+msgstr "Upravljanje Uniswapa je za na voljo samo na sloju 1. Če želite videti pobude in glasovati, preklopite na omrežje Ethereum Mainnet."
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1792,7 +1792,7 @@ msgstr ""
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Neznana napaka {0}. Poskusite povečati toleranco do zdrsa. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1805,7 +1805,7 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr ""
+msgstr "Odklepanje glasov"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -1884,7 +1884,7 @@ msgstr ""
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
-msgstr ""
+msgstr "Prikaži na Etherscanu"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -1915,41 +1915,41 @@ msgstr ""
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr ""
+msgstr "Glasuj proti pobudi {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey}"
-msgstr ""
+msgstr "Glasuj proti pobudi {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr ""
+msgstr "Glasujte proti pobudi {proposalKey} z razlogom \"{0}\""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr ""
+msgstr "Glasuj za pobudo {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr ""
+msgstr "Glasuj za pobudo {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr ""
+msgstr "Glasuj za pobudo {proposalKey} z razlogom \"{0}\""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr ""
+msgstr "Vzdrži se glasovanja o pobudi {proposalId}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr ""
+msgstr "Vzdrži se glasovanja o pobudi {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr ""
+msgstr "Vzdrži se glasovanja o pobudi {proposalKey} z razlogom \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -2023,7 +2023,7 @@ msgstr ""
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
-msgstr ""
+msgstr "Imate že eno aktivno ali čakajočo pobudo."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
@@ -2039,7 +2039,7 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr ""
+msgstr "O vsaki pobudi lahko glasujete sami ali pa svoje glasove prenesete na izbranega zastopnika."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
@@ -2047,7 +2047,7 @@ msgstr ""
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You don't have enough votes to submit a proposal"
-msgstr ""
+msgstr "Nimate dovolj glasov za predložitev pobude."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -2071,7 +2071,7 @@ msgstr ""
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You must have {formattedProposalThreshold} votes to submit a proposal"
-msgstr ""
+msgstr "Za predložitev pobude potrebujete {formattedProposalThreshold} glasov."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
