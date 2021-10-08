@@ -1,20 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Token } from '@uniswap/sdk-core'
-import * as Comlink from 'comlink'
 import qs from 'qs'
 import { AppState } from 'state'
-import { RouterType } from 'worker/smartOrderRouter/router.worker'
-import SmartOrderRouterWorker from 'worker-loader!worker/smartOrderRouter/router.worker'
 
+import { getQuote } from '../../worker/smartOrderRouter/router.worker'
 import { GetQuoteResult } from './types'
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
-
-let comlinkWorker: Comlink.Remote<RouterType> | null = null
-
-function getWorker() {
-  return comlinkWorker ?? (comlinkWorker = Comlink.wrap<RouterType>(new SmartOrderRouterWorker()))
-}
 
 async function getClientSideQuote({
   tokenIn,
@@ -28,7 +20,7 @@ async function getClientSideQuote({
   type: 'exactIn' | 'exactOut'
 }) {
   // TODO(judo): update worker when token list changes
-  return getWorker().getQuote({
+  return getQuote({
     type,
     chainId: tokenIn.chainId,
     tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
