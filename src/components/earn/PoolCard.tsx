@@ -95,15 +95,18 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
       : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
 
-  const dpy = apy
-    ? new Percent(Math.floor(parseFloat(apy.divide('365').toFixed(10)) * 1_000_000).toFixed(0), '1000000')
-    : undefined
-
-  let weeklyAPY: React.ReactNode | undefined = <>🤯</>
+  // let weeklyAPY: React.ReactNode | undefined = <>🤯</>
+  let quarterlyAPY: React.ReactNode | undefined = <>🤯</>
   try {
-    weeklyAPY = apy
+    // weeklyAPY = apy
+    //   ? new Percent(
+    //       Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000).toFixed(0),
+    //       '1000000'
+    //     ).toFixed(0, { groupSeparator: ',' })
+    //   : undefined
+    quarterlyAPY = apy
       ? new Percent(
-          Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000).toFixed(0),
+          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000).toFixed(0),
           '1000000'
         ).toFixed(0, { groupSeparator: ',' })
       : undefined
@@ -183,14 +186,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
           })}
         {apy && apy.greaterThan('0') && (
           <PoolStatRow
-            helperText={
-              <>
-                Yield/day: {dpy?.toSignificant(4)}%<br />
-                APY (weekly compounded): {weeklyAPY}%
-              </>
-            }
-            statName={stakingInfo.rewardTokens.length > 1 ? 'Combined APR' : 'APR'}
-            statValue={apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
+            helperText={<>Compounded semiannually</>}
+            statName={stakingInfo.rewardTokens.length > 1 ? 'Combined APY' : 'APY'}
+            statValue={apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'}
           />
         )}
 
