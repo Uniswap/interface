@@ -4,7 +4,8 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 import { formatUnits } from '@ethersproject/units'
-import { Trans } from '@lingui/macro'
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -16,7 +17,7 @@ import {
   useUniContract,
 } from 'hooks/useContract'
 import { useActiveWeb3React } from 'hooks/web3'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
@@ -36,8 +37,8 @@ interface ProposalDetail {
 
 export interface ProposalData {
   id: string
-  title: ReactNode
-  description: ReactNode
+  title: string
+  description: string
   proposer: string
   status: ProposalState
   forCount: number
@@ -221,8 +222,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
         }
         return {
           id: proposal?.result?.id.toString(),
-          title: description?.split(/# |\n/g)[1] ?? <Trans>Untitled</Trans>,
-          description: description ?? <Trans>No description.</Trans>,
+          title: description?.split(/# |\n/g)[1] ?? t`Untitled`,
+          description: description ?? t`No description.`,
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: parseFloat(formatUnits(proposal?.result?.forVotes?.toString() ?? 0, 18)),
