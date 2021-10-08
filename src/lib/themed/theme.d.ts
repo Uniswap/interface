@@ -1,27 +1,27 @@
 export type Color = string
 
 export interface Colors {
-  // text
-  text1: Color
-  text2: Color
+  white: Color
+  black: Color
 
-  // icons
-  icon1: Color
-  icon2: Color
+  text: Color
+  icon: Color
+  action: Color
+  selected: Color
 
-  // backgrounds
-  bg1: Color
-  bg2: Color
-  bg3: Color
+  bg: Color
+  modalBg: Color
+  alertBg: Color
 
-  // statuses
   confirm: Color
   success: Color
-  warning: Color
   error: Color
 }
 
 export interface Theme extends Colors {
+  // opacity for accent UI (labels, details, etc)
+  accentOpacity: number
+
   font: string
   borderRadius: number
 }

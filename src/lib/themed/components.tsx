@@ -1,14 +1,14 @@
 import { Icon } from 'react-feather'
 
-import themed from '.'
+import themed, { Colors } from '.'
 
-export function themedIcon(Icon: Icon) {
+export function themedIcon(Icon: Icon, color = 'icon' as keyof Colors) {
   return themed(Icon)`
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
 
   > * {
-    stroke: ${({ theme }) => theme.icon1};
+    stroke: ${({ theme }) => theme[color]};
   }
   `
 }
@@ -16,8 +16,8 @@ export function themedIcon(Icon: Icon) {
 export function inlaidIcon(Icon: Icon, Inlay: Icon) {
   const ThemedIcon = themedIcon(Icon)
   const ThemedInlay = themed(themedIcon(Inlay))`
-  background-color: currentColor;
-  border-radius: 1em;
+  background-color: ${({ theme }) => theme.bg};
+  border-radius: 0.2em;
   bottom: 0;
   height: 8px;
   right: 0;

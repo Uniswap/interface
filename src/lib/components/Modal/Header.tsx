@@ -1,37 +1,26 @@
-import { Icon } from 'react-feather'
+import { ReactNode } from 'react'
+import { X } from 'react-feather'
 
-import themed from '../../themed'
-import { ThemedButton } from '../../themed/components'
+import { ThemedButton, themedIcon } from '../../themed/components'
+import BaseHeader from '../Header'
 
-const Wrapper = themed.div`
-  display: flex;
-  height: 24px;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-  padding: 0 8px;
-`
-
-const Title = themed.div`
-  display: flex;
-  color: ${({ theme }) => theme.text1};
-`
+const ThemedXIcon = themedIcon(X, 'text')
 
 export interface HeaderProps {
-  title: string
-  Icon?: Icon
-  onClick?: () => void
+  title: ReactNode
+  onClose: () => void
+  children?: ReactNode
 }
 
-export default function Header({ title, Icon, onClick }: HeaderProps) {
+export default function Header({ title, onClose, children }: HeaderProps) {
   return (
-    <Wrapper>
-      <Title>{title}</Title>
-      {Icon && (
-        <ThemedButton onClick={onClick}>
-          <Icon />
+    <BaseHeader title={title} divider>
+      {children}
+      {onClose && (
+        <ThemedButton onClick={onClose}>
+          <ThemedXIcon />
         </ThemedButton>
       )}
-    </Wrapper>
+    </BaseHeader>
   )
 }

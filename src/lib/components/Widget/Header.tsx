@@ -1,35 +1,12 @@
-import { ReactComponent as Logo } from 'assets/svg/logo.svg'
 import { ReactNode } from 'react'
 
-import themed, { useTheme } from '../../themed'
-
-const Wrapper = themed.div`
-  display: flex;
-  height: 24px;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-  padding: 0 8px;
-`
-
-const Toolbar = themed.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-
-  > * {
-    margin-left: 8px;
-  }
-`
-
-const Title = themed.div`
-  display: flex;
-  user-select: none;
-  color: ${({ theme }) => theme.text1};
-`
+import { ReactComponent as Logo } from '../../assets/logo.svg'
+import themed, { TYPE, useTheme } from '../../themed'
+import BaseHeader from '../Header'
 
 const LogoWrapper = themed.div`
   transition: transform 0.3s ease;
+
   :hover {
     cursor: pointer;
     opacity: 0.7;
@@ -43,21 +20,21 @@ export interface HeaderProps {
   children: ReactNode
 }
 
-export default function Header({ path, title, children }: HeaderProps) {
-  const { icon1 } = useTheme()
-
+function Title({ path, title }: Omit<HeaderProps, 'children'>) {
+  const { icon } = useTheme()
   return (
-    <Wrapper>
-      <Title>
-        <a href={`https://app.uniswap.org/#${path}`}>
-          <LogoWrapper>
-            <Logo width="17" fill={icon1} style={{ mixBlendMode: 'lighten' }} />
-          </LogoWrapper>
-        </a>
-        <span style={{ width: 8 }} />
-        {title}
-      </Title>
-      <Toolbar>{children}</Toolbar>
-    </Wrapper>
+    <>
+      <a href={`https://app.uniswap.org/#${path}`}>
+        <LogoWrapper>
+          <Logo height="18" width="18" fill={icon} style={{ mixBlendMode: 'lighten' }} />
+        </LogoWrapper>
+      </a>
+      <span style={{ width: 8 }} />
+      <TYPE.header.title>{title}</TYPE.header.title>
+    </>
   )
+}
+
+export default function Header({ path, title, children }: HeaderProps) {
+  return <BaseHeader title={<Title path={path} title={title} />}>{children}</BaseHeader>
 }

@@ -1,23 +1,32 @@
 import { createContext, ReactNode, useContext } from 'react'
 import { createPortal } from 'react-dom'
 
-import themed from '../../themed'
+import themed, { useTheme } from '../../themed'
+
+export { default as Header } from './Header'
 
 const Context = createContext<HTMLDivElement | null>(null)
 
 export const Provider = Context.Provider
 
 const Wrapper = themed.div`
-  background-color: ${({ theme }) => theme.bg1};
   border-radius: ${({ theme }) => Math.max(theme.borderRadius - 4, 0)}px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   height: calc(100% - 8px);
   left: 0;
   margin: 4px;
+  padding: 8px;
   position: absolute;
   top: 0;
   width: calc(100% - 8px);
   z-index: 1;
+`
+
+export const Body = themed.div`
+  padding-top: 8px;
+  overflow-y: scroll;
 `
 
 interface ModalProps {
@@ -26,10 +35,13 @@ interface ModalProps {
 }
 
 export default function Modal({ backgroundColor, children }: ModalProps) {
-  const div = useContext(Context)
-  if (!div) {
-    return null
-  }
+  const modal = useContext(Context)
+  const { modalBg } = useTheme()
+  backgroundColor = backgroundColor ?? modalBg
+  return modal && createPortal(<Wrapper style={{ backgroundColor }}>{children}</Wrapper>, modal)
+}
 
-  return createPortal(<Wrapper style={{ backgroundColor }}>{children}</Wrapper>, div)
+export function Alert({ children }: ModalProps) {
+  const { alertBg } = useTheme()
+  return <Modal backgroundColor={alertBg}>{children}</Modal>
 }

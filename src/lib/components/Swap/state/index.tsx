@@ -1,11 +1,10 @@
-import { WritableAtom } from 'jotai'
 import { atomWithStore } from 'jotai/redux'
 import { createContext, ReactNode } from 'react'
-import { AnyAction, createStore } from 'redux'
+import { createStore } from 'redux'
 
 import reducer, { SwapState } from './reducer'
 
-export const StoreAtomContext = createContext<WritableAtom<SwapState, AnyAction>>(undefined as any)
+export const StoreAtomContext = createContext(atomWithStore<SwapState>(createStore(reducer)))
 
 export function SwapStateProvider({ children }: { children: ReactNode }) {
   const store = createStore(reducer)
