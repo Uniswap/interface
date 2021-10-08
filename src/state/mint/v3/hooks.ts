@@ -10,7 +10,7 @@ import {
   TICK_SPACINGS,
   TickMath,
   tickToPrice,
-} from '@uniswap/v3-sdk/dist/'
+} from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'

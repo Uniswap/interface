@@ -641,10 +641,11 @@ export default function AddLiquidity({
                           }}
                           onCurrencySelect={handleCurrencyASelect}
                           showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                          currency={currencies[Field.CURRENCY_A]}
+                          currency={currencies[Field.CURRENCY_A] ?? null}
                           id="add-liquidity-input-tokena"
                           showCommonBases
                         />
+
                         <div style={{ width: '12px' }} />
 
                         <CurrencyDropdown
@@ -656,7 +657,7 @@ export default function AddLiquidity({
                             onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                           }}
                           showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                          currency={currencies[Field.CURRENCY_B]}
+                          currency={currencies[Field.CURRENCY_B] ?? null}
                           id="add-liquidity-input-tokenb"
                           showCommonBases
                         />
@@ -697,7 +698,7 @@ export default function AddLiquidity({
                         onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                      currency={currencies[Field.CURRENCY_A]}
+                      currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
                       fiatValue={usdcValues[Field.CURRENCY_A]}
                       showCommonBases
@@ -712,7 +713,7 @@ export default function AddLiquidity({
                       }}
                       showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                       fiatValue={usdcValues[Field.CURRENCY_B]}
-                      currency={currencies[Field.CURRENCY_B]}
+                      currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
                       showCommonBases
                       locked={depositBDisabled}
