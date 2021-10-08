@@ -28,7 +28,7 @@ const StyledPriceContainer = styled.button`
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
-  const usdcPrice = useUSDCPrice(showInverted ? price.quoteCurrency : price.baseCurrency)
+  const usdcPrice = useUSDCPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
 
   let formattedPrice: string
   try {
