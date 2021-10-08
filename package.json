@@ -178,7 +178,7 @@
   "dependencies": {},
   "jest": {
     "moduleNameMapper": {
-      "comlink-loader!":"<rootDir>/src/__mocks__/workerMock.ts"
+      "comlink-loader!": "<rootDir>/src/__mocks__/workerMock.ts"
     }
   }
 }
