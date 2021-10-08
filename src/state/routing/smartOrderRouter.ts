@@ -4,7 +4,7 @@ import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { processSwapRoute } from 'utils/processSwapRoute'
 
-import { buildDependencies, DEFAULT_ROUTING_CONFIG } from './dependencies'
+import { buildDependencies, DEFAULT_ROUTING_CONFIG } from './smartOrderRouterDeps'
 
 const routerParamsByChain = buildDependencies()
 
@@ -43,4 +43,8 @@ export async function getQuote({
 
   // return GetQuoteResult for consistency with Routing API and WebWorker
   return { data: processSwapRoute(type, amount, params.poolProvider, swapRoute) }
+}
+
+export interface Router extends Worker {
+  getQuote: typeof getQuote
 }

@@ -79,6 +79,7 @@
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",
     "comlink": "^4.3.1",
+    "comlink-loader": "^2.0.0",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.3",
     "cypress": "^7.7.0",
@@ -174,5 +175,10 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {},
+  "jest": {
+    "moduleNameMapper": {
+      "comlink-loader!":"<rootDir>/src/__mocks__/workerMock.ts"
+    }
+  }
 }
