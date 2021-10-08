@@ -111,8 +111,6 @@ export function buildDependencies(): Dependencies {
   for (const chainId of SUPPORTED_CHAINS) {
     const provider = new providers.JsonRpcProvider(NETWORK_URLS[chainId])
 
-    const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new MemoryCache<Token>())
-
     const tokenCache = new MemoryCache<Token>()
     const blockedTokenCache = new MemoryCache<Token>()
 
@@ -120,7 +118,6 @@ export function buildDependencies(): Dependencies {
     const tokenProvider = new CachingTokenProviderWithFallback(
       chainId,
       tokenCache,
-      tokenListProvider,
       new TokenProvider(chainId, multicall2Provider)
     )
 
