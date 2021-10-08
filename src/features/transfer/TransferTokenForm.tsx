@@ -22,6 +22,7 @@ export function TransferTokenForm() {
   const dispatch = useAppDispatch()
 
   const onSubmit = (values: FormValues) => {
+    // eslint-disable-next-line no-console
     console.log(JSON.stringify(values))
     setShowModal(true)
     dispatch(transferTokenActions.trigger(values))

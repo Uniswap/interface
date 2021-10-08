@@ -21,6 +21,7 @@ export function HomeScreen({ navigation }: Props) {
   }
 
   const onClickList = () => {
+    // eslint-disable-next-line no-console
     console.log(Object.values(accounts))
   }
 

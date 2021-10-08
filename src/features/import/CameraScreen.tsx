@@ -16,10 +16,11 @@ interface OcrObject {
 function extractSeedPhraseFromOCR(scan: OcrObject[]) {
   const words = scan
     .map((obj) => {
-      return obj.text.split(' ').filter((word) => wordlists['en'].getWordIndex(word) > -1)
+      return obj.text.split(' ').filter((word) => wordlists.en.getWordIndex(word) > -1)
     })
     .flat()
   if (words.length > 0) {
+    // eslint-disable-next-line no-console
     console.log(words)
   }
 }
@@ -29,10 +30,11 @@ export function CameraScreen() {
   const [hasPermission, setHasPermission] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
+    const request = async () => {
       const status = await Camera.requestCameraPermission()
       setHasPermission(status === 'authorized')
-    })()
+    }
+    request()
   }, [])
 
   useEffect(() => {
