@@ -233,7 +233,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
               <Trans>Transaction deadline</Trans>
             </TYPE.black>
             <QuestionHelper
-              text={t`Your transaction will revert if it is pending for more than this period of time.`}
+              text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
             />
           </RowFixed>
           <RowFixed>
