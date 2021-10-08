@@ -114,10 +114,12 @@ export function buildDependencies(): Dependencies {
     const tokenCache = new MemoryCache<Token>()
     const blockedTokenCache = new MemoryCache<Token>()
 
+    const tokenListProvider = new CachingTokenListProvider(chainId, DEFAULT_TOKEN_LIST, new MemoryCache<Token>())
     const multicall2Provider = new UniswapMulticallProvider(chainId, provider, 375_000)
     const tokenProvider = new CachingTokenProviderWithFallback(
       chainId,
       tokenCache,
+      tokenListProvider,
       new TokenProvider(chainId, multicall2Provider)
     )
 
