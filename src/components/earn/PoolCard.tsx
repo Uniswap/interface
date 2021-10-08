@@ -141,7 +141,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
           </TYPE.white>
           {apy && apy.greaterThan('0') && (
             <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-              {apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'} APR
+              {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
             </TYPE.small>
           )}
         </PoolInfo>
