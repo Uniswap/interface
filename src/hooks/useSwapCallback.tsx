@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'

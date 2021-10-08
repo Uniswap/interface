@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { ReactNode, useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
