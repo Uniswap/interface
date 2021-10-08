@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { ChainId, Token, WETH, ETHER } from 'libs/sdk/src'
-import { KNC, ZERO_ADDRESS, COINGECKO_NETWORK_ID } from '../../constants'
+import { ChainId, Token, WETH } from 'libs/sdk/src'
+import { KNC, ZERO_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -289,46 +289,4 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
   }, [ethPrice.currentPrice, chainId, tokens])
 
   return prices
-}
-
-export const useTokensMarketPrice = (tokens: (Token | null | undefined)[]) => {
-  const { chainId } = useActiveWeb3React()
-  const [marketPrices, setMarketPrices] = useState(tokens.map(_ => 0))
-
-  useEffect(() => {
-    const getMarketPrice = async () => {
-      if (!chainId || (chainId && !COINGECKO_NETWORK_ID[chainId])) return
-
-      try {
-        const tokenAddress = tokens
-          .filter(Boolean)
-          .map(token => (token === ETHER ? WETH[chainId].address : token?.address))
-
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/simple/token_price/${
-            COINGECKO_NETWORK_ID[chainId]
-          }?contract_addresses=${tokenAddress.join()}&vs_currencies=usd`
-        )
-
-        const data = await res.json()
-
-        setMarketPrices(
-          tokens.map(token => {
-            if (!token) return 0
-
-            if (token === ETHER) return data[WETH[chainId].address.toLowerCase()]?.usd ?? 0
-
-            return data[token?.address.toLowerCase()]?.usd ?? 0
-          })
-        )
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    getMarketPrice()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, JSON.stringify(tokens)])
-
-  return marketPrices
 }
