@@ -151,6 +151,7 @@
     "react-indiana-drag-scroll": "^2.0.1",
     "react-player": "^2.9.0",
     "react-use": "^15.3.4",
+    "swr": "^1.0.1",
     "toformat": "^2.0.0"
   }
 }
