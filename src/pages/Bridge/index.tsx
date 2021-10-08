@@ -23,6 +23,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { BridgeErrorModal } from './BridgeModals/BridgeErrorModal'
 import { BridgePendingModal } from './BridgeModals/BridgePendingModal'
 import { BridgingInitiatedModal } from './BridgeModals/BridgingInitiatedModal'
+import { Tabs } from './Tabs'
 
 const Title = styled.p`
   margin: 0;
@@ -160,10 +161,12 @@ export default function Bridge() {
 
   const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
+  const [tab, setTab] = useState('Bridge')
 
   return (
     <>
       <AppBody>
+        <Tabs selectedTab={tab} onTabClick={setTab} isCollectDisabled={true} collectAmount={3} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
@@ -230,7 +233,6 @@ export default function Bridge() {
       </AppBody>
       {bridge && chainId && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
-          show
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
           onCollect={handleCollect}
