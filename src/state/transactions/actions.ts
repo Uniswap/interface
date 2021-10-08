@@ -170,13 +170,12 @@ export type TransactionInfo =
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
 
-export const addTransaction =
-  createAction<{
-    chainId: number
-    hash: string
-    from: string
-    info: TransactionInfo
-  }>('transactions/addTransaction')
+export const addTransaction = createAction<{
+  chainId: number
+  hash: string
+  from: string
+  info: TransactionInfo
+}>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: number }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{
   chainId: number
