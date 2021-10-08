@@ -64,7 +64,6 @@ const TokenSymbol = styled.span`
 
 const StyledImg = styled.img`
   margin-right: 4px;
-  background: #fff;
   border-radius: 50%;
   object-fit: contain;
 `
