@@ -30,6 +30,7 @@ import { providers } from 'ethers/lib/ethers'
 import ms from 'ms.macro'
 
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
+
 export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
   topN: 2,
   topNDirectSwaps: 2,
@@ -62,7 +63,7 @@ class GAMetric extends IMetric {
 }
 setGlobalMetric(new GAMetric())
 
-//TODO(judo): tests
+//TODO(judo): move to utils and add tests
 class MemoryCache<T> implements ICache<T> {
   private cache: Record<string, { val: T; added: number; timeout?: ReturnType<typeof setTimeout> }> = {}
 
@@ -104,6 +105,7 @@ class MemoryCache<T> implements ICache<T> {
 
 export type Dependencies = { [chainId in ChainId]?: AlphaRouterParams }
 
+// loosely inspired by https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/injector.ts#L204-L286
 export function buildDependencies(): Dependencies {
   const dependenciesByChain: Dependencies = {}
   for (const chainId of SUPPORTED_CHAINS) {

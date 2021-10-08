@@ -3,6 +3,7 @@ import { IPoolProvider, routeAmountsToString, SwapRoute } from '@uniswap/smart-o
 import { GetQuoteResult, PoolInRoute } from 'state/routing/types'
 
 // transforms a SwapRoute into a GetQuoteResult
+// from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
 export function processSwapRoute(
   type: 'exactIn' | 'exactOut',
   amount: CurrencyAmount<Currency>,

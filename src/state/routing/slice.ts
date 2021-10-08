@@ -1,4 +1,4 @@
-import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Token } from '@uniswap/sdk-core'
 import * as Comlink from 'comlink'
 import qs from 'qs'
@@ -7,6 +7,8 @@ import { RouterType } from 'worker/smartOrderRouter/router.worker'
 import SmartOrderRouterWorker from 'worker-loader!worker/smartOrderRouter/router.worker'
 
 import { GetQuoteResult } from './types'
+
+type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
 let comlinkWorker: Comlink.Remote<RouterType> | null = null
 
@@ -20,13 +22,12 @@ async function getClientSideQuote({
   amount,
   type,
 }: {
-  // objects must be serializable in redux store
-  tokenIn: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
-  tokenOut: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+  tokenIn: SerializableToken
+  tokenOut: SerializableToken
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
-  // TODO(judo): update worker when token list changes?
+  // TODO(judo): update worker when token list changes
   return getWorker().getQuote({
     type,
     chainId: tokenIn.chainId,
@@ -44,9 +45,8 @@ export const routingApi = createApi({
     getQuote: build.query<
       GetQuoteResult,
       {
-        // objects must be serializable in redux store
-        tokenIn: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
-        tokenOut: Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
+        tokenIn: SerializableToken
+        tokenOut: SerializableToken
         amount: string
         type: 'exactIn' | 'exactOut'
       }
