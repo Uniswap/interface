@@ -11,14 +11,9 @@ import { AppState } from 'state'
 import { useAppDispatch } from 'state/hooks'
 import { Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
 import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
-import {
-  useBlockNumber,
-  useETHPrice,
-  useExchangeClient,
-  useTokensMarketPrice,
-  useTokensPrice
-} from 'state/application/hooks'
+import { useBlockNumber, useETHPrice, useExchangeClient, useTokensPrice } from 'state/application/hooks'
 import { useActiveWeb3React } from 'hooks'
+import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
 import { useAllTokens } from 'hooks/Tokens'

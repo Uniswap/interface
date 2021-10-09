@@ -24,6 +24,9 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
   } else if (address?.toLowerCase() === '0x938fe3788222a74924e062120e7bfac829c719fb') {
     uri = 'https://i.imgur.com/jXxS6uW.png'
+  } else if (address?.toLowerCase() === '0x961C8c0B1aaD0c0b10a51FeF6a867E3091BCef17'.toLowerCase()) {
+    // dyp
+    uri = 'https://i.imgur.com/CLevvjE.png'
   }
 
   if (!uri) {
