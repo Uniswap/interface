@@ -17,11 +17,20 @@ import {
   updateBridgeTxnPartnerHash,
   updateBridgeTxnWithdrawalInfo
 } from '../state/bridgeTransactions/actions'
+import { setBridgeModalState } from '../state/bridge/actions'
 
 import { txnTypeToLayer } from '../state/bridgeTransactions/reducer'
 
 import { AppState } from '../state'
 import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
+import { BridgeModalState } from '../state/bridge/reducer'
+
+const getErrorMsg = (error: any) => {
+  if (error?.code === 4001) {
+    return 'Transaction rejected'
+  }
+  return `Bridge failed: ${error.message}`
+}
 
 export class BridgeService {
   private l1ChainId: ChainId | undefined
@@ -196,10 +205,14 @@ export class BridgeService {
   public depositEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
+    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
+
     const weiValue = utils.parseEther(value)
 
     try {
       const txn = await this.bridge.depositETH(weiValue)
+
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.INITIATED }))
 
       this.store.dispatch(
         addBridgeTxn({
@@ -223,16 +236,21 @@ export class BridgeService {
         })
       )
     } catch (err) {
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
       throw err
     }
   }
 
   public withdrawEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l2ChainId) return
+
+    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
+
     const weiValue = utils.parseEther(value)
 
     try {
       const txn = await this.bridge.withdrawETH(weiValue)
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.INITIATED }))
 
       this.store.dispatch(
         addBridgeTxn({
@@ -256,6 +274,7 @@ export class BridgeService {
         })
       )
     } catch (err) {
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
       throw err
     }
   }

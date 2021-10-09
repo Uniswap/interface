@@ -1,15 +1,32 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
-import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks } from './actions'
+import {
+  selectCurrency,
+  typeInput,
+  setFromBridgeNetwork,
+  setToBridgeNetwork,
+  swapBridgeNetworks,
+  setBridgeModalState
+} from './actions'
 
 export interface BridgeNetworkInput {
   readonly chainId: ChainId
+}
+
+export enum BridgeModalState {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  CLOSED = 'CLOSED',
+  INITIATED = 'INITIATED',
+  ERROR = 'ERROR'
 }
 export interface BridgeState {
   readonly typedValue: string
   readonly currencyId: string | undefined
   readonly fromNetwork: BridgeNetworkInput
   readonly toNetwork: BridgeNetworkInput
+  readonly modalState: BridgeModalState
+  readonly modalError?: string
 }
 
 const initialState: BridgeState = {
@@ -20,7 +37,9 @@ const initialState: BridgeState = {
   },
   toNetwork: {
     chainId: 42161
-  }
+  },
+  modalState: BridgeModalState.CLOSED,
+  modalError: undefined
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
@@ -71,5 +90,9 @@ export default createReducer<BridgeState>(initialState, builder =>
           chainId: fromChainId
         }
       }
+    })
+    .addCase(setBridgeModalState, (state, { payload: { modalState, modalError } }) => {
+      state.modalState = modalState
+      state.modalError = modalError
     })
 )
