@@ -1,9 +1,9 @@
 import React from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import Modal from '../../components/Modal'
-import { TYPE } from '../../theme'
+import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import { TYPE } from '../../../theme'
 
 const Wrapper = styled.div`
   display: flex;

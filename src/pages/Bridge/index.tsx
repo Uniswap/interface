@@ -7,11 +7,10 @@ import AppBody from '../AppBody'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
-import { BridgeSuccesModal } from './BridgeSuccesModal'
+import { BridgeSuccesModal } from './BridgeModals/BridgeSuccesModal'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
-
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
@@ -20,6 +19,10 @@ import { BridgeActionPanel } from './BridgeActionPanel'
 import { NETWORK_DETAIL } from '../../constants'
 import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
+import { BridgeErrorModal } from './BridgeModals/BridgeErrorModal'
+import { BridgePendingModal } from './BridgeModals/BridgePendingModal'
+import { BridgingInitiatedModal } from './BridgeModals/BridgingInitiatedModal'
+import { Tabs } from './Tabs'
 
 const Title = styled.p`
   margin: 0;
@@ -68,6 +71,9 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
+  const [isPending, setIsPending] = useState(false)
+  const [isBridgeInitiated, setIsBridgeInitiated] = useState(false)
+
   const bridgeService = useBridgeService()
   const bridgeSummaries = useBridgeTransactionsSummary()
 
@@ -85,14 +91,21 @@ export default function Bridge() {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
+  const [bridgeError, setBridgeError] = useState<string | null>(null)
+  const handleError = (error: any) => {
+    if (error?.code === 4001) {
+      setBridgeError('Transaction rejected')
+    } else setBridgeError(`Bridge failed: ${error.message}`)
+  }
+
   const handleSubmit = useCallback(() => {
     if (!chainId || !bridgeService) return
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       handleResetBridge()
-      return bridgeService.depositEth(typedValue)
+      return bridgeService.depositEth(typedValue).catch(handleError)
     } else {
       handleResetBridge()
-      return bridgeService.withdrawEth(typedValue)
+      return bridgeService.withdrawEth(typedValue).catch(handleError)
     }
   }, [bridgeService, chainId, handleResetBridge, typedValue])
 
@@ -135,9 +148,14 @@ export default function Bridge() {
     }
   }, [chainId, collectableTx, isCollecting, step])
 
+  const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
+  const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
+  const [tab, setTab] = useState('Bridge')
+
   return (
     <>
       <AppBody>
+        <Tabs selectedTab={tab} onTabClick={setTab} isCollectDisabled={true} collectAmount={3} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
@@ -204,12 +222,28 @@ export default function Bridge() {
       </AppBody>
       {bridgeService && chainId && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
-          show
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
           onCollect={handleCollect}
         />
       )}
+      {/* {step === Step.Initial && !!typedValue && (
+        <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
+      )} */}
+      <BridgePendingModal
+        isOpen={isPending}
+        onDismiss={() => setIsPending(false)}
+        pendingText={`1 ETH from ${fromNetworkName} to ${toNetworkName}`}
+      />
+      <BridgeErrorModal isOpen={!!bridgeError} onDismiss={() => setBridgeError(null)} error={bridgeError || ''} />
+      <BridgingInitiatedModal
+        isOpen={isBridgeInitiated}
+        onDismiss={() => setIsBridgeInitiated(false)}
+        amount={'1'}
+        assetType={'ETH'}
+        fromNetworkName={fromNetworkName}
+        toNetworkName={toNetworkName}
+      />
       <BridgeSuccesModal
         isOpen={step === BridgeStep.Success}
         onDismiss={handleResetBridge}
