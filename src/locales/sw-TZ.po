@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 21:07\n"
+"PO-Revision-Date: 2021-10-09 09:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -319,17 +319,17 @@ msgstr "Kiasi: {0} {1}"
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "Bora kwa jozi za kigeni."
+msgstr "Bora kwa pair maalum."
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "Bora kwa jozi nyingi."
+msgstr "Bora kwa pair nyingi."
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "Bora kwa jozi thabiti."
+msgstr "Bora kwa pair thabiti."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
