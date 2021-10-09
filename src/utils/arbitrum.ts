@@ -6,6 +6,7 @@ export type ChainIdPair = {
   l1ChainId: ChainId | undefined
   l2ChainId: ChainId | undefined
   chainId: ChainId | undefined
+  partnerChainId: ChainId | undefined
 }
 
 export const getChainPair = (chainId?: ChainId): ChainIdPair => {
@@ -13,7 +14,8 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
     return {
       l1ChainId: chainId,
       l2ChainId: undefined,
-      chainId
+      chainId,
+      partnerChainId: undefined
     }
   }
 
@@ -25,14 +27,16 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
     return {
       l1ChainId: Number(l1) as ChainId,
       l2ChainId: Number(l2) as ChainId,
-      chainId
+      chainId,
+      partnerChainId: NETWORK_DETAIL[chainId].partnerChainId
     }
   }
 
   return {
     l1ChainId: chainId,
     l2ChainId: undefined,
-    chainId
+    chainId,
+    partnerChainId: undefined
   }
 }
 

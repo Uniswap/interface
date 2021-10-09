@@ -20,7 +20,8 @@ const defaultValue: BridgeContextType = {
   chainIdPair: {
     l1ChainId: undefined,
     l2ChainId: undefined,
-    chainId: undefined
+    chainId: undefined,
+    partnerChainId: undefined
   }
 }
 
