@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-09 09:06\n"
+"PO-Revision-Date: 2021-10-09 11:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -333,7 +333,7 @@ msgstr "Bora kwa pair thabiti."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr "Anwani iliyozuiwa"
+msgstr "Anwani iliyozuiliwa"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
