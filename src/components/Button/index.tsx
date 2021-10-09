@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { darken, lighten, transparentize } from 'polished'
 
@@ -6,14 +6,17 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import arrowIcon from './../../assets/svg/double-angle.svg'
 import { Text } from 'rebass'
 
-const Base = styled(RebassButton)<{
+interface BaseProps {
   padding?: string
   width?: string
   borderRadius?: string
   altDisabledStyle?: boolean
-}>`
+}
+
+const Base = styled(RebassButton)<BaseProps>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 600;
@@ -291,3 +294,37 @@ export const AddSWPRToMetamaskButton = styled(Base)<{ active?: boolean }>`
   border: none;
   box-shadow: ${props => (props.active ? '0px 0px 42px rgba(165, 58, 196, 0.35)' : 'none')};
 `
+
+const MoreButton = styled.button`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 8px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text5};
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  img {
+    margin-left: 10px;
+  }
+`
+
+interface ShowMoreButtonProps {
+  children: ReactNode
+  onClick: () => void
+  isOpen: boolean
+}
+
+export const ShowMoreButton = ({ children, onClick, isOpen }: ShowMoreButtonProps) => (
+  <MoreButton onClick={onClick}>
+    {children}
+    <img src={arrowIcon} alt="arrow down" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
+  </MoreButton>
+)

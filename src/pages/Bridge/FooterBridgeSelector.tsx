@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
+import { ShowMoreButton } from '../../components/Button'
 import { HideableAutoColumn } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
-import arrowIcon from './../../assets/svg/double-angle.svg'
 import { BridgeOption } from './BridgeOption'
 
 interface FooterBridgeSelectorProps {
@@ -23,26 +23,6 @@ const Footer = styled(AdvancedDetailsFooter)`
   background: none;
   border: none;
   box-shadow: none;
-`
-
-const ShowMoreButton = styled.button`
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 8px;
-  font-weight: 600;
-  font-size: 10px;
-  line-height: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.text5};
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  img {
-    margin-left: 10px;
-  }
 `
 
 const StyledHideableAutoColumn = styled(HideableAutoColumn)`
@@ -140,9 +120,8 @@ export const FooterBridgeSelector = ({ show, selectedBridge, onBridgeChange }: F
           </tbody>
         </StyledTable>
         {!isAllItemsVisible && (
-          <ShowMoreButton onClick={() => setShowMore(true)}>
+          <ShowMoreButton isOpen={isAllItemsVisible} onClick={() => setShowMore(true)}>
             +{bridgesAmount - numberOfItems} more bridges
-            <img src={arrowIcon} alt="arrow down" />
           </ShowMoreButton>
         )}
       </Footer>
