@@ -24,11 +24,6 @@ export const TagSuccess = styled(Tag)`
   background: rgba(14, 159, 110, 0.15);
 `
 
-export const TagInfo = styled(Tag)`
-  color: #a2a832;
-  background: rgba(223, 235, 14, 0.15);
-`
-
 export const TagSuccessArrow = styled(TagSuccess)`
   position: relative;
   padding-right: 20px;
@@ -50,10 +45,9 @@ export const TagSuccessArrow = styled(TagSuccess)`
 const TagWarning = styled(Tag)`
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   color: #a86e3f;
   background: rgba(242, 153, 74, 0.16);
-  display: flex;
-  justify-content: space-between;
 `
 
 const QuestionHelperWarning = styled(QuestionHelper)`
