@@ -4,7 +4,7 @@ import { AppState } from '..'
 import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
 import { chainIdSelector, accountSelector } from '../application/selectors'
 import { BridgeTxsFilter } from '../bridge/reducer'
-import { bridgeTxsFilterSelector } from '../bridge/selectors'
+import { bridgeTxsFilterSelector, bridgeTxsLoadingSelector } from '../bridge/selectors'
 import { BridgeTransactionLog, BridgeTransactionSummary, BridgeTxn, BridgeTxnsState } from './types'
 
 export const bridgeTxsSelector = (state: AppState) => state.bridgeTransactions
@@ -101,7 +101,8 @@ export const bridgeTxsSummarySelector = createSelector(
   chainIdSelector,
   bridgeOwnedTxsSelector,
   bridgeTxsFilterSelector,
-  ({ l1ChainId, l2ChainId }, txs, txsFilter) => {
+  bridgeTxsLoadingSelector,
+  ({ l1ChainId, l2ChainId }, txs, txsFilter, isLoading) => {
     if (l1ChainId && l2ChainId) {
       const l1Txs = txs[l1ChainId]
       const l2Txs = txs[l2ChainId]
@@ -200,18 +201,23 @@ export const bridgeTxsSummarySelector = createSelector(
         if (!tx.partnerTxHash || !l1Txs[tx.partnerTxHash]) {
           // display state of outgoing message state when withdrawal
           if (tx.type === 'withdraw') {
-            switch (tx.outgoingMessageState) {
-              case OutgoingMessageState.CONFIRMED:
-                summary.status = 'redeem'
-                summary.timestampResolved = undefined
-                break
-              case OutgoingMessageState.EXECUTED:
-                summary.status = 'claimed'
-                break
-              default:
-                summary.status = 'pending'
-                summary.pendingReason = PendingReasons.WITHDRAWAL
-                summary.timestampResolved = undefined
+            if (!isLoading) {
+              switch (tx.outgoingMessageState) {
+                case OutgoingMessageState.CONFIRMED:
+                  summary.status = 'redeem'
+                  summary.timestampResolved = undefined
+                  break
+                case OutgoingMessageState.EXECUTED:
+                  summary.status = 'claimed'
+                  break
+                default:
+                  summary.status = 'pending'
+                  summary.pendingReason = PendingReasons.WITHDRAWAL
+                  summary.timestampResolved = undefined
+              }
+            } else {
+              summary.status = 'loading'
+              summary.timestampResolved = undefined
             }
           }
           summary.log = createBridgeLog([tx])

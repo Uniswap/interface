@@ -45,7 +45,7 @@ export type BridgeTxn = {
   outgoingMessageState?: OutgoingMessageState
 }
 
-export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem' | 'claimed'
+export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem' | 'claimed' | 'loading'
 
 export type BridgeTransactionSummary = Pick<
   BridgeTxn,

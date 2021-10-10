@@ -19,3 +19,4 @@ export const bridgeModalDataSelector = createSelector(bridgeStateSelector, bridg
 })
 
 export const bridgeTxsFilterSelector = createSelector(bridgeStateSelector, bridge => bridge.txsFilter)
+export const bridgeTxsLoadingSelector = createSelector(bridgeStateSelector, bridge => bridge.isCheckingWithdrawals)

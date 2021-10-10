@@ -17,7 +17,7 @@ import {
   updateBridgeTxnPartnerHash,
   updateBridgeTxnWithdrawalInfo
 } from '../state/bridgeTransactions/actions'
-import { setBridgeModalState } from '../state/bridge/actions'
+import { setBridgeLoadingWithdrawals, setBridgeModalState } from '../state/bridge/actions'
 
 import { txnTypeToLayer } from '../state/bridgeTransactions/reducer'
 
@@ -178,6 +178,8 @@ export class BridgeService {
 
     const pendingWithdrawals = bridgePendingWithdrawalsSelector(this.store.getState())
 
+    this.store.dispatch(setBridgeLoadingWithdrawals(true))
+
     const promises = pendingWithdrawals.map(this.getOutgoingMessageState)
     const withdrawalsInfo = await Promise.all(promises)
 
@@ -198,6 +200,7 @@ export class BridgeService {
       }
     })
 
+    this.store.dispatch(setBridgeLoadingWithdrawals(false))
     this.initialPendingWithdrawalsChecked = true
   }
 
@@ -237,7 +240,6 @@ export class BridgeService {
       )
     } catch (err) {
       this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
-      throw err
     }
   }
 
@@ -275,7 +277,6 @@ export class BridgeService {
       )
     } catch (err) {
       this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
-      throw err
     }
   }
 

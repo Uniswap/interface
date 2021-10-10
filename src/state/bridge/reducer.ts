@@ -7,7 +7,8 @@ import {
   setToBridgeNetwork,
   swapBridgeNetworks,
   setBridgeModalState,
-  setBridgeTxsFilter
+  setBridgeTxsFilter,
+  setBridgeLoadingWithdrawals
 } from './actions'
 
 export interface BridgeNetworkInput {
@@ -32,6 +33,7 @@ export interface BridgeState {
   readonly currencyId: string | undefined
   readonly fromNetwork: BridgeNetworkInput
   readonly toNetwork: BridgeNetworkInput
+  readonly isCheckingWithdrawals: boolean
   readonly txsFilter: BridgeTxsFilter
   readonly modalState: BridgeModalState
   readonly modalError?: string
@@ -48,7 +50,8 @@ const initialState: BridgeState = {
   },
   txsFilter: BridgeTxsFilter.RECENT,
   modalState: BridgeModalState.CLOSED,
-  modalError: undefined
+  modalError: undefined,
+  isCheckingWithdrawals: true
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
@@ -106,5 +109,8 @@ export default createReducer<BridgeState>(initialState, builder =>
     })
     .addCase(setBridgeTxsFilter, (state, { payload }) => {
       state.txsFilter = payload
+    })
+    .addCase(setBridgeLoadingWithdrawals, (state, { payload }) => {
+      state.isCheckingWithdrawals = payload
     })
 )

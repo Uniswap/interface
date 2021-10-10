@@ -10,3 +10,4 @@ export const setBridgeModalState = createAction<Pick<BridgeState, 'modalState' |
   'bridge/setBridgeModalState'
 )
 export const setBridgeTxsFilter = createAction<BridgeTxsFilter>('bridge/setBridgeTxsFilter')
+export const setBridgeLoadingWithdrawals = createAction<boolean>('bridge/setBridgeLoadingWithdrawals')
