@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 21:07\n"
+"PO-Revision-Date: 2021-10-10 21:07\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -365,7 +365,7 @@ msgstr "Grafikoni"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "Preveri stanje omrežja"
+msgstr "Stanje omrežja preverite"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -1747,7 +1747,7 @@ msgstr "Potrebni so žetoni likvidnosti (LP) UNI-V2. Če boste dodali likvidnost
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
-msgstr "{0}-{1} UNI-V2"
+msgstr "UNI-V2 {0}-{1}"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
