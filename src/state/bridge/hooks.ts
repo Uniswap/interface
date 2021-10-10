@@ -17,6 +17,7 @@ import { currencyId } from '../../utils/currencyId'
 import { tryParseAmount } from '../swap/hooks'
 import { BridgeTxsFilter } from './reducer'
 import { bridgeTxsFilterSelector } from './selectors'
+import { getChainPair } from '../../utils/arbitrum'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -36,6 +37,7 @@ export function useBridgeActionHandlers(): {
 
   const onFromNetworkChange = useCallback(
     (chainId: ChainId) => {
+      const { partnerChainId } = getChainPair(chainId)
       if (chainId === toNetwork.chainId) {
         dispatch(swapBridgeNetworks())
         return
@@ -45,12 +47,19 @@ export function useBridgeActionHandlers(): {
           chainId: chainId
         })
       )
+      dispatch(
+        setToBridgeNetwork({
+          chainId: partnerChainId
+        })
+      )
     },
     [dispatch, toNetwork.chainId]
   )
 
   const onToNetworkChange = useCallback(
     (chainId: ChainId) => {
+      const { partnerChainId } = getChainPair(chainId)
+
       if (chainId === fromNetwork.chainId) {
         dispatch(swapBridgeNetworks())
         return
@@ -58,6 +67,11 @@ export function useBridgeActionHandlers(): {
       dispatch(
         setToBridgeNetwork({
           chainId: chainId
+        })
+      )
+      dispatch(
+        setFromBridgeNetwork({
+          chainId: partnerChainId
         })
       )
     },
