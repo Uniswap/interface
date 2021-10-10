@@ -28,6 +28,7 @@ export function useBridgeActionHandlers(): {
   onFromNetworkChange: (chainId: ChainId) => void
   onToNetworkChange: (chainId: ChainId) => void
   onSwapBridgeNetworks: () => void
+  getCollectedTx: ({ from, to, currency }: { from: ChainId; to: ChainId; currency: Currency | string }) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -85,12 +86,26 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
+  const getCollectedTx = useCallback(
+    ({ from, to, currency }: { from: ChainId; to: ChainId; currency: Currency | string }) => {
+      dispatch(setFromBridgeNetwork({ chainId: from }))
+      dispatch(setToBridgeNetwork({ chainId: to }))
+      dispatch(
+        selectCurrency({
+          currencyId: currency instanceof Currency ? currencyId(currency) : currency
+        })
+      )
+    },
+    [dispatch]
+  )
+
   return {
     onCurrencySelection,
     onUserInput,
     onFromNetworkChange,
     onToNetworkChange,
-    onSwapBridgeNetworks
+    onSwapBridgeNetworks,
+    getCollectedTx
   }
 }
 

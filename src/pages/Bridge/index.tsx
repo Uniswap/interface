@@ -56,9 +56,9 @@ export default function Bridge() {
   const {
     onUserInput,
     onToNetworkChange,
-    onCurrencySelection,
     onFromNetworkChange,
-    onSwapBridgeNetworks
+    onSwapBridgeNetworks,
+    getCollectedTx
   } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
@@ -115,11 +115,9 @@ export default function Bridge() {
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
-      onFromNetworkChange(tx.fromChainId)
-      onToNetworkChange(tx.toChainId)
-      onCurrencySelection(tx.assetName)
+      getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId })
     },
-    [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
+    [getCollectedTx]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -186,7 +184,6 @@ export default function Bridge() {
           onMax={!isCollecting ? handleMaxInput : undefined}
           disableCurrencySelect={true}
           disabled={isCollecting}
-          hideBalance={!isNetworkConnected}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
