@@ -230,8 +230,7 @@ export const bridgeTxsSummarySelector = createSelector(
       }, [])
 
       // Filtering and sorting
-      // TODO - sorting
-      const retVal = [...l1Summaries, ...l2Summaries]
+      const retVal = [...l1Summaries, ...l2Summaries].reverse()
 
       switch (txsFilter) {
         case BridgeTxsFilter.COLLECTABLE:
