@@ -3,6 +3,8 @@ import { OutgoingMessageState } from 'arb-ts'
 import { AppState } from '..'
 import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
 import { chainIdSelector, accountSelector } from '../application/selectors'
+import { BridgeTxsFilter } from '../bridge/reducer'
+import { bridgeTxsFilterSelector } from '../bridge/selectors'
 import { BridgeTransactionLog, BridgeTransactionSummary, BridgeTxn, BridgeTxnsState } from './types'
 
 export const bridgeTxsSelector = (state: AppState) => state.bridgeTransactions
@@ -98,7 +100,8 @@ export const createBridgeLog = (transactions: BridgeTxn[]): BridgeTransactionLog
 export const bridgeTxsSummarySelector = createSelector(
   chainIdSelector,
   bridgeOwnedTxsSelector,
-  ({ l1ChainId, l2ChainId }, txs) => {
+  bridgeTxsFilterSelector,
+  ({ l1ChainId, l2ChainId }, txs, txsFilter) => {
     if (l1ChainId && l2ChainId) {
       const l1Txs = txs[l1ChainId]
       const l2Txs = txs[l2ChainId]
@@ -220,7 +223,23 @@ export const bridgeTxsSummarySelector = createSelector(
         return total
       }, [])
 
-      return [...l1Summaries, ...l2Summaries]
+      // Filtering and sorting
+      // TODO - sorting
+      const retVal = [...l1Summaries, ...l2Summaries]
+
+      switch (txsFilter) {
+        case BridgeTxsFilter.COLLECTABLE:
+          return retVal.filter(summary => summary.status === 'redeem')
+        case BridgeTxsFilter.RECENT:
+          const passed24h = new Date().getTime() - 1000 * 60 * 60 * 24
+
+          return retVal.filter(summary => {
+            if (!summary.timestampResolved) return true
+            return summary.timestampResolved >= passed24h
+          })
+        default:
+          return retVal
+      }
     }
 
     return []

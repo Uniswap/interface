@@ -17,3 +17,5 @@ export const bridgeModalDataSelector = createSelector(bridgeStateSelector, bridg
     fromNetworkName: NETWORK_DETAIL[fromNetwork.chainId].chainName
   }
 })
+
+export const bridgeTxsFilterSelector = createSelector(bridgeStateSelector, bridge => bridge.txsFilter)

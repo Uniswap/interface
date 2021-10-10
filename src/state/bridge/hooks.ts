@@ -5,9 +5,18 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks } from './actions'
+import {
+  selectCurrency,
+  typeInput,
+  setFromBridgeNetwork,
+  setToBridgeNetwork,
+  swapBridgeNetworks,
+  setBridgeTxsFilter
+} from './actions'
 import { currencyId } from '../../utils/currencyId'
 import { tryParseAmount } from '../swap/hooks'
+import { BridgeTxsFilter } from './reducer'
+import { bridgeTxsFilterSelector } from './selectors'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -120,4 +129,12 @@ export function useBridgeInfo() {
     fromNetwork,
     toNetwork
   }
+}
+
+export const useBridgeTxsFilter = (): [BridgeTxsFilter, (filter: BridgeTxsFilter) => void] => {
+  const dispatch = useDispatch()
+  const filter = useSelector(bridgeTxsFilterSelector)
+  const setFilter = (filter: BridgeTxsFilter) => dispatch(setBridgeTxsFilter(filter))
+
+  return [filter, setFilter]
 }

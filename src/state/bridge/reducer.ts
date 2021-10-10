@@ -6,7 +6,8 @@ import {
   setFromBridgeNetwork,
   setToBridgeNetwork,
   swapBridgeNetworks,
-  setBridgeModalState
+  setBridgeModalState,
+  setBridgeTxsFilter
 } from './actions'
 
 export interface BridgeNetworkInput {
@@ -20,11 +21,18 @@ export enum BridgeModalState {
   INITIATED = 'INITIATED',
   ERROR = 'ERROR'
 }
+
+export enum BridgeTxsFilter {
+  NONE = 'NONE',
+  COLLECTABLE = 'COLLECTABLE',
+  RECENT = 'RECENT'
+}
 export interface BridgeState {
   readonly typedValue: string
   readonly currencyId: string | undefined
   readonly fromNetwork: BridgeNetworkInput
   readonly toNetwork: BridgeNetworkInput
+  readonly txsFilter: BridgeTxsFilter
   readonly modalState: BridgeModalState
   readonly modalError?: string
 }
@@ -38,6 +46,7 @@ const initialState: BridgeState = {
   toNetwork: {
     chainId: 42161
   },
+  txsFilter: BridgeTxsFilter.RECENT,
   modalState: BridgeModalState.CLOSED,
   modalError: undefined
 }
@@ -94,5 +103,8 @@ export default createReducer<BridgeState>(initialState, builder =>
     .addCase(setBridgeModalState, (state, { payload: { modalState, modalError } }) => {
       state.modalState = modalState
       state.modalError = modalError
+    })
+    .addCase(setBridgeTxsFilter, (state, { payload }) => {
+      state.txsFilter = payload
     })
 )
