@@ -134,12 +134,10 @@ export default function Bridge() {
     }
   }, [chainId, collectableTx, isCollecting, step])
 
-  const [tab, setTab] = useState('Bridge')
-
   return (
     <>
       <AppBody>
-        <Tabs selectedTab={tab} onTabClick={setTab} isCollectDisabled={true} collectAmount={3} />
+        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
@@ -204,7 +202,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {bridgeService && chainId && !!bridgeSummaries.length && (
+      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}

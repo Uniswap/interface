@@ -1,35 +1,32 @@
 import React from 'react'
 import styled from 'styled-components'
-import { NumberBadge } from '../../components/NumberBadge'
+
 import Row from '../../components/Row'
+import { BridgeStep } from './utils'
 
 interface TabsProps {
-  selectedTab: string
-  onTabClick: (tab: string) => void
-  isCollectDisabled: boolean
-  collectAmount: number
+  step: BridgeStep
+  setStep: (step: BridgeStep) => void
+  handleResetBridge: () => void
 }
 
-const tabs = ['Bridge', 'Collect']
+export const Tabs = ({ step, setStep, handleResetBridge }: TabsProps) => {
+  const isCollecting = step === BridgeStep.Collect
 
-export const Tabs = ({ selectedTab, onTabClick, isCollectDisabled, collectAmount }: TabsProps) => {
   return (
     <TabsRow>
-      {tabs.map((tab, index) => {
-        const isCollectTab = tab === 'Collect'
-
-        return (
-          <Button
-            key={index}
-            onClick={() => onTabClick(tab)}
-            className={selectedTab === tab ? 'active' : ''}
-            disabled={isCollectTab && isCollectDisabled}
-          >
-            {tab}
-            {isCollectTab && <Badge badgeTheme="green">{collectAmount}</Badge>}
-          </Button>
-        )
-      })}
+      <Button
+        onClick={() => {
+          if (step !== BridgeStep.Initial) handleResetBridge()
+          setStep(BridgeStep.Initial)
+        }}
+        className={!isCollecting ? 'active' : ''}
+      >
+        Bridge
+      </Button>
+      <Button className={isCollecting ? 'active' : ''} disabled={!isCollecting}>
+        Collect
+      </Button>
     </TabsRow>
   )
 }
@@ -69,11 +66,4 @@ const Button = styled.button`
     color: #504d72;
     cursor: not-allowed;
   }
-`
-
-const Badge = styled(NumberBadge)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 6px;
 `
