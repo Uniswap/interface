@@ -16,6 +16,9 @@ export const getBscMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0xd6cce248263ea1e2b8cb765178c944fc16ed0727') {
     //CTR
     uri = `https://bscscan.com/token/images/creator_32.png`
+  } else if (address?.toLowerCase() === '0x339c72829ab7dd45c3c52f965e7abe358dd8761e') {
+    //WANA
+    uri = `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${address}/logo.png`
   }
 
   if (!uri) {
