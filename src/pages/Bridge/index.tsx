@@ -184,8 +184,7 @@ export default function Bridge() {
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
-          onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={isCollecting}
+          disableCurrencySelect={true}
           disabled={isCollecting}
           hideBalance={!isNetworkConnected}
           id="bridge-currency-input"

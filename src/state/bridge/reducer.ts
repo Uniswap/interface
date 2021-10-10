@@ -39,7 +39,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: '',
+  currencyId: 'ETH',
   fromNetwork: {
     chainId: 1
   },
