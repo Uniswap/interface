@@ -1,5 +1,5 @@
 import React from 'react'
-import { TagInfo, TagPending, TagSuccess, TagSuccessArrow } from '../../components/Tag'
+import { TagPending, TagSuccess, TagSuccessArrow } from '../../components/Tag'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
 
 export type BridgeStatusTagProps = Pick<BridgeTransactionSummary, 'status' | 'pendingReason'> & {
@@ -19,7 +19,7 @@ export const BridgeStatusTag = ({ status, pendingReason, onCollect }: BridgeStat
         </TagSuccessArrow>
       )
     case 'claimed':
-      return <TagInfo style={{ width: '67px' }}>Claimed</TagInfo>
+      return <TagSuccess style={{ width: '67px' }}>Collected</TagSuccess>
     default:
       return null
   }
