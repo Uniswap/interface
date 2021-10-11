@@ -25,11 +25,15 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
-  z-index: ${Z_INDEX.zero};
+  z-index: ${Z_INDEX.deprecated_zero};
 
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
   transition: transform 300ms ease-in-out;
   text-align: center;
+`
+
+const StyledButtonEmpty = styled(ButtonEmpty)`
+  text-decoration: none;
 `
 
 const AddressText = styled(TYPE.blue)`
@@ -102,11 +106,11 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <ButtonEmpty padding={'0'} style={{ textDecoration: 'none' }} onClick={() => setShowDetails(true)}>
+      <StyledButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
         <TYPE.blue>
           <Trans>Read more about unsupported assets</Trans>
         </TYPE.blue>
-      </ButtonEmpty>
+      </StyledButtonEmpty>
     </DetailsFooter>
   )
 }
