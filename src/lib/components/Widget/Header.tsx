@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import Logo from '../../assets/logo'
+import Logo from '../../assets/Logo'
 import themed, { TYPE, useTheme } from '../../themed'
 import BaseHeader from '../Header'
 
