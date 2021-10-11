@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext } from 'react'
 import { createPortal } from 'react-dom'
 
-import themed, { useTheme } from '../../themed'
+import themed, { Colors, useTheme } from '../../themed'
 
 export { default as Header } from './Header'
 
@@ -17,7 +17,7 @@ const Wrapper = themed.div`
   height: calc(100% - 8px);
   left: 0;
   margin: 4px;
-  padding: 8px;
+  padding: 16px 16px 0 16px;
   position: absolute;
   top: 0;
   width: calc(100% - 8px);
@@ -25,23 +25,18 @@ const Wrapper = themed.div`
 `
 
 export const Body = themed.div`
-  padding-top: 8px;
+  padding-top: 16px;
   overflow-y: scroll;
 `
 
 interface ModalProps {
-  backgroundColor?: string
+  color?: keyof Colors
   children: ReactNode
 }
 
-export default function Modal({ backgroundColor, children }: ModalProps) {
+export default function Modal({ color = 'modalBg', children }: ModalProps) {
   const modal = useContext(Context)
-  const { modalBg } = useTheme()
-  backgroundColor = backgroundColor ?? modalBg
+  const theme = useTheme()
+  const backgroundColor = theme[color]
   return modal && createPortal(<Wrapper style={{ backgroundColor }}>{children}</Wrapper>, modal)
-}
-
-export function Alert({ children }: ModalProps) {
-  const { alertBg } = useTheme()
-  return <Modal backgroundColor={alertBg}>{children}</Modal>
 }

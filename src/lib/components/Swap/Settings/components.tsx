@@ -4,16 +4,17 @@ import themed from '../../../themed'
 import { themedIcon } from '../../../themed/components'
 
 export const Line = themed.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
 `
 
 export const Row = themed(Line)`
-  padding: 8px 0;
+  padding: 8px 0 16px 0;
 `
 
 export const Spacer = themed.span`
-  width: 12px;
+  min-width: 8px;
 `
 
 export const Bordered = themed.div`

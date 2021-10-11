@@ -5,7 +5,6 @@ interface LabelProps {
 }
 
 const Wrapper = themed.div`
-  padding-top: 4px;
   user-select: none;
 `
 

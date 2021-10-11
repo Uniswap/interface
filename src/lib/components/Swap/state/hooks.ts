@@ -7,7 +7,7 @@ import {
   setExpertMode,
   setGasPrice,
   setMaxSlippage,
-  setMultiHop,
+  setMultihop,
   setTransactionDeadline,
   toggleShowDetails,
 } from './actions'
@@ -27,14 +27,21 @@ export function useResetSettings() {
   return () => dispatch(resetSettings())
 }
 
-export function useGasPrice(): [GasPrice, (value: GasPrice) => void] {
-  const [{ gasPrice }, dispatch] = useSwapStore()
-  return [gasPrice, (value: GasPrice) => dispatch(setGasPrice(value))]
+export function useGasPrice(): [[GasPrice, number | undefined], (value: GasPrice, custom?: number) => void] {
+  const [{ gasPrice, customGasPrice }, dispatch] = useSwapStore()
+  return [
+    [gasPrice, customGasPrice],
+    (gasPrice: GasPrice, customGasPrice?: number) => dispatch(setGasPrice({ gasPrice, customGasPrice })),
+  ]
 }
 
-export function useMaxSlippage(): [MaxSlippage, (value: MaxSlippage) => void] {
-  const [{ maxSlippage }, dispatch] = useSwapStore()
-  return [maxSlippage, (value: MaxSlippage) => dispatch(setMaxSlippage(value))]
+export function useMaxSlippage(): [[MaxSlippage, number | undefined], (value: MaxSlippage, custom?: number) => void] {
+  const [{ maxSlippage, customMaxSlippage }, dispatch] = useSwapStore()
+  return [
+    [maxSlippage, customMaxSlippage],
+    (maxSlippage: MaxSlippage, customMaxSlippage?: number) =>
+      dispatch(setMaxSlippage({ maxSlippage, customMaxSlippage })),
+  ]
 }
 
 export function useTransactionDeadline(): [number, (value: number) => void] {
@@ -47,7 +54,7 @@ export function useExpertMode(): [boolean, (value: boolean) => void] {
   return [expertMode, (value: boolean) => dispatch(setExpertMode(value))]
 }
 
-export function useMultiHop(): [boolean, (value: boolean) => void] {
-  const [{ multiHop }, dispatch] = useSwapStore()
-  return [multiHop, (value: boolean) => dispatch(setMultiHop(value))]
+export function useMultihop(): [boolean, (value: boolean) => void] {
+  const [{ multihop }, dispatch] = useSwapStore()
+  return [multihop, (value: boolean) => dispatch(setMultihop(value))]
 }

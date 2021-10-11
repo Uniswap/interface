@@ -62,18 +62,13 @@ interface TextProps extends Omit<TextPropsWithCss, 'css'> {
 }
 
 const TextWrapper = themed(Text)<{ accent: boolean; color?: keyof Colors }>`
-  color: ${({ color = 'text', theme }) => (theme as Theme)[color]};
+  color: ${({ color = 'text' as keyof Colors, theme }) => (theme as Theme)[color]};
   opacity: ${({ accent, theme }) => (accent ? theme.accentOpacity : 1.0)};
 `
 
 export const TYPE = {
-  header: {
-    title(props: TextProps) {
-      return <TextWrapper fontWeight={600} fontSize={16} {...props} />
-    },
-    action(props: TextProps) {
-      return <TextWrapper fontWeight={600} fontSize={14} color="action" {...props} />
-    },
+  title(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={12} {...props} />

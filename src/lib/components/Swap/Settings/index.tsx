@@ -8,41 +8,35 @@ import { useResetSettings } from '../state/hooks'
 import ExpertModeToggle from './ExpertModeToggle'
 import GasPriceSelect from './GasPriceSelect'
 import MaxSlippageSelect from './MaxSlippageSelect'
-import MultiHopToggle from './MultiHopToggle'
+import MultihopToggle from './MultihopToggle'
 import TransactionDeadlineInput from './TransactionDeadlineInput'
 
-const ThemedSettingsIcon = themedIcon(SettingsIcon)
+export const ThemedSettingsIcon = themedIcon(SettingsIcon)
 
-const ThemedReset = themed(TYPE.header.action)`
+const ThemedReset = themed(TYPE.text)`
+  padding-right: 12px;
+
   :hover {
     cursor: pointer;
     opacity: 0.7;
   }
 `
 
-function Title() {
-  return (
-    <>
-      <ThemedSettingsIcon />
-      <span style={{ width: 8 }} />
-      <TYPE.header.title>Settings</TYPE.header.title>
-    </>
-  )
-}
-
 export function SettingsModal({ onClose }: { onClose: () => void }) {
   const resetSettings = useResetSettings()
   return (
     <Modal>
-      <ModalHeader title={<Title />} onClose={onClose}>
-        <ThemedReset onClick={resetSettings}>Reset</ThemedReset>
+      <ModalHeader title={<TYPE.title>Settings</TYPE.title>} onClose={onClose}>
+        <ThemedReset color="action" onClick={resetSettings}>
+          Reset
+        </ThemedReset>
       </ModalHeader>
       <ModalBody>
         <GasPriceSelect />
         <MaxSlippageSelect />
         <TransactionDeadlineInput />
         <ExpertModeToggle />
-        <MultiHopToggle />
+        <MultihopToggle />
       </ModalBody>
     </Modal>
   )

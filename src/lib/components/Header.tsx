@@ -26,8 +26,8 @@ const Title = themed.div`
 `
 
 const Divider = themed.hr`
-  border-color: ${({ theme }) => theme.text};
-  border-bottom: none;
+  border-color: ${({ theme }) => theme.icon};
+  border-top: none;
   border-right: none;
   border-left: none;
   margin-bottom: 0;

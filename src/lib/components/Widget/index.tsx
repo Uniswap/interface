@@ -11,9 +11,9 @@ const Wrapper = themed.div`
   flex-direction: column;
   font-family: ${({ theme }) => theme.font};
   font-size: 16px;
-  max-height: 305px;
+  max-height: 360px;
   max-width: 360px;
-  min-height: 305px;
+  min-height: 360px;
   min-width: 360px;
   padding: 12px;
   position: relative;

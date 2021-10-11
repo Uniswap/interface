@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { ReactComponent as Logo } from '../../assets/logo.svg'
+import Logo from '../../assets/logo'
 import themed, { TYPE, useTheme } from '../../themed'
 import BaseHeader from '../Header'
 
@@ -30,7 +30,7 @@ function Title({ path, title }: Omit<HeaderProps, 'children'>) {
         </LogoWrapper>
       </a>
       <span style={{ width: 8 }} />
-      <TYPE.header.title>{title}</TYPE.header.title>
+      <TYPE.title>{title}</TYPE.title>
     </>
   )
 }
