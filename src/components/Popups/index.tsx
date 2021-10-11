@@ -1,12 +1,13 @@
-import styled from 'styled-components/macro'
-import { useActivePopups } from '../../state/application/hooks'
-import { AutoColumn } from '../Column'
-import PopupItem from './PopupItem'
-import ClaimPopup from './ClaimPopup'
-import { useURLWarningVisible } from '../../state/user/hooks'
-import { useActiveWeb3React } from 'hooks/web3'
 import { SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
+import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
+
+import { useActivePopups } from '../../state/application/hooks'
+import { useURLWarningVisible } from '../../state/user/hooks'
+import { AutoColumn } from '../Column'
+import ClaimPopup from './ClaimPopup'
+import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;

@@ -1,13 +1,14 @@
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
-import JSBI from 'jsbi'
-import { PoolState, usePool } from './usePools'
-import { useMemo } from 'react'
-import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-import { useAllV3TicksQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { Currency } from '@uniswap/sdk-core'
+import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
 import ms from 'ms.macro'
+import { useMemo } from 'react'
+import { useAllV3TicksQuery } from 'state/data/enhanced'
 import { AllV3TicksQuery } from 'state/data/generated'
+import computeSurroundingTicks from 'utils/computeSurroundingTicks'
+
+import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -31,11 +32,10 @@ export function useAllV3Ticks(
   const poolAddress =
     currencyA && currencyB && feeAmount ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount) : undefined
 
-  //TODO(judo): determine if pagination is necessary for this query
   const { isLoading, isError, error, isUninitialized, data } = useAllV3TicksQuery(
     poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken,
     {
-      pollingInterval: ms`2m`,
+      pollingInterval: ms`30s`,
     }
   )
 

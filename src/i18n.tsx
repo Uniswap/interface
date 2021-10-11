@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { ReactNode } from 'react'
-import { useActiveLocale, useSetLocaleFromUrl } from 'hooks/useActiveLocale'
-import { SupportedLocale } from 'constants/locales'
+import { DEFAULT_LOCALE, DEFAULT_MESSAGES, SupportedLocale } from 'constants/locales'
+import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import {
   af,
   ar,
@@ -25,17 +23,21 @@ import {
   nl,
   no,
   pl,
+  PluralCategory,
   pt,
   ro,
   ru,
   sr,
   sv,
+  sw,
   tr,
   uk,
   vi,
   zh,
-  PluralCategory,
 } from 'make-plural/plurals'
+import { useEffect } from 'react'
+import { ReactNode } from 'react'
+import { useUserLocaleManager } from 'state/user/hooks'
 
 type LocalePlural = {
   [key in SupportedLocale]: (n: number | string, ord?: boolean) => PluralCategory
@@ -68,6 +70,7 @@ const plurals: LocalePlural = {
   'ru-RU': ru,
   'sr-SP': sr,
   'sv-SE': sv,
+  'sw-TZ': sw,
   'tr-TR': tr,
   'uk-UA': uk,
   'vi-VN': vi,
@@ -76,30 +79,28 @@ const plurals: LocalePlural = {
 }
 
 async function dynamicActivate(locale: SupportedLocale) {
-  const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
+  const { messages } = locale === DEFAULT_LOCALE ? { messages: DEFAULT_MESSAGES } : await import(`locales/${locale}`)
   i18n.load(locale, messages)
   i18n.activate(locale)
 }
 
+dynamicActivate(initialLocale)
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  useSetLocaleFromUrl()
   const locale = useActiveLocale()
-  const [loaded, setLoaded] = useState(false)
+  const [, setUserLocale] = useUserLocaleManager()
 
   useEffect(() => {
     dynamicActivate(locale)
       .then(() => {
         document.documentElement.setAttribute('lang', locale)
-        setLoaded(true)
+        setUserLocale(locale) // stores the selected locale to persist across sessions
       })
       .catch((error) => {
         console.error('Failed to activate locale', locale, error)
       })
-  }, [locale])
-
-  // prevent the app from rendering with placeholder text before the locale is loaded
-  if (!loaded) return null
+  }, [locale, setUserLocale])
 
   return (
     <I18nProvider forceRenderOnLocaleChange={false} i18n={i18n}>

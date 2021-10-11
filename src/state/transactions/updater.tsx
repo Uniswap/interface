@@ -1,6 +1,7 @@
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+
 import { L2_CHAIN_IDS, SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { retry, RetryableError, RetryOptions } from '../../utils/retry'
@@ -106,8 +107,6 @@ export default function Updater(): null {
                 {
                   txn: {
                     hash,
-                    success: receipt.status === 1,
-                    summary: transactions[hash]?.summary,
                   },
                 },
                 hash,

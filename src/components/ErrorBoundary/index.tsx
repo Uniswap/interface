@@ -1,11 +1,12 @@
 import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
+import ReactGA from 'react-ga'
+import styled from 'styled-components/macro'
+
 import store, { AppState } from '../../state'
 import { ExternalLink, TYPE } from '../../theme'
+import { userAgent } from '../../utils/userAgent'
 import { AutoColumn } from '../Column'
-import styled from 'styled-components/macro'
-import ReactGA from 'react-ga'
-import { getUserAgent } from '../../utils/getUserAgent'
 import { AutoRow } from '../Row'
 
 const FallbackWrapper = styled.div`
@@ -136,7 +137,7 @@ function getRelevantState(): null | keyof AppState {
 
 function issueBody(error: Error): string {
   const relevantState = getRelevantState()
-  const deviceData = getUserAgent()
+  const deviceData = userAgent
   return `## URL
   
 ${window.location.href}

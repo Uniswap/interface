@@ -1,15 +1,16 @@
-import { t } from '@lingui/macro'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
+import { Interface } from '@ethersproject/abi'
+import { Trans } from '@lingui/macro'
+import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
+
 import { DAI, UNI, USDC, USDT, WBTC, WETH9_EXTENDED } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { Interface } from '@ethersproject/abi'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 
 const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
 
@@ -249,7 +250,7 @@ export function useDerivedStakeInfo(
   userLiquidityUnstaked: CurrencyAmount<Token> | undefined
 ): {
   parsedAmount?: CurrencyAmount<Token>
-  error?: string
+  error?: ReactNode
 } {
   const { account } = useActiveWeb3React()
 
@@ -260,12 +261,12 @@ export function useDerivedStakeInfo(
       ? parsedInput
       : undefined
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
   if (!parsedAmount) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   return {

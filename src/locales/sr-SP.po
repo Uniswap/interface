@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-03 17:08\n"
+"PO-Revision-Date: 2021-10-11 14:06\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -27,6 +27,10 @@ msgstr "$ -"
 msgid "${0}"
 msgstr "${0}"
 
+#: src/components/swap/TradePrice.tsx
+msgid "(${0})"
+msgstr "(${0})"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(Макс)"
@@ -48,8 +52,8 @@ msgid "(edit)"
 msgstr "(уреди)"
 
 #: src/pages/Swap/index.tsx
-msgid "- Remove send"
-msgstr "- Уклони слање"
+msgid "- Remove recipient"
+msgstr "- Уклоните примаоца"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -94,10 +98,6 @@ msgstr "<0/> Гласови"
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> Аналитика рачуна и обрачунате накнаде</0> <1> ↗</1>"
-
-#: src/pages/Swap/index.tsx
-msgid "<0>Back to </0>V3"
-msgstr "<0>Назад на </0>В3"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "<0>Current Price:</0><1><2/></1><3>{0} per {1}</3>"
@@ -154,6 +154,10 @@ msgstr "Активно"
 msgid "Add"
 msgstr "Додати"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Add <0/> and <1/> to Uniswap V2"
+msgstr "Додајте <0/> и <1/> у Унисвап В2"
+
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
 msgstr "Додајте делегата +"
@@ -179,16 +183,11 @@ msgstr "Додајте више ликвидности"
 msgid "Add {0} to Metamask <0/>"
 msgstr "Додајте {0} у Метамаск <0/>"
 
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Add {0} {1} and {2} {3}"
-msgstr "Додај {0} {1} и {2} {3}"
-
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
 msgstr "Додајте {0}-{1} ликвидност"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Додај {0}/{1} В3 ликвидност"
 
@@ -220,11 +219,15 @@ msgstr "Дозволите Uniswap протоколу да користи ваш
 msgid "Allowed"
 msgstr "Дозвољен"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Allowed Slippage"
+msgstr "Дозвољено клизање"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Износ"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
@@ -241,6 +244,7 @@ msgstr "Одобри"
 msgid "Approve Token"
 msgstr "Одобри жетон"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -264,6 +268,18 @@ msgstr "Одобравање"
 msgid "Approving {0}"
 msgstr "Одобравање {0}"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbiscan"
+msgstr "Арбисцан"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Arbitrum Bridge"
+msgstr "Мост Арбитрум"
+
+#: src/components/DowntimeWarning/index.tsx
+msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Арбитрум је у бета фази и може доћи до застоја. Током застоја, ваша позиција неће зарађивати накнаде и нећете моћи да уклоните ликвидност. <0> Прочитајте више.</0>"
+
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
 msgstr "Јеси ли сигуран?"
@@ -279,6 +295,10 @@ msgstr "Најмање {0} {1} и {2} {3} ће бити враћени у ваш
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
 msgstr "Аutomatski"
+
+#: src/components/Settings/index.tsx
+msgid "Auto Router"
+msgstr "Ауто Роутер"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -315,6 +335,10 @@ msgstr "Најбоље за стабилне парове."
 msgid "Blocked address"
 msgstr "Блокирана адреса"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Bridge"
+msgstr "Мост"
+
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Додавањем ликвидности зарадићете 0,3% свих трговина на овом пару пропорционално вашем уделу у фонду. Накнаде се додају у фонд, прикупљају се у реалном времену и могу се захтевати повлачењем ваше ликвидности."
@@ -335,13 +359,13 @@ msgstr "Отказано"
 msgid "Change"
 msgstr "Промена"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "Change your network to go back to L1"
-msgstr "Промените мрежу да бисте се вратили на Л1"
-
 #: src/components/Header/index.tsx
 msgid "Charts"
 msgstr "Графикони"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Check network status"
+msgstr "Проверите статус мреже"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -352,6 +376,10 @@ msgstr "Погледајте наше водиче за v3 LP и водиче з
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
 msgstr "Потраживање"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim <0/> for {0}"
+msgstr "Потраживање <0/> за {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -365,10 +393,9 @@ msgstr "Преузми УНИ"
 msgid "Claim UNI Token"
 msgstr "Преузми УНИ токен"
 
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/components/earn/ClaimRewardModal.tsx
-msgid "Claim accumulated UNI rewards"
-msgstr "Преузми накупљене УНИ награде"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Claim UNI reward for {0}"
+msgstr "Затражите УНИ награду за {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -387,7 +414,12 @@ msgstr "Преузето"
 msgid "Claimed UNI!"
 msgstr "Преузет УНИ!"
 
+#: src/components/claim/ClaimModal.tsx
+msgid "Claimed!"
+msgstr "Потраживано!"
+
 #: src/components/claim/AddressClaimModal.tsx
+#: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
 msgstr "Преузимање"
 
@@ -434,6 +466,10 @@ msgstr "Сакупи као WETH"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
 msgstr "Сакупи накнаде"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Collect {0}/{1} fees"
+msgstr "Покупи {0}/{1} накнаде"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -484,15 +520,17 @@ msgstr "Потврдите ову трансакцију у новчанику"
 msgid "Confirm transaction in wallet"
 msgstr "Потврдите трансакцију у новчанику"
 
+#: src/components/earn/ClaimRewardModal.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Повежите новчаник"
 
@@ -517,11 +555,6 @@ msgstr "Повежите се са новчаником да бисте виде
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
 msgstr "Повежите се са новчаником да бисте видели своју ликвидност."
-
-#: src/components/earn/ClaimRewardModal.tsx
-#: src/pages/AddLiquidity/index.tsx
-msgid "Connect wallet"
-msgstr "Повежите новчаник"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -562,7 +595,7 @@ msgstr "Направите фонд"
 msgid "Create an issue on GitHub"
 msgstr "Направите питање на GitHub-у"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
 msgstr "Направите фонд и додајте {0}/{1} V3 ликвидност"
 
@@ -570,7 +603,7 @@ msgstr "Направите фонд и додајте {0}/{1} V3 ликвидн�
 msgid "Create pool."
 msgstr "Направите фонд."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Створити {0}/{1} В3 базен"
 
@@ -595,13 +628,13 @@ msgstr "Поражени"
 msgid "Delegate Votes"
 msgstr "Делегирајте гласове"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Delegate voting power to {0}"
+msgstr "Делегирајте гласачку моћ на {0}"
+
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
 msgstr "Делегирано за:"
-
-#: src/state/governance/hooks.ts
-msgid "Delegated votes"
-msgstr "Делегирани гласови"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -618,19 +651,17 @@ msgstr "Депозит"
 msgid "Deposit Amounts"
 msgstr "Износи депозита"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Deposit Assets"
+msgstr "Депозитна средства"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
 msgstr "Положите UNI-V2 LP токене"
 
-#: src/components/earn/StakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Deposit liquidity"
 msgstr "Ликвидност депозита"
-
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Deposit to {0}"
-msgstr "Депозит на {0}"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
@@ -659,10 +690,6 @@ msgstr "Детаљно"
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
 msgstr "Детаљи"
-
-#: src/components/Settings/index.tsx
-msgid "Disable Multihops"
-msgstr "Онемогући Мултихоп"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -696,11 +723,11 @@ msgstr "Уредити"
 msgid "Efficiency Comparison"
 msgstr "Поређење ефикасности"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Унесите проценат"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Унесите примаоца"
 
@@ -714,11 +741,11 @@ msgstr "Унесите адресу да бисте покренули преу�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Унесите износ"
 
@@ -758,6 +785,10 @@ msgid "Expanded results from inactive Token Lists"
 msgstr "Проширени резултати са неактивних листа токена"
 
 #: src/components/Settings/index.tsx
+msgid "Expert Mode"
+msgstr "Режим стручњака"
+
+#: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
 msgstr "Експертни режим искључује упит за потврду трансакције и омогућава велике клизне трансакције које често резултирају лошим стопама и изгубљеним новчаним средствима."
 
@@ -768,6 +799,10 @@ msgstr "Истекло"
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
 msgstr "Истражите популарне фондове на Uniswap Аналитици."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Explorer"
+msgstr "Екплорер"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -806,6 +841,10 @@ msgstr "Позиције пуног опсега могу зарадити ма�
 msgid "Get support on Discord"
 msgstr "Затражите подршку на Discord-у"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Help Center"
+msgstr "Центар за помоћ"
+
 #: src/components/FeeSelector/index.tsx
 msgid "Hide"
 msgstr "Сакрити"
@@ -814,11 +853,8 @@ msgstr "Сакрити"
 msgid "High Price Impact"
 msgstr "Утицај високе цене"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "I Understand"
-msgstr "Разумем"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "разумем"
 
@@ -873,28 +909,24 @@ msgstr "Улаз се процењује. Продаћете највише <0>{
 msgid "Install Metamask"
 msgstr "Инсталирајте Метамаск"
 
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient ${0} balance"
+msgstr "Недовољно стање ${0}"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Недовољна ликвидност за ову трговину."
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Недовољна ликвидност за ову трговину. Покушајте да омогућите мултихоп трговине."
-
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
-msgid "Insufficient {0} balance"
-msgstr "Недовољно {0} на стању"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Подешавања интерфејса"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "Неважећи пар"
 
@@ -902,7 +934,7 @@ msgstr "Неважећи пар"
 msgid "Invalid pair."
 msgstr "Неважећи пар."
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "Неважећи унос цене"
 
@@ -911,7 +943,8 @@ msgstr "Неважећи унос цене"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Изабран је неважећи опсег. Минимална цена мора бити нижа од максималне."
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Неважећи прималац"
 
@@ -923,13 +956,13 @@ msgstr "Језик"
 msgid "Learn"
 msgstr "Научи"
 
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "Learn More"
+msgstr "Сазнајте више"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Сазнајте више о обезбеђивању ликвидности"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Learn more"
-msgstr "Сазнајте више"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1046,6 +1079,10 @@ msgstr "Миграција V2 ликвидности"
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
 msgstr "Пребаците своје токене ликвидности са Uniswap V2 на Uniswap V3."
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Migrate {0}/{1} liquidity to V3"
+msgstr "Мигрирајте {0}/{1} ликвидност у В3"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
 msgstr "Миграција"
@@ -1067,9 +1104,17 @@ msgstr "Мин:"
 msgid "Minimum received"
 msgstr "Минимално примљено"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "Недостају зависности"
+
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "Више"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "Network Warning"
+msgstr "Упозорење на мрежу"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1140,21 +1185,17 @@ msgstr "Само УНИ гласови који су самостално или
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Упс! Дошло је до непознате грешке. Освежите страницу или је посетите из другог прегледача или уређаја."
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism Planned Downtime"
-msgstr "Оптимизам планирано време застоја"
+#: src/components/Header/NetworkSelector.tsx
+msgid "Optimism Gateway"
+msgstr "Оптимисм Гатеваи"
 
-#: src/components/OptimismDowntimeWarning/index.tsx
-msgid "Optimism expects planned downtime in the near future. Unplanned downtime may also occur. While the network is down, fees will not be generated and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Оптимизам очекује планиране застоје у блиској будућности. Може доћи и до непланираних застоја. Док је мрежа у квару, накнаде се неће генерисати и нећете моћи да уклоните ликвидност. <0> Прочитајте више.</0>"
+#: src/components/DowntimeWarning/index.tsx
+msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
+msgstr "Оптимистични Етхереум је у бета верзији и може доћи до застоја. Оптимизам очекује планиране застоје за надоградњу мреже у блиској будућности. Током застоја, ваша позиција неће зарађивати накнаде и нећете моћи да уклоните ликвидност. <0> Прочитајте више.</0>"
 
-#: src/components/Header/NetworkCard.tsx
+#: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
 msgstr "Оптимистични Етхерсцан"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Optimistic L2 Gateway"
-msgstr "Оптимистични Л2 пролаз"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1311,12 +1352,6 @@ msgstr "У реду"
 msgid "Rates"
 msgstr "Стопе"
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "Read more"
-msgstr "Опширније"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Прочитајте више о UNI-ју"
@@ -1349,6 +1384,10 @@ msgstr "Прималац"
 msgid "Remove"
 msgstr "Уклоните"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Remove <0/> and <1/>"
+msgstr "Уклоните <0/> и <1/>"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
 msgstr "Уклони износ"
@@ -1368,31 +1407,18 @@ msgid "Remove list"
 msgstr "Уклони листу"
 
 #: src/pages/RemoveLiquidity/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Remove {0} {1} and {2} {3}"
-msgstr "Уклони {0} {1} и {2} {3}"
+msgid "Removing ${0} ${1} and ${2} ${3}"
+msgstr "Уклањање ${0} ${1} и ${2} ${3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
-msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Уклони {0}/{1} V3 ликвидност"
-
-#: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Уклањање {0} {1} и {2} {3}"
-
-#: src/components/Settings/index.tsx
-msgid "Restricts swaps to direct pairs only."
-msgstr "Ограничава замене само на директне парове."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Return"
 msgstr "Повратак"
-
-#: src/components/swap/AdvancedSwapDetails.tsx
-msgid "Route"
-msgstr "Рута"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1402,11 +1428,15 @@ msgstr "Претражите име или налепите адресу"
 msgid "Select Pair"
 msgstr "Изаберите Упари"
 
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a network"
+msgstr "Изаберите мрежу"
+
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Изаберите жетон"
 
@@ -1461,7 +1491,6 @@ msgid "Simple"
 msgstr "Једноставно"
 
 #: src/components/TransactionSettings/index.tsx
-#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Клизна толеранција"
 
@@ -1481,9 +1510,9 @@ msgstr "Статус"
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Корак 1. Набавите UNI-V2 токене ликвидности"
 
-#: src/state/governance/hooks.ts
-msgid "Submitted new proposal"
-msgstr "Поднет нови предлог"
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Submit new proposal"
+msgstr "Поднесите нови предлог"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1506,8 +1535,8 @@ msgid "Supply"
 msgstr "Снабдевање"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "Снабдевање {0} {1} и {2} {3}"
+msgid "Supplying ${0} ${1} and ${2} ${3}"
+msgstr "Снабдевање ${0} ${1} и ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1517,18 +1546,27 @@ msgstr "Снабдевање {0} {1} и {2} {3}"
 msgid "Swap"
 msgstr "Размени"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap <0/> for exactly <1/>"
+msgstr "Замени <0/> за тачно <1/>"
+
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Замени свеједно"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Swap exactly <0/> for <1/>"
+msgstr "Замените тачно <0/> за <1/>"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "Замена није успела: {0}"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Замена {0} {1} за {2} {3}"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "Switch to L1 (Mainnet)"
-msgstr "Пребаците се на Л1 (Маиннет)"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1538,11 +1576,11 @@ msgstr "Хвала вам што сте део заједнице Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Који ћете зарадити на накнадама."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap непроменљива x*y=k није испоштована разменом. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Токен за унос није могуће пренети. Можда постоји проблем са улазним токеном."
 
@@ -1550,11 +1588,11 @@ msgstr "Токен за унос није могуће пренети. Можд�
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Тржишна цена је изван наведеног распона цена. Само депозит за једно средство."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Излазни токен се не може пренети. Можда постоји проблем са излазним токеном. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
@@ -1570,7 +1608,7 @@ msgstr "Цена овог фонда је у вашем одабраном оп�
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Однос жетона које додате ће одредити цену овог фонда."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Трансакција није могла бити послата јер је рок истекао. Молимо вас да проверите да ваш рок за трансакцију није пренизак."
 
@@ -1582,15 +1620,6 @@ msgstr "Нема података о ликвидности."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ови токени су обично упарени са другим токенима."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network."
-msgstr "Ово је алфа издање Унисвап-а на мрежи {0}"
-
-#: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "This is an alpha release of Uniswap on the {0} network. You must bridge L1 assets to the network to swap them."
-msgstr "Ово је алфа издање Унисвап-а на мрежи {0} Морате повезати средства Л1 на мрежу да бисте их заменили."
-
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Овај фонд мора бити иницијализован да бисте могли да додате ликвидност. Да бисте иницијализирали, одаберите почетну цену за базен. Затим унесите опсег цена ликвидности и износ депозита. Накнаде за плин биће веће него обично због трансакције иницијализације."
@@ -1598,6 +1627,10 @@ msgstr "Овај фонд мора бити иницијализован да б
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
 msgstr "Овај фонд мора бити иницијализован на {0} да бисте могли да додате ликвидност. Да бисте иницијализирали, одаберите почетну цену за базен. Затим унесите опсег цена ликвидности и износ депозита."
+
+#: src/components/swap/SwapRoute.tsx
+msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
+msgstr "Ова рута оптимизује вашу цену узимајући у обзир подељене руте, више прескакања и трошкове гаса."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1607,11 +1640,11 @@ msgstr "Овај токен се не појављује на листи акт�
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Овај алат ће безбедно пребацити вашу {0} ликвидност на V3. Процес је потпуно неповерљив захваљујући"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ова трансакција неће успети због кретања цена. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ова трансакција неће успети или због кретања цена или због накнаде за пренос. Покушајте да повећате клизну толеранцију."
 
@@ -1630,9 +1663,9 @@ msgstr "До"
 msgid "To (at least)"
 msgstr "До (најмање)"
 
-#: src/components/Settings/index.tsx
-msgid "Toggle Expert Mode"
-msgstr "Укључивање експертног режима"
+#: src/components/NetworkAlert/NetworkAlert.tsx
+msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Да бисте започели трговање на {0}, прво премостите своју имовину са Л1 на Л2. Молимо вас да ово третирате као бета издање и сазнате о ризицима пре коришћења {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1658,6 +1691,14 @@ msgstr "Укупно депоновано"
 msgid "Total deposits"
 msgstr "Укупни депозити"
 
+#: src/components/swap/RouterLabel.tsx
+msgid "Trade Route"
+msgstr "Трговачка рута"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Transaction Details"
+msgstr "Детаљи трансакције"
+
 #: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1680,6 +1721,11 @@ msgstr "Трансакција је завршена у"
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "Крајњи рок за трансакцију"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "Трансакција је одбијена."
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1738,6 +1784,14 @@ msgstr "Непотраживано:"
 msgid "Undetermined"
 msgstr "Неодређено"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "Неочекивана грешка. Није могуће проценити гас за замену."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "Неочекивани проблем са проценом гаса. Молим вас, покушајте поново."
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap управљање"
@@ -1766,9 +1820,9 @@ msgstr "Унисвап на {0}"
 msgid "Unknown Source"
 msgstr "Непознат извор"
 
-#: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Непозната грешка{0}. Покушајте да повећате толеранцију на клизање. Напомена: накнада за токене за пренос и пребазу није компатибилна са Унисвап В3."
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Непозната грешка${0}. Покушајте повећати толеранцију клизања. Напомена: накнада за токене за пренос и поновну надоградњу није компатибилна са Унисвап В3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1801,6 +1855,10 @@ msgstr "Без наслова"
 msgid "Unwrap"
 msgstr "Одмотај"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Unwrap <0/> to ETH"
+msgstr "Одмотајте <0/> на ЕТХ"
+
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
 msgstr "Ажурирање делегације"
@@ -1809,9 +1867,17 @@ msgstr "Ажурирање делегације"
 msgid "Update list"
 msgstr "Ажурирај листу"
 
+#: src/components/Settings/index.tsx
+msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
+msgstr "Користите Унисвап Лабс АПИ да бисте добили боље цене путем ефикасније руте."
+
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
 msgstr "Корисник"
+
+#: src/components/swap/SwapRoute.tsx
+msgid "V2"
+msgstr "В2"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
@@ -1821,7 +1887,7 @@ msgstr "В2 није доступан на слоју 2. Пребаците се
 msgid "V2 liquidity"
 msgstr "V2 ликвидност"
 
-#: src/pages/Swap/index.tsx
+#: src/components/swap/SwapRoute.tsx
 msgid "V3"
 msgstr "V3"
 
@@ -1881,15 +1947,39 @@ msgstr "Гласајте за"
 msgid "Vote against proposal {proposalId}"
 msgstr "Гласајте против предлога {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey}"
+msgstr "Гласајте против предлога {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote against proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте против предлога {proposalKey} са разлогом \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
 msgstr "Гласајте за предлог {proposalId}"
 
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey}"
+msgstr "Гласајте за предлог {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote for proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте за предлог {proposalKey} са разлогом \"{0}\""
+
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
 msgstr "Гласајте за уздржавање по предлогу {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey}"
+msgstr "Гласајте за уздржавање по предлогу {proposalKey}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
+msgstr "Гласајте за уздржавање од предлога {proposalKey} са разлогом \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1936,8 +2026,7 @@ msgstr "Повуците"
 msgid "Withdraw & Claim"
 msgstr "Повуци и затражи"
 
-#: src/components/earn/UnstakingModal.tsx
-#: src/components/earn/UnstakingModal.tsx
+#: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Withdraw deposited liquidity"
 msgstr "Повући депоновану ликвидност"
 
@@ -1952,6 +2041,10 @@ msgstr "Повукао UNI-V2!"
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Упакујте"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Wrap <0/> to WETH"
+msgstr "Замотајте <0/> у ВЕТХ"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1990,10 +2083,13 @@ msgstr "Немате довољно гласова за подношење пр�
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Још увек немате ликвидност у овом фонду."
 
-#: src/components/NetworkAlert/AddLiquidityNetworkAlert.tsx
-#: src/components/NetworkAlert/MinimalNetworkAlert.tsx
-msgid "You must bridge L1 assets to the network to use them."
-msgstr "Морате повезати средства Л1 на мрежу да бисте их користили."
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection, or {label} might be down right now."
+msgstr "Можда сте изгубили мрежну везу или {label} није у реду."
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "You may have lost your network connection."
+msgstr "Можда сте изгубили мрежну везу."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -2123,6 +2219,10 @@ msgstr "за {0}"
 msgid "has socks emoji"
 msgstr "има чарапе емоџи"
 
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "here."
+msgstr "овде."
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https:// или ipfs:// или ENS име"
@@ -2159,10 +2259,6 @@ msgstr "{0} %"
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> по <1/>"
 
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Bridge"
-msgstr "{0} Мост"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
 msgstr "{0} Прилагођени токени"
@@ -2176,10 +2272,6 @@ msgstr "{0} Депоновано"
 #: src/components/earn/PoolCard.tsx
 msgid "{0} ETH"
 msgstr "{0} ETH"
-
-#: src/components/Header/NetworkCard.tsx
-msgid "{0} Explorer"
-msgstr "{0} Екплорер"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx

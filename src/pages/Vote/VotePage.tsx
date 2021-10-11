@@ -1,14 +1,16 @@
+import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { DateTime } from 'luxon'
+import { DateTime } from 'luxon/src/luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
+
 import { ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -33,14 +35,13 @@ import {
   useProposalData,
   useUserDelegatee,
   useUserVotesAsOfBlock,
-  VoteOption,
 } from '../../state/governance/hooks'
+import { VoteOption } from '../../state/governance/types'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
-import { t, Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;

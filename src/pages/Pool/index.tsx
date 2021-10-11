@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import DowntimeWarning from 'components/DowntimeWarning'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
+import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -17,6 +19,7 @@ import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { HideSmall, TYPE } from 'theme'
 import { PositionDetails } from 'types/position'
+
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
@@ -221,6 +224,8 @@ export default function Pool() {
             </TitleRow>
 
             <HideSmall>
+              <NetworkAlert thin />
+              <DowntimeWarning />
               <CTACards />
             </HideSmall>
 

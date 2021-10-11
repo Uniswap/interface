@@ -1,17 +1,17 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Token, Currency } from '@uniswap/sdk-core'
-import { useFeeTierDistributionQuery } from 'state/data/enhanced'
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { reduce } from 'lodash'
-import { useBlockNumber } from 'state/application/hooks'
-import ReactGA from 'react-ga'
-import { useMemo } from 'react'
-import { FeeTierDistributionQuery } from 'state/data/generated'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import ms from 'ms.macro'
+import { useMemo } from 'react'
+import ReactGA from 'react-ga'
+import { useBlockNumber } from 'state/application/hooks'
+import { useFeeTierDistributionQuery } from 'state/data/enhanced'
+import { FeeTierDistributionQuery } from 'state/data/generated'
+
 import { PoolState, usePool } from './usePools'
 
 // maximum number of blocks past which we consider the data stale
-const MAX_DATA_BLOCK_AGE = 10
+const MAX_DATA_BLOCK_AGE = 20
 
 interface FeeTierDistribution {
   isLoading: boolean
@@ -85,7 +85,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { isLoading, isFetching, isUninitialized, isError, data } = useFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken,
     {
-      pollingInterval: ms`2m`,
+      pollingInterval: ms`30s`,
     }
   )
 
@@ -117,7 +117,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     const all = asToken0.concat(asToken1)
 
     // sum tvl for token0 and token1 by fee tier
-    const tvlByFeeTer = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
+    const tvlByFeeTier = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
       (acc, value) => {
         acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken0)
         acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.totalValueLockedToken1)
@@ -131,8 +131,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     )
 
     // sum total tvl for token0 and token1
-    const [sumToken0Tvl, sumToken1Tvl] = reduce(
-      tvlByFeeTer,
+    const [sumToken0Tvl, sumToken1Tvl] = Object.values(tvlByFeeTier).reduce(
       (acc: [number, number], value) => {
         acc[0] += value[0] ?? 0
         acc[1] += value[1] ?? 0
@@ -151,17 +150,22 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
       isUninitialized,
       isError,
       distributions: {
-        [FeeAmount.LOW]: mean(tvlByFeeTer[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTer[FeeAmount.LOW][1], sumToken1Tvl),
-        [FeeAmount.MEDIUM]: mean(
-          tvlByFeeTer[FeeAmount.MEDIUM][0],
+        [FeeAmount.LOW]: mean(
+          tvlByFeeTier[FeeAmount.LOW][0],
           sumToken0Tvl,
-          tvlByFeeTer[FeeAmount.MEDIUM][1],
+          tvlByFeeTier[FeeAmount.LOW][1],
+          sumToken1Tvl
+        ),
+        [FeeAmount.MEDIUM]: mean(
+          tvlByFeeTier[FeeAmount.MEDIUM][0],
+          sumToken0Tvl,
+          tvlByFeeTier[FeeAmount.MEDIUM][1],
           sumToken1Tvl
         ),
         [FeeAmount.HIGH]: mean(
-          tvlByFeeTer[FeeAmount.HIGH][0],
+          tvlByFeeTier[FeeAmount.HIGH][0],
           sumToken0Tvl,
-          tvlByFeeTer[FeeAmount.HIGH][1],
+          tvlByFeeTier[FeeAmount.HIGH][1],
           sumToken1Tvl
         ),
       },

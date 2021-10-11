@@ -1,6 +1,7 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useV3NFTPositionManagerContract } from './useContract'
 

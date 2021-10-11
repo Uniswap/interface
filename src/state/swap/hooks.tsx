@@ -1,26 +1,29 @@
-import { t } from '@lingui/macro'
-import JSBI from 'jsbi'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
-import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { TWO_PERCENT } from 'constants/misc'
+import { useBestV2Trade } from 'hooks/useBestV2Trade'
+import { useBestV3Trade } from 'hooks/useBestV3Trade'
+import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState } from 'react'
-import { useActiveWeb3React } from '../../hooks/web3'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { V3TradeState } from 'state/routing/types'
+import { isTradeBetter } from 'utils/isTradeBetter'
+
 import { useCurrency } from '../../hooks/Tokens'
+import useENS from '../../hooks/useENS'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { Version } from '../../hooks/useToggledVersion'
-import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
-import useParsedQueryString from '../../hooks/useParsedQueryString'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import { useUserSingleHopOnly } from 'state/user/hooks'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -114,19 +117,20 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(toggledVersion: Version): {
+export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
-  inputError?: string
+  inputError?: ReactNode
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
-  v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
-  toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  v3Trade: {
+    trade: V3Trade<Currency, Currency, TradeType> | null
+    state: V3TradeState
+  }
+  bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()
-
-  const [singleHopOnly] = useUserSingleHopOnly()
 
   const {
     independentField,
@@ -147,20 +151,39 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const parsedAmount = useMemo(
+    () => tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
+    [inputCurrency, isExactIn, outputCurrency, typedValue]
+  )
 
-  const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
-  const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, {
-    maxHops: singleHopOnly ? 1 : undefined,
-  })
+  // get v2 and v3 quotes
+  // skip if other version is toggled
+  const v2Trade = useBestV2Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    toggledVersion !== Version.v3 ? parsedAmount : undefined,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
+  )
+  const v3Trade = useBestV3Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    toggledVersion !== Version.v2 ? parsedAmount : undefined,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
+  )
 
-  const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const isV2TradeBetter = useMemo(() => {
+    try {
+      // avoids comparing trades when V3Trade is not in a ready state.
+      return toggledVersion === Version.v2 ||
+        [V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3Trade.state)
+        ? isTradeBetter(v3Trade.trade, v2Trade, TWO_PERCENT)
+        : undefined
+    } catch (e) {
+      // v3 trade may be debouncing or fetching and have different
+      // inputs/ouputs than v2
+      return undefined
+    }
+  }, [toggledVersion, v2Trade, v3Trade.state, v3Trade.trade])
 
-  const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
-  const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
+  const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -172,40 +195,35 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     [Field.OUTPUT]: outputCurrency,
   }
 
-  let inputError: string | undefined
+  let inputError: ReactNode | undefined
   if (!account) {
-    inputError = t`Connect Wallet`
+    inputError = <Trans>Connect Wallet</Trans>
   }
 
   if (!parsedAmount) {
-    inputError = inputError ?? t`Enter an amount`
+    inputError = inputError ?? <Trans>Enter an amount</Trans>
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    inputError = inputError ?? t`Select a token`
+    inputError = inputError ?? <Trans>Select a token</Trans>
   }
 
   const formattedTo = isAddress(to)
   if (!to || !formattedTo) {
-    inputError = inputError ?? t`Enter a recipient`
+    inputError = inputError ?? <Trans>Enter a recipient</Trans>
   } else {
-    if (
-      BAD_RECIPIENT_ADDRESSES[formattedTo] ||
-      (bestV2TradeExactIn && involvesAddress(bestV2TradeExactIn, formattedTo)) ||
-      (bestV2TradeExactOut && involvesAddress(bestV2TradeExactOut, formattedTo))
-    ) {
-      inputError = inputError ?? t`Invalid recipient`
+    if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
+      inputError = inputError ?? <Trans>Invalid recipient</Trans>
     }
   }
 
-  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined
-  const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
+  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], toggledTrade?.maximumAmountIn(allowedSlippage)]
+  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = t`Insufficient ${amountIn.currency.symbol} balance`
+    inputError = <Trans>Insufficient ${amountIn.currency.symbol} balance</Trans>
   }
 
   return {
@@ -214,8 +232,8 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     parsedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
-    v3TradeState: v3Trade,
-    toggledTrade,
+    v3Trade,
+    bestTrade: bestTrade ?? undefined,
     allowedSlippage,
   }
 }
@@ -263,10 +281,10 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
 
   return {
     [Field.INPUT]: {
-      currencyId: inputCurrency,
+      currencyId: inputCurrency === '' ? null : inputCurrency ?? null,
     },
     [Field.OUTPUT]: {
-      currencyId: outputCurrency,
+      currencyId: outputCurrency === '' ? null : outputCurrency ?? null,
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
@@ -281,8 +299,9 @@ export function useDefaultsFromURLSearch():
   const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const parsedQs = useParsedQueryString()
-  const [result, setResult] =
-    useState<{ inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined>()
+  const [result, setResult] = useState<
+    { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
+  >()
 
   useEffect(() => {
     if (!chainId) return

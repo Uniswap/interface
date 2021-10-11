@@ -1,18 +1,14 @@
+import { defaultAbiCoder, Interface } from '@ethersproject/abi'
+import { isAddress } from '@ethersproject/address'
+import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
+import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
+import { formatUnits } from '@ethersproject/units'
+// eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { Contract } from 'ethers'
-import {
-  defaultAbiCoder,
-  formatUnits,
-  Interface,
-  isAddress,
-  toUtf8String,
-  Utf8ErrorFuncs,
-  Utf8ErrorReason,
-} from 'ethers/lib/utils'
 import {
   useGovernanceBravoContract,
   useGovernanceV0Contract,
@@ -23,12 +19,15 @@ import {
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+
 import { SupportedChainId } from '../../constants/chains'
 import { BRAVO_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
+import { TransactionType } from '../transactions/actions'
 import { useTransactionAdder } from '../transactions/hooks'
+import { VoteOption } from './types'
 
 interface ProposalDetail {
   target: string
@@ -135,7 +134,7 @@ function useFormattedProposalCreatedLogs(
 
           // Bravo proposal omits newlines
           if (startBlock === BRAVO_START_BLOCK) {
-            description = description.replaceAll(/  /g, '\n').replaceAll(/\d\. /g, '\n$&')
+            description = description.replace(/  /g, '\n').replace(/\d\. /g, '\n$&')
           }
         }
         return {
@@ -300,7 +299,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 
   return useCallback(
     (delegatee: string | undefined) => {
-      if (!library || !chainId || !account || !isAddress(delegatee ?? '')) return undefined
+      if (!library || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) return undefined
       const args = [delegatee]
       if (!uniContract) throw new Error('No UNI Contract!')
       return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
@@ -308,7 +307,8 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
           .delegate(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: t`Delegated votes`,
+              type: TransactionType.DELEGATE,
+              delegatee,
             })
             return response.hash
           })
@@ -316,12 +316,6 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
     },
     [account, addTransaction, chainId, library, uniContract]
   )
-}
-
-export enum VoteOption {
-  Against,
-  For,
-  Abstain,
 }
 
 export function useVoteCallback(): {
@@ -342,9 +336,11 @@ export function useVoteCallback(): {
           .castVote(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Voted ${
-                voteOption === VoteOption.Against ? 'against' : voteOption === VoteOption.For ? 'for' : 'to abstain on'
-              } proposal ${proposalId}`,
+              type: TransactionType.VOTE,
+              decision: voteOption,
+              governorAddress: latestGovernanceContract.address,
+              proposalId: parseInt(proposalId),
+              reason: '',
             })
             return response.hash
           })
@@ -380,7 +376,7 @@ export function useCreateProposalCallback(): (
           .propose(...args, { gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: t`Submitted new proposal`,
+              type: TransactionType.SUBMIT_PROPOSAL,
             })
             return response.hash
           })

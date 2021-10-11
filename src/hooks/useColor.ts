@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
 import Vibrant from 'node-vibrant'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
@@ -19,7 +20,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   const { address } = wrappedToken
   let { logoURI } = wrappedToken
   if (!logoURI) {
-    if (token.chainId !== 1) {
+    if (token.chainId !== SupportedChainId.MAINNET) {
       return null
     } else {
       logoURI = URIForEthToken(address)
