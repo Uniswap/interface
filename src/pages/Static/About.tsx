@@ -46,6 +46,7 @@ import {
   Image2,
   Image1
 } from './styleds'
+import useTheme from 'hooks/useTheme'
 
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
@@ -72,6 +73,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
   const data = useGlobalData()
@@ -99,7 +101,7 @@ export default function About() {
       <Image2 />
       <Image3 />
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300} color={'#ffffff'}>
+        <Text fontWeight={300} color={theme.text}>
           <Trans>DeFi's First Multi-Chain</Trans>
         </Text>
         <Text fontWeight={700}>
@@ -112,12 +114,12 @@ export default function About() {
           <Text color={'#78d5ff'} display={'inline-block'}>
             <Trans>Maker</Trans>&nbsp;
           </Text>
-          <Text color={'#ffffff'} display={'inline-block'} fontWeight={300}>
+          <Text color={theme.text} display={'inline-block'} fontWeight={300}>
             <Trans>Protocol</Trans>&nbsp;
           </Text>
         </Text>
       </Text>
-      <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
+      <Text px={4} mt={10} fontSize={[16, 21]} color={theme.subText}>
         <Trans>
           Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
         </Trans>
@@ -126,10 +128,10 @@ export default function About() {
       <SectionNumberContainer>
         <TradingVolumeSection>
           <div>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
               {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2}>
+            <Text fontSize={14} mt={2} color={theme.subText}>
               <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
@@ -137,7 +139,7 @@ export default function About() {
 
         <SectionNumber>
           <LiquidityNumber>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
@@ -146,29 +148,34 @@ export default function About() {
           </LiquidityNumber>
           <div className="line"></div>
           <AmpLiquidityNumber>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2}>
-              <Trans>Total AMP Liquidity</Trans>
-            </Text>
-            <Text fontSize={10} fontStyle="italic" mt={2}>
-              <Trans>Equivalent TVL when compared to typical AMMs</Trans>
+            <Text fontSize={14} mt={2} color={theme.subText}>
+              <Trans>Total AMP Liquidity</Trans>*
             </Text>
           </AmpLiquidityNumber>
+          <Text
+            fontSize={10}
+            fontStyle="italic"
+            sx={{
+              position: 'absolute',
+              bottom: '-18px',
+              right: '0px'
+            }}
+          >
+            *<Trans>Equivalent TVL when compared to typical AMMs</Trans>
+          </Text>
         </SectionNumber>
 
         {maxApr >= 0 && (
           <TradingVolumeSection>
-            <div>
-              <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
-                {maxApr.toFixed(2)}%
-              </Text>
-              <Text fontSize={14} mt={2}>
-                <Trans>Max APY</Trans>
-              </Text>
-              <Text fontSize={14}>&nbsp;</Text>
-            </div>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
+              {maxApr.toFixed(2)}%
+            </Text>
+            <Text fontSize={14} color={theme.subText}>
+              <Trans>Max APY</Trans>
+            </Text>
           </TradingVolumeSection>
         )}
       </SectionNumberContainer>
@@ -187,14 +194,15 @@ export default function About() {
           <Trans>Documentation</Trans>
         </ButtonOutlined>
       </Panel0>
-      <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
+
+      <Text mt={[70, 100]} color={theme.text} fontSize={[24, 40]}>
         <span>
           <Trans>Amplified Liquidity Pools</Trans>
         </span>
       </Text>
       <SectionCurveDetail>
         <i>
-          <Text mb={15}>
+          <Text mb={15} color={theme.subText}>
             <Trans>Less tokens required for high liquidity</Trans>
           </Text>
         </i>
@@ -214,7 +222,7 @@ export default function About() {
           <Trans>for users compared to AMMs.</Trans>
         </div>
       </SectionCurveDetail>
-      <Text fontSize={[16, 24]} fontWeight={600} px={2}>
+      <Text fontSize={[16, 24]} fontWeight={600} px={2} color={theme.text}>
         <Trans>DMM can be up to 100x more capital efficient than typical AMMs</Trans>
       </Text>
       <SectionAmp>
@@ -250,12 +258,12 @@ export default function About() {
         </div>
       </SectionAmp>
       <i>
-        <Text fontSize={[12, 14]} px={2} color="#859aa5">
+        <Text fontSize={[12, 14]} px={2}>
           <Trans>*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade</Trans>
         </Text>
       </i>
 
-      <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
+      <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={theme.text} style={{ position: 'relative' }}>
         <span>
           <Trans>Dynamic Fees</Trans>
         </span>
@@ -300,7 +308,7 @@ export default function About() {
         </div>
       </SectionGraph>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[50, 135]} px={2}>
+      <Text fontSize={[24, 36]} color={theme.text} mt={[50, 135]} px={2}>
         <span>
           <Trans>Permissionless and Frictionless Liquidity for DeFi</Trans>
         </span>
@@ -308,7 +316,7 @@ export default function About() {
       <div style={{ padding: '0 24px' }}>
         <Box width={['100%', 780]} mx="auto">
           <img src={require('../../assets/svg/permissionless_frictionless.svg')} alt="" />
-          <Text mt={[16, 20]} color="#c9d2d7" lineHeight="26px">
+          <Text mt={[16, 20]} lineHeight="26px">
             <Trans>
               Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
               aggregators, end users) can source liquidity from the DMM.
@@ -331,7 +339,7 @@ export default function About() {
         <ReactPlayer url="https://www.youtube.com/watch?v=2xgboyu7rss" />
       </YoutubeVideo>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
+      <Text fontSize={[24, 36]} color={theme.text} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
         <Trans>Access DMM Liquidity for your Blockchain Platform</Trans>
       </Text>
       <Text fontSize={[16, 20]} maxWidth="700px" mx="auto">
@@ -401,7 +409,7 @@ export default function About() {
         </ButtonOutlined>
       </Panel>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} px={2}>
+      <Text fontSize={[24, 36]} color={theme.text} mt={[100, 200]} mb={45} px={2}>
         <Trans>Committed to Security</Trans>
       </Text>
       <Security>

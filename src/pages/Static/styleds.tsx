@@ -12,9 +12,9 @@ export const Wrapper = styled.div`
   height: 100%;
   margin-top: -32px;
   text-align: center;
-  color: #c9d2d7;
+  color: ${({ theme }) => theme.subText};
   position: relative;
-  background-color: #222c31;
+  background-color: ${({ theme }) => theme.buttonBlack};
   z-index: -2;
 
   img {
@@ -30,6 +30,7 @@ export const Image1 = styled.div`
   height: 800px;
   background-repeat: no-repeat;
   background-position-x: right;
+  background-size: contain;
   z-index: -1;
 `
 
@@ -63,11 +64,12 @@ export const Image3 = styled.div`
 `
 
 export const SectionNumberContainer = styled.div`
-  max-width: 800px;
+  max-width: 900px;
   margin: 65px auto 0 auto;
   padding: 24px;
   display: flex;
-  justify-content: space-between;
+  gap: 24px;
+  justify-content: space-evenly;
   align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -78,12 +80,13 @@ export const SectionNumberContainer = styled.div`
 export const SectionNumber = styled.div`
   max-width: 450px;
   margin: 0 auto;
-  background: #1d272b;
-  border: dashed 1px #303e46;
+  background: ${({ theme }) => theme.background};
+  border: 1px solid ${({ theme }) => theme.border2};
   border-radius: 20px;
-  padding: 28px 24px;
+  padding: 28px 44px;
   display: flex;
   justify-content: space-around;
+  position: relative;
 
   .line {
     width: 0px;
@@ -92,7 +95,7 @@ export const SectionNumber = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-    margin-bottom: 12px;
+    gap: 16px;
     width: 100%;
 
     .line {
@@ -105,15 +108,7 @@ export const TradingVolumeSection = styled(SectionNumber)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 44px 60px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-      padding: 28px 24px;
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-        padding: 36px 48px;
-  `}
+  padding: 28px 24px;
 `
 
 export const LiquidityNumber = styled.div`
@@ -121,11 +116,10 @@ export const LiquidityNumber = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
-  width: 50%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-right: 0;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     width: 100%;
   `}
 `
@@ -136,7 +130,6 @@ export const AmpLiquidityNumber = styled.div`
   justify-content: center;
   margin-right: 20px;
   margin-left: 20px;
-  width: 50%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-left: 0;
@@ -182,7 +175,6 @@ export const SectionCurveDetail = styled.div`
   max-width: 680px;
   margin: 45px auto 75px;
   padding: 0 20px;
-  color: #c9d2d7;
   font-size: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -192,6 +184,7 @@ export const SectionCurveDetail = styled.div`
 `
 
 export const SectionAmp = styled.div`
+  color: #fff;
   display: flex;
   justify-content: space-around;
   max-width: 700px;
@@ -257,7 +250,6 @@ export const SectionFee = styled.div`
   max-width: 780px;
   margin: 0 auto;
   padding: 0 10px;
-  color: #c9d2d7;
   font-size: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -277,11 +269,13 @@ export const SectionGraph = styled.div`
   `}
 
   .left {
-    border-radius: 20px;
+    border-radius: 4px;
     flex: 1;
     background-image: url(${aboutGraph});
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: contain;
+    background-position: center;
+    border: dashed 1px #303e46;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       height: 300px;
@@ -296,9 +290,8 @@ export const SectionGraph = styled.div`
 
     .item {
       padding: 25px;
-      background-color: rgba(29, 39, 43, 0.6);
-      border-radius: 20px;
-      border: solid 1px #303e46;
+      border-radius: 4px;
+      border: dashed 1px #303e46;
       .box {
         width: 76px;
         height: 68px;
