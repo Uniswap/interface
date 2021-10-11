@@ -2,8 +2,8 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
+import { useRoutingAPIEnabled } from 'state/user/hooks'
 
-import useAutoRouterSupported from './useAutoRouterSupported'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
 import useIsWindowVisible from './useIsWindowVisible'
@@ -23,14 +23,14 @@ export function useBestV3Trade(
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
 } {
-  const autoRouterSupported = useAutoRouterSupported()
+  const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
-    autoRouterSupported && isWindowVisible ? debouncedAmount : undefined,
+    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
     otherCurrency
   )
 
@@ -48,9 +48,9 @@ export function useBestV3Trade(
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
         !otherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
-  const useFallback = !autoRouterSupported || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
+  const useFallback = !routingAPIEnabled || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
 
-  // only use client side router if routing api trade failed or is not supported
+  // only use client side router if routing api trade failed
   const bestV3Trade = useClientSideV3Trade(
     tradeType,
     useFallback ? debouncedAmount : undefined,

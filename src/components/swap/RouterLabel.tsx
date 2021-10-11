@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
+import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
@@ -40,15 +40,15 @@ const StyledAutoRouterLabel = styled(TYPE.black)`
 `
 
 export function AutoRouterLogo() {
-  const autoRouterSupported = useAutoRouterSupported()
+  const routingAPIEnabled = useRoutingAPIEnabled()
 
-  return autoRouterSupported ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
+  return routingAPIEnabled ? <StyledAutoRouterIcon /> : <StyledStaticRouterIcon />
 }
 
 export function AutoRouterLabel() {
-  const autoRouterSupported = useAutoRouterSupported()
+  const routingAPIEnabled = useRoutingAPIEnabled()
 
-  return autoRouterSupported ? (
+  return routingAPIEnabled ? (
     <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
   ) : (
     <TYPE.black fontSize={14}>
