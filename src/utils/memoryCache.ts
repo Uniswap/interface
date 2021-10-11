@@ -9,7 +9,7 @@ export class MemoryCache<T> implements ICache<T> {
     const rec = this.cache[key]
 
     if (this.ttl) {
-      if (rec?.added && rec?.added + this.ttl > Date.now()) {
+      if (rec?.added !== undefined && rec?.added + this.ttl > Date.now()) {
         return rec?.val
       } else {
         return undefined

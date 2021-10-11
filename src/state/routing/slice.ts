@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Token } from '@uniswap/sdk-core'
 import SmartOrderRouterWorker from 'comlink-loader!./smartOrderRouter'
 import qs from 'qs'
@@ -20,6 +20,7 @@ async function getClientSideQuote({
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
+  debugger
   const router = new SmartOrderRouterWorker() as Router
 
   return router.getQuote({
@@ -73,7 +74,7 @@ export const routingApi = createApi({
 
           return { data: result.data as GetQuoteResult }
         } catch (e) {
-          return { error: { status: 500, data: e } }
+          return { error: e as FetchBaseQueryError }
         }
       },
     }),
