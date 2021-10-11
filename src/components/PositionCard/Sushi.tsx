@@ -1,23 +1,21 @@
+import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { Trans } from '@lingui/macro'
-
-import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonEmpty } from '../Button'
-import { transparentize } from 'polished'
-import { CardNoise } from '../earn/styled'
 
 import { useColor } from '../../hooks/useColor'
-
+import { unwrappedToken } from '../../utils/unwrappedToken'
+import { ButtonEmpty } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowFixed, AutoRow } from '../Row'
+import { CardNoise } from '../earn/styled'
+import { AutoRow, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
-import Badge, { BadgeVariant } from 'components/Badge'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;

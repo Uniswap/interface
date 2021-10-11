@@ -1,6 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
+
 import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants/routing'
 import { useActiveWeb3React } from './web3'
 
@@ -20,7 +20,11 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
   }, [chainId, tokenA, tokenB])
 
   const basePairs: [Token, Token][] = useMemo(
-    () => flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])),
+    () =>
+      bases
+        .flatMap((base): [Token, Token][] => bases.map((otherBase) => [base, otherBase]))
+        // though redundant with the first filter below, that expression runs more often, so this is probably worthwhile
+        .filter(([t0, t1]) => !t0.equals(t1)),
     [bases]
   )
 
@@ -29,7 +33,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
       tokenA && tokenB
         ? [
             // the direct pair
-            [tokenA, tokenB],
+            [tokenA, tokenB] as [Token, Token],
             // token A against all bases
             ...bases.map((base): [Token, Token] => [tokenA, base]),
             // token B against all bases
@@ -37,8 +41,18 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
             // each base against all bases
             ...basePairs,
           ]
-            .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
-            .filter(([t0, t1]) => t0.address !== t1.address)
+            // filter out invalid pairs comprised of the same asset (e.g. WETH<>WETH)
+            .filter(([t0, t1]) => !t0.equals(t1))
+            // filter out duplicate pairs
+            .filter(([t0, t1], i, otherPairs) => {
+              // find the first index in the array at which there are the same 2 tokens as the current
+              const firstIndexInOtherPairs = otherPairs.findIndex(([t0Other, t1Other]) => {
+                return (t0.equals(t0Other) && t1.equals(t1Other)) || (t0.equals(t1Other) && t1.equals(t0Other))
+              })
+              // only accept the first occurence of the same 2 tokens
+              return firstIndexInOtherPairs === i
+            })
+            // optionally filter out some pairs for tokens with custom bases defined
             .filter(([tokenA, tokenB]) => {
               if (!chainId) return true
               const customBases = CUSTOM_BASES[chainId]

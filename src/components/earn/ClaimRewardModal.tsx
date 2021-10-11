@@ -1,17 +1,19 @@
-import { useState } from 'react'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components/macro'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
-import { useStakingContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { Trans } from '@lingui/macro'
+import { ReactNode, useState } from 'react'
+import styled from 'styled-components/macro'
+
+import { useStakingContract } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { t, Trans } from '@lingui/macro'
+import { StakingInfo } from '../../state/stake/hooks'
+import { TransactionType } from '../../state/transactions/actions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import Modal from '../Modal'
+import { LoadingView, SubmittedView } from '../ModalViews'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -41,12 +43,15 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
 
   async function onClaimReward() {
-    if (stakingContract && stakingInfo?.stakedAmount) {
+    if (stakingContract && stakingInfo?.stakedAmount && account) {
       setAttempting(true)
       await stakingContract
         .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
-          addTransaction(response, { summary: t`Claim accumulated UNI rewards` })
+          addTransaction(response, {
+            type: TransactionType.CLAIM,
+            recipient: account,
+          })
           setHash(response.hash)
         })
         .catch((error: any) => {
@@ -56,12 +61,12 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
     }
   }
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   return (

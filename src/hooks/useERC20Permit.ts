@@ -1,16 +1,17 @@
-import JSBI from 'jsbi'
-import { Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
+import { splitSignature } from '@ethersproject/bytes'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { splitSignature } from 'ethers/lib/utils'
+import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
+
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { DAI, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import { useActiveWeb3React } from './web3'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
 import useTransactionDeadline from './useTransactionDeadline'
+import { useActiveWeb3React } from './web3'
 
 enum PermitType {
   AMOUNT = 1,

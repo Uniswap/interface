@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
+import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
@@ -11,8 +12,8 @@ import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+
+import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ExternalLink, TYPE } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
@@ -22,7 +23,7 @@ import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
-import NetworkCard from './NetworkCard'
+import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
@@ -71,6 +72,10 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+
+  &:not(:first-child) {
+    margin-left: 0.5em;
+  }
 
   /* addresses safari's lack of support for "gap" */
   & > *:not(:first-child) {
@@ -122,7 +127,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
-  cursor: pointer;
 
   :focus {
     border: 1px solid blue;
@@ -244,6 +248,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
+  const { white, black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -265,7 +270,7 @@ export default function Header() {
       </Modal>
       <Title href=".">
         <UniIcon>
-          <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -285,7 +290,7 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
-        {chainId && chainId === SupportedChainId.MAINNET && (
+        {(!chainId || chainId === SupportedChainId.MAINNET) && (
           <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
             <Trans>Vote</Trans>
           </StyledNavLink>
@@ -297,7 +302,9 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
-        <NetworkCard />
+        <HeaderElement>
+          <NetworkSelector />
+        </HeaderElement>
         <HeaderElement>
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
@@ -315,14 +322,16 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+          <AccountElement active={!!account}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                 <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
               </BalanceText>
             ) : null}
             <Web3Status />
           </AccountElement>
+        </HeaderElement>
+        <HeaderElement>
           <Menu />
         </HeaderElement>
       </HeaderControls>

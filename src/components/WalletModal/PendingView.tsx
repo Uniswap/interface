@@ -1,11 +1,12 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import styled from 'styled-components/macro'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import Option from './Option'
-import { injected } from '../../connectors'
-import { darken } from 'polished'
-import Loader from '../Loader'
 import { Trans } from '@lingui/macro'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { darken } from 'polished'
+import styled from 'styled-components/macro'
+
+import { injected } from '../../connectors'
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
+import Loader from '../Loader'
+import Option from './Option'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};

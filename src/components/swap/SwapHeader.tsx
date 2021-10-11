@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import styled from 'styled-components/macro'
-import SettingsTab from '../Settings'
 import { Percent } from '@uniswap/sdk-core'
+import styled from 'styled-components/macro'
 
-import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
+import { RowBetween, RowFixed } from '../Row'
+import SettingsTab from '../Settings'
 
 const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;

@@ -1,7 +1,9 @@
+import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { arrayify } from 'ethers/lib/utils'
+import { SupportedChainId } from 'constants/chains'
 import { useMemo } from 'react'
+
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
@@ -10,9 +12,8 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
-
-import { useActiveWeb3React } from './web3'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -76,7 +77,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
       if (!list) continue
       for (const tokenInfo of list.tokens) {
         if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-          const wrapped = new WrappedTokenInfo(tokenInfo, list)
+          const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
           if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
             addressSet[wrapped.address] = true
             result.push(wrapped)
@@ -123,9 +124,9 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 }
 
 // undefined if invalid or does not exist
-// null if loading
+// null if loading or null was passed
 // otherwise returns the token
-export function useToken(tokenAddress?: string): Token | undefined | null {
+export function useToken(tokenAddress?: string | null): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
@@ -148,6 +149,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 
   return useMemo(() => {
     if (token) return token
+    if (tokenAddress === null) return null
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
@@ -169,18 +171,27 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     symbol.result,
     symbolBytes32.result,
     token,
+    tokenAddress,
     tokenName.loading,
     tokenName.result,
     tokenNameBytes32.result,
   ])
 }
 
-export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+export function useCurrency(currencyId: string | null | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
-  const extendedEther = useMemo(() => (chainId ? ExtendedEther.onChain(chainId) : undefined), [chainId])
+  const extendedEther = useMemo(
+    () =>
+      chainId
+        ? ExtendedEther.onChain(chainId)
+        : // display mainnet when not connected
+          ExtendedEther.onChain(SupportedChainId.MAINNET),
+    [chainId]
+  )
   const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
-  if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
+  if (currencyId === null || currencyId === undefined) return currencyId
+  if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isETH ? extendedEther : token
 }

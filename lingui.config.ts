@@ -40,6 +40,7 @@ export default {
     'ru-RU',
     'sr-SP',
     'sv-SE',
+    'sw-TZ',
     'tr-TR',
     'uk-UA',
     'vi-VN',

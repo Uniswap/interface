@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useCallback, useEffect } from 'react'
-import ReactGA from 'react-ga'
 import { Heart, X } from 'react-feather'
+import ReactGA from 'react-ga'
 import styled, { keyframes } from 'styled-components/macro'
+
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -14,7 +15,6 @@ import {
   useToggleSelfClaimModal,
   useToggleShowClaimPopup,
 } from '../../state/application/hooks'
-
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'

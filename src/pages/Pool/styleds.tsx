@@ -1,5 +1,6 @@
+import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import { Text } from 'rebass'
-import styled, { keyframes } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -56,36 +57,13 @@ export const Dots = styled.span`
   }
 `
 
-const loadingAnimation = keyframes`
-  0% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-`
-
-export const LoadingRows = styled.div`
-  display: grid;
+export const LoadingRows = styled(BaseLoadingRows)`
   min-width: 75%;
   max-width: 960px;
   grid-column-gap: 0.5em;
   grid-row-gap: 0.8em;
   grid-template-columns: repeat(3, 1fr);
-  & > div {
-    animation: ${loadingAnimation} 1.5s infinite;
-    animation-fill-mode: both;
-    background: linear-gradient(
-      to left,
-      ${({ theme }) => theme.bg1} 25%,
-      ${({ theme }) => theme.bg2} 50%,
-      ${({ theme }) => theme.bg1} 75%
-    );
-    background-size: 400%;
-    border-radius: 12px;
-    height: 2.4em;
-    will-change: background-position;
-  }
+
   & > div:nth-child(4n + 1) {
     grid-column: 1 / 3;
   }

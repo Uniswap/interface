@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useBlockNumber } from '../application/hooks'
 import { useAppDispatch, useAppSelector } from '../hooks'

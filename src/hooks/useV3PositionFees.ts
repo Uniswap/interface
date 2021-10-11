@@ -1,11 +1,12 @@
-import { useSingleCallResult } from 'state/multicall/hooks'
-import { useEffect, useState } from 'react'
-import { useV3NFTPositionManagerContract } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
-import { CurrencyAmount, Currency } from '@uniswap/sdk-core'
+import { useEffect, useState } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import { unwrappedToken } from 'utils/unwrappedToken'
+
+import { useV3NFTPositionManagerContract } from './useContract'
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 

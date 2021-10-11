@@ -1,13 +1,14 @@
-import { useState, useCallback, useEffect, ReactNode } from 'react'
+import { Trans } from '@lingui/macro'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
-import { Input as NumericalInput } from '../NumericalInput'
+import { AutoColumn } from 'components/Column'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { AutoColumn } from 'components/Column'
-import { ButtonGray } from 'components/Button'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Trans } from '@lingui/macro'
-import { Plus, Minus } from 'react-feather'
+
+import { Input as NumericalInput } from '../NumericalInput'
 
 const pulse = (color: string) => keyframes`
   0% {

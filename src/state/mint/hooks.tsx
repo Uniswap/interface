@@ -1,17 +1,17 @@
-import { t } from '@lingui/macro'
-import { useCallback, useMemo } from 'react'
-import { AppState } from '../index'
-import { Field, typeInput } from './actions'
+import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, Token, Percent, Price, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { ReactNode, useCallback, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { Field, typeInput } from './actions'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -59,7 +59,7 @@ export function useDerivedMintInfo(
   noLiquidity?: boolean
   liquidityMinted?: CurrencyAmount<Token>
   poolTokenPercentage?: Percent
-  error?: string
+  error?: ReactNode
 } {
   const { account } = useActiveWeb3React()
 
@@ -176,27 +176,27 @@ export function useDerivedMintInfo(
     }
   }, [liquidityMinted, totalSupply])
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
 
   if (pairState === PairState.INVALID) {
-    error = error ?? t`Invalid pair`
+    error = error ?? <Trans>Invalid pair</Trans>
   }
 
   if (!parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = t`Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance`
+    error = <Trans>Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = t`Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance`
+    error = <Trans>Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
   }
 
   return {

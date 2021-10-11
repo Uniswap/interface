@@ -45,7 +45,7 @@ export default function UnsupportedCurrencyFooter({
   currencies,
 }: {
   show: boolean
-  currencies: (Currency | undefined)[]
+  currencies: (Currency | undefined | null)[]
 }) {
   const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)

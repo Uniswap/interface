@@ -1,29 +1,36 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
+import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+
 import {
   addPopup,
+  ApplicationModal,
   PopupContent,
   removePopup,
-  updateBlockNumber,
-  ApplicationModal,
+  setChainConnectivityWarning,
+  setImplements3085,
   setOpenModal,
+  updateBlockNumber,
   updateChainId,
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
-  // used by RTK-Query to build dynamic subgraph urls
-  readonly chainId: number | null
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly popupList: PopupList
+  readonly chainConnectivityWarning: boolean
+  readonly chainId: number | null
+  readonly implements3085: boolean
   readonly openModal: ApplicationModal | null
+  readonly popupList: PopupList
 }
 
 const initialState: ApplicationState = {
-  chainId: null,
   blockNumber: {},
-  popupList: [],
+  chainConnectivityWarning: false,
+  chainId: null,
+  implements3085: false,
   openModal: null,
+  popupList: [],
 }
 
 export default createReducer(initialState, (builder) =>
@@ -43,7 +50,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(setOpenModal, (state, action) => {
       state.openModal = action.payload
     })
-    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 25000 } }) => {
+    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) => {
       state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
         {
           key: key || nanoid(),
@@ -59,5 +66,11 @@ export default createReducer(initialState, (builder) =>
           p.show = false
         }
       })
+    })
+    .addCase(setImplements3085, (state, { payload: { implements3085 } }) => {
+      state.implements3085 = implements3085
+    })
+    .addCase(setChainConnectivityWarning, (state, { payload: { warn } }) => {
+      state.chainConnectivityWarning = warn
     })
 )

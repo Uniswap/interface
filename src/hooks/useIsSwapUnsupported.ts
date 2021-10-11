@@ -1,5 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+
 import { useUnsupportedTokens } from './Tokens'
 
 /**
@@ -7,7 +8,7 @@ import { useUnsupportedTokens } from './Tokens'
  * @param currencyIn the input currency to check
  * @param currencyOut the output currency to check
  */
-export function useIsSwapUnsupported(currencyIn?: Currency, currencyOut?: Currency): boolean {
+export function useIsSwapUnsupported(currencyIn?: Currency | null, currencyOut?: Currency | null): boolean {
   const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
   return useMemo(() => {

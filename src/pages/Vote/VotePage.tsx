@@ -1,14 +1,16 @@
+import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
-import { DateTime } from 'luxon'
+import { DateTime } from 'luxon/src/luxon'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-
 import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components/macro'
+
 import { ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -34,12 +36,12 @@ import {
   useUserDelegatee,
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
+import { VoteOption } from '../../state/governance/types'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
-import { t, Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -130,8 +132,8 @@ export default function VotePage({
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
 
-  // update support based on button interactions
-  const [support, setSupport] = useState<boolean>(true)
+  // update vote option based on button interactions
+  const [voteOption, setVoteOption] = useState<VoteOption | undefined>(undefined)
 
   // modal for casting votes
   const showVoteModal = useModalOpen(ApplicationModal.VOTE)
@@ -203,7 +205,12 @@ export default function VotePage({
   return (
     <>
       <PageWrapper gap="lg" justify="center">
-        <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
+        <VoteModal
+          isOpen={showVoteModal}
+          onDismiss={toggleVoteModal}
+          proposalId={proposalData?.id}
+          voteOption={voteOption}
+        />
         <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
         <ProposalInfo gap="lg" justify="start">
           <RowBetween style={{ width: '100%' }}>
@@ -252,7 +259,7 @@ export default function VotePage({
                 padding="8px"
                 $borderRadius="8px"
                 onClick={() => {
-                  setSupport(true)
+                  setVoteOption(VoteOption.For)
                   toggleVoteModal()
                 }}
               >
@@ -262,7 +269,7 @@ export default function VotePage({
                 padding="8px"
                 $borderRadius="8px"
                 onClick={() => {
-                  setSupport(false)
+                  setVoteOption(VoteOption.Against)
                   toggleVoteModal()
                 }}
               >

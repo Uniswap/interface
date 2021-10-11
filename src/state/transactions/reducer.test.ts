@@ -1,5 +1,13 @@
 import { createStore, Store } from 'redux'
-import { addTransaction, checkedTransaction, clearAllTransactions, finalizeTransaction } from './actions'
+
+import { updateVersion } from '../global/actions'
+import {
+  addTransaction,
+  checkedTransaction,
+  clearAllTransactions,
+  finalizeTransaction,
+  TransactionType,
+} from './actions'
 import reducer, { initialState, TransactionState } from './reducer'
 
 describe('transaction reducer', () => {
@@ -9,16 +17,45 @@ describe('transaction reducer', () => {
     store = createStore(reducer, initialState)
   })
 
+  describe('updateVersion', () => {
+    it('clears old format transactions that do not have info', () => {
+      store = createStore(reducer, {
+        [1]: {
+          abc: {
+            hash: 'abc',
+          } as any,
+        },
+      })
+      store.dispatch(updateVersion())
+      expect(store.getState()[1]['abc']).toBeUndefined()
+    })
+    it('keeps old format transactions that do have info', () => {
+      store = createStore(reducer, {
+        [1]: {
+          abc: {
+            hash: 'abc',
+            info: {},
+          } as any,
+        },
+      })
+      store.dispatch(updateVersion())
+      expect(store.getState()[1]['abc']).toBeTruthy()
+    })
+  })
+
   describe('addTransaction', () => {
     it('adds the transaction', () => {
       const beforeTime = new Date().getTime()
       store.dispatch(
         addTransaction({
           chainId: 1,
-          summary: 'hello world',
           hash: '0x0',
-          approval: { tokenAddress: 'abc', spender: 'def' },
           from: 'abc',
+          info: {
+            type: TransactionType.APPROVAL,
+            tokenAddress: 'abc',
+            spender: 'def',
+          },
         })
       )
       const txs = store.getState()
@@ -27,10 +64,13 @@ describe('transaction reducer', () => {
       const tx = txs[1]?.['0x0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
-      expect(tx?.summary).toEqual('hello world')
-      expect(tx?.approval).toEqual({ tokenAddress: 'abc', spender: 'def' })
       expect(tx?.from).toEqual('abc')
       expect(tx?.addedTime).toBeGreaterThanOrEqual(beforeTime)
+      expect(tx?.info).toEqual({
+        type: TransactionType.APPROVAL,
+        tokenAddress: 'abc',
+        spender: 'def',
+      })
     })
   })
 
@@ -59,8 +99,7 @@ describe('transaction reducer', () => {
         addTransaction({
           hash: '0x0',
           chainId: 4,
-          approval: { spender: '0x0', tokenAddress: '0x0' },
-          summary: 'hello world',
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
       )
@@ -82,7 +121,6 @@ describe('transaction reducer', () => {
         })
       )
       const tx = store.getState()[4]?.['0x0']
-      expect(tx?.summary).toEqual('hello world')
       expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.receipt).toEqual({
         status: 1,
@@ -113,8 +151,7 @@ describe('transaction reducer', () => {
         addTransaction({
           hash: '0x0',
           chainId: 4,
-          approval: { spender: '0x0', tokenAddress: '0x0' },
-          summary: 'hello world',
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
       )
@@ -133,8 +170,7 @@ describe('transaction reducer', () => {
         addTransaction({
           hash: '0x0',
           chainId: 4,
-          approval: { spender: '0x0', tokenAddress: '0x0' },
-          summary: 'hello world',
+          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0' },
           from: '0x0',
         })
       )
@@ -162,18 +198,16 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: 1,
-          summary: 'hello world',
           hash: '0x0',
-          approval: { tokenAddress: 'abc', spender: 'def' },
+          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
           from: 'abc',
         })
       )
       store.dispatch(
         addTransaction({
           chainId: 4,
-          summary: 'hello world',
           hash: '0x1',
-          approval: { tokenAddress: 'abc', spender: 'def' },
+          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def' },
           from: 'abc',
         })
       )
