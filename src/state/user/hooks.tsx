@@ -1,6 +1,6 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -119,13 +119,6 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
   )
 
   return [clientSideRouter, setClientSideRouter]
-}
-
-export function useRoutingAPIEnabled(): boolean {
-  const { chainId } = useActiveWeb3React()
-  const [clientSideRouter] = useClientSideRouter()
-
-  return chainId === SupportedChainId.MAINNET && !clientSideRouter
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

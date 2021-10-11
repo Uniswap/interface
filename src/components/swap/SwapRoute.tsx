@@ -7,9 +7,9 @@ import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram, { RoutingDiagramEntry } from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
+import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
-import { useRoutingAPIEnabled } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { getTradeVersion } from 'utils/getTradeVersion'
@@ -31,7 +31,7 @@ export default memo(function SwapRoute({
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
-  const routingAPIEnabled = useRoutingAPIEnabled()
+  const autoRouterSupported = useAutoRouterSupported()
 
   return (
     <AutoColumn gap="12px">
@@ -64,7 +64,7 @@ export default memo(function SwapRoute({
           routes={getTokenPath(trade)}
         />
       )}
-      {routingAPIEnabled && (
+      {autoRouterSupported && (
         <TYPE.main fontSize={12} width={400}>
           <Trans>This route optimizes your price by considering split routes, multiple hops, and gas costs.</Trans>
         </TYPE.main>
