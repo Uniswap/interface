@@ -1,7 +1,9 @@
 import { useCallback } from 'react'
 
-import { useRewardLockerContract } from './useContract'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
+import { useRewardLockerContract } from 'hooks/useContract'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { calculateGasMargin } from 'utils'
 
 const useVesting = (rewardLockerAddress: string) => {
   const addTransaction = useTransactionAdder()
@@ -9,7 +11,14 @@ const useVesting = (rewardLockerAddress: string) => {
 
   const vestAtIndex = useCallback(
     async (token: string, index: number[]) => {
-      const tx = await lockerContract?.vestScheduleAtIndices(token, index)
+      if (!lockerContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await lockerContract.estimateGas.vestScheduleAtIndices(token, index)
+      const tx = await lockerContract.vestScheduleAtIndices(token, index, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Claim schedule ${index}` })
 
       return tx.hash
@@ -19,7 +28,14 @@ const useVesting = (rewardLockerAddress: string) => {
 
   const vestMultipleTokensAtIndices = useCallback(
     async (tokens: string[], indices: number[][]) => {
-      const tx = await lockerContract?.vestScheduleForMultipleTokensAtIndices(tokens, indices)
+      if (!lockerContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await lockerContract.estimateGas.vestScheduleForMultipleTokensAtIndices(tokens, indices)
+      const tx = await lockerContract.vestScheduleForMultipleTokensAtIndices(tokens, indices, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Claim all` })
 
       return tx.hash
