@@ -20,7 +20,8 @@ export enum BridgeModalState {
   SUCCESS = 'SUCCESS',
   CLOSED = 'CLOSED',
   INITIATED = 'INITIATED',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
+  COLLECTING = 'COLLECTING'
 }
 
 export enum BridgeTxsFilter {

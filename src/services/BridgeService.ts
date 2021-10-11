@@ -285,34 +285,40 @@ export class BridgeService {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId || !batchIndex || !batchNumber || !value)
       return
 
-    const batchNumberBN = BigNumber.from(batchNumber)
-    const batchIndexBN = BigNumber.from(batchIndex)
-
-    const l1Tx = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
-
-    this.store.dispatch(
-      addBridgeTxn({
-        assetName: 'ETH',
-        assetType: BridgeAssetType.ETH,
-        type: 'outbox',
-        value,
-        txHash: l1Tx.hash,
-        chainId: this.l1ChainId,
-        sender: this.account
-      })
-    )
-
-    this.store.dispatch(
-      updateBridgeTxnPartnerHash({
-        chainId: this.l1ChainId,
-        txHash: l1Tx.hash,
-        partnerTxHash: l2Tx.txHash,
-        partnerChainId: this.l2ChainId
-      })
-    )
+    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
 
     try {
+      const batchNumberBN = BigNumber.from(batchNumber)
+      const batchIndexBN = BigNumber.from(batchIndex)
+
+      const l1Tx = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
+
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.COLLECTING }))
+
+      this.store.dispatch(
+        addBridgeTxn({
+          assetName: 'ETH',
+          assetType: BridgeAssetType.ETH,
+          type: 'outbox',
+          value,
+          txHash: l1Tx.hash,
+          chainId: this.l1ChainId,
+          sender: this.account
+        })
+      )
+
+      this.store.dispatch(
+        updateBridgeTxnPartnerHash({
+          chainId: this.l1ChainId,
+          txHash: l1Tx.hash,
+          partnerTxHash: l2Tx.txHash,
+          partnerChainId: this.l2ChainId
+        })
+      )
+
       const l1Receipt = await l1Tx.wait()
+
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.SUCCESS }))
 
       this.store.dispatch(
         updateBridgeTxnReceipt({
@@ -329,9 +335,8 @@ export class BridgeService {
           outgoingMessageState: OutgoingMessageState.EXECUTED
         })
       )
-      return l1Receipt
     } catch (err) {
-      throw err
+      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
     }
   }
 

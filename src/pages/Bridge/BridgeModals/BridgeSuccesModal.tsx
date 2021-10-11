@@ -1,7 +1,7 @@
 import React from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
-import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
+import { ButtonSecondary } from '../../../components/Button'
 import Modal from '../../../components/Modal'
 import { TYPE } from '../../../theme'
 
@@ -33,6 +33,9 @@ const Button = styled(ButtonSecondary)`
 interface BridgeSuccesModalProps {
   isOpen: boolean
   amount: string
+  assetType: string
+  fromNetworkName: string
+  toNetworkName: string
   onDismiss: () => void
   onTradeButtonClick: () => void
   onBackButtonClick: () => void
@@ -42,8 +45,9 @@ export const BridgeSuccesModal = ({
   amount,
   isOpen,
   onDismiss,
-  onTradeButtonClick,
-  onBackButtonClick
+  assetType,
+  fromNetworkName,
+  toNetworkName
 }: BridgeSuccesModalProps) => {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
@@ -54,10 +58,11 @@ export const BridgeSuccesModal = ({
             Bridging Succesful
           </TYPE.body>
         </TitleWrapper>
-        <TYPE.main>{amount} ETH from Arbitrum to Ethereum</TYPE.main>
+        <TYPE.main>
+          {amount} {assetType} from {fromNetworkName} to {toNetworkName}
+        </TYPE.main>
         <ButtonsWrapper>
-          <ButtonPrimary onClick={onTradeButtonClick}>Trade on Ethereum</ButtonPrimary>
-          <Button onClick={onBackButtonClick}>Back to bridge</Button>
+          <Button onClick={onDismiss}>Back to bridge</Button>
         </ButtonsWrapper>
       </Wrapper>
     </Modal>
