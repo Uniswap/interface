@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 21:07\n"
+"PO-Revision-Date: 2021-10-11 14:06\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -227,7 +227,7 @@ msgstr "Độ trượt được phép"
 msgid "Amount"
 msgstr "Số tiền"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
@@ -525,12 +525,12 @@ msgstr "Xác nhận giao dịch trong ví"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Kết nối ví"
 
@@ -723,11 +723,11 @@ msgstr "Biên tập"
 msgid "Efficiency Comparison"
 msgstr "So sánh hiệu quả"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Nhập một phần trăm"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Nhập người nhận"
 
@@ -741,11 +741,11 @@ msgstr "Nhập địa chỉ để kích hoạt khiếu nại UNI. Nếu địa c
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Nhập số tiền"
 
@@ -909,24 +909,24 @@ msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0}
 msgid "Install Metamask"
 msgstr "Cài đặt Metamask"
 
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient ${0} balance"
+msgstr "Số dư ${0} không đủ"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Không đủ thanh khoản cho giao dịch này."
-
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
-msgid "Insufficient {0} balance"
-msgstr "Số dư {0} không đủ"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Cài đặt giao diện"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "Cặp không hợp lệ"
 
@@ -934,7 +934,7 @@ msgstr "Cặp không hợp lệ"
 msgid "Invalid pair."
 msgstr "Cặp không hợp lệ."
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "Giá đầu vào không hợp lệ"
 
@@ -943,7 +943,8 @@ msgstr "Giá đầu vào không hợp lệ"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Đã chọn dải ô không hợp lệ. Giá tối thiểu phải thấp hơn giá tối đa."
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
@@ -1102,6 +1103,10 @@ msgstr "Tối thiểu:"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "Thiếu phụ thuộc"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1401,8 +1406,11 @@ msgstr "Loại bỏ thanh khoản"
 msgid "Remove list"
 msgstr "Xóa danh sách"
 
-#: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing ${0} ${1} and ${2} ${3}"
+msgstr "Loại bỏ ${0} ${1} và ${2} ${3}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Loại bỏ {0} {1} và {2} {3}"
 
@@ -1428,7 +1436,7 @@ msgstr "Chọn một mạng"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Chọn một mã token"
 
@@ -1527,8 +1535,8 @@ msgid "Supply"
 msgstr "Cung cấp"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "Cung cấp {0} {1} và {2} {3}"
+msgid "Supplying ${0} ${1} and ${2} ${3}"
+msgstr "Cung cấp ${0} ${1} và ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1551,6 +1559,11 @@ msgstr "Vẫn hoán đổi"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Hoán đổi chính xác <0 /> lấy <1 />"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "Hoán đổi không thành công: {0}"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Đổi {0} {1} lấy {2} {3}"
@@ -1563,11 +1576,11 @@ msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0/>"
 msgid "The % you will earn in fees."
 msgstr "% Bạn sẽ kiếm được từ phí."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
 
@@ -1575,11 +1588,11 @@ msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố v�
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định của bạn. Chỉ gửi một tài sản duy nhất."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với mã token đầu ra."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có sự cố với mã thông báo đầu ra. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
@@ -1595,7 +1608,7 @@ msgstr "Giá của pool này nằm trong phạm vi bạn đã chọn. Vị trí 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Tỷ lệ mã token bạn thêm vào sẽ thiết lập giá của nhóm này."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng kiểm tra xem thời hạn giao dịch của bạn không quá thấp."
 
@@ -1627,11 +1640,11 @@ msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đ
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Công cụ này sẽ chuyển thanh khoản {0} sang V3. Quá trình này hoàn toàn không đáng tin cậy nhờ vào"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Giao dịch này sẽ không thành công do biến động giá hoặc phí chuyển nhượng. Hãy thử tăng khả năng chịu trượt của bạn."
 
@@ -1709,6 +1722,11 @@ msgstr "Giao dịch đã hoàn tất trong"
 msgid "Transaction deadline"
 msgstr "Thời hạn giao dịch"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "Giao dịch bị từ chối."
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Mã thông báo chuyển"
@@ -1766,6 +1784,14 @@ msgstr "Chưa nhận:"
 msgid "Undetermined"
 msgstr "Không xác định"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "Lỗi không mong đợi. Không thể ước tính khí cho hoán đổi."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử lại."
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Quản trị Uniswap"
@@ -1794,9 +1820,9 @@ msgstr "Hủy hoán đổi trên {0}"
 msgid "Unknown Source"
 msgstr "Nguồn không rõ"
 
-#: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Lỗi không xác định${0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

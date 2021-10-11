@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 21:07\n"
+"PO-Revision-Date: 2021-10-11 14:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -227,7 +227,7 @@ msgstr "מותר החלקה"
 msgid "Amount"
 msgstr "כמות"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
 
@@ -525,12 +525,12 @@ msgstr "אשר עסקה בארנק"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "חבר ארנק"
 
@@ -723,11 +723,11 @@ msgstr "לַעֲרוֹך"
 msgid "Efficiency Comparison"
 msgstr "השוואת יעילות"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "הזן אחוז"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "הזן נמען"
 
@@ -741,11 +741,11 @@ msgstr "הזן כתובת להפעלת תביעה של UNI. אם לכתובת י
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "הזן סכום"
 
@@ -909,24 +909,24 @@ msgstr "הקלט מוערך. אתה תמכור לכל היותר <0>{0} {1}</0> 
 msgid "Install Metamask"
 msgstr "התקן את Metamask"
 
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient ${0} balance"
+msgstr "איזון ${0} לא מספיק"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "לא מספיק נזילות למסחר זה."
-
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
-msgid "Insufficient {0} balance"
-msgstr "איזון {0} לא מספיק"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "הגדרות ממשק"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "זוג לא חוקי"
 
@@ -934,7 +934,7 @@ msgstr "זוג לא חוקי"
 msgid "Invalid pair."
 msgstr "זוג לא חוקי."
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "קלט מחירים לא חוקי"
 
@@ -943,7 +943,8 @@ msgstr "קלט מחירים לא חוקי"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "נבחר טווח לא חוקי. המחיר המינימלי חייב להיות נמוך מהמחיר המקסימלי."
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
 
@@ -1102,6 +1103,10 @@ msgstr "דקה:"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "מינימום שהתקבל"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "חסרות תלות"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1401,8 +1406,11 @@ msgstr "הסר נזילות"
 msgid "Remove list"
 msgstr "הסר את הרשימה"
 
-#: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing ${0} ${1} and ${2} ${3}"
+msgstr "הסרת ${0} ${1} ו- ${2} ${3}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "הסרת {0} {1} ו {2} {3}"
 
@@ -1428,7 +1436,7 @@ msgstr "בחר רשת"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "בחר אסימון"
 
@@ -1527,8 +1535,8 @@ msgid "Supply"
 msgstr "לְסַפֵּק"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "אספקת {0} {1} ו {2} {3}"
+msgid "Supplying ${0} ${1} and ${2} ${3}"
+msgstr "מתן ${0} ${1} ו ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1551,6 +1559,11 @@ msgstr "החלף בכל מקרה"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "החלף בדיוק <0/> עבור <1/>"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "החלפה נכשלה: {0}"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "החלפת {0} {1} ב- {2} {3}"
@@ -1563,11 +1576,11 @@ msgstr "תודה שהיית חלק מקהילת Uniswap <0 />"
 msgid "The % you will earn in fees."
 msgstr "האחוזים שתרוויחו בעמלות."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "המשתנה של Uniswap x * y = k לא הסתפק בהחלפה. זה בדרך כלל אומר שאחד מהאסימונים שאתה מחליף משלב התנהגות מותאמת אישית בהעברה."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "לא ניתן להעביר את אסימון הקלט. יכול להיות שיש בעיה באסימון הקלט."
 
@@ -1575,11 +1588,11 @@ msgstr "לא ניתן להעביר את אסימון הקלט. יכול להיו
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "מחיר השוק הוא מחוץ לטווח המחירים שצוין. הפקדת נכס יחיד בלבד."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה באסימון הפלט."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש בעיה באסימון הפלט. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
 
@@ -1595,7 +1608,7 @@ msgstr "המחיר של המאגר הזה הוא בטווח שבחרתם. עמד
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "יחס האסימונים שתוסיף יקבע את מחיר הבריכה הזו."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "לא ניתן היה לשלוח את העסקה מכיוון שהמועד האחרון חלף. אנא בדוק שמועד העסקה האחרון שלך אינו קרוב מדי."
 
@@ -1627,11 +1640,11 @@ msgstr "אסימון זה אינו מופיע ברשימות האסימונים 
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "כלי זה יעביר בבטחה את נזילות {0} שלך ל- V3. התהליך חסר אמון לחלוטין בזכות"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "עסקה זו לא תצליח בגלל תנועת מחירים. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Uniswap V3."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "עסקה זו לא תצליח גם בגלל תנועת מחירים או עמלה על העברה. נסה להגביר את סובלנות ההחלקה שלך."
 
@@ -1709,6 +1722,11 @@ msgstr "העסקה הושלמה בשנת"
 msgid "Transaction deadline"
 msgstr "מועד אחרון לעסקה"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "העסקה נדחתה."
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "העברת אסימון"
@@ -1766,6 +1784,14 @@ msgstr "ללא דרישה:"
 msgid "Undetermined"
 msgstr "לא נקבע"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "שגיאה לא צפויה. לא ניתן היה לאמוד גז להחלפה."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "בעיה בלתי צפויה בהערכת הגז. בבקשה נסה שוב."
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "ממשל לא מוחלף"
@@ -1794,9 +1820,9 @@ msgstr "ביטול החלפה ב- {0}"
 msgid "Unknown Source"
 msgstr "מקור לא ידוע"
 
-#: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "שגיאה לא ידועה{0}. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Uniswap V3."
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "שגיאה לא ידועה${0}. נסה להגדיל את סובלנות ההחלקה שלך. הערה: העמלה על אסימוני העברה ורישום מחדש אינם תואמים ל- Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-09 11:06\n"
+"PO-Revision-Date: 2021-10-11 14:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -227,7 +227,7 @@ msgstr "Kuruhusiwa Slippage"
 msgid "Amount"
 msgstr "Kiasi"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
@@ -525,12 +525,12 @@ msgstr "Thibitisha shughuli kwenye mkoba"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "Unganisha Mkoba"
 
@@ -723,11 +723,11 @@ msgstr "Hariri"
 msgid "Efficiency Comparison"
 msgstr "Ufanisi Kulinganisha"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "Ingiza asilimia"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "Ingiza mpokeaji"
 
@@ -741,11 +741,11 @@ msgstr "Ingiza anwani ili kuchochea dai la UNI. Ikiwa anwani ina UNI yoyote inay
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "Ingiza kiasi"
 
@@ -909,24 +909,24 @@ msgstr "Ingizo inakadiriwa. Utauza zaidi <0>{0} {1}</0> au shughuli itarejea."
 msgid "Install Metamask"
 msgstr "Sakinisha Metamask"
 
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient ${0} balance"
+msgstr "Usawa wa kutosha ${0}"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Ukosefu wa kutosha wa biashara hii."
-
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
-msgid "Insufficient {0} balance"
-msgstr "Usawa wa kutosha {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Mipangilio ya Kiolesura"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "Jozi batili"
 
@@ -934,7 +934,7 @@ msgstr "Jozi batili"
 msgid "Invalid pair."
 msgstr "Jozi batili."
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "Ingizo batili la bei"
 
@@ -943,7 +943,8 @@ msgstr "Ingizo batili la bei"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Masafa batili yamechaguliwa. Bei ya min lazima iwe chini kuliko bei ya juu."
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "Mpokeaji si sahihi"
 
@@ -1102,6 +1103,10 @@ msgstr "Dak:"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "Kiwango cha chini kimepokelewa"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "Kukosa utegemezi"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1401,8 +1406,11 @@ msgstr "Ondoa Liquidity"
 msgid "Remove list"
 msgstr "Ondoa orodha"
 
-#: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing ${0} ${1} and ${2} ${3}"
+msgstr "Kuondoa ${0} ${1} na ${2} ${3}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Kuondoa {0} {1} na {2} {3}"
 
@@ -1428,7 +1436,7 @@ msgstr "Chagua mtandao"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "Chagua ishara"
 
@@ -1527,8 +1535,8 @@ msgid "Supply"
 msgstr "Ugavi"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "Kusambaza {0} {1} na {2} {3}"
+msgid "Supplying ${0} ${1} and ${2} ${3}"
+msgstr "Kusambaza ${0} ${1} na ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1551,6 +1559,11 @@ msgstr "Badili Vyovyote vile"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "Badilisha kabisa <0 /> kwa <1 />"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "Kubadilisha kumeshindwa: {0}"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Kubadilisha {0} {1} kwa {2} {3}"
@@ -1563,11 +1576,11 @@ msgstr "Asante kwa kuwa sehemu ya jamii ya Uniswap <0 />"
 msgid "The % you will earn in fees."
 msgstr "% Utakayopata katika ada."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Kiasi kisichobadilika x * y = k hakiridhika na ubadilishaji. Hii kawaida inamaanisha moja ya ishara unazobadilisha zinajumuisha tabia ya kawaida kwenye uhamishaji."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Ishara ya kuingiza haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya kuingiza."
 
@@ -1575,11 +1588,11 @@ msgstr "Ishara ya kuingiza haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara 
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Bei ya soko iko nje ya kiwango chako cha bei maalum. Amana ya mali moja tu."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ishara ya pato haiwezi kuhamishwa. Kunaweza kuwa na shida na ishara ya pato. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
@@ -1595,7 +1608,7 @@ msgstr "Bei ya dimbwi hili iko katika anuwai uliyochagua. Msimamo wako kwa sasa 
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Uwiano wa ishara unazoongeza zitaweka bei ya dimbwi hili."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "Shughuli haikuweza kutumwa kwa sababu tarehe ya mwisho imepita. Tafadhali angalia kuwa tarehe ya mwisho ya ununuzi sio chini sana."
 
@@ -1627,11 +1640,11 @@ msgstr "Ishara hii haionekani kwenye orodha (s) zinazotumika. Hakikisha hii ndio
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Chombo hiki kitahamisha {0} kwa V3. Mchakato huo hauna shukrani kabisa kwa"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Uuzaji huu hautafaulu kwa sababu ya harakati za bei. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "Ununuzi huu hautafanikiwa ama kwa sababu ya kusonga kwa bei au ada kwenye uhamishaji. Jaribu kuongeza uvumilivu wako wa kuteleza."
 
@@ -1709,6 +1722,11 @@ msgstr "Ununuzi umekamilika katika"
 msgid "Transaction deadline"
 msgstr "Mwisho wa shughuli"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "Ununuzi umekataliwa."
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Hati ya Kuhamisha"
@@ -1766,6 +1784,14 @@ msgstr "Haikutajwa:"
 msgid "Undetermined"
 msgstr "Haijakadiriwa"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "Hitilafu isiyotarajiwa. Haikuweza kukadiria gesi kwa ubadilishaji."
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "Suala lisilotarajiwa na kukadiria gesi. Tafadhali jaribu tena."
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Utawala usiobadilika"
@@ -1794,9 +1820,9 @@ msgstr "Haibadiliki kwenye {0}"
 msgid "Unknown Source"
 msgstr "Chanzo kisichojulikana"
 
-#: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Hitilafu isiyojulikana${0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

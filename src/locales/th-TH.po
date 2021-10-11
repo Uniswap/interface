@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-08 21:07\n"
+"PO-Revision-Date: 2021-10-11 14:06\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -227,7 +227,7 @@ msgstr "อนุญาตการเลื่อนหลุด"
 msgid "Amount"
 msgstr "จำนวน"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
@@ -525,12 +525,12 @@ msgstr "ยืนยันการทำธุรกรรมในกระเ
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "เชื่อมต่อกระเป๋าเงิน"
 
@@ -723,11 +723,11 @@ msgstr "แก้ไข"
 msgid "Efficiency Comparison"
 msgstr "การเปรียบเทียบประสิทธิภาพ"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "ป้อนเปอร์เซ็นต์"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "ใส่ผู้รับ"
 
@@ -741,11 +741,11 @@ msgstr "ป้อนที่อยู่เพื่อเรียกใช้
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "ใส่จำนวนเงิน"
 
@@ -909,24 +909,24 @@ msgstr "ข้อมูลเข้าเป็นค่าประมาณ �
 msgid "Install Metamask"
 msgstr "ติดตั้ง Metamask"
 
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
+msgid "Insufficient ${0} balance"
+msgstr "ไม่เพียงพอ ${0} ยอดคงเหลือ"
+
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "สภาพคล่องไม่เพียงพอสำหรับการค้านี้"
-
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
-msgid "Insufficient {0} balance"
-msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "การตั้งค่าอินเทอร์เฟซ"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "คู่ไม่ถูกต้อง"
 
@@ -934,7 +934,7 @@ msgstr "คู่ไม่ถูกต้อง"
 msgid "Invalid pair."
 msgstr "คู่ที่ไม่ถูกต้อง"
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "ใส่ราคาไม่ถูกต้อง"
 
@@ -943,7 +943,8 @@ msgstr "ใส่ราคาไม่ถูกต้อง"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "เลือกช่วงที่ไม่ถูกต้อง ราคาขั้นต่ำต้องต่ำกว่าราคาสูงสุด"
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "ผู้รับไม่ถูกต้อง"
 
@@ -1102,6 +1103,10 @@ msgstr "นาที:"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
 msgstr "รับขั้นต่ำ"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "ไม่มีการพึ่งพา"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1401,8 +1406,11 @@ msgstr "ลบสภาพคล่อง"
 msgid "Remove list"
 msgstr "ลบรายการ"
 
-#: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing ${0} ${1} and ${2} ${3}"
+msgstr "กำลังลบ ${0} ${1} และ ${2} ${3}"
+
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "กำลังลบ {0} {1} และ {2} {3}"
 
@@ -1428,7 +1436,7 @@ msgstr "เลือกเครือข่าย"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "เลือกโทเค็น"
 
@@ -1527,8 +1535,8 @@ msgid "Supply"
 msgstr "จัดหา"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "จัดหา {0} {1} และ {2} {3}"
+msgid "Supplying ${0} ${1} and ${2} ${3}"
+msgstr "จัดหา ${0} ${1} และ ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1551,6 +1559,11 @@ msgstr "สลับกัน"
 msgid "Swap exactly <0/> for <1/>"
 msgstr "สลับเฉพาะ <0/> เป็น <1/>"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "สลับล้มเหลว: {0}"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "สลับ {0} {1} เป็น {2} {3}"
@@ -1563,11 +1576,11 @@ msgstr "ขอบคุณที่เป็นส่วนหนึ่งขอ
 msgid "The % you will earn in fees."
 msgstr "% ที่คุณจะได้รับเป็นค่าธรรมเนียม"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "ค่าคงที่ Uniswap x*y=k ไม่พอใจโดยการแลกเปลี่ยน ซึ่งมักจะหมายถึงหนึ่งในโทเค็นที่คุณกำลังแลกเปลี่ยนรวมลักษณะการทำงานที่กำหนดเองในการโอน"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "ไม่สามารถโอนโทเค็นอินพุตได้ อาจมีปัญหากับโทเค็นอินพุต"
 
@@ -1575,11 +1588,11 @@ msgstr "ไม่สามารถโอนโทเค็นอินพุต
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "ราคาตลาดอยู่นอกช่วงราคาที่คุณกำหนด เงินฝากสินทรัพย์เดียวเท่านั้น"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ไม่สามารถโอนโทเค็นเอาต์พุตได้ อาจมีปัญหากับโทเค็นเอาต์พุต หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
@@ -1595,7 +1608,7 @@ msgstr "ราคาของพูลนี้อยู่ในช่วงท
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "อัตราส่วนของโทเค็นที่คุณเพิ่มจะกำหนดราคาของพูลนี้"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "ไม่สามารถส่งธุรกรรมได้เนื่องจากเลยกำหนดส่งแล้ว โปรดตรวจสอบว่ากำหนดเวลาในการทำธุรกรรมของคุณไม่ต่ำเกินไป"
 
@@ -1627,11 +1640,11 @@ msgstr "โทเค็นนี้ไม่ปรากฏในรายกา
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "เครื่องมือนี้จะย้าย {0} ของคุณไปยัง V3 อย่างปลอดภัย กระบวนการนี้ไม่น่าเชื่อถืออย่างสมบูรณ์ต้องขอบคุณ"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคา ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "ธุรกรรมนี้จะไม่สำเร็จเนื่องจากการเคลื่อนไหวของราคาหรือค่าธรรมเนียมในการโอน ลองเพิ่มความทนทานต่อการเลื่อนหลุด"
 
@@ -1709,6 +1722,11 @@ msgstr "ธุรกรรมเสร็จสมบูรณ์ใน"
 msgid "Transaction deadline"
 msgstr "กำหนดเวลาการทำธุรกรรม"
 
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "ธุรกรรมถูกปฏิเสธ"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "โทเค็นการโอน"
@@ -1766,6 +1784,14 @@ msgstr "ไม่มีการอ้างสิทธิ์:"
 msgid "Undetermined"
 msgstr "ไม่แน่นอน"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "ข้อผิดพลาดที่ไม่คาดคิด ไม่สามารถประมาณค่าก๊าซสำหรับการแลกเปลี่ยนได้"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "ปัญหาที่ไม่คาดคิดกับการประมาณค่าก๊าซ กรุณาลองอีกครั้ง."
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "การกำกับดูแล Uniswap"
@@ -1794,9 +1820,9 @@ msgstr "Uniswap บน {0}"
 msgid "Unknown Source"
 msgstr "ไม่ทราบแหล่งที่มา"
 
-#: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "ข้อผิดพลาดที่ไม่รู้จัก{0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+#: src/hooks/useSwapCallback.tsx
+msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "ข้อผิดพลาดที่ไม่รู้จัก${0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
