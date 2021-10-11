@@ -182,12 +182,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
     return () => {
       clearTimeout(timeout)
     }
-  }, [
-    currencyAmountOut?.toSignificant(10),
-    currencyAmountOut?.currency.symbol,
-    currencyIn?.symbol,
-    allowedPairs.length
-  ])
+  }, [currencyAmountOut?.toSignificant(10), currencyAmountOut?.currency.symbol, currencyIn, allowedPairs.length])
   return trade
   // return useMemo(() => {
   //   if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
