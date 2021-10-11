@@ -13,10 +13,16 @@ exports[`renders multi route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 gwivhA"
-        />
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+        >
+          <svg
+            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+          >
+            dot_line.svg
+          </svg>
+        </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -56,10 +62,16 @@ exports[`renders multi route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 gwivhA"
-        />
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+        >
+          <svg
+            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+          >
+            dot_line.svg
+          </svg>
+        </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
@@ -122,10 +134,16 @@ exports[`renders single route 1`] = `
         class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteRow-sc-o1ook0-2 lmTMKd itvFNV fzMiot"
       >
         <div
-          class="RoutingDiagram__DottedLine-sc-o1ook0-4 gwivhA"
-        />
+          class="RoutingDiagram__DottedLine-sc-o1ook0-4 kkXINS"
+        >
+          <svg
+            class="RoutingDiagram__DotColor-sc-o1ook0-5 kgYqrO"
+          >
+            dot_line.svg
+          </svg>
+        </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-5 gayll cvyxdH"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
         >
           <div
             class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
