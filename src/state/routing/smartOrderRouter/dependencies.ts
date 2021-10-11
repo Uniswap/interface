@@ -1,7 +1,6 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { Token } from '@uniswap/sdk-core'
 import {
-  AlphaRouterConfig,
   AlphaRouterParams,
   CachingGasStationProvider,
   CachingPoolProvider,
@@ -11,7 +10,6 @@ import {
   EIP1559GasPriceProvider,
   GasPrice,
   HeuristicGasModelFactory,
-  ICache,
   ID_TO_CHAIN_ID,
   IMetric,
   MetricLoggerUnit,
@@ -29,23 +27,9 @@ import { NETWORK_URLS } from 'connectors/networkUrls'
 import { providers } from 'ethers/lib/ethers'
 import ms from 'ms.macro'
 
-import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
-
-export const DEFAULT_ROUTING_CONFIG: AlphaRouterConfig = {
-  topN: 2,
-  topNDirectSwaps: 2,
-  topNTokenInOut: 3,
-  topNSecondHop: 0,
-  topNWithEachBaseToken: 3,
-  topNWithBaseToken: 6,
-  topNWithBaseTokenInSet: false,
-  maxSwapsPerPath: 3,
-  minSplits: 1,
-  maxSplits: 7,
-  distributionPercent: 5,
-}
-
-const SUPPORTED_CHAINS: ChainId[] = [ChainId.MAINNET, ChainId.RINKEBY]
+import UNSUPPORTED_TOKEN_LIST from '../../../constants/tokenLists/unsupported.tokenlist.json'
+import { MemoryCache } from '../../../utils/memoryCache'
+import { SUPPORTED_CHAINS } from './constants'
 
 class GAMetric extends IMetric {
   putDimensions() {
@@ -62,46 +46,6 @@ class GAMetric extends IMetric {
   }
 }
 setGlobalMetric(new GAMetric())
-
-//TODO(judo): move to utils and add tests
-class MemoryCache<T> implements ICache<T> {
-  private cache: Record<string, { val: T; added: number; timeout?: ReturnType<typeof setTimeout> }> = {}
-
-  constructor(private ttl?: number) {}
-
-  async get(key: string) {
-    const rec = this.cache[key]
-
-    if (this.ttl) {
-      return !(rec?.added && rec?.added + this.ttl > Date.now()) ? rec?.val : undefined
-    } else {
-      return rec?.val
-    }
-  }
-
-  async set(key: string, value: T) {
-    this.cache[key] = {
-      val: value,
-      added: Date.now(),
-      timeout: this.ttl ? setTimeout(() => this.del(key), this.ttl) : undefined,
-    }
-
-    return true
-  }
-
-  async has(key: string) {
-    return Boolean(this.cache[key])
-  }
-
-  del(key: string) {
-    const rec = this.cache[key]
-
-    if (!rec) return
-    if (rec.timeout) clearTimeout(rec.timeout)
-
-    delete this.cache[key]
-  }
-}
 
 export type Dependencies = { [chainId in ChainId]?: AlphaRouterParams }
 

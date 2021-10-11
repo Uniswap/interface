@@ -22,7 +22,6 @@ async function getClientSideQuote({
 }) {
   const router = new SmartOrderRouterWorker() as Router
 
-  // TODO(judo): update worker when token list changes
   return router.getQuote({
     type,
     chainId: tokenIn.chainId,
@@ -51,26 +50,31 @@ export const routingApi = createApi({
         const useClientSideRouter: boolean = (getState() as AppState).user.userClientSideRouter
 
         let result
-        if (useClientSideRouter) {
-          result = await getClientSideQuote(args)
-        } else {
-          result = await fetch(
-            `quote?${qs.stringify({
-              tokenInAddress: tokenIn.address,
-              tokenInChainId: tokenIn.chainId,
-              tokenOutAddress: tokenOut.address,
-              tokenOutChainId: tokenOut.chainId,
-              amount,
-              type,
-            })}`
-          )
-        }
 
-        if (result.error) {
-          throw result.error
-        }
+        try {
+          if (useClientSideRouter) {
+            result = await getClientSideQuote(args)
+          } else {
+            result = await fetch(
+              `quote?${qs.stringify({
+                tokenInAddress: tokenIn.address,
+                tokenInChainId: tokenIn.chainId,
+                tokenOutAddress: tokenOut.address,
+                tokenOutChainId: tokenOut.chainId,
+                amount,
+                type,
+              })}`
+            )
+          }
 
-        return { data: result.data as GetQuoteResult }
+          if (result.error) {
+            throw result.error
+          }
+
+          return { data: result.data as GetQuoteResult }
+        } catch (e) {
+          return { error: { status: 500, data: e } }
+        }
       },
     }),
   }),

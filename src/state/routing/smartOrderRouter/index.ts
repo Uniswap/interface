@@ -4,7 +4,8 @@ import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { processSwapRoute } from 'utils/processSwapRoute'
 
-import { buildDependencies, DEFAULT_ROUTING_CONFIG } from './smartOrderRouterDeps'
+import { DEFAULT_ROUTING_CONFIG } from './constants'
+import { buildDependencies } from './dependencies'
 
 const routerParamsByChain = buildDependencies()
 
@@ -37,11 +38,8 @@ export async function getQuote({
       ? await router.routeExactIn(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
       : await router.routeExactOut(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
 
-  // TODO: fill error
-  // TODO: try catch necesasry here?
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  // return GetQuoteResult for consistency with Routing API and WebWorker
   return { data: processSwapRoute(type, amount, params.poolProvider, swapRoute) }
 }
 
