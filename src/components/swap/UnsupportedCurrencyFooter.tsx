@@ -10,6 +10,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { CloseIcon, ExternalLink, TYPE, Z_INDEX } from 'theme'
+
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
