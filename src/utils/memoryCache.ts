@@ -1,6 +1,5 @@
 import { ICache } from '@uniswap/smart-order-router'
 
-//TODO(judo): add tests
 export class MemoryCache<T> implements ICache<T> {
   private cache: Record<string, { val: T; added: number; timeout?: ReturnType<typeof setTimeout> }> = {}
 
