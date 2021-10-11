@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme'
 
 export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   position: relative;
@@ -11,6 +12,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   margin-top: 1rem;
+  z-index: ${Z_INDEX.deprecated_content};
 `
 
 /**
