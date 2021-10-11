@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
 import { Currency, currencyEquals, ETHER, WETH } from 'libs/sdk/src'
 import { useMemo } from 'react'
+import { calculateGasMargin } from 'utils'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -45,7 +46,13 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                  const estimateGas = await wethContract.estimateGas.deposit({
+                    value: `0x${inputAmount.raw.toString(16)}`
+                  })
+                  const txReceipt = await wethContract.deposit({
+                    value: `0x${inputAmount.raw.toString(16)}`,
+                    gasLimit: calculateGasMargin(estimateGas)
+                  })
                   addTransaction(txReceipt, {
                     summary: `Wrap ${inputAmount.toSignificant(6)} ${
                       convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol
@@ -69,7 +76,10 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  const estimateGas = await wethContract.estimateGas.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`, {
+                    gasLimit: calculateGasMargin(estimateGas)
+                  })
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
                 } catch (error) {
                   console.error('Could not withdraw', error)
