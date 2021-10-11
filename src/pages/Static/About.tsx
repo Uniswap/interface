@@ -82,17 +82,27 @@ export default function About() {
 
   const { data: farms } = useFarmsData()
 
-  const [maxApr, setMaxApr] = useState<number>(-1)
+  const [maxApr, setMaxApr] = useState<{ [key: string]: number }>({
+    [chainId as ChainId]: -1
+  })
   const [indexx, setIndexx] = useState<number>(0)
+
+  useEffect(() => {
+    setIndexx(0)
+  }, [farms])
 
   const handleAprUpdate = useCallback(
     (value: number) => {
-      if (value > maxApr) {
-        setMaxApr(value)
+      const max = maxApr[chainId as ChainId] || -1
+      if (value > max) {
+        setMaxApr(prev => ({
+          ...prev,
+          [chainId as ChainId]: value
+        }))
       }
       setIndexx(prev => prev + 1)
     },
-    [maxApr]
+    [maxApr, chainId]
   )
 
   return (
@@ -168,10 +178,10 @@ export default function About() {
           </Text>
         </SectionNumber>
 
-        {maxApr >= 0 && (
+        {maxApr[chainId as ChainId] >= 0 && (
           <TradingVolumeSection>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
-              {maxApr.toFixed(2)}%
+              {maxApr[chainId as ChainId].toFixed(2)}%
             </Text>
             <Text fontSize={14} color={theme.subText}>
               <Trans>Max APY</Trans>
