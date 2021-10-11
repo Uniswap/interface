@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-10-11 15:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -156,7 +156,7 @@ msgstr "Добавить"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "Добавить <0 /> и <1 /> в Uniswap V2"
+msgstr "Добавить <0/> и <1/> в Uniswap V2"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -278,7 +278,7 @@ msgstr "Мост в Arbitrum"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Arbitrum находится на стадии бета-тестирования и может испытывать простои. Во время простоя ваша позиция не будет получать комиссию, и вы не сможете удалить ликвидность. <0> Читать дальше.</0>"
+msgstr "Arbitrum находится на стадии бета-тестирования, возможны перерывы в его работе. Во время перерыва ваша позиция не будет зарабатывать комиссии, и вы не сможете удалить ликвидность. <0>Читать дальше.</0>"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -365,7 +365,7 @@ msgstr "Графики"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "Проверить статус сети"
+msgstr "Проверьте состояние сети"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -379,7 +379,7 @@ msgstr "Востребовать"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "Востребовать <0 /> за {0}"
+msgstr "Востребовать <0/> за {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -395,7 +395,7 @@ msgstr "Claim UNI Token"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "Востребовать награду UNI за {0}"
+msgstr "Востребовать награду в UNI за {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -469,7 +469,7 @@ msgstr "Получить комиссии"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "Собирают {0}/{1} сборы"
+msgstr "Получить комиссии {0}/{1}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -915,7 +915,7 @@ msgstr "Установить MetaMask"
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Insufficient ${0} balance"
-msgstr "Недостаточно ${0} баланса"
+msgstr "Баланс ${0} недостаточен"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -1106,7 +1106,7 @@ msgstr "Минимум к получению"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
-msgstr "Отсутствующие зависимости"
+msgstr "Отсутствуют зависимости"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1191,7 +1191,7 @@ msgstr "Шлюз в Optimism"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
-msgstr "Оптимистичный Ethereum находится на стадии бета-тестирования и может испытывать простои. В ближайшем будущем ожидается запланированный простой Optimism для обновления сети. Во время простоя ваша позиция не будет зарабатывать комиссии, и вы не сможете удалить ликвидность. <0>Читать дальше.</0>"
+msgstr "Оптимистичный Ethereum находится на стадии бета-тестирования, возможны перерывы в работе. В ближайшем будущем ожидается плановый перерыв в работе Optimism для обновления сети. Во время перерыва ваша позиция не будет зарабатывать комиссии, и вы не сможете удалить ликвидность. <0>Читать дальше.</0>"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
@@ -1386,7 +1386,7 @@ msgstr "Удалить"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "Удалить <0 /> и <1 />"
+msgstr "Удалить <0/> и <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1536,7 +1536,7 @@ msgstr "Внести"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "Поставка ${0} ${1} и ${2} ${3}"
+msgstr "Внесение ${0} ${1} и ${2} ${3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1548,7 +1548,7 @@ msgstr "Обменять"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "Обменять <0 /> на ровно <1 />"
+msgstr "Обменять <0/> на ровно <1/>"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1557,12 +1557,12 @@ msgstr "Всё равно обменять"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "Обменять ровно <0 /> на <1 />"
+msgstr "Обменять ровно <0/> на <1/>"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
-msgstr "Ошибка свопа: {0}"
+msgstr "Обмен не удался: {0}"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1630,7 +1630,7 @@ msgstr "Этот пул необходимо инициализировать в
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Этот маршрут оптимизирует для вас цену, оценивая возможность разделения маршрутов, сложные маршруты, а также стоимость газа."
+msgstr "Этот маршрут оптимизирует вашу конечную цену с учётом возможности разделения маршрутов, использования сложных маршрутов, а также стоимости газа."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1786,11 +1786,11 @@ msgstr "Не определено"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "Неожиданная ошибка. Не мог оценить газ для свопа."
+msgstr "Неожиданная ошибка. Невозможно спрогнозировать газ для обмена."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "Неожиданная проблема с оценкой газа. Пожалуйста, попробуйте еще раз."
+msgstr "Неожиданная проблема при прогнозировании газа. Пожалуйста, попробуйте еще раз."
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
@@ -1822,7 +1822,7 @@ msgstr "Неизвестный источник"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Неизвестная ошибка${0}. Попробуйте повысить устойчивость к проскальзыванию. Примечание: комиссия за перевод и перебазирование токенов несовместима с Uniswap V3."
+msgstr "Неизвестная ошибка${0}. Попробуйте увеличить допустимое проскальзывание. Обратите внимание: токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1857,7 +1857,7 @@ msgstr "Развернуть"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to ETH"
-msgstr "Развернуть <0 /> в ETH"
+msgstr "Развернуть <0/> в ETH"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1869,7 +1869,7 @@ msgstr "Обновить список"
 
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get better pricing through a more efficient route."
-msgstr "Использовать API Uniswap Labs, чтобы получить более выгодную цену за счет более эффективного маршрута."
+msgstr "Использовать API от Uniswap Labs, чтобы получить более выгодную цену за счет более эффективного маршрута."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -1966,7 +1966,7 @@ msgstr "Проголосовать за предложение {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "Проголосуйте за предложение {proposalKey} по причине \"{0}\""
+msgstr "Проголосовать за предложение {proposalKey} по причине \"{0}\""
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1975,11 +1975,11 @@ msgstr "Воздержаться при голосовании по предло
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "Воздержаться при голосовании по предложению {proposalKey}"
+msgstr "Воздержаться от голосования по предложению {proposalKey}"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "Проголосовать за воздержание по предложению {proposalKey} по причине \"{0}\""
+msgstr "Воздержаться от голосования по предложению {proposalKey} по причине \"{0}\""
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
