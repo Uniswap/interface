@@ -6,7 +6,6 @@ import styled, {
   DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components/macro'
-
 import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
@@ -21,6 +20,8 @@ export const MEDIA_WIDTHS = {
   upToLarge: 1280,
 }
 
+// Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
+// Please avoid using deprecated numbers
 export enum Z_INDEX {
   deprecated_zero = 0,
   deprecated_content = 1,
