@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import DowntimeWarning from 'components/DowntimeWarning'
@@ -560,7 +560,7 @@ export default function AddLiquidity({
           hash={txHash}
           content={() => (
             <ConfirmationModalContent
-              title={t`Add Liquidity`}
+              title={<Trans>Add Liquidity</Trans>}
               onDismiss={handleDismissConfirmation}
               topContent={() => (
                 <Review

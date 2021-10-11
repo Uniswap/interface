@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -371,9 +371,12 @@ export default function RemoveLiquidity({
     )
   }
 
-  const pendingText = t`Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    currencyA?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
+  const pendingText = (
+    <Trans>
+      Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol} and $
+      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}
+    </Trans>
+  )
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {

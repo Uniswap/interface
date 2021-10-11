@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
-import { useState } from 'react'
+import { Trans } from '@lingui/macro'
+import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useStakingContract } from '../../hooks/useContract'
@@ -61,12 +61,12 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
     }
   }
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   return (

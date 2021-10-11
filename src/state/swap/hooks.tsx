@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -8,7 +8,7 @@ import { useBestV2Trade } from 'hooks/useBestV2Trade'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { V3TradeState } from 'state/routing/types'
 import { isTradeBetter } from 'utils/isTradeBetter'
@@ -121,7 +121,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
-  inputError?: string
+  inputError?: ReactNode
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
@@ -195,25 +195,25 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     [Field.OUTPUT]: outputCurrency,
   }
 
-  let inputError: string | undefined
+  let inputError: ReactNode | undefined
   if (!account) {
-    inputError = t`Connect Wallet`
+    inputError = <Trans>Connect Wallet</Trans>
   }
 
   if (!parsedAmount) {
-    inputError = inputError ?? t`Enter an amount`
+    inputError = inputError ?? <Trans>Enter an amount</Trans>
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    inputError = inputError ?? t`Select a token`
+    inputError = inputError ?? <Trans>Select a token</Trans>
   }
 
   const formattedTo = isAddress(to)
   if (!to || !formattedTo) {
-    inputError = inputError ?? t`Enter a recipient`
+    inputError = inputError ?? <Trans>Enter a recipient</Trans>
   } else {
     if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
-      inputError = inputError ?? t`Invalid recipient`
+      inputError = inputError ?? <Trans>Invalid recipient</Trans>
     }
   }
 
@@ -223,7 +223,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = t`Insufficient ${amountIn.currency.symbol} balance`
+    inputError = <Trans>Insufficient ${amountIn.currency.symbol} balance</Trans>
   }
 
   return {

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
   encodeSqrtRatioX96,
@@ -13,7 +13,7 @@ import {
 } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import JSBI from 'jsbi'
-import { useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
@@ -112,7 +112,7 @@ export function useV3DerivedMintInfo(
   parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   position: Position | undefined
   noLiquidity?: boolean
-  errorMessage?: string
+  errorMessage?: ReactNode
   invalidPool: boolean
   outOfRange: boolean
   invalidRange: boolean
@@ -218,7 +218,7 @@ export function useV3DerivedMintInfo(
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
-  // lower and upper limits in the tick space for `feeAmount`
+  // lower and upper limits in the tick space for `feeAmoun<Trans>
   const tickSpaceLimits: {
     [bound in Bound]: number | undefined
   } = useMemo(
@@ -423,34 +423,34 @@ export function useV3DerivedMintInfo(
     tickUpper,
   ])
 
-  let errorMessage: string | undefined
+  let errorMessage: ReactNode | undefined
   if (!account) {
-    errorMessage = t`Connect Wallet`
+    errorMessage = <Trans>Connect Wallet</Trans>
   }
 
   if (poolState === PoolState.INVALID) {
-    errorMessage = errorMessage ?? t`Invalid pair`
+    errorMessage = errorMessage ?? <Trans>Invalid pair</Trans>
   }
 
   if (invalidPrice) {
-    errorMessage = errorMessage ?? t`Invalid price input`
+    errorMessage = errorMessage ?? <Trans>Invalid price input</Trans>
   }
 
   if (
     (!parsedAmounts[Field.CURRENCY_A] && !depositADisabled) ||
     (!parsedAmounts[Field.CURRENCY_B] && !depositBDisabled)
   ) {
-    errorMessage = errorMessage ?? t`Enter an amount`
+    errorMessage = errorMessage ?? <Trans>Enter an amount</Trans>
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance`
+    errorMessage = <Trans>Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance`
+    errorMessage = <Trans>Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
   }
 
   const invalidPool = poolState === PoolState.INVALID

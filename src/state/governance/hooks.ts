@@ -4,6 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 import { formatUnits } from '@ethersproject/units'
+// eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
