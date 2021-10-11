@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'

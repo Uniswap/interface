@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'

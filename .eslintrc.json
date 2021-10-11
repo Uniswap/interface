@@ -48,6 +48,11 @@
           {
             "name": "styled-components",
             "message": "Please import from styled-components/macro."
+          },
+          {
+            "name": "@lingui/macro",
+            "importNames": ["t"],
+            "message": "Please use <Trans> instead of t"
           }
         ],
         "patterns": [
