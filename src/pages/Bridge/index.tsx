@@ -115,7 +115,7 @@ export default function Bridge() {
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
-      getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId })
+      getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId, typedValue: tx.value })
     },
     [getCollectedTx]
   )
@@ -205,7 +205,7 @@ export default function Bridge() {
           onCollect={handleCollect}
         />
       )}
-      <BridgeModal handleResetBridge={handleResetBridge} />
+      <BridgeModal handleResetBridge={handleResetBridge} setStep={setStep} />
     </>
   )
 }

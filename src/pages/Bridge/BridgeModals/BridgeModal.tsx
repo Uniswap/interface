@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setBridgeModalState } from '../../../state/bridge/actions'
 import { BridgeModalState } from '../../../state/bridge/reducer'
 import { bridgeModalDataSelector } from '../../../state/bridge/selectors'
+import { BridgeStep } from '../utils'
 import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
@@ -10,9 +11,10 @@ import { BridgingInitiatedModal } from './BridgingInitiatedModal'
 
 export interface BridgeModalProps {
   handleResetBridge: () => void
+  setStep: (step: BridgeStep) => void
 }
 
-export const BridgeModal = ({ handleResetBridge }: BridgeModalProps) => {
+export const BridgeModal = ({ handleResetBridge, setStep }: BridgeModalProps) => {
   const dispatch = useDispatch()
   const { modalState, currencyId, fromNetworkName, toNetworkName, typedValue, modalError } = useSelector(
     bridgeModalDataSelector
@@ -45,7 +47,10 @@ export const BridgeModal = ({ handleResetBridge }: BridgeModalProps) => {
         return (
           <BridgingInitiatedModal
             isOpen
-            onDismiss={() => setModalState(BridgeModalState.CLOSED)}
+            onDismiss={() => {
+              setModalState(BridgeModalState.CLOSED)
+              setStep(BridgeStep.Initial)
+            }}
             amount={typedValue}
             assetType={currencyId ?? ''}
             fromNetworkName={fromNetworkName}
@@ -66,7 +71,10 @@ export const BridgeModal = ({ handleResetBridge }: BridgeModalProps) => {
             assetType={currencyId ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
-            onDismiss={handleResetBridge}
+            onDismiss={() => {
+              setModalState(BridgeModalState.CLOSED)
+              handleResetBridge()
+            }}
             onTradeButtonClick={handleResetBridge}
             onBackButtonClick={handleResetBridge}
           />
