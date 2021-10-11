@@ -348,6 +348,10 @@ msgstr "Kết nối Ví"
 msgid "Connected with {name}"
 msgstr "Đã kết nối với {name}"
 
+#: src/constants/messages.ts
+msgid "Contract not found! Please reload and try again."
+msgstr "Không tìm thấy contract! Vui lòng tải lại trang và thử lại"
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address."
 msgstr "Chuyển đổi vị trí thanh khoản của bạn trên Sushiswap thành các token bên dưới với tỷ giá hiện tại. Token được gửi vào Pool cơ bản AMP=1 trên DMM và bạn sẽ được cấp token DMM-LP đại diện cho tỷ lệ đóng góp trong pool mới của bạn. Nếu tỷ giá khác nhau giữa hai nền tảng, một số token có thể được hoàn lại vào địa chỉ của bạn."
