@@ -168,7 +168,13 @@ export const bridgeTxsSummarySelector = createSelector(
           })
           summary.fromChainId = to
           summary.toChainId = from
-          summary.status = getBridgeTxStatus(status)
+
+          summary.status =
+            summary.status === 'confirmed' &&
+              l2Txs[tx.partnerTxHash].outgoingMessageState === OutgoingMessageState.EXECUTED
+              ? 'claimed'
+              : getBridgeTxStatus(status)
+
           summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
