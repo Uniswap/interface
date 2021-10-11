@@ -159,7 +159,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     USDT[ChainId.ARBITRUM_ONE]
   ],
   [ChainId.ARBITRUM_RINKEBY]: [WETH[ChainId.ARBITRUM_RINKEBY], DXD[ChainId.ARBITRUM_RINKEBY]],
-  [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
+  [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI], SWPR[ChainId.XDAI]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -256,7 +256,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = 'ipfs://QmPQcxPxytZEGBdNSj1gu9QNQScXVVZNat3VcqzdDyR8QU'
+export const DEFAULT_TOKEN_LIST = 'ipfs://QmNUFTEZ6rrDXrMcYu6HdyGdNcwJRT9H1QpVo9VMLPouQD'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 
