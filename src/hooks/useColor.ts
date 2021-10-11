@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
-import Vibrant from 'node-vibrant'
+import Vibrant from 'node-vibrant/lib/bundle'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
