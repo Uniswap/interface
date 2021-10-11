@@ -20,7 +20,6 @@ async function getClientSideQuote({
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
-  debugger
   const router = new SmartOrderRouterWorker() as Router
 
   return router.getQuote({
