@@ -88,10 +88,20 @@ export const bridgePendingWithdrawalsSelector = createSelector(
   }
 )
 
-export const createBridgeLog = (transactions: BridgeTxn[]): BridgeTransactionLog[] => {
+type CreateBridgeLogProps = Pick<BridgeTransactionSummary, 'fromChainId' | 'toChainId'> & {
+  transactions: BridgeTxn[]
+}
+
+export const createBridgeLog = ({
+  transactions,
+  fromChainId,
+  toChainId
+}: CreateBridgeLogProps): BridgeTransactionLog[] => {
   return transactions.map(tx => ({
     txHash: tx.txHash,
     chainId: tx.chainId,
+    toChainId,
+    fromChainId,
     type: tx.type,
     status: getBridgeTxStatus(tx.receipt?.status)
   }))
@@ -135,7 +145,7 @@ export const bridgeTxsSummarySelector = createSelector(
         }
 
         if (!tx.partnerTxHash || !l2Txs[tx.partnerTxHash]) {
-          summary.log = createBridgeLog([tx])
+          summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
 
           // deposits on l1 should never show confirmed on UI
           if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
@@ -151,7 +161,13 @@ export const bridgeTxsSummarySelector = createSelector(
         // l2 to l1 withdrawal
         if (tx.type === 'outbox') {
           const status = tx.receipt?.status
-          summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
+          summary.log = createBridgeLog({
+            transactions: [l2Txs[tx.partnerTxHash], tx],
+            fromChainId: to,
+            toChainId: from
+          })
+          summary.fromChainId = to
+          summary.toChainId = from
           summary.status = getBridgeTxStatus(status)
           summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
 
@@ -164,7 +180,11 @@ export const bridgeTxsSummarySelector = createSelector(
         // Has pair & is deposit
         if (tx.receipt?.status === 1 && tx.type === 'deposit-l1') {
           const status = l2Txs[tx.partnerTxHash].receipt?.status
-          summary.log = createBridgeLog([tx, l2Txs[tx.partnerTxHash]])
+          summary.log = createBridgeLog({
+            transactions: [tx, l2Txs[tx.partnerTxHash]],
+            fromChainId: from,
+            toChainId: to
+          })
           summary.status = getBridgeTxStatus(status)
           summary.pendingReason = status ? undefined : PendingReasons.DESPOSIT
           summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
@@ -220,7 +240,7 @@ export const bridgeTxsSummarySelector = createSelector(
               summary.timestampResolved = undefined
             }
           }
-          summary.log = createBridgeLog([tx])
+          summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
           processedTxsMap[l2ChainId][tx.txHash] = tx.txHash
           total.push(summary)
           return total
