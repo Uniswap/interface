@@ -1,149 +1,190 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+import styled from 'styled-components'
+import aboutGraph from 'assets/svg/about_graph.svg'
+import aboutIcon4 from 'assets/svg/about_icon_4.svg'
+import aboutIcon5 from 'assets/svg/about_icon_5.svg'
+import aboutIcon6 from 'assets/svg/about_icon_6.svg'
+import image1 from 'assets/svg/bg1.svg'
+import image2 from 'assets/svg/bg2.svg'
+import image3 from 'assets/svg/bg3.svg'
 
-$mobile-width: 480px;
-$tablet-width: 768px;
-$desktop-width: 1024px;
-
-@mixin mobile {
-  @media (max-width: #{$mobile-width - 1px}) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (min-width: #{$mobile-width}) and (max-width: #{$desktop-width - 1px}) {
-    @content;
-  }
-}
-
-@mixin desktop {
-  @media (min-width: #{$desktop-width}) {
-    @content;
-  }
-}
-
-.wrapper {
+export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   margin-top: -32px;
   text-align: center;
-  color: #c9d2d7;
+  color: ${({ theme }) => theme.subText};
   position: relative;
-  background-color: #222c31;
+  background-color: ${({ theme }) => theme.buttonBlack};
   z-index: -2;
 
   img {
     max-width: 100%;
   }
-}
+`
 
-.title {
-  font-size: 24px;
-  margin-top: 35px;
-  padding: 0 16px;
-  @include desktop {
-    font-size: 58px;
-    margin-top: 150px;
-  }
-}
+export const Image1 = styled.div`
+  background-image: url(${image1});
+  width: 100%;
+  position: absolute;
+  top: 0;
+  height: 800px;
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-size: contain;
+  z-index: -1;
+`
 
-.section_number_container {
-  max-width: 800px;
+export const Image2 = styled.div`
+  background-image: url(${image2});
+  width: 100%;
+  position: absolute;
+  top: 800px;
+  height: 1200px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  z-index: -1;
+`
+
+export const Image3 = styled.div`
+  background-image: url(${image3});
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 369px;
+  background-repeat: no-repeat;
+  z-index: -1;
+  background-size: cover;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    height: 200px;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    height: 300px;
+  `}
+`
+
+export const SectionNumberContainer = styled.div`
+  max-width: 900px;
   margin: 65px auto 0 auto;
   padding: 24px;
   display: flex;
-  justify-content: space-between;
+  gap: 24px;
+  justify-content: space-evenly;
   align-items: center;
 
-  @include mobile {
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-  }
-}
+  `}
+`
 
-.section_number {
+export const SectionNumber = styled.div`
   max-width: 450px;
   margin: 0 auto;
-  background: #1d272b;
-  border: dashed 1px #303e46;
+  background: ${({ theme }) => theme.background};
+  border: 1px solid ${({ theme }) => theme.border2};
   border-radius: 20px;
-  padding: 28px 24px;
+  padding: 28px 44px;
   display: flex;
   justify-content: space-around;
+  position: relative;
 
   .line {
     width: 0px;
     border: 1px solid #303e46;
   }
 
-  @include mobile {
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-    margin-bottom: 12px;
+    gap: 16px;
     width: 100%;
 
     .line {
       width: 100%;
     }
-  }
-}
+  `}
+`
 
-.trading_volume_section {
+export const TradingVolumeSection = styled(SectionNumber)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 28px 24px;
+`
 
-  @include tablet() {
-    padding: 36px 48px;
-  }
-
-  @include desktop() {
-    padding: 44px 60px;
-  }
-}
-
-.liquidity_number {
+export const LiquidityNumber = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
-  width: 50%;
 
-  @include mobile {
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-right: 0;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     width: 100%;
-  }
-}
+  `}
+`
 
-.amp_liquidity_number {
+export const AmpLiquidityNumber = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
   margin-left: 20px;
-  width: 50%;
 
-  @include mobile {
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-left: 0;
     margin-right: 0;
     margin-top: 32px;
     width: 100%;
-  }
-}
+  `}
+`
 
-.section_curve_details {
+export const Panel0 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 450px;
+  margin: 50px auto auto auto;
+  a {
+    width: 200px;
+    max-width: 100%;
+    margin: 0 10px;
+  }
+`
+
+export const Panel = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 50px;
+  margin: 50px auto auto auto;
+  flex-wrap: wrap;
+  padding: 0 15px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    > a {
+      margin-top: 10px;
+      display: block;
+    }
+  `}
+`
+
+export const SectionCurveDetail = styled.div`
   max-width: 680px;
   margin: 45px auto 75px;
   padding: 0 20px;
-  color: #c9d2d7;
   font-size: 20px;
-  @include mobile {
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 16px;
     margin-top: 20px;
-  }
-}
+  `}
+`
 
-.section_amp {
+export const SectionAmp = styled.div`
+  color: #fff;
   display: flex;
   justify-content: space-around;
   max-width: 700px;
@@ -164,7 +205,8 @@ $desktop-width: 1024px;
     &:nth-child(4) {
       font-size: 14px;
     }
-    @include mobile {
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       &:nth-child(1) {
         font-size: 12px;
       }
@@ -178,7 +220,7 @@ $desktop-width: 1024px;
       &:nth-child(4) {
         font-size: 10px;
       }
-    }
+    `}
   }
   .box_1 {
     text-align: center;
@@ -196,201 +238,98 @@ $desktop-width: 1024px;
     &:nth-child(3) {
       background-color: #08a1e7;
     }
-    @include mobile {
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       width: 100px;
       padding: 10px;
-    }
+    `}
   }
-}
+`
 
-.section_fee {
+export const SectionFee = styled.div`
   max-width: 780px;
   margin: 0 auto;
   padding: 0 10px;
-  color: #c9d2d7;
   font-size: 20px;
-  @include mobile {
-    font-size: 16px;
-  }
-}
 
-.break {
-  flex-basis: 100%;
-  height: 0;
-}
-.section_graph {
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 16px;
+  `}
+`
+
+export const SectionGraph = styled.div`
   max-width: 780px;
   margin: 0 auto;
   display: flex;
   margin-top: 50px;
-  @include mobile {
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
     padding: 0 24px;
-  }
+  `}
+
   .left {
-    border-radius: 20px;
+    border-radius: 4px;
     flex: 1;
-    background-image: url('../../assets/svg/about_graph.svg');
+    background-image: url(${aboutGraph});
     background-repeat: no-repeat;
-    background-size: 100%;
-    @include mobile {
+    background-size: contain;
+    background-position: center;
+    border: dashed 1px #303e46;
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       height: 300px;
       flex: auto;
       margin-bottom: 20px;
-    }
+    `}
   }
   .right {
-    @include mobile {
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       display: flex;
-    }
+    `}
+
     .item {
       padding: 25px;
-      background-color: rgba(29, 39, 43, 0.6);
-      border-radius: 20px;
-      border: solid 1px #303e46;
+      border-radius: 4px;
+      border: dashed 1px #303e46;
       .box {
         width: 76px;
         height: 68px;
         margin: 0 auto;
         background-repeat: no-repeat;
         background-size: contain;
-        @include mobile {
+        ${({ theme }) => theme.mediaWidth.upToExtraSmall`
           width: 40px;
           height: 37px;
-        }
+        `}
+
         &_1 {
-          background-image: url('../../assets/svg/about_icon_4.svg');
+          background-image: url(${aboutIcon4});
         }
         &_2 {
-          background-image: url('../../assets/svg/about_icon_5.svg');
+          background-image: url(${aboutIcon5});
         }
         &_3 {
-          background-image: url('../../assets/svg/about_icon_6.svg');
+          background-image: url(${aboutIcon6});
         }
       }
     }
   }
-}
+`
 
-.youtube_video {
+export const YoutubeVideo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 50%;
   margin: 0 auto;
 
-  @include mobile {
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     width: 100%;
-  }
-}
+  `}
+`
 
-.icon {
-  width: 76px;
-  height: 68px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  &_1 {
-    background-image: url('../../assets/svg/about_icon_1.svg');
-  }
-  &_2 {
-    background-image: url('../../assets/svg/about_icon_2.svg');
-  }
-  &_3 {
-    background-image: url('../../assets/svg/about_icon_3.svg');
-  }
-  margin: auto;
-}
-
-.image1 {
-  background-image: url('../../assets/svg/bg1.svg');
-  width: 100%;
-  position: absolute;
-  top: 0;
-  height: 800px;
-  background-repeat: no-repeat;
-  background-position-x: right;
-  background-size: contain;
-  z-index: -1;
-}
-
-.image2 {
-  background-image: url('../../assets/svg/bg2.svg');
-  width: 100%;
-  position: absolute;
-  top: 800px;
-  height: 1200px;
-  background-repeat: no-repeat;
-  // background-position: 0 630px;
-  background-size: 100%;
-  z-index: -1;
-}
-.image3 {
-  background-image: url('../../assets/svg/bg3.svg');
-  width: 100%;
-  position: absolute;
-  bottom: 0px;
-  height: 500px;
-  background-repeat: no-repeat;
-  // background-position: 0 630px;
-  background-size: cover;
-  @include mobile {
-    height: 200px;
-  }
-  @include tablet {
-    height: 300px;
-  }
-  z-index: -1;
-}
-
-.image_graph {
-  background-image: url('../../assets/svg/about_graph.svg');
-  width: 100%;
-  max-width: 800px;
-  margin: auto;
-  height: 500px;
-  background-repeat: no-repeat;
-  background-position-x: center;
-  background-size: contain;
-  @include mobile {
-    height: 200px;
-  }
-  @include tablet() {
-    height: 400px;
-  }
-}
-
-.panel0 {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 450px;
-  margin: 50px auto auto auto;
-  a {
-    width: 200px;
-    max-width: 100%;
-    margin: 0 10px;
-  }
-}
-
-.panel {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  max-width: 800px;
-  margin-top: 50px;
-  margin: 50px auto auto auto;
-  flex-wrap: wrap;
-  padding: 0 15px;
-  @include mobile {
-    flex-direction: column;
-    > a {
-      margin-top: 10px;
-      display: block;
-    }
-  }
-}
-
-.security {
+export const Security = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
@@ -400,36 +339,39 @@ $desktop-width: 1024px;
   flex-wrap: wrap;
   div {
     text-align: center;
-    @include mobile {
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       flex-basis: 50%;
-    }
+    `}
     img {
       display: inline;
       margin: 32px 10px 0 10px;
       border-radius: 10px;
       height: 80px;
       max-width: 180px;
-      @include mobile {
+      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         flex-basis: 50%;
         max-height: 55px;
         max-width: 130px;
         margin-top: 20px;
         margin-bottom: 40px;
-      }
+      `}
     }
   }
-}
-.powered {
+`
+
+export const Powered = styled.div`
   display: flex;
   justify-content: space-around;
   width: 100%;
   max-width: 800px;
-  margin: 40px auto;
+  margin: 60px auto 140px;
   align-items: flex-end;
   flex-wrap: wrap;
-  @include mobile() {
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 40px auto;
-  }
+  `}
+
   > div {
     flex-basis: 50%;
   }
@@ -451,15 +393,20 @@ $desktop-width: 1024px;
       padding-bottom: 15px;
     }
   }
-}
-.footer {
+`
+
+export const Footer = styled.div`
   background: #0c1012;
   display: flex;
   padding: 10px 20px;
-  @include desktop {
-    margin-bottom: -5rem;
-    height: 85px;
-  }
+  margin-bottom: -5rem;
+  height: 85px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    margin-bottom: unset;
+    height: unset;
+  `}
+
   .content {
     width: 100%;
     max-width: 1000px;
@@ -471,9 +418,11 @@ $desktop-width: 1024px;
       padding-top: 6px;
       display: flex;
       flex-wrap: wrap;
-      @include mobile {
+
+      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         font-size: 12px;
-      }
+      `}
+
       div {
         cursor: pointer;
         display: inline;
@@ -485,11 +434,12 @@ $desktop-width: 1024px;
       }
     }
     .right {
-      @include mobile {
+      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         display: flex;
         margin-top: 20px;
         justify-content: space-between;
-      }
+      `}
+
       a {
         cursor: pointer;
         img {
@@ -500,4 +450,4 @@ $desktop-width: 1024px;
       }
     }
   }
-}
+`

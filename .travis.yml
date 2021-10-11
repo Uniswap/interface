@@ -15,7 +15,6 @@ script:
 install:
   - git submodule update --remote
   - yarn
-  - npm rebuild node-sass
   - bash .travis/build.sh || true
   - ls build || true
 

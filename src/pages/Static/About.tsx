@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import ReactPlayer from 'react-player/lazy'
-import style from './about.module.scss'
 
 import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
@@ -26,6 +25,28 @@ import useTokenBalance from 'hooks/useTokenBalance'
 import { isAddressString } from 'utils'
 import { ethers } from 'ethers'
 import { useBlockNumber } from 'state/application/hooks'
+import {
+  Wrapper,
+  SectionNumberContainer,
+  TradingVolumeSection,
+  SectionNumber,
+  LiquidityNumber,
+  AmpLiquidityNumber,
+  Panel0,
+  SectionCurveDetail,
+  SectionAmp,
+  SectionFee,
+  SectionGraph,
+  YoutubeVideo,
+  Panel,
+  Security,
+  Powered,
+  Footer,
+  Image3,
+  Image2,
+  Image1
+} from './styleds'
+import useTheme from 'hooks/useTheme'
 
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
@@ -52,6 +73,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
   const data = useGlobalData()
@@ -60,26 +82,36 @@ export default function About() {
 
   const { data: farms } = useFarmsData()
 
-  const [maxApr, setMaxApr] = useState<number>(-1)
+  const [maxApr, setMaxApr] = useState<{ [key: string]: number }>({
+    [chainId as ChainId]: -1
+  })
   const [indexx, setIndexx] = useState<number>(0)
+
+  useEffect(() => {
+    setIndexx(0)
+  }, [farms])
 
   const handleAprUpdate = useCallback(
     (value: number) => {
-      if (value > maxApr) {
-        setMaxApr(value)
+      const max = maxApr[chainId as ChainId] || -1
+      if (value > max) {
+        setMaxApr(prev => ({
+          ...prev,
+          [chainId as ChainId]: value
+        }))
       }
       setIndexx(prev => prev + 1)
     },
-    [maxApr, indexx]
+    [maxApr, chainId]
   )
 
   return (
-    <div className={style.wrapper}>
-      <div className={style.image1}></div>
-      <div className={style.image2}></div>
-      <div className={style.image3} style={{ bottom: `0` }}></div>
+    <Wrapper>
+      <Image1 />
+      <Image2 />
+      <Image3 />
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300} color={'#ffffff'}>
+        <Text fontWeight={300} color={theme.text}>
           <Trans>DeFi's First Multi-Chain</Trans>
         </Text>
         <Text fontWeight={700}>
@@ -92,68 +124,73 @@ export default function About() {
           <Text color={'#78d5ff'} display={'inline-block'}>
             <Trans>Maker</Trans>&nbsp;
           </Text>
-          <Text color={'#ffffff'} display={'inline-block'} fontWeight={300}>
+          <Text color={theme.text} display={'inline-block'} fontWeight={300}>
             <Trans>Protocol</Trans>&nbsp;
           </Text>
         </Text>
       </Text>
-      <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
+      <Text px={4} mt={10} fontSize={[16, 21]} color={theme.subText}>
         <Trans>
           Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
         </Trans>
       </Text>
 
-      <div className={style.section_number_container}>
-        <div className={`${style.section_number} ${style.trading_volume_section}`}>
+      <SectionNumberContainer>
+        <TradingVolumeSection>
           <div>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
               {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2}>
+            <Text fontSize={14} mt={2} color={theme.subText}>
               <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
-        </div>
+        </TradingVolumeSection>
 
-        <div className={style.section_number}>
-          <div className={style.liquidity_number}>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+        <SectionNumber>
+          <LiquidityNumber>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2}>
               <Trans>Total Value Locked</Trans>
             </Text>
-          </div>
-          <div className={style.line}></div>
-          <div className={style.amp_liquidity_number}>
-            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+          </LiquidityNumber>
+          <div className="line"></div>
+          <AmpLiquidityNumber>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2}>
-              <Trans>Total AMP Liquidity</Trans>
+            <Text fontSize={14} mt={2} color={theme.subText}>
+              <Trans>Total AMP Liquidity</Trans>*
             </Text>
-            <Text fontSize={10} fontStyle="italic" mt={2}>
-              <Trans>Equivalent TVL when compared to typical AMMs</Trans>
-            </Text>
-          </div>
-        </div>
+          </AmpLiquidityNumber>
+          <Text
+            fontSize={10}
+            fontStyle="italic"
+            sx={{
+              position: 'absolute',
+              bottom: '-18px',
+              right: '0px'
+            }}
+          >
+            *<Trans>Equivalent TVL when compared to typical AMMs</Trans>
+          </Text>
+        </SectionNumber>
 
-        {maxApr >= 0 && (
-          <div className={`${style.section_number} ${style.trading_volume_section}`}>
-            <div>
-              <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
-                {maxApr.toFixed(2)}%
-              </Text>
-              <Text fontSize={14} mt={2}>
-                <Trans>Max APY</Trans>
-              </Text>
-              <Text fontSize={14}>&nbsp;</Text>
-            </div>
-          </div>
+        {maxApr[chainId as ChainId] >= 0 && (
+          <TradingVolumeSection>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
+              {maxApr[chainId as ChainId].toFixed(2)}%
+            </Text>
+            <Text fontSize={14} color={theme.subText}>
+              <Trans>Max APY</Trans>
+            </Text>
+          </TradingVolumeSection>
         )}
-      </div>
+      </SectionNumberContainer>
 
-      <div className={style.panel0}>
+      <Panel0>
         <ButtonPrimary padding="12px 10px" as={Link} to={poolsMenuLink}>
           <Trans>Add Liquidity</Trans>
         </ButtonPrimary>
@@ -166,15 +203,16 @@ export default function About() {
         >
           <Trans>Documentation</Trans>
         </ButtonOutlined>
-      </div>
-      <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
+      </Panel0>
+
+      <Text mt={[70, 100]} color={theme.text} fontSize={[24, 40]}>
         <span>
           <Trans>Amplified Liquidity Pools</Trans>
         </span>
       </Text>
-      <div className={style.section_curve_details}>
+      <SectionCurveDetail>
         <i>
-          <Text mb={15}>
+          <Text mb={15} color={theme.subText}>
             <Trans>Less tokens required for high liquidity</Trans>
           </Text>
         </i>
@@ -193,12 +231,12 @@ export default function About() {
           </b>{' '}
           <Trans>for users compared to AMMs.</Trans>
         </div>
-      </div>
-      <Text fontSize={[16, 24]} fontWeight={600} px={2}>
+      </SectionCurveDetail>
+      <Text fontSize={[16, 24]} fontWeight={600} px={2} color={theme.text}>
         <Trans>DMM can be up to 100x more capital efficient than typical AMMs</Trans>
       </Text>
-      <div className={style.section_amp}>
-        <div className={[style.box, style.box_1].join(' ')}>
+      <SectionAmp>
+        <div className="box box_1">
           <div>
             <Trans>Typical AMM</Trans>
           </div>
@@ -208,7 +246,7 @@ export default function About() {
             <Trans>Slippage</Trans>
           </div>
         </div>
-        <div className={[style.box, style.box_1].join(' ')}>
+        <div className="box box_1">
           <div>DMM</div>
           <div>
             <Trans>Capital Amp Factor = 5</Trans>
@@ -218,7 +256,7 @@ export default function About() {
             <Trans>Slippage</Trans>
           </div>
         </div>
-        <div className={[style.box, style.box_1].join(' ')}>
+        <div className="box box_1">
           <div>DMM</div>
           <div>
             <Trans>Capital Amp Factor = 10</Trans>
@@ -228,20 +266,20 @@ export default function About() {
             <Trans>Slippage</Trans>
           </div>
         </div>
-      </div>
+      </SectionAmp>
       <i>
-        <Text fontSize={[12, 14]} px={2} color="#859aa5">
+        <Text fontSize={[12, 14]} px={2}>
           <Trans>*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade</Trans>
         </Text>
       </i>
 
-      <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
+      <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={theme.text} style={{ position: 'relative' }}>
         <span>
           <Trans>Dynamic Fees</Trans>
         </span>
       </Text>
 
-      <div className={style.section_fee}>
+      <SectionFee>
         <i>
           <Text mb={15}>
             <Trans>Higher earnings potential for liquidity providers, reducing the impact of IL</Trans>
@@ -254,33 +292,33 @@ export default function About() {
             impermanent loss. In periods of low volatility, fees decrease to encourage more trading.
           </Trans>
         </div>
-      </div>
+      </SectionFee>
 
-      <div className={style.section_graph}>
-        <div className={style.left}></div>
-        <div className={style.right}>
-          <div className={style.item}>
-            <div className={[style.box, style.box_1].join(' ')}></div>
+      <SectionGraph>
+        <div className="left"></div>
+        <div className="right">
+          <div className="item">
+            <div className="box box_1"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Reduce the impact of IL</Trans>
             </Text>
           </div>
-          <div className={style.item}>
-            <div className={[style.box, style.box_2].join(' ')}></div>
+          <div className="item">
+            <div className="box box_2"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Increase LP Profit</Trans>
             </Text>
           </div>
-          <div className={style.item}>
-            <div className={[style.box, style.box_3].join(' ')}></div>
+          <div className="item">
+            <div className="box box_3"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Encourage trading</Trans>
             </Text>
           </div>
         </div>
-      </div>
+      </SectionGraph>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[50, 135]} px={2}>
+      <Text fontSize={[24, 36]} color={theme.text} mt={[50, 135]} px={2}>
         <span>
           <Trans>Permissionless and Frictionless Liquidity for DeFi</Trans>
         </span>
@@ -288,7 +326,7 @@ export default function About() {
       <div style={{ padding: '0 24px' }}>
         <Box width={['100%', 780]} mx="auto">
           <img src={require('../../assets/svg/permissionless_frictionless.svg')} alt="" />
-          <Text mt={[16, 20]} color="#c9d2d7" lineHeight="26px">
+          <Text mt={[16, 20]} lineHeight="26px">
             <Trans>
               Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
               aggregators, end users) can source liquidity from the DMM.
@@ -307,11 +345,11 @@ export default function About() {
         <Trans>Explore pools</Trans>
       </ButtonOutlined>
 
-      <div className={style.youtube_video}>
+      <YoutubeVideo>
         <ReactPlayer url="https://www.youtube.com/watch?v=2xgboyu7rss" />
-      </div>
+      </YoutubeVideo>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
+      <Text fontSize={[24, 36]} color={theme.text} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
         <Trans>Access DMM Liquidity for your Blockchain Platform</Trans>
       </Text>
       <Text fontSize={[16, 20]} maxWidth="700px" mx="auto">
@@ -346,7 +384,7 @@ export default function About() {
           perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing.
         </Trans>
       </Text>
-      <div className={style.panel}>
+      <Panel>
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
@@ -379,12 +417,12 @@ export default function About() {
         >
           <Trans>Developer Support</Trans>
         </ButtonOutlined>
-      </div>
+      </Panel>
 
-      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} px={2}>
+      <Text fontSize={[24, 36]} color={theme.text} mt={[100, 200]} mb={45} px={2}>
         <Trans>Committed to Security</Trans>
       </Text>
-      <div className={style.security}>
+      <Security>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
             <Trans>Code Audited</Trans>
@@ -411,21 +449,21 @@ export default function About() {
           </Text>
           <img src={require('../../assets/svg/unslashed.svg')} alt="" />
         </div>
-      </div>
+      </Security>
 
       <Text fontSize={[12, 18]} fontWeight={500} mt={5}>
         <Trans>Powered by</Trans>
       </Text>
-      <div className={style.powered}>
+      <Powered>
         <img src={require('../../assets/svg/about_icon_kyber.svg')} alt="" />
         <img src={require('../../assets/svg/about_icon_ethereum.png')} alt="" />
         <img src={require('../../assets/svg/about_icon_polygon.png')} alt="" />
         <img src={require('../../assets/svg/about_icon_avalanche.png')} alt="" />
         <img src={require('../../assets/svg/about_icon_bsc.png')} alt="" />
-      </div>
-      <div className={style.footer}>
-        <div className={style.content}>
-          <div className={style.left}>
+      </Powered>
+      <Footer>
+        <div className={'content'}>
+          <div className={'left'}>
             <Text>
               <ExternalLink href={`https://docs.dmm.exchange`}>
                 <Trans>DevPortal</Trans>
@@ -466,7 +504,7 @@ export default function About() {
               <ExternalLink href={`https://kyber.network/`}>Kyber Network</ExternalLink>
             </Text>
           </div>
-          <div className={style.right}>
+          <div className={'right'}>
             <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
               <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
             </ExternalLink>
@@ -484,8 +522,8 @@ export default function About() {
             .flat()
             .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
         </div>
-      </div>
-    </div>
+      </Footer>
+    </Wrapper>
   )
 }
 
