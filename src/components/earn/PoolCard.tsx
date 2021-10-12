@@ -3,7 +3,10 @@ import QuestionHelper from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
+import { updateUserAprMode } from 'state/user/actions'
+import { useIsAprMode } from 'state/user/hooks'
 import styled from 'styled-components'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -73,6 +76,8 @@ interface Props {
 
 export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   const { t } = useTranslation()
+  const userAprMode = useIsAprMode()
+  const dispatch = useDispatch()
   const [token0, token1] = stakingInfo.tokens
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
@@ -95,6 +100,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
       : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
 
+  const dpy = apy
+    ? new Percent(Math.floor(parseFloat(apy.divide('365').toFixed(10)) * 1_000_000).toFixed(0), '1000000')
+    : undefined
   // let weeklyAPY: React.ReactNode | undefined = <>🤯</>
   let quarterlyAPY: React.ReactNode | undefined = <>🤯</>
   try {
@@ -139,11 +147,19 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
           <TYPE.white fontWeight={600} fontSize={[18, 24]}>
             {token0.symbol}-{token1.symbol}
           </TYPE.white>
-          {apy && apy.greaterThan('0') && (
-            <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-              {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
-            </TYPE.small>
-          )}
+          <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
+            {apy &&
+              apy.greaterThan('0') &&
+              (userAprMode ? (
+                <TYPE.small className="apr" fontWeight={400} fontSize={14}>
+                  {apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'} APR
+                </TYPE.small>
+              ) : (
+                <TYPE.small className="apr" fontWeight={400} fontSize={14}>
+                  {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
+                </TYPE.small>
+              ))}
+          </div>
         </PoolInfo>
 
         <StyledInternalLink
@@ -185,11 +201,26 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
             )
           })}
         {apy && apy.greaterThan('0') && (
-          <PoolStatRow
-            helperText={<>Compounded semiannually</>}
-            statName={stakingInfo.rewardTokens.length > 1 ? 'Combined APY' : 'APY'}
-            statValue={apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'}
-          />
+          <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
+            <PoolStatRow
+              helperText={
+                userAprMode ? (
+                  <>
+                    Yield/day: {dpy?.toSignificant(4)}%<br />
+                    APY (semi-annually compounded): {quarterlyAPY}%
+                  </>
+                ) : (
+                  <>Compounded semi-annually</>
+                )
+              }
+              statName={`${stakingInfo.rewardTokens.length > 1 ? 'Combined ' : ''}${userAprMode ? 'APR' : 'APY'}`}
+              statValue={
+                apy.denominator.toString() !== '0'
+                  ? `${userAprMode ? apy.toFixed(0, { groupSeparator: ',' }) : quarterlyAPY}%`
+                  : '-'
+              }
+            />
+          </div>
         )}
 
         {/*
@@ -265,6 +296,7 @@ const PoolInfo = styled.div`
     display: none;
     ${({ theme }) => theme.mediaWidth.upToSmall`
   display: block;
+    color: white;
   `}
   }
 `

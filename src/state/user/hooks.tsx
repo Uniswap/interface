@@ -313,3 +313,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
 }
+
+export function useIsAprMode(): boolean {
+  return useSelector<AppState, AppState['user']['userAprMode']>((state) => state.user.userAprMode)
+}
