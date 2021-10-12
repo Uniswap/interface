@@ -47,6 +47,7 @@ import {
   Image1
 } from './styleds'
 import useTheme from 'hooks/useTheme'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
@@ -74,6 +75,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 export default function About() {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
+  const isDarkMode = useIsDarkMode()
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
   const data = useGlobalData()
@@ -428,7 +430,14 @@ export default function About() {
             <Trans>Code Audited</Trans>
           </Text>
           <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
-            <img src={require('../../assets/svg/chainsecurity.svg')} alt="" />
+            <img
+              src={
+                !isDarkMode
+                  ? 'https://chainsecurity.com/wp-content/themes/chainsecurity-wp/resources/images/temp/logo.svg'
+                  : require('../../assets/svg/chainsecurity.svg')
+              }
+              alt=""
+            />
           </ExternalLink>
         </div>
         <div>
@@ -447,7 +456,12 @@ export default function About() {
           <Text fontSize={[12, 18]} fontWeight={500}>
             <Trans>Insured by</Trans>
           </Text>
-          <img src={require('../../assets/svg/unslashed.svg')} alt="" />
+          <img
+            src={
+              !isDarkMode ? require('../../assets/svg/unslashed_light.svg') : require('../../assets/svg/unslashed.svg')
+            }
+            alt=""
+          />
         </div>
       </Security>
 

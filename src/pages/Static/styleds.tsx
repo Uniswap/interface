@@ -27,7 +27,7 @@ export const Image1 = styled.div`
   width: 100%;
   position: absolute;
   top: 0;
-  height: 800px;
+  height: 1000px;
   background-repeat: no-repeat;
   background-position-x: right;
   background-size: contain;
@@ -38,8 +38,8 @@ export const Image2 = styled.div`
   background-image: url(${image2});
   width: 100%;
   position: absolute;
-  top: 800px;
-  height: 1200px;
+  top: 1100px;
+  height: 1304px;
   background-repeat: no-repeat;
   background-size: 100%;
   z-index: -1;
