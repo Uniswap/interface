@@ -13,8 +13,8 @@ const Wrapper = themed.div`
   font-size: 16px;
   max-height: 360px;
   max-width: 360px;
-  min-height: 360px;
-  min-width: 360px;
+  min-height: 325px;
+  min-width: 325px;
   padding: 12px;
   position: relative;
 `

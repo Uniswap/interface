@@ -59,12 +59,12 @@ function CustomOption({ value, selected, onChange, onSelect }: CustomOptionProps
   )
 }
 
-export default function GasPriceSelect() {
+export default function MaxSlippageSelect() {
   const { P01, P05, CUSTOM, DEFAULT } = MaxSlippage
   const [[maxSlippage, custom], setMaxSlippage] = useMaxSlippage()
   return (
     <>
-      <Label name="Gas Price" />
+      <Label name="Max Slippage" />
       <Row>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Spacer />
