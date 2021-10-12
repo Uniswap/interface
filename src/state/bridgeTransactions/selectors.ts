@@ -171,7 +171,7 @@ export const bridgeTxsSummarySelector = createSelector(
 
           summary.status =
             summary.status === 'confirmed' &&
-              l2Txs[tx.partnerTxHash].outgoingMessageState === OutgoingMessageState.EXECUTED
+            l2Txs[tx.partnerTxHash].outgoingMessageState === OutgoingMessageState.EXECUTED
               ? 'claimed'
               : getBridgeTxStatus(status)
 

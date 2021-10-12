@@ -17,13 +17,13 @@ import {
   updateBridgeTxnPartnerHash,
   updateBridgeTxnWithdrawalInfo
 } from '../state/bridgeTransactions/actions'
-import { setBridgeLoadingWithdrawals, setBridgeModalState } from '../state/bridge/actions'
+import { setBridgeLoadingWithdrawals, setBridgeModalStatus } from '../state/bridge/actions'
 
 import { txnTypeToLayer } from '../state/bridgeTransactions/reducer'
 
 import { AppState } from '../state'
 import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
-import { BridgeModalState } from '../state/bridge/reducer'
+import { BridgeModalStatus } from '../state/bridge/reducer'
 
 const getErrorMsg = (error: any) => {
   if (error?.code === 4001) {
@@ -208,14 +208,14 @@ export class BridgeService {
   public depositEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
-    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
 
     const weiValue = utils.parseEther(value)
 
     try {
       const txn = await this.bridge.depositETH(weiValue)
 
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.INITIATED }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
       this.store.dispatch(
         addBridgeTxn({
@@ -239,20 +239,20 @@ export class BridgeService {
         })
       )
     } catch (err) {
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
 
   public withdrawEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l2ChainId) return
 
-    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
 
     const weiValue = utils.parseEther(value)
 
     try {
       const txn = await this.bridge.withdrawETH(weiValue)
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.INITIATED }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
       this.store.dispatch(
         addBridgeTxn({
@@ -276,7 +276,7 @@ export class BridgeService {
         })
       )
     } catch (err) {
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
 
@@ -285,7 +285,7 @@ export class BridgeService {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId || !batchIndex || !batchNumber || !value)
       return
 
-    this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.PENDING }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
 
     try {
       const batchNumberBN = BigNumber.from(batchNumber)
@@ -293,7 +293,7 @@ export class BridgeService {
 
       const l1Tx = await this.bridge.triggerL2ToL1Transaction(batchNumberBN, batchIndexBN, true)
 
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.COLLECTING }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.COLLECTING }))
 
       this.store.dispatch(
         addBridgeTxn({
@@ -318,7 +318,7 @@ export class BridgeService {
 
       const l1Receipt = await l1Tx.wait()
 
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.SUCCESS }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.SUCCESS }))
 
       this.store.dispatch(
         updateBridgeTxnReceipt({
@@ -336,7 +336,7 @@ export class BridgeService {
         })
       )
     } catch (err) {
-      this.store.dispatch(setBridgeModalState({ modalState: BridgeModalState.ERROR, modalError: getErrorMsg(err) }))
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
 

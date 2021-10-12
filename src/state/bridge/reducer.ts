@@ -6,16 +6,24 @@ import {
   setFromBridgeNetwork,
   setToBridgeNetwork,
   swapBridgeNetworks,
-  setBridgeModalState,
+  setBridgeModalStatus,
   setBridgeTxsFilter,
-  setBridgeLoadingWithdrawals
+  setBridgeLoadingWithdrawals,
+  setBridgeModalData
 } from './actions'
 
 export interface BridgeNetworkInput {
   readonly chainId: ChainId
 }
-
-export enum BridgeModalState {
+export interface BridgeModal {
+  readonly status: BridgeModalStatus
+  readonly currencyId: string | undefined
+  readonly typedValue: string
+  readonly fromNetwork: BridgeNetworkInput
+  readonly toNetwork: BridgeNetworkInput
+  readonly error?: string
+}
+export enum BridgeModalStatus {
   PENDING = 'PENDING',
   SUCCESS = 'SUCCESS',
   CLOSED = 'CLOSED',
@@ -36,8 +44,9 @@ export interface BridgeState {
   readonly toNetwork: BridgeNetworkInput
   readonly isCheckingWithdrawals: boolean
   readonly txsFilter: BridgeTxsFilter
-  readonly modalState: BridgeModalState
   readonly modalError?: string
+  readonly modalState: BridgeModalStatus
+  readonly modal: BridgeModal
 }
 
 const initialState: BridgeState = {
@@ -50,9 +59,20 @@ const initialState: BridgeState = {
     chainId: 42161
   },
   txsFilter: BridgeTxsFilter.RECENT,
-  modalState: BridgeModalState.CLOSED,
   modalError: undefined,
-  isCheckingWithdrawals: true
+  isCheckingWithdrawals: true,
+  modalState: BridgeModalStatus.CLOSED,
+  modal: {
+    status: BridgeModalStatus.CLOSED,
+    currencyId: 'ETH',
+    typedValue: '',
+    fromNetwork: {
+      chainId: 1
+    },
+    toNetwork: {
+      chainId: 42161
+    }
+  }
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
@@ -104,14 +124,32 @@ export default createReducer<BridgeState>(initialState, builder =>
         }
       }
     })
-    .addCase(setBridgeModalState, (state, { payload: { modalState, modalError } }) => {
-      state.modalState = modalState
-      state.modalError = modalError
-    })
     .addCase(setBridgeTxsFilter, (state, { payload }) => {
       state.txsFilter = payload
     })
     .addCase(setBridgeLoadingWithdrawals, (state, { payload }) => {
       state.isCheckingWithdrawals = payload
+    })
+    .addCase(setBridgeModalStatus, (state, { payload: { status, error } }) => {
+      return {
+        ...state,
+        modal: {
+          ...state.modal,
+          status,
+          error
+        }
+      }
+    })
+    .addCase(setBridgeModalData, (state, { payload: { currencyId, typedValue, fromNetwork, toNetwork } }) => {
+      return {
+        ...state,
+        modal: {
+          ...state.modal,
+          currencyId: currencyId,
+          typedValue: typedValue,
+          fromNetwork: fromNetwork,
+          toNetwork: toNetwork
+        }
+      }
     })
 )
