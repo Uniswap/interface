@@ -5,6 +5,7 @@ import qs from 'qs'
 import { GetQuoteResult } from './types'
 
 export const routingApi = createApi({
+  reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
