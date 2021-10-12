@@ -1,5 +1,6 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
-import { spawn } from 'redux-saga/effects'
+import { call, spawn } from 'redux-saga/effects'
+import { initProviders } from 'src/chains/initProviders'
 import {
   importAccountActions,
   importAccountReducer,
@@ -21,7 +22,9 @@ import {
 import { SagaActions, SagaState } from 'src/utils/saga'
 
 // Things that should happen before other sagas start go here
-function* init() {}
+function* init() {
+  yield call(initProviders)
+}
 
 // All regular sagas must be included here
 const sagas: any[] = []

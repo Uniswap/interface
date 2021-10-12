@@ -9,6 +9,7 @@ import ErrorBoundary from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { store } from 'src/app/store'
+import { WalletContextProvider } from 'src/app/walletContext'
 import { HomeScreen } from 'src/features/home/HomeScreen'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
@@ -26,7 +27,9 @@ export function App() {
         <Provider store={store}>
           <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
             <ErrorBoundary>
-              <NavStack isDarkMode={isDarkMode} />
+              <WalletContextProvider>
+                <NavStack isDarkMode={isDarkMode} />
+              </WalletContextProvider>
             </ErrorBoundary>
           </ThemeProvider>
         </Provider>

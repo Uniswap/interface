@@ -54,7 +54,14 @@ export class ProviderManager {
   }
 
   getProvider(chainId: SupportedChainId) {
-    return this._providers[chainId]
+    if (!this._providers[chainId]) {
+      throw new Error(`No provider initialized for chain: ${chainId}`)
+    }
+    const provider = this._providers[chainId]
+    if (provider?.status !== ProviderStatus.Connected) {
+      throw new Error(`Provider not connected for chain: ${chainId}`)
+    }
+    return provider.provider
   }
 
   private async initProvider(chainId: SupportedChainId, chainDetails: L1ChainInfo) {
@@ -116,5 +123,3 @@ export class ProviderManager {
     }
   }
 }
-
-export const providerManager = new ProviderManager()
