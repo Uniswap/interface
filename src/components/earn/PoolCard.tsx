@@ -100,13 +100,13 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   try {
     // weeklyAPY = apy
     //   ? new Percent(
-    //       Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000).toFixed(0),
+    //       Math.floor(parseFloat(apy.divide('52').add('1').toFixed(10)) ** 52 * 1_000_000 - 1_000_000).toFixed(0),
     //       '1000000'
     //     ).toFixed(0, { groupSeparator: ',' })
     //   : undefined
     quarterlyAPY = apy
       ? new Percent(
-          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000).toFixed(0),
+          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000 - 1_000_000).toFixed(0),
           '1000000'
         ).toFixed(0, { groupSeparator: ',' })
       : undefined
