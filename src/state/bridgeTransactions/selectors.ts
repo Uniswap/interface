@@ -92,11 +92,7 @@ type CreateBridgeLogProps = Pick<BridgeTransactionSummary, 'fromChainId' | 'toCh
   transactions: BridgeTxn[]
 }
 
-export const createBridgeLog = ({
-  transactions,
-  fromChainId,
-  toChainId
-}: CreateBridgeLogProps): BridgeTransactionLog[] => {
+const createBridgeLog = ({ transactions, fromChainId, toChainId }: CreateBridgeLogProps): BridgeTransactionLog[] => {
   return transactions.map(tx => ({
     txHash: tx.txHash,
     chainId: tx.chainId,
@@ -127,7 +123,6 @@ export const bridgeTxsSummarySelector = createSelector(
         const from = txnTypeToOrigin(tx.type) === 1 ? l1ChainId : l2ChainId
         const to = from === l1ChainId ? l2ChainId : l1ChainId
 
-        // No pair
         if (processedTxsMap[l1ChainId][tx.txHash]) return total
 
         const summary: BridgeTransactionSummary = {
@@ -161,21 +156,16 @@ export const bridgeTxsSummarySelector = createSelector(
         // l2 to l1 withdrawal
         if (tx.type === 'outbox') {
           const status = tx.receipt?.status
+
+          summary.fromChainId = to
+          summary.toChainId = from
+          summary.status = status === 1 ? 'claimed' : getBridgeTxStatus(status)
+          summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
           summary.log = createBridgeLog({
             transactions: [l2Txs[tx.partnerTxHash], tx],
             fromChainId: to,
             toChainId: from
           })
-          summary.fromChainId = to
-          summary.toChainId = from
-
-          summary.status =
-            summary.status === 'confirmed' &&
-              l2Txs[tx.partnerTxHash].outgoingMessageState === OutgoingMessageState.EXECUTED
-              ? 'claimed'
-              : getBridgeTxStatus(status)
-
-          summary.pendingReason = status ? undefined : PendingReasons.TX_UNCONFIRMED
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
           processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
