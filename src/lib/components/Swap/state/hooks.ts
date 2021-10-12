@@ -1,7 +1,6 @@
 import { useAtom } from 'jotai'
-import { useContext } from 'react'
 
-import { StoreAtomContext } from '.'
+import { storeAtom } from '.'
 import {
   resetSettings,
   setExpertMode,
@@ -13,22 +12,18 @@ import {
 } from './actions'
 import { GasPrice, MaxSlippage } from './reducer'
 
-export function useSwapStore() {
-  return useAtom(useContext(StoreAtomContext))
-}
-
 export function useShowDetails(): [boolean, () => void] {
-  const [{ showDetails }, dispatch] = useSwapStore()
+  const [{ showDetails }, dispatch] = useAtom(storeAtom)
   return [showDetails, () => dispatch(toggleShowDetails())]
 }
 
 export function useResetSettings() {
-  const [, dispatch] = useSwapStore()
+  const [, dispatch] = useAtom(storeAtom)
   return () => dispatch(resetSettings())
 }
 
 export function useGasPrice(): [[GasPrice, number | undefined], (value: GasPrice, custom?: number) => void] {
-  const [{ gasPrice, customGasPrice }, dispatch] = useSwapStore()
+  const [{ gasPrice, customGasPrice }, dispatch] = useAtom(storeAtom)
   return [
     [gasPrice, customGasPrice],
     (gasPrice: GasPrice, customGasPrice?: number) => dispatch(setGasPrice({ gasPrice, customGasPrice })),
@@ -36,7 +31,7 @@ export function useGasPrice(): [[GasPrice, number | undefined], (value: GasPrice
 }
 
 export function useMaxSlippage(): [[MaxSlippage, number | undefined], (value: MaxSlippage, custom?: number) => void] {
-  const [{ maxSlippage, customMaxSlippage }, dispatch] = useSwapStore()
+  const [{ maxSlippage, customMaxSlippage }, dispatch] = useAtom(storeAtom)
   return [
     [maxSlippage, customMaxSlippage],
     (maxSlippage: MaxSlippage, customMaxSlippage?: number) =>
@@ -45,16 +40,16 @@ export function useMaxSlippage(): [[MaxSlippage, number | undefined], (value: Ma
 }
 
 export function useTransactionDeadline(): [number, (value: number) => void] {
-  const [{ transactionDeadline }, dispatch] = useSwapStore()
+  const [{ transactionDeadline }, dispatch] = useAtom(storeAtom)
   return [transactionDeadline, (value: number) => dispatch(setTransactionDeadline(value))]
 }
 
 export function useExpertMode(): [boolean, (value: boolean) => void] {
-  const [{ expertMode }, dispatch] = useSwapStore()
+  const [{ expertMode }, dispatch] = useAtom(storeAtom)
   return [expertMode, (value: boolean) => dispatch(setExpertMode(value))]
 }
 
 export function useMultihop(): [boolean, (value: boolean) => void] {
-  const [{ multihop }, dispatch] = useSwapStore()
+  const [{ multihop }, dispatch] = useAtom(storeAtom)
   return [multihop, (value: boolean) => dispatch(setMultihop(value))]
 }

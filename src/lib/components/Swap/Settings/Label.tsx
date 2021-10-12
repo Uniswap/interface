@@ -1,4 +1,3 @@
-import { Placement } from '@popperjs/core'
 import { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 
