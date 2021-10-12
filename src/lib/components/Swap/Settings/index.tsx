@@ -1,3 +1,4 @@
+import { BoundaryProvider } from 'lib/components/Popover'
 import { useState } from 'react'
 import { Settings as SettingsIcon } from 'react-feather'
 
@@ -23,6 +24,7 @@ const ThemedReset = themed(TYPE.text)`
 `
 
 export function SettingsModal({ onClose }: { onClose: () => void }) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const resetSettings = useResetSettings()
   return (
     <Modal>
@@ -31,12 +33,14 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
           Reset
         </ThemedReset>
       </ModalHeader>
-      <ModalBody>
-        <GasPriceSelect />
-        <MaxSlippageSelect />
-        <TransactionDeadlineInput />
-        <ExpertModeToggle />
-        <MultihopToggle />
+      <ModalBody ref={setContainer}>
+        <BoundaryProvider value={container}>
+          <GasPriceSelect />
+          <MaxSlippageSelect />
+          <TransactionDeadlineInput />
+          <ExpertModeToggle />
+          <MultihopToggle />
+        </BoundaryProvider>
       </ModalBody>
     </Modal>
   )

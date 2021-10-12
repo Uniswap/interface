@@ -27,7 +27,6 @@ export interface WidgetProps {
 export default function Widget({ darkMode, children }: WidgetProps) {
   const theme = useMemo(() => getTheme(darkMode), [darkMode])
   const [modal, setModal] = useState<HTMLDivElement | null>(null)
-
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>

@@ -55,7 +55,7 @@ const Input = themed.input`
   }
 
   :before {
-    transition: margin ease .3s;
+    transition: margin ease 150ms;
   }
 `
 

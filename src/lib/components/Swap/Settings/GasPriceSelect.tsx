@@ -7,6 +7,8 @@ import { GasPrice } from '../state/reducer'
 import { Line, Option as BaseOption, Row, Selected, Spacer } from './components'
 import Label from './Label'
 
+const tooltip = 'Lorem ipsum dolores park'
+
 interface OptionProps {
   name: string
   value: GasPrice
@@ -69,7 +71,7 @@ export default function GasPriceSelect() {
   const [[gasPrice, custom], setGasPrice] = useGasPrice()
   return (
     <>
-      <Label name="Gas Price" />
+      <Label name="Gas Price" tooltip={tooltip} />
       <Row>
         <Option name="Fast" value={FAST} onSelect={setGasPrice} selected={gasPrice === FAST} />
         <Spacer />

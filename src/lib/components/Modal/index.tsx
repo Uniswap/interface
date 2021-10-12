@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext } from 'react'
 import { createPortal } from 'react-dom'
 
-import themed, { Colors, useTheme } from '../../themed'
+import themed, { Colors, Layer, useTheme } from '../../themed'
 
 export { default as Header } from './Header'
 
@@ -21,7 +21,7 @@ const Wrapper = themed.div`
   position: absolute;
   top: 0;
   width: calc(100% - 8px);
-  z-index: 1;
+  z-index: ${Layer.MODAL};
 `
 
 export const Body = themed.div`

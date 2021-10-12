@@ -62,6 +62,7 @@ interface TextProps extends Omit<TextPropsWithCss, 'css'> {
 }
 
 const TextWrapper = themed(Text)<{ accent: boolean; color?: keyof Colors }>`
+  font-family: ${({ theme }) => theme.font};
   color: ${({ color = 'text' as keyof Colors, theme }) => (theme as Theme)[color]};
   opacity: ${({ accent, theme }) => (accent ? theme.accentOpacity : 1.0)};
 `
@@ -82,4 +83,9 @@ export const TYPE = {
   subtext(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
   },
+}
+
+export enum Layer {
+  MODAL = 10,
+  POPOVER = 100,
 }

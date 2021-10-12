@@ -1,11 +1,12 @@
+import { Placement } from '@popperjs/core'
+import { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 
 import themed, { TYPE } from '../../../themed'
 import { themedIcon } from '../../../themed/components'
+import Popover from '../../Popover'
 
 const ThemedHelpCircle = themed(themedIcon(HelpCircle))`
-  margin-left: 8px;
-
   :hover {
     cursor: help;
     opacity: 0.7;
@@ -24,11 +25,17 @@ const Wrapper = themed.div`
 `
 
 export default function Label({ name, tooltip }: LabelProps) {
+  const [show, setShow] = useState(false)
   return (
     <Wrapper>
-      <TYPE.label>{name}</TYPE.label>
-      {/* TODO: Implement the tooltip */}
-      {tooltip && <ThemedHelpCircle />}
+      <TYPE.label style={{ marginRight: 8 }}>{name}</TYPE.label>
+      {tooltip && (
+        <TYPE.text>
+          <Popover content={<TYPE.detail>{tooltip}</TYPE.detail>} show={show} placement="top">
+            <ThemedHelpCircle onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
+          </Popover>
+        </TYPE.text>
+      )}
     </Wrapper>
   )
 }

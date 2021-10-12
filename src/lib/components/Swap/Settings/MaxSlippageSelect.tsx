@@ -7,6 +7,8 @@ import { MaxSlippage } from '../state/reducer'
 import { Line, Option as BaseOption, Row, Selected, Spacer } from './components'
 import Label from './Label'
 
+const tooltip = 'Your transaction will revert if the price changes unfavorably by more than this percentage.'
+
 interface OptionProps {
   value: MaxSlippage
   onSelect: (value: MaxSlippage) => void
@@ -64,7 +66,7 @@ export default function MaxSlippageSelect() {
   const [[maxSlippage, custom], setMaxSlippage] = useMaxSlippage()
   return (
     <>
-      <Label name="Max Slippage" />
+      <Label name="Max Slippage" tooltip={tooltip} />
       <Row>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Spacer />
