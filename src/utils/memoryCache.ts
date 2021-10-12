@@ -26,6 +26,7 @@ export class MemoryCache<T> implements ICache<T> {
       timeout: this.ttl ? setTimeout(() => this.del(key), this.ttl) : undefined,
     }
 
+    // `ICache` expects a boolean
     return true
   }
 

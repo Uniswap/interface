@@ -55,16 +55,15 @@ export const routingApi = createApi({
           if (useClientSideRouter) {
             result = await getClientSideQuote(args)
           } else {
-            result = await fetch(
-              `quote?${qs.stringify({
-                tokenInAddress: tokenIn.address,
-                tokenInChainId: tokenIn.chainId,
-                tokenOutAddress: tokenOut.address,
-                tokenOutChainId: tokenOut.chainId,
-                amount,
-                type,
-              })}`
-            )
+            const query = qs.stringify({
+              tokenInAddress: tokenIn.address,
+              tokenInChainId: tokenIn.chainId,
+              tokenOutAddress: tokenOut.address,
+              tokenOutChainId: tokenOut.chainId,
+              amount,
+              type,
+            })
+            result = await fetch(`quote?${query}`)
           }
 
           if (result.error) {

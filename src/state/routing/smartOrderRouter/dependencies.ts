@@ -24,11 +24,11 @@ import { TokenList } from '@uniswap/token-lists'
 import { Pool } from '@uniswap/v3-sdk'
 import { timing } from 'components/analytics'
 import { NETWORK_URLS } from 'connectors/networkUrls'
+import UNSUPPORTED_TOKEN_LIST from 'constants/tokenLists/unsupported.tokenlist.json'
 import { providers } from 'ethers/lib/ethers'
 import ms from 'ms.macro'
+import { MemoryCache } from 'utils/memoryCache'
 
-import UNSUPPORTED_TOKEN_LIST from '../../../constants/tokenLists/unsupported.tokenlist.json'
-import { MemoryCache } from '../../../utils/memoryCache'
 import { SUPPORTED_CHAINS } from './constants'
 
 class GAMetric extends IMetric {

@@ -40,15 +40,15 @@ describe('MemoryCache', () => {
         // invalidate first entry
         setDate(1250)
 
-        expect(await cache.get('key')).toBe(undefined)
+        expect(await cache.get('key')).toBeUndefined()
         expect(await cache.get('key2')).toBe(2)
         expect(await cache.get('invalidKey')).toBeUndefined()
 
         // invalidate second entry
         setDate(2000)
 
-        expect(await cache.get('key')).toBe(undefined)
-        expect(await cache.get('key2')).toBe(undefined)
+        expect(await cache.get('key')).toBeUndefined()
+        expect(await cache.get('key2')).toBeUndefined()
         expect(await cache.get('invalidKey')).toBeUndefined()
       })
     })

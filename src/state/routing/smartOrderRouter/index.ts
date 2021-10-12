@@ -33,10 +33,8 @@ export async function getQuote({
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
   const amount = CurrencyAmount.fromRawAmount(currencyIn, JSBI.BigInt(amountRaw))
 
-  const swapRoute =
-    type === 'exactIn'
-      ? await router.routeExactIn(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
-      : await router.routeExactOut(currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
+  const method = type === 'exactIn' ? 'routeExactIn' : 'routeExactOut'
+  const swapRoute = await router[method](currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
