@@ -1463,6 +1463,10 @@ msgstr ""
 msgid "Trade"
 msgstr "Giao dịch"
 
+#: src/pages/Static/About.tsx
+msgid "Trade Now"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
 msgstr "Giao dịch đã được gửi"

@@ -5,7 +5,7 @@ import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonOutlined, ButtonPrimary, ButtonEmpty } from 'components/Button'
 import Loader from 'components/Loader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
@@ -48,6 +48,7 @@ import {
 } from './styleds'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
+import { useMedia } from 'react-use'
 
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
@@ -75,6 +76,7 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
 export default function About() {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
+  const above576 = useMedia('(min-width: 576px)')
   const isDarkMode = useIsDarkMode()
 
   const poolsMenuLink = getPoolsMenuLink(chainId)
@@ -163,7 +165,7 @@ export default function About() {
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2} color={theme.subText}>
+            <Text fontSize={14} mt={2} color={theme.subText} minWidth="max-content">
               <Trans>Total AMP Liquidity</Trans>*
             </Text>
           </AmpLiquidityNumber>
@@ -193,18 +195,21 @@ export default function About() {
       </SectionNumberContainer>
 
       <Panel0>
-        <ButtonPrimary padding="12px 10px" as={Link} to={poolsMenuLink}>
-          <Trans>Add Liquidity</Trans>
+        <ButtonPrimary padding="12px 10px" as={Link} to={'/swap'}>
+          <Trans>Trade Now</Trans>
         </ButtonPrimary>
-        <ButtonOutlined
-          padding="12px 10px"
+        <ButtonOutlined padding="12px 10px" as={Link} to={poolsMenuLink} style={{ fontSize: '16px' }}>
+          <Trans>Add Liquidity</Trans>
+        </ButtonOutlined>
+        <ButtonEmpty
+          padding="12px 0px"
           as={ExternalLink}
           href={`https://docs.dmm.exchange`}
           target="_blank"
           style={{ fontSize: '16px' }}
         >
           <Trans>Documentation</Trans>
-        </ButtonOutlined>
+        </ButtonEmpty>
       </Panel0>
 
       <Text mt={[70, 100]} color={theme.text} fontSize={[24, 40]}>
@@ -299,7 +304,7 @@ export default function About() {
       <SectionGraph>
         <div className="left"></div>
         <div className="right">
-          <div className="item">
+          <div className="item" style={{ borderLeft: above576 ? undefined : '1px dashed #303e46' }}>
             <div className="box box_1"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Reduce the impact of IL</Trans>
@@ -311,7 +316,7 @@ export default function About() {
               <Trans>Increase LP Profit</Trans>
             </Text>
           </div>
-          <div className="item">
+          <div className="item" style={{ borderBottom: 'dashed 1px #303e46' }}>
             <div className="box box_3"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Encourage trading</Trans>
@@ -469,9 +474,23 @@ export default function About() {
         <Trans>Powered by</Trans>
       </Text>
       <Powered>
-        <img src={require('../../assets/svg/about_icon_kyber.svg')} alt="" />
+        <img
+          src={
+            isDarkMode
+              ? require('../../assets/svg/about_icon_kyber.svg')
+              : require('../../assets/svg/about_icon_kyber_light.svg')
+          }
+          alt=""
+        />
         <img src={require('../../assets/svg/about_icon_ethereum.png')} alt="" />
-        <img src={require('../../assets/svg/about_icon_polygon.png')} alt="" />
+        <img
+          src={
+            isDarkMode
+              ? require('../../assets/svg/about_icon_polygon.png')
+              : require('../../assets/svg/about_icon_polygon_light.svg')
+          }
+          alt=""
+        />
         <img src={require('../../assets/svg/about_icon_avalanche.png')} alt="" />
         <img src={require('../../assets/svg/about_icon_bsc.png')} alt="" />
       </Powered>

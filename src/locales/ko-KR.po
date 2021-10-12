@@ -1463,6 +1463,10 @@ msgstr ""
 msgid "Trade"
 msgstr "거래"
 
+#: src/pages/Static/About.tsx
+msgid "Trade Now"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
 msgstr "제출된 거래"

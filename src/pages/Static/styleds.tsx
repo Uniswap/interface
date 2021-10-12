@@ -10,7 +10,6 @@ import image3 from 'assets/svg/bg3.svg'
 export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: -32px;
   text-align: center;
   color: ${({ theme }) => theme.subText};
   position: relative;
@@ -27,6 +26,7 @@ export const Image1 = styled.div`
   width: 100%;
   position: absolute;
   top: 0;
+  right: 0;
   height: 1000px;
   background-repeat: no-repeat;
   background-position-x: right;
@@ -69,7 +69,7 @@ export const SectionNumberContainer = styled.div`
   padding: 24px;
   display: flex;
   gap: 24px;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -79,7 +79,6 @@ export const SectionNumberContainer = styled.div`
 
 export const SectionNumber = styled.div`
   max-width: 450px;
-  margin: 0 auto;
   background: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.border2};
   border-radius: 20px;
@@ -116,6 +115,7 @@ export const LiquidityNumber = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
+  width: 50%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-right: 0;
@@ -128,8 +128,8 @@ export const AmpLiquidityNumber = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 20px;
   margin-left: 20px;
+  width: 50%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-left: 0;
@@ -143,13 +143,18 @@ export const Panel0 = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  max-width: 450px;
+  max-width: fit-content;
   margin: 50px auto auto auto;
   a {
     width: 200px;
     max-width: 100%;
     margin: 0 10px;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+    gap: 16px;
+  `}
 `
 
 export const Panel = styled.div`
@@ -275,6 +280,7 @@ export const SectionGraph = styled.div`
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
+    background-color: ${({ theme }) => `${theme.buttonBlack}88`};
     border: dashed 1px #303e46;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -284,6 +290,7 @@ export const SectionGraph = styled.div`
     `}
   }
   .right {
+    margin-right: -1px;
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       display: flex;
     `}
@@ -292,12 +299,21 @@ export const SectionGraph = styled.div`
       padding: 25px;
       border-radius: 4px;
       border: dashed 1px #303e46;
+      border-left: none;
+      background-color: ${({ theme }) => `${theme.buttonBlack}88`};
+      border-bottom: none;
+
+      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+        border-bottom: dashed 1px #303e46;
+      `}
+
       .box {
         width: 76px;
         height: 68px;
         margin: 0 auto;
         background-repeat: no-repeat;
         background-size: contain;
+
         ${({ theme }) => theme.mediaWidth.upToExtraSmall`
           width: 40px;
           height: 37px;

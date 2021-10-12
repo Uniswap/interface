@@ -20,7 +20,7 @@ const StyledPoweredBy = styled.div`
   box-sizing: border-box;
   padding: 8px 16px;
   border-radius: 4px;
-  background: ${({ theme }) => `${theme.bg3}20`};
+  background: ${({ theme }) => `${theme.bg3}33`};
   :hover {
     background: ${({ theme }) => `${theme.bg3}50`};
   }

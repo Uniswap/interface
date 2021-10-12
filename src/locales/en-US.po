@@ -1463,6 +1463,10 @@ msgstr "Tradable token pair price range for this pool based on AMP. If the price
 msgid "Trade"
 msgstr "Trade"
 
+#: src/pages/Static/About.tsx
+msgid "Trade Now"
+msgstr "Trade Now"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
 msgstr "Transaction Submitted"
