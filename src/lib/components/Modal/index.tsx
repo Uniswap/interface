@@ -17,7 +17,7 @@ const Wrapper = themed.div`
   height: calc(100% - 8px);
   left: 0;
   margin: 4px;
-  padding: 16px 16px 0 16px;
+  padding: 14px 16px 0;
   position: absolute;
   top: 0;
   width: calc(100% - 8px);
@@ -25,8 +25,9 @@ const Wrapper = themed.div`
 `
 
 export const Body = themed.div`
-  padding-top: 16px;
+  margin-right: -16px;
   overflow-y: scroll;
+  padding: 16px 16px 0 0;
 `
 
 interface ModalProps {
