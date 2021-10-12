@@ -348,6 +348,10 @@ msgstr "连接钱包"
 msgid "Connected with {name}"
 msgstr "与 {name} 连接"
 
+#: src/constants/messages.ts
+msgid "Contract not found! Please reload and try again."
+msgstr ""
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address."
 msgstr "以当前比率将您在 Sushiswap 上的流动性头寸转换为基础代币。 代币存入 DMM 上的基本 AMP=1 池中，您将获得代表新池份额的 DMM-LP 代币。 如果两个平台之间的费率不同，一些代币可能会退还到您的地址。"

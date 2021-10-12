@@ -15,7 +15,8 @@ import {
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
   KNCL_ADDRESS_ROPSTEN,
-  KNC
+  KNC,
+  DEFAULT_GAS_LIMIT_MARGIN
 } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
@@ -123,9 +124,18 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
-// add 10%
+/**
+ * Add a margin amount equal to max of 20000 or 20% of estimatedGas
+ * total = estimate + max(20k, 20% * estimate)
+ *
+ * @param value BigNumber
+ * @returns BigNumber
+ */
 export function calculateGasMargin(value: BigNumber): BigNumber {
-  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
+  const defaultGasLimitMargin = BigNumber.from(DEFAULT_GAS_LIMIT_MARGIN)
+  const gasMagin = value.mul(BigNumber.from(2000)).div(BigNumber.from(10000))
+
+  return gasMagin.gte(defaultGasLimitMargin) ? value.add(gasMagin) : value.add(defaultGasLimitMargin)
 }
 
 // converts a basis points value to a sdk percent

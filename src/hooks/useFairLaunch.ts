@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
 import { BigNumber } from 'ethers'
 
+import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { calculateGasMargin } from 'utils'
 
 const useFairLaunch = (address: string) => {
   const addTransaction = useTransactionAdder()
@@ -47,7 +49,14 @@ const useFairLaunch = (address: string) => {
   // Deposit
   const deposit = useCallback(
     async (pid: number, amount: BigNumber, name: string, shouldHaverst = false) => {
-      const tx = await fairLaunchContract?.deposit(pid, amount, shouldHaverst)
+      if (!fairLaunchContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await fairLaunchContract.estimateGas.deposit(pid, amount, shouldHaverst)
+      const tx = await fairLaunchContract.deposit(pid, amount, shouldHaverst, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Deposit ${name}` })
 
       return tx.hash
@@ -58,7 +67,14 @@ const useFairLaunch = (address: string) => {
   // Withdraw
   const withdraw = useCallback(
     async (pid: number, amount: BigNumber, name: string) => {
-      const tx = await fairLaunchContract?.withdraw(pid, amount)
+      if (!fairLaunchContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await fairLaunchContract.estimateGas.withdraw(pid, amount)
+      const tx = await fairLaunchContract.withdraw(pid, amount, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Withdraw ${name}` })
 
       return tx.hash
@@ -68,7 +84,14 @@ const useFairLaunch = (address: string) => {
 
   const harvest = useCallback(
     async (pid: number, name: string) => {
-      const tx = await fairLaunchContract?.harvest(pid)
+      if (!fairLaunchContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await fairLaunchContract.estimateGas.harvest(pid)
+      const tx = await fairLaunchContract.harvest(pid, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Harvest ${name}` })
 
       return tx.hash
@@ -78,7 +101,14 @@ const useFairLaunch = (address: string) => {
 
   const harvestMultiplePools = useCallback(
     async (pids: number[]) => {
-      const tx = await fairLaunchContract?.harvestMultiplePools(pids)
+      if (!fairLaunchContract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+
+      const estimateGas = await fairLaunchContract.estimateGas.harvestMultiplePools(pids)
+      const tx = await fairLaunchContract.harvestMultiplePools(pids, {
+        gasLimit: calculateGasMargin(estimateGas)
+      })
       addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
 
       return tx.hash

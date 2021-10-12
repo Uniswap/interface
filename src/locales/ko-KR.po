@@ -348,6 +348,10 @@ msgstr "지갑 연결"
 msgid "Connected with {name}"
 msgstr "{name}에 연결됨"
 
+#: src/constants/messages.ts
+msgid "Contract not found! Please reload and try again."
+msgstr ""
+
 #: src/components/NavigationTabs/index.tsx
 msgid "Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address."
 msgstr "Sushiswap의 유동성을 DMM으로 가져올 수 있습니다. 동일 한 토큰으로 AMP=1 기본 풀로 예치될것이며 예치 후에는 DMM-LP 토큰이 제공됩니다. 두 플랫폼 간에 토큰 비율이 다른 경우 일부 토큰은 귀하의 주소로 환불될 수 있습니다."
