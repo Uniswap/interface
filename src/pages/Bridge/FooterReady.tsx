@@ -6,12 +6,12 @@ import { Table, Th } from '../../components/Table'
 import { TagSuccessArrow } from '../../components/Tag'
 import { TYPE } from '../../theme'
 
-interface FooterReadyProps extends HideableAutoColumnProps{
-  amount: string;
-  onCollectButtonClick: () => void;
+interface FooterReadyProps extends HideableAutoColumnProps {
+  amount: string
+  onCollectButtonClick: () => void
 }
 
-export const FooterReady = ({show, onCollectButtonClick, amount}: FooterReadyProps) => {
+export const FooterReady = ({ show, onCollectButtonClick, amount }: FooterReadyProps) => {
   return (
     <HideableAutoColumn show={show}>
       <AdvancedDetailsFooter fullWidth padding="16px">
@@ -42,9 +42,7 @@ export const FooterReady = ({show, onCollectButtonClick, amount}: FooterReadyPro
                 </TYPE.main>
               </td>
               <td align="right">
-                <TagSuccessArrow onClick={onCollectButtonClick}>
-                  Ready
-                </TagSuccessArrow>
+                <TagSuccessArrow onClick={onCollectButtonClick}>Ready</TagSuccessArrow>
               </td>
             </tr>
           </tbody>

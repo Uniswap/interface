@@ -7,22 +7,18 @@ import AppBody from '../AppBody'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
-// import { FooterBridgeSelector } from './FooterBridgeSelector'
-import { BridgeSuccesModal } from './BridgeModals/BridgeSuccesModal'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
-
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
-import { useArbBridge, useBridge } from '../../hooks/useArbBridge'
-import { BridgeTransactionSummary, useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
+import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeActionPanel } from './BridgeActionPanel'
 import { NETWORK_DETAIL } from '../../constants'
-import { BridgeErrorModal } from './BridgeModals/BridgeErrorModal'
-import { BridgePendingModal } from './BridgeModals/BridgePendingModal'
-import { BridgingInitiatedModal } from './BridgeModals/BridgingInitiatedModal'
+import { useBridgeService } from '../../contexts/BridgeServiceProvider'
+import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
+import { BridgeModal } from './BridgeModals/BridgeModal'
 import { Tabs } from './Tabs'
 
 const Title = styled.p`
@@ -56,14 +52,13 @@ const SwapButton = styled.button<{ disabled: boolean }>`
 
 export default function Bridge() {
   const { account, chainId } = useActiveWeb3React()
-  const { bridge } = useBridge()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
   const {
     onUserInput,
     onToNetworkChange,
-    onCurrencySelection,
     onFromNetworkChange,
-    onSwapBridgeNetworks
+    onSwapBridgeNetworks,
+    getCollectedTx
   } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
@@ -73,21 +68,8 @@ export default function Bridge() {
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
 
-  const {
-    depositEth,
-    withdrawEth,
-    triggerOutboxEth,
-    isPending,
-    setIsPending,
-    isBridgeInitiated,
-    setIsBridgeInitiated
-  } = useArbBridge()
+  const bridgeService = useBridgeService()
   const bridgeSummaries = useBridgeTransactionsSummary()
-
-  useEffect(() => {
-    const timer = setTimeout(() => step === BridgeStep.Pending && setStep(BridgeStep.Ready), 2000)
-    return () => clearTimeout(timer)
-  }, [step])
 
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
@@ -103,23 +85,15 @@ export default function Bridge() {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
-  const [bridgeError, setBridgeError] = useState<string | null>(null)
-  const handleError = (error: any) => {
-    if (error?.code === 4001) {
-      setBridgeError('Transaction rejected')
-    } else setBridgeError(`Bridge failed: ${error.message}`)
-  }
-
-  const handleSubmit = useCallback(() => {
-    if (!chainId) return
+  const handleSubmit = useCallback(async () => {
+    if (!chainId || !bridgeService) return
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
-      handleResetBridge()
-      return depositEth(typedValue).catch(handleError)
+      await bridgeService.depositEth(typedValue)
     } else {
-      handleResetBridge()
-      return withdrawEth(typedValue).catch(handleError)
+      await bridgeService.withdrawEth(typedValue)
     }
-  }, [chainId, depositEth, handleResetBridge, typedValue, withdrawEth])
+    // handleResetBridge()
+  }, [bridgeService, chainId, typedValue])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -134,24 +108,23 @@ export default function Bridge() {
   })
 
   const [collectableTx, setCollectableTx] = useState(
-    bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
+    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
-      onFromNetworkChange(tx.fromChainId)
-      onToNetworkChange(tx.toChainId)
-      onCurrencySelection(tx.assetName)
+      getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId, typedValue: tx.value })
     },
-    [onCurrencySelection, onFromNetworkChange, onToNetworkChange]
+    [getCollectedTx]
   )
 
   const handleCollectConfirm = useCallback(async () => {
-    await triggerOutboxEth(collectableTx)
+    if (!bridgeService) return
+    await bridgeService.triggerOutboxEth(collectableTx)
     setStep(BridgeStep.Success)
-  }, [collectableTx, triggerOutboxEth])
+  }, [bridgeService, collectableTx])
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -159,14 +132,10 @@ export default function Bridge() {
     }
   }, [chainId, collectableTx, isCollecting, step])
 
-  const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
-  const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
-  const [tab, setTab] = useState('Bridge')
-
   return (
     <>
       <AppBody>
-        <Tabs selectedTab={tab} onTabClick={setTab} isCollectDisabled={true} collectAmount={3} />
+        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
           <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
@@ -213,10 +182,8 @@ export default function Bridge() {
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
-          onCurrencySelect={onCurrencySelection}
-          disableCurrencySelect={isCollecting}
+          disableCurrencySelect={true}
           disabled={isCollecting}
-          hideBalance={!isNetworkConnected}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
@@ -231,37 +198,14 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {bridge && chainId && !!bridgeSummaries.length && (
+      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
           onCollect={handleCollect}
         />
       )}
-      {/* {step === Step.Initial && !!typedValue && (
-        <FooterBridgeSelector show selectedBridge={bridge} onBridgeChange={handleBridgeRadioChange} />
-      )} */}
-      <BridgePendingModal
-        isOpen={isPending}
-        onDismiss={() => setIsPending(false)}
-        pendingText={`1 ETH from ${fromNetworkName} to ${toNetworkName}`}
-      />
-      <BridgeErrorModal isOpen={!!bridgeError} onDismiss={() => setBridgeError(null)} error={bridgeError || ''} />
-      <BridgingInitiatedModal
-        isOpen={isBridgeInitiated}
-        onDismiss={() => setIsBridgeInitiated(false)}
-        amount={'1'}
-        assetType={'ETH'}
-        fromNetworkName={fromNetworkName}
-        toNetworkName={toNetworkName}
-      />
-      <BridgeSuccesModal
-        isOpen={step === BridgeStep.Success}
-        onDismiss={handleResetBridge}
-        onTradeButtonClick={handleResetBridge}
-        onBackButtonClick={handleResetBridge}
-        amount={typedValue}
-      />
+      <BridgeModal handleResetBridge={handleResetBridge} setStep={setStep} />
     </>
   )
 }

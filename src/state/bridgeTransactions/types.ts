@@ -16,8 +16,8 @@ export type BridgeTxnType =
 
 export enum BridgeAssetType {
   ETH = 'ETH',
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721'
+  ERC20 = 'ERC20'
+  //ERC721
 }
 
 export type BridgeTxnsState = {
@@ -44,3 +44,21 @@ export type BridgeTxn = {
   batchNumber?: string
   outgoingMessageState?: OutgoingMessageState
 }
+
+export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'redeem' | 'claimed' | 'loading'
+
+export type BridgeTransactionSummary = Pick<
+  BridgeTxn,
+  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber' | 'timestampResolved'
+> & {
+  fromChainId: ChainId
+  toChainId: ChainId
+  log: BridgeTransactionLog[]
+  status: BridgeTransactionStatus
+  pendingReason?: string
+}
+
+export type BridgeTransactionLog = Pick<BridgeTxn, 'txHash' | 'type' | 'chainId'> &
+  Pick<BridgeTransactionSummary, 'fromChainId' | 'toChainId'> & {
+    status: BridgeTransactionStatus
+  }

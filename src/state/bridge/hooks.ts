@@ -5,9 +5,19 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { selectCurrency, typeInput, setFromBridgeNetwork, setToBridgeNetwork, swapBridgeNetworks } from './actions'
+import {
+  selectCurrency,
+  typeInput,
+  setFromBridgeNetwork,
+  setToBridgeNetwork,
+  swapBridgeNetworks,
+  setBridgeTxsFilter
+} from './actions'
 import { currencyId } from '../../utils/currencyId'
 import { tryParseAmount } from '../swap/hooks'
+import { BridgeTxsFilter } from './reducer'
+import { bridgeTxsFilterSelector } from './selectors'
+import { getChainPair } from '../../utils/arbitrum'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -19,6 +29,17 @@ export function useBridgeActionHandlers(): {
   onFromNetworkChange: (chainId: ChainId) => void
   onToNetworkChange: (chainId: ChainId) => void
   onSwapBridgeNetworks: () => void
+  getCollectedTx: ({
+    from,
+    to,
+    currency,
+    typedValue
+  }: {
+    from: ChainId
+    to: ChainId
+    currency: Currency | string
+    typedValue: string
+  }) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -26,6 +47,7 @@ export function useBridgeActionHandlers(): {
 
   const onFromNetworkChange = useCallback(
     (chainId: ChainId) => {
+      const { partnerChainId } = getChainPair(chainId)
       if (chainId === toNetwork.chainId) {
         dispatch(swapBridgeNetworks())
         return
@@ -35,12 +57,19 @@ export function useBridgeActionHandlers(): {
           chainId: chainId
         })
       )
+      dispatch(
+        setToBridgeNetwork({
+          chainId: partnerChainId
+        })
+      )
     },
     [dispatch, toNetwork.chainId]
   )
 
   const onToNetworkChange = useCallback(
     (chainId: ChainId) => {
+      const { partnerChainId } = getChainPair(chainId)
+
       if (chainId === fromNetwork.chainId) {
         dispatch(swapBridgeNetworks())
         return
@@ -48,6 +77,11 @@ export function useBridgeActionHandlers(): {
       dispatch(
         setToBridgeNetwork({
           chainId: chainId
+        })
+      )
+      dispatch(
+        setFromBridgeNetwork({
+          chainId: partnerChainId
         })
       )
     },
@@ -76,12 +110,37 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
+  const getCollectedTx = useCallback(
+    ({
+      from,
+      to,
+      currency,
+      typedValue
+    }: {
+      from: ChainId
+      to: ChainId
+      currency: Currency | string
+      typedValue: string
+    }) => {
+      dispatch(setFromBridgeNetwork({ chainId: from }))
+      dispatch(setToBridgeNetwork({ chainId: to }))
+      dispatch(typeInput({ typedValue }))
+      dispatch(
+        selectCurrency({
+          currencyId: currency instanceof Currency ? currencyId(currency) : currency
+        })
+      )
+    },
+    [dispatch]
+  )
+
   return {
     onCurrencySelection,
     onUserInput,
     onFromNetworkChange,
     onToNetworkChange,
-    onSwapBridgeNetworks
+    onSwapBridgeNetworks,
+    getCollectedTx
   }
 }
 
@@ -120,4 +179,12 @@ export function useBridgeInfo() {
     fromNetwork,
     toNetwork
   }
+}
+
+export const useBridgeTxsFilter = (): [BridgeTxsFilter, (filter: BridgeTxsFilter) => void] => {
+  const dispatch = useDispatch()
+  const filter = useSelector(bridgeTxsFilterSelector)
+  const setFilter = (filter: BridgeTxsFilter) => dispatch(setBridgeTxsFilter(filter))
+
+  return [filter, setFilter]
 }

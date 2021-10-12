@@ -18,7 +18,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   align-items: center;
 `
 
-const CurrencySelect = styled.button<{ selected: boolean }>`
+const CurrencySelect = styled.button<{ selected: boolean; disableCurrencySelect?: boolean }>`
   align-items: center;
   font-size: ${({ selected }) => (selected ? '26px' : '12px')};
   font-weight: ${({ selected }) => (selected ? 600 : 700)};
@@ -29,7 +29,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   color: ${({ theme }) => theme.white};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
-  cursor: pointer;
+  cursor: ${({ disableCurrencySelect }) => (disableCurrencySelect ? 'auto' : 'pointer')};
   user-select: none;
   border: none;
   text-transform: uppercase;
@@ -51,7 +51,7 @@ const Aligner = styled.span`
   justify-content: space-between;
 `
 
-const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
+const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0 0 5px;
   height: 11px;
   width: 11px;
@@ -149,6 +149,7 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const [focused, setFocused] = useState(false)
   const { account } = useActiveWeb3React()
+
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
 
   const handleDismissSearch = useCallback(() => {
@@ -219,6 +220,7 @@ export default function CurrencyInputPanel({
             <CurrencySelect
               selected={!!(currency || pair)}
               className="open-currency-select-button"
+              disableCurrencySelect={disableCurrencySelect}
               onClick={() => {
                 if (!disableCurrencySelect) {
                   setModalOpen(true)
@@ -239,8 +241,8 @@ export default function CurrencyInputPanel({
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                      '...' +
-                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        '...' +
+                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
                       : currency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}

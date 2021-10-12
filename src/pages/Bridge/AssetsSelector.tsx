@@ -39,7 +39,7 @@ const IconWrapper = styled(RowBetween)`
   }
 `
 
-const AssetName = styled.p`
+const AssetName = styled.p<{ disabled: boolean }>`
   position: relative;
   display: inline-block;
   padding-right: 20px;
@@ -49,6 +49,9 @@ const AssetName = styled.p`
   line-height: 20px;
   color: ${({ theme }) => theme.text2};
 
+  ${({ disabled }) =>
+    !disabled &&
+    `
   &::after {
     content: '';
     position: absolute;
@@ -59,11 +62,12 @@ const AssetName = styled.p`
     background: url(${TriangleIcon}) center no-repeat;
     background-size: contain;
   }
+  `}
 `
 
 interface AssetSelectorProps {
   label: string
-  selectedNetwork: Partial<NetworkOptionProps> | undefined
+  selectedNetwork?: Partial<NetworkOptionProps>
   onClick: () => void
   disabled?: boolean
 }
@@ -78,7 +82,7 @@ export const AssetSelector = ({ label, selectedNetwork, onClick, disabled = fals
         {selectedNetwork?.active && <TagSuccess>Connected</TagSuccess>}
       </Row>
       <SmallLabel>{label}</SmallLabel>
-      <AssetName>{selectedNetwork?.header}</AssetName>
+      <AssetName disabled={disabled}>{selectedNetwork?.header}</AssetName>
     </Section>
   )
 }

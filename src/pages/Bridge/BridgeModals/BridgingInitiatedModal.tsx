@@ -23,6 +23,7 @@ interface BridgingInitiatedModalProps extends ModalProps {
   assetType: string
   fromNetworkName: string
   toNetworkName: string
+  heading: string
 }
 
 export const BridgingInitiatedModal = ({
@@ -31,14 +32,15 @@ export const BridgingInitiatedModal = ({
   amount,
   assetType,
   fromNetworkName,
-  toNetworkName
+  toNetworkName,
+  heading
 }: BridgingInitiatedModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
     <Wrapper>
       <ArrowRightCircle strokeWidth={0.5} size={75} color="#0E9F6E" />
       <TitleWrapper>
         <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
-          Bridging Initiated
+          {heading}
         </TYPE.body>
       </TitleWrapper>
       <TYPE.main mb="24px">
