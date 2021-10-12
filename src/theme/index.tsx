@@ -82,9 +82,7 @@ export function colors(darkMode: boolean): Colors {
     bg19: darkMode ? '#222c31' : '#ffffff',
     buttonBlack: darkMode ? '#11171a' : '#f5f5f5',
     buttonGray: darkMode ? '#40444f' : '#dcdbdc',
-    poweredBy: darkMode ? 'rgba(64, 68, 79, 0.4)' : 'rgba(220, 219, 220, 0.2)',
-    poweredByAbout: darkMode ? 'rgba(64, 68, 79, 0.4)' : 'rgba(64, 68, 79, 0.2)',
-    poweredByMobile: darkMode ? 'rgba(17, 23, 26, 0.4)' : 'rgba(220, 219, 220, 0.4)',
+    poweredByText: darkMode ? '#A7B6BD' : '#5C6468',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',

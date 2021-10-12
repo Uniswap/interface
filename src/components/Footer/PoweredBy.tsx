@@ -10,7 +10,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
 import SocialLinks from './SocialLinks'
 
-const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
+const StyledPoweredBy = styled.div`
   position: fixed;
   bottom: 96px;
   right: 16px;
@@ -20,7 +20,10 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   box-sizing: border-box;
   padding: 8px 16px;
   border-radius: 4px;
-  background: ${({ theme, isAboutpage }) => (isAboutpage ? theme.poweredByAbout : theme.poweredByMobile)};
+  background: ${({ theme }) => `${theme.bg3}20`};
+  :hover {
+    background: ${({ theme }) => `${theme.bg3}50`};
+  }
 
   @media only screen and (min-width: 768px) {
     position: fixed;
@@ -42,7 +45,6 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   }
 
   @media only screen and (min-width: 1366px) {
-    background: ${({ theme, isAboutpage }) => (isAboutpage ? theme.poweredByAbout : theme.poweredBy)};
     padding: 16px;
     flex-direction: column;
     position: absolute;
@@ -69,7 +71,7 @@ const PoweredByLink = styled(ExternalLink)`
 `
 
 const PoweredByText = styled.div`
-  color: ${({ theme }) => theme.subText};
+  color: ${({ theme }) => theme.poweredByText};
   font-size: 10px;
   font-weight: 400;
   margin-bottom: 0;
@@ -98,11 +100,16 @@ export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
   const aboutPage = useRouteMatch('/about')
   const above768 = useMedia('(min-width: 768px)')
+  const above1366 = useMedia('(min-width: 1366px)')
 
   return (
-    <StyledPoweredBy isAboutpage={aboutPage?.isExact}>
+    <StyledPoweredBy>
       <PoweredByLink href="https://kyber.network/">
-        <PoweredByText>
+        <PoweredByText
+          style={{
+            color: aboutPage?.isExact && above1366 ? '#fff' : undefined
+          }}
+        >
           <Trans>Powered By</Trans>
         </PoweredByText>
         <div>
@@ -113,9 +120,9 @@ export default function PoweredBy() {
               <PoweredByIconDark width={48} />
             )
           ) : above768 ? (
-            <PoweredByIconLight />
+            <PoweredByIconLight color={aboutPage?.isExact && above1366 ? '#fff' : undefined} />
           ) : (
-            <PoweredByIconLight width={48} />
+            <PoweredByIconLight width={48} color={aboutPage?.isExact && above1366 ? '#fff' : undefined} />
           )}
         </div>
       </PoweredByLink>
