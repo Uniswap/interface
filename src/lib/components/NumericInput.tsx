@@ -1,5 +1,5 @@
 import themed from 'lib/themed'
-import { forwardRef, HTMLProps, MutableRefObject, useEffect, useState } from 'react'
+import { forwardRef, HTMLProps, useEffect, useState } from 'react'
 
 const StyledInput = themed.input`
   background-color: transparent;
