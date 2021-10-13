@@ -1329,13 +1329,15 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@davatar/react@1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.6.2.tgz#27ccb5e653dae1a525368daf82d801812f44b240"
-  integrity sha512-BQIP6fg8xoUgTleLUk91kItpDYpyXAkFYl04W+86LfYBahr1zBe4lvWZqVypMR36YASa4qn2yIyaaVHLgDOeqQ==
+"@davatar/react@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.8.1.tgz#2fe3e619422a46092c57025328be56b1e911550e"
+  integrity sha512-vq9zNwAfnZCoY8W2eAbjWP1GPQutUfdxG+lKG2fAPqNFP2qrzDhIziKyCKtt7jwaXp79P1Cy1Gjzlvs1XkzwOQ==
   dependencies:
+    "@ethersproject/contracts" "^5.4.1"
     "@ethersproject/providers" "^5.4.5"
     "@types/react-blockies" "^1.4.1"
+    bn.js "^5.2.0"
     color "^3.2.1"
     mersenne-twister "^1.1.0"
     react-blockies "^1.4.1"
@@ -1560,7 +1562,7 @@
   dependencies:
     "@ethersproject/bignumber" "^5.4.0"
 
-"@ethersproject/contracts@5.4.1":
+"@ethersproject/contracts@5.4.1", "@ethersproject/contracts@^5.4.1":
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/contracts/-/contracts-5.4.1.tgz#3eb4f35b7fe60a962a75804ada2746494df3e470"
   integrity sha512-m+z2ZgPy4pyR15Je//dUaymRUZq5MtDajF6GwFbGAVmKz/RF+DNIPwF0k5qEcL3wPGVqUjFg2/krlCRVTU4T5w==
@@ -6280,7 +6282,7 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
   integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
-bn.js@^5.0.0, bn.js@^5.1.1:
+bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
