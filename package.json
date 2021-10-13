@@ -25,6 +25,7 @@
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
     "@react-hook/window-scroll": "^1.3.0",
+    "@reduxjs/toolkit": "^1.6.1",
     "@svgr/cli": "^5.5.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
