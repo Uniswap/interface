@@ -5,6 +5,8 @@ import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/
 import TwitterIcon from 'components/Icons/TwitterIcon'
 import DiscordIcon from 'components/Icons/DiscordIcon'
 import { ExternalLink } from 'theme'
+import { useRouteMatch } from 'react-router-dom'
+import { useMedia } from 'react-use'
 
 const StyledSocialLinks = styled.div`
   display: flex;
@@ -13,11 +15,11 @@ const StyledSocialLinks = styled.div`
   border-radius: 5px;
 `
 
-const StyledTwitterIcon = styled.div`
+const StyledTwitterIcon = styled.div<{ borderColor?: string }>`
   display: flex;
   align-items: center;
   padding-right: 6px;
-  border-right: solid 0.6px ${({ theme }) => theme.subText};
+  border-right: solid 0.6px ${({ theme, borderColor }) => borderColor ?? theme.subText};
 `
 
 const StyledDiscordIcon = styled.div`
@@ -27,10 +29,13 @@ const StyledDiscordIcon = styled.div`
 `
 
 export default function SocialLinks() {
+  const aboutPage = useRouteMatch('/about')
+  const above1366 = useMedia('(min-width: 1366px)')
+
   return (
     <StyledSocialLinks>
       <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
-        <StyledTwitterIcon>
+        <StyledTwitterIcon borderColor={aboutPage?.isExact && above1366 ? '#fff' : undefined}>
           <TwitterIcon />
         </StyledTwitterIcon>
       </ExternalLink>

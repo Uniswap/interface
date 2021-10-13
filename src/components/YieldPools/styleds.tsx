@@ -125,34 +125,86 @@ export const AdContainer = styled.div`
 
 export const HeadingContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0;
+  `}
+`
+export const HeadingRight = styled.div`
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg16};
-  padding: 28px 32px;
-  margin-bottom: 20px;
+  padding: 24px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
 
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    box-shadow: none;
+    padding-bottom: 0;
+
+    :after {
+      content: "";
+      display: block;
+      border-bottom: 1px solid #404b51;
+    }
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding-bottom: 0;
+  `}
+`
+
+export const HeadingLeft = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg16};
+  padding: 24px;
+  gap: 16px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    box-shadow: none;
+  `}
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 1fr;
-    flex-direction: column-reverse;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
   `}
 `
 
 export const LearnMoreContainer = styled.div`
-  padding-right: 56px;
+  padding-right: 24px;
   border-right: 1px solid #404b51;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-row: 2;
-    padding-top: 24px;
+    padding-bottom: 24px;
     padding-right: 0;
-    border-top: 1px solid #404b51;
+    border-bottom: 1px solid #404b51;
     border-right: none;
   `}
 `
 
+export const UpcomingFarmsContainer = styled.div`
+  padding-left: 24px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding-top: 24px;
+    padding-left: 0;
+  `}
+`
 export const LearnMoreInstruction = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `
 
 export const LearnMoreLinkContainer = styled.div`
@@ -161,20 +213,8 @@ export const LearnMoreLinkContainer = styled.div`
 `
 
 export const HarvestAllContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 3fr;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 36px;
-
-  @media (max-width: 1600px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 1fr;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     padding-bottom: 24px;
-    padding-left: 0;
   `}
 `
 
@@ -184,13 +224,13 @@ export const TotalRewardsContainer = styled.div`
 
 export const TotalRewardsTitleWrapper = styled.div`
   display: flex;
+  margin-bottom: 12px;
 `
 
 export const TotalRewardsTitle = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: ${({ theme }) => theme.text11};
-  margin-bottom: 2px;
 `
 
 export const HarvestAllButtonContainer = styled.div`

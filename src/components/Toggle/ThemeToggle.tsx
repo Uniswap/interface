@@ -7,15 +7,19 @@ import LightModeIconActive from 'components/Icons/LightModeIconActive'
 import LightModeIconInactive from 'components/Icons/LightModeIconInactive'
 
 const ToggleElement = styled.span<{ isDarkMode?: boolean }>`
-  padding: 0.25rem 0.5rem;
   border-radius: 50%;
-  background: ${({ theme, isDarkMode }) => (isDarkMode ? theme.primary1 : 'none')};
+  background-color: ${({ theme, isDarkMode }) => (isDarkMode ? theme.primary1 : 'none')};
   font-size: 1rem;
   font-weight: 400;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const StyledToggle = styled.button`
-  border-radius: 16px;
+  border-radius: 999px;
   border: none;
   background: ${({ theme }) => theme.bg3};
   display: flex;
@@ -24,6 +28,8 @@ const StyledToggle = styled.button`
   outline: none;
   padding: 0;
   opacity: 1;
+  width: 56px;
+  height: 28px;
   transition: opacity 0.25s ease;
 
   :hover {

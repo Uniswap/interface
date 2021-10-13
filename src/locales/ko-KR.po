@@ -1319,6 +1319,10 @@ msgstr "스테이킹 풀만 보기"
 msgid "Staked TVL"
 msgstr "스테이킹된 TVL"
 
+#: src/components/YieldPools/index.tsx
+msgid "Start preparing liquidity for our upcoming farms!"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
@@ -1463,6 +1467,10 @@ msgstr ""
 msgid "Trade"
 msgstr "거래"
 
+#: src/pages/Static/About.tsx
+msgid "Trade Now"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
 msgstr "제출된 거래"
@@ -1564,6 +1572,10 @@ msgstr "베스팅"
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "베스팅 시작됨: {0}"
+
+#: src/components/YieldPools/index.tsx
+msgid "View Upcoming Farms →"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics"

@@ -1319,6 +1319,10 @@ msgstr "仅质押"
 msgid "Staked TVL"
 msgstr "质押的总锁定价值"
 
+#: src/components/YieldPools/index.tsx
+msgid "Start preparing liquidity for our upcoming farms!"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
@@ -1463,6 +1467,10 @@ msgstr ""
 msgid "Trade"
 msgstr "交易"
 
+#: src/pages/Static/About.tsx
+msgid "Trade Now"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction Submitted"
 msgstr "交易提交"
@@ -1564,6 +1572,10 @@ msgstr "释放"
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "释放开始: {0}"
+
+#: src/components/YieldPools/index.tsx
+msgid "View Upcoming Farms →"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics"
