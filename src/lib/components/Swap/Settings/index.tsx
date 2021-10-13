@@ -1,6 +1,6 @@
 import themed, { TYPE } from 'lib/themed'
 import { ThemedButton, themedIcon } from 'lib/themed/components'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Settings as SettingsIcon } from 'react-feather'
 
 import Modal, { Body, Header } from '../../Modal'
@@ -24,7 +24,7 @@ const ThemedReset = themed(TYPE.text)`
 `
 
 export function SettingsModal({ onClose }: { onClose: () => void }) {
-  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+  const boundary = useRef<HTMLDivElement>(null)
   const resetSettings = useResetSettings()
   return (
     <Modal>
@@ -33,8 +33,8 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
           Reset
         </ThemedReset>
       </Header>
-      <Body ref={setContainer}>
-        <BoundaryProvider value={container}>
+      <Body ref={boundary}>
+        <BoundaryProvider value={boundary}>
           <GasPriceSelect />
           <MaxSlippageSelect />
           <TransactionTtlInput />

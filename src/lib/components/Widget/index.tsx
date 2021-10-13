@@ -1,5 +1,5 @@
 import themed, { getTheme, Provider as ThemeProvider } from 'lib/themed'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useMemo, useRef } from 'react'
 
 import { Provider as ModalProvider } from '../Modal'
 
@@ -26,12 +26,12 @@ export interface WidgetProps {
 
 export default function Widget({ darkMode, children }: WidgetProps) {
   const theme = useMemo(() => getTheme(darkMode), [darkMode])
-  const [modal, setModal] = useState<HTMLDivElement | null>(null)
+  const modal = useRef<HTMLDivElement>(null)
   return (
     <ThemeProvider theme={theme}>
       <Wrapper>
-        <div ref={setModal} />
-        <ModalProvider value={modal}>{children}</ModalProvider>
+        <div ref={modal} />
+        <ModalProvider value={modal.current}>{children}</ModalProvider>
       </Wrapper>
     </ThemeProvider>
   )
