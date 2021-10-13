@@ -37,14 +37,12 @@ function CustomOption({ value, selected, onChange, onSelect }: CustomOptionProps
   const input = useRef<HTMLInputElement>(null)
   const theme = useTheme()
   const borderColor = selected ? theme.selected : undefined
+  const focus = () => {
+    input.current?.focus()
+    value !== undefined && onSelect(value)
+  }
   return (
-    <BaseOption
-      style={{ borderColor }}
-      onClick={() => {
-        input.current?.focus()
-        value !== undefined && onSelect(value)
-      }}
-    >
+    <BaseOption style={{ borderColor }} onClick={focus}>
       <Line>
         <TYPE.text style={{ display: 'flex', justifyContent: 'space-between' }} accent>
           <DecimalInput
