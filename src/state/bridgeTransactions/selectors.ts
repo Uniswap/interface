@@ -103,6 +103,7 @@ const createBridgeLog = ({ transactions, fromChainId, toChainId }: CreateBridgeL
   }))
 }
 
+// Reduce transactions into deposit/withdrawal summaries so user can see the result of entire process rather than its parts
 export const bridgeTxsSummarySelector = createSelector(
   chainIdSelector,
   bridgeOwnedTxsSelector,
@@ -119,6 +120,7 @@ export const bridgeTxsSummarySelector = createSelector(
         }
       } = { [l1ChainId]: {}, [l2ChainId]: {} }
 
+      // Pair transactions and decide about their status
       const l1Summaries = Object.values(l1Txs ?? {}).reduce<BridgeTransactionSummary[]>((total, tx) => {
         const from = txnTypeToOrigin(tx.type) === 1 ? l1ChainId : l2ChainId
         const to = from === l1ChainId ? l2ChainId : l1ChainId
@@ -139,12 +141,12 @@ export const bridgeTxsSummarySelector = createSelector(
           log: []
         }
 
+        // DEPOSIT L1
         if (!tx.partnerTxHash || !l2Txs[tx.partnerTxHash]) {
           summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
 
-          // deposits on l1 should never show confirmed on UI
           if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
-            summary.status = 'pending'
+            summary.status = 'pending' // deposits on l1 should never show confirmed on UI
             summary.pendingReason = PendingReasons.TX_UNCONFIRMED
           }
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
@@ -153,7 +155,8 @@ export const bridgeTxsSummarySelector = createSelector(
           return total
         }
 
-        // l2 to l1 withdrawal
+        // WITHDRAWAL L1 + L2
+        // from/to are inverted for better UX
         if (tx.type === 'outbox') {
           const status = tx.receipt?.status
 
@@ -168,12 +171,13 @@ export const bridgeTxsSummarySelector = createSelector(
           })
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
-          processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
+          processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash // skip partner tx in l2Summaries
+
           total.push(summary)
           return total
         }
 
-        // Has pair & is deposit
+        // DEPOSIT L1 + L2
         if (tx.receipt?.status === 1 && tx.type === 'deposit-l1') {
           const status = l2Txs[tx.partnerTxHash].receipt?.status
           summary.log = createBridgeLog({
@@ -186,7 +190,8 @@ export const bridgeTxsSummarySelector = createSelector(
           summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
-          processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash
+          processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash // skip partner tx in l2Summaries
+
           total.push(summary)
           return total
         }
@@ -195,7 +200,6 @@ export const bridgeTxsSummarySelector = createSelector(
       }, [])
 
       const l2Summaries = Object.values(l2Txs ?? {}).reduce<BridgeTransactionSummary[]>((total, tx) => {
-        // No pair
         const from = txnTypeToOrigin(tx.type) === 1 ? l1ChainId : l2ChainId
         const to = from === l1ChainId ? l2ChainId : l1ChainId
 
@@ -214,8 +218,8 @@ export const bridgeTxsSummarySelector = createSelector(
           log: []
         }
 
+        // WITHDRAWAL L2
         if (!tx.partnerTxHash || !l1Txs[tx.partnerTxHash]) {
-          // display state of outgoing message state when withdrawal
           if (tx.type === 'withdraw') {
             if (!isLoading) {
               switch (tx.outgoingMessageState) {
@@ -237,7 +241,9 @@ export const bridgeTxsSummarySelector = createSelector(
             }
           }
           summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
+
           processedTxsMap[l2ChainId][tx.txHash] = tx.txHash
+
           total.push(summary)
           return total
         }
