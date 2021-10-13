@@ -10,7 +10,7 @@ import ExpertModeToggle from './ExpertModeToggle'
 import GasPriceSelect from './GasPriceSelect'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import MultihopToggle from './MultihopToggle'
-import TransactionDeadlineInput from './TransactionDeadlineInput'
+import TransactionTtlInput from './TransactionTtlInput'
 
 export const ThemedSettingsIcon = themedIcon(SettingsIcon)
 
@@ -37,7 +37,7 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
         <BoundaryProvider value={container}>
           <GasPriceSelect />
           <MaxSlippageSelect />
-          <TransactionDeadlineInput />
+          <TransactionTtlInput />
           <ExpertModeToggle />
           <MultihopToggle />
         </BoundaryProvider>

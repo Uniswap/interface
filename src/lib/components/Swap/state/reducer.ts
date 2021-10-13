@@ -4,7 +4,7 @@ import {
   resetSettings,
   setGasPrice,
   setMaxSlippage,
-  setTransactionDeadline,
+  setTransactionTtl,
   toggleExpertMode,
   toggleMultihop,
   toggleShowDetails,
@@ -27,7 +27,7 @@ export enum MaxSlippage {
 export interface Settings {
   gasPrice: [GasPrice, number?]
   maxSlippage: [MaxSlippage, number?]
-  transactionDeadline: number
+  transactionTtl: number
   expertMode: boolean
   multihop: boolean
 }
@@ -39,7 +39,7 @@ export interface SwapState extends Settings {
 const initialSettings: Settings = {
   gasPrice: [GasPrice.DEFAULT],
   maxSlippage: [MaxSlippage.DEFAULT],
-  transactionDeadline: 40,
+  transactionTtl: 40,
   expertMode: false,
   multihop: true,
 }
@@ -86,8 +86,8 @@ export default createReducer<SwapState>(initialState, (builder) =>
         state.maxSlippage = [MaxSlippage.DEFAULT]
       }
     })
-    .addCase(setTransactionDeadline, (state, { payload: value }) => {
-      state.transactionDeadline = value
+    .addCase(setTransactionTtl, (state, { payload: value }) => {
+      state.transactionTtl = value
     })
     .addCase(toggleExpertMode, (state) => {
       state.expertMode = !state.expertMode

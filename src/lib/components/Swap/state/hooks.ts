@@ -6,7 +6,7 @@ import {
   resetSettings,
   setGasPrice,
   setMaxSlippage,
-  setTransactionDeadline,
+  setTransactionTtl,
   toggleExpertMode,
   toggleMultihop,
   toggleShowDetails,
@@ -29,8 +29,8 @@ export function useMaxSlippage() {
   return useSelectedReducerAtom(swapAtom, ({ maxSlippage }) => maxSlippage, setMaxSlippage)
 }
 
-export function useTransactionDeadline() {
-  return useSelectedReducerAtom(swapAtom, ({ transactionDeadline }) => transactionDeadline, setTransactionDeadline)
+export function useTransactionTtl() {
+  return useSelectedReducerAtom(swapAtom, ({ transactionTtl }) => transactionTtl, setTransactionTtl)
 }
 
 export function useExpertMode() {
