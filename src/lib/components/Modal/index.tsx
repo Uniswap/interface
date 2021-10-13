@@ -1,4 +1,4 @@
-import themed, { Colors, Layer, useTheme } from 'lib/themed'
+import styled, { Colors, Layer, useTheme } from 'lib/styled'
 import { createContext, ReactNode, useContext } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -8,7 +8,7 @@ const Context = createContext<HTMLDivElement | null>(null)
 
 export const Provider = Context.Provider
 
-const Wrapper = themed.div`
+const Wrapper = styled.div`
   border-radius: ${({ theme }) => Math.max(theme.borderRadius - 4, 0)}px;
   box-sizing: border-box;
   display: flex;
@@ -23,7 +23,7 @@ const Wrapper = themed.div`
   z-index: ${Layer.MODAL};
 `
 
-export const Body = themed.div`
+export const Body = styled.div`
   margin-right: -16px;
   overflow-y: scroll;
   padding: 16px 16px 0 0;

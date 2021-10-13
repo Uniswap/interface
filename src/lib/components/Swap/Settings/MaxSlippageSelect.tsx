@@ -1,4 +1,4 @@
-import { TYPE, useTheme } from 'lib/themed'
+import { TYPE, useTheme } from 'lib/styled'
 import { useRef } from 'react'
 
 import { DecimalInput } from '../../NumericInput'

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { Text, TextProps as TextPropsWithCss } from 'rebass'
+// eslint-disable-next-line no-restricted-imports
 import styled, {
   ThemedBaseStyledInterface,
   ThemeProvider as StyledProvider,

@@ -1,14 +1,14 @@
-import themed from 'lib/themed'
+import styled from 'lib/styled'
 import { ReactNode } from 'react'
 
-const Row = themed.div`
+const Row = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
   line-height: 20px;
 `
 
-const Toolbar = themed.div`
+const Toolbar = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
@@ -18,13 +18,13 @@ const Toolbar = themed.div`
   }
 `
 
-const Title = themed.div`
+const Title = styled.div`
   color: ${({ theme }) => theme.text};
   display: flex;
   user-select: none;
 `
 
-const Divider = themed.hr`
+const Divider = styled.hr`
   border-color: ${({ theme }) => theme.icon};
   border-top: none;
   border-right: none;

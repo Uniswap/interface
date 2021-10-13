@@ -1,5 +1,5 @@
-import themed, { TYPE } from 'lib/themed'
-import { ThemedButton, themedIcon } from 'lib/themed/components'
+import styled, { TYPE } from 'lib/styled'
+import { StyledButton, styledIcon } from 'lib/styled/components'
 import { useRef, useState } from 'react'
 import { Settings as SettingsIcon } from 'react-feather'
 
@@ -12,9 +12,9 @@ import MaxSlippageSelect from './MaxSlippageSelect'
 import MultihopToggle from './MultihopToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
-export const ThemedSettingsIcon = themedIcon(SettingsIcon)
+export const StyledSettingsIcon = styledIcon(SettingsIcon)
 
-const ThemedReset = themed(TYPE.text)`
+const StyledReset = styled(TYPE.text)`
   padding-right: 12px;
 
   :hover {
@@ -29,9 +29,9 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
   return (
     <Modal>
       <Header title={<TYPE.title>Settings</TYPE.title>} onClose={onClose}>
-        <ThemedReset color="action" onClick={resetSettings}>
+        <StyledReset color="action" onClick={resetSettings}>
           Reset
-        </ThemedReset>
+        </StyledReset>
       </Header>
       <Body ref={boundary}>
         <BoundaryProvider value={boundary}>
@@ -50,9 +50,9 @@ export default function Settings() {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <ThemedButton onClick={() => setOpen(true)}>
-        <ThemedSettingsIcon />
-      </ThemedButton>
+      <StyledButton onClick={() => setOpen(true)}>
+        <StyledSettingsIcon />
+      </StyledButton>
       {open && <SettingsModal onClose={() => setOpen(false)} />}
     </>
   )

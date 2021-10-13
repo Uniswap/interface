@@ -1,4 +1,4 @@
-import { TYPE } from 'lib/themed'
+import { TYPE } from 'lib/styled'
 
 import Toggle from '../../Toggle'
 import { useExpertMode } from '../state/hooks'

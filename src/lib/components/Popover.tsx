@@ -1,6 +1,6 @@
 import { Options, Placement } from '@popperjs/core'
 import useInterval from 'lib/hooks/useInterval'
-import themed, { Layer } from 'lib/themed'
+import styled, { Layer } from 'lib/styled'
 import maxSize from 'popper-max-size-modifier'
 import React, { createContext, RefObject, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -10,7 +10,7 @@ const BoundaryContext = createContext<RefObject<HTMLDivElement> | null>(null)
 
 export const BoundaryProvider = BoundaryContext.Provider
 
-const PopoverContainer = themed.div<{ show: boolean }>`
+const PopoverContainer = styled.div<{ show: boolean }>`
   background-color: ${({ theme }) => theme.black};
   border: 1px solid ${({ theme }) => theme.icon};
   border-radius: 8px;
@@ -21,11 +21,11 @@ const PopoverContainer = themed.div<{ show: boolean }>`
   z-index: ${Layer.POPOVER};
 `
 
-const Reference = themed.div`
+const Reference = styled.div`
   display: inline-block;
 `
 
-const Arrow = themed.div`
+const Arrow = styled.div`
   width: 8px;
   height: 8px;
   z-index: ${Layer.POPOVER};

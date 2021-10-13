@@ -1,4 +1,4 @@
-import { inlaidIcon, ThemedButton } from 'lib/themed/components'
+import { inlaidIcon, StyledButton } from 'lib/styled/components'
 import { Info, Minus, Plus } from 'react-feather'
 
 import { useShowDetails } from './state/hooks'
@@ -8,5 +8,5 @@ const InfoMinus = inlaidIcon(Info, Minus)
 
 export default function ShowDetails() {
   const [showDetails, toggleShowDetails] = useShowDetails()
-  return <ThemedButton onClick={toggleShowDetails}>{showDetails ? <InfoMinus /> : <InfoPlus />}</ThemedButton>
+  return <StyledButton onClick={toggleShowDetails}>{showDetails ? <InfoMinus /> : <InfoPlus />}</StyledButton>
 }

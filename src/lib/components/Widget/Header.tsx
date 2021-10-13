@@ -1,10 +1,10 @@
 import Logo from 'lib/assets/Logo'
-import themed, { TYPE } from 'lib/themed'
+import styled, { TYPE } from 'lib/styled'
 import { ReactNode } from 'react'
 
 import BaseHeader from '../Header'
 
-const ThemedLogo = themed(Logo)`
+const StyledLogo = styled(Logo)`
   fill: ${({ theme }) => theme.icon};
   mix-blend-mode: lighten;
   padding: 1.5px 2px;
@@ -27,7 +27,7 @@ function Title({ path, title }: Omit<HeaderProps, 'children'>) {
   return (
     <>
       <a href={`https://app.uniswap.org/#${path}`}>
-        <ThemedLogo />
+        <StyledLogo />
       </a>
       <span style={{ width: 8 }} />
       <TYPE.title>{title}</TYPE.title>

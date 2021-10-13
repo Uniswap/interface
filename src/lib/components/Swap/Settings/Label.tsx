@@ -1,11 +1,11 @@
-import themed, { TYPE } from 'lib/themed'
-import { themedIcon } from 'lib/themed/components'
+import styled, { TYPE } from 'lib/styled'
+import { styledIcon } from 'lib/styled/components'
 import { useState } from 'react'
 import { HelpCircle } from 'react-feather'
 
 import Popover from '../../Popover'
 
-const ThemedHelpCircle = themed(themedIcon(HelpCircle))`
+const StyledHelpCircle = styled(styledIcon(HelpCircle))`
   :hover {
     cursor: help;
     opacity: 0.7;
@@ -17,7 +17,7 @@ interface LabelProps {
   tooltip?: string
 }
 
-const Wrapper = themed.div`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
   user-select: none;
@@ -31,7 +31,7 @@ export default function Label({ name, tooltip }: LabelProps) {
       {tooltip && (
         <TYPE.text>
           <Popover content={<TYPE.detail>{tooltip}</TYPE.detail>} show={show} placement="top">
-            <ThemedHelpCircle onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
+            <StyledHelpCircle onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
           </Popover>
         </TYPE.text>
       )}

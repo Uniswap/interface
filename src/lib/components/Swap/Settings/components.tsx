@@ -1,22 +1,22 @@
-import themed from 'lib/themed'
-import { themedIcon } from 'lib/themed/components'
+import styled from 'lib/styled'
+import { styledIcon } from 'lib/styled/components'
 import { CheckCircle } from 'react-feather'
 
-export const Line = themed.div`
+export const Line = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
 `
 
-export const Row = themed(Line)`
+export const Row = styled(Line)`
   padding: 8px 0 16px 0;
 `
 
-export const Spacer = themed.span`
+export const Spacer = styled.span`
   min-width: 8px;
 `
 
-export const Bordered = themed.div`
+export const Bordered = styled.div`
   border: 1px solid ${({ theme }) => theme.icon};
   border-radius: 0.5em;
   display: flex;
@@ -25,13 +25,13 @@ export const Bordered = themed.div`
   padding: 8px;
 `
 
-export const Option = themed(Bordered)`
+export const Option = styled(Bordered)`
   cursor: pointer;
   flex-direction: column;
   justify-content: flex-start;
 `
 
-export const Selected = themed(themedIcon(CheckCircle))`
+export const Selected = styled(styledIcon(CheckCircle))`
   > * {
     stroke: ${({ theme }) => theme.selected};
   }

@@ -1,9 +1,9 @@
-import themed, { getTheme, Provider as ThemeProvider } from 'lib/themed'
+import styled, { getTheme, Provider as ThemeProvider } from 'lib/styled'
 import { ReactNode, useMemo, useRef } from 'react'
 
 import { Provider as ModalProvider } from '../Modal'
 
-const Wrapper = themed.div`
+const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.bg};
   border-radius: ${({ theme }) => theme.borderRadius}px;
   box-sizing: border-box;

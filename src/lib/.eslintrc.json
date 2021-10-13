@@ -1,0 +1,16 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "styled-components/macro",
+            "message": "Please import from lib/styled."
+          }
+        ]
+      }
+    ]
+  }
+}

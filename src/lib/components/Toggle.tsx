@@ -1,6 +1,6 @@
-import themed from 'lib/themed'
+import styled from 'lib/styled'
 
-const Input = themed.input`
+const Input = styled.input`
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.icon};

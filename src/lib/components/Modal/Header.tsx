@@ -1,10 +1,10 @@
-import { ThemedButton, themedIcon } from 'lib/themed/components'
+import { StyledButton, styledIcon } from 'lib/styled/components'
 import { ReactNode } from 'react'
 import { X } from 'react-feather'
 
 import BaseHeader from '../Header'
 
-const ThemedXIcon = themedIcon(X, 'text')
+const StyledXIcon = styledIcon(X, 'text')
 
 export interface HeaderProps {
   title: ReactNode
@@ -17,9 +17,9 @@ export default function Header({ title, onClose, children }: HeaderProps) {
     <BaseHeader title={title} divider>
       {children}
       {onClose && (
-        <ThemedButton onClick={onClose}>
-          <ThemedXIcon />
-        </ThemedButton>
+        <StyledButton onClick={onClose}>
+          <StyledXIcon />
+        </StyledButton>
       )}
     </BaseHeader>
   )
