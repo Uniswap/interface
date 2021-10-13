@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 15:06\n"
+"PO-Revision-Date: 2021-10-13 23:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -1128,6 +1128,10 @@ msgstr "Ликвидность в V2 не обнаружена."
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "Нет активных пулов"
+
+#: src/components/FeeSelector/index.tsx
+msgid "No data"
+msgstr "Нет данных"
 
 #: src/state/governance/hooks.ts
 msgid "No description."

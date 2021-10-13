@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-10-13 23:06\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -1128,6 +1128,10 @@ msgstr "Nessuna liquidità V2 trovata."
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "Nessun pool attivo"
+
+#: src/components/FeeSelector/index.tsx
+msgid "No data"
+msgstr "Nessun dato"
 
 #: src/state/governance/hooks.ts
 msgid "No description."

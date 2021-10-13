@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-10-13 23:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1128,6 +1128,10 @@ msgstr "找不到V2流动资金。"
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
 msgstr "无运行中的流动池"
+
+#: src/components/FeeSelector/index.tsx
+msgid "No data"
+msgstr "没有数据"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
