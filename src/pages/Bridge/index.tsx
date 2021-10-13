@@ -93,7 +93,6 @@ export default function Bridge() {
     } else {
       await bridgeService.withdrawEth(typedValue)
     }
-    // handleResetBridge()
   }, [bridgeService, chainId, typedValue])
 
   const fromOptions = createNetworkOptions({

@@ -57,9 +57,6 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
             heading={'Collecting Initiated'}
           />
         )
-
-      case BridgeModalStatus.ERROR:
-        return <BridgeErrorModal isOpen onDismiss={() => setStatus(BridgeModalStatus.ERROR)} error={error ?? ''} />
       case BridgeModalStatus.SUCCESS:
         return (
           <BridgeSuccesModal
@@ -76,6 +73,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
             onBackButtonClick={handleResetBridge}
           />
         )
+      case BridgeModalStatus.ERROR:
+        return <BridgeErrorModal isOpen onDismiss={() => setStatus(BridgeModalStatus.ERROR)} error={error ?? ''} />
       default:
         return null
     }
