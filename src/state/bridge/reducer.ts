@@ -45,7 +45,6 @@ export interface BridgeState {
   readonly isCheckingWithdrawals: boolean
   readonly txsFilter: BridgeTxsFilter
   readonly modalError?: string
-  readonly modalState: BridgeModalStatus
   readonly modal: BridgeModalState
 }
 
@@ -61,7 +60,6 @@ const initialState: BridgeState = {
   txsFilter: BridgeTxsFilter.RECENT,
   modalError: undefined,
   isCheckingWithdrawals: true,
-  modalState: BridgeModalStatus.CLOSED,
   modal: {
     status: BridgeModalStatus.CLOSED,
     currencyId: 'ETH',
