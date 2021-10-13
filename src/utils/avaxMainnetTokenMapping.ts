@@ -27,6 +27,9 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0x961C8c0B1aaD0c0b10a51FeF6a867E3091BCef17'.toLowerCase()) {
     // dyp
     uri = 'https://i.imgur.com/CLevvjE.png'
+  } else if (address?.toLowerCase() === '0x130966628846BFd36ff31a822705796e8cb8C18D'.toLowerCase()) {
+    // MIM
+    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/162.png'
   }
 
   if (!uri) {
