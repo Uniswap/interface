@@ -4,8 +4,10 @@ import ReactPlayer from 'react-player/lazy'
 import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
+import aboutGraph from 'assets/svg/about_graph.svg'
+import aboutGraphDark from 'assets/svg/about_graph_dark.svg'
 
-import { ButtonOutlined, ButtonPrimary, ButtonEmpty } from 'components/Button'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import Loader from 'components/Loader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
@@ -145,7 +147,7 @@ export default function About() {
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
               {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2} color={theme.subText}>
+            <Text fontSize={14} mt={2} color={theme.subText} minWidth="max-content">
               <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
@@ -156,7 +158,7 @@ export default function About() {
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text} mt={[0, 0]}>
               {globalData ? formatBigLiquidity(globalData.totalLiquidityUSD, 2, true) : <Loader />}
             </Text>
-            <Text fontSize={14} mt={2}>
+            <Text fontSize={14} mt={2} minWidth="max-content">
               <Trans>Total Value Locked</Trans>
             </Text>
           </LiquidityNumber>
@@ -187,7 +189,7 @@ export default function About() {
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
               {maxApr[chainId as ChainId].toFixed(2)}%
             </Text>
-            <Text fontSize={14} color={theme.subText}>
+            <Text fontSize={14} color={theme.subText} mt={2} minWidth="max-content">
               <Trans>Max APY</Trans>
             </Text>
           </TradingVolumeSection>
@@ -201,15 +203,15 @@ export default function About() {
         <ButtonOutlined padding="12px 10px" as={Link} to={poolsMenuLink} style={{ fontSize: '16px' }}>
           <Trans>Add Liquidity</Trans>
         </ButtonOutlined>
-        <ButtonEmpty
-          padding="12px 0px"
+        <ButtonOutlined
+          padding="12px 10px"
           as={ExternalLink}
           href={`https://docs.dmm.exchange`}
           target="_blank"
           style={{ fontSize: '16px' }}
         >
           <Trans>Documentation</Trans>
-        </ButtonEmpty>
+        </ButtonOutlined>
       </Panel0>
 
       <Text mt={[70, 100]} color={theme.text} fontSize={[24, 40]}>
@@ -302,7 +304,12 @@ export default function About() {
       </SectionFee>
 
       <SectionGraph>
-        <div className="left"></div>
+        <div
+          className="left"
+          style={{
+            backgroundImage: isDarkMode ? `url(${aboutGraphDark})` : `url(${aboutGraph})`
+          }}
+        />
         <div className="right">
           <div className="item" style={{ borderLeft: above576 ? undefined : '1px dashed #303e46' }}>
             <div className="box box_1"></div>
@@ -342,7 +349,7 @@ export default function About() {
         </Box>
       </div>
 
-      <ButtonOutlined
+      <ButtonPrimary
         width="248px"
         padding="12px 18px"
         as={Link}
@@ -350,7 +357,7 @@ export default function About() {
         style={{ margin: '60px auto 100px auto', fontSize: '16px' }}
       >
         <Trans>Explore pools</Trans>
-      </ButtonOutlined>
+      </ButtonPrimary>
 
       <YoutubeVideo>
         <ReactPlayer url="https://www.youtube.com/watch?v=2xgboyu7rss" />
@@ -393,34 +400,34 @@ export default function About() {
       </Text>
       <Panel>
         <ButtonOutlined
-          padding="12px 28px"
+          padding="12px"
           as={ExternalLink}
           href={DMM_ANALYTICS_URL[chainId as ChainId]}
-          style={{ width: 'auto', fontSize: '16px' }}
+          style={{ width: '200px', fontSize: '16px' }}
         >
           <Trans>Analytics</Trans>
         </ButtonOutlined>
         <ButtonOutlined
-          padding="12px 28px"
+          padding="12px"
           as={ExternalLink}
           href={`https://github.com/dynamic-amm`}
-          style={{ width: 'auto', fontSize: '16px' }}
+          style={{ width: '200px', fontSize: '16px' }}
         >
           <Trans>Github</Trans>
         </ButtonOutlined>
         <ButtonOutlined
-          padding="12px 28px"
+          padding="12px"
           as={ExternalLink}
           href={`https://files.kyber.network/DMM-Feb21.pdf`}
-          style={{ width: 'auto', fontSize: '16px' }}
+          style={{ width: '200px', fontSize: '16px' }}
         >
           <Trans>Litepaper</Trans>
         </ButtonOutlined>
         <ButtonOutlined
-          padding="12px 28px"
+          padding="12px"
           as={ExternalLink}
           href={KYBER_NETWORK_DISCORD_URL}
-          style={{ width: 'auto', fontSize: '16px' }}
+          style={{ width: '200px', fontSize: '16px' }}
         >
           <Trans>Developer Support</Trans>
         </ButtonOutlined>

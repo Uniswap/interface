@@ -1319,6 +1319,10 @@ msgstr "Chỉ Stake"
 msgid "Staked TVL"
 msgstr "TVL đã Stake"
 
+#: src/components/YieldPools/index.tsx
+msgid "Start preparing liquidity for our upcoming farms!"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Starting In"
@@ -1568,6 +1572,10 @@ msgstr "Vesting"
 #: src/components/Vesting/Schedule.tsx
 msgid "Vesting started: {0}"
 msgstr "Vesting đã bắt đầu: {0}"
+
+#: src/components/YieldPools/index.tsx
+msgid "View Upcoming Farms →"
+msgstr ""
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics"

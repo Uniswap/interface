@@ -15,7 +15,7 @@ import { formattedNum } from 'utils'
 import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 import {
   AdContainer,
-  HeadingContainer,
+  HeadingLeft,
   LearnMoreContainer,
   LearnMoreInstruction,
   LearnMoreLinkContainer,
@@ -28,15 +28,18 @@ import {
   ClickableText,
   StakedOnlyToggleWrapper,
   StakedOnlyToggle,
-  StakedOnlyToggleText
+  StakedOnlyToggleText,
+  HeadingContainer,
+  HeadingRight,
+  UpcomingFarmsContainer
 } from './styleds'
 import ConfirmHarvestingModal from './ConfirmHarvestingModal'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import TotalRewardsDetail from './TotalRewardsDetail'
 import LocalLoader from 'components/LocalLoader'
 import useTheme from 'hooks/useTheme'
 
-const YieldPools = ({ loading }: { loading: boolean }) => {
+const YieldPools = ({ loading, setActiveTab }: { loading: boolean; setActiveTab: (tab: number) => void }) => {
   const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const lgBreakpoint = useMedia('(min-width: 992px)')
@@ -55,33 +58,49 @@ const YieldPools = ({ loading }: { loading: boolean }) => {
         <img src={lgBreakpoint ? RainMakerBannel : RainMakerMobileBanner} alt="RainMaker" width="100%" />
       </AdContainer>
       <HeadingContainer>
-        <LearnMoreContainer>
-          <LearnMoreInstruction>
-            <Trans>Stake your DMM Liquidity Provider tokens to earn token rewards.</Trans>
-          </LearnMoreInstruction>
-          <LearnMoreLinkContainer>
-            <ExternalLink href="https://docs.dmm.exchange/rainmaker/FAQs">
-              <Trans>Learn More →</Trans>
-            </ExternalLink>
-          </LearnMoreLinkContainer>
-        </LearnMoreContainer>
-        <HarvestAllContainer>
-          <TotalRewardsContainer>
-            <TotalRewardsTitleWrapper>
-              <TotalRewardsTitle>
-                <Trans>My Total Rewards</Trans>
-              </TotalRewardsTitle>
-              <InfoHelper
-                text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool).`}
-              />
-            </TotalRewardsTitleWrapper>
+        <HeadingLeft>
+          <LearnMoreContainer>
+            <LearnMoreInstruction>
+              <Trans>Stake your DMM Liquidity Provider tokens to earn token rewards.</Trans>
+            </LearnMoreInstruction>
+            <LearnMoreLinkContainer>
+              <ExternalLink href="https://docs.dmm.exchange/rainmaker/FAQs">
+                <Trans>Learn More →</Trans>
+              </ExternalLink>
+            </LearnMoreLinkContainer>
+          </LearnMoreContainer>
+          <UpcomingFarmsContainer>
+            <LearnMoreInstruction>
+              <Trans>Start preparing liquidity for our upcoming farms!</Trans>
+            </LearnMoreInstruction>
+            <LearnMoreLinkContainer>
+              <Text color={theme.primary1} onClick={() => setActiveTab(2)} role="button" sx={{ cursor: 'pointer' }}>
+                <Trans>View Upcoming Farms →</Trans>
+              </Text>
+            </LearnMoreLinkContainer>
+          </UpcomingFarmsContainer>
+        </HeadingLeft>
+        <HeadingRight>
+          <HarvestAllContainer>
+            <TotalRewardsContainer>
+              <TotalRewardsTitleWrapper>
+                <TotalRewardsTitle>
+                  <Trans>My Total Rewards</Trans>
+                </TotalRewardsTitle>
+                <InfoHelper
+                  text={t`Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool).`}
+                />
+              </TotalRewardsTitleWrapper>
 
-            <Flex>
-              <TotalRewardUSD>{totalRewardsUSD ? formattedNum(totalRewardsUSD.toString(), true) : '$0'}</TotalRewardUSD>
-              {totalRewardsUSD > 0 && totalRewards.length > 0 && <TotalRewardsDetail totalRewards={totalRewards} />}
-            </Flex>
-          </TotalRewardsContainer>
-        </HarvestAllContainer>
+              <Flex>
+                <TotalRewardUSD>
+                  {totalRewardsUSD ? formattedNum(totalRewardsUSD.toString(), true) : '$0'}
+                </TotalRewardUSD>
+                {totalRewardsUSD > 0 && totalRewards.length > 0 && <TotalRewardsDetail totalRewards={totalRewards} />}
+              </Flex>
+            </TotalRewardsContainer>
+          </HarvestAllContainer>
+        </HeadingRight>
       </HeadingContainer>
 
       <StakedOnlyToggleWrapper>

@@ -107,7 +107,7 @@ export const TradingVolumeSection = styled(SectionNumber)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 28px 24px;
+  padding: 28px;
 `
 
 export const LiquidityNumber = styled.div`
@@ -144,6 +144,7 @@ export const Panel0 = styled.div`
   justify-content: space-between;
   width: 100%;
   max-width: fit-content;
+  gap: 20px;
   margin: 50px auto auto auto;
   a {
     width: 200px;
@@ -159,9 +160,10 @@ export const Panel0 = styled.div`
 
 export const Panel = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
   width: 100%;
-  max-width: 800px;
   margin-top: 50px;
   margin: 50px auto auto auto;
   flex-wrap: wrap;
@@ -169,6 +171,7 @@ export const Panel = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
+    gap: 16px;
     > a {
       margin-top: 10px;
       display: block;
@@ -278,9 +281,9 @@ export const SectionGraph = styled.div`
     flex: 1;
     background-image: url(${aboutGraph});
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-position: center;
-    background-color: ${({ theme }) => `${theme.buttonBlack}88`};
+    background-color: ${({ theme }) => `${theme.buttonBlack}66`};
     border: dashed 1px #303e46;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -300,7 +303,7 @@ export const SectionGraph = styled.div`
       border-radius: 4px;
       border: dashed 1px #303e46;
       border-left: none;
-      background-color: ${({ theme }) => `${theme.buttonBlack}88`};
+      background-color: ${({ theme }) => `${theme.buttonBlack}66`};
       border-bottom: none;
 
       ${({ theme }) => theme.mediaWidth.upToExtraSmall`
