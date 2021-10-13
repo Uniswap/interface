@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { ButtonPrimary, ShowMoreButton } from '../../components/Button'
@@ -39,9 +39,9 @@ export const BridgeTransactionsSummary = ({
             <thead>
               <tr>
                 <Th>Bridging</Th>
-                <Th align="left">From</Th>
-                <Th align="left">To</Th>
-                <Th align="left">Status</Th>
+                <Th align="right">From</Th>
+                <Th align="right">To</Th>
+                <Th align="right">Status</Th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +67,11 @@ export const BridgeTransactionsSummary = ({
 
 const ClickableTd = styled.td`
   cursor: pointer;
+  padding: 0 8px;
+
+  &:not(:first-child) {
+    text-align: right;
+  }
 `
 
 const ClickableTr = styled.tr`
@@ -86,6 +91,38 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.red1)};
 `
 
+const TextFrom = styled.span<{ dashedLineWidth: number; success: boolean }>`
+  position: relative;
+  color: #0e9f6e;
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 50%;
+    height: 2px;
+    width: ${({ dashedLineWidth }) => dashedLineWidth / 2 + 'px'};
+    border-bottom: 2px dotted #0e9f6e;
+    transform: translate(100%, -50%);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    width: ${({ dashedLineWidth }) => dashedLineWidth / 2 + 'px'};
+    background-color: #1e202d;
+    border-bottom: 2px dotted ${({ success }) => (success ? '#0e9f6e' : '#8780bf')};
+    transform: translate(200%, -50%);
+  }
+`
+
+const TextTo = styled.span<{ success: boolean }>`
+  color: ${({ success }) => (success ? '#0e9f6e' : '#8780bf')};
+`
+
 interface BridgeTransactionsSummaryRow {
   tx: BridgeTransactionSummary
   onCollect: BridgeTransactionsSummaryProps['onCollect']
@@ -95,6 +132,20 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
   const [showLog, setShowLog] = useState(false)
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
 
+  const refFrom = useRef<HTMLDivElement>(null)
+  const refTo = useRef<HTMLDivElement>(null)
+  const [dashedLineWidth, setDashedLineWidth] = useState(0)
+
+  useEffect(() => {
+    if (refFrom && refFrom.current && refTo && refTo.current) {
+      const refFromX = refFrom.current.getBoundingClientRect().right
+      const refToX = refTo.current.getBoundingClientRect().left
+      setDashedLineWidth(refToX - refFromX - 3)
+    }
+  }, [])
+
+  const success = status === 'confirmed'
+
   return (
     <>
       <tr style={{ lineHeight: '22px' }} onClick={() => setShowLog(show => !show)}>
@@ -103,17 +154,21 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
             {`${value} ${assetName}`}
           </TYPE.main>
         </ClickableTd>
-        <ClickableTd align="left">
-          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
-            {NETWORK_DETAIL[fromChainId].chainName}
+        <ClickableTd>
+          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
+            <TextFrom success={success} dashedLineWidth={dashedLineWidth} ref={refFrom}>
+              {NETWORK_DETAIL[fromChainId].chainName}
+            </TextFrom>
           </TYPE.main>
         </ClickableTd>
-        <ClickableTd align="left">
-          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" paddingLeft="9px">
-            {NETWORK_DETAIL[toChainId].chainName}
+        <ClickableTd>
+          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
+            <TextTo success={success} ref={refTo}>
+              {NETWORK_DETAIL[toChainId].chainName}
+            </TextTo>
           </TYPE.main>
         </ClickableTd>
-        <td align="left">
+        <td align="right">
           <BridgeStatusTag status={status} pendingReason={pendingReason} onCollect={() => onCollect(tx)} />
         </td>
       </tr>
