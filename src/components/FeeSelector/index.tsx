@@ -7,9 +7,10 @@ import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
+import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components/macro'
@@ -58,11 +59,25 @@ const FeeAmountLabel = {
   },
 }
 
-const FeeTierPercentageBadge = ({ percentage }: { percentage: number | undefined }) => {
+function FeeTierPercentageBadge({
+  feeAmount,
+  distributions,
+  poolState,
+}: {
+  feeAmount: FeeAmount
+  distributions: ReturnType<typeof useFeeTierDistribution>['distributions']
+  poolState: PoolState
+}) {
   return (
     <Badge>
       <TYPE.label fontSize={12}>
-        {percentage !== undefined ? <Trans>{percentage?.toFixed(0)}% select</Trans> : <Trans>Not created</Trans>}
+        {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
+          <Trans>Not created</Trans>
+        ) : distributions[feeAmount] !== undefined ? (
+          <Trans>{distributions[feeAmount]?.toFixed(0)}% select</Trans>
+        ) : (
+          <Trans>No data</Trans>
+        )}
       </TYPE.label>
     </Badge>
   )
@@ -82,6 +97,33 @@ export default function FeeSelector({
   currencyB?: Currency | undefined
 }) {
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
+
+  // get pool data on-chain for latest states
+  const pools = usePools([
+    [currencyA, currencyB, FeeAmount.LOW],
+    [currencyA, currencyB, FeeAmount.MEDIUM],
+    [currencyA, currencyB, FeeAmount.HIGH],
+  ])
+
+  const poolsByFeeTier = useMemo(
+    () =>
+      pools.reduce(
+        (acc, [curPoolState, curPool]) => {
+          acc = {
+            ...acc,
+            ...{ [curPool?.fee as FeeAmount]: curPoolState },
+          }
+          return acc
+        },
+        {
+          // default all states to NOT_EXISTS
+          [FeeAmount.LOW]: PoolState.NOT_EXISTS,
+          [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
+          [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
+        }
+      ),
+    [pools]
+  )
 
   const [showOptions, setShowOptions] = useState(false)
   const [pulsing, setPulsing] = useState(false)
@@ -153,7 +195,13 @@ export default function FeeSelector({
                     <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
                   </TYPE.label>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
-                    {distributions && feeAmount && <FeeTierPercentageBadge percentage={distributions[feeAmount]} />}
+                    {distributions && (
+                      <FeeTierPercentageBadge
+                        distributions={distributions}
+                        feeAmount={feeAmount}
+                        poolState={poolsByFeeTier[feeAmount]}
+                      />
+                    )}
                   </Box>
                 </>
               )}
@@ -182,7 +230,13 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.LOW]} />}
+                {distributions && (
+                  <FeeTierPercentageBadge
+                    distributions={distributions}
+                    feeAmount={FeeAmount.LOW}
+                    poolState={poolsByFeeTier[FeeAmount.LOW]}
+                  />
+                )}
               </AutoColumn>
             </ButtonRadioChecked>
             <ButtonRadioChecked
@@ -200,7 +254,13 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.MEDIUM]} />}
+                {distributions && (
+                  <FeeTierPercentageBadge
+                    distributions={distributions}
+                    feeAmount={FeeAmount.MEDIUM}
+                    poolState={poolsByFeeTier[FeeAmount.MEDIUM]}
+                  />
+                )}
               </AutoColumn>
             </ButtonRadioChecked>
             <ButtonRadioChecked
@@ -218,7 +278,13 @@ export default function FeeSelector({
                   </TYPE.main>
                 </AutoColumn>
 
-                {distributions && <FeeTierPercentageBadge percentage={distributions[FeeAmount.HIGH]} />}
+                {distributions && (
+                  <FeeTierPercentageBadge
+                    distributions={distributions}
+                    feeAmount={FeeAmount.HIGH}
+                    poolState={poolsByFeeTier[FeeAmount.HIGH]}
+                  />
+                )}
               </AutoColumn>
             </ButtonRadioChecked>
           </RowBetween>
