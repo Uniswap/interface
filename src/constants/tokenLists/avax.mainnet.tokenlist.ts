@@ -58,6 +58,20 @@ export const AVAX_MAINNET_TOKEN_LIST = {
       symbol: 'DYP',
       name: 'DeFiYieldProtocol',
       decimals: 18
+    },
+    {
+      chainId: 43114,
+      address: '0xd1c3f94DE7e5B45fa4eDBBA472491a9f4B166FC4',
+      symbol: 'XAVA',
+      name: 'Avalaunch',
+      decimals: 18
+    },
+    {
+      chainId: 43114,
+      address: '0x130966628846BFd36ff31a822705796e8cb8C18D',
+      symbol: 'MIM',
+      name: 'Magic Internet Money',
+      decimals: 18
     }
   ],
   version: {
