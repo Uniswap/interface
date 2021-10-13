@@ -144,31 +144,28 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     const mean = (tvl0: number | undefined, sumTvl0: number, tvl1: number | undefined, sumTvl1: number) =>
       tvl0 === undefined && tvl1 === undefined ? undefined : ((tvl0 ?? 0) + (tvl1 ?? 0)) / (sumTvl0 + sumTvl1) || 0
 
+    const distributions = {
+      [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
+      [FeeAmount.MEDIUM]: mean(
+        tvlByFeeTier[FeeAmount.MEDIUM][0],
+        sumToken0Tvl,
+        tvlByFeeTier[FeeAmount.MEDIUM][1],
+        sumToken1Tvl
+      ),
+      [FeeAmount.HIGH]: mean(
+        tvlByFeeTier[FeeAmount.HIGH][0],
+        sumToken0Tvl,
+        tvlByFeeTier[FeeAmount.HIGH][1],
+        sumToken1Tvl
+      ),
+    }
+
     return {
       isLoading,
       isFetching,
       isUninitialized,
       isError,
-      distributions: {
-        [FeeAmount.LOW]: mean(
-          tvlByFeeTier[FeeAmount.LOW][0],
-          sumToken0Tvl,
-          tvlByFeeTier[FeeAmount.LOW][1],
-          sumToken1Tvl
-        ),
-        [FeeAmount.MEDIUM]: mean(
-          tvlByFeeTier[FeeAmount.MEDIUM][0],
-          sumToken0Tvl,
-          tvlByFeeTier[FeeAmount.MEDIUM][1],
-          sumToken1Tvl
-        ),
-        [FeeAmount.HIGH]: mean(
-          tvlByFeeTier[FeeAmount.HIGH][0],
-          sumToken0Tvl,
-          tvlByFeeTier[FeeAmount.HIGH][1],
-          sumToken1Tvl
-        ),
-      },
+      distributions,
     }
   }, [_meta, asToken0, asToken1, isLoading, isError, isFetching, isUninitialized, latestBlock])
 }
