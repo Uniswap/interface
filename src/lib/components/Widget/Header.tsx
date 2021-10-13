@@ -1,10 +1,13 @@
 import Logo from 'lib/assets/Logo'
-import themed, { TYPE, useTheme } from 'lib/themed'
+import themed, { TYPE } from 'lib/themed'
 import { ReactNode } from 'react'
 
 import BaseHeader from '../Header'
 
-const LogoWrapper = themed.div`
+const ThemedLogo = themed(Logo)`
+  fill: ${({ theme }) => theme.icon};
+  mix-blend-mode: lighten;
+  padding: 1.5px 2px;
   transition: transform 0.3s ease;
 
   :hover {
@@ -21,13 +24,10 @@ export interface HeaderProps {
 }
 
 function Title({ path, title }: Omit<HeaderProps, 'children'>) {
-  const { icon } = useTheme()
   return (
     <>
       <a href={`https://app.uniswap.org/#${path}`}>
-        <LogoWrapper>
-          <Logo height="18" width="18" fill={icon} style={{ mixBlendMode: 'lighten' }} />
-        </LogoWrapper>
+        <ThemedLogo />
       </a>
       <span style={{ width: 8 }} />
       <TYPE.title>{title}</TYPE.title>
