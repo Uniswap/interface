@@ -117,8 +117,14 @@ export default function Bridge() {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId, typedValue: tx.value })
+      setModalData({
+        currencyId: tx.assetName,
+        typedValue: tx.value,
+        fromChainId: tx.fromChainId,
+        toChainId: tx.toChainId
+      })
     },
-    [getCollectedTx]
+    [getCollectedTx, setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -206,7 +212,12 @@ export default function Bridge() {
           onCollect={handleCollect}
         />
       )}
-      <BridgeModal handleResetBridge={handleResetBridge} setStep={setStep} modalData={modalData} />
+      <BridgeModal
+        handleResetBridge={handleResetBridge}
+        setStep={setStep}
+        setStatus={setModalStatus}
+        modalData={modalData}
+      />
     </>
   )
 }

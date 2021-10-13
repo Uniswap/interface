@@ -15,7 +15,7 @@ import {
 export interface BridgeNetworkInput {
   readonly chainId: ChainId
 }
-export interface BridgeModal {
+export interface BridgeModalState {
   readonly status: BridgeModalStatus
   readonly currencyId: string | undefined
   readonly typedValue: string
@@ -46,7 +46,7 @@ export interface BridgeState {
   readonly txsFilter: BridgeTxsFilter
   readonly modalError?: string
   readonly modalState: BridgeModalStatus
-  readonly modal: BridgeModal
+  readonly modal: BridgeModalState
 }
 
 const initialState: BridgeState = {
@@ -140,15 +140,21 @@ export default createReducer<BridgeState>(initialState, builder =>
         }
       }
     })
-    .addCase(setBridgeModalData, (state, { payload: { currencyId, typedValue, fromNetwork, toNetwork } }) => {
+    .addCase(setBridgeModalData, (state, { payload: { currencyId, typedValue, fromChainId, toChainId } }) => {
       return {
         ...state,
         modal: {
           ...state.modal,
-          currencyId: currencyId,
-          typedValue: typedValue,
-          fromNetwork: fromNetwork,
-          toNetwork: toNetwork
+          currencyId,
+          typedValue,
+          fromNetwork: {
+            ...state.fromNetwork,
+            chainId: fromChainId
+          },
+          toNetwork: {
+            ...state.toNetwork,
+            chainId: toChainId
+          }
         }
       }
     })

@@ -17,7 +17,7 @@ import {
 } from './actions'
 import { currencyId } from '../../utils/currencyId'
 import { tryParseAmount } from '../swap/hooks'
-import { BridgeModal, BridgeModalStatus, BridgeTxsFilter } from './reducer'
+import { BridgeModalState, BridgeModalStatus, BridgeTxsFilter } from './reducer'
 import { bridgeModalDataSelector, bridgeTxsFilterSelector } from './selectors'
 import { getChainPair } from '../../utils/arbitrum'
 
@@ -192,17 +192,28 @@ export const useBridgeTxsFilter = (): [BridgeTxsFilter, (filter: BridgeTxsFilter
 }
 
 export const useBridgeModal = (): [
-  BridgeModal,
-  (status: BridgeModalStatus) => void,
-  ({ currencyId, typedValue, fromNetwork, toNetwork }: Omit<BridgeModal, 'status' | 'error'>) => void
+  BridgeModalState,
+  (status: BridgeModalStatus, error?: string) => void,
+  ({
+    currencyId,
+    typedValue,
+    fromChainId,
+    toChainId
+  }: Pick<BridgeModalState, 'currencyId' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) => void
 ] => {
   const dispatch = useDispatch()
   const modalData = useSelector(bridgeModalDataSelector)
 
-  const setModalStatus = (status: BridgeModalStatus) => dispatch(setBridgeModalStatus({ status }))
+  const setModalStatus = (status: BridgeModalStatus, error?: string) =>
+    dispatch(setBridgeModalStatus({ status, error }))
 
-  const setModalData = ({ currencyId, typedValue, fromNetwork, toNetwork }: Omit<BridgeModal, 'status' | 'error'>) =>
-    dispatch(setBridgeModalData({ currencyId, typedValue, fromNetwork, toNetwork }))
+  const setModalData = ({
+    currencyId,
+    typedValue,
+    fromChainId,
+    toChainId
+  }: Pick<BridgeModalState, 'currencyId' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }) =>
+    dispatch(setBridgeModalData({ currencyId, typedValue, fromChainId, toChainId }))
 
   return [modalData, setModalStatus, setModalData]
 }

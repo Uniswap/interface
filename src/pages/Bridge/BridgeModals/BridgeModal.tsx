@@ -1,8 +1,5 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setBridgeModalData, setBridgeModalStatus } from '../../../state/bridge/actions'
-import { BridgeModal, BridgeModalStatus, BridgeNetworkInput } from '../../../state/bridge/reducer'
-import { bridgeModalDataSelector } from '../../../state/bridge/selectors'
+import { BridgeModalState, BridgeModalStatus } from '../../../state/bridge/reducer'
 import { BridgeStep } from '../utils'
 import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
@@ -13,13 +10,11 @@ import { NETWORK_DETAIL } from '../../../constants'
 export interface BridgeModalProps {
   handleResetBridge: () => void
   setStep: (step: BridgeStep) => void
-  modalData: BridgeModal
+  setStatus: (status: BridgeModalStatus, error?: string) => void
+  modalData: BridgeModalState
 }
 
-export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeModalProps) => {
-  // const dispatch = useDispatch()
-  // const { state, currencyId, fromNetworkName, toNetworkName, typedValue, error } = useSelector(bridgeModalDataSelector)
-  // const setModalState = (state: BridgeModalStatus) => dispatch(setBridgeModalStatus({ state }))
+export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }: BridgeModalProps) => {
   const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
 
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
@@ -31,7 +26,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeMod
         return (
           <BridgingInitiatedModal
             isOpen
-            onDismiss={() => setBridgeModalStatus(BridgeModalStatus.CLOSED)}
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             amount={typedValue}
             assetType={currencyId ?? ''}
             fromNetworkName={fromNetworkName}
@@ -43,7 +38,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeMod
         return (
           <BridgePendingModal
             isOpen
-            onDismiss={() => setModalState(BridgeModalStatus.CLOSED)}
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             pendingText={`${typedValue} ${currencyId ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
@@ -52,7 +47,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeMod
           <BridgingInitiatedModal
             isOpen
             onDismiss={() => {
-              setBridgeModalStatus(BridgeModalStatus.CLOSED)
+              setStatus(BridgeModalStatus.CLOSED)
               setStep(BridgeStep.Initial)
             }}
             amount={typedValue}
@@ -64,13 +59,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeMod
         )
 
       case BridgeModalStatus.ERROR:
-        return (
-          <BridgeErrorModal
-            isOpen
-            onDismiss={() => setBridgeModalStatus(BridgeModalStatus.ERROR)}
-            error={error ?? ''}
-          />
-        )
+        return <BridgeErrorModal isOpen onDismiss={() => setStatus(BridgeModalStatus.ERROR)} error={error ?? ''} />
       case BridgeModalStatus.SUCCESS:
         return (
           <BridgeSuccesModal
@@ -80,7 +69,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, modalData }: BridgeMod
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             onDismiss={() => {
-              setBridgeModalStatus(BridgeModalStatus.CLOSED)
+              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             onTradeButtonClick={handleResetBridge}
