@@ -1,25 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { CurrencyAmount } from '@swapr/sdk'
-import QuestionHelper from '../../components/QuestionHelper'
-import { RowBetween } from '../../components/Row'
-import AppBody from '../AppBody'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import ArrowIcon from '../../assets/svg/arrow.svg'
-import { AssetSelector } from './AssetsSelector'
-import { useActiveWeb3React } from '../../hooks'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
-import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
-import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
-import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
-import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
-import { BridgeActionPanel } from './BridgeActionPanel'
-import { NETWORK_DETAIL } from '../../constants'
-import { useBridgeService } from '../../contexts/BridgeServiceProvider'
-import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
-import { BridgeModal } from './BridgeModals/BridgeModal'
+
 import { Tabs } from './Tabs'
+import AppBody from '../AppBody'
+import { AssetSelector } from './AssetsSelector'
+import { RowBetween } from '../../components/Row'
+import ArrowIcon from '../../assets/svg/arrow.svg'
+import { BridgeActionPanel } from './BridgeActionPanel'
+import { BridgeModal } from './BridgeModals/BridgeModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
+import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
+import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
+
+import { useActiveWeb3React } from '../../hooks'
+import { useBridgeService } from '../../contexts/BridgeServiceProvider'
+import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
+import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
+
+import { NETWORK_DETAIL } from '../../constants'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 
 const Title = styled.p`
   margin: 0;
@@ -51,15 +53,12 @@ const SwapButton = styled.button<{ disabled: boolean }>`
 `
 
 export default function Bridge() {
+  const bridgeService = useBridgeService()
   const { account, chainId } = useActiveWeb3React()
+  const bridgeSummaries = useBridgeTransactionsSummary()
+  const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
-  const {
-    onUserInput,
-    onToNetworkChange,
-    onFromNetworkChange,
-    onSwapBridgeNetworks,
-    getCollectedTx
-  } = useBridgeActionHandlers()
+  const { onUserInput, onToNetworkChange, onFromNetworkChange, onSwapBridgeNetworks } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
   const fromPanelRef = useRef(null)
@@ -67,15 +66,20 @@ export default function Bridge() {
   const [step, setStep] = useState(BridgeStep.Initial)
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
-  const [modalData, setModalStatus, setModalData] = useBridgeModal()
+  const [collectableTx, setCollectableTx] = useState(
+    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
+  )
 
-  const bridgeService = useBridgeService()
-  const bridgeSummaries = useBridgeTransactionsSummary()
-
+  const isCollecting = step === BridgeStep.Collect
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
-  const isCollecting = step === BridgeStep.Collect
+
+  useEffect(() => {
+    if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
+      setStep(BridgeStep.Initial)
+    }
+  }, [chainId, collectableTx, isCollecting, step])
 
   const handleResetBridge = useCallback(() => {
     onUserInput('')
@@ -95,6 +99,26 @@ export default function Bridge() {
     }
   }, [bridgeService, chainId, typedValue])
 
+  const handleCollect = useCallback(
+    (tx: BridgeTransactionSummary) => {
+      setStep(BridgeStep.Collect)
+      setCollectableTx(tx)
+      setModalData({
+        currencyId: tx.assetName,
+        typedValue: tx.value,
+        fromChainId: tx.fromChainId,
+        toChainId: tx.toChainId
+      })
+    },
+    [setModalData]
+  )
+
+  const handleCollectConfirm = useCallback(async () => {
+    if (!bridgeService) return
+    await bridgeService.triggerOutboxEth(collectableTx)
+    setStep(BridgeStep.Success)
+  }, [bridgeService, collectableTx])
+
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
     setValue: onFromNetworkChange,
@@ -107,44 +131,12 @@ export default function Bridge() {
     activeChainId: !!account ? chainId : -1
   })
 
-  const [collectableTx, setCollectableTx] = useState(
-    () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
-  )
-
-  const handleCollect = useCallback(
-    (tx: BridgeTransactionSummary) => {
-      setStep(BridgeStep.Collect)
-      setCollectableTx(tx)
-      getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId, typedValue: tx.value })
-      setModalData({
-        currencyId: tx.assetName,
-        typedValue: tx.value,
-        fromChainId: tx.fromChainId,
-        toChainId: tx.toChainId
-      })
-    },
-    [getCollectedTx, setModalData]
-  )
-
-  const handleCollectConfirm = useCallback(async () => {
-    if (!bridgeService) return
-    await bridgeService.triggerOutboxEth(collectableTx)
-    setStep(BridgeStep.Success)
-  }, [bridgeService, collectableTx])
-
-  useEffect(() => {
-    if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
-      setStep(BridgeStep.Initial)
-    }
-  }, [chainId, collectableTx, isCollecting, step])
-
   return (
     <>
       <AppBody>
         <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
-          <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <Row mb="12px">
           <div ref={fromPanelRef}>
