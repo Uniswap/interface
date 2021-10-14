@@ -12,7 +12,7 @@ import { AppState } from '../index'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { Call, parseCallKey } from './utils'
 
-const DEFAULT_GAS_REQUIRED = 1_000_000
+const DEFAULT_GAS_REQUIRED = 1_000_000_000_000
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
@@ -33,7 +33,7 @@ async function fetchChunk(
         callData: obj.callData,
         gasLimit: obj.gasRequired ?? DEFAULT_GAS_REQUIRED,
       })),
-      { blockTag: blockNumber }
+      { blockTag: blockNumber, gasLimit: DEFAULT_GAS_REQUIRED * 100 }
     )
 
     if (process.env.NODE_ENV === 'development') {
