@@ -120,6 +120,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
       const pairs = []
       let lastId = ''
       setLoadingPairs(true)
+      setPairs([])
       try {
         while (1) {
           const result = await immediateSubgraphClients[chainId].request<QueryResult>(QUERY, {
