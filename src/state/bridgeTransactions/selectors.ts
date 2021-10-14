@@ -143,12 +143,16 @@ export const bridgeTxsSummarySelector = createSelector(
 
         // DEPOSIT L1
         if (!tx.partnerTxHash || !l2Txs[tx.partnerTxHash]) {
-          summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
-
-          if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
-            summary.status = 'pending' // deposits on l1 should never show confirmed on UI
-            summary.pendingReason = PendingReasons.TX_UNCONFIRMED
+          if (tx.type === 'deposit-l1') {
+            if (tx.receipt?.status === 0) {
+              summary.status = 'failed'
+            } else {
+              summary.status = 'pending' // deposits on l1 should never show confirmed on UI
+              summary.pendingReason = PendingReasons.TX_UNCONFIRMED
+            }
           }
+
+          summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
 
           total.push(summary)
@@ -178,16 +182,21 @@ export const bridgeTxsSummarySelector = createSelector(
         }
 
         // DEPOSIT L1 + L2
-        if (tx.receipt?.status === 1 && tx.type === 'deposit-l1') {
-          const status = l2Txs[tx.partnerTxHash].receipt?.status
+        if (tx.type === 'deposit-l1' && tx.receipt) {
+          const statusL2 = l2Txs[tx.partnerTxHash].receipt?.status
+          if (tx.receipt?.status === 0 || statusL2 === 0) {
+            summary.status = 'failed'
+          } else {
+            summary.status = getBridgeTxStatus(statusL2)
+            summary.pendingReason = statusL2 ? undefined : PendingReasons.DESPOSIT
+            summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
+          }
+
           summary.log = createBridgeLog({
             transactions: [tx, l2Txs[tx.partnerTxHash]],
             fromChainId: from,
             toChainId: to
           })
-          summary.status = getBridgeTxStatus(status)
-          summary.pendingReason = status ? undefined : PendingReasons.DESPOSIT
-          summary.timestampResolved = l2Txs[tx.partnerTxHash].timestampResolved
 
           processedTxsMap[l1ChainId][tx.txHash] = tx.txHash
           processedTxsMap[l2ChainId][tx.partnerTxHash] = tx.partnerTxHash // skip partner tx in l2Summaries
@@ -222,18 +231,22 @@ export const bridgeTxsSummarySelector = createSelector(
         if (!tx.partnerTxHash || !l1Txs[tx.partnerTxHash]) {
           if (tx.type === 'withdraw') {
             if (!isLoading) {
-              switch (tx.outgoingMessageState) {
-                case OutgoingMessageState.CONFIRMED:
-                  summary.status = 'redeem'
-                  summary.timestampResolved = undefined
-                  break
-                case OutgoingMessageState.EXECUTED:
-                  summary.status = 'claimed'
-                  break
-                default:
-                  summary.status = 'pending'
-                  summary.pendingReason = PendingReasons.WITHDRAWAL
-                  summary.timestampResolved = undefined
+              if (tx.receipt?.status !== 0) {
+                switch (tx.outgoingMessageState) {
+                  case OutgoingMessageState.CONFIRMED:
+                    summary.status = 'redeem'
+                    summary.timestampResolved = undefined
+                    break
+                  case OutgoingMessageState.EXECUTED:
+                    summary.status = 'claimed'
+                    break
+                  default:
+                    summary.status = 'pending'
+                    summary.pendingReason = PendingReasons.WITHDRAWAL
+                    summary.timestampResolved = undefined
+                }
+              } else {
+                summary.status = 'failed'
               }
             } else {
               summary.status = 'loading'

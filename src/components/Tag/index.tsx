@@ -20,6 +20,9 @@ export const TagPrimary = styled(Tag)`
 `
 
 export const TagSuccess = styled(Tag)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #118761;
   background: rgba(14, 159, 110, 0.15);
 `
@@ -48,6 +51,13 @@ const TagWarning = styled(Tag)`
   justify-content: space-between;
   color: #a86e3f;
   background: rgba(242, 153, 74, 0.16);
+`
+export const TagFailed = styled(Tag)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9c1c1c;
+  background: rgba(212, 28, 28, 0.15);
 `
 
 const QuestionHelperWarning = styled(QuestionHelper)`
