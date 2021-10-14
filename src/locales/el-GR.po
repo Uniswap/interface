@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-13 23:06\n"
+"PO-Revision-Date: 2021-10-14 15:11\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -909,17 +909,17 @@ msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλ�
 msgid "Install Metamask"
 msgstr "Εγκατάσταση Metamask"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "Ανεπαρκές υπόλοιπο ${0}"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
+msgid "Insufficient {0} balance"
+msgstr "Ανεπαρκές υπόλοιπο {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -1410,13 +1410,13 @@ msgstr "Αφαίρεση Ρευστότητας"
 msgid "Remove list"
 msgstr "Αφαίρεση λίστας"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "Αφαίρεση ${0} ${1} και ${2} ${3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Αφαίρεση των {0} {1} και {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "Αφαίρεση {0} {1} και{2} {3}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1539,8 +1539,8 @@ msgid "Supply"
 msgstr "Παροχή"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "Παροχή ${0} ${1} και ${2} ${3}"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "Παροχή {0} {1} και{2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1825,8 +1825,8 @@ msgid "Unknown Source"
 msgstr "Άγνωστη πηγή"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Άγνωστο σφάλμα${0}. Προσπαθήστε να αυξήσετε την ανοχή σας στην ολίσθηση. Σημείωση: η χρέωση για διακριτικά μεταφοράς και επαναφοράς είναι ασύμβατη με το Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: οι χρεώσεις μεταφοράς και οι rebase μάρκες δεν είναι συμβατές με το Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

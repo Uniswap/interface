@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-13 23:06\n"
+"PO-Revision-Date: 2021-10-14 15:11\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -909,17 +909,17 @@ msgstr "הקלט מוערך. אתה תמכור לכל היותר <0>{0} {1}</0> 
 msgid "Install Metamask"
 msgstr "התקן את Metamask"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "לא מספיק נזילות למסחר זה."
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "איזון ${0} לא מספיק"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "לא מספיק נזילות למסחר זה."
+msgid "Insufficient {0} balance"
+msgstr "איזון {0} לא מספיק"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -1410,13 +1410,13 @@ msgstr "הסר נזילות"
 msgid "Remove list"
 msgstr "הסר את הרשימה"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "הסרת ${0} ${1} ו- ${2} ${3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "הסרת {0} {1} ו {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "הסרת {0} {1} ו-{2} {3}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1539,8 +1539,8 @@ msgid "Supply"
 msgstr "לְסַפֵּק"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "מתן ${0} ${1} ו ${2} ${3}"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "מתן {0} {1} ו{2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1825,8 +1825,8 @@ msgid "Unknown Source"
 msgstr "מקור לא ידוע"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "שגיאה לא ידועה${0}. נסה להגדיל את סובלנות ההחלקה שלך. הערה: העמלה על אסימוני העברה ורישום מחדש אינם תואמים ל- Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "שגיאה לא ידועה{0}. נסה להגביר את סובלנות ההחלקה שלך. הערה: עמלה על אסימון העברה ומיקום מחדש אינם תואמים ל- Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-13 23:06\n"
+"PO-Revision-Date: 2021-10-14 15:11\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -910,17 +910,17 @@ msgstr "Az input becsült. Legfeljebb <0>{0} {1}</0> értékesíthet, különben
 msgid "Install Metamask"
 msgstr "Metamask telepítése"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "Elégtelen ${0} egyenleg"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
+msgid "Insufficient {0} balance"
+msgstr "Elégtelen {0} egyenleg"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -1411,13 +1411,13 @@ msgstr "Likviditás eltávolítása"
 msgid "Remove list"
 msgstr "Lista eltávolítása"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "${0} ${1} és ${2} ${3}eltávolítása"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} és {2} {3} eltávolítása"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "{0} {1} és{2} {3}eltávolítása"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1540,8 +1540,8 @@ msgid "Supply"
 msgstr "Kínálat"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "${0} ${1} és ${2} ${3}ellátása"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "{0} {1} és{2} {3}ellátása"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1826,8 +1826,8 @@ msgid "Unknown Source"
 msgstr "Ismeretlen forrás"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ismeretlen hiba${0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
