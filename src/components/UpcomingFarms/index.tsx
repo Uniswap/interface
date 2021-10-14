@@ -3,20 +3,16 @@ import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
 import { Trans } from '@lingui/macro'
 
-import { ChainId } from 'libs/sdk/src'
 import RainMakerBannel from 'assets/images/rain-maker.png'
 import RainMakerMobileBanner from 'assets/images/rain-maker-mobile.png'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import { AdContainer, ClickableText } from 'components/YieldPools/styleds'
-import { useActiveWeb3React } from 'hooks'
 import NoFarms from './NoFarms'
 import ListItem from './ListItem'
 import { TableWrapper, TableHeader, RowsWrapper } from './styled'
 
 const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => void }) => {
-  const { chainId } = useActiveWeb3React()
   const lgBreakpoint = useMedia('(min-width: 1000px)')
-  const upcomingPools = UPCOMING_POOLS[chainId as ChainId]
 
   const renderHeader = () => {
     if (!lgBreakpoint) {
@@ -31,19 +27,25 @@ const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => 
           </ClickableText>
         </Flex>
 
-        <Flex grid-area="liq" alignItems="center" justifyContent="flex-start">
+        <Flex grid-area="startingIn" alignItems="center" justifyContent="flex-start">
           <ClickableText>
             <Trans>Starting In</Trans>
           </ClickableText>
         </Flex>
 
-        <Flex grid-area="end" alignItems="right" justifyContent="flex-end">
+        <Flex grid-area="network" alignItems="center" justifyContent="flex-start">
+          <ClickableText>
+            <Trans>Network</Trans>
+          </ClickableText>
+        </Flex>
+
+        <Flex grid-area="rewards" alignItems="right" justifyContent="flex-end">
           <ClickableText>
             <Trans>Rewards</Trans>
           </ClickableText>
         </Flex>
 
-        <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
+        <Flex grid-area="information" alignItems="center" justifyContent="flex-end">
           <ClickableText>
             <Trans>Information</Trans>
           </ClickableText>
@@ -58,12 +60,12 @@ const UpcomingFarms = ({ setActiveTab }: { setActiveTab: (activeTab: number) => 
         <img src={lgBreakpoint ? RainMakerBannel : RainMakerMobileBanner} alt="RainMaker" width="100%" />
       </AdContainer>
 
-      {upcomingPools.length > 0 ? (
+      {UPCOMING_POOLS.length > 0 ? (
         <TableWrapper>
           {renderHeader()}
           <RowsWrapper>
-            {upcomingPools?.map((pool, index) => (
-              <ListItem key={index} pool={pool} isLastItem={index === upcomingPools.length - 1} />
+            {UPCOMING_POOLS.map((pool, index) => (
+              <ListItem key={index} pool={pool} isLastItem={index === UPCOMING_POOLS.length - 1} />
             ))}
           </RowsWrapper>
         </TableWrapper>
