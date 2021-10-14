@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 15:11\n"
+"PO-Revision-Date: 2021-10-14 18:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -303,10 +303,6 @@ msgstr "自动路由"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "可调用的数额：{0}"
-
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "返回"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"

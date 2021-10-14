@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 15:11\n"
+"PO-Revision-Date: 2021-10-14 18:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -303,10 +303,6 @@ msgstr "נתב אוטומטי"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "זמין להפקדה: {0}"
-
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "חזרה"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"

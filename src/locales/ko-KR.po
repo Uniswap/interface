@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 15:11\n"
+"PO-Revision-Date: 2021-10-14 18:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -303,10 +303,6 @@ msgstr "자동 라우터"
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
 msgstr "입금 가능 : {0}"
-
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "뒤로"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
