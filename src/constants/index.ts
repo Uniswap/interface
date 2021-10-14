@@ -1,6 +1,7 @@
 import { ChainId, JSBI, Percent, Token, WETH } from 'libs/sdk/src'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink } from '../connectors'
+import { PopularPair } from 'state/pair/types'
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
@@ -787,3 +788,38 @@ export const KYBER_NETWORK_DISCORD_URL = 'https://discord.com/invite/NB3vc8J9uv'
 export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'
 
 export const DEFAULT_GAS_LIMIT_MARGIN = 20000
+
+export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
+  [ChainId.MAINNET]: [],
+  [ChainId.ROPSTEN]: [],
+  [ChainId.RINKEBY]: [],
+  [ChainId.GÖRLI]: [],
+  [ChainId.KOVAN]: [],
+  [ChainId.MATIC]: [],
+  [ChainId.MUMBAI]: [],
+  [ChainId.BSCTESTNET]: [],
+  [ChainId.BSCMAINNET]: [],
+  [ChainId.AVAXTESTNET]: [],
+  [ChainId.AVAXMAINNET]: [
+    {
+      token0: {
+        id: '0x130966628846bfd36ff31a822705796e8cb8c18d',
+        symbol: 'MIM'
+      },
+      token1: {
+        id: '0xc7198437980c041c805a1edcba50c1ce5db95118',
+        symbol: 'USDT'
+      }
+    },
+    {
+      token0: {
+        id: '0xd1c3f94de7e5b45fa4edbba472491a9f4b166fc4',
+        symbol: 'XAVA'
+      },
+      token1: {
+        id: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+        symbol: 'AVAX'
+      }
+    }
+  ]
+}

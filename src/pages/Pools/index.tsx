@@ -4,7 +4,8 @@ import { useMedia } from 'react-use'
 import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
-import { Currency } from 'libs/sdk/src'
+import { ChainId, Currency } from 'libs/sdk/src'
+import { POPULAR_PAIRS } from 'constants/index'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
@@ -38,6 +39,7 @@ import { formatBigLiquidity } from 'utils/formatBalance'
 import Loader from 'components/Loader'
 import { Farm } from 'state/farms/types'
 import { useFarmsData } from 'state/farms/hooks'
+import { PopularPair } from 'state/pair/types'
 
 const Pools = ({
   match: {
@@ -115,6 +117,9 @@ const Pools = ({
   const globalData = data && data.dmmFactories[0]
 
   const { loading: loadingPoolFarm, data: farms } = useFarmsData()
+
+  const popularPairs: PopularPair[] = POPULAR_PAIRS[chainId as ChainId]
+
   return (
     <>
       <PageWrapper>
@@ -279,6 +284,9 @@ const Pools = ({
             .map((farm, index) => (
               <PoolFarm key={index} farm={farm} />
             ))}
+          {popularPairs.map((pair, index) => (
+            <PoolFarm key={index} farm={pair} />
+          ))}
         </Flex>
       </PageWrapper>
       <SwitchLocaleLink />
@@ -286,7 +294,7 @@ const Pools = ({
   )
 }
 
-const PoolFarm = ({ farm }: { farm: Farm }) => {
+const PoolFarm = ({ farm }: { farm: Farm | PopularPair }) => {
   const { chainId } = useActiveWeb3React()
   return (
     <ButtonGray
