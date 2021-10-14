@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-13 23:06\n"
+"PO-Revision-Date: 2021-10-14 06:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -302,7 +302,7 @@ msgstr "Njia ya Kiotomatiki"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "Inapatikana kwa amana: {0}"
+msgstr "Inapatikana kwa kutuma: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -399,7 +399,7 @@ msgstr "Dai malipo ya UNI kwa {0}"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Ada ya madai"
+msgstr "Chukua makato"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -425,7 +425,7 @@ msgstr "Inachukuliwa"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Kudai UNI"
+msgstr "Inachukuliwa UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1778,11 +1778,11 @@ msgstr "Aujachukua UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "Ada ambazo hazijadaiwa"
+msgstr "Makato ambayo ayajachukuliwa"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
-msgstr "Haikutajwa:"
+msgstr "Ayajachukuliwa:"
 
 #: src/pages/Vote/styled.tsx
 msgid "Undetermined"
