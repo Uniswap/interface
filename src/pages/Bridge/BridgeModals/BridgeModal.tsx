@@ -1,33 +1,32 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setBridgeModalState } from '../../../state/bridge/actions'
-import { BridgeModalState } from '../../../state/bridge/reducer'
-import { bridgeModalDataSelector } from '../../../state/bridge/selectors'
+import { BridgeModalState, BridgeModalStatus } from '../../../state/bridge/reducer'
 import { BridgeStep } from '../utils'
 import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
+import { NETWORK_DETAIL } from '../../../constants'
 
 export interface BridgeModalProps {
   handleResetBridge: () => void
   setStep: (step: BridgeStep) => void
+  setStatus: (status: BridgeModalStatus, error?: string) => void
+  modalData: BridgeModalState
 }
 
-export const BridgeModal = ({ handleResetBridge, setStep }: BridgeModalProps) => {
-  const dispatch = useDispatch()
-  const { modalState, currencyId, fromNetworkName, toNetworkName, typedValue, modalError } = useSelector(
-    bridgeModalDataSelector
-  )
-  const setModalState = (modalState: BridgeModalState) => dispatch(setBridgeModalState({ modalState }))
+export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }: BridgeModalProps) => {
+  const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
+
+  const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
+  const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
 
   const selectModal = () => {
-    switch (modalState) {
-      case BridgeModalState.INITIATED:
+    switch (status) {
+      case BridgeModalStatus.INITIATED:
         return (
           <BridgingInitiatedModal
             isOpen
-            onDismiss={() => setModalState(BridgeModalState.CLOSED)}
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             amount={typedValue}
             assetType={currencyId ?? ''}
             fromNetworkName={fromNetworkName}
@@ -35,20 +34,20 @@ export const BridgeModal = ({ handleResetBridge, setStep }: BridgeModalProps) =>
             heading={'Bridging Initiated'}
           />
         )
-      case BridgeModalState.PENDING:
+      case BridgeModalStatus.PENDING:
         return (
           <BridgePendingModal
             isOpen
-            onDismiss={() => setModalState(BridgeModalState.CLOSED)}
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             pendingText={`${typedValue} ${currencyId ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
-      case BridgeModalState.COLLECTING:
+      case BridgeModalStatus.COLLECTING:
         return (
           <BridgingInitiatedModal
             isOpen
             onDismiss={() => {
-              setModalState(BridgeModalState.CLOSED)
+              setStatus(BridgeModalStatus.CLOSED)
               setStep(BridgeStep.Initial)
             }}
             amount={typedValue}
@@ -58,12 +57,7 @@ export const BridgeModal = ({ handleResetBridge, setStep }: BridgeModalProps) =>
             heading={'Collecting Initiated'}
           />
         )
-
-      case BridgeModalState.ERROR:
-        return (
-          <BridgeErrorModal isOpen onDismiss={() => setModalState(BridgeModalState.CLOSED)} error={modalError ?? ''} />
-        )
-      case BridgeModalState.SUCCESS:
+      case BridgeModalStatus.SUCCESS:
         return (
           <BridgeSuccesModal
             isOpen
@@ -72,13 +66,15 @@ export const BridgeModal = ({ handleResetBridge, setStep }: BridgeModalProps) =>
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             onDismiss={() => {
-              setModalState(BridgeModalState.CLOSED)
+              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             onTradeButtonClick={handleResetBridge}
             onBackButtonClick={handleResetBridge}
           />
         )
+      case BridgeModalStatus.ERROR:
+        return <BridgeErrorModal isOpen onDismiss={() => setStatus(BridgeModalStatus.ERROR)} error={error ?? ''} />
       default:
         return null
     }

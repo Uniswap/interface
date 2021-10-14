@@ -9,7 +9,7 @@ import ArrowIcon from '../../assets/svg/arrow.svg'
 import { AssetSelector } from './AssetsSelector'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useBridgeInfo, useBridgeActionHandlers } from '../../state/bridge/hooks'
+import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
 import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/NetworkSwitcher'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
@@ -67,6 +67,7 @@ export default function Bridge() {
   const [step, setStep] = useState(BridgeStep.Initial)
   const [showToList, setShowToList] = useState(false)
   const [showFromList, setShowFromList] = useState(false)
+  const [modalData, setModalStatus, setModalData] = useBridgeModal()
 
   const bridgeService = useBridgeService()
   const bridgeSummaries = useBridgeTransactionsSummary()
@@ -92,7 +93,6 @@ export default function Bridge() {
     } else {
       await bridgeService.withdrawEth(typedValue)
     }
-    // handleResetBridge()
   }, [bridgeService, chainId, typedValue])
 
   const fromOptions = createNetworkOptions({
@@ -116,8 +116,14 @@ export default function Bridge() {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       getCollectedTx({ currency: tx.assetName, from: tx.fromChainId, to: tx.toChainId, typedValue: tx.value })
+      setModalData({
+        currencyId: tx.assetName,
+        typedValue: tx.value,
+        fromChainId: tx.fromChainId,
+        toChainId: tx.toChainId
+      })
     },
-    [getCollectedTx]
+    [getCollectedTx, setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -205,7 +211,12 @@ export default function Bridge() {
           onCollect={handleCollect}
         />
       )}
-      <BridgeModal handleResetBridge={handleResetBridge} setStep={setStep} />
+      <BridgeModal
+        handleResetBridge={handleResetBridge}
+        setStep={setStep}
+        setStatus={setModalStatus}
+        modalData={modalData}
+      />
     </>
   )
 }
