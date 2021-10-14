@@ -1,0 +1,2 @@
+git_url(ENV['URL_TO_FASTLANE_CERTIFICATES_REPO'])
+app_identifier ENV['APP_IDENTIFIER']

@@ -5,8 +5,9 @@
   "scripts": {
     "android": "react-native run-android",
     "debug": "react-devtools",
+    "deploy:ios:alpha": "fastlane ios alpha",
     "i18n:extract": "i18next",
-    "ios": "react-native run-ios",
+    "ios": "SKIP_BUNDLING=1 react-native run-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "NODE_ENV=development react-native start",
     "start:production": "NODE_ENV=production react-native start --reset-cache",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.14.5",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^3.0.1",
     "@types/detox": "^17.14.2",
