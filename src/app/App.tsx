@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import * as Sentry from '@sentry/react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
@@ -10,6 +11,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
+import { config } from 'src/config'
 import { HomeScreen } from 'src/features/home/HomeScreen'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
@@ -17,6 +19,12 @@ import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { darkTheme, theme } from 'src/styles/theme'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
+
+if (!__DEV__) {
+  Sentry.init({
+    dsn: config.sentryDsn,
+  })
+}
 
 export function App() {
   const isDarkMode = useColorScheme() === 'dark'

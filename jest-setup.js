@@ -3,3 +3,4 @@
 
 // mock initProviders to avoid creating real ethers providers for each test
 jest.mock('src/chains/initProviders')
+jest.mock('@sentry/react-native', () => ({ init: () => jest.fn() }))

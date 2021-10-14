@@ -4,4 +4,5 @@ declare module 'react-native-dotenv' {
   export const DEBUG: string
   export const VERSION: string
   export const API_URL: string
+  export const SENTRY_DSN: string
 }
