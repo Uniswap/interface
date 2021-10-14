@@ -143,13 +143,9 @@ export const bridgeTxsSummarySelector = createSelector(
 
         // DEPOSIT L1
         if (!tx.partnerTxHash || !l2Txs[tx.partnerTxHash]) {
-          if (tx.type === 'deposit-l1') {
-            if (tx.receipt?.status === 0) {
-              summary.status = 'failed'
-            } else {
-              summary.status = 'pending' // deposits on l1 should never show confirmed on UI
-              summary.pendingReason = PendingReasons.TX_UNCONFIRMED
-            }
+          if (tx.type === 'deposit-l1' && tx.receipt?.status !== 0) {
+            summary.status = 'pending' // deposits on l1 should never show confirmed on UI
+            summary.pendingReason = PendingReasons.TX_UNCONFIRMED
           }
 
           summary.log = createBridgeLog({ transactions: [tx], fromChainId: from, toChainId: to })
