@@ -944,6 +944,11 @@ msgstr "Tổng các Phần thưởng của tôi"
 msgid "My liquidity"
 msgstr "Thanh khoản của tôi"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Network"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"

@@ -3,12 +3,13 @@ import { useMedia } from 'react-use'
 import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
+import { NETWORK_ICON, NETWORK_LABEL } from 'constants/networks'
 import { UpcomingPool } from 'constants/upcoming-pools'
 import { ExternalLink } from 'theme'
 import { DataText, DataTitle, GridItem } from 'components/YieldPools/styleds'
 import PoolTokens from './PoolTokens'
 import StartingIn from './StartingIn'
-import { StyledImg, TableRow, StyledItemCard } from './styled'
+import { StyledImg, TableRow, StyledItemCard, NetworkLabel } from './styled'
 
 const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolean }) => {
   const breakpoint = useMedia('(min-width: 1000px)')
@@ -21,6 +22,10 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
         </Flex>
         <Flex grid-area="startingIn" alignItems="center" justifyContent="flex-start">
           <StartingIn startingIn={pool.startingIn} />
+        </Flex>
+        <Flex grid-area="network" alignItems="center" justifyContent="flex-start">
+          <img src={NETWORK_ICON[pool.network]} alt="Network Logo" style={{ width: '16px', marginRight: '4px' }} />
+          <NetworkLabel>{NETWORK_LABEL[pool.network]}</NetworkLabel>
         </Flex>
         <Flex grid-area="rewards" alignItems="right" justifyContent="flex-end">
           {pool.rewards.map((reward, index) => (
@@ -38,7 +43,7 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
 
   return (
     <StyledItemCard isLastItem={isLastItem}>
-      <GridItem style={{ gridColumn: '1 / span 2' }}>
+      <GridItem>
         <DataTitle>
           <span>
             <Trans>Pools</Trans>
@@ -47,6 +52,20 @@ const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolea
         <DataText>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <PoolTokens pool={pool} />
+          </div>
+        </DataText>
+      </GridItem>
+
+      <GridItem>
+        <DataTitle>
+          <span>
+            <Trans>Network</Trans>
+          </span>
+        </DataTitle>
+        <DataText>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img src={NETWORK_ICON[pool.network]} alt="Network Logo" style={{ width: '16px', marginRight: '4px' }} />
+            <NetworkLabel>{NETWORK_LABEL[pool.network]}</NetworkLabel>
           </div>
         </DataText>
       </GridItem>
