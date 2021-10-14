@@ -1,8 +1,9 @@
-import { createAction } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
-import { BridgeTxn } from './types'
+import { createAction } from '@reduxjs/toolkit'
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { OutgoingMessageState } from 'arb-ts'
+
+import { BridgeTxn } from './types'
 
 const PREFIX = 'bridgeTxn/'
 

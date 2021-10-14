@@ -19,11 +19,11 @@ import {
 } from '../state/bridgeTransactions/actions'
 import { setBridgeLoadingWithdrawals, setBridgeModalStatus } from '../state/bridge/actions'
 
-import { txnTypeToLayer } from '../state/bridgeTransactions/reducer'
+import { txnTypeToLayer } from '../utils/arbitrum'
 
 import { AppState } from '../state'
-import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
 import { BridgeModalStatus } from '../state/bridge/reducer'
+import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
 
 const getErrorMsg = (error: any) => {
   if (error?.code === 4001) {

@@ -1,10 +1,8 @@
-import { ChainId, Currency } from '@swapr/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { ChainId, Currency } from '@swapr/sdk'
+
 import { AppDispatch, AppState } from '../index'
-import { useCurrencyBalances } from '../wallet/hooks'
 import {
   selectCurrency,
   typeInput,
@@ -15,10 +13,15 @@ import {
   setBridgeModalStatus,
   setBridgeModalData
 } from './actions'
-import { currencyId } from '../../utils/currencyId'
-import { tryParseAmount } from '../swap/hooks'
-import { BridgeModalState, BridgeModalStatus, BridgeTxsFilter } from './reducer'
 import { bridgeModalDataSelector, bridgeTxsFilterSelector } from './selectors'
+import { BridgeModalState, BridgeModalStatus, BridgeTxsFilter } from './reducer'
+
+import { tryParseAmount } from '../swap/hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import { useActiveWeb3React } from '../../hooks'
+import { useCurrencyBalances } from '../wallet/hooks'
+
+import { currencyId } from '../../utils/currencyId'
 import { getChainPair } from '../../utils/arbitrum'
 
 export function useBridgeState(): AppState['bridge'] {

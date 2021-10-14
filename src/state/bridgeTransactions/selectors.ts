@@ -1,10 +1,12 @@
-import { createSelector } from '@reduxjs/toolkit'
 import { OutgoingMessageState } from 'arb-ts'
+import { createSelector } from '@reduxjs/toolkit'
+
 import { AppState } from '..'
-import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
-import { chainIdSelector, accountSelector } from '../application/selectors'
 import { BridgeTxsFilter } from '../bridge/reducer'
+import { chainIdSelector, accountSelector } from '../application/selectors'
 import { bridgeTxsFilterSelector, bridgeTxsLoadingSelector } from '../bridge/selectors'
+
+import { getBridgeTxStatus, PendingReasons, txnTypeToOrigin } from '../../utils/arbitrum'
 import { BridgeTransactionLog, BridgeTransactionSummary, BridgeTxn, BridgeTxnsState } from './types'
 
 export const bridgeTxsSelector = (state: AppState) => state.bridgeTransactions

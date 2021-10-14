@@ -72,3 +72,19 @@ export const txnTypeToOrigin = (txnType: BridgeTxnType): 1 | 2 => {
       return 2
   }
 }
+
+export const txnTypeToLayer = (txnType: BridgeTxnType): 1 | 2 => {
+  switch (txnType) {
+    case 'deposit':
+    case 'deposit-l1':
+    case 'outbox':
+    case 'approve':
+    case 'connext-deposit':
+      return 1
+    case 'deposit-l2':
+    case 'withdraw':
+    case 'connext-withdraw':
+    case 'deposit-l2-auto-redeem':
+      return 2
+  }
+}
