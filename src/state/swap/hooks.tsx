@@ -223,7 +223,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = <Trans>Insufficient ${amountIn.currency.symbol} balance</Trans>
+    inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
   }
 
   return {
