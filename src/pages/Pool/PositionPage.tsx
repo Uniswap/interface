@@ -514,7 +514,7 @@ export function PositionPage({
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM].includes(chainId)
   const showCollectAsWeth = Boolean(
     ownsNFT &&
       (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&

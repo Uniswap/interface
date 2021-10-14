@@ -262,7 +262,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
+  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM].includes(chainId)
   const showCollectAsWeth = Boolean(
     !onOptimisticChain &&
       liquidityValue0?.currency &&

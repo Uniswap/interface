@@ -6,6 +6,7 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import { SupportedChainId } from '../constants/chains'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 import { useActiveWeb3React } from './web3'
@@ -46,6 +47,12 @@ export function usePools(
         tokenA: value[0],
         tokenB: value[1],
         fee: value[2],
+        initCodeHashManualOverride:
+          // this is handled in the compute pool address function currently
+          // https://github.com/Uniswap/v3-sdk/blob/b50b02238d4d4f04dbaa04d531e5ff8dd76d63d9/src/utils/computePoolAddress.ts#L40-L45
+          chainId === SupportedChainId.OPTIMISTIC_KOVAN
+            ? '0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54'
+            : undefined,
       })
     })
   }, [chainId, transformed])
