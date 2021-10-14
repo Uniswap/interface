@@ -944,6 +944,11 @@ msgstr "내 총 보상"
 msgid "My liquidity"
 msgstr "나의 유동성"
 
+#: src/components/UpcomingFarms/ListItem.tsx
+#: src/components/UpcomingFarms/index.tsx
+msgid "Network"
+msgstr ""
+
 #: src/components/Header/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"
