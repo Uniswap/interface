@@ -4,8 +4,8 @@ import { animated } from 'react-spring'
 import { useSpring } from 'react-spring/web'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
+import { PopupContent } from '../../state/application/reducer'
 import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`

@@ -4,6 +4,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AutoRow } from 'components/Row'
 import { useEffect, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 
@@ -13,8 +14,8 @@ import { fortmatic, injected, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import usePrevious from '../../hooks/usePrevious'
-import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, TYPE } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
@@ -330,7 +331,7 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              <Trans>Back</Trans>
+              <ArrowLeft />
             </HoverText>
           </HeaderRow>
         ) : (
@@ -344,14 +345,14 @@ export default function WalletModal({
         <ContentWrapper>
           <LightCard style={{ marginBottom: '16px' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.main fontSize={14}>
+              <TYPE.black fontSize={14}>
                 <Trans>
                   By connecting a wallet, you agree to Uniswap Labs’{' '}
                   <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the{' '}
                   <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
                 </Trans>
-              </TYPE.main>
+              </TYPE.black>
             </AutoRow>
           </LightCard>
           {walletView === WALLET_VIEWS.PENDING ? (

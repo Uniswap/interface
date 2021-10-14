@@ -1,20 +1,28 @@
 import { createStore, Store } from 'redux'
 
-import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber, updateChainId } from './actions'
-import reducer, { ApplicationState } from './reducer'
+import reducer, {
+  addPopup,
+  ApplicationModal,
+  ApplicationState,
+  removePopup,
+  setOpenModal,
+  updateBlockNumber,
+  updateChainId,
+} from './reducer'
 
 describe('application reducer', () => {
   let store: Store<ApplicationState>
 
   beforeEach(() => {
     store = createStore(reducer, {
-      chainId: null,
-      chainConnectivityWarning: false,
-      popupList: [],
       blockNumber: {
         [1]: 3,
       },
+      chainId: null,
+      chainConnectivityWarning: false,
+      implements3085: false,
       openModal: null,
+      popupList: [],
     })
   })
 
