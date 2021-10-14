@@ -8,8 +8,8 @@ export const TableWrapper = styled.div`
 export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 3rem;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-areas: 'pools startingIn rewards information';
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas: 'pools startingIn network rewards information';
   padding: 18px 24px 18px 24px;
   font-size: 12px;
   align-items: center;
@@ -43,8 +43,8 @@ export const RowsWrapper = styled.div`
 export const TableRow = styled.div<{ isLastItem?: boolean }>`
   display: grid;
   grid-gap: 3rem;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-areas: 'pools startingIn rewards information';
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas: 'pools startingIn network rewards information';
   padding: 16px 0;
   font-size: 14px;
   align-items: center;
@@ -96,6 +96,12 @@ export const PoolTokensText = styled.div`
   font-size: 14px;
   font-weight: 400;
   color: ${({ theme }) => theme.text};
+`
+
+export const NetworkLabel = styled.span`
+  color: ${({ theme }) => theme.text};
+  font-size: 14px;
+  font-weight: 500;
 `
 
 export const NoFarmsWrapper = styled.div`
