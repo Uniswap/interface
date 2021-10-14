@@ -11,9 +11,9 @@ import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { AutoColumn } from '../Column'
 import Card from '../Card'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { Flex, Text } from 'rebass'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -109,7 +109,7 @@ const StyledBalanceMax = styled.button`
 `
 
 const Card2 = styled(Card)<{ balancePosition: string }>`
-  padding: 0 0.75rem 0.4rem 0.75rem;
+  padding: 0 0.25rem 0.4rem;
   text-align: ${({ balancePosition }) => `${balancePosition}`};
 `
 
@@ -125,6 +125,7 @@ interface CurrencyInputPanelProps {
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
+  disabledInput?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
@@ -139,13 +140,14 @@ export default function CurrencyInputPanel({
   onUserInput,
   onMax,
   showMaxButton,
-  label = 'Input',
+  label = '',
   onCurrencySelect,
   currency,
   disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
+  disabledInput = false,
   otherCurrency,
   id,
   showCommonBases,
@@ -167,20 +169,31 @@ export default function CurrencyInputPanel({
 
   return (
     <div style={{ width: '100%' }}>
-      {account && (
-        <Card2 padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'} balancePosition={balancePosition}>
-          <AutoColumn gap="4px">
-            <TYPE.body
-              onClick={onMax}
-              color={theme.text2}
-              fontWeight={500}
-              fontSize={14}
-              style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
-            >
-              {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
-                t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
-            </TYPE.body>
-          </AutoColumn>
+      {(account || label) && (
+        <Card2 borderRadius={'20px'} balancePosition={balancePosition}>
+          <Flex justifyContent="space-between" alignItems="center">
+            {label && (
+              <Text fontSize={14} color={theme.text2} fontWeight={500}>
+                {label}
+              </Text>
+            )}
+            {account && (
+              <TYPE.body
+                onClick={onMax}
+                color={theme.text2}
+                fontWeight={500}
+                fontSize={14}
+                style={{
+                  flex: 1,
+                  display: 'inline',
+                  cursor: `${!disabledInput && label !== 'To' ? 'pointer' : 'initial'}`
+                }}
+              >
+                {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
+                  t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
+              </TYPE.body>
+            )}
+          </Flex>
         </Card2>
       )}
       <InputPanel id={id} hideInput={hideInput}>
@@ -191,6 +204,7 @@ export default function CurrencyInputPanel({
                 <NumericalInput
                   className="token-amount-input"
                   value={value}
+                  disabled={disabledInput}
                   onUserInput={val => {
                     onUserInput(val)
                   }}

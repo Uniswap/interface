@@ -1,0 +1,65 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              },
+              {
+                "internalType": "uint16",
+                "name": "dexOption",
+                "type": "uint16"
+              }
+            ],
+            "internalType": "struct IFireBirdMultihopRouter.Swap[][]",
+            "name": "swapSequences",
+            "type": "tuple[][]"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenIn",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenOut",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minTotalAmountOut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct AggregationExecutor.SwapExecutorDescription",
+        "name": "swapExecutorDescription",
+        "type": "tuple"
+      }
+    ],
+    "name": "getCallByte",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]

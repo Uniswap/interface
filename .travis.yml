@@ -33,6 +33,17 @@ deploy:
   - provider: gcs
     access_key_id: $GCS_ACCESS_KEY_ID
     secret_access_key: $GCS_SECRET_KEY_ID
+    bucket: dev-dmm-split-trade.knstats.com
+    skip_cleanup: true
+    local-dir: build
+    cache_control: "no-cache"
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^develop_split_trade$
+
+  - provider: gcs
+    access_key_id: $GCS_ACCESS_KEY_ID
+    secret_access_key: $GCS_SECRET_KEY_ID
     bucket: staging-dmm.knstats.com
     skip_cleanup: true
     local-dir: build

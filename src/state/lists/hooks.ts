@@ -98,11 +98,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
-
-export function useDMMTokenList(): TokenAddressMap {
-  const { chainId } = useActiveWeb3React()
-
+export const getTokenAddressMap = (chainId?: ChainId) => {
   switch (chainId) {
     case ChainId.MAINNET:
       return listToTokenMap(MAINNET_TOKEN_LIST)
@@ -123,6 +119,14 @@ export function useDMMTokenList(): TokenAddressMap {
     default:
       return listToTokenMap(MAINNET_TOKEN_LIST)
   }
+}
+
+const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
+
+export function useDMMTokenList(): TokenAddressMap {
+  const { chainId } = useActiveWeb3React()
+
+  return getTokenAddressMap(chainId)
 }
 
 // returns all downloaded current lists

@@ -335,17 +335,17 @@ export default function CreatePool({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const realPercentToken0 = pair
-    ? pair.reserve0
-        .divide(pair.virtualReserve0)
-        .multiply('100')
-        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
-    : new Fraction(JSBI.BigInt(50))
+  // const realPercentToken0 = pair
+  //   ? pair.reserve0
+  //       .divide(pair.virtualReserve0)
+  //       .multiply('100')
+  //       .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
+  //   : new Fraction(JSBI.BigInt(50))
 
-  const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
+  // const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(4)
-  const percentToken1 = realPercentToken1.toSignificant(4)
+  // const percentToken0 = realPercentToken0.toSignificant(4)
+  // const percentToken1 = realPercentToken1.toSignificant(4)
 
   const tokens = useMemo(
     () =>

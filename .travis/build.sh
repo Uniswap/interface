@@ -11,6 +11,10 @@ elif [[ "$TRAVIS_BRANCH" == "staging" ]]; then
   echo "Start running build-staging"
   yarn build-staging
   echo "Finished running build-staging"
+elif [[ "$TRAVIS_BRANCH" == "develop_split_trade" ]]; then
+  echo "Start running build-production"
+  yarn build-production
+  echo "Finished running build-production"
 elif [[ "$TRAVIS_BRANCH" == "main" ]]; then
   echo "Start running build"
   yarn build-production

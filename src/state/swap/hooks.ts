@@ -12,11 +12,20 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import {
+  chooseToSaveGas,
+  Field,
+  replaceSwapState,
+  selectCurrency,
+  setRecipient,
+  switchCurrencies,
+  switchCurrenciesV2,
+  typeInput
+} from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { BAD_RECIPIENT_ADDRESSES } from '../../constants'
+import { BAD_RECIPIENT_ADDRESSES, KNC, USDC } from '../../constants'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 export function useSwapState(): AppState['swap'] {
@@ -26,8 +35,10 @@ export function useSwapState(): AppState['swap'] {
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
   onSwitchTokens: () => void
+  onSwitchTokensV2: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
+  onChooseToSaveGas: (saveGas: boolean) => void
 } {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
@@ -52,6 +63,10 @@ export function useSwapActionHandlers(): {
     dispatch(switchCurrencies())
   }, [dispatch])
 
+  const onSwitchTokensV2 = useCallback(() => {
+    dispatch(switchCurrenciesV2())
+  }, [dispatch])
+
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
@@ -66,11 +81,20 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onChooseToSaveGas = useCallback(
+    (saveGas: boolean) => {
+      dispatch(chooseToSaveGas({ saveGas }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
+    onSwitchTokensV2,
     onCurrencySelection,
     onUserInput,
-    onChangeRecipient
+    onChangeRecipient,
+    onChooseToSaveGas
   }
 }
 
@@ -232,7 +256,7 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): Omit<SwapState, 'saveGas'> {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
@@ -272,19 +296,25 @@ export function useDefaultsFromURLSearch():
   useEffect(() => {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs, chainId)
-
+    const outputCurrencyAddress = [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.BSCMAINNET, ChainId.MATIC].includes(
+      chainId
+    )
+      ? KNC[chainId].address
+      : USDC[chainId].address
     dispatch(
       replaceSwapState({
-        typedValue: parsed.typedValue,
+        typedValue: parsed.typedValue || '1',
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        outputCurrencyId: outputCurrencyAddress,
         recipient: parsed.recipient
       })
     )
 
-    console.log('----loadedUrlParams?.inputCurrencyId', parsedQs)
-    setResult({ inputCurrencyId: parsed[Field.INPUT].currencyId, outputCurrencyId: parsed[Field.OUTPUT].currencyId })
+    setResult({
+      inputCurrencyId: parsed[Field.INPUT].currencyId,
+      outputCurrencyId: outputCurrencyAddress
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])
 

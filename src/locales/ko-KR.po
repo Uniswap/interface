@@ -18,6 +18,7 @@ msgid "*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K 
 msgstr "*슬립페이지 발생: 백만달러 유동성에서 십억달러만큼의 토큰 거래가 발생하였을 때"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "+ Add a send (optional)"
 msgstr "+ 보내기 추가 (선택 사항)"
 
@@ -28,6 +29,7 @@ msgid "+ Create New Pool"
 msgstr "+ 새 풀 만들기"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "- Remove send"
 msgstr "- 보내기 제거"
 
@@ -80,6 +82,7 @@ msgstr "About"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Accept"
 msgstr "승인"
 
@@ -180,6 +183,7 @@ msgid "Approve"
 msgstr "승인"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approve {0}"
 msgstr "승인{0}"
 
@@ -187,6 +191,7 @@ msgstr "승인{0}"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approved"
 msgstr "승인됨"
 
@@ -196,6 +201,7 @@ msgstr "승인됨"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approving"
 msgstr "승인 중"
 
@@ -242,6 +248,7 @@ msgid "CLAIMED"
 msgstr "청구됨"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Calculating best route"
 msgstr "최적 경로 계산"
 
@@ -258,6 +265,7 @@ msgid "Change"
 msgstr "변경"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
 msgstr ""
 
@@ -297,6 +305,10 @@ msgstr "보안에 전념"
 msgid "Common bases"
 msgstr "공통 기지"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Compared to {0}"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -305,6 +317,8 @@ msgstr "확인"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/ConfirmSwapModal.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "스왑 확인하기"
 
@@ -320,6 +334,7 @@ msgstr "지갑에서 이 거래를 승인하세요"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "지갑 연결"
 
@@ -341,6 +356,7 @@ msgstr "지갑에 연결하여 유동성을 확인하세요."
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "지갑 연결"
 
@@ -478,6 +494,10 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "동적 수수료"
 
+#: src/components/swapv2/Routing.tsx
+msgid "Dynamic Trade Routing"
+msgstr ""
+
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
@@ -508,6 +528,7 @@ msgid "Ending In"
 msgstr "종료"
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter a recipient"
 msgstr "받는 사람을 입력하세요"
 
@@ -529,6 +550,7 @@ msgstr ""
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter an amount"
 msgstr "금액을 입력"
 
@@ -557,6 +579,11 @@ msgstr "연결하는 동안 오류가 발생했습니다. 페이지를 새로고
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Estimated Refund"
 msgstr "예상 환불"
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Estimated cost"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
@@ -604,10 +631,12 @@ msgid "Forums"
 msgstr ""
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From"
 msgstr "발신자"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From (estimated)"
 msgstr "부터(예상)"
 
@@ -730,6 +759,7 @@ msgid "Initializing..."
 msgstr "초기화..."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most"
 msgstr "예상된 입력값입니다"
 
@@ -738,6 +768,7 @@ msgid "Insufficient W{0} balance"
 msgstr ""
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 
@@ -747,6 +778,7 @@ msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Insufficient {0} balance"
 msgstr ""
 
@@ -756,6 +788,7 @@ msgstr "보험 제공"
 
 #: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid amount"
 msgstr ""
 
@@ -768,6 +801,7 @@ msgid "Invalid pair."
 msgstr "잘못된 쌍입니다."
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid recipient"
 msgstr "잘못된 수신자"
 
@@ -834,6 +868,14 @@ msgstr "로딩중"
 msgid "Locked Rewards"
 msgstr "잠긴 보상"
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Lowest Gas"
+msgstr ""
+
+#: 
+#~ msgid "Lowest Gas Cost"
+#~ msgstr ""
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "최대"
@@ -882,8 +924,14 @@ msgstr "최대"
 msgid "Max APY"
 msgstr ""
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Maximum Return"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Maximum sold"
 msgstr "최대 판매"
 
@@ -906,6 +954,8 @@ msgstr "마이그레이션 유동성"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Minimum received"
 msgstr "최소 수령"
 
@@ -1019,11 +1069,16 @@ msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고�
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> 유동성에 대한 공개 액세스"
 
+#: 
+#~ msgid "Order Routing"
+#~ msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "예상된 가격입니다. 가격이 {0}% 이상 변경되면 거래가 취소됩니다."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least"
 msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
 
@@ -1141,6 +1196,7 @@ msgid "Price range {0}/{1}"
 msgstr "가격대 {0}/{1}"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "가격:"
 
@@ -1277,6 +1333,7 @@ msgstr "토큰 선택"
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Select a token"
 msgstr "토큰 선택"
 
@@ -1304,6 +1361,7 @@ msgid "Slippage"
 msgstr "슬립피지"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Slippage Tolerance:"
 msgstr "슬립피지 범위:"
 
@@ -1337,6 +1395,9 @@ msgstr ""
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Swap"
 msgstr "토큰 스왑"
 
@@ -1345,6 +1406,22 @@ msgstr "토큰 스왑"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "스왑하기"
+
+#: 
+#~ msgid "Swap Token"
+#~ msgstr ""
+
+#: 
+#~ msgid "Swap V2"
+#~ msgstr ""
+
+#: 
+#~ msgid "Swap any token accross different exchange for the best price"
+#~ msgstr ""
+
+#: src/components/swapv2/Routing.tsx
+msgid "Swap any token across different exchanges for the best price"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1624,6 +1701,10 @@ msgstr "잘못된 네트워크"
 #~ msgid "Yield"
 #~ msgstr "유동성 마이닝"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "You Save"
+msgstr ""
+
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 msgstr ""
@@ -1684,6 +1765,8 @@ msgstr "거래가 실패할 수 있습니다"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
 msgstr "거래 승인 버튼을 누르기 전에 큰 가격 변동이 있는 경우 거래가 거절됩니다."
 
@@ -1730,6 +1813,9 @@ msgstr "훨씬 더 높은 자본 효율성"
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "or the transaction will revert."
 msgstr "그렇지 않으면 거래가 거절될것입니다."
 

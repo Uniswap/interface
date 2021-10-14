@@ -200,6 +200,8 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
           <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
             {message}
+            {message.includes('minTotalAmountOut') &&
+              ' Try to refresh the exchange rate or increase the Slippage tolerance in Settings'}
           </Text>
         </AutoColumn>
       </Section>

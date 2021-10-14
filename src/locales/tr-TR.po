@@ -18,6 +18,7 @@ msgid "*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K 
 msgstr "* Kayma Gerçekleşti: Her token için 1 milyon dolarlık likidite ve 100.000 dolarlık bir ticaret varsayıldığında"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "+ Add a send (optional)"
 msgstr "+ Gönderme ekle (isteğe bağlı)"
 
@@ -28,6 +29,7 @@ msgid "+ Create New Pool"
 msgstr "+ Yeni Havuz Oluştur"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "- Remove send"
 msgstr "- Göndermeyi kaldır"
 
@@ -80,6 +82,7 @@ msgstr "Hakkında"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Accept"
 msgstr "Kabul Et"
 
@@ -180,6 +183,7 @@ msgid "Approve"
 msgstr "Onayla"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approve {0}"
 msgstr "{0} Onayla"
 
@@ -187,6 +191,7 @@ msgstr "{0} Onayla"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approved"
 msgstr "Onaylandı"
 
@@ -196,6 +201,7 @@ msgstr "Onaylandı"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approving"
 msgstr "Onaylanıyor"
 
@@ -242,6 +248,7 @@ msgid "CLAIMED"
 msgstr "ALINDI"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Calculating best route"
 msgstr "En iyi rotayı hesaplama"
 
@@ -258,6 +265,7 @@ msgid "Change"
 msgstr "Değiştir"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
 msgstr ""
 
@@ -297,6 +305,10 @@ msgstr "Güvenlik Taahhüdü"
 msgid "Common bases"
 msgstr "Ortak temeller"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Compared to {0}"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -305,6 +317,8 @@ msgstr "Onayla"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/ConfirmSwapModal.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "Takası Onayla"
 
@@ -320,6 +334,7 @@ msgstr "Bu işlemi cüzdanınızda onaylayın"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "Cüzdanı Bağla"
 
@@ -341,6 +356,7 @@ msgstr "Likiditenizi görüntülemek için bir cüzdana bağlanın."
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "Cüzdanı bağla"
 
@@ -478,6 +494,10 @@ msgstr ""
 msgid "Dynamic Fees"
 msgstr "Dinamik Ücretler"
 
+#: src/components/swapv2/Routing.tsx
+msgid "Dynamic Trade Routing"
+msgstr ""
+
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
@@ -508,6 +528,7 @@ msgid "Ending In"
 msgstr "BİTİYOR"
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter a recipient"
 msgstr "Bir alıcı girin"
 
@@ -529,6 +550,7 @@ msgstr ""
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter an amount"
 msgstr "Bir miktar girin"
 
@@ -557,6 +579,11 @@ msgstr "Bağlantı hatası. Sayfayı yenilemeyi deneyin."
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Estimated Refund"
 msgstr "Tahmini Geri Ödeme"
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Estimated cost"
+msgstr ""
 
 #: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
@@ -604,10 +631,12 @@ msgid "Forums"
 msgstr ""
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From"
 msgstr "Kimden"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From (estimated)"
 msgstr "Kimden (tahmini)"
 
@@ -730,6 +759,7 @@ msgid "Initializing..."
 msgstr "Başlatılıyor..."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most"
 msgstr "Giriş tahminidir. En fazla satacaksınız"
 
@@ -738,6 +768,7 @@ msgid "Insufficient W{0} balance"
 msgstr ""
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Bu alım satım için yetersiz likidite."
 
@@ -747,6 +778,7 @@ msgstr "Bu alım satım için yetersiz likidite."
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Insufficient {0} balance"
 msgstr ""
 
@@ -756,6 +788,7 @@ msgstr "tarafından sigortalıdır"
 
 #: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid amount"
 msgstr ""
 
@@ -768,6 +801,7 @@ msgid "Invalid pair."
 msgstr "Geçersiz çift."
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid recipient"
 msgstr "Geçersiz alıcı"
 
@@ -834,6 +868,14 @@ msgstr "Yükleniyor"
 msgid "Locked Rewards"
 msgstr "Kilitli Ödüller"
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Lowest Gas"
+msgstr ""
+
+#: 
+#~ msgid "Lowest Gas Cost"
+#~ msgstr ""
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAKS"
@@ -882,8 +924,14 @@ msgstr "Maksimum"
 msgid "Max APY"
 msgstr ""
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Maximum Return"
+msgstr ""
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Maximum sold"
 msgstr "Maksimum satıldı"
 
@@ -906,6 +954,8 @@ msgstr "Likiditeyi     Taşı"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Minimum received"
 msgstr "Minimum alındı"
 
@@ -1019,11 +1069,16 @@ msgstr "Hay Aksi! Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin ya da 
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> Likiditeye Açık Erişim"
 
+#: 
+#~ msgid "Order Routing"
+#~ msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "Çıktı tahmin edilir. Fiyat %{0}'den fazla değişirse işleminiz geri alınır."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least"
 msgstr "Çıktı tahmin ediliyor. En azı alacaksınız"
 
@@ -1141,6 +1196,7 @@ msgid "Price range {0}/{1}"
 msgstr "Fiyat aralığı {0}/{1}"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Fiyat:"
 
@@ -1277,6 +1333,7 @@ msgstr "Bir Token Seç"
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Select a token"
 msgstr "Bir token seç"
 
@@ -1304,6 +1361,7 @@ msgid "Slippage"
 msgstr "Kayma"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Slippage Tolerance:"
 msgstr "Kayma Toleransı:"
 
@@ -1337,6 +1395,9 @@ msgstr ""
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Swap"
 msgstr "Takas"
 
@@ -1345,6 +1406,22 @@ msgstr "Takas"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Yine de Takası Yap"
+
+#: 
+#~ msgid "Swap Token"
+#~ msgstr ""
+
+#: 
+#~ msgid "Swap V2"
+#~ msgstr ""
+
+#: 
+#~ msgid "Swap any token accross different exchange for the best price"
+#~ msgstr ""
+
+#: src/components/swapv2/Routing.tsx
+msgid "Swap any token across different exchanges for the best price"
+msgstr ""
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1624,6 +1701,10 @@ msgstr "Yanlış Ağ"
 #~ msgid "Yield"
 #~ msgstr "Getiri"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "You Save"
+msgstr ""
+
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 msgstr ""
@@ -1684,6 +1765,8 @@ msgstr "İşleminiz başarısız olabilir"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
 msgstr "Onaylanmadan önce büyük, olumsuz bir fiyat hareketi olursa işleminiz geri alınır."
 
@@ -1730,6 +1813,9 @@ msgstr "çok daha yüksek sermaye verimliliği"
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "or the transaction will revert."
 msgstr "veya işlem geri dönecektir."
 

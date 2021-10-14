@@ -1,4 +1,5 @@
 import { ZERO_ADDRESS } from 'constants/index'
+import { isAddress } from 'utils'
 
 export const getBscMainnetTokenLogoURL = (address: string) => {
   let uri
@@ -22,7 +23,10 @@ export const getBscMainnetTokenLogoURL = (address: string) => {
   }
 
   if (!uri) {
-    uri = `https://pancakeswap.finance/images/tokens/${address}.png`
+    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${isAddress(
+      address
+    )}/logo.png`
+    // uri = `https://pancakeswap.finance/images/tokens/${address}.png`
   }
 
   return uri

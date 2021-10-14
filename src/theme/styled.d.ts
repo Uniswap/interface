@@ -22,6 +22,7 @@ export interface Colors {
   text11: Color
   text12: Color
   text13: Color
+  disableText: Color
 
   // backgrounds / greys
   tableHeader: Color
@@ -67,6 +68,7 @@ export interface Colors {
   secondary1: Color
   secondary2: Color
   secondary3: Color
+  secondary4: Color
 
   // border colors
   border: Color

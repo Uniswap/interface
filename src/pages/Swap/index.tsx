@@ -290,12 +290,12 @@ export default function Swap({ history }: RouteComponentProps) {
                 <ArrowWrapper clickable>
                   <img
                     src={SwapIcon}
+                    alt="SwapIcon"
                     width="22"
                     onClick={() => {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    alt="SwapIcon"
                   />
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (
@@ -457,7 +457,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 }
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
-                <Text fontWeight={500}>
+                <Text fontSize={20} fontWeight={500}>
                   {swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
