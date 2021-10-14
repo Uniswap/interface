@@ -1,3 +1,4 @@
+import { SupportedChainId } from 'constants/chains'
 import { useEffect, useMemo, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { UniswapInterfaceMulticall } from 'types/v3'
@@ -13,6 +14,11 @@ import { errorFetchingMulticallResults, fetchingMulticallResults, updateMultical
 import { Call, parseCallKey } from './utils'
 
 const DEFAULT_GAS_REQUIRED = 1_000_000_000_000
+
+const CHUNK_GAS_LIMIT: { [chainId: number]: number } = {
+  [SupportedChainId.MAINNET]: 100_000_000,
+  [SupportedChainId.ARBITRUM_ONE]: 1_000_000_000,
+}
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
@@ -158,7 +164,7 @@ export default function Updater(): null {
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))
 
-    const chunkedCalls = chunkArray(calls, chainId)
+    const chunkedCalls = chunkArray(calls, CHUNK_GAS_LIMIT[chainId] ?? CHUNK_GAS_LIMIT[SupportedChainId.MAINNET])
 
     if (cancellations.current && cancellations.current.blockNumber !== latestBlockNumber) {
       cancellations.current.cancellations.forEach((c) => c())
