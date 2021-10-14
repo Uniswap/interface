@@ -1,11 +1,13 @@
 import { Currency, CurrencyAmount, Pair, Token, Trade } from 'libs/sdk/src'
-import { useMemo, useEffect, useState } from 'react'
-
+import { useMemo, useEffect, useState, useCallback } from 'react'
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-
 import { useActiveWeb3React } from './index'
+import { routerUri } from '../apollo/client'
+import useDebounce from './useDebounce'
+import { Aggregator } from '../utils/aggregator'
+import { AggregationComparer } from '../state/swap/types'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
   const { chainId } = useActiveWeb3React()
@@ -193,4 +195,59 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
   //   }
   //   return null
   // }, [allowedPairs, currencyIn, currencyAmountOut])
+}
+
+/**
+ * Returns the best trade for the exact amount of tokens in to the given token out
+ */
+export function useTradeExactInV2(
+  currencyAmountIn?: CurrencyAmount,
+  currencyOut?: Currency,
+  saveGas?: boolean
+): {
+  trade: Aggregator | null
+  comparer: AggregationComparer | null
+  onUpdateCallback: () => void
+} {
+  const { chainId } = useActiveWeb3React()
+
+  const [trade, setTrade] = useState<Aggregator | null>(null)
+  const [comparer, setComparer] = useState<AggregationComparer | null>(null)
+
+  const debouncedCurrencyAmountIn = useDebounce(currencyAmountIn?.toSignificant(10), 300)
+  const debouncedCurrencyIn = useDebounce(currencyAmountIn?.currency, 300)
+
+  const routerApi = useMemo((): string => {
+    return (chainId && routerUri[chainId]) || ''
+  }, [chainId])
+
+  const onUpdateCallback = useCallback(async () => {
+    if (currencyAmountIn && currencyOut) {
+      const state = await Aggregator.bestTradeExactIn(routerApi, currencyAmountIn, currencyOut, saveGas)
+      setComparer(null)
+      setTrade(state)
+      const comparedResult = await Aggregator.compareDex(routerApi, currencyAmountIn, currencyOut)
+      setComparer(comparedResult)
+    } else {
+      setTrade(null)
+      setComparer(null)
+    }
+  }, [debouncedCurrencyAmountIn, debouncedCurrencyIn, currencyOut, routerApi, saveGas])
+
+  useEffect(() => {
+    let timeout: any
+    const fn = function() {
+      timeout = setTimeout(onUpdateCallback, 100)
+    }
+    fn()
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [onUpdateCallback])
+
+  return {
+    trade,
+    comparer,
+    onUpdateCallback
+  }
 }

@@ -15,11 +15,15 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   background-color: ${({ theme }) => theme.buttonBlack};
   font-size: ${({ fontSize }) => fontSize ?? '24px'};
   text-align: ${({ align }) => align && align};
+  color: ${({ disabled, theme }) => (disabled ? theme.disableText : theme.text)};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0px;
   -webkit-appearance: textfield;
+
+  ${({ disabled, theme }) =>
+    disabled && `cursor: not-allowed; opacity: 1; -webkit-text-fill-color: ${theme.disableText}`};
 
   ::-webkit-search-decoration {
     -webkit-appearance: none;

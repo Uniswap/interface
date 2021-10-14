@@ -323,7 +323,11 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          {/*<StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            <Trans>Swap</Trans>
+          </StyledNavLink>
+          */}
+          <StyledNavLink id={`swapv2-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>

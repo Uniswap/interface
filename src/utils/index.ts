@@ -10,15 +10,19 @@ import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import {
   ROUTER_ADDRESSES,
+  ROUTER_ADDRESSES_V2,
   FACTORY_ADDRESSES,
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
   KNCL_ADDRESS_ROPSTEN,
   KNC,
+  AGGREGATION_EXECUTOR,
   DEFAULT_GAS_LIMIT_MARGIN
 } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
+import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
+import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from 'libs/sdk/src'
@@ -183,6 +187,18 @@ export function getContractForReading(address: string, ABI: any, library: ethers
 // account is optional
 export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
+}
+
+export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(ROUTER_ADDRESSES_V2[chainId] || '', ROUTER_ABI_V2, library, account)
+}
+
+export function getAggregationExecutorAddress(chainId: ChainId): string {
+  return AGGREGATION_EXECUTOR[chainId] || ''
+}
+
+export function getAggregationExecutorContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(getAggregationExecutorAddress(chainId), AGGREGATOR_EXECUTOR_ABI, library, account)
 }
 
 export function getMigratorContract(_: number, library: Web3Provider, account?: string): Contract {

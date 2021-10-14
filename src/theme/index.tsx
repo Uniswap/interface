@@ -57,6 +57,7 @@ export function colors(darkMode: boolean): Colors {
     text11: darkMode ? '#f4f4f4' : '#565A69',
     text12: darkMode ? '#4aff8c' : '#0CE15B',
     text13: darkMode ? '#f5f5f5' : '#3a3a3a',
+    disableText: darkMode ? '#6C7284' : '#A7B6BD',
 
     // backgrounds
     tableHeader: darkMode ? '#303E46' : '#F9F9F9',
@@ -104,6 +105,7 @@ export function colors(darkMode: boolean): Colors {
     secondary1: darkMode ? '#08a1e7' : '#08a1e7',
     secondary2: darkMode ? '#17000b26' : '#17000b26',
     secondary3: darkMode ? '#17000b26' : '#17000b26',
+    secondary4: '#2FC99E',
 
     // border colors
     border: darkMode ? '#4c5f69' : '#859aa5',
@@ -191,6 +193,9 @@ export const TYPE = {
   },
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  h3(props: TextProps) {
+    return <TextWrapper fontSize={'18px'} fontWeight={500} color={'#E1F5FE'} lineheight={'21px'} my={0} {...props} />
   },
   small(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />

@@ -18,6 +18,7 @@ msgid "*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K 
 msgstr "*Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "+ Add a send (optional)"
 msgstr "+ Add a send (optional)"
 
@@ -28,6 +29,7 @@ msgid "+ Create New Pool"
 msgstr "+ Create New Pool"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "- Remove send"
 msgstr "- Remove send"
 
@@ -80,6 +82,7 @@ msgstr "About"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Accept"
 msgstr "Accept"
 
@@ -180,6 +183,7 @@ msgid "Approve"
 msgstr "Approve"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approve {0}"
 msgstr "Approve {0}"
 
@@ -187,6 +191,7 @@ msgstr "Approve {0}"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approved"
 msgstr "Approved"
 
@@ -196,6 +201,7 @@ msgstr "Approved"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Approving"
 msgstr "Approving"
 
@@ -242,6 +248,7 @@ msgid "CLAIMED"
 msgstr "CLAIMED"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Calculating best route"
 msgstr "Calculating best route"
 
@@ -258,6 +265,7 @@ msgid "Change"
 msgstr "Change"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Checking allowance..."
 msgstr "Checking allowance..."
 
@@ -297,6 +305,10 @@ msgstr "Committed to Security"
 msgid "Common bases"
 msgstr "Common bases"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "Compared to {0}"
+msgstr "Compared to {0}"
+
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -305,6 +317,8 @@ msgstr "Confirm"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/ConfirmSwapModal.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Confirm Swap"
 msgstr "Confirm Swap"
 
@@ -320,6 +334,7 @@ msgstr "Confirm this transaction in your wallet"
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
@@ -341,6 +356,7 @@ msgstr "Connect to a wallet to view your liquidity."
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Connect wallet"
 msgstr "Connect wallet"
 
@@ -478,6 +494,10 @@ msgstr "Dynamic Fee Range"
 msgid "Dynamic Fees"
 msgstr "Dynamic Fees"
 
+#: src/components/swapv2/Routing.tsx
+msgid "Dynamic Trade Routing"
+msgstr "Dynamic Trade Routing"
+
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
@@ -508,6 +528,7 @@ msgid "Ending In"
 msgstr "Ending In"
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter a recipient"
 msgstr "Enter a recipient"
 
@@ -529,6 +550,7 @@ msgstr "Enter amp (>=1)"
 #: src/state/stake/hooks.ts
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Enter an amount"
 msgstr "Enter an amount"
 
@@ -557,6 +579,11 @@ msgstr "Error connecting. Try refreshing the page."
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Estimated Refund"
 msgstr "Estimated Refund"
+
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
+msgid "Estimated cost"
+msgstr "Estimated cost"
 
 #: src/components/YieldPools/index.tsx
 msgid "Estimated total annualized yield from fees + rewards"
@@ -604,10 +631,12 @@ msgid "Forums"
 msgstr "Forums"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From"
 msgstr "From"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "From (estimated)"
 msgstr "From (estimated)"
 
@@ -730,6 +759,7 @@ msgid "Initializing..."
 msgstr "Initializing..."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most"
 msgstr "Input is estimated. You will sell at most"
 
@@ -738,6 +768,7 @@ msgid "Insufficient W{0} balance"
 msgstr "Insufficient W{0} balance"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Insufficient liquidity for this trade."
 msgstr "Insufficient liquidity for this trade."
 
@@ -747,6 +778,7 @@ msgstr "Insufficient liquidity for this trade."
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Insufficient {0} balance"
 msgstr "Insufficient {0} balance"
 
@@ -756,6 +788,7 @@ msgstr "Insured by"
 
 #: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid amount"
 msgstr "Invalid amount"
 
@@ -768,6 +801,7 @@ msgid "Invalid pair."
 msgstr "Invalid pair."
 
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Invalid recipient"
 msgstr "Invalid recipient"
 
@@ -834,6 +868,14 @@ msgstr "Loading"
 msgid "Locked Rewards"
 msgstr "Locked Rewards"
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Lowest Gas"
+msgstr "Lowest Gas"
+
+#: 
+#~ msgid "Lowest Gas Cost"
+#~ msgstr "Lowest Gas Cost"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
@@ -882,8 +924,14 @@ msgstr "Max"
 msgid "Max APY"
 msgstr "Max APY"
 
+#: src/components/swapv2/TradeTypeSelection.tsx
+msgid "Maximum Return"
+msgstr "Maximum Return"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Maximum sold"
 msgstr "Maximum sold"
 
@@ -906,6 +954,8 @@ msgstr "Migrate     Liquidity"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Minimum received"
 msgstr "Minimum received"
 
@@ -1019,11 +1069,16 @@ msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from 
 msgid "Open Access to <0/> Liquidity"
 msgstr "Open Access to <0/> Liquidity"
 
+#: 
+#~ msgid "Order Routing"
+#~ msgstr "Order Routing"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least"
 msgstr "Output is estimated. You will receive at least"
 
@@ -1141,6 +1196,7 @@ msgid "Price range {0}/{1}"
 msgstr "Price range {0}/{1}"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Price:"
 
@@ -1277,6 +1333,7 @@ msgstr "Select a Token"
 #: src/components/PoolsCurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/state/swap/hooks.ts
+#: src/state/swap/useAggregator.ts
 msgid "Select a token"
 msgstr "Select a token"
 
@@ -1304,6 +1361,7 @@ msgid "Slippage"
 msgstr "Slippage"
 
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Slippage Tolerance:"
 msgstr "Slippage Tolerance:"
 
@@ -1337,6 +1395,9 @@ msgstr "Starting In"
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Swap"
 msgstr "Swap"
 
@@ -1345,6 +1406,22 @@ msgstr "Swap"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Swap Anyway"
+
+#: 
+#~ msgid "Swap Token"
+#~ msgstr "Swap Token"
+
+#: 
+#~ msgid "Swap V2"
+#~ msgstr "Swap V2"
+
+#: 
+#~ msgid "Swap any token accross different exchange for the best price"
+#~ msgstr "Swap any token accross different exchange for the best price"
+
+#: src/components/swapv2/Routing.tsx
+msgid "Swap any token across different exchanges for the best price"
+msgstr "Swap any token across different exchanges for the best price"
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1624,6 +1701,10 @@ msgstr "Wrong Network"
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+msgid "You Save"
+msgstr "You Save"
+
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
 msgstr "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1684,6 +1765,8 @@ msgstr "Your transaction may fail"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
+#: src/components/swapv2/AdvancedSwapDetails.tsx
+#: src/components/swapv2/SwapModalFooter.tsx
 msgid "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
 msgstr "Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
 
@@ -1730,6 +1813,9 @@ msgstr "much higher capital efficiency"
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
 #: src/components/swap/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
+#: src/components/swapv2/SwapModalHeader.tsx
 msgid "or the transaction will revert."
 msgstr "or the transaction will revert."
 

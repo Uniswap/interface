@@ -27,6 +27,22 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
     process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8'
 }
 
+// TODO-swapv2: change router v2 contract
+export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
+  [ChainId.BSCMAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
+  [ChainId.MATIC]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
+  [ChainId.AVAXMAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c',
+  [ChainId.MAINNET]: '0x1Fc3607fa67B58DedDB0fAf7a116F417a20C551c'
+}
+
+// TODO-swapv2: change aggregation executor contract
+export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
+  [ChainId.BSCMAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
+  [ChainId.MATIC]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
+  [ChainId.AVAXMAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
+  [ChainId.MAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744'
+}
+
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -625,6 +641,8 @@ export const NetworkContextName = 'NETWORK'
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+// denominated in seconds
+export const TIME_TO_REFRESH_SWAP_RATE = 10
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 
@@ -784,6 +802,7 @@ export const COINGECKO_NETWORK_ID = {
   [ChainId.AVAXTESTNET]: ''
 }
 
+export const ETHER_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 export const KYBER_NETWORK_DISCORD_URL = 'https://discord.com/invite/NB3vc8J9uv'
 export const KYBER_NETWORK_TWITTER_URL = 'https://twitter.com/KyberNetwork'
 

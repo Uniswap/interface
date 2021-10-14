@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { HelpCircle as Question } from 'react-feather'
+import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
 
@@ -57,7 +57,7 @@ export default function QuestionHelper({ text }: { text: string }) {
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Question size={16} />
+          <Info size={16} />
         </QuestionWrapper>
       </Tooltip>
     </span>

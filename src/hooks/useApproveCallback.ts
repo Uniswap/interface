@@ -2,7 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, ETHER } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESSES } from '../constants'
+import { ROUTER_ADDRESSES, ROUTER_ADDRESSES_V2 } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
@@ -12,6 +12,7 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { ZERO } from 'libs/sdk/src/constants'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
+import { Aggregator } from '../utils/aggregator'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -107,4 +108,14 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     [trade, allowedSlippage]
   )
   return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES[chainId] : undefined)
+}
+
+// wraps useApproveCallback in the context of a swap
+export function useApproveCallbackFromTradeV2(trade?: Aggregator, allowedSlippage = 0) {
+  const { chainId } = useActiveWeb3React()
+  const amountToApprove = useMemo(
+    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
+    [trade, allowedSlippage]
+  )
+  return useApproveCallback(amountToApprove, !!chainId ? ROUTER_ADDRESSES_V2[chainId] : undefined)
 }

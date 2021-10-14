@@ -1,3 +1,5 @@
+import { isAddress } from 'utils'
+
 export const getBscTestnetTokenLogoURL = (address: string) => {
   let uri
 
@@ -29,7 +31,9 @@ export const getBscTestnetTokenLogoURL = (address: string) => {
   }
 
   if (!uri) {
-    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+    uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${isAddress(
+      address
+    )}/logo.png`
   }
 
   return uri
