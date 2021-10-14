@@ -1,7 +1,6 @@
-import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ChainId } from '@swapr/sdk'
 import { OutgoingMessageState } from 'arb-ts'
-export type BridgeTxnStatus = 'pending' | 'confirmed' | 'failure' | 'dispute_period'
+import { TransactionReceipt } from '@ethersproject/abstract-provider'
 
 export type BridgeTxnType =
   | 'deposit'

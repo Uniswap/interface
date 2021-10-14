@@ -1,10 +1,8 @@
-import { ChainId, Currency } from '@swapr/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { ChainId, Currency } from '@swapr/sdk'
+
 import { AppDispatch, AppState } from '../index'
-import { useCurrencyBalances } from '../wallet/hooks'
 import {
   selectCurrency,
   typeInput,
@@ -15,10 +13,15 @@ import {
   setBridgeModalStatus,
   setBridgeModalData
 } from './actions'
-import { currencyId } from '../../utils/currencyId'
-import { tryParseAmount } from '../swap/hooks'
-import { BridgeModalState, BridgeModalStatus, BridgeTxsFilter } from './reducer'
 import { bridgeModalDataSelector, bridgeTxsFilterSelector } from './selectors'
+import { BridgeModalState, BridgeModalStatus, BridgeTxsFilter } from './reducer'
+
+import { tryParseAmount } from '../swap/hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import { useActiveWeb3React } from '../../hooks'
+import { useCurrencyBalances } from '../wallet/hooks'
+
+import { currencyId } from '../../utils/currencyId'
 import { getChainPair } from '../../utils/arbitrum'
 
 export function useBridgeState(): AppState['bridge'] {
@@ -31,17 +34,6 @@ export function useBridgeActionHandlers(): {
   onFromNetworkChange: (chainId: ChainId) => void
   onToNetworkChange: (chainId: ChainId) => void
   onSwapBridgeNetworks: () => void
-  getCollectedTx: ({
-    from,
-    to,
-    currency,
-    typedValue
-  }: {
-    from: ChainId
-    to: ChainId
-    currency: Currency | string
-    typedValue: string
-  }) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -112,37 +104,12 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
-  const getCollectedTx = useCallback(
-    ({
-      from,
-      to,
-      currency,
-      typedValue
-    }: {
-      from: ChainId
-      to: ChainId
-      currency: Currency | string
-      typedValue: string
-    }) => {
-      dispatch(setFromBridgeNetwork({ chainId: from }))
-      dispatch(setToBridgeNetwork({ chainId: to }))
-      dispatch(typeInput({ typedValue }))
-      dispatch(
-        selectCurrency({
-          currencyId: currency instanceof Currency ? currencyId(currency) : currency
-        })
-      )
-    },
-    [dispatch]
-  )
-
   return {
     onCurrencySelection,
     onUserInput,
     onFromNetworkChange,
     onToNetworkChange,
-    onSwapBridgeNetworks,
-    getCollectedTx
+    onSwapBridgeNetworks
   }
 }
 

@@ -1,8 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId } from '@swapr/sdk'
+
 import {
-  selectCurrency,
   typeInput,
+  selectCurrency,
   setFromBridgeNetwork,
   setToBridgeNetwork,
   swapBridgeNetworks,
@@ -50,7 +51,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: 'ETH',
+  currencyId: 'ETH', // hardcoded until ERC20 implemented
   fromNetwork: {
     chainId: 1
   },
@@ -62,7 +63,7 @@ const initialState: BridgeState = {
   isCheckingWithdrawals: true,
   modal: {
     status: BridgeModalStatus.CLOSED,
-    currencyId: 'ETH',
+    currencyId: 'ETH', // hardcoded until ERC20 implemented
     typedValue: '',
     fromNetwork: {
       chainId: 1
@@ -141,6 +142,16 @@ export default createReducer<BridgeState>(initialState, builder =>
     .addCase(setBridgeModalData, (state, { payload: { currencyId, typedValue, fromChainId, toChainId } }) => {
       return {
         ...state,
+        currencyId,
+        typedValue,
+        fromNetwork: {
+          ...state.fromNetwork,
+          chainId: fromChainId
+        },
+        toNetwork: {
+          ...state.toNetwork,
+          chainId: toChainId
+        },
         modal: {
           ...state.modal,
           currencyId,
