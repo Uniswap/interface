@@ -46,7 +46,12 @@ export const BridgeTransactionsSummary = ({
             </thead>
             <tbody>
               {Object.values(transactions).map((tx, index) => (
-                <BridgeTransactionsSummaryRow key={index} tx={tx} onCollect={onCollect} />
+                <BridgeTransactionsSummaryRow
+                  transactionsLength={transactions.length}
+                  key={index}
+                  tx={tx}
+                  onCollect={onCollect}
+                />
               ))}
             </tbody>
           </Table>
@@ -91,31 +96,30 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.red1)};
 `
 
-const TextFrom = styled.span<{ dashedLineWidth: number; success: boolean }>`
+const TextFrom = styled.span`
   position: relative;
   color: #0e9f6e;
+`
 
-  &::before {
+const Progress = styled.span<{ dashedLineWidth: number; success: boolean }>`
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translate(100%, -50%);
+  width: ${({ dashedLineWidth }) => dashedLineWidth - 2 + 'px'};
+  height: 1px;
+  background-color: #8780bf;
+  -webkit-mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
+  mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
+
+  &:before {
     content: '';
     position: absolute;
-    right: -3px;
-    top: 50%;
-    height: 2px;
-    width: ${({ dashedLineWidth }) => dashedLineWidth / 2 + 'px'};
-    border-bottom: 2px dotted #0e9f6e;
-    transform: translate(100%, -50%);
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    height: 2px;
-    width: ${({ dashedLineWidth }) => dashedLineWidth / 2 + 'px'};
-    background-color: #1e202d;
-    border-bottom: 2px dotted ${({ success }) => (success ? '#0e9f6e' : '#8780bf')};
-    transform: translate(200%, -50%);
+    top: 0;
+    left: 0;
+    width: ${({ success }) => (success ? '100%' : '50%')};
+    height: 100%;
+    background-color: #0e9f6e;
   }
 `
 
@@ -126,9 +130,10 @@ const TextTo = styled.span<{ success: boolean }>`
 interface BridgeTransactionsSummaryRow {
   tx: BridgeTransactionSummary
   onCollect: BridgeTransactionsSummaryProps['onCollect']
+  transactionsLength: number
 }
 
-const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSummaryRow) => {
+const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: BridgeTransactionsSummaryRow) => {
   const [showLog, setShowLog] = useState(false)
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
 
@@ -142,7 +147,7 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
       const refToX = refTo.current.getBoundingClientRect().left
       setDashedLineWidth(refToX - refFromX - 3)
     }
-  }, [])
+  }, [transactionsLength])
 
   const success = status === 'confirmed'
 
@@ -156,8 +161,9 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect }: BridgeTransactionsSumma
         </ClickableTd>
         <ClickableTd>
           <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-            <TextFrom success={success} dashedLineWidth={dashedLineWidth} ref={refFrom}>
+            <TextFrom ref={refFrom}>
               {NETWORK_DETAIL[fromChainId].chainName}
+              <Progress success={success} dashedLineWidth={dashedLineWidth} />
             </TextFrom>
           </TYPE.main>
         </ClickableTd>
