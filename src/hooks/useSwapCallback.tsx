@@ -257,8 +257,8 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
       }
       return (
         <Trans>
-          Unknown error{reason ? reason : ''}. Try increasing your slippage tolerance. Note: fee on transfer and rebase
-          tokens are incompatible with Uniswap V3.
+          Unknown error{reason ? `"${reason}"` : ''}. Try increasing your slippage tolerance. Note: fee on transfer and
+          rebase tokens are incompatible with Uniswap V3.
         </Trans>
       )
   }
