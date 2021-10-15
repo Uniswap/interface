@@ -56,6 +56,7 @@ export default function RangeSelector({
           title={<Trans>Min Price</Trans>}
           tokenA={currencyA?.symbol}
           tokenB={currencyB?.symbol}
+          currencyB={currencyB}
         />
         <StepCounter
           value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(5) ?? ''}
@@ -69,6 +70,7 @@ export default function RangeSelector({
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
           tokenA={currencyA?.symbol}
           tokenB={currencyB?.symbol}
+          currencyB={currencyB}
           title={<Trans>Max Price</Trans>}
         />
       </RowBetween>

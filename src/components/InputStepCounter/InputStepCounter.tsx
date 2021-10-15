@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import useUSDCValue from 'hooks/useUSDCPrice'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
@@ -81,6 +83,7 @@ interface StepCounterProps {
   title: ReactNode
   tokenA: string | undefined
   tokenB: string | undefined
+  currencyB?: Currency | null
 }
 
 const StepCounter = ({
@@ -95,6 +98,7 @@ const StepCounter = ({
   title,
   tokenA,
   tokenB,
+  currencyB,
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -139,6 +143,7 @@ const StepCounter = ({
       }, 0)
     }
   }, [localValue, useLocalValue, value])
+  const currencyInUSDC = useUSDCValue(currencyB ? currencyB : undefined)
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -180,6 +185,12 @@ const StepCounter = ({
             {tokenB} per {tokenA}
           </Trans>
         </InputTitle>
+        {currencyInUSDC && (
+          <InputTitle fontSize={12} textAlign="center">
+            <Trans>1 {currencyB?.symbol}=</Trans>
+            <Trans>{currencyInUSDC?.toSignificant(3)} USDC</Trans>
+          </InputTitle>
+        )}
       </AutoColumn>
     </FocusedOutlineCard>
   )
