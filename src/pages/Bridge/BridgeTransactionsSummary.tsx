@@ -80,6 +80,7 @@ const Td = styled.td`
 
 const Link = styled.a`
   cursor: initial;
+  color: #0e9f6e;
 
   &[href] {
     cursor: pointer;
@@ -90,9 +91,8 @@ const Link = styled.a`
   }
 `
 
-const TextFrom = styled(Link)`
+const TextFrom = styled.div`
   position: relative;
-  color: #0e9f6e;
 `
 
 const Progress = styled.span<{ dashedLineWidth: number; success: boolean }>`
@@ -130,7 +130,7 @@ interface BridgeTransactionsSummaryRow {
 const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: BridgeTransactionsSummaryRow) => {
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
 
-  const refFrom = useRef<HTMLAnchorElement>(null)
+  const refFrom = useRef<HTMLDivElement>(null)
   const refTo = useRef<HTMLAnchorElement>(null)
   const [dashedLineWidth, setDashedLineWidth] = useState(0)
 
@@ -155,13 +155,14 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: Bri
       </Td>
       <Td>
         <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-          <TextFrom
-            ref={refFrom}
-            href={getExplorerLink(log[0].chainId, log[0].txHash, 'transaction')}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {NETWORK_DETAIL[fromChainId].chainName}
+          <TextFrom ref={refFrom}>
+            <Link
+              href={getExplorerLink(log[0].chainId, log[0].txHash, 'transaction')}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {NETWORK_DETAIL[fromChainId].chainName}
+            </Link>
             <Progress success={success} dashedLineWidth={dashedLineWidth} />
           </TextFrom>
         </TYPE.main>
