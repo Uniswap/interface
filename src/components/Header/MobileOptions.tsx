@@ -46,7 +46,7 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
-const DisabledNavLink = styled(StyledNavLink) <{ isActive?: boolean }>`
+const DisabledNavLink = styled(StyledNavLink)<{ isActive?: boolean }>`
   color: ${({ theme }) => transparentize(0.6, theme.text5)} !important;
   font-weight: 400 !important;
 `
@@ -118,6 +118,7 @@ export default function MobileOptions() {
       case '/swap':
         return t('swap')
       case '/bridge':
+        return t('bridge')
       case '/pools':
       case '/add':
       case '/remove':
