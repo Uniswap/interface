@@ -1,10 +1,9 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
+import useInterval from 'lib/hooks/useInterval'
 import React, { useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components/macro'
-
-import useInterval from '../../hooks/useInterval'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
