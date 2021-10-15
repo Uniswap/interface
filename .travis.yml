@@ -17,6 +17,7 @@ install:
   - yarn
   - bash .travis/build.sh || true
   - ls build || true
+  - ls build-ropsten || true
 
 deploy:
   - provider: gcs
