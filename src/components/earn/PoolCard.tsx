@@ -1,4 +1,6 @@
-import { Percent } from '@ubeswap/sdk'
+import { gql, useQuery } from '@apollo/client'
+import { useContractKit } from '@celo-tools/use-contractkit'
+import { ChainId, cUSD, Percent, TokenAmount } from '@ubeswap/sdk'
 import QuestionHelper from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
@@ -8,6 +10,7 @@ import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
 import { updateUserAprMode } from 'state/user/actions'
 import { useIsAprMode } from 'state/user/hooks'
 import styled from 'styled-components'
+import { toWei } from 'web3-utils'
 
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { useColor } from '../../hooks/useColor'
@@ -74,11 +77,26 @@ interface Props {
   stakingInfo: StakingInfo
 }
 
+const pairDataGql = gql`
+  query getPairHourData($id: String!) {
+    pair(id: $id) {
+      pairHourData(first: 24, orderBy: hourStartUnix, orderDirection: desc) {
+        hourStartUnix
+        hourlyVolumeUSD
+      }
+    }
+  }
+`
+
 export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   const { t } = useTranslation()
+  const { network } = useContractKit()
   const userAprMode = useIsAprMode()
   const dispatch = useDispatch()
   const [token0, token1] = stakingInfo.tokens
+  const { data, loading, error } = useQuery(pairDataGql, {
+    variables: { id: stakingInfo.stakingToken.address.toLowerCase() },
+  })
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -93,12 +111,31 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
     userAmountTokenA,
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
-  const dollarRewardPerYear = useAnnualRewardDollars(stakingInfo.rewardTokens, stakingInfo.totalRewardRates)
+  const annualFarmRewards = useAnnualRewardDollars(stakingInfo.rewardTokens, stakingInfo.totalRewardRates)
+  let annualSwapFees
+  if (!loading && !error && data) {
+    const lastDayVolumeUsd = data.pair.pairHourData.reduce(
+      (acc: number, curr: { hourlyVolumeUSD: string }) => acc + Number(curr.hourlyVolumeUSD),
+      0
+    )
+    const yearlyVolumeUsd = lastDayVolumeUsd * 365
+    annualSwapFees = new TokenAmount(
+      cUSD[network.chainId as unknown as ChainId],
+      toWei(Math.floor(yearlyVolumeUsd * 0.0025).toString())
+    )
+  }
+  const dollarRewardPerYear = annualSwapFees && annualFarmRewards ? annualFarmRewards.add(annualSwapFees) : undefined
+
   const apyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
       ? dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
+  const swapApyFraction =
+    stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
+      ? annualSwapFees?.divide(valueOfTotalStakedAmountInCUSD)
+      : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
+  const swapApy = swapApyFraction ? new Percent(swapApyFraction.numerator, swapApyFraction.denominator) : undefined
 
   const dpy = apy
     ? new Percent(Math.floor(parseFloat(apy.divide('365').toFixed(10)) * 1_000_000).toFixed(0), '1000000')
@@ -207,6 +244,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
                 userAprMode ? (
                   <>
                     Yield/day: {dpy?.toSignificant(4)}%<br />
+                    Swap APR: {swapApy?.toSignificant(4)}%<br />
                     APY (semi-annually compounded): {quarterlyAPY}%
                   </>
                 ) : (

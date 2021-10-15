@@ -2,6 +2,7 @@ import './i18n'
 import '@celo-tools/use-contractkit/lib/styles.css'
 import './index.css'
 
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { ContractKitProvider } from '@celo-tools/use-contractkit'
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
@@ -26,6 +27,11 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 if (window.celo) {
   window.celo.autoRefreshOnNetworkChange = false
 }
+
+const client = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap-backup',
+  cache: new InMemoryCache(),
+})
 
 const GOOGLE_ANALYTICS_IDS = {
   production: {
@@ -136,13 +142,15 @@ ReactDOM.render(
       }}
     >
       <Provider store={store}>
-        <Updaters />
-        <ThemeProvider>
-          <ThemedGlobalStyle />
-          <HashRouter>
-            <App />
-          </HashRouter>
-        </ThemeProvider>
+        <ApolloProvider client={client}>
+          <Updaters />
+          <ThemeProvider>
+            <ThemedGlobalStyle />
+            <HashRouter>
+              <App />
+            </HashRouter>
+          </ThemeProvider>
+        </ApolloProvider>
       </Provider>
     </ContractKitProvider>
   </StrictMode>,

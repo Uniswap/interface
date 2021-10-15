@@ -113,6 +113,7 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.16",
     "@celo-tools/use-contractkit": "npm:@poofcash/use-contractkit@^1.0.7-beta",
     "@celo/base": "^1.2.1",
     "@celo/connect": "^1.2.0",
@@ -149,6 +150,7 @@
     "@web3-react/injected-connector": "^6.0.7",
     "bignumber.js": "^9.0.1",
     "eventemitter3": "^4.0.7",
+    "graphql": "^15.6.1",
     "hash.js": "^1.1.7",
     "jsbi": "^3.1.5",
     "lodash": "^4.17.21",
