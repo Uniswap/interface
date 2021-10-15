@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
+import { NumberBadge } from '../../components/NumberBadge'
 
 import Row from '../../components/Row'
 import { useBridgeTxsFilter } from '../../state/bridge/hooks'
@@ -14,7 +15,6 @@ interface TabsProps {
 }
 
 export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: TabsProps) => {
-  const isCollecting = step === BridgeStep.Collect
   const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
   const toggleFilter = useCallback(() => {
@@ -22,12 +22,15 @@ export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: Tab
     else setTxsFilter(BridgeTxsFilter.RECENT)
   }, [setTxsFilter, txsFilter])
 
+  const isCollecting = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
+  const collectAmount = 1
   return (
     <TabsRow>
       <Button
         onClick={() => {
           if (step !== BridgeStep.Initial) handleResetBridge()
           setStep(BridgeStep.Initial)
+          if (isCollecting) toggleFilter()
         }}
         className={!isCollecting ? 'active' : ''}
       >
@@ -36,12 +39,13 @@ export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: Tab
       <Button
         onClick={() => {
           handleCollectTab()
-          toggleFilter()
+          if (!isCollecting) toggleFilter()
         }}
         className={isCollecting ? 'active' : ''}
         // disabled={!isCollecting}
       >
         Collect
+        {<Badge badgeTheme="green">{collectAmount}</Badge>}
       </Button>
     </TabsRow>
   )
@@ -82,4 +86,10 @@ const Button = styled.button`
     color: #504d72;
     cursor: not-allowed;
   }
+`
+const Badge = styled(NumberBadge)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 6px;
 `
