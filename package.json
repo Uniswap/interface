@@ -53,6 +53,7 @@
     "ethers": "^5.4.4",
     "git-revision-webpack-plugin": "^3.0.6",
     "graphql": "^15.5.1",
+    "graphql-request": "^3.6.0",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
