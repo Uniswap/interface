@@ -6,7 +6,19 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
-import { BookOpen, Check, ChevronLeft, Code, Globe, Info, MessageCircle, Moon, PieChart, Sun } from 'react-feather'
+import {
+  Book,
+  BookOpen,
+  Check,
+  ChevronLeft,
+  Code,
+  Globe,
+  Info,
+  MessageCircle,
+  Moon,
+  PieChart,
+  Sun,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
@@ -202,8 +214,9 @@ export default function Menu() {
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
-  const toggle = useToggleModal(ApplicationModal.MENU)
-  useOnClickOutside(node, open ? toggle : undefined)
+  const toggleMenu = useToggleModal(ApplicationModal.MENU)
+  useOnClickOutside(node, open ? toggleMenu : undefined)
+  const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
@@ -219,7 +232,7 @@ export default function Menu() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle} aria-label={t`Menu`}>
+      <StyledMenuButton onClick={toggleMenu} aria-label={t`Menu`}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -271,6 +284,12 @@ export default function Menu() {
                   <ToggleMenuItem onClick={() => toggleDarkMode()}>
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                     {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+                  </ToggleMenuItem>
+                  <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
+                    <div>
+                      <Trans>Privacy and terms</Trans>
+                    </div>
+                    <Book opacity={0.6} size={16} />
                   </ToggleMenuItem>
                   {showUNIClaimOption && (
                     <UNIbutton

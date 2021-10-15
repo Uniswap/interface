@@ -2,9 +2,12 @@ import { Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { AutoRow } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import { PrivacyPolicy } from 'components/PrivacyPolicy'
+import Row, { AutoRow, RowBetween } from 'components/Row'
+import { darken } from 'polished'
 import { useEffect, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 
@@ -19,7 +22,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, TYPE } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
-import { LightCard } from '../Card'
+import Card, { BlueCard, LightCard } from '../Card'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -106,11 +109,22 @@ const HoverText = styled.div`
   }
 `
 
+const LinkCard = styled(Card)`
+  background-color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.white};
+
+  :hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+  }
+`
+
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
   PENDING: 'pending',
+  PRIVACY: 'privacy',
 }
 
 export default function WalletModal({
@@ -307,6 +321,29 @@ export default function WalletModal({
         </UpperSection>
       )
     }
+    if (walletView === WALLET_VIEWS.PRIVACY) {
+      return (
+        <UpperSection>
+          <HeaderRow>
+            <HoverText
+              onClick={() => {
+                setWalletView(WALLET_VIEWS.ACCOUNT)
+              }}
+            >
+              <ArrowLeft />
+            </HoverText>
+            <Row justify="center">
+              <TYPE.mediumHeader>
+                <Trans>Privacy</Trans>
+              </TYPE.mediumHeader>
+            </Row>
+          </HeaderRow>
+          <ContentWrapper>
+            <PrivacyPolicy />
+          </ContentWrapper>
+        </UpperSection>
+      )
+    }
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
@@ -343,28 +380,41 @@ export default function WalletModal({
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '16px' }}>
-            <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.black fontSize={14}>
-                <Trans>
-                  By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                  acknowledge that you have read and understand the{' '}
-                  <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
-                </Trans>
-              </TYPE.black>
-            </AutoRow>
-          </LightCard>
-          {walletView === WALLET_VIEWS.PENDING ? (
-            <PendingView
-              connector={pendingWallet}
-              error={pendingError}
-              setPendingError={setPendingError}
-              tryActivation={tryActivation}
-            />
-          ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
+          <AutoColumn gap="16px">
+            <LightCard>
+              <AutoRow style={{ flexWrap: 'nowrap' }}>
+                <TYPE.black fontSize={14}>
+                  <Trans>
+                    By connecting a wallet, you agree to Uniswap Labs’{' '}
+                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                    acknowledge that you have read and understand the{' '}
+                    <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                  </Trans>
+                </TYPE.black>
+              </AutoRow>
+            </LightCard>
+            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.PRIVACY)}>
+              <RowBetween>
+                <AutoRow gap="4px">
+                  <Info size={20} />
+                  <TYPE.white fontSize={14}>
+                    <Trans>How this app uses APIs</Trans>
+                  </TYPE.white>
+                </AutoRow>
+                <ArrowRight size={16} />
+              </RowBetween>
+            </LinkCard>
+            {walletView === WALLET_VIEWS.PENDING ? (
+              <PendingView
+                connector={pendingWallet}
+                error={pendingError}
+                setPendingError={setPendingError}
+                tryActivation={tryActivation}
+              />
+            ) : (
+              <OptionGrid>{getOptions()}</OptionGrid>
+            )}
+          </AutoColumn>
         </ContentWrapper>
       </UpperSection>
     )
