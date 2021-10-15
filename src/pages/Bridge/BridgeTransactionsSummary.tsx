@@ -107,7 +107,7 @@ const Progress = styled.span<{ dashedLineWidth: number; success: boolean }>`
   top: 50%;
   transform: translate(100%, -50%);
   width: ${({ dashedLineWidth }) => dashedLineWidth - 2 + 'px'};
-  height: 1px;
+  height: 2px;
   background-color: #8780bf;
   -webkit-mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
   mask-image: repeating-linear-gradient(90deg, transparent, transparent 2px, black 2px, black 4px);
