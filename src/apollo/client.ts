@@ -33,11 +33,11 @@ export const subgraphClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
 }
 
 export const immediateSubgraphClients: { [chainId in ChainId]: GraphQLClient } = {
-  [ChainId.MAINNET]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-alpha'),
+  [ChainId.MAINNET]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-v2'),
   [ChainId.RINKEBY]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-rinkeby-new'),
-  [ChainId.XDAI]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai'),
-  [ChainId.ARBITRUM_ONE]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2'),
+  [ChainId.XDAI]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai-v2'),
+  [ChainId.ARBITRUM_ONE]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v3'),
   [ChainId.ARBITRUM_RINKEBY]: new GraphQLClient(
-    'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-new'
+    'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-v2'
   )
 }
