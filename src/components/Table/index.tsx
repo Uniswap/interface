@@ -1,12 +1,12 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const Table = styled.table`
   width: 100%;
   margin: 0;
   padding: 0;
-`;
+`
 
-export const Th = styled.th<{align?: string}>`
+export const Th = styled.th<{ align?: string }>`
   padding: 0 9px;
   font-size: 10px;
   font-weight: 600;
@@ -19,15 +19,15 @@ export const Th = styled.th<{align?: string}>`
   &:last-child {
     padding: 0;
   }
-`;
+`
 
-export const Td = styled.td<{isActive?: boolean}>`
+export const Td = styled.td<{ isActive?: boolean }>`
   padding: 9px 10px;
   text-align: right;
   background: rgba(104, 110, 148, 0.16);
   border-width: 1px 0;
   border-style: solid;
-  border-color: ${({isActive}) => isActive ? 'rgba(120, 115, 164, 0.5)' : 'transparent'};
+  border-color: ${({ isActive }) => (isActive ? 'rgba(120, 115, 164, 0.5)' : 'transparent')};
 
   &:first-child {
     text-align: left;
@@ -42,6 +42,4 @@ export const Td = styled.td<{isActive?: boolean}>`
     border-bottom-right-radius: 8px;
     border-right-width: 1px;
   }
-`;
-
-
+`
