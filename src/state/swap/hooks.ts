@@ -301,19 +301,20 @@ export function useDefaultsFromURLSearch():
     )
       ? KNC[chainId].address
       : USDC[chainId].address
+
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue || '1',
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: outputCurrencyAddress,
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress,
         recipient: parsed.recipient
       })
     )
 
     setResult({
       inputCurrencyId: parsed[Field.INPUT].currencyId,
-      outputCurrencyId: outputCurrencyAddress
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, chainId])
