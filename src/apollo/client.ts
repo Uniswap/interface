@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request'
 import { ChainId } from '@swapr/sdk'
 
 export const defaultSubgraphClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-alpha',
+  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-v2',
   cache: new InMemoryCache()
 })
 
@@ -19,25 +19,25 @@ export const subgraphClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
     cache: new InMemoryCache()
   }),
   [ChainId.XDAI]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai-v2',
     cache: new InMemoryCache()
   }),
   [ChainId.ARBITRUM_ONE]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v3',
     cache: new InMemoryCache()
   }),
   [ChainId.ARBITRUM_RINKEBY]: new ApolloClient({
-    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-new',
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-v2',
     cache: new InMemoryCache()
   })
 }
 
 export const immediateSubgraphClients: { [chainId in ChainId]: GraphQLClient } = {
-  [ChainId.MAINNET]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-alpha'),
+  [ChainId.MAINNET]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-v2'),
   [ChainId.RINKEBY]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-rinkeby-new'),
-  [ChainId.XDAI]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai'),
-  [ChainId.ARBITRUM_ONE]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v2'),
+  [ChainId.XDAI]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai-v2'),
+  [ChainId.ARBITRUM_ONE]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-one-v3'),
   [ChainId.ARBITRUM_RINKEBY]: new GraphQLClient(
-    'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-new'
+    'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-v2'
   )
 }

@@ -11,7 +11,7 @@ import { ButtonSecondary, ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
-import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
+import { ReactComponent as ThreeBlurredCircles } from '../../assets/svg/three-blurred-circles.svg'
 import { ChevronDown, X } from 'react-feather'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { Currency, Token } from '@swapr/sdk'
@@ -135,7 +135,7 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset, aggre
             <PointableFlex onClick={handleAllClick}>
               {!filteredToken && (
                 <Box mr="6px" height="21px">
-                  <img src={threeBlurredCircles} alt="Circles" />
+                  <ThreeBlurredCircles />
                 </Box>
               )}
               {filteredToken && (
