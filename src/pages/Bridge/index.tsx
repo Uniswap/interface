@@ -119,6 +119,10 @@ export default function Bridge() {
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
+  const handleCollectTab = useCallback(() => {
+    console.log(step)
+  }, [step])
+
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
     setValue: onFromNetworkChange,
@@ -134,7 +138,7 @@ export default function Bridge() {
   return (
     <>
       <AppBody>
-        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
+        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} handleCollectTab={handleCollectTab} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>

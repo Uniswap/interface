@@ -1,17 +1,26 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 
 import Row from '../../components/Row'
+import { useBridgeTxsFilter } from '../../state/bridge/hooks'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeStep } from './utils'
 
 interface TabsProps {
   step: BridgeStep
   setStep: (step: BridgeStep) => void
   handleResetBridge: () => void
+  handleCollectTab: () => void
 }
 
-export const Tabs = ({ step, setStep, handleResetBridge }: TabsProps) => {
+export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: TabsProps) => {
   const isCollecting = step === BridgeStep.Collect
+  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
+
+  const toggleFilter = useCallback(() => {
+    if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+    else setTxsFilter(BridgeTxsFilter.RECENT)
+  }, [setTxsFilter, txsFilter])
 
   return (
     <TabsRow>
@@ -24,7 +33,14 @@ export const Tabs = ({ step, setStep, handleResetBridge }: TabsProps) => {
       >
         Bridge
       </Button>
-      <Button className={isCollecting ? 'active' : ''} disabled={!isCollecting}>
+      <Button
+        onClick={() => {
+          handleCollectTab()
+          toggleFilter()
+        }}
+        className={isCollecting ? 'active' : ''}
+        // disabled={!isCollecting}
+      >
         Collect
       </Button>
     </TabsRow>
