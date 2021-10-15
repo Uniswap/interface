@@ -141,7 +141,7 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: Bri
     }
   }, [transactionsLength])
 
-  const success = status === 'confirmed'
+  const success = status === 'confirmed' || status === 'claimed'
 
   return (
     <tr style={{ lineHeight: '22px' }}>
