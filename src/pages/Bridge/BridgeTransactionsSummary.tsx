@@ -5,12 +5,11 @@ import { ButtonPrimary, ShowMoreButton } from '../../components/Button'
 import { HideableAutoColumn } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
 import { BridgeTransactionSummary } from '../../state/bridgeTransactions/types'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { BridgeStatusTag } from './BridgeStatusTag'
 import { NETWORK_DETAIL } from '../../constants'
 import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
-import { Loader, CheckCircle, Triangle } from 'react-feather'
 import { getExplorerLink } from '../../utils'
 
 interface BridgeTransactionsSummaryProps {
@@ -70,8 +69,7 @@ export const BridgeTransactionsSummary = ({
   )
 }
 
-const ClickableTd = styled.td`
-  cursor: pointer;
+const Td = styled.td`
   padding: 0 8px;
 
   &:not(:first-child) {
@@ -79,24 +77,19 @@ const ClickableTd = styled.td`
   }
 `
 
-const ClickableTr = styled.tr`
-  cursor: pointer;
-  :hover {
+const Link = styled.a`
+  cursor: initial;
+
+  &[href] {
+    cursor: pointer;
+  }
+
+  &[href]:hover {
     text-decoration: underline;
   }
 `
 
-const TransactionState = styled(ExternalLink)``
-
-const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3px 0px;
-  color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.red1)};
-`
-
-const TextFrom = styled.span`
+const TextFrom = styled(Link)`
   position: relative;
   color: #0e9f6e;
 `
@@ -123,7 +116,7 @@ const Progress = styled.span<{ dashedLineWidth: number; success: boolean }>`
   }
 `
 
-const TextTo = styled.span<{ success: boolean }>`
+const TextTo = styled(Link)<{ success: boolean }>`
   color: ${({ success }) => (success ? '#0e9f6e' : '#8780bf')};
 `
 
@@ -134,11 +127,10 @@ interface BridgeTransactionsSummaryRow {
 }
 
 const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: BridgeTransactionsSummaryRow) => {
-  const [showLog, setShowLog] = useState(false)
   const { assetName, fromChainId, status, toChainId, value, pendingReason, log } = tx
 
-  const refFrom = useRef<HTMLDivElement>(null)
-  const refTo = useRef<HTMLDivElement>(null)
+  const refFrom = useRef<HTMLAnchorElement>(null)
+  const refTo = useRef<HTMLAnchorElement>(null)
   const [dashedLineWidth, setDashedLineWidth] = useState(0)
 
   useEffect(() => {
@@ -152,79 +144,41 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: Bri
   const success = status === 'confirmed'
 
   return (
-    <>
-      <tr style={{ lineHeight: '22px' }} onClick={() => setShowLog(show => !show)}>
-        <ClickableTd>
-          <TYPE.main color="white" fontSize="14px" lineHeight="14px" fontWeight="600">
-            {`${value} ${assetName}`}
-          </TYPE.main>
-        </ClickableTd>
-        <ClickableTd>
-          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-            <TextFrom ref={refFrom}>
-              {NETWORK_DETAIL[fromChainId].chainName}
-              <Progress success={success} dashedLineWidth={dashedLineWidth} />
-            </TextFrom>
-          </TYPE.main>
-        </ClickableTd>
-        <ClickableTd>
-          <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
-            <TextTo success={success} ref={refTo}>
-              {NETWORK_DETAIL[toChainId].chainName}
-            </TextTo>
-          </TYPE.main>
-        </ClickableTd>
-        <td align="right">
-          <BridgeStatusTag status={status} pendingReason={pendingReason} onCollect={() => onCollect(tx)} />
-        </td>
-      </tr>
-
-      {showLog &&
-        log.map(logTx => {
-          const { status, txHash, type, chainId, fromChainId, toChainId } = logTx
-          const pending = status === 'pending'
-          const success = status === 'confirmed'
-
-          return (
-            <ClickableTr key={`${txHash}`}>
-              <td>
-                <div>
-                  <TransactionState href={getExplorerLink(chainId, txHash, 'transaction')}>
-                    <TYPE.main
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="flex-start"
-                      color="text4"
-                      fontSize="12px"
-                      lineHeight="12px"
-                      paddingLeft="16px"
-                    >
-                      {`${type} (${NETWORK_DETAIL[chainId].isArbitrum ? 'l2' : 'l1'}) ↗`}
-                    </TYPE.main>
-                  </TransactionState>
-                </div>
-              </td>
-              <td align="center">
-                {chainId === fromChainId && (
-                  <TransactionState href={getExplorerLink(chainId, txHash, 'transaction')}>
-                    <IconWrapper pending={pending} success={success}>
-                      {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
-                    </IconWrapper>
-                  </TransactionState>
-                )}
-              </td>
-              <td align="center">
-                {chainId === toChainId && (
-                  <TransactionState href={getExplorerLink(chainId, txHash, 'transaction')}>
-                    <IconWrapper pending={pending} success={success}>
-                      {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
-                    </IconWrapper>
-                  </TransactionState>
-                )}
-              </td>
-            </ClickableTr>
-          )
-        })}
-    </>
+    <tr style={{ lineHeight: '22px' }}>
+      <Td>
+        <TYPE.main color="white" fontSize="14px" lineHeight="14px" fontWeight="600">
+          {`${value} ${assetName}`}
+        </TYPE.main>
+      </Td>
+      <Td>
+        <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
+          <TextFrom
+            ref={refFrom}
+            href={getExplorerLink(log[0].chainId, log[0].txHash, 'transaction')}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {NETWORK_DETAIL[fromChainId].chainName}
+            <Progress success={success} dashedLineWidth={dashedLineWidth} />
+          </TextFrom>
+        </TYPE.main>
+      </Td>
+      <Td>
+        <TYPE.main color="text4" fontSize="10px" lineHeight="12px" display="inline">
+          <TextTo
+            success={success}
+            ref={refTo}
+            href={log[1] && getExplorerLink(log[1].chainId, log[1].txHash, 'transaction')}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {NETWORK_DETAIL[toChainId].chainName}
+          </TextTo>
+        </TYPE.main>
+      </Td>
+      <td align="right">
+        <BridgeStatusTag status={status} pendingReason={pendingReason} onCollect={() => onCollect(tx)} />
+      </td>
+    </tr>
   )
 }
