@@ -38,15 +38,17 @@ const QUERY = gql`
         endsAt
         locked
         stakingCap
-        rewardTokens {
-          address: id
-          name
-          symbol
-          decimals
-          derivedNativeCurrency
+        rewards {
+          token {
+            address: id
+            name
+            symbol
+            decimals
+            derivedNativeCurrency
+          }
+          amount
         }
         stakedAmount
-        rewardAmounts
         liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $userId }) {
           id
         }
