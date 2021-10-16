@@ -124,11 +124,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
       toWei(Math.floor(yearlyVolumeUsd * 0.0025).toString())
     )
   }
-  const dollarRewardPerYear = annualSwapFees && annualFarmRewards ? annualFarmRewards.add(annualSwapFees) : undefined
-
   const apyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
-      ? dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
+      ? annualFarmRewards?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
   const swapApyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
@@ -237,6 +235,13 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
               </React.Fragment>
             )
           })}
+        {swapApy && (
+          <PoolStatRow
+            helperText={'Projected APR from last 24 hour trading fees'}
+            statName={'Swap APR'}
+            statValue={swapApy.denominator.toString() !== '0' ? `${swapApy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
+          />
+        )}
         {apy && apy.greaterThan('0') && (
           <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
@@ -244,7 +249,6 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
                 userAprMode ? (
                   <>
                     Yield/day: {dpy?.toSignificant(4)}%<br />
-                    Swap APR: {swapApy?.toSignificant(4)}%<br />
                     APY (semi-annually compounded): {quarterlyAPY}%
                   </>
                 ) : (
