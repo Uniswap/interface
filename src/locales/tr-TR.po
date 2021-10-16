@@ -410,6 +410,11 @@ msgstr "Özel"
 msgid "DEPOSIT"
 msgstr ""
 
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
+msgstr ""
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "DMM Exchange available in: <0>{0}</0>"
 msgstr ""

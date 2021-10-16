@@ -410,6 +410,11 @@ msgstr "Custom"
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
 
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
+msgstr "DMM"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "DMM Exchange available in: <0>{0}</0>"
 msgstr "DMM Exchange available in: <0>{0}</0>"

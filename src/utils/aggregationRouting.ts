@@ -3,7 +3,6 @@ import { ChainId, Percent, Rounding, Token } from 'libs/sdk/src'
 import { ZERO } from 'libs/sdk/src/constants'
 import { Aggregator } from './aggregator'
 import { wrappedCurrencyAmount } from './wrappedCurrency'
-import { getTokenAddressMap } from 'state/lists/hooks'
 import { getAddress } from 'ethers/lib/utils'
 
 interface SwapPool {
