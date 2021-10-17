@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { UniswapInterfaceMulticall } from 'types/v3'
 
+import { SupportedChainId } from '../../constants/chains'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -10,20 +11,28 @@ import { retry, RetryableError } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { AppState } from '../index'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
-import { Call, parseCallKey } from './utils'
+import { Call, parseCallKey, toCallKey } from './utils'
 
 const DEFAULT_GAS_REQUIRED = 1_000_000
+
+const DEFAULT_CHUNK_GAS_LIMIT = 100_000_000
+const CHUNK_GAS_LIMIT_BY_CHAIN_ID: { [chainId in SupportedChainId]?: number } = {
+  [SupportedChainId.ARBITRUM_ONE]: 10_000_000,
+  [SupportedChainId.ARBITRUM_RINKEBY]: 10_000_000,
+}
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multicall multicall contract to fetch against
  * @param chunk chunk of calls to make
  * @param blockNumber block number passed as the block tag in the eth_call
+ * @param gasLimit the block gas limit
  */
 async function fetchChunk(
   multicall: UniswapInterfaceMulticall,
   chunk: Call[],
-  blockNumber: number
+  blockNumber: number,
+  gasLimit: number
 ): Promise<{ success: boolean; returnData: string }[]> {
   console.debug('Fetching chunk', chunk, blockNumber)
   try {
@@ -33,7 +42,10 @@ async function fetchChunk(
         callData: obj.callData,
         gasLimit: obj.gasRequired ?? DEFAULT_GAS_REQUIRED,
       })),
-      { blockTag: blockNumber }
+      {
+        blockTag: blockNumber,
+        gasLimit,
+      }
     )
 
     if (process.env.NODE_ENV === 'development') {
@@ -57,6 +69,18 @@ async function fetchChunk(
   } catch (error) {
     if (error.code === -32000 || error.message?.indexOf('header not found') !== -1) {
       throw new RetryableError(`header not found for block number ${blockNumber}`)
+    } else if (error.code === -32603 || error.message?.indexOf('execution ran out of gas') !== -1) {
+      if (chunk.length > 1) {
+        if (process.env.NODE_ENV === 'development') {
+          console.debug('Splitting a chunk in 2', chunk)
+        }
+        const half = Math.floor(chunk.length / 2)
+        const [c0, c1] = await Promise.all([
+          fetchChunk(multicall, chunk.slice(0, half), blockNumber, gasLimit),
+          fetchChunk(multicall, chunk.slice(half, chunk.length), blockNumber, gasLimit),
+        ])
+        return c0.concat(c1)
+      }
     }
     console.error('Failed to fetch chunk', error)
     throw error
@@ -174,30 +198,33 @@ export default function Updater(): null {
 
     cancellations.current = {
       blockNumber: latestBlockNumber,
-      cancellations: chunkedCalls.map((chunk, index) => {
-        const { cancel, promise } = retry(() => fetchChunk(multicall2Contract, chunk, latestBlockNumber), {
-          n: Infinity,
-          minWait: 1000,
-          maxWait: 2500,
-        })
+      cancellations: chunkedCalls.map((chunk) => {
+        const { cancel, promise } = retry(
+          () =>
+            fetchChunk(
+              multicall2Contract,
+              chunk,
+              latestBlockNumber,
+              CHUNK_GAS_LIMIT_BY_CHAIN_ID[chainId as SupportedChainId] ?? DEFAULT_CHUNK_GAS_LIMIT
+            ),
+          {
+            n: Infinity,
+            minWait: 1000,
+            maxWait: 2500,
+          }
+        )
         promise
           .then((returnData) => {
-            // accumulates the length of all previous indices
-            const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
-            const lastCallKeyIndex = firstCallKeyIndex + returnData.length
-
-            const slice = outdatedCallKeys.slice(firstCallKeyIndex, lastCallKeyIndex)
-
-            // split the returned slice into errors and success
-            const { erroredCalls, results } = slice.reduce<{
+            // split the returned slice into errors and results
+            const { erroredCalls, results } = chunk.reduce<{
               erroredCalls: Call[]
               results: { [callKey: string]: string | null }
             }>(
-              (memo, callKey, i) => {
+              (memo, call, i) => {
                 if (returnData[i].success) {
-                  memo.results[callKey] = returnData[i].returnData ?? null
+                  memo.results[toCallKey(call)] = returnData[i].returnData ?? null
                 } else {
-                  memo.erroredCalls.push(parseCallKey(callKey))
+                  memo.erroredCalls.push(call)
                 }
                 return memo
               },
@@ -216,7 +243,15 @@ export default function Updater(): null {
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
-              console.debug('Calls errored in fetch', erroredCalls)
+              if (process.env.NODE_ENV === 'development') {
+                returnData.forEach((returnData, ix) => {
+                  if (!returnData.success) {
+                    console.debug('Call failed', chunk[ix], returnData)
+                  }
+                })
+              } else {
+                console.debug('Calls errored in fetch', erroredCalls)
+              }
               dispatch(
                 errorFetchingMulticallResults({
                   calls: erroredCalls,
