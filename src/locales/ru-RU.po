@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-17 00:11\n"
+"PO-Revision-Date: 2021-10-17 01:29\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -1011,7 +1011,7 @@ msgstr "Загрузка"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "Управлять"
+msgstr "Управление"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
@@ -1044,7 +1044,7 @@ msgstr "Макс.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Максимально к отправлению"
+msgstr "Максимум к продаже"
 
 #: src/components/Menu/index.tsx
 msgid "Menu"
@@ -1195,7 +1195,7 @@ msgstr "Оптимистичный Ethereum находится на стадии
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimistic Etherscan"
-msgstr "Etherscan сети Optimism"
+msgstr "Etherscan для Optimism"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1630,7 +1630,7 @@ msgstr "Этот пул необходимо инициализировать в
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
-msgstr "Этот маршрут оптимизирует вашу конечную цену с учётом возможности разделения маршрутов, использования сложных маршрутов, а также стоимости газа."
+msgstr "Этот маршрут оптимизирует вашу конечную цену с учётом возможности разбивки маршрутов, использования сложных маршрутов, а также стоимости газа."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1665,7 +1665,7 @@ msgstr "На токены (минимум)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Чтобы начать торговлю на {0}, вам нужно перенести свои активы с L1 на L2 через мост. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
+msgstr "Чтобы начать торговлю в {0}, вам нужно перенести свои активы с L1 на L2 через мост. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1673,7 +1673,7 @@ msgstr "Токены"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Токены из неактивных списков. Импортируйте нужные токены ниже, либо нажмите «Управлять», чтобы активировать другие списки."
+msgstr "Показаны токены из неактивных списков. Импортируйте нужные токены или нажмите «Управлять», чтобы активировать больше списков."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
