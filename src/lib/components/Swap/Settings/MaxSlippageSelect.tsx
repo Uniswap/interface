@@ -13,10 +13,6 @@ import Label, { Value } from './Label'
 
 const tooltip = 'Your transaction will revert if the price changes unfavorably by more than this percentage.'
 
-const OptionsRow = styled(Row)`
-  grid-template-columns: repeat(3, 1fr);
-`
-
 const Selected = styledIcon(CheckCircle, 'active')
 
 const InputType = styled(TYPE.subhead2)`
@@ -61,7 +57,7 @@ export default function MaxSlippageSelect() {
   return (
     <Column gap="0.75em">
       <Label name="Max Slippage" tooltip={tooltip} />
-      <OptionsRow gap="0.5em">
+      <Row gap="0.5em" grow>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
         <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM}>
@@ -78,7 +74,7 @@ export default function MaxSlippageSelect() {
             </InputType>
           </Row>
         </Option>
-      </OptionsRow>
+      </Row>
     </Column>
   )
 }
