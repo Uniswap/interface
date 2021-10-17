@@ -17,8 +17,8 @@ const DEFAULT_GAS_REQUIRED = 1_000_000
 
 const DEFAULT_CHUNK_GAS_LIMIT = 100_000_000
 const CHUNK_GAS_LIMIT_BY_CHAIN_ID: { [chainId in SupportedChainId]?: number } = {
-  [SupportedChainId.ARBITRUM_ONE]: 10_000_000,
-  [SupportedChainId.ARBITRUM_RINKEBY]: 10_000_000,
+  [SupportedChainId.ARBITRUM_ONE]: 100_000_000,
+  [SupportedChainId.ARBITRUM_RINKEBY]: 100_000_000,
 }
 
 /**
