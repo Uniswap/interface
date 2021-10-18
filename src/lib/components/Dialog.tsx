@@ -21,7 +21,7 @@ interface DialogHeaderProps {
 
 export function DialogHeader({ title, onClose, children }: DialogHeaderProps) {
   return (
-    <Header title={title} divider>
+    <Header title={title} divider={true}>
       {children}
       {onClose && (
         <StyledButton onClick={onClose}>
