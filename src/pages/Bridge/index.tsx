@@ -84,7 +84,13 @@ export default function Bridge() {
   const handleResetBridge = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
-  }, [onUserInput])
+    setModalData({
+      currencyId: 'ETH',
+      typedValue: '',
+      fromChainId: 1,
+      toChainId: 42161
+    })
+  }, [onUserInput, setModalData])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
