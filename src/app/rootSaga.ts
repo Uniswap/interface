@@ -2,6 +2,13 @@ import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { call, spawn } from 'redux-saga/effects'
 import { initProviders } from 'src/chains/initProviders'
 import {
+  fetchBalancesActions,
+  fetchBalancesReducer,
+  fetchBalancesSaga,
+  fetchBalancesSagaName,
+} from 'src/features/balances/fetchBalances'
+
+import {
   importAccountActions,
   importAccountReducer,
   importAccountSaga,
@@ -57,6 +64,12 @@ export const monitoredSagas: {
     wrappedSaga: transferTokenSaga,
     reducer: transferTokenReducer,
     actions: transferTokenActions,
+  },
+  [fetchBalancesSagaName]: {
+    name: fetchBalancesSagaName,
+    wrappedSaga: fetchBalancesSaga,
+    reducer: fetchBalancesReducer,
+    actions: fetchBalancesActions,
   },
 }
 

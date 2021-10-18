@@ -2,6 +2,7 @@ import { Wallet } from 'ethers'
 import { getWalletAccounts } from 'src/app/walletContext'
 import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
 import { SupportedChainId } from 'src/constants/chains'
+import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { Address } from 'src/utils/Address'
@@ -36,6 +37,7 @@ export function* importAccount(params: ImportAccountParams) {
   })
   yield* put(addAccount({ type, address: address.toString(), name, chainId }))
   yield* put(activateAccount({ address: address.toString(), chainId }))
+  yield* put(fetchBalancesActions.trigger({ type, address: address.toString(), name, chainId }))
   logger.info('New account imported:', address.toString())
 }
 

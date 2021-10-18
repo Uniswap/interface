@@ -1,24 +1,28 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
-import { useWalletProviders } from 'src/app/walletContext'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { config } from 'src/config'
 import { SupportedChainId } from 'src/constants/chains'
+import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
+import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
 import { createAccountActions } from 'src/features/wallet/createAccount'
+import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
 export function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
-  const { activeAccount, accounts } = useAppSelector((state) => state.wallet)
+  const accounts = useAccounts()
+  const activeAccount = useActiveAccount()
+  const balances = useActiveAccountEthBalance(SupportedChainId.GOERLI)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -32,12 +36,10 @@ export function HomeScreen({ navigation }: Props) {
     navigation.navigate(Screens.Transfer)
   }
 
-  const providers = useWalletProviders()
   const onPressGetBalance = async () => {
-    const goerliProvider = providers.getProvider(SupportedChainId.GOERLI)
-    if (!activeAccount) throw new Error('No active account')
-    const balance = await goerliProvider.getBalance(activeAccount.address)
-    logger.debug('Balance:', balance.toString())
+    if (!activeAccount) return
+    dispatch(fetchBalancesActions.trigger(activeAccount))
+    logger.debug(balances)
   }
 
   const { t } = useTranslation()

@@ -1,12 +1,9 @@
 import { providers as ethersProviders } from 'ethers'
+import { config } from 'src/config'
 import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timeout'
-
-// Temporary project id
-// TODO move to config file
-const PROJECT_ID = 'c210a3529cad40d3b42310838a7baa47'
 
 enum ProviderStatus {
   Disconnected,
@@ -68,7 +65,7 @@ export class ProviderManager {
     try {
       const chainName = this.getInfuraChainName(chainId)
       logger.info(`Connecting to infura rpc provider for ${chainName}`)
-      const provider = new ethersProviders.InfuraProvider(chainName, PROJECT_ID)
+      const provider = new ethersProviders.InfuraProvider(chainName, config.infuraProjectId)
       for (let i = 0; i < 3; i++) {
         const blockAndNetworkP = Promise.all([provider.getBlock('latest'), provider.getNetwork()])
         const blockAndNetwork = await promiseTimeout(blockAndNetworkP, 1000)

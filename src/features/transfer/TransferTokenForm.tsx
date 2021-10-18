@@ -8,9 +8,10 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout/Box'
 import { Modal } from 'src/components/modals/Modal'
 import { transferTokenActions } from 'src/features/transfer/transferToken'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 
 const initialValues = {
-  tokenId: '',
+  tokenAddress: '',
   amount: '',
   toAddress: '',
 }
@@ -21,11 +22,14 @@ export function TransferTokenForm() {
   const [showModal, setShowModal] = useState(false)
   const dispatch = useAppDispatch()
 
+  const activeAccount = useActiveAccount()
+
   const onSubmit = (values: FormValues) => {
+    if (!activeAccount) return
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(values))
     setShowModal(true)
-    dispatch(transferTokenActions.trigger(values))
+    dispatch(transferTokenActions.trigger({ account: activeAccount, ...values }))
   }
 
   return (
