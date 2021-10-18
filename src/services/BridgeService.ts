@@ -17,7 +17,7 @@ import {
   updateBridgeTxnPartnerHash,
   updateBridgeTxnWithdrawalInfo
 } from '../state/bridgeTransactions/actions'
-import { setBridgeLoadingWithdrawals, setBridgeModalStatus } from '../state/bridge/actions'
+import { setBridgeLoadingWithdrawals, setBridgeModalData, setBridgeModalStatus } from '../state/bridge/actions'
 
 import { txnTypeToLayer } from '../utils/arbitrum'
 
@@ -209,6 +209,14 @@ export class BridgeService {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
+    this.store.dispatch(
+      setBridgeModalData({
+        currencyId: 'ETH',
+        typedValue: value,
+        fromChainId: this.l1ChainId,
+        toChainId: this.l2ChainId
+      })
+    )
 
     const weiValue = utils.parseEther(value)
 
@@ -244,9 +252,17 @@ export class BridgeService {
   }
 
   public withdrawEth = async (value: string) => {
-    if (!this.account || !this.bridge || !this.l2ChainId) return
+    if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
+    this.store.dispatch(
+      setBridgeModalData({
+        currencyId: 'ETH',
+        typedValue: value,
+        fromChainId: this.l2ChainId,
+        toChainId: this.l1ChainId
+      })
+    )
 
     const weiValue = utils.parseEther(value)
 
