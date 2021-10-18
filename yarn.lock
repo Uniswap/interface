@@ -1638,7 +1638,7 @@
     aes-js "3.0.0"
     scrypt-js "3.0.1"
 
-"@ethersproject/keccak256@5.4.0", "@ethersproject/keccak256@^5.0.0-beta.130", "@ethersproject/keccak256@^5.4.0":
+"@ethersproject/keccak256@5.4.0", "@ethersproject/keccak256@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/keccak256/-/keccak256-5.4.0.tgz#7143b8eea4976080241d2bd92e3b1f1bf7025318"
   integrity sha512-FBI1plWet+dPUvAzPAeHzRKiPpETQzqSUWR1wXJGHVWi4i8bOSrpC3NwpkPjgeXG7MnugVc1B42VbfnQikyC/A==
@@ -2654,6 +2654,11 @@
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@lingui/core" "^3.9.0"
+
+"@metamask/detect-provider@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@metamask/detect-provider/-/detect-provider-1.2.0.tgz#3667a7531f2a682e3c3a43eaf3a1958bdb42a696"
+  integrity sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==
 
 "@metamask/safe-event-emitter@2.0.0", "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
@@ -4533,16 +4538,13 @@
   dependencies:
     "@web3-react/types" "^6.0.7"
 
-"@web3-react/core@^6.0.9":
-  version "6.1.9"
-  resolved "https://registry.npmjs.org/@web3-react/core/-/core-6.1.9.tgz"
-  integrity sha512-P877DslsbAkWIlMANpWiK7pCvNwlz0kJC0EGckuVh0wlA23J4UnFxq6xyOaxkxaDCu14rA/tAO0NbwjcXTQgSA==
+"@web3-react/core@^8.0.6-alpha.0":
+  version "8.0.6-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.0.6-alpha.0.tgz#c52883faa81f31a000393ef7d7275f51336f2ae1"
+  integrity sha512-7i/QK7YfHzlL3EO2/km35Afn+TjjnJwFhtLDEzIv5x9QFETh4ePiYHmTK8zuTN/1p5PvTySSR3QzH+8th/h9WQ==
   dependencies:
-    "@ethersproject/keccak256" "^5.0.0-beta.130"
-    "@web3-react/abstract-connector" "^6.0.7"
-    "@web3-react/types" "^6.0.7"
-    tiny-invariant "^1.0.6"
-    tiny-warning "^1.0.3"
+    "@web3-react/store" "^8.0.6-alpha.0"
+    "@web3-react/types" "^8.0.6-alpha.0"
 
 "@web3-react/fortmatic-connector@^6.0.9":
   version "6.1.6"
@@ -4563,6 +4565,14 @@
     "@web3-react/types" "^6.0.7"
     tiny-warning "^1.0.3"
 
+"@web3-react/metamask@^8.0.6-alpha.0":
+  version "8.0.6-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.0.6-alpha.0.tgz#f4fad5856cd0e05d708731bce6c5ae5054330d88"
+  integrity sha512-Ti5z6wbrGvglbT1v2ihG/qiMsUNv49vmtpABcRfqurWW6gXrLiGBmYwtt4/8IVqM1Ybd6kk6sujK5LEjLpdLBA==
+  dependencies:
+    "@metamask/detect-provider" "^1.2.0"
+    "@web3-react/types" "^8.0.6-alpha.0"
+
 "@web3-react/portis-connector@^6.0.9":
   version "6.1.9"
   resolved "https://registry.npmjs.org/@web3-react/portis-connector/-/portis-connector-6.1.9.tgz"
@@ -4573,10 +4583,23 @@
     "@web3-react/types" "^6.0.7"
     tiny-invariant "^1.0.6"
 
+"@web3-react/store@^8.0.6-alpha.0":
+  version "8.0.6-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/store/-/store-8.0.6-alpha.0.tgz#90ae4110bb12318e8e739bb68026a41fe544ae2c"
+  integrity sha512-TUo85VLMCRV0a/1lvbRiM/yRrbfgxEInAkCQFyasI2NARq5HFWWrs+I0oj1BHgFYfsg/aCYAWzuiGvFtDIyhdg==
+  dependencies:
+    "@ethersproject/address" "^5.4.0"
+    "@web3-react/types" "^8.0.6-alpha.0"
+
 "@web3-react/types@^6.0.7":
   version "6.0.7"
   resolved "https://registry.npmjs.org/@web3-react/types/-/types-6.0.7.tgz"
   integrity sha512-ofGmfDhxmNT1/P/MgVa8IKSkCStFiyvXe+U5tyZurKdrtTDFU+wJ/LxClPDtFerWpczNFPUSrKcuhfPX1sI6+A==
+
+"@web3-react/types@^8.0.6-alpha.0":
+  version "8.0.6-alpha.0"
+  resolved "https://registry.yarnpkg.com/@web3-react/types/-/types-8.0.6-alpha.0.tgz#55d34ab57eff4b21c783929e2a172e5d7ca65759"
+  integrity sha512-33+ZTVK/psC6k7/MY8KWbMQInIJLO3wMryxh77yHl7pTEkcImhvt74Es/Nj3jSYCZbdH4cmM4K4TZkEofFrscA==
 
 "@web3-react/walletconnect-connector@^7.0.2-alpha.0":
   version "7.0.2-alpha.0"
