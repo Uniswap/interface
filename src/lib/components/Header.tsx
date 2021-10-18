@@ -8,7 +8,8 @@ import Row from './Row'
 const HeaderRow = styled(Row)<{ divider?: boolean; theme: Theme }>`
   border-bottom: 1px solid ${({ divider, theme }) => (divider ? theme.outline : 'transparent')};
   margin: 0 1em;
-  padding: 1em 0;
+  padding-top: 1em;
+  padding-bottom: ${({ divider }) => (divider ? '1em' : undefined)};
 `
 
 const StyledLogo = styled(Logo)`
