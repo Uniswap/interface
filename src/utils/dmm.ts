@@ -303,6 +303,7 @@ export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainI
     if ([137, 80001].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
     if ([97, 56].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BNB', 'BNB')
     if ([43113, 43114].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'AVAX', 'AVAX')
+    if ([250].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'FTM', 'FTM')
   }
 
   return currency
