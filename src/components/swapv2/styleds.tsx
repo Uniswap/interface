@@ -5,8 +5,91 @@ import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 
+export const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  padding: 0 16px 100px;
+
+  @media only screen and (min-width: 768px) {
+    flex-direction: column;
+    padding: 24px 16px 100px;
+  }
+
+  @media only screen and (min-width: 1000px) {
+    gap: 4px;
+    padding: 24px 32px 100px;
+  }
+
+  @media only screen and (min-width: 1366px) {
+    padding: 24px 215px 50px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    padding: 24px 252px 50px;
+  }
+`
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 28px;
+
+  @media only screen and (min-width: 1000px) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  & > div:first-child {
+    width: 100%;
+    max-width: 425px;
+  }
+`
+
 export const Wrapper = styled.div`
   position: relative;
+`
+
+export const AggregatorStatsContainer = styled.div`
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr;
+  margin-top: 36px;
+
+  @media only screen and (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 0;
+    grid-gap: 1.5rem;
+  }
+`
+
+export const AggregatorStatsItem = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: ${({ theme }) => `${theme.buttonGray}20`};
+`
+
+export const AggregatorStatsItemTitle = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.subText};
+`
+
+export const AggregatorStatsItemValue = styled.span`
+  font-size: 18px;
+  font-weight: 600;
+  color: #78d5ff;
+  margin-left: 4px;
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
