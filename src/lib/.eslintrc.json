@@ -1,6 +1,8 @@
 {
   "extends": ["../../.eslintrc.json"],
+  "plugins": ["better-styled-components"],
   "rules": {
+    "better-styled-components/sort-declarations-alphabetically": "error",
     "no-restricted-imports": [
       "error",
       {
