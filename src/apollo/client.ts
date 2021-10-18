@@ -58,6 +58,14 @@ const avaxMainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Apoll
   cache: new InMemoryCache()
 })
 
+const fantomExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+  uri:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dmm-exchange-ftm'
+      : '',
+  cache: new InMemoryCache()
+})
+
 export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetExchangeClient,
   [ChainId.ROPSTEN]: ropstenExchangeClient,
@@ -70,7 +78,7 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.BSCMAINNET]: bscMainnetExchangeClient,
   [ChainId.AVAXTESTNET]: avaxTestnetExchangeClient,
   [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient,
-  [ChainId.FANTOM]: avaxMainnetExchangeClient
+  [ChainId.FANTOM]: fantomExchangeClient
 }
 
 const ropstenBlockClient = new ApolloClient({
@@ -111,6 +119,11 @@ const avaxMainnetBlockClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+const fantomBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/ducquangkstn/fantom-blocks',
+  cache: new InMemoryCache()
+})
+
 export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheObject> } = {
   [ChainId.MAINNET]: mainnetBlockClient,
   [ChainId.ROPSTEN]: ropstenBlockClient,
@@ -123,7 +136,7 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.BSCMAINNET]: bscMainnetBlockClient,
   [ChainId.AVAXTESTNET]: avaxTestnetBlockClient,
   [ChainId.AVAXMAINNET]: avaxMainnetBlockClient,
-  [ChainId.FANTOM]: avaxMainnetBlockClient
+  [ChainId.FANTOM]: fantomBlockClient
 }
 
 //https://router.firebird.finance/bsc/route
