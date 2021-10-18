@@ -9,11 +9,16 @@ export function useMonitoringEventCallback() {
   const { account, chainId } = useActiveWeb3React()
 
   const event = useCallback(
-    (action: MonitoringEvent) => {
+    (action: MonitoringEvent, { hash }: { hash?: string } | undefined = {}) => {
       ReactGA.event({
         category: 'Monitoring',
         action,
-        label: [`walletAddress: ${account}`, `chainId: ${chainId}`, `timestamp: ${Date.now()}`].join(';'),
+        label: [
+          `walletAddress: ${account}`,
+          `chainId: ${chainId}`,
+          `timestamp: ${Date.now()}`,
+          `hash: ${hash ?? 'n/a'}`,
+        ].join(';'),
       })
     },
     [account, chainId]
