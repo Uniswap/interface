@@ -36,7 +36,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
   return (
     <Wrapper>
       <DialogHeader title="Settings" onClose={onClose}>
-        <StyledReset color="action" onClick={resetSettings}>
+        <StyledReset color="active" onClick={resetSettings}>
           Reset
         </StyledReset>
       </DialogHeader>
