@@ -19,7 +19,7 @@ export default function TransactionTtlInput() {
       <Value onClick={() => input.current?.focus()}>
         <Row>
           <TYPE.subhead2>
-            <IntegerInput value={transactionTtl} onUserInput={(value) => setTransactionTtl(value ?? 0)} ref={input} />
+            <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
           </TYPE.subhead2>
           <TYPE.subhead2>Minutes</TYPE.subhead2>
         </Row>

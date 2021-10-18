@@ -1,5 +1,5 @@
 import styled from 'lib/theme'
-import { forwardRef, HTMLProps, useEffect, useState } from 'react'
+import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
 const StyledInput = styled.input`
   background-color: transparent;
@@ -34,9 +34,9 @@ const StyledInput = styled.input`
   }
 `
 
-interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value' | 'onUserInput'> {
+interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
   value: number | undefined
-  onUserInput: (input: number | undefined) => void
+  onChange: (input: number | undefined) => void
 }
 
 interface EnforcedInputProps extends InputProps {
@@ -45,10 +45,10 @@ interface EnforcedInputProps extends InputProps {
 }
 
 const Input = forwardRef<HTMLInputElement, EnforcedInputProps>(function Input(
-  { value, onUserInput, enforcer, pattern, ...props }: EnforcedInputProps,
+  { value, onChange, enforcer, pattern, ...props }: EnforcedInputProps,
   ref
 ) {
-  // Allow value/onUserInput to use number by preventing a  trailing decimal separator from triggering onUserInput
+  // Allow value/onChange to use number by preventing a  trailing decimal separator from triggering onChange
   const [state, setState] = useState(value ?? '')
   useEffect(() => {
     if (+state !== value) {
@@ -56,18 +56,23 @@ const Input = forwardRef<HTMLInputElement, EnforcedInputProps>(function Input(
     }
   }, [value, state, setState])
 
+  const validateChange = useCallback(
+    (event) => {
+      const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
+      if (nextInput !== null) {
+        setState(nextInput ?? '')
+        if (nextInput === undefined || +nextInput !== value) {
+          onChange(nextInput === undefined ? undefined : +nextInput)
+        }
+      }
+    },
+    [value, onChange, enforcer]
+  )
+
   return (
     <StyledInput
       value={state}
-      onChange={(event) => {
-        const nextInput = enforcer(event.target.value.replace(/,/g, '.'))
-        if (nextInput !== null) {
-          setState(nextInput ?? '')
-          if (nextInput === undefined || +nextInput !== value) {
-            onUserInput(nextInput === undefined ? undefined : +nextInput)
-          }
-        }
-      }}
+      onChange={validateChange}
       // universal input options
       inputMode="decimal"
       autoComplete="off"
@@ -84,31 +89,27 @@ const Input = forwardRef<HTMLInputElement, EnforcedInputProps>(function Input(
   )
 })
 
-export const IntegerInput = (() => {
-  const regexp = /^\d*$/
-  const enforcer = (nextUserInput: string) => {
-    if (nextUserInput === '' || regexp.test(nextUserInput)) {
-      const nextInput = parseInt(nextUserInput)
-      return isNaN(nextInput) ? undefined : nextInput.toString()
-    }
-    return null
+const integerRegexp = /^\d*$/
+const integerEnforcer = (nextUserInput: string) => {
+  if (nextUserInput === '' || integerRegexp.test(nextUserInput)) {
+    const nextInput = parseInt(nextUserInput)
+    return isNaN(nextInput) ? undefined : nextInput.toString()
   }
-  return forwardRef(function IntegerInput(props: InputProps, ref) {
-    return <Input pattern="^[0-9]*$" enforcer={enforcer} ref={ref as any} {...props} />
-  })
-})()
+  return null
+}
+export const IntegerInput = forwardRef(function IntegerInput(props: InputProps, ref) {
+  return <Input pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
+})
 
-export const DecimalInput = (() => {
-  const regexp = /^\d*(?:[\.])?\d*$/
-  const enforcer = (nextUserInput: string) => {
-    if (nextUserInput === '') {
-      return undefined
-    } else if (regexp.test(nextUserInput)) {
-      return nextUserInput
-    }
-    return null
+const decimalRegexp = /^\d*(?:[\.])?\d*$/
+const decimalEnforcer = (nextUserInput: string) => {
+  if (nextUserInput === '') {
+    return undefined
+  } else if (decimalRegexp.test(nextUserInput)) {
+    return nextUserInput
   }
-  return forwardRef(function DecimalInput(props: InputProps, ref) {
-    return <Input pattern="^[0-9]*[.,]?[0-9]*$" enforcer={enforcer} ref={ref as any} {...props} />
-  })
-})()
+  return null
+}
+export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, ref) {
+  return <Input pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
+})

@@ -68,7 +68,7 @@ export default function GasPriceSelect() {
             <IntegerInput
               style={{ width: '4ch' }}
               value={custom}
-              onUserInput={(value) => setGasPrice([CUSTOM, value])}
+              onChange={(value) => setGasPrice([CUSTOM, value])}
               placeholder="-"
               maxLength={4}
               ref={input}

@@ -66,7 +66,7 @@ export default function MaxSlippageSelect() {
               <DecimalInput
                 style={{ width: hasCustomInput ? '4ch' : '100%' }}
                 value={custom}
-                onUserInput={(value) => setMaxSlippage([CUSTOM, value])}
+                onChange={(value) => setMaxSlippage([CUSTOM, value])}
                 placeholder="Custom"
                 ref={input}
               />
