@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react'
 import { SupportedChainId } from 'src/constants/chains'
+import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
 import { logger } from 'src/utils/logger'
@@ -15,11 +16,13 @@ import { getContext } from 'typed-redux-saga'
 export interface WalletContextValue {
   accounts: AccountManager
   providers: ProviderManager
+  contracts: ContractManager
 }
 
 export const walletContextValue: WalletContextValue = {
   accounts: new AccountManager(),
   providers: new ProviderManager(),
+  contracts: new ContractManager(),
 }
 
 export const WalletContext = createContext<{ value: WalletContextValue; version: number }>({
@@ -74,5 +77,14 @@ export function useWalletProvider(chainId: SupportedChainId) {
 
 export function* getWalletProviders() {
   const value = yield* getContext<ProviderManager>('providers')
+  return value
+}
+
+export function useWalletContracts(): ContractManager {
+  return useContext(WalletContext).value.contracts
+}
+
+export function* getWalletContracts() {
+  const value = yield* getContext<ContractManager>('contracts')
   return value
 }

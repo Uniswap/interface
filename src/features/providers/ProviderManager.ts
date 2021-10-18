@@ -56,7 +56,7 @@ export class ProviderManager {
       return
     }
     delete this._providers[chainId]
-    if (this.onUpdate) this.onUpdate()
+    this.onUpdate?.()
   }
 
   tryGetProvider(chainId: SupportedChainId) {

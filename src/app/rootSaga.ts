@@ -6,7 +6,6 @@ import {
   fetchBalancesSaga,
   fetchBalancesSagaName,
 } from 'src/features/balances/fetchBalances'
-
 import {
   importAccountActions,
   importAccountReducer,

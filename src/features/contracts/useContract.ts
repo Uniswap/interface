@@ -5,7 +5,7 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import { Contract, providers } from 'ethers'
+import { Contract } from 'ethers'
 import { useMemo } from 'react'
 import EIP_2612 from 'src/abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'src/abis/ens-public-resolver.json'
@@ -19,7 +19,7 @@ import {
   UniswapInterfaceMulticall,
 } from 'src/abis/uniswapV3/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { useWalletProviders } from 'src/app/walletContext'
+import { useWalletContracts, useWalletProviders } from 'src/app/walletContext'
 import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESS,
@@ -27,20 +27,8 @@ import {
   QUOTER_ADDRESSES,
 } from 'src/constants/addresses'
 import { SupportedChainId } from 'src/constants/chains'
-import { Address } from 'src/utils/Address'
 import { logger } from 'src/utils/logger'
 
-export function createContract(address: string, ABI: any, provider: providers.Provider): Contract {
-  if (!Address.isValid(address, false)) {
-    throw Error(`Invalid address for contract: ${address}`)
-  }
-  return new Contract(address, ABI, provider)
-}
-
-// Note: this uses the same strategy as the web app in that it creates
-// new Contract objects on each use. We could consider caching the contract
-// instances in a ContractManager.
-// TODO: consider throwing here instead of returning NUll
 export function useContract<T extends Contract = Contract>(
   chainId: SupportedChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
@@ -48,6 +36,7 @@ export function useContract<T extends Contract = Contract>(
 ): T | null {
   const providerManager = useWalletProviders()
   const provider = providerManager.tryGetProvider(chainId)
+  const contractsManager = useWalletContracts()
 
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
@@ -56,12 +45,12 @@ export function useContract<T extends Contract = Contract>(
     else address = addressOrAddressMap[chainId]
     if (!address) return null
     try {
-      return createContract(address, ABI, provider)
+      return contractsManager.getOrCreateContract(chainId, address, provider, ABI)
     } catch (error) {
       logger.error('Failed to get contract', error)
       return null
     }
-  }, [addressOrAddressMap, ABI, provider, chainId]) as T
+  }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T
 }
 
 export function useBytes32TokenContract(

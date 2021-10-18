@@ -9,6 +9,7 @@ const sagaMiddleware = createSagaMiddleware({
   context: {
     accounts: walletContextValue.accounts,
     providers: walletContextValue.providers,
+    contracts: walletContextValue.contracts,
   },
 })
 
