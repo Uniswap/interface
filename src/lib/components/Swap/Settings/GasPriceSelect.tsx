@@ -43,15 +43,15 @@ function Option<T>({ name, value, children, selected, onSelect }: OptionProps<T>
 
 export default function GasPriceSelect() {
   const { FAST, TRADER, CUSTOM } = GasPrice
-  const [[gasPrice, custom], setGasPrice] = useAtom(gasPriceAtom)
+  const [{ value: gasPrice, custom }, setGasPrice] = useAtom(gasPriceAtom)
 
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
   const onCustomSelect = useCallback(
-    (value) => {
+    (custom) => {
       focus()
-      if (value !== undefined) {
-        setGasPrice([CUSTOM, value])
+      if (custom !== undefined) {
+        setGasPrice({ value: CUSTOM, custom })
       }
     },
     [CUSTOM, focus, setGasPrice]
@@ -61,14 +61,14 @@ export default function GasPriceSelect() {
     <Column gap="0.75em">
       <Label name="Gas Price" />
       <OptionsRow gap="0.5em">
-        <Option name="Fast" value={FAST} onSelect={setGasPrice} selected={gasPrice === FAST} />
-        <Option name="Trader" value={TRADER} onSelect={setGasPrice} selected={gasPrice === TRADER} />
+        <Option name="Fast" value={'-'} onSelect={() => setGasPrice(FAST)} selected={gasPrice === FAST} />
+        <Option name="Trader" value={'-'} onSelect={() => setGasPrice(TRADER)} selected={gasPrice === TRADER} />
         <Option name="Custom" value={custom} onSelect={onCustomSelect} selected={gasPrice === CUSTOM}>
           <InputType>
             <IntegerInput
               style={{ width: '4ch' }}
               value={custom}
-              onChange={(value) => setGasPrice([CUSTOM, value])}
+              onChange={(custom) => setGasPrice({ value: CUSTOM, custom })}
               placeholder="-"
               maxLength={4}
               ref={input}

@@ -4,20 +4,22 @@ import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils
 
 import Settings from './Settings'
 
+/** Gas price, in gwei. Indexes into chain-specific gas price arrays. */
 export enum GasPrice {
-  FAST = 155,
-  TRADER = 175,
+  FAST = 0,
+  TRADER = 1,
   // Members to satisfy CustomizableEnum; see setCustomizable
   CUSTOM = -1,
-  DEFAULT = 175,
+  DEFAULT = TRADER,
 }
 
+/** Max slippage, as a percentage. */
 export enum MaxSlippage {
   P01 = 0.1,
   P05 = 0.5,
   // Members to satisfy CustomizableEnum; see setCustomizable
   CUSTOM = -1,
-  DEFAULT = 0.5,
+  DEFAULT = P05,
 }
 
 export interface Settings {
@@ -28,8 +30,8 @@ export interface Settings {
 }
 
 const initialSettings: Settings = {
-  gasPrice: [GasPrice.DEFAULT],
-  maxSlippage: [MaxSlippage.DEFAULT],
+  gasPrice: { value: GasPrice.DEFAULT },
+  maxSlippage: { value: MaxSlippage.DEFAULT },
   transactionTtl: 40,
   simplifyUi: true,
 }

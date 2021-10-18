@@ -39,15 +39,15 @@ function Option<T>({ value, children, selected, onSelect }: OptionProps<T>) {
 
 export default function MaxSlippageSelect() {
   const { P01, P05, CUSTOM } = MaxSlippage
-  const [[maxSlippage, custom], setMaxSlippage] = useAtom(maxSlippageAtom)
+  const [{ value: maxSlippage, custom }, setMaxSlippage] = useAtom(maxSlippageAtom)
 
   const input = useRef<HTMLInputElement>(null)
   const focus = useCallback(() => input.current?.focus(), [input])
   const onCustomSelect = useCallback(
-    (value) => {
+    (custom) => {
       focus()
-      if (value !== undefined) {
-        setMaxSlippage([CUSTOM, value])
+      if (custom !== undefined) {
+        setMaxSlippage({ value: CUSTOM, custom })
       }
     },
     [CUSTOM, focus, setMaxSlippage]
@@ -66,7 +66,7 @@ export default function MaxSlippageSelect() {
               <DecimalInput
                 style={{ width: hasCustomInput ? '4ch' : '100%' }}
                 value={custom}
-                onChange={(value) => setMaxSlippage([CUSTOM, value])}
+                onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
                 placeholder="Custom"
                 ref={input}
               />

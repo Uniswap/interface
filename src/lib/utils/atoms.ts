@@ -42,7 +42,7 @@ export function pickAtom<Value, Key extends keyof Value, Update extends Value[Ke
  * This is not exported because an enum may not extend another interface.
  */
 interface CustomizableEnum<T extends number> {
-  CUSTOM: T
+  CUSTOM: -1
   DEFAULT: T
 }
 
@@ -50,24 +50,24 @@ interface CustomizableEnum<T extends number> {
  * Typing for a customizable enum; see setCustomizable.
  * The first value is used, unless it is CUSTOM, in which case the second is used.
  */
-export type Customizable<T> = [T, number?]
+export type Customizable<T> = { value: T; custom?: number }
 
 /** Sets a customizable enum, validating the tuple and falling back to the default. */
 export function setCustomizable<T extends number, Enum extends CustomizableEnum<T>>(customizable: Enum) {
-  return (draft: Customizable<T>, update: Customizable<T> | T): void => {
+  return (draft: Customizable<T>, update: T | Customizable<T>): void => {
     // normalize the update
-    if (!Array.isArray(update)) {
-      update = [update]
+    if (typeof update === 'number') {
+      update = { value: update }
     }
 
-    draft[0] = update[0]
-    if (update.length === 2) {
-      draft[1] = update[1]
+    draft.value = update.value
+    if (update.custom) {
+      draft.custom = update.custom
     }
 
     // prevent invalid state
-    if (draft[0] === customizable.CUSTOM && draft[1] === undefined) {
-      draft[0] = customizable.DEFAULT
+    if (draft.value === customizable.CUSTOM && draft.custom === undefined) {
+      draft.value = customizable.DEFAULT
     }
     return
   }
