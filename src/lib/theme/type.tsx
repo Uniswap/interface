@@ -2,7 +2,7 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
 import styled, { Color, Theme } from '.'
 
-type TextProps = Omit<TextPropsWithCss, 'css'>
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
 
 const TextWrapper = styled(Text)<{ color?: Color; theme: Theme }>`
   color: ${({ color = 'primary' as Color, theme }) => theme[color]};
