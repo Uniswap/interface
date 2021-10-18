@@ -128,7 +128,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jEUR',
       name: 'Jarvis Synthetic Euro',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/ZvP634G.png'
+      logoURI: 'https://i.imgur.com/92uhfao.png'
     },
     {
       chainId: 1,
@@ -136,7 +136,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jGBP',
       name: 'Jarvis Synthetic British Pound',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/zOLD6Vf.png'
+      logoURI: 'https://i.imgur.com/HS7BMfs.png'
     },
     {
       chainId: 1,
@@ -144,7 +144,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'jCHF',
       name: 'Jarvis Synthetic Swiss Franc',
       decimals: 18,
-      logoURI: 'https://i.imgur.com/EknGhAl.png'
+      logoURI: 'https://i.imgur.com/Fp31dDB.png'
     },
     {
       chainId: 1,
