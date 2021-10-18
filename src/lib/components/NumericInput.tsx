@@ -2,6 +2,7 @@ import styled from 'lib/theme'
 import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
 const StyledInput = styled.input`
+  -webkit-appearance: textfield;
   background-color: transparent;
   border: none;
   color: currentColor;
@@ -12,9 +13,8 @@ const StyledInput = styled.input`
   overflow: hidden;
   padding: 0px;
   text-align: left;
-  text-overflow: ellipsis;
 
-  -webkit-appearance: textfield;
+  text-overflow: ellipsis;
 
   ::-webkit-search-decoration {
     -webkit-appearance: none;

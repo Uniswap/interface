@@ -5,12 +5,12 @@ const Column = styled.div<{
   justify?: string
   gap?: string
 }>`
+  align-items: ${({ align }) => align ?? 'center'};
   display: grid;
+  gap: ${({ gap }) => gap && gap};
   grid-auto-flow: row;
   grid-template-columns: 1fr;
-  align-items: ${({ align }) => align ?? 'center'};
   justify-content: ${({ justify }) => justify ?? 'space-between'};
-  gap: ${({ gap }) => gap && gap};
 `
 
 export default Column

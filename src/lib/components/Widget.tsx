@@ -10,10 +10,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   font-family: ${({ theme }) => theme.fontFamily};
   font-size: 16px;
-  min-height: 240px;
-  min-width: 240px;
   max-height: 360px;
   max-width: 360px;
+  min-height: 240px;
+  min-width: 240px;
   padding: 0.25em;
   position: relative;
 `

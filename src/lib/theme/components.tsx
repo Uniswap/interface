@@ -14,10 +14,10 @@ export function styledIcon(Icon: Icon, color = 'secondary' as Color) {
 }
 
 export const StyledButton = styled.button`
-  border: none;
   background-color: transparent;
-  padding: 0;
+  border: none;
   border-radius: 0.5em;
+  padding: 0;
 
   :hover {
     cursor: pointer;

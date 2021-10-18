@@ -27,26 +27,26 @@ const Reference = styled.div`
 `
 
 const Arrow = styled.div`
-  width: 8px;
   height: 8px;
+  width: 8px;
   z-index: ${Layer.TOOLTIP};
 
   ::before {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-
-    content: '';
     background: ${({ theme }) => theme.interactive};
     border: 1px solid ${({ theme }) => theme.outline};
+    content: '';
+
+    height: 8px;
+    position: absolute;
     transform: rotate(45deg);
+    width: 8px;
   }
 
   &.arrow-top {
     bottom: -5px;
     ::before {
-      border-top: none;
       border-left: none;
+      border-top: none;
     }
   }
 

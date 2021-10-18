@@ -7,10 +7,10 @@ import Tooltip from '../../Tooltip'
 export const Value = styled.div<{ selected?: boolean; theme: Theme }>`
   border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
   border-radius: 0.5em;
+  cursor: pointer;
   display: grid;
   grid-gap: 0.25em;
   padding: 0.5em;
-  cursor: pointer;
 `
 
 interface LabelProps {
