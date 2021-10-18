@@ -97,7 +97,7 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'FTM',
       decimals: 18
     },
-    rpcUrls: ['https://rpcapi.fantom.network '],
+    rpcUrls: ['https://rpcapi.fantom.network'],
     blockExplorerUrls: ['https://ftmscan.com/']
   }
 }

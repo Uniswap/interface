@@ -17,7 +17,7 @@ const QUICK_SWAP = 'https://unpkg.com/quickswap-default-token-list@1.0.67/build/
 const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
-const SPOOKY = 'https://github.com/SpookySwap/spooky-info/blob/master/src/constants/token/spookyswap.json'
+const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 export const BYPASS_LIST = [PANGOLIN, SPOOKY]

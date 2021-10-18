@@ -93,34 +93,36 @@ export default function NetworkModal(): JSX.Element | null {
       <ModalHeader title={t`Select a Network`} />
 
       <NetworkList>
-        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET].map((key: ChainId, i: number) => {
-          if (chainId === key) {
+        {[ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM].map(
+          (key: ChainId, i: number) => {
+            if (chainId === key) {
+              return (
+                <SelectNetworkButton key={i} padding="0">
+                  <ListItem selected>
+                    <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
+                    <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
+                  </ListItem>
+                </SelectNetworkButton>
+              )
+            }
+
             return (
-              <SelectNetworkButton key={i} padding="0">
-                <ListItem selected>
+              <SelectNetworkButton
+                key={i}
+                padding="0"
+                onClick={() => {
+                  toggleNetworkModal()
+                  changeNetwork(key)
+                }}
+              >
+                <ListItem>
                   <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
                   <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
                 </ListItem>
               </SelectNetworkButton>
             )
           }
-
-          return (
-            <SelectNetworkButton
-              key={i}
-              padding="0"
-              onClick={() => {
-                toggleNetworkModal()
-                changeNetwork(key)
-              }}
-            >
-              <ListItem>
-                <img src={NETWORK_ICON[key]} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
-                <NetworkLabel>{NETWORK_LABEL[key]}</NetworkLabel>
-              </ListItem>
-            </SelectNetworkButton>
-          )
-        })}
+        )}
       </NetworkList>
     </ModalContentWrapper>
   )
