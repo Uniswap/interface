@@ -4,6 +4,7 @@
   "List Accounts": "List Accounts",
   "Send Token": "Send Token",
   "Get Balance": "Get Balance",
+  "Scan a Seed Phrase": "Scan a Seed Phrase",
   "Enter your seed phrase (mnemonic):": "Enter your seed phrase (mnemonic):",
   "Submit": "Submit",
   "Required": "Required",
@@ -13,5 +14,7 @@
   "Create New Account": "Create New Account",
   "Import Account": "Import Account",
   "Send those tokens around": "Send those tokens around",
-  "Back": "Back"
+  "Back": "Back",
+  "Extra words detected - tap to remove them": "Extra words detected - tap to remove them",
+  "Confirm phrase": "Confirm phrase"
 }

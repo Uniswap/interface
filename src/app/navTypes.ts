@@ -1,7 +1,12 @@
 // Route nav props go here
+
+import { Screens } from 'src/app/Screens'
+
 export type RootStackParamList = {
-  Home: undefined
-  Transfer: undefined
-  Welcome: undefined
-  ImportAccount: undefined
+  [Screens.Camera]: undefined
+  [Screens.Home]: undefined
+  [Screens.ImportAccount]: undefined
+  [Screens.SeedPhrase]: { seedPhrase: string[] }
+  [Screens.Transfer]: undefined
+  [Screens.Welcome]: undefined
 }

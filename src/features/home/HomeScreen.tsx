@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
+import { Screens } from 'src/app/Screens'
 import { useWalletProviders } from 'src/app/walletContext'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
@@ -13,7 +14,7 @@ import { SupportedChainId } from 'src/constants/chains'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { logger } from 'src/utils/logger'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
+type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
 export function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
@@ -28,7 +29,7 @@ export function HomeScreen({ navigation }: Props) {
   }
 
   const onPressSend = () => {
-    navigation.navigate('Transfer')
+    navigation.navigate(Screens.Transfer)
   }
 
   const providers = useWalletProviders()

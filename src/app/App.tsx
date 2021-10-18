@@ -9,10 +9,13 @@ import { Provider } from 'react-redux'
 import ErrorBoundary from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
+import { Screens } from 'src/app/Screens'
 import { store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { HomeScreen } from 'src/features/home/HomeScreen'
+import { CameraScreen } from 'src/features/import/CameraScreen'
+import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
@@ -54,12 +57,12 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         {isUnlocked ? (
           <>
             <Stack.Screen
-              name="Home"
+              name={Screens.Home}
               component={HomeScreen}
               options={{ title: 'Uniswap | Home' }}
             />
             <Stack.Screen
-              name="Transfer"
+              name={Screens.Transfer}
               component={TransferTokenScreen}
               options={{ title: 'Uniswap | Send' }}
             />
@@ -67,14 +70,24 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         ) : (
           <>
             <Stack.Screen
-              name="Welcome"
+              name={Screens.Welcome}
               component={WelcomeScreen}
               options={{ title: 'Uniswap | Welcome' }}
             />
             <Stack.Screen
-              name="ImportAccount"
+              name={Screens.ImportAccount}
               component={ImportAccountScreen}
               options={{ title: 'Uniswap | Import' }}
+            />
+            <Stack.Screen
+              name={Screens.Camera}
+              component={CameraScreen}
+              options={{ title: 'Uniswap | Camera' }}
+            />
+            <Stack.Screen
+              name={Screens.SeedPhrase}
+              component={SeedPhraseScreen}
+              options={{ title: 'Uniswap | Seed Phrase' }}
             />
           </>
         )}
