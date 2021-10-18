@@ -5,7 +5,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { darken } from 'polished'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -22,7 +22,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, TYPE } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
-import Card, { BlueCard, LightCard } from '../Card'
+import Card, { LightCard } from '../Card'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -150,6 +150,8 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
+  const logMonitoringEvent = useMonitoringEventCallback()
+
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -197,13 +199,17 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true).catch((error) => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(connector) // a little janky...can't use setError because the connector isn't set
-        } else {
-          setPendingError(true)
-        }
-      })
+      activate(connector, undefined, true)
+        .then(() => {
+          logMonitoringEvent('wallet connected')
+        })
+        .catch((error) => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(connector) // a little janky...can't use setError because the connector isn't set
+          } else {
+            setPendingError(true)
+          }
+        })
   }
 
   // close wallet modal if fortmatic modal is active
@@ -338,9 +344,7 @@ export default function WalletModal({
               </TYPE.mediumHeader>
             </Row>
           </HeaderRow>
-          <ContentWrapper>
-            <PrivacyPolicy />
-          </ContentWrapper>
+          <PrivacyPolicy />
         </UpperSection>
       )
     }

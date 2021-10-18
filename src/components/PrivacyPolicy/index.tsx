@@ -19,25 +19,13 @@ const GrayscaleRouterLogo = styled(AutoRouterIcon)`
 `
 
 const Wrapper = styled.div`
-  width: 375px;
-  max-height: 455px;
-`
-
-const OverflowWrapper = styled.div`
-  height: 300px;
-  overflow-y: scroll;
-  &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.bg1};
-  }
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.primary1};
-  }
+  padding: 0 1rem;
 `
 
 const StyledExternalCard = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
-  width: 100%;
   padding: 0.5rem;
+  width: 100%;
 
   :hover,
   :focus,
@@ -46,7 +34,6 @@ const StyledExternalCard = styled(Card)`
   }
 `
 
-//todo is there a common?
 const StyledLinkOut = styled(ArrowDown)`
   transform: rotate(230deg);
 `
@@ -87,7 +74,7 @@ export function PrivacyPolicyModal() {
   useEffect(() => {
     ReactGA.event({
       category: 'Privacy',
-      action: 'Show',
+      action: 'Show modal',
     })
   }, [])
 
@@ -144,23 +131,22 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
         </AutoColumn>
-        <OverflowWrapper>
-          <AutoColumn gap="12px" style={{ marginBottom: '12px' }}>
-            {EXTERNAL_APIS.map(({ name, icon, description }, i) => (
-              <DarkGreyCard key={i}>
-                <AutoColumn gap="8px">
-                  <AutoRow gap="4px">
-                    {icon ?? <Info size={18} />}
-                    <TYPE.main fontSize={14} color={'text1'}>
-                      {name}
-                    </TYPE.main>
-                  </AutoRow>
-                  <TYPE.main fontSize={14}>{description}</TYPE.main>
-                </AutoColumn>
-              </DarkGreyCard>
-            ))}
-          </AutoColumn>
-        </OverflowWrapper>
+        <AutoColumn gap="12px">
+          {EXTERNAL_APIS.map(({ name, icon, description }, i) => (
+            <DarkGreyCard key={i}>
+              <AutoColumn gap="8px">
+                <AutoRow gap="4px">
+                  {icon ?? <Info size={18} />}
+                  <TYPE.main fontSize={14} color={'text1'}>
+                    {name}
+                  </TYPE.main>
+                </AutoRow>
+                <TYPE.main fontSize={14}>{description}</TYPE.main>
+              </AutoColumn>
+            </DarkGreyCard>
+          ))}
+          <div />
+        </AutoColumn>
       </AutoColumn>
     </Wrapper>
   )
