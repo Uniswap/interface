@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
+import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -230,83 +231,86 @@ export default function Menu() {
   }, [open])
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={t`Menu`}>
-        <StyledMenuIcon />
-      </StyledMenuButton>
+    <>
+      {/* // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
+      <StyledMenu ref={node as any}>
+        <StyledMenuButton onClick={toggleMenu} aria-label={t`Menu`}>
+          <StyledMenuIcon />
+        </StyledMenuButton>
 
-      {open &&
-        (() => {
-          switch (menu) {
-            case 'lang':
-              return <LanguageMenu close={() => setMenu('main')} />
-            case 'main':
-            default:
-              return (
-                <MenuFlyout>
-                  <MenuItem href="https://uniswap.org/">
-                    <div>
-                      <Trans>About</Trans>
-                    </div>
-                    <Info opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://docs.uniswap.org/">
-                    <div>
-                      <Trans>Docs</Trans>
-                    </div>
-                    <BookOpen opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={CODE_LINK}>
-                    <div>
-                      <Trans>Code</Trans>
-                    </div>
-                    <Code opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href="https://discord.gg/FCfyBSbCU5">
-                    <div>
-                      <Trans>Discord</Trans>
-                    </div>
-                    <MessageCircle opacity={0.6} size={16} />
-                  </MenuItem>
-                  <MenuItem href={infoLink}>
-                    <div>
-                      <Trans>Analytics</Trans>
-                    </div>
-                    <PieChart opacity={0.6} size={16} />
-                  </MenuItem>
-                  <ToggleMenuItem onClick={() => setMenu('lang')}>
-                    <div>
-                      <Trans>Language</Trans>
-                    </div>
-                    <Globe opacity={0.6} size={16} />
-                  </ToggleMenuItem>
-                  <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
-                  </ToggleMenuItem>
-                  <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
-                    <div>
-                      <Trans>Privacy and terms</Trans>
-                    </div>
-                    <Book opacity={0.6} size={16} />
-                  </ToggleMenuItem>
-                  {showUNIClaimOption && (
-                    <UNIbutton
-                      onClick={openClaimModal}
-                      padding="8px 16px"
-                      width="100%"
-                      $borderRadius="12px"
-                      mt="0.5rem"
-                    >
-                      <Trans>Claim UNI</Trans>
-                    </UNIbutton>
-                  )}
-                </MenuFlyout>
-              )
-          }
-        })()}
-    </StyledMenu>
+        {open &&
+          (() => {
+            switch (menu) {
+              case 'lang':
+                return <LanguageMenu close={() => setMenu('main')} />
+              case 'main':
+              default:
+                return (
+                  <MenuFlyout>
+                    <MenuItem href="https://uniswap.org/">
+                      <div>
+                        <Trans>About</Trans>
+                      </div>
+                      <Info opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href="https://docs.uniswap.org/">
+                      <div>
+                        <Trans>Docs</Trans>
+                      </div>
+                      <BookOpen opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href={CODE_LINK}>
+                      <div>
+                        <Trans>Code</Trans>
+                      </div>
+                      <Code opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href="https://discord.gg/FCfyBSbCU5">
+                      <div>
+                        <Trans>Discord</Trans>
+                      </div>
+                      <MessageCircle opacity={0.6} size={16} />
+                    </MenuItem>
+                    <MenuItem href={infoLink}>
+                      <div>
+                        <Trans>Analytics</Trans>
+                      </div>
+                      <PieChart opacity={0.6} size={16} />
+                    </MenuItem>
+                    <ToggleMenuItem onClick={() => setMenu('lang')}>
+                      <div>
+                        <Trans>Language</Trans>
+                      </div>
+                      <Globe opacity={0.6} size={16} />
+                    </ToggleMenuItem>
+                    <ToggleMenuItem onClick={() => toggleDarkMode()}>
+                      <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
+                      {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+                    </ToggleMenuItem>
+                    <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
+                      <div>
+                        <Trans>Privacy and terms</Trans>
+                      </div>
+                      <Book opacity={0.6} size={16} />
+                    </ToggleMenuItem>
+                    {showUNIClaimOption && (
+                      <UNIbutton
+                        onClick={openClaimModal}
+                        padding="8px 16px"
+                        width="100%"
+                        $borderRadius="12px"
+                        mt="0.5rem"
+                      >
+                        <Trans>Claim UNI</Trans>
+                      </UNIbutton>
+                    )}
+                  </MenuFlyout>
+                )
+            }
+          })()}
+      </StyledMenu>
+      <PrivacyPolicyModal />
+    </>
   )
 }
 

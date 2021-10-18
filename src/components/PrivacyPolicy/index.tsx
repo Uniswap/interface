@@ -1,16 +1,19 @@
 import { Trans } from '@lingui/macro'
 import Card, { DarkGreyCard } from 'components/Card'
+import HoverInlineText from 'components/HoverInlineText'
 import { AutoRow, RowBetween } from 'components/Row'
-import { useEffect } from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 
 import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
-import { useModalOpen } from '../../state/application/hooks'
+import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
+import Modal from '../Modal'
 
 const GrayscaleRouterLogo = styled(AutoRouterIcon)`
   filter: grayscale(1);
@@ -31,6 +34,22 @@ const StyledExternalCard = styled(Card)`
   :focus,
   :active {
     background-color: ${({ theme }) => theme.primary4};
+  }
+`
+
+const Header = styled.div`
+  flex: 1;
+  text-align: center;
+`
+
+const HoverText = styled.div`
+  text-decoration: none;
+  color: ${({ theme }) => theme.text1};
+  display: flex;
+  align-items: center;
+
+  :hover {
+    cursor: pointer;
   }
 `
 
@@ -69,25 +88,33 @@ const EXTERNAL_APIS = [
 ]
 
 export function PrivacyPolicyModal() {
-  const show = useModalOpen(ApplicationModal.PRIVACY_POLICY)
+  const node = useRef<HTMLDivElement>()
+  const open = useModalOpen(ApplicationModal.PRIVACY_POLICY)
+  const toggle = useTogglePrivacyPolicy()
 
   useEffect(() => {
     ReactGA.event({
-      category: 'Privacy',
-      action: 'Show modal',
+      category: 'Modals',
+      action: 'Privacy and terms',
     })
   }, [])
 
   return (
-    show && (
-      <Wrapper>
-        <RowBetween>
-          <Trans>Privacy</Trans>
-          <X size={12} />
+    <Modal isOpen={open} onDismiss={() => toggle()}>
+      <AutoColumn gap="12px" ref={node as any}>
+        <RowBetween padding="1rem 1rem 0.5rem 1rem">
+          <Header>
+            <TYPE.mediumHeader flex="1">
+              <Trans>Privacy</Trans>
+            </TYPE.mediumHeader>
+          </Header>
+          <HoverText onClick={() => toggle()}>
+            <X size={18} />
+          </HoverText>
         </RowBetween>
         <PrivacyPolicy />
-      </Wrapper>
-    )
+      </AutoColumn>
+    </Modal>
   )
 }
 
