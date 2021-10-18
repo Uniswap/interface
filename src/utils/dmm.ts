@@ -147,6 +147,8 @@ export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
       return ChainIdSUSHI.FUJI
     case ChainIdDMM.AVAXMAINNET:
       return ChainIdSUSHI.AVALANCHE
+    case ChainIdDMM.FANTOM:
+      return ChainIdSUSHI.FANTOM
   }
 }
 

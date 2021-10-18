@@ -77,6 +77,8 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://cchain.explorer.avax-test.network'
     case ChainId.AVAXMAINNET:
       return 'https://cchain.explorer.avax.network'
+    case ChainId.FANTOM:
+      return 'https://ftmscan.com'
   }
 }
 

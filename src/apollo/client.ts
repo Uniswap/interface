@@ -69,7 +69,8 @@ export const exchangeClients: { [chainId in ChainId]: ApolloClient<NormalizedCac
   [ChainId.BSCTESTNET]: bscTestnetExchangeClient,
   [ChainId.BSCMAINNET]: bscMainnetExchangeClient,
   [ChainId.AVAXTESTNET]: avaxTestnetExchangeClient,
-  [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient
+  [ChainId.AVAXMAINNET]: avaxMainnetExchangeClient,
+  [ChainId.FANTOM]: avaxMainnetExchangeClient
 }
 
 const ropstenBlockClient = new ApolloClient({
@@ -121,7 +122,8 @@ export const blockClient: { [chainId in ChainId]: ApolloClient<NormalizedCacheOb
   [ChainId.BSCTESTNET]: bscTestnetBlockClient,
   [ChainId.BSCMAINNET]: bscMainnetBlockClient,
   [ChainId.AVAXTESTNET]: avaxTestnetBlockClient,
-  [ChainId.AVAXMAINNET]: avaxMainnetBlockClient
+  [ChainId.AVAXMAINNET]: avaxMainnetBlockClient,
+  [ChainId.FANTOM]: avaxMainnetBlockClient
 }
 
 //https://router.firebird.finance/bsc/route
@@ -129,7 +131,8 @@ export const routerUri: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route`,
   [ChainId.BSCMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route`,
   [ChainId.MATIC]: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route`,
-  [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route`
+  [ChainId.AVAXMAINNET]: `${process.env.REACT_APP_AGGREGATOR_API}/avalanche/route`,
+  [ChainId.FANTOM]: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route`
 }
 
 // TODO-swapv2: change price uri

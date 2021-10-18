@@ -59,7 +59,8 @@ export const NETWORK_URLS: {
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`,
   [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
-  [ChainId.AVAXMAINNET]: `https://api.avax.network/ext/bc/C/rpc`
+  [ChainId.AVAXMAINNET]: `https://api.avax.network/ext/bc/C/rpc`,
+  [ChainId.FANTOM]: `https://rpcapi.fantom.network `
 }
 
 export const walletconnect = new WalletConnectConnector({
