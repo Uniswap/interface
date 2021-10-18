@@ -64,8 +64,6 @@ export default function Bridge() {
   const fromPanelRef = useRef(null)
 
   const [step, setStep] = useState(BridgeStep.Initial)
-  const [showToList, setShowToList] = useState(false)
-  const [showFromList, setShowFromList] = useState(false)
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
@@ -143,15 +141,15 @@ export default function Bridge() {
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              onClick={() => setShowFromList(val => !val)}
-              disabled={isCollecting}
+              disabled
+              onClick={() => null}
             />
             <NetworkSwitcherPopover
-              show={showFromList}
-              onOuterClick={() => setShowFromList(false)}
               options={fromOptions}
               showWalletConnector={false}
               parentRef={fromPanelRef}
+              show={false}
+              onOuterClick={() => null}
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -161,15 +159,15 @@ export default function Bridge() {
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              onClick={() => setShowToList(val => !val)}
-              disabled={isCollecting}
+              disabled
+              onClick={() => null}
             />
             <NetworkSwitcherPopover
-              show={showToList}
-              onOuterClick={() => setShowToList(false)}
               options={toOptions}
               showWalletConnector={false}
               parentRef={toPanelRef}
+              show={false}
+              onOuterClick={() => null}
             />
           </div>
         </Row>
