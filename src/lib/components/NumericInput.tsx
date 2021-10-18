@@ -13,8 +13,8 @@ const StyledInput = styled.input`
   overflow: hidden;
   padding: 0px;
   text-align: left;
-
   text-overflow: ellipsis;
+  width: 100%;
 
   ::-webkit-search-decoration {
     -webkit-appearance: none;
