@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Card, { DarkGreyCard } from 'components/Card'
-import HoverInlineText from 'components/HoverInlineText'
 import { AutoRow, RowBetween } from 'components/Row'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
