@@ -1,5 +1,5 @@
 import styled from 'lib/theme'
-import { Children } from 'react'
+import { Children, ReactNode } from 'react'
 
 const Row = styled.div<{
   align?: string
