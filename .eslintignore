@@ -1,2 +1,6 @@
 node_modules
 jest-setup.js
+
+# Generated contract types
+src/abis/types
+src/abis/uniswapV3

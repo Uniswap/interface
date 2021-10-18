@@ -17,8 +17,15 @@ interface ProviderDetails {
   status: ProviderStatus
 }
 
+export type ChainIdToProvider = Partial<Record<SupportedChainId, ProviderDetails>>
+
 export class ProviderManager {
-  private readonly _providers: Partial<Record<SupportedChainId, ProviderDetails>> = {}
+  private readonly _providers: ChainIdToProvider = {}
+  private onUpdate: (() => void) | null = null
+
+  setOnUpdate(onUpdate: () => void) {
+    this.onUpdate = onUpdate
+  }
 
   async createProvider(chainId: SupportedChainId) {
     if (this._providers[chainId]) {
@@ -35,6 +42,7 @@ export class ProviderManager {
         provider: newProvider,
         status: ProviderStatus.Connected,
       }
+      this.onUpdate?.()
       return newProvider
     } else {
       // Otherwise show error
@@ -48,6 +56,14 @@ export class ProviderManager {
       return
     }
     delete this._providers[chainId]
+    if (this.onUpdate) this.onUpdate()
+  }
+
+  tryGetProvider(chainId: SupportedChainId) {
+    if (!this._providers[chainId]) return null
+    const provider = this._providers[chainId]
+    if (provider?.status !== ProviderStatus.Connected) return null
+    return provider.provider
   }
 
   getProvider(chainId: SupportedChainId) {
@@ -59,6 +75,10 @@ export class ProviderManager {
       throw new Error(`Provider not connected for chain: ${chainId}`)
     }
     return provider.provider
+  }
+
+  getAllProviders() {
+    return this._providers
   }
 
   private async initProvider(chainId: SupportedChainId, chainDetails: L1ChainInfo) {

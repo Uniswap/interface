@@ -75,6 +75,14 @@ jobs:
           max_attempts: 3
           command: yarn --no-audit --prefer-offline
 
+      - name: Typechain
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 20
+          max_attempts: 3
+          command: yarn contracts:compile
+
       - name: Update Ruby build tools
         uses: nick-invision/retry@v2
         with:

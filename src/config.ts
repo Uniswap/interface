@@ -1,4 +1,5 @@
 import { API_URL, DEBUG, INFURA_PROJECT_ID, SENTRY_DSN, VERSION } from 'react-native-dotenv'
+import { logger } from 'src/utils/logger'
 
 interface Config {
   debug: boolean
@@ -21,3 +22,7 @@ function parseBoolean(value: string): boolean {
 }
 
 export const config = Object.freeze(_config)
+
+if (config.debug) {
+  logger.debug('Using config:', config)
+}

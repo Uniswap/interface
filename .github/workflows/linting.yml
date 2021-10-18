@@ -18,15 +18,19 @@ jobs:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
           all_but_latest: true
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
+
       - uses: actions/setup-node@v2
         with:
           node-version: 16
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
+
       - uses: actions/cache@v2
         name: Yarn Cache
         id: yarn-cache
@@ -34,6 +38,7 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
           restore-keys: ${{ runner.os }}-yarn-v1
+
       - name: Yarn Install
         uses: nick-invision/retry@v2
         with:
@@ -41,6 +46,15 @@ jobs:
           retry_wait_seconds: 30
           max_attempts: 3
           command: yarn --no-audit --prefer-offline
+
+      - name: Typechain
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 20
+          max_attempts: 3
+          command: yarn contracts:compile
+
       - name: Lint
         uses: nick-invision/retry@v2
         with:
@@ -57,15 +71,19 @@ jobs:
       - uses: styfle/cancel-workflow-action@0.9.1
         with:
           all_but_latest: true
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
+
       - uses: actions/setup-node@v2
         with:
           node-version: 16
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
+
       - uses: actions/cache@v2
         name: Yarn Cache
         id: yarn-cache
@@ -73,6 +91,7 @@ jobs:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
           restore-keys: ${{ runner.os }}-yarn-v1
+
       - name: Yarn Install
         uses: nick-invision/retry@v2
         with:
@@ -80,5 +99,14 @@ jobs:
           retry_wait_seconds: 30
           max_attempts: 3
           command: yarn --no-audit --prefer-offline
-      - name: Lint
+
+      - name: Typechain
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 20
+          max_attempts: 3
+          command: yarn contracts:compile
+
+      - name: Typescript Compile
         run: yarn tsc:compile

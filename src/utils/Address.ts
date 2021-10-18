@@ -1,4 +1,5 @@
 import { utils } from 'ethers'
+import { NULL_ADDRESS } from 'src/constants/accounts'
 import { logger } from 'src/utils/logger'
 import { ensureLeading0x } from 'src/utils/string'
 
@@ -18,11 +19,12 @@ export class Address {
     return new Address(utils.getAddress(ensureLeading0x(address)))
   }
 
-  public static isValid(address: string | null | undefined) {
+  public static isValid(address: string | null | undefined, allowZero = true) {
     // Need to catch because ethers' isAddress throws in some cases (bad checksum)
     try {
       const isValid = address && utils.isAddress(address)
-      return !!isValid
+      if (allowZero) return !!isValid
+      else return !!isValid && address !== NULL_ADDRESS
     } catch (error) {
       logger.warn('Invalid address', error, address)
       return false

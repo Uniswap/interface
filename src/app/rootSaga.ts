@@ -1,6 +1,5 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { call, spawn } from 'redux-saga/effects'
-import { initProviders } from 'src/chains/initProviders'
 import {
   fetchBalancesActions,
   fetchBalancesReducer,
@@ -14,6 +13,7 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from 'src/features/import/importAccount'
+import { initProviders } from 'src/features/providers/initProviders'
 import {
   transferTokenActions,
   transferTokenReducer,

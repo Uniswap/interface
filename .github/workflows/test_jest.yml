@@ -44,5 +44,7 @@ jobs:
           retry_wait_seconds: 60
           max_attempts: 3
           command: yarn --no-audit --prefer-offline
+      - name: Typechain
+        run: yarn contracts:compile
       - name: Jest
         run: yarn test

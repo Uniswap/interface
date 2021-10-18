@@ -63,3 +63,7 @@ fastlane/builds
 
 # Locale backup files
 src/locales/**/*_old.json
+
+# Generated contract types
+src/abis/types
+src/abis/uniswapV3

@@ -6,10 +6,20 @@ The home of the official Uniswap mobile app for iOS and Android!
 
 ### Setup
 
+#### Package Manager
+
+Install the [yarn package manager](https://yarnpkg.com/getting-started/install) for Javascript,
+
+#### React Native
+
 Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) with the following additional (optional) recommendations:
 
 1. After installing Node: also install NVM to help you manage versions. Use the latest v14.x
 2. Before installing cocoapods: install RBEnv and use it to install Ruby v3 globally. When installing cocoapods, follow the non-sudo instructions.
+
+#### Contract ABI types
+
+Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile`. Re-run this if the ABIs or uniswap sdk libs are ever changed.
 
 ### Running
 

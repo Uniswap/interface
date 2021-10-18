@@ -6,7 +6,7 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
-import ErrorBoundary from 'src/app/ErrorBoundary'
+import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
@@ -16,6 +16,7 @@ import { config } from 'src/config'
 import { HomeScreen } from 'src/features/home/HomeScreen'
 import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
+import { MulticallUpdater } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
@@ -39,6 +40,7 @@ export function App() {
           <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
             <ErrorBoundary>
               <WalletContextProvider>
+                <MulticallUpdater />
                 <NavStack isDarkMode={isDarkMode} />
               </WalletContextProvider>
             </ErrorBoundary>

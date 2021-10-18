@@ -12,6 +12,7 @@ import { config } from 'src/config'
 import { SupportedChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
+import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
@@ -42,6 +43,8 @@ export function HomeScreen({ navigation }: Props) {
     logger.debug(balances)
   }
 
+  const blockTimestamp = useCurrentBlockTimestamp(SupportedChainId.GOERLI)
+
   const { t } = useTranslation()
 
   return (
@@ -54,6 +57,9 @@ export function HomeScreen({ navigation }: Props) {
         <Button label={t('List Accounts')} onPress={onPressList} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
+        <Text textAlign="center" mt="xl">
+          {`Block Timestamp: ${blockTimestamp}`}
+        </Text>
         <Text textAlign="center" mt="xl">
           {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
         </Text>

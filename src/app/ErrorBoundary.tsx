@@ -9,7 +9,7 @@ interface ErrorBoundaryState {
 
 // Uncaught errors during renders of subclasses will be caught here
 // Errors in handlers (e.g. press handler) will not reach here
-export default class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> {
   constructor(props: unknown) {
     super(props)
     this.state = { error: null }

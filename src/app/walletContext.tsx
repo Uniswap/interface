@@ -1,6 +1,15 @@
-import React, { createContext, PropsWithChildren, useContext } from 'react'
-import { ProviderManager } from 'src/chains/ProviderManager'
+import React, {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import { SupportedChainId } from 'src/constants/chains'
+import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
+import { logger } from 'src/utils/logger'
 import { getContext } from 'typed-redux-saga'
 
 export interface WalletContextValue {
@@ -13,18 +22,41 @@ export const walletContextValue: WalletContextValue = {
   providers: new ProviderManager(),
 }
 
-export const WalletContext = createContext<WalletContextValue>(walletContextValue)
+export const WalletContext = createContext<{ value: WalletContextValue; version: number }>({
+  value: walletContextValue,
+  version: 0,
+})
 
 export const WalletContextProvider = ({ children }: PropsWithChildren<any>) => {
-  return <WalletContext.Provider value={walletContextValue}>{children}</WalletContext.Provider>
+  // This state allows the managers to trigger re-renders when relevant values change (i.e. new provider ready)
+  // Probably not strictly necessary but more robust than relying on 'organic' re-renders
+  const [contextVersion, updateContextVersion] = useState(0)
+  const incrementContextVersion = useCallback(() => {
+    logger.debug('Wallet context update count:', contextVersion + 1)
+    updateContextVersion(contextVersion + 1)
+  }, [contextVersion, updateContextVersion])
+  useEffect(() => {
+    walletContextValue.providers.setOnUpdate(incrementContextVersion)
+  }, [incrementContextVersion])
+
+  return (
+    <WalletContext.Provider value={{ value: walletContextValue, version: contextVersion }}>
+      {children}
+    </WalletContext.Provider>
+  )
 }
 
 export function useWalletContext(): WalletContextValue {
-  return useContext(WalletContext)
+  return useContext(WalletContext).value
 }
 
 export function useWalletAccounts(): AccountManager {
-  return useContext(WalletContext).accounts
+  return useContext(WalletContext).value.accounts
+}
+
+export function useWalletAccount(address: string) {
+  // TODO after changing schema of AccountManager to remove chainId param
+  logger.debug(address)
 }
 
 export function* getWalletAccounts() {
@@ -33,7 +65,11 @@ export function* getWalletAccounts() {
 }
 
 export function useWalletProviders(): ProviderManager {
-  return useContext(WalletContext).providers
+  return useContext(WalletContext).value.providers
+}
+
+export function useWalletProvider(chainId: SupportedChainId) {
+  return useWalletProviders().tryGetProvider(chainId)
 }
 
 export function* getWalletProviders() {

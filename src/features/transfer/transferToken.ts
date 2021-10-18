@@ -1,7 +1,7 @@
 import { providers, utils } from 'ethers'
 import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
-import { ProviderManager } from 'src/chains/ProviderManager'
 import { SupportedChainId } from 'src/constants/chains'
+import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { TransferTokenParams } from 'src/features/transfer/types'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
 import { AccountStub } from 'src/features/wallet/accounts/types'
