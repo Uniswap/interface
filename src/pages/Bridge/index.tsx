@@ -70,6 +70,7 @@ export default function Bridge() {
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
 
+  const collectableTxAmount = bridgeSummaries.filter(tx => tx.status === 'redeem').length
   const isCollecting = step === BridgeStep.Collect
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
@@ -120,8 +121,8 @@ export default function Bridge() {
   }, [bridgeService, collectableTx])
 
   const handleCollectTab = useCallback(() => {
-    console.log(step)
-  }, [step])
+    setStep(BridgeStep.Initial)
+  }, [])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -138,7 +139,13 @@ export default function Bridge() {
   return (
     <>
       <AppBody>
-        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} handleCollectTab={handleCollectTab} />
+        <Tabs
+          step={step}
+          collectableTxAmount={collectableTxAmount}
+          setStep={setStep}
+          handleResetBridge={handleResetBridge}
+          handleCollectTab={handleCollectTab}
+        />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>

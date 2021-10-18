@@ -9,12 +9,13 @@ import { BridgeStep } from './utils'
 
 interface TabsProps {
   step: BridgeStep
+  collectableTxAmount: number
   setStep: (step: BridgeStep) => void
   handleResetBridge: () => void
   handleCollectTab: () => void
 }
 
-export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: TabsProps) => {
+export const Tabs = ({ step, collectableTxAmount, setStep, handleResetBridge, handleCollectTab }: TabsProps) => {
   const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
   const toggleFilter = useCallback(() => {
@@ -23,7 +24,6 @@ export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: Tab
   }, [setTxsFilter, txsFilter])
 
   const isCollecting = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
-  const collectAmount = 1
   return (
     <TabsRow>
       <Button
@@ -45,7 +45,7 @@ export const Tabs = ({ step, setStep, handleResetBridge, handleCollectTab }: Tab
         // disabled={!isCollecting}
       >
         Collect
-        {<Badge badgeTheme="green">{collectAmount}</Badge>}
+        {<Badge badgeTheme="green">{collectableTxAmount}</Badge>}
       </Button>
     </TabsRow>
   )
