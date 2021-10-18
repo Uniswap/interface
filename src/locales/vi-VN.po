@@ -37,6 +37,10 @@ msgstr "- Đã xóa"
 msgid "1Yr Fees Collected/Liquidity based on 24H volume annualized"
 msgstr "1 Năm Phí Thu được/ Thanh khoản dựa trên khối lượng 24 Giờ hàng năm"
 
+#: src/pages/SwapV2/index.tsx
+msgid "24h Trading Volume"
+msgstr "Khối lượng giao dịch 24h"
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>Mẹo:</0> Sử dụng công cụ này để tìm các cặp không tự động xuất hiện trên giao diện."
@@ -1512,6 +1516,7 @@ msgid "Total Trading Volume"
 msgstr "Tổng Khối lượng Giao dịch"
 
 #: src/pages/Pools/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume:"
 msgstr "Tổng Khối lượng Giao dịch:"
 

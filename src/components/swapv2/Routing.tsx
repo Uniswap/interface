@@ -19,11 +19,11 @@ import { useAllTokens } from 'hooks/Tokens'
 const StyledContainer = styled.div`
   flex: 1;
   max-width: 100%;
-  margin-left: 20px;
-  padding-top: 52px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-left: 0px;
-  `}
+  margin-left: 0;
+
+  @media only screen and (min-width: 1000px) {
+    padding-top: 52px;
+  }
 `
 const StyledPair = styled.div`
   position: relative;
