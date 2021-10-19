@@ -17,11 +17,12 @@ import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/Netw
 import { useActiveWeb3React } from '../../hooks'
 import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
-import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
+import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFilter } from '../../state/bridge/hooks'
 
 import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
 
 const Title = styled.p`
   margin: 0;
@@ -76,6 +77,19 @@ export default function Bridge() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
+  // needed here?
+  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
+  const handleBridgeTxsList = useCallback(() => {
+    if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.COLLECTABLE)
+      setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+    else if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.RECENT) setTxsFilter(BridgeTxsFilter.RECENT)
+    else if (step === BridgeStep.Collect && txsFilter === BridgeTxsFilter.HIDE)
+      setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+
+    // if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+    // else setTxsFilter(BridgeTxsFilter.RECENT)
+  }, [setTxsFilter, step, txsFilter])
+
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
       setStep(BridgeStep.Initial)
@@ -103,6 +117,7 @@ export default function Bridge() {
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
+      setTxsFilter(BridgeTxsFilter.HIDE)
       setCollectableTx(tx)
       setModalData({
         currencyId: tx.assetName,
@@ -111,7 +126,7 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [setModalData]
+    [setModalData, setTxsFilter]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -121,8 +136,8 @@ export default function Bridge() {
   }, [bridgeService, collectableTx])
 
   const handleCollectTab = useCallback(() => {
-    setStep(BridgeStep.Initial)
-  }, [])
+    handleBridgeTxsList()
+  }, [handleBridgeTxsList])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -207,7 +222,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
+      {txsFilter !== BridgeTxsFilter.HIDE && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}

@@ -1,9 +1,8 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { NumberBadge } from '../../components/NumberBadge'
 
 import Row from '../../components/Row'
-import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeStep } from './utils'
 
@@ -16,33 +15,26 @@ interface TabsProps {
 }
 
 export const Tabs = ({ step, collectableTxAmount, setStep, handleResetBridge, handleCollectTab }: TabsProps) => {
-  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
-
-  const toggleFilter = useCallback(() => {
-    if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-    else setTxsFilter(BridgeTxsFilter.RECENT)
-  }, [setTxsFilter, txsFilter])
-
-  const isCollecting = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
+  const isCollectable = step === BridgeStep.Collect || BridgeTxsFilter.COLLECTABLE
   return (
     <TabsRow>
       <Button
         onClick={() => {
           if (step !== BridgeStep.Initial) handleResetBridge()
           setStep(BridgeStep.Initial)
-          if (isCollecting) toggleFilter()
+          handleCollectTab()
         }}
-        className={!isCollecting ? 'active' : ''}
+        className={!isCollectable ? 'active' : ''}
       >
         Bridge
       </Button>
       <Button
         onClick={() => {
-          handleCollectTab()
-          if (!isCollecting) toggleFilter()
+          if (!isCollectable) {
+            handleCollectTab()
+          }
         }}
-        className={isCollecting ? 'active' : ''}
-        // disabled={!isCollecting}
+        className={isCollectable ? 'active' : ''}
       >
         Collect
         {<Badge badgeTheme="green">{collectableTxAmount}</Badge>}
