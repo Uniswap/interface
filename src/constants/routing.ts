@@ -15,6 +15,8 @@ import {
   renBTC,
   TRIBE,
   USDC,
+  USDC_ARBITRUM,
+  USDC_OPTIMISM,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_OPTIMISM,
@@ -94,6 +96,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.ARBITRUM_ONE]: [
     ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
+    USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
@@ -105,6 +108,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.OPTIMISM]: [
     ExtendedEther.onChain(SupportedChainId.OPTIMISM),
     DAI_OPTIMISM,
+    USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
     WETH9_EXTENDED[SupportedChainId.OPTIMISM],
