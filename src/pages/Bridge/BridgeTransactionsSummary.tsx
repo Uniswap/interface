@@ -11,6 +11,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { useBridgeTxsFilter } from '../../state/bridge/hooks'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { getExplorerLink } from '../../utils'
+import { useWindowSize } from '../../hooks/useWindowSize'
 
 interface BridgeTransactionsSummaryProps {
   transactions: BridgeTransactionSummary[]
@@ -133,13 +134,15 @@ const BridgeTransactionsSummaryRow = ({ tx, onCollect, transactionsLength }: Bri
   const refTo = useRef<HTMLAnchorElement>(null)
   const [dashedLineWidth, setDashedLineWidth] = useState(0)
 
+  const windowSize = useWindowSize()
+
   useEffect(() => {
     if (refFrom && refFrom.current && refTo && refTo.current) {
       const refFromX = refFrom.current.getBoundingClientRect().right
       const refToX = refTo.current.getBoundingClientRect().left
       setDashedLineWidth(refToX - refFromX - 3)
     }
-  }, [transactionsLength])
+  }, [transactionsLength, windowSize.width])
 
   const success = status === 'confirmed' || status === 'claimed'
 

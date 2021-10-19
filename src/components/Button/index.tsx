@@ -297,10 +297,9 @@ export const AddSWPRToMetamaskButton = styled(Base)<{ active?: boolean }>`
 
 const MoreButton = styled.button`
   position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: block;
   padding: 6px 8px;
-  margin-top: 12px;
+  margin: 12px auto 0;
   font-weight: 600;
   font-size: 10px;
   line-height: 12px;

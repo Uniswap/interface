@@ -6,6 +6,8 @@ import { RowBetween } from '../../components/Row'
 import { TagSuccess } from '../../components/Tag'
 
 const Section = styled.button<{ disabled: boolean }>`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   padding: 12px 19px 15px;
   background: ${({ theme }) => theme.bg1And2};
@@ -27,12 +29,12 @@ const SmallLabel = styled.p`
 
 const Row = styled(RowBetween)`
   align-items: flex-start;
+  margin-bottom: 12px;
+  min-height: 33px;
 `
 
 const IconWrapper = styled(RowBetween)`
-  min-height: 36px;
-  max-width: 36px;
-  margin-bottom: 12px;
+  max-width: 33px;
 
   img {
     max-width: 100%;

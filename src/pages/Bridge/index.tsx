@@ -23,6 +23,11 @@ import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 
+const Wrapper = styled.div`
+  max-width: 432px;
+  margin: 0 auto;
+`
+
 const Title = styled.p`
   margin: 0;
   font-weight: 500;
@@ -36,6 +41,7 @@ const Row = styled(RowBetween)`
   align-items: stretch;
 
   & > div {
+    min-width: 141px;
     width: 100%;
   }
 
@@ -50,6 +56,10 @@ const SwapButton = styled.button<{ disabled: boolean }>`
   border: none;
   background: none;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+
+  @media only screen and (max-width: 600px) {
+    padding: 0 8px;
+  }
 `
 
 export default function Bridge() {
@@ -132,9 +142,9 @@ export default function Bridge() {
   })
 
   return (
-    <>
+    <Wrapper>
+      <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
       <AppBody>
-        <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>
@@ -209,6 +219,6 @@ export default function Bridge() {
         setStatus={setModalStatus}
         modalData={modalData}
       />
-    </>
+    </Wrapper>
   )
 }
