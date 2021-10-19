@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import styled from 'lib/theme'
+import styled, { Theme } from 'lib/theme'
 import { styledIcon } from 'lib/theme/components'
 import TYPE from 'lib/theme/type'
 import { ReactNode, useCallback, useMemo, useRef } from 'react'
@@ -15,8 +15,8 @@ const tooltip = 'Your transaction will revert if the price changes unfavorably b
 
 const Selected = styledIcon(CheckCircle, 'active')
 
-const InputType = styled(TYPE.subhead2)`
-  color: ${({ theme }) => theme.secondary};
+const InputType = styled(TYPE.subhead2)<{ empty: boolean; theme: Theme }>`
+  color: ${({ empty, theme }) => (empty ? theme.secondary : theme.primary)};
 `
 
 interface OptionProps<T> {
@@ -62,7 +62,7 @@ export default function MaxSlippageSelect() {
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
         <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM}>
           <Row>
-            <InputType>
+            <InputType empty={!hasCustomInput}>
               <DecimalInput
                 style={{ width: hasCustomInput ? '4ch' : '100%' }}
                 value={custom}
