@@ -13,16 +13,20 @@ const HeaderRow = styled(Row)<{ divider?: boolean; theme: Theme }>`
 `
 
 const StyledLogo = styled(Logo)`
+  cursor: pointer;
   fill: ${({ theme }) => theme.secondary};
   mix-blend-mode: lighten;
   padding: 0 1px 3px 1px;
   transition: transform 0.3s ease;
 
   :hover {
-    cursor: pointer;
     opacity: 0.7;
     transform: rotate(-5deg);
   }
+`
+
+const TitleType = styled(TYPE.subhead1)`
+  user-select: none;
 `
 
 export interface HeaderProps {
@@ -41,7 +45,7 @@ export default function Header({ title, logo, divider, children }: HeaderProps) 
             <StyledLogo />
           </a>
         )}
-        {title && <TYPE.subhead1>{title}</TYPE.subhead1>}
+        {title && <TitleType>{title}</TitleType>}
       </Row>
       <Row gap="0.5em">{children}</Row>
     </HeaderRow>

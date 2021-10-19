@@ -61,15 +61,14 @@ export function setCustomizable<T extends number, Enum extends CustomizableEnum<
     }
 
     draft.value = update.value
-    if (update.custom) {
+    if (draft.value === customizable.CUSTOM) {
       draft.custom = update.custom
-    }
 
-    // prevent invalid state
-    if (draft.value === customizable.CUSTOM && draft.custom === undefined) {
-      draft.value = customizable.DEFAULT
+      // prevent invalid state
+      if (draft.custom === undefined) {
+        draft.value = customizable.DEFAULT
+      }
     }
-    return
   }
 }
 

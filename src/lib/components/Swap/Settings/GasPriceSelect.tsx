@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import styled from 'lib/theme'
-import { styledIcon } from 'lib/theme/components'
+import { StyledButton, styledIcon } from 'lib/theme/components'
 import TYPE from 'lib/theme/type'
 import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
@@ -9,11 +9,9 @@ import Column from '../../Column'
 import { IntegerInput } from '../../NumericInput'
 import Row from '../../Row'
 import { GasPrice, gasPriceAtom } from '../state'
-import Label, { Value } from './Label'
+import Label, { styledValue } from './Label'
 
-const OptionsRow = styled(Row)`
-  grid-template-columns: repeat(3, 1fr);
-`
+const Value = styledValue(StyledButton)
 
 const Selected = styledIcon(CheckCircle, 'active')
 
@@ -60,7 +58,7 @@ export default function GasPriceSelect() {
   return (
     <Column gap="0.75em">
       <Label name="Gas Price" />
-      <OptionsRow gap="0.5em">
+      <Row gap="0.5em" grow>
         <Option name="Fast" value={'-'} onSelect={() => setGasPrice(FAST)} selected={gasPrice === FAST} />
         <Option name="Trader" value={'-'} onSelect={() => setGasPrice(TRADER)} selected={gasPrice === TRADER} />
         <Option name="Custom" value={custom} onSelect={onCustomSelect} selected={gasPrice === CUSTOM}>
@@ -76,7 +74,7 @@ export default function GasPriceSelect() {
             <span>&emsp;gwei</span>
           </InputType>
         </Option>
-      </OptionsRow>
+      </Row>
     </Column>
   )
 }
