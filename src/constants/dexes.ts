@@ -13,7 +13,7 @@ export const dexListConfig: DexList = {
   dmm: {
     name: 'DMM',
     icon: 'https://dmm.exchange/favicon.png',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET, ChainId.FANTOM]
   },
   uniswap: {
     name: 'UniSwap_V2',
@@ -53,12 +53,12 @@ export const dexListConfig: DexList = {
   curve: {
     name: 'Curve',
     icon: 'https://curve.fi/favicon-32x32.svg',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
   },
   jetswap: {
     name: 'JetSwap',
     icon: 'https://jetswap.finance/favicon_io/favicon.ico',
-    chainIds: [ChainId.MATIC, ChainId.BSCMAINNET]
+    chainIds: [ChainId.MATIC, ChainId.BSCMAINNET, ChainId.FANTOM]
   },
   'iron-stable': {
     name: 'IronSwap',
@@ -114,6 +114,21 @@ export const dexListConfig: DexList = {
     name: 'TraderJoe',
     icon: 'https://www.traderjoexyz.com/favicon.png',
     chainIds: [ChainId.AVAXMAINNET]
+  },
+  spookyswap: {
+    name: 'SpookySwap',
+    icon: 'https://spookyswap.finance/favicon.ico',
+    chainIds: [ChainId.FANTOM]
+  },
+  spiritswap: {
+    name: 'SpiritSwap',
+    icon: 'https://app.spiritswap.finance/favicon-32x32.png',
+    chainIds: [ChainId.FANTOM]
+  },
+  paintswap: {
+    name: 'PaintSwap',
+    icon: 'https://paintswap.finance/favicon.png',
+    chainIds: [ChainId.FANTOM]
   }
 }
 
@@ -170,6 +185,10 @@ export const dexTypes: DexTypes = {
     curve: 2,
     dmm: 3,
     'iron-stable': 4
+  },
+  [ChainId.FANTOM]: {
+    curve: 2,
+    dmm: 3
   }
 }
 
@@ -182,5 +201,6 @@ export const DEX_TO_COMPARE: { [chainId in ChainId]?: DexConfig } = {
   [ChainId.BSCMAINNET]: findDex('pancake'),
   [ChainId.MATIC]: findDex('quickswap'),
   [ChainId.AVAXMAINNET]: findDex('traderjoe'),
-  [ChainId.MAINNET]: findDex('uniswap')
+  [ChainId.MAINNET]: findDex('uniswap'),
+  [ChainId.FANTOM]: findDex('spookyswap')
 }
