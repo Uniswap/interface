@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmount, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, Price, Token, TokenAmount, WETH } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Plus, AlertTriangle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'

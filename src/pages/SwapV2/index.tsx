@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token } from 'libs/sdk/src'
+import { CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'

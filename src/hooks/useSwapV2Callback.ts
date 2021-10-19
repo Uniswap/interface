@@ -10,8 +10,9 @@ import {
   TradeOptions,
   TradeOptionsDeadline,
   TradeType,
-  TokenAmount
-} from 'libs/sdk/src'
+  TokenAmount,
+  validateAndParseAddress
+} from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, ETHER_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -30,7 +31,6 @@ import useENS from './useENS'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import { Aggregator, encodeSwapExecutor } from '../utils/aggregator'
 import invariant from 'tiny-invariant'
-import { validateAndParseAddress } from '../libs/sdk/src/utils'
 import { Web3Provider } from '@ethersproject/providers'
 
 import { ROUTER_ADDRESSES_V2 } from '../constants'

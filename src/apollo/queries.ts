@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 import { BUNDLE_ID, FACTORY_ADDRESSES } from '../constants'
 
 export const SUBGRAPH_BLOCK_NUMBER = () => gql`

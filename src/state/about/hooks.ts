@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { GLOBAL_DATA } from 'apollo/queries'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'

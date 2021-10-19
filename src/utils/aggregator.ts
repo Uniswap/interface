@@ -11,9 +11,10 @@ import {
   Token,
   TokenAmount,
   TradeType,
-  WETH
-} from 'libs/sdk/src'
-import { ONE, ZERO } from 'libs/sdk/src/constants'
+  WETH,
+  ONE,
+  ZERO
+} from '@dynamic-amm/sdk'
 import { dexIds, dexTypes, dexListConfig, DexConfig, DEX_TO_COMPARE } from '../constants/dexes'
 import invariant from 'tiny-invariant'
 import { AggregationComparer } from 'state/swap/types'

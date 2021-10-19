@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId, Token } from 'libs/sdk/src'
+import { ChainId, Token } from '@dynamic-amm/sdk'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import { FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'

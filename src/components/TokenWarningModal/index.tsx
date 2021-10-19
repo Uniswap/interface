@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Token } from 'libs/sdk/src'
+import { Token } from '@dynamic-amm/sdk'
 import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
 

@@ -1,4 +1,4 @@
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 
 interface Reward {
   symbol: string

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency, Price } from 'libs/sdk/src'
+import { Currency, Price } from '@dynamic-amm/sdk'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

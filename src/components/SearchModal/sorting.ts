@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from 'libs/sdk/src'
+import { Token, TokenAmount } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 

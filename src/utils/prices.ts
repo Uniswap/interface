@@ -1,5 +1,5 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { ChainId, Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from 'libs/sdk/src'
+import { ChainId, Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from '@dynamic-amm/sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'

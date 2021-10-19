@@ -1,5 +1,5 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@sushiswap/sdk'
-import { Currency, ETHER, WETH } from 'libs/sdk/src'
+import { Currency, ETHER, WETH } from '@dynamic-amm/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'

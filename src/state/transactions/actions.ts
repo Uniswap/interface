@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 
 export interface SerializableTransactionReceipt {
   to: string

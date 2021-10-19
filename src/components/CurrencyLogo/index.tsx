@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER } from '@dynamic-amm/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 

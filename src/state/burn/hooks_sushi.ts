@@ -1,5 +1,5 @@
 import { CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@sushiswap/sdk'
-import { Currency, TokenAmount as TokenAmountDMM } from 'libs/sdk/src'
+import { Currency, TokenAmount as TokenAmountDMM } from '@dynamic-amm/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'

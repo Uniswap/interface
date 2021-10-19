@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency, JSBI, Token } from 'libs/sdk/src'
+import { TokenAmount, Pair, Currency, JSBI, Token, DMMPool } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
@@ -6,7 +6,6 @@ import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useFactoryContract } from 'hooks/useContract'
-import DMMPool from 'libs/sdk/src/abis/DMMPool.json'
 
 export enum PairState {
   LOADING,

@@ -1,4 +1,4 @@
-import { Trade } from 'libs/sdk/src'
+import { Trade } from '@dynamic-amm/sdk'
 import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
