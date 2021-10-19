@@ -17,10 +17,10 @@ export const StyledButton = styled.button`
   background-color: transparent;
   border: none;
   border-radius: 0.5em;
+  cursor: pointer;
   padding: 0;
 
   :hover {
-    cursor: pointer;
     opacity: 0.7;
   }
 `

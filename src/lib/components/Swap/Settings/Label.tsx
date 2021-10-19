@@ -1,22 +1,26 @@
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { AnyStyledComponent } from 'styled-components'
 
 import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
-export const Value = styled.div<{ selected?: boolean; theme: Theme }>`
-  border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
-  border-radius: 0.5em;
-  cursor: pointer;
-  display: grid;
-  grid-gap: 0.25em;
-  padding: 0.5em;
+export function styledValue(Value: AnyStyledComponent) {
+  return styled(Value)<{ selected?: boolean; theme: Theme }>`
+    border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
+    border-radius: 0.5em;
+    cursor: pointer;
+    display: grid;
+    grid-gap: 0.25em;
+    padding: 0.5em;
 
-  :hover,
-  :focus-within {
-    border-color: ${({ theme }) => theme.accent};
-  }
-`
+    :hover,
+    :focus-within {
+      border-color: ${({ theme }) => theme.accent};
+      opacity: 1;
+    }
+  `
+}
 
 interface LabelProps {
   name: string

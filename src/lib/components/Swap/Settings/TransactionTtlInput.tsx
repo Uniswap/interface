@@ -6,9 +6,11 @@ import Column from '../../Column'
 import { IntegerInput } from '../../NumericInput'
 import Row from '../../Row'
 import { transactionTtlAtom } from '../state'
-import Label, { Value } from './Label'
+import Label, { styledValue } from './Label'
 
 const tooltip = 'Your transaction will revert if it has not occured by this deadline.'
+
+const Value = styledValue(Row)
 
 export default function TransactionTtlInput() {
   const [transactionTtl, setTransactionTtl] = useAtom(transactionTtlAtom)
@@ -17,12 +19,10 @@ export default function TransactionTtlInput() {
     <Column gap="0.75em">
       <Label name="Transaction Deadline" tooltip={tooltip} />
       <Value onClick={() => input.current?.focus()}>
-        <Row>
-          <TYPE.subhead2>
-            <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
-          </TYPE.subhead2>
-          <TYPE.subhead2>Minutes</TYPE.subhead2>
-        </Row>
+        <TYPE.subhead2>
+          <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
+        </TYPE.subhead2>
+        <TYPE.subhead2>Minutes</TYPE.subhead2>
       </Value>
     </Column>
   )

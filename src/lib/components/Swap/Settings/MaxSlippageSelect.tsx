@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import styled, { Theme } from 'lib/theme'
-import { styledIcon } from 'lib/theme/components'
+import { StyledButton, styledIcon } from 'lib/theme/components'
 import TYPE from 'lib/theme/type'
 import { ReactNode, useCallback, useMemo, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
@@ -9,9 +9,11 @@ import Column from '../../Column'
 import { DecimalInput } from '../../NumericInput'
 import Row from '../../Row'
 import { MaxSlippage, maxSlippageAtom } from '../state'
-import Label, { Value } from './Label'
+import Label, { styledValue } from './Label'
 
 const tooltip = 'Your transaction will revert if the price changes unfavorably by more than this percentage.'
+
+const Value = styledValue(StyledButton)
 
 const Selected = styledIcon(CheckCircle, 'active')
 

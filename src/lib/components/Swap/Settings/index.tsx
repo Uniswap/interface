@@ -21,13 +21,8 @@ const Wrapper = styled.div`
 
 export const StyledSettingsIcon = styledIcon(SettingsIcon)
 
-const StyledReset = styled(TYPE.subhead2)`
+const ResetButton = styled(StyledButton)`
   color: ${({ theme }) => theme.accent};
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.7;
-  }
 `
 
 export function SettingsDialog({ onClose }: { onClose: () => void }) {
@@ -36,9 +31,11 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
   return (
     <Wrapper>
       <DialogHeader title="Settings" onClose={onClose}>
-        <StyledReset color="active" onClick={resetSettings}>
-          Reset
-        </StyledReset>
+        <TYPE.subhead2>
+          <ResetButton color="active" onClick={resetSettings}>
+            Reset
+          </ResetButton>
+        </TYPE.subhead2>
       </DialogHeader>
       <DialogBody ref={setBoundary}>
         <Column gap="1em">

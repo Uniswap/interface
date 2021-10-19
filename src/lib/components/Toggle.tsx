@@ -14,7 +14,6 @@ const Input = styled.input`
   font-weight: inherit;
   height: 2em;
   margin: 0;
-  outline: none;
   padding: 0;
   position: relative;
   width: 4.5em;
@@ -33,11 +32,19 @@ const Input = styled.input`
     position: absolute;
   }
 
+  :hover:before {
+    background-color: ${({ theme }) => theme.secondary}B2;
+  }
+
   :checked:before {
     background-color: ${({ theme }) => theme.active};
 
     // use margin because it can transition
     margin-left: 2.75em;
+  }
+
+  :hover:checked:before {
+    background-color: ${({ theme }) => theme.active}B2;
   }
 
   :after {
