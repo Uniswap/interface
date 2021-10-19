@@ -11,7 +11,7 @@ import { TokenAddressMap } from 'src/features/tokenLists/types'
 import sortByListPriority from 'src/features/tokenLists/utils'
 import { WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
 import { useUserAddedTokens } from 'src/features/tokens/hooks'
-import { Address } from 'src/utils/Address'
+import { normalizeAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 
 /**
@@ -156,7 +156,7 @@ export function useIsListActive(url: string): boolean {
 function useTokensFromMap(
   tokenMap: TokenAddressMap,
   includeUserAdded: boolean
-): { [address: string]: Token } {
+): { [address: Address]: Token } {
   const chainId = SupportedChainId.MAINNET // TODO get chainId from context
   const userAddedTokens = useUserAddedTokens()
 
@@ -165,7 +165,7 @@ function useTokensFromMap(
 
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[chainId] ?? {}).reduce<{
-      [address: string]: Token
+      [address: Address]: Token
     }>((newMap, address) => {
       newMap[address] = tokenMap[chainId][address].token
       return newMap
@@ -175,7 +175,7 @@ function useTokensFromMap(
       return (
         userAddedTokens
           // reduce into all ALL_TOKENS filtered by the current chain
-          .reduce<{ [address: string]: Token }>(
+          .reduce<{ [address: Address]: Token }>(
             (memo, token) => {
               memo[token.address] = token
               return memo
@@ -191,12 +191,12 @@ function useTokensFromMap(
   }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
 }
 
-export function useAllTokens(): { [address: string]: Token } {
+export function useAllTokens(): { [address: Address]: Token } {
   const allTokens = useCombinedActiveList()
   return useTokensFromMap(allTokens, true)
 }
 
-export function useUnsupportedTokens(): { [address: string]: Token } {
+export function useUnsupportedTokens(): { [address: Address]: Token } {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromMap(unsupportedTokensMap, false)
 }
@@ -213,7 +213,7 @@ export function useSearchInactiveTokenLists(
     if (!search || search.trim().length === 0) return []
     const tokenFilter = createTokenFilterFunction(search)
     const result: WrappedTokenInfo[] = []
-    const addressSet: { [address: string]: true } = {}
+    const addressSet: { [address: Address]: true } = {}
     for (const url of inactiveUrls) {
       const list = lists[url].current
       if (!list) continue
@@ -250,7 +250,7 @@ export function useIsTokenActive(token: Token | undefined | null): boolean {
 export function createTokenFilterFunction<T extends Token | TokenInfo>(
   search: string
 ): (tokens: T) => boolean {
-  const searchingAddress = Address.normalize(search)
+  const searchingAddress = normalizeAddress(search)
 
   if (searchingAddress) {
     const lower = searchingAddress.toLowerCase()

@@ -40,7 +40,7 @@ export function useContract<T extends Contract = Contract>(
 
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
-    let address: string | undefined
+    let address: Address | undefined
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
     else address = addressOrAddressMap[chainId]
     if (!address) return null
@@ -55,14 +55,14 @@ export function useContract<T extends Contract = Contract>(
 
 export function useBytes32TokenContract(
   chainId: SupportedChainId,
-  tokenAddress?: string
+  tokenAddress?: Address
 ): Contract | null {
   return useContract(chainId, tokenAddress, ERC20_BYTES32_ABI)
 }
 
 export function useEIP2612Contract(
   chainId: SupportedChainId,
-  tokenAddress?: string
+  tokenAddress?: Address
 ): Contract | null {
   return useContract(chainId, tokenAddress, EIP_2612)
 }
@@ -71,7 +71,7 @@ export function useENSRegistrarContract(chainId: SupportedChainId) {
   return useContract<EnsRegistrar>(chainId, ENS_REGISTRAR_ADDRESSES, ENS_ABI)
 }
 
-export function useENSResolverContract(chainId: SupportedChainId, address: string | undefined) {
+export function useENSResolverContract(chainId: SupportedChainId, address: Address | undefined) {
   return useContract<EnsPublicResolver>(chainId, address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
@@ -79,11 +79,11 @@ export function useMulticall2Contract(chainId: SupportedChainId) {
   return useContract<UniswapInterfaceMulticall>(chainId, MULTICALL_ADDRESS, MulticallABI)
 }
 
-export function usePairContract(chainId: SupportedChainId, pairAddress?: string): Contract | null {
+export function usePairContract(chainId: SupportedChainId, pairAddress?: Address): Contract | null {
   return useContract(chainId, pairAddress, IUniswapV2PairABI)
 }
 
-export function useTokenContract(chainId: SupportedChainId, tokenAddress?: string) {
+export function useTokenContract(chainId: SupportedChainId, tokenAddress?: Address) {
   return useContract<Erc20>(chainId, tokenAddress, ERC20_ABI)
 }
 

@@ -1,6 +1,5 @@
 import { providers, Signer, utils } from 'ethers'
 import { NULL_ADDRESS } from 'src/constants/accounts'
-import { Address } from 'src/utils/Address'
 
 // A signer that uses native keystore to access keys
 export class NativeSigner extends Signer {
@@ -9,11 +8,11 @@ export class NativeSigner extends Signer {
   async init() {
     if (this.address) throw new Error('NativeSigner already initialized')
 
-    this.address = Address.from(NULL_ADDRESS)
+    this.address = NULL_ADDRESS
     throw new Error('TODO implement init')
   }
 
-  async getAddress(): Promise<string> {
+  async getAddress(): Promise<Address> {
     if (!this.address) throw new Error('NativeSigner must be initiated before getting address')
     return this.address.toString()
   }

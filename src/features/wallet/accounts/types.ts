@@ -1,7 +1,6 @@
 import { providers, Signer, VoidSigner, Wallet } from 'ethers'
 import { SupportedChainId } from 'src/constants/chains'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
-import { Address } from 'src/utils/Address'
 
 export enum AccountType {
   local = 'local', // Key lives in JS, essentially just a normal ethers Wallet
@@ -12,7 +11,7 @@ export enum AccountType {
 
 export interface AccountStub {
   type: AccountType
-  address: string
+  address: Address
   name: string
   chainId: SupportedChainId
 }

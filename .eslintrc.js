@@ -42,4 +42,7 @@ module.exports = {
       },
     },
   ],
+  globals: {
+    Address: 'readonly',
+  },
 }

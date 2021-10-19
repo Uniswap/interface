@@ -26,7 +26,7 @@ const slice = createSlice({
     },
     removeAccount: (
       state,
-      action: PayloadAction<{ address: string; chainId: SupportedChainId }>
+      action: PayloadAction<{ address: Address; chainId: SupportedChainId }>
     ) => {
       const { address, chainId } = action.payload
       const id = getCaip10Id(address, chainId)
@@ -34,7 +34,7 @@ const slice = createSlice({
     },
     activateAccount: (
       state,
-      action: PayloadAction<{ address: string; chainId: SupportedChainId }>
+      action: PayloadAction<{ address: Address; chainId: SupportedChainId }>
     ) => {
       const { address, chainId } = action.payload
       const id = getCaip10Id(address, chainId)

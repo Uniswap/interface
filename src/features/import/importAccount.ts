@@ -5,7 +5,6 @@ import { SupportedChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
-import { Address } from 'src/utils/Address'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
@@ -25,7 +24,7 @@ export function* importAccount(params: ImportAccountParams) {
   derivationPath ??= ETHEREUM_DERIVATION_PATH + '/0'
   name ??= 'Imported Account'
   const signer = Wallet.fromMnemonic(formattedMnemonic, derivationPath)
-  const address = Address.from(signer.address)
+  const address = signer.address
   const chainId = SupportedChainId.GOERLI
   const type = AccountType.local
   manager.addAccount({
@@ -35,10 +34,10 @@ export function* importAccount(params: ImportAccountParams) {
     signer,
     chainId,
   })
-  yield* put(addAccount({ type, address: address.toString(), name, chainId }))
-  yield* put(activateAccount({ address: address.toString(), chainId }))
-  yield* put(fetchBalancesActions.trigger({ type, address: address.toString(), name, chainId }))
-  logger.info('New account imported:', address.toString())
+  yield* put(addAccount({ type, address, name, chainId }))
+  yield* put(activateAccount({ address, chainId }))
+  yield* put(fetchBalancesActions.trigger({ type, address, name, chainId }))
+  logger.info('New account imported:', address)
 }
 
 export const {

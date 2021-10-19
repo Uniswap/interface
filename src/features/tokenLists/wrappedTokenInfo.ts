@@ -1,7 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/state/lists/wrappedTokenInfo.ts
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
-import { Address } from 'src/utils/Address'
+import { normalizeAddress } from 'src/utils/addresses'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -22,12 +22,11 @@ export class WrappedTokenInfo implements Token {
     this.list = list
   }
 
-  private _checksummedAddress: string | null = null
+  private _checksummedAddress: Address | null = null
 
   public get address(): string {
     if (!this._checksummedAddress) {
-      const checksummedAddress = Address.from(this.tokenInfo.address)
-      this._checksummedAddress = checksummedAddress.toString()
+      this._checksummedAddress = normalizeAddress(this.tokenInfo.address)
     }
     return this._checksummedAddress
   }

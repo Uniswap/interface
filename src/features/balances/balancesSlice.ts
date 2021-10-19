@@ -6,8 +6,8 @@ import { AccountStub } from 'src/features/wallet/accounts/types'
 interface Balances {
   byChainId: {
     [chainId in SupportedChainId]?: {
-      [tokenAddress: string]: {
-        [accountAddress: string]: Balance
+      [tokenAddress: Address]: {
+        [accountAddress: Address]: Balance
       }
     }
   }
@@ -25,7 +25,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         account: AccountStub
-        updatedBalances: { [tokenAddress: string]: Balance }
+        updatedBalances: { [tokenAddress: Address]: Balance }
       }>
     ) => {
       const { account, updatedBalances } = action.payload
@@ -40,7 +40,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         account: AccountStub
-        tokenAddress: string
+        tokenAddress: Address
         balance: Balance
       }>
     ) => {

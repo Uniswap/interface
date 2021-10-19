@@ -1,6 +1,6 @@
 import { Contract, providers } from 'ethers'
 import { SupportedChainId } from 'src/constants/chains'
-import { Address } from 'src/utils/Address'
+import { isValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 
 export class ContractManager {
@@ -8,11 +8,11 @@ export class ContractManager {
 
   createContract(
     chainId: SupportedChainId,
-    address: string,
+    address: Address,
     provider: providers.Provider,
     ABI: any
   ) {
-    if (!Address.isValid(address, false)) {
+    if (!isValidAddress(address, false)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
@@ -26,7 +26,7 @@ export class ContractManager {
     }
   }
 
-  removeContract(chainId: SupportedChainId, address: string) {
+  removeContract(chainId: SupportedChainId, address: Address) {
     if (!this._contracts[chainId]?.[address]) {
       logger.warn('Attempting to remove non-existing contract', chainId, address)
       return
@@ -39,13 +39,13 @@ export class ContractManager {
   }
 
   // Returns contract or null
-  getContract(chainId: SupportedChainId, address: string) {
+  getContract(chainId: SupportedChainId, address: Address) {
     return this._contracts[chainId]?.[address] ?? null
   }
 
   getOrCreateContract(
     chainId: SupportedChainId,
-    address: string,
+    address: Address,
     provider: providers.Provider,
     ABI: any
   ) {

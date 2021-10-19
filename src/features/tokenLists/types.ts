@@ -21,13 +21,13 @@ export interface TokenListsState {
 
 export type TokenAddressMap = {
   [chainId: number]: {
-    [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList }
+    [tokenAddress: Address]: { token: WrappedTokenInfo; list: TokenList }
   }
 }
 
 export interface SerializedToken {
   chainId: number
-  address: string
+  address: Address
   decimals: number
   symbol?: string
   name?: string

@@ -1,7 +1,6 @@
 import { SupportedChainId } from 'src/constants/chains'
 import { Account } from 'src/features/wallet/accounts/types'
 import { getCaip10Id } from 'src/features/wallet/accounts/utils'
-import { Address } from 'src/utils/Address'
 import { logger } from 'src/utils/logger'
 
 export class AccountManager {

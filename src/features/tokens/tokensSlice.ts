@@ -5,7 +5,7 @@ import { SerializedPair, SerializedToken } from 'src/features/tokenLists/types'
 interface Tokens {
   tokens: {
     [chainId: number]: {
-      [address: string]: SerializedToken
+      [address: Address]: SerializedToken
     }
   }
   tokenPairs: {
@@ -30,7 +30,7 @@ const slice = createSlice({
       state.tokens[newToken.chainId] ||= {}
       state.tokens[newToken.chainId][newToken.address] = newToken
     },
-    removeToken: (state, action: PayloadAction<{ address: string; chainId: number }>) => {
+    removeToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
       const { address, chainId } = action.payload
       if (!state.tokens[chainId] || !!state.tokens[chainId][address]) return
       delete state.tokens[chainId][address]
@@ -48,7 +48,7 @@ const slice = createSlice({
     },
     removeTokenPair: (
       state,
-      action: PayloadAction<{ chainId: number; token1Address: string; token2Address: string }>
+      action: PayloadAction<{ chainId: number; token1Address: Address; token2Address: Address }>
     ) => {
       const { chainId, token1Address, token2Address } = action.payload
       if (!state.tokens[chainId]) return
@@ -63,6 +63,6 @@ export const { addToken, removeToken, addTokenPair, removeTokenPair, resetTokens
 
 export const tokensReducer = slice.reducer
 
-function pairKey(token0Address: string, token1Address: string) {
+function pairKey(token0Address: Address, token1Address: Address) {
   return `${token0Address};${token1Address}`
 }

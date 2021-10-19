@@ -5,7 +5,6 @@ import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { TransferTokenParams } from 'src/features/transfer/types'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
 import { AccountStub } from 'src/features/wallet/accounts/types'
-import { Address } from 'src/utils/Address'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
@@ -27,18 +26,15 @@ export function* transferToken(params: TransferTokenParams) {
 
 async function _transferToken(
   account: AccountStub,
-  tokenAddress: string,
+  tokenAddress: Address,
   amount: string,
-  toAddress: string,
+  toAddress: Address,
   accountManager: AccountManager,
   providerManager: ProviderManager
 ) {
   // TODO use the appropriate provider for current chain
   const goerliProvider = providerManager.getProvider(SupportedChainId.GOERLI)
-  const walletAccount = accountManager.getAccount(
-    Address.from(account.address),
-    SupportedChainId.GOERLI
-  )
+  const walletAccount = accountManager.getAccount(account.address, SupportedChainId.GOERLI)
 
   if (!walletAccount) throw Error('No active account')
 

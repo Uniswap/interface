@@ -2,7 +2,7 @@ import { AccountStub } from 'src/features/wallet/accounts/types'
 
 export interface TransferTokenParams {
   account: AccountStub
-  tokenAddress: string
+  tokenAddress: Address
   amount: string
-  toAddress: string
+  toAddress: Address
 }
