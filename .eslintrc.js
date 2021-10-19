@@ -19,6 +19,17 @@ module.exports = {
     // 'import/no-default-export': 1,
     // 'react/jsx-uses-react': 'off',
     // 'react/react-in-jsx-scope': 'off',
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: '@ethersproject',
+            message: "Please import from 'ethers' directly to support tree-shaking.",
+          },
+        ],
+      },
+    ],
   },
   plugins: ['detox'],
   overrides: [

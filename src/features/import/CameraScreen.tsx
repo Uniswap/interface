@@ -1,4 +1,3 @@
-import { wordlists } from '@ethersproject/wordlists'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, useWindowDimensions, View, ViewStyle } from 'react-native'
@@ -8,35 +7,10 @@ import { Camera, useCameraDevices, useFrameProcessor } from 'react-native-vision
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
 import { Screen } from 'src/components/layout/Screen'
+import { Bounds, extractSeedPhraseFromOCR, OcrObject } from 'src/features/import/scanUtils'
 import { scanOCR } from 'vision-camera-ocr'
 
-type Bounds = [minX: number, minY: number, maxX: number, maxY: number]
-interface OcrObject {
-  bounds: Bounds
-  height: number
-  width: number
-  text: string
-}
-
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Camera>
-
-function extractSeedPhraseFromOCR(scan: OcrObject[], bounds: Bounds) {
-  const words = scan.flatMap((obj) => {
-    if (
-      obj.bounds[0] > bounds[0] &&
-      obj.bounds[1] > bounds[1] &&
-      obj.bounds[2] < bounds[2] &&
-      obj.bounds[3] < bounds[3]
-    ) {
-      return obj.text.split(' ').filter((word) => wordlists.en.getWordIndex(word) > -1)
-    }
-    return []
-  })
-  if (words.length > 11 && words.length < 16) {
-    return words
-  }
-  return null
-}
 
 const SAMPLE_SEED = [
   'abacus',
