@@ -1,5 +1,5 @@
 import styled from 'lib/theme'
-import { styledIcon } from 'lib/theme/components'
+import { StyledButton, styledIcon } from 'lib/theme/components'
 import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Row from '../Row'
@@ -28,9 +28,9 @@ const Overlay = styled.div`
   padding: 0.25em;
 `
 
-const SwapIcon = styled.div`
+const SwapIcon = styled(StyledButton)`
   background-color: ${({ theme }) => theme.interactive};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 40px;
   position: relative;
   width: 40px;
