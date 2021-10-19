@@ -7,17 +7,10 @@ import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 
-import { ReactComponent as AutoRouterIcon } from '../../assets/svg/auto_router.svg'
 import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
-
-const GrayscaleRouterLogo = styled(AutoRouterIcon)`
-  filter: grayscale(1);
-  height: 15px;
-  width: 15px;
-`
 
 const Wrapper = styled.div`
   padding: 0 1rem;
@@ -58,7 +51,6 @@ const StyledLinkOut = styled(ArrowDown)`
 const EXTERNAL_APIS = [
   {
     name: 'Auto Router',
-    icon: <GrayscaleRouterLogo />,
     description: (
       <Trans>
         The app fetches the optimal trade route from a Uniswap Labs server. Your IP address is shared. You may disable
@@ -157,11 +149,11 @@ export function PrivacyPolicy() {
           </StyledExternalCard>
         </AutoColumn>
         <AutoColumn gap="12px">
-          {EXTERNAL_APIS.map(({ name, icon, description }, i) => (
+          {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGreyCard key={i}>
               <AutoColumn gap="8px">
                 <AutoRow gap="4px">
-                  {icon ?? <Info size={18} />}
+                  <Info size={18} />
                   <TYPE.main fontSize={14} color={'text1'}>
                     {name}
                   </TYPE.main>
