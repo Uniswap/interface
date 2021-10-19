@@ -5,6 +5,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { currencyId } from 'utils/currencyId'
@@ -60,7 +61,7 @@ export default function CommonBases({
               disable={isSelected}
               key={currencyId(currency)}
             >
-              <CurrencyLogo currency={currency} style={{ marginRight: 8 }} />
+              <CurrencyLogoFromList currency={currency} />
               <Text fontWeight={500} fontSize={16}>
                 {currency.symbol}
               </Text>
@@ -70,4 +71,11 @@ export default function CommonBases({
       </AutoRow>
     </MobileWrapper>
   ) : null
+}
+
+/** helper component to retrieve a base currency from the active token lists */
+function CurrencyLogoFromList({ currency }: { currency: Currency }) {
+  const token = useTokenInfoFromActiveList(currency)
+
+  return <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
 }
