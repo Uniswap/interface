@@ -219,23 +219,23 @@ export default function MigrateLiquiditySUSHI({
       ? liquidityMintedMaxA
       : liquidityMintedMaxB
 
-  let amountsMin
+  // let amountsMin
   let currencyAmountAToAddPool: CurrencyAmount | undefined
   let currencyAmountBToAddPool: CurrencyAmount | undefined
   let estimatedRefund = ''
   let poolShare = ''
   const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
   if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
-    amountsMin =
-      !currencyAmountA || !currencyAmountB
-        ? {
-            [Field.CURRENCY_A]: undefined,
-            [Field.CURRENCY_B]: undefined
-          }
-        : {
-            [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
-            [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
-          }
+    // amountsMin =
+    //   !currencyAmountA || !currencyAmountB
+    //     ? {
+    //         [Field.CURRENCY_A]: undefined,
+    //         [Field.CURRENCY_B]: undefined
+    //       }
+    //     : {
+    //         [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
+    //         [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
+    //       }
     const {
       // [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
       [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA

@@ -61,6 +61,7 @@ import TotalTradingVolume from 'assets/svg/total_trade_volume.svg'
 import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
 
 const AppBodyWrapped = styled(AppBody)`
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 1;
 `
 

@@ -2,18 +2,17 @@ import React, { useCallback, useState } from 'react'
 import { Info } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
+import { Flex } from 'rebass'
 
 const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.2rem;
   border: none;
   background: none;
   outline: none;
   cursor: default;
   border-radius: 36px;
-  background-color: ${({ theme }) => theme.bg2};
   color: ${({ theme }) => theme.text2};
 
   :hover,
@@ -54,13 +53,13 @@ export default function QuestionHelper({ text }: { text: string }) {
   const close = useCallback(() => setShow(false), [setShow])
 
   return (
-    <span style={{ marginLeft: 4 }}>
+    <Flex as="span" marginLeft="0.25rem" alignItems="center">
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
           <Info size={16} />
         </QuestionWrapper>
       </Tooltip>
-    </span>
+    </Flex>
   )
 }
 

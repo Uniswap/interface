@@ -123,12 +123,12 @@ export default function RefreshButton({ isConfirming, trade, onClick }: RefreshB
 
   const hasOutput = useMemo((): boolean => {
     return !!trade?.outputAmount
-  }, [trade?.outputAmount.toSignificant(10)])
+  }, [trade])
 
   useEffect(() => {
     let interval: any
     if (svgLoadingRef?.current) {
-      if (!isConfirming && trade?.outputAmount) {
+      if (!isConfirming && hasOutput) {
         // reset svg animate duration to 0 and UNPAUSE animations
         svgLoadingRef.current.setCurrentTime(0)
         svgLoadingRef.current.unpauseAnimations()

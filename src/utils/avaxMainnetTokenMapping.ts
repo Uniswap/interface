@@ -1,4 +1,5 @@
 import { ZERO_ADDRESS } from 'constants/index'
+import { isAddress } from 'utils'
 
 export const getAvaxMainnetTokenLogoURL = (address: string) => {
   let uri
@@ -33,7 +34,9 @@ export const getAvaxMainnetTokenLogoURL = (address: string) => {
   }
 
   if (!uri) {
-    uri = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${address}/logo.png`
+    uri = `https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/${isAddress(
+      address
+    )}/logo.png`
   }
 
   return uri

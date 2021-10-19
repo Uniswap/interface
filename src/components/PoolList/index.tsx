@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { Pair } from '@dynamic-amm/sdk'
@@ -73,18 +73,20 @@ const SORT_FIELD = {
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const above1000 = useMedia('(min-width: 1000px)')
 
-  const transformedSubgraphPoolsData: {
-    [key: string]: SubgraphPoolData
-  } = {}
-
   const transformedUserLiquidityPositions: {
     [key: string]: UserLiquidityPosition
   } = {}
 
-  subgraphPoolsData &&
-    subgraphPoolsData.forEach(data => {
-      transformedSubgraphPoolsData[data.id] = data
-    })
+  const transformedSubgraphPoolsData: {
+    [key: string]: SubgraphPoolData
+  } = useMemo(() => {
+    return (subgraphPoolsData || []).reduce((acc, data) => {
+      return {
+        ...acc,
+        [data.id]: data
+      }
+    }, {})
+  }, [subgraphPoolsData])
 
   userLiquidityPositions &&
     userLiquidityPositions.forEach(position => {
@@ -100,71 +102,76 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.NONE)
 
-  const sortList = (poolA: Pair | null, poolB: Pair | null): number => {
-    if (sortedColumn === SORT_FIELD.NONE) {
-      if (!poolA) {
-        return 1
+  const sortList = useCallback(
+    (poolA: Pair | null, poolB: Pair | null): number => {
+      if (sortedColumn === SORT_FIELD.NONE) {
+        if (!poolA) {
+          return 1
+        }
+
+        if (!poolB) {
+          return -1
+        }
+
+        const poolAHealthFactor = getHealthFactor(poolA)
+        const poolBHealthFactor = getHealthFactor(poolB)
+
+        // Pool with better health factor will be prioritized higher
+        if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
+          return -1
+        }
+
+        if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
+          return 1
+        }
+
+        return 0
       }
 
-      if (!poolB) {
-        return -1
-      }
+      const poolASubgraphData = transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]
+      const poolBSubgraphData = transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]
 
-      const poolAHealthFactor = getHealthFactor(poolA)
-      const poolBHealthFactor = getHealthFactor(poolB)
+      const feeA = poolASubgraphData?.oneDayFeeUSD
+        ? poolASubgraphData?.oneDayFeeUSD
+        : poolASubgraphData?.oneDayFeeUntracked
 
-      // Pool with better health factor will be prioritized higher
-      if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
-        return -1
-      }
+      const feeB = poolBSubgraphData?.oneDayFeeUSD
+        ? poolBSubgraphData?.oneDayFeeUSD
+        : poolBSubgraphData?.oneDayFeeUntracked
 
-      if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
-        return 1
+      switch (sortedColumn) {
+        case SORT_FIELD.LIQ:
+          return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolASubgraphData?.reserveUSD) >
+            parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolBSubgraphData?.reserveUSD)
+            ? (sortDirection ? -1 : 1) * 1
+            : (sortDirection ? -1 : 1) * -1
+        case SORT_FIELD.VOL:
+          const volumeA = poolASubgraphData?.oneDayVolumeUSD
+            ? poolASubgraphData?.oneDayVolumeUSD
+            : poolASubgraphData?.oneDayVolumeUntracked
+
+          const volumeB = poolBSubgraphData?.oneDayVolumeUSD
+            ? poolBSubgraphData?.oneDayVolumeUSD
+            : poolBSubgraphData?.oneDayVolumeUntracked
+
+          return parseFloat(volumeA) > parseFloat(volumeB)
+            ? (sortDirection ? -1 : 1) * 1
+            : (sortDirection ? -1 : 1) * -1
+        case SORT_FIELD.FEES:
+          return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+        case SORT_FIELD.ONE_YEAR_FL:
+          const oneYearFLPoolA = getTradingFeeAPR(poolASubgraphData?.reserveUSD, feeA)
+          const oneYearFLPoolB = getTradingFeeAPR(poolBSubgraphData?.reserveUSD, feeB)
+
+          return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+        default:
+          break
       }
 
       return 0
-    }
-
-    const poolASubgraphData = transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]
-    const poolBSubgraphData = transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]
-
-    const feeA = poolASubgraphData?.oneDayFeeUSD
-      ? poolASubgraphData?.oneDayFeeUSD
-      : poolASubgraphData?.oneDayFeeUntracked
-
-    const feeB = poolBSubgraphData?.oneDayFeeUSD
-      ? poolBSubgraphData?.oneDayFeeUSD
-      : poolBSubgraphData?.oneDayFeeUntracked
-
-    switch (sortedColumn) {
-      case SORT_FIELD.LIQ:
-        return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolASubgraphData?.reserveUSD) >
-          parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolBSubgraphData?.reserveUSD)
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1
-      case SORT_FIELD.VOL:
-        const volumeA = poolASubgraphData?.oneDayVolumeUSD
-          ? poolASubgraphData?.oneDayVolumeUSD
-          : poolASubgraphData?.oneDayVolumeUntracked
-
-        const volumeB = poolBSubgraphData?.oneDayVolumeUSD
-          ? poolBSubgraphData?.oneDayVolumeUSD
-          : poolBSubgraphData?.oneDayVolumeUntracked
-
-        return parseFloat(volumeA) > parseFloat(volumeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
-      case SORT_FIELD.FEES:
-        return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
-      case SORT_FIELD.ONE_YEAR_FL:
-        const oneYearFLPoolA = getTradingFeeAPR(poolASubgraphData?.reserveUSD, feeA)
-        const oneYearFLPoolB = getTradingFeeAPR(poolBSubgraphData?.reserveUSD, feeB)
-
-        return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
-      default:
-        break
-    }
-
-    return 0
-  }
+    },
+    [sortDirection, sortedColumn, transformedSubgraphPoolsData]
+  )
 
   const renderHeader = () => {
     return above1000 ? (
@@ -295,7 +302,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     return poolsList
       .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
       .sort(sortList)
-  }, [poolsList, sortedColumn, sortDirection])
+  }, [poolsList, sortList])
 
   useEffect(() => {
     if (poolsList) {

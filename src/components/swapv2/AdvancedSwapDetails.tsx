@@ -29,7 +29,7 @@ function TradeSummary({ trade, allowedSlippage, tradeComparer }: TradeSummaryPro
   const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }}>
+      <AutoColumn style={{ padding: '0 20px' }} gap="0.375rem">
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
