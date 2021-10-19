@@ -45,7 +45,7 @@ async function _transferToken(
   // TODO check balance?
   // TODO handle non ETH sending by checking tokenAddress
   const currentGasPrice = await goerliProvider.getGasPrice()
-  const gasPrice = utils.hexlify(parseInt(currentGasPrice.toString()))
+  const gasPrice = utils.hexlify(parseInt(currentGasPrice.toString(), 10))
   const nonce = await goerliProvider.getTransactionCount(account.address, 'pending')
   const transaction: providers.TransactionRequest = {
     from: account.address,
