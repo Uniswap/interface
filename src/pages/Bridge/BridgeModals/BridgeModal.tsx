@@ -6,6 +6,7 @@ import { BridgePendingModal } from './BridgePendingModal'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
 import { NETWORK_DETAIL } from '../../../constants'
+import { BridgeDisclaimerModal } from './BridgeDisclaimerModal'
 
 export interface BridgeModalProps {
   handleResetBridge: () => void
@@ -82,6 +83,16 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
               handleResetBridge()
             }}
             error={error ?? ''}
+          />
+        )
+      case BridgeModalStatus.CLOSED:
+        return (
+          <BridgeDisclaimerModal
+            isOpen
+            onDismiss={() => {
+              setStatus(BridgeModalStatus.CLOSED)
+            }}
+            msg={'eloszki'}
           />
         )
       default:

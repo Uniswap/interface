@@ -187,3 +187,26 @@ export default function TransactionConfirmationModal({
     </Modal>
   )
 }
+
+export function DisclaimerContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  const theme = useContext(ThemeContext)
+  return (
+    <Wrapper>
+      <Section>
+        <RowBetween>
+          <TYPE.mediumHeader color="text4">Disclaimer</TYPE.mediumHeader>
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
+          <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
+          <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
+            {message}
+          </Text>
+        </AutoColumn>
+      </Section>
+      <BottomSection gap="12px">
+        <ButtonPrimary onClick={onDismiss}>Dismiss</ButtonPrimary>
+      </BottomSection>
+    </Wrapper>
+  )
+}
