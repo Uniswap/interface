@@ -8,7 +8,7 @@ type MonitoringEvent = 'wallet connected' | 'swap' | 'add liquidity/v3' | 'add l
 export function useMonitoringEventCallback() {
   const { account, chainId } = useActiveWeb3React()
 
-  const event = useCallback(
+  return useCallback(
     (action: MonitoringEvent, { hash }: { hash?: string } | undefined = {}) => {
       ReactGA.event({
         category: 'Monitoring',
@@ -23,6 +23,4 @@ export function useMonitoringEventCallback() {
     },
     [account, chainId]
   )
-
-  return event
 }

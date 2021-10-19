@@ -70,7 +70,7 @@ const EXTERNAL_APIS = [
     name: <Trans>Infura API</Trans>,
     description: (
       <Trans>
-        The app fetches on chain data and constructs contract calls with an Infura API. Your wallet address and IP
+        The app fetches on-chain data and constructs contract calls with the Infura API. Your wallet address and IP
         address are shared.
       </Trans>
     ),
