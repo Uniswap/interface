@@ -11,6 +11,11 @@ export const Value = styled.div<{ selected?: boolean; theme: Theme }>`
   display: grid;
   grid-gap: 0.25em;
   padding: 0.5em;
+
+  :hover,
+  :focus-within {
+    border-color: ${({ theme }) => theme.accent};
+  }
 `
 
 interface LabelProps {
