@@ -1416,6 +1416,10 @@ msgstr "Takas"
 msgid "Swap Anyway"
 msgstr "Yine de Takası Yap"
 
+#: src/components/Header/index.tsx
+msgid "Swap Legacy"
+msgstr ""
+
 #: 
 #~ msgid "Swap Token"
 #~ msgstr ""

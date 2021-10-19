@@ -1416,6 +1416,10 @@ msgstr "Chuyển đổi"
 msgid "Swap Anyway"
 msgstr "Vẫn chuyển đổi"
 
+#: src/components/Header/index.tsx
+msgid "Swap Legacy"
+msgstr ""
+
 #: 
 #~ msgid "Swap Token"
 #~ msgstr ""

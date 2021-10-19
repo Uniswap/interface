@@ -1416,6 +1416,10 @@ msgstr "토큰 스왑"
 msgid "Swap Anyway"
 msgstr "스왑하기"
 
+#: src/components/Header/index.tsx
+msgid "Swap Legacy"
+msgstr ""
+
 #: 
 #~ msgid "Swap Token"
 #~ msgstr ""
