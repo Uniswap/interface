@@ -6,7 +6,6 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
-import { SupportedChainId } from '../constants/chains'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 import { useActiveWeb3React } from './web3'
