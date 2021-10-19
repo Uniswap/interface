@@ -74,7 +74,16 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
           />
         )
       case BridgeModalStatus.ERROR:
-        return <BridgeErrorModal isOpen onDismiss={() => setStatus(BridgeModalStatus.ERROR)} error={error ?? ''} />
+        return (
+          <BridgeErrorModal
+            isOpen
+            onDismiss={() => {
+              setStatus(BridgeModalStatus.CLOSED)
+              handleResetBridge()
+            }}
+            error={error ?? ''}
+          />
+        )
       default:
         return null
     }
