@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
+import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { t } from '@lingui/macro'

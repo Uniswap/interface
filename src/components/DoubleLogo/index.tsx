@@ -1,4 +1,4 @@
-import { Currency } from 'libs/sdk/src'
+import { Currency } from '@dynamic-amm/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'

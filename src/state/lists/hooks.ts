@@ -1,4 +1,4 @@
-import { ChainId, Token } from 'libs/sdk/src'
+import { ChainId, Token } from '@dynamic-amm/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { useMemo } from 'react'

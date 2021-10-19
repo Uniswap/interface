@@ -1,5 +1,5 @@
 import { Currency, JSBI } from '@uniswap/sdk'
-import { ETHER, TokenAmount } from 'libs/sdk/src'
+import { ETHER, TokenAmount } from '@dynamic-amm/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'

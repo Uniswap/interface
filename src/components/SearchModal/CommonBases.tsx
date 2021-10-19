@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, Currency, currencyEquals, ETHER, Token } from '@dynamic-amm/sdk'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 

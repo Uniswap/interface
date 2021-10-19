@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI } from 'libs/sdk/src'
+import { CurrencyAmount, ETHER, JSBI } from '@dynamic-amm/sdk'
 import { MIN_ETH } from '../constants'
 
 /**

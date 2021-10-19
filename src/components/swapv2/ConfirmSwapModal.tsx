@@ -1,4 +1,4 @@
-import { currencyEquals, Currency } from 'libs/sdk/src'
+import { currencyEquals, Currency } from '@dynamic-amm/sdk'
 import React, { useCallback, useMemo } from 'react'
 import { t } from '@lingui/macro'
 import { useCurrencyConvertedToNative } from 'utils/dmm'

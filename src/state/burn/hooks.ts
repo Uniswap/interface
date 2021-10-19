@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@dynamic-amm/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'

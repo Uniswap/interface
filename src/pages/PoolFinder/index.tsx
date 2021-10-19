@@ -1,4 +1,4 @@
-import { Currency, ETHER, JSBI, Pair, TokenAmount } from 'libs/sdk/src'
+import { Currency, ETHER, JSBI, Pair, TokenAmount } from '@dynamic-amm/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'

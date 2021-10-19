@@ -1,4 +1,4 @@
-import { JSBI, Token, TokenAmount } from 'libs/sdk/src'
+import { JSBI, Token, TokenAmount } from '@dynamic-amm/sdk'
 import { BigNumber } from 'ethers'
 import { STAKING_GENESIS } from '../state/stake/hooks'
 

@@ -1,4 +1,4 @@
-import { Percent } from 'libs/sdk/src'
+import { Percent } from '@dynamic-amm/sdk'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

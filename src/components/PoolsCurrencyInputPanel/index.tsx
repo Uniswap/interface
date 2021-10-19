@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
-import { Currency, Pair } from 'libs/sdk/src'
+import { Currency, Pair } from '@dynamic-amm/sdk'
 
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import CurrencyLogo from 'components/CurrencyLogo'

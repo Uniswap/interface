@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { Token } from 'libs/sdk/src'
+import { Token } from '@dynamic-amm/sdk'
 import { ButtonDropdown } from 'components/Button'
 import { useActiveWeb3React } from 'hooks'
 import useVesting from 'hooks/useVesting'

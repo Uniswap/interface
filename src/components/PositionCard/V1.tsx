@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
-import { Token, TokenAmount, WETH } from 'libs/sdk/src'
+import { Token, TokenAmount, WETH } from '@dynamic-amm/sdk'
 
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'

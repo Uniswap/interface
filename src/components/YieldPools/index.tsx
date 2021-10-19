@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useMedia } from 'react-use'
 import { t, Trans } from '@lingui/macro'
 
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 import RainMakerBannel from 'assets/images/rain-maker.png'
 import RainMakerMobileBanner from 'assets/images/rain-maker-mobile.png'
 import { FAIRLAUNCH_ADDRESSES } from 'constants/index'

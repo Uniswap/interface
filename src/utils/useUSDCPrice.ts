@@ -1,4 +1,4 @@
-import { ChainId, Currency, currencyEquals, JSBI, Price, Token, WETH } from 'libs/sdk/src'
+import { ChainId, Currency, currencyEquals, JSBI, Price, Token, WETH } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { USDC as USDC_MAINNET } from '../constants'
 import { PairState, usePairs, useUnAmplifiedPairsFull } from '../data/Reserves'

@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { Field } from './actions'
-import { Currency, CurrencyAmount } from 'libs/sdk/src'
-import { ZERO } from 'libs/sdk/src/constants'
+import { Currency, CurrencyAmount, ZERO } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'

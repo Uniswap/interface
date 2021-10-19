@@ -1,4 +1,4 @@
-import { Currency, Pair } from 'libs/sdk/src'
+import { Currency, Pair } from '@dynamic-amm/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'

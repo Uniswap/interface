@@ -1,4 +1,4 @@
-import { ChainId, Currency, Trade, TradeType } from 'libs/sdk/src'
+import { ChainId, Currency, Trade, TradeType } from '@dynamic-amm/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'

@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro'
 import { useMedia } from 'react-use'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 import { AVERAGE_BLOCK_TIME_IN_SECS } from 'constants/index'
 import { ButtonPrimary } from 'components/Button'
 import { AutoRow } from 'components/Row'

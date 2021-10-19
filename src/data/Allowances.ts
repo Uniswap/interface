@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from 'libs/sdk/src'
+import { Token, TokenAmount } from '@dynamic-amm/sdk'
 import { Token as TokenUNI, TokenAmount as TokenAmountUNI } from '@uniswap/sdk'
 import { Token as TokenSUSHI, TokenAmount as TokenAmountSUSHI } from '@sushiswap/sdk'
 import { useMemo } from 'react'

@@ -1,5 +1,5 @@
 import { useActiveWeb3React } from 'hooks'
-import { Currency, TradeType } from 'libs/sdk/src'
+import { Currency, TradeType } from '@dynamic-amm/sdk'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

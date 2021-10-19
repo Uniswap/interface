@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { TokenList } from '@uniswap/token-lists'
-import { Currency, Token } from 'libs/sdk/src'
+import { Currency, Token } from '@dynamic-amm/sdk'
 
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'

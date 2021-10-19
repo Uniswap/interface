@@ -7,7 +7,7 @@ import { getEtherscanLink, formattedNum } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { Aggregator, getExchangeConfig } from '../../utils/aggregator'
 import { getTradeComposition, SwapRouteV2 } from '../../utils/aggregationRouting'
-import { ChainId, Currency, CurrencyAmount, TokenAmount } from 'libs/sdk/src'
+import { ChainId, Currency, CurrencyAmount, TokenAmount } from '@dynamic-amm/sdk'
 import useThrottle from '../../hooks/useThrottle'
 import { Field } from '../../state/swap/actions'
 import { useCurrencyConvertedToNative } from '../../utils/dmm'
@@ -19,11 +19,11 @@ import { useAllTokens } from 'hooks/Tokens'
 const StyledContainer = styled.div`
   flex: 1;
   max-width: 100%;
-  margin-left: 20px;
-  padding-top: 52px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-left: 0px;
-  `}
+  margin-left: 0;
+
+  @media only screen and (min-width: 1000px) {
+    padding-top: 52px;
+  }
 `
 const StyledPair = styled.div`
   position: relative;

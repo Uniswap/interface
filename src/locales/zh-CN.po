@@ -37,6 +37,10 @@ msgstr "-删除发送"
 msgid "1Yr Fees Collected/Liquidity based on 24H volume annualized"
 msgstr "基于 24 小时交易量预测的流动性年化收益率"
 
+#: src/pages/SwapV2/index.tsx
+msgid "24h Trading Volume"
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>提示：</0> 使用此工具查找未自动出现在界面中的交易对。"
@@ -1512,6 +1516,7 @@ msgid "Total Trading Volume"
 msgstr "总交易量"
 
 #: src/pages/Pools/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume:"
 msgstr "总交易量:"
 

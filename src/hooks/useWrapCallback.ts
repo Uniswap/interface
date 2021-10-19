@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { Currency, currencyEquals, ETHER, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, WETH } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { calculateGasMargin } from 'utils'
 import { convertToNativeTokenFromETH } from 'utils/dmm'

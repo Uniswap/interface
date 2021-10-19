@@ -37,6 +37,10 @@ msgstr "- Göndermeyi kaldır"
 msgid "1Yr Fees Collected/Liquidity based on 24H volume annualized"
 msgstr "1 Yıllık Toplanan Ücretler/Likidite, yıl bazında 24 saatlik hacme dayalıdır"
 
+#: src/pages/SwapV2/index.tsx
+msgid "24h Trading Volume"
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>İpucu:</0> Arayüzde otomatik olarak görünmeyen çiftleri bulmak için bu aracı kullanın."
@@ -1512,6 +1516,7 @@ msgid "Total Trading Volume"
 msgstr "Toplam İşlem Hacmi"
 
 #: src/pages/Pools/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume:"
 msgstr "Toplam İşlem Hacmi:"
 

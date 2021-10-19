@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from 'libs/sdk/src'
+import { ChainId, JSBI, Percent, Token, WETH } from '@dynamic-amm/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'

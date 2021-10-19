@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { ChainId, Token, WETH } from 'libs/sdk/src'
+import { ChainId, Token, WETH } from '@dynamic-amm/sdk'
 import { KNC, ZERO_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'

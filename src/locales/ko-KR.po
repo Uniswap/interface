@@ -37,6 +37,10 @@ msgstr "- 보내기 제거"
 msgid "1Yr Fees Collected/Liquidity based on 24H volume annualized"
 msgstr "1년동안 모여진 수수료/24H 거래량기준 유동성"
 
+#: src/pages/SwapV2/index.tsx
+msgid "24h Trading Volume"
+msgstr ""
+
 #: src/pages/PoolFinder/PoolFinderExternal.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
 msgstr "<0>팁:</0> 이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 토큰 쌍을 찾을 수 잇습니다."
@@ -1512,6 +1516,7 @@ msgid "Total Trading Volume"
 msgstr "총 거래량"
 
 #: src/pages/Pools/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Total Trading Volume:"
 msgstr "총 거래량:"
 
