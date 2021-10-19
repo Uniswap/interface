@@ -13,26 +13,18 @@ import { AppState } from '../index'
 import { errorFetchingMulticallResults, fetchingMulticallResults, updateMulticallResults } from './actions'
 import { Call, parseCallKey, toCallKey } from './utils'
 
-const DEFAULT_GAS_REQUIRED = 1_000_000
-
-const DEFAULT_CHUNK_GAS_LIMIT = 100_000_000
-const CHUNK_GAS_LIMIT_BY_CHAIN_ID: { [chainId in SupportedChainId]?: number } = {
-  [SupportedChainId.ARBITRUM_ONE]: 100_000_000,
-  [SupportedChainId.ARBITRUM_RINKEBY]: 100_000_000,
-}
+const DEFAULT_CALL_GAS_REQUIRED = 1_000_000
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multicall multicall contract to fetch against
  * @param chunk chunk of calls to make
  * @param blockNumber block number passed as the block tag in the eth_call
- * @param gasLimit the block gas limit
  */
 async function fetchChunk(
   multicall: UniswapInterfaceMulticall,
   chunk: Call[],
-  blockNumber: number,
-  gasLimit: number
+  blockNumber: number
 ): Promise<{ success: boolean; returnData: string }[]> {
   console.debug('Fetching chunk', chunk, blockNumber)
   try {
@@ -40,11 +32,11 @@ async function fetchChunk(
       chunk.map((obj) => ({
         target: obj.address,
         callData: obj.callData,
-        gasLimit: obj.gasRequired ?? DEFAULT_GAS_REQUIRED,
+        gasLimit: obj.gasRequired ?? DEFAULT_CALL_GAS_REQUIRED,
       })),
       {
+        // we aren't passing through the block gas limit we used to create the chunk, because it causes a problem with the integ tests
         blockTag: blockNumber,
-        gasLimit,
       }
     )
 
@@ -53,11 +45,11 @@ async function fetchChunk(
         if (
           !success &&
           returnData.length === 2 &&
-          gasUsed.gte(Math.floor((chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED) * 0.95))
+          gasUsed.gte(Math.floor((chunk[i].gasRequired ?? DEFAULT_CALL_GAS_REQUIRED) * 0.95))
         ) {
           console.warn(
             `A call failed due to requiring ${gasUsed.toString()} vs. allowed ${
-              chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED
+              chunk[i].gasRequired ?? DEFAULT_CALL_GAS_REQUIRED
             }`,
             chunk[i]
           )
@@ -76,8 +68,8 @@ async function fetchChunk(
         }
         const half = Math.floor(chunk.length / 2)
         const [c0, c1] = await Promise.all([
-          fetchChunk(multicall, chunk.slice(0, half), blockNumber, gasLimit),
-          fetchChunk(multicall, chunk.slice(half, chunk.length), blockNumber, gasLimit),
+          fetchChunk(multicall, chunk.slice(0, half), blockNumber),
+          fetchChunk(multicall, chunk.slice(half, chunk.length), blockNumber),
         ])
         return c0.concat(c1)
       }
@@ -175,6 +167,9 @@ export default function Updater(): null {
     [unserializedOutdatedCallKeys]
   )
 
+  // todo: consider getting this information from the node we are using, e.g. block.gaslimit
+  const chunkGasLimit = 100_000_000
+
   useEffect(() => {
     if (!latestBlockNumber || !chainId || !multicall2Contract) return
 
@@ -182,7 +177,7 @@ export default function Updater(): null {
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))
 
-    const chunkedCalls = chunkArray(calls)
+    const chunkedCalls = chunkArray(calls, chunkGasLimit)
 
     if (cancellations.current && cancellations.current.blockNumber !== latestBlockNumber) {
       cancellations.current.cancellations.forEach((c) => c())
@@ -199,20 +194,11 @@ export default function Updater(): null {
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk) => {
-        const { cancel, promise } = retry(
-          () =>
-            fetchChunk(
-              multicall2Contract,
-              chunk,
-              latestBlockNumber,
-              CHUNK_GAS_LIMIT_BY_CHAIN_ID[chainId as SupportedChainId] ?? DEFAULT_CHUNK_GAS_LIMIT
-            ),
-          {
-            n: Infinity,
-            minWait: 1000,
-            maxWait: 2500,
-          }
-        )
+        const { cancel, promise } = retry(() => fetchChunk(multicall2Contract, chunk, latestBlockNumber), {
+          n: Infinity,
+          minWait: 1000,
+          maxWait: 2500,
+        })
         promise
           .then((returnData) => {
             // split the returned slice into errors and results
