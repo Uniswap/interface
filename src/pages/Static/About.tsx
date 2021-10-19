@@ -133,7 +133,7 @@ export default function About() {
           <Text color={'#08a1e7'} display={'inline-block'}>
             <Trans>Market</Trans>&nbsp;
           </Text>
-          <Text color={'#78d5ff'} display={'inline-block'}>
+          <Text color={theme.lightBlue} display={'inline-block'}>
             <Trans>Maker</Trans>&nbsp;
           </Text>
           <Text color={theme.text} display={'inline-block'} fontWeight={300}>

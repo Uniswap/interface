@@ -238,7 +238,7 @@ const Schedule = ({ rewardLockerAddress, schedule }: { rewardLockerAddress: stri
                 position: 'absolute',
                 height: '12px',
                 width: `${vestedAndVestablePercent}%`,
-                background: '#78d5ff',
+                background: theme.lightBlue,
                 borderRadius: '26px',
                 zIndex: 2
               }}

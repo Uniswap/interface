@@ -51,7 +51,7 @@ export const GlobalDataItemTitle = styled.span`
 export const GlobalDataItemValue = styled.span`
   font-size: 18px;
   font-weight: 500;
-  color: #78d5ff;
+  color: ${({ theme }) => theme.blue};
 `
 
 export const AddLiquidityInstructionContainer = styled.div`
@@ -63,7 +63,7 @@ export const AddLiquidityInstructionContainer = styled.div`
 
 export const AddLiquidityTitle = styled.span`
   font-size: 14px;
-  color: #78d5ff;
+  color: ${({ theme }) => theme.blue};
   margin-right: 0.5rem;
 `
 

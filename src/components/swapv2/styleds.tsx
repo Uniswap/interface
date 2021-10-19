@@ -70,25 +70,25 @@ export const AggregatorStatsContainer = styled.div`
 
 export const AggregatorStatsItem = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   padding: 8px 16px;
   border-radius: 4px;
-  background-color: ${({ theme }) => `${theme.buttonGray}20`};
+  background-color: ${({ theme }) => `${theme.buttonGray}66`};
 `
 
 export const AggregatorStatsItemTitle = styled.span`
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  color: ${({ theme }) => theme.subText};
+  color: ${({ theme }) => theme.text};
 `
 
 export const AggregatorStatsItemValue = styled.span`
   font-size: 18px;
   font-weight: 600;
-  color: #78d5ff;
+  color: ${({ theme }) => theme.blue};
   margin-left: 4px;
 `
 
