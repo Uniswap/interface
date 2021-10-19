@@ -68,12 +68,20 @@ export default function Bridge() {
   const bridgeSummaries = useBridgeTransactionsSummary()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
-  const { onUserInput, onToNetworkChange, onFromNetworkChange, onSwapBridgeNetworks } = useBridgeActionHandlers()
+  const {
+    onCurrencySelection,
+    onUserInput,
+    onToNetworkChange,
+    onFromNetworkChange,
+    onSwapBridgeNetworks
+  } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
   const fromPanelRef = useRef(null)
 
   const [step, setStep] = useState(BridgeStep.Initial)
+  const [showToList, setShowToList] = useState(false)
+  const [showFromList, setShowFromList] = useState(false)
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
@@ -157,15 +165,15 @@ export default function Bridge() {
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              disabled
-              onClick={() => null}
+              onClick={() => setShowFromList(val => !val)}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
+              show={showFromList}
+              onOuterClick={() => setShowFromList(false)}
               options={fromOptions}
               showWalletConnector={false}
               parentRef={fromPanelRef}
-              show={false}
-              onOuterClick={() => null}
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -175,15 +183,15 @@ export default function Bridge() {
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              disabled
-              onClick={() => null}
+              onClick={() => setShowToList(val => !val)}
+              disabled={isCollecting}
             />
             <NetworkSwitcherPopover
+              show={showToList}
+              onOuterClick={() => setShowToList(false)}
               options={toOptions}
               showWalletConnector={false}
               parentRef={toPanelRef}
-              show={false}
-              onOuterClick={() => null}
             />
           </div>
         </Row>
@@ -194,7 +202,8 @@ export default function Bridge() {
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
-          disableCurrencySelect={true}
+          onCurrencySelect={onCurrencySelection}
+          disableCurrencySelect={isCollecting}
           disabled={isCollecting}
           id="bridge-currency-input"
         />
