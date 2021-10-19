@@ -51,7 +51,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: 'ETH', // hardcoded until ERC20 implemented
+  currencyId: '',
   fromNetwork: {
     chainId: 1
   },
@@ -63,7 +63,7 @@ const initialState: BridgeState = {
   isCheckingWithdrawals: true,
   modal: {
     status: BridgeModalStatus.CLOSED,
-    currencyId: 'ETH', // hardcoded until ERC20 implemented
+    currencyId: '',
     typedValue: '',
     fromNetwork: {
       chainId: 1
