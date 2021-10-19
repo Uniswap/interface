@@ -89,6 +89,9 @@ export interface Colors {
   yellow2: Color
   blue1: Color
   warning: Color
+  lightBlue: Color
+  darkBlue: Color
+  blue: Color
 }
 
 export interface Grids {
