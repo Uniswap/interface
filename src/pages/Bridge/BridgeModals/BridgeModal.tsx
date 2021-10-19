@@ -85,14 +85,20 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
             error={error ?? ''}
           />
         )
-      case BridgeModalStatus.CLOSED:
+      case BridgeModalStatus.DISCLAIMER:
         return (
           <BridgeDisclaimerModal
             isOpen
+            onConfirm={() => {
+              setStatus(BridgeModalStatus.PENDING)
+            }}
             onDismiss={() => {
               setStatus(BridgeModalStatus.CLOSED)
             }}
-            msg={'eloszki'}
+            amount={typedValue}
+            assetType={currencyId ?? ''}
+            fromNetworkName={fromNetworkName}
+            toNetworkName={toNetworkName}
           />
         )
       default:

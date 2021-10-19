@@ -30,7 +30,8 @@ export enum BridgeModalStatus {
   CLOSED = 'CLOSED',
   INITIATED = 'INITIATED',
   ERROR = 'ERROR',
-  COLLECTING = 'COLLECTING'
+  COLLECTING = 'COLLECTING',
+  DISCLAIMER = 'DISCLAIMER'
 }
 
 export enum BridgeTxsFilter {
