@@ -136,9 +136,13 @@ msgstr "添加流动性:"
 msgid "Add {0} to Metamask"
 msgstr "将 {0} 添加到Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "进阶模式"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "仪表板"
 
-#: 
+#:
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi 首个"
 
@@ -486,7 +490,7 @@ msgstr "没看到您加入的池吗?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -511,19 +515,19 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "每次您收成奖励时，都会创建一个约 30 天的新释放期。多个释放期可以同时运行。每个释放期的解锁奖励可以随时领取（没有截止日期）。"
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Eligible Pools"
 #~ msgstr "符合条件的池"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "允许高滑点交易。使用的风险自负。"
 
@@ -685,7 +689,7 @@ msgstr "收成"
 msgid "Harvest All"
 msgstr "收成全部"
 
-#: 
+#:
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "通过单击下面列表中符合条件的池来获取您的奖励。"
 
@@ -746,7 +750,7 @@ msgstr "导入它。"
 msgid "Import your Wallet"
 msgstr "导入您的钱包"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "在进阶模式下，“确认交易”提示被停用。 这可能导致不良利率的高滑点交易。"
 
@@ -759,7 +763,7 @@ msgstr "增加 LP收益"
 msgid "Information"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -881,7 +885,7 @@ msgstr "锁定奖励"
 msgid "Lowest Gas"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
@@ -968,7 +972,7 @@ msgstr "迁移     流动性"
 msgid "Minimum received"
 msgstr "收到的最小值"
 
-#: 
+#:
 #~ msgid "My Dashboard"
 #~ msgstr "我的仪表板"
 
@@ -1054,7 +1058,7 @@ msgstr "关"
 msgid "ON"
 msgstr "开"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "只有当您意识到风险时才使用此模式"
 
@@ -1078,7 +1082,7 @@ msgstr "哎呀！ 出现未知错误。 请刷新页面，或从其他浏览器�
 msgid "Open Access to <0/> Liquidity"
 msgstr "开放获取<0/>流动性"
 
-#: 
+#:
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1095,11 +1099,11 @@ msgstr "输出估计。 至少您将收到"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "DeFi 的无权准入和无摩擦的流动性"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "请确认"
 
-#: 
+#:
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "请连接到适合的以太坊网络。"
 
@@ -1209,7 +1213,7 @@ msgstr "价格范围 {0}/{1}"
 msgid "Price:"
 msgstr "价格:"
 
-#: 
+#:
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1312,7 +1316,7 @@ msgstr "路由"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "通过这些代币的路由为您的交易带来了最好的价格。"
 
-#: 
+#:
 #~ msgid "START IN"
 #~ msgstr "开始"
 
@@ -1420,15 +1424,15 @@ msgstr "Swap Anyway"
 msgid "Swap Legacy"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1541,11 +1545,11 @@ msgstr "总价值锁定："
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "可以收成的总奖励。 收成的奖励会在约 30 天内锁定和逐步释放。"
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1587,7 +1591,7 @@ msgstr "如果出现高于此 % 的不利利率变化，交易将恢复"
 msgid "Try Again"
 msgstr "再试一次"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "打进阶模式"
 
@@ -1627,7 +1631,7 @@ msgstr "解锁: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1711,7 +1715,7 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "错误的网络"
 
-#: 
+#:
 #~ msgid "Yield"
 #~ msgstr "收益"
 
@@ -1751,11 +1755,11 @@ msgstr "您的池份额："
 msgid "Your position"
 msgstr "您的头寸"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "您从一开始就收成的总奖励。 每次您收成新的奖励时，它们都会在大约 30 天内锁定并逐步释放，从收成日期算起。 可以随时领取解锁的奖励（没有截止日期）。"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1792,7 +1796,7 @@ msgstr "您的交易将显示在此处..."
 msgid "and"
 msgstr ""
 
-#: 
+#:
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1854,7 +1858,7 @@ msgstr "{0} 待处理"
 msgid "{0} added"
 msgstr "{0} 添加"
 
-#: 
+#:
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1880,7 +1884,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} 代币更新"
 
-#: 
+#:
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} 区块"
 

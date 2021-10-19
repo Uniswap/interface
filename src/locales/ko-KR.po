@@ -136,9 +136,13 @@ msgstr "유동성 추가:"
 msgid "Add {0} to Metamask"
 msgstr "메타마스크에 {0} 추가"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "고급 모드"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "대시보드"
 
-#: 
+#:
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi의 첫 번째"
 
@@ -486,7 +490,7 @@ msgstr "예치한 풀이 보이지 않습니까?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -511,19 +515,19 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Eligible Pools"
 #~ msgstr "지정 풀"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. 자신의 책임하에 사용하십시오."
 
@@ -685,7 +689,7 @@ msgstr "수확하다"
 msgid "Harvest All"
 msgstr "모두 수확하기"
 
-#: 
+#:
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "아래 목록에서 자신이 예치한 풀을 클릭하여 보상을 받으십시오."
 
@@ -746,7 +750,7 @@ msgstr "가져오기."
 msgid "Import your Wallet"
 msgstr "지갑 가져오기"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "고급 모드에서는 '트랜잭션 확인' 하기 버튼이 비활성화되어 있습니다. 높은 슬립피지거래를 허용함으로써 좋지 못한 결과를 초래할수있습니다."
 
@@ -759,7 +763,7 @@ msgstr "LP 수익 증대"
 msgid "Information"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -881,7 +885,7 @@ msgstr "잠긴 보상"
 msgid "Lowest Gas"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
@@ -968,7 +972,7 @@ msgstr "마이그레이션 유동성"
 msgid "Minimum received"
 msgstr "최소 수령"
 
-#: 
+#:
 #~ msgid "My Dashboard"
 #~ msgstr "대시보드"
 
@@ -1054,7 +1058,7 @@ msgstr "꺼짐"
 msgid "ON"
 msgstr "켜짐"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "위험을 알고 있는 경우에만 이 모드를 사용하십시오"
 
@@ -1078,7 +1082,7 @@ msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고�
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> 유동성에 대한 공개 액세스"
 
-#: 
+#:
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1095,11 +1099,11 @@ msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "DeFi를 위한 무허가 및 풍부한 유동성"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "확인해주세요"
 
-#: 
+#:
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "이더리움 네트워크에 연결하십시오."
 
@@ -1209,7 +1213,7 @@ msgstr "가격대 {0}/{1}"
 msgid "Price:"
 msgstr "가격:"
 
-#: 
+#:
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1312,7 +1316,7 @@ msgstr "경로"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수 있습니다."
 
-#: 
+#:
 #~ msgid "START IN"
 #~ msgstr "에서 시작"
 
@@ -1420,15 +1424,15 @@ msgstr "스왑하기"
 msgid "Swap Legacy"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1541,11 +1545,11 @@ msgstr "예치된 자산 가치:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1587,7 +1591,7 @@ msgstr "이 %보다 높은 비율 변경이 있는 경우 거래가 거절됩니
 msgid "Try Again"
 msgstr "다시 시도"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "고급 모드 켜기"
 
@@ -1627,7 +1631,7 @@ msgstr "잠금 해제: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1711,7 +1715,7 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 
-#: 
+#:
 #~ msgid "Yield"
 #~ msgstr "유동성 마이닝"
 
@@ -1751,11 +1755,11 @@ msgstr "풀 비중:"
 msgid "Your position"
 msgstr "당신의 위치"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1792,7 +1796,7 @@ msgstr "거래가 여기에 표시됩니다..."
 msgid "and"
 msgstr ""
 
-#: 
+#:
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1854,7 +1858,7 @@ msgstr "{0} 보류 중"
 msgid "{0} added"
 msgstr "{0} 추가됨"
 
-#: 
+#:
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1880,7 +1884,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} 토큰이 업데이트되었습니다"
 
-#: 
+#:
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} 블록"
 

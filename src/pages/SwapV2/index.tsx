@@ -59,6 +59,7 @@ import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { formattedNum } from 'utils'
 import TotalTradingVolume from 'assets/svg/total_trade_volume.svg'
 import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
+import TransactionSettings from 'components/TransactionSettings'
 
 const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
@@ -302,6 +303,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
+                  <TransactionSettings />
                 </SwapFormActions>
               </RowBetween>
 

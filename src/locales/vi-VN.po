@@ -136,9 +136,13 @@ msgstr "Thêm thanh khoản:"
 msgid "Add {0} to Metamask"
 msgstr "Thêm {0} vào Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "Chế Độ Nâng Cao"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
 
-#: 
+#:
 #~ msgid "DeFi's First"
 #~ msgstr "Đầu tiên của DeFi"
 
@@ -486,7 +490,7 @@ msgstr "Không thấy Pool mà bạn đã tham gia?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -511,19 +515,19 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Mỗi khi bạn thu hoạch phần thưởng, một khoảng thời gian vesting mới ~ 30 ngày sẽ được tạo ra. Nhiều giai đoạn vesting có thể chạy đồng thời. Phần thưởng đã mở cho mỗi lượt vesting có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Eligible Pools"
 #~ msgstr "Các Pool Đủ Điều Kiện"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạn hiểu rõ rủi ro."
 
@@ -685,7 +689,7 @@ msgstr "Thu hoạch"
 msgid "Harvest All"
 msgstr "Thu hoạch tất cả"
 
-#: 
+#:
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "Thu thập phần thưởng của bạn bằng cách nhấp vào một hoặc nhiều Pool đủ điều kiện của bạn trong danh sách bên dưới."
 
@@ -746,7 +750,7 @@ msgstr "Nhập."
 msgid "Import your Wallet"
 msgstr "Nhập Ví của bạn"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "Trong Chế độ Nâng cao, lời nhắc 'xác nhận giao dịch' bị vô hiệu hóa. Điều này cho phép thực hiện các giao dịch có độ trượt giá cao và thường dẫn đến tỷ giá xấu."
 
@@ -759,7 +763,7 @@ msgstr "Tăng Lợi nhuận LP"
 msgid "Information"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -881,7 +885,7 @@ msgstr "Các Phần thưởng Đã Khóa"
 msgid "Lowest Gas"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
@@ -968,7 +972,7 @@ msgstr "Di chuyển     Thanh Khoản"
 msgid "Minimum received"
 msgstr "Đã nhận Tối thiểu"
 
-#: 
+#:
 #~ msgid "My Dashboard"
 #~ msgstr "Quản lý"
 
@@ -1054,7 +1058,7 @@ msgstr "OFF"
 msgid "ON"
 msgstr "ON"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN Ý THỨC ĐƯỢC CÁC RỦI RO"
 
@@ -1078,7 +1082,7 @@ msgstr "Oops! Đã xảy ra lỗi không xác định. Vui lòng làm mới tran
 msgid "Open Access to <0/> Liquidity"
 msgstr "Mở quyền truy cập vào <0 /> Thanh khoản"
 
-#: 
+#:
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1095,11 +1099,11 @@ msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "Thanh khoản Không xin phép và Dễ dàng cho DeFi"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Vui lòng xác nhận"
 
-#: 
+#:
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
 
@@ -1209,7 +1213,7 @@ msgstr "Phạm vi giá {0} / {1}"
 msgid "Price:"
 msgstr "Giá:"
 
-#: 
+#:
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1312,7 +1316,7 @@ msgstr "Tuyến"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Tuyến thông qua các token này dẫn đến giá tốt nhất cho giao dịch của bạn."
 
-#: 
+#:
 #~ msgid "START IN"
 #~ msgstr "BẮT ĐẦU VÀO"
 
@@ -1420,15 +1424,15 @@ msgstr "Vẫn chuyển đổi"
 msgid "Swap Legacy"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1541,11 +1545,11 @@ msgstr "Tổng Giá trị Đã khóa:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Tổng số phần thưởng có thể thu hoạch. Phần thưởng đã thu hoạch được khóa và trao vesting trong ~ 30 ngày."
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1587,7 +1591,7 @@ msgstr "Giao dịch sẽ hoàn nguyên nếu có sự thay đổi tỷ giá bấ
 msgid "Try Again"
 msgstr "Thử lại"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "Bật chế độ nâng cao"
 
@@ -1627,7 +1631,7 @@ msgstr "Đã mở khóa: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1711,7 +1715,7 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "Sai Mạng"
 
-#: 
+#:
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
@@ -1751,11 +1755,11 @@ msgstr "Tỷ lệ đóng góp nhóm của bạn:"
 msgid "Your position"
 msgstr "Vị trí của bạn"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Tổng số phần thưởng thu hoạch của bạn kể từ đầu. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và được cấp vesting trong ~ 30 ngày, bắt đầu từ ngày thu hoạch. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1792,7 +1796,7 @@ msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
 msgid "and"
 msgstr ""
 
-#: 
+#:
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1854,7 +1858,7 @@ msgstr "{0} Đang chờ xử lý"
 msgid "{0} added"
 msgstr "{0} đã được thêm vào"
 
-#: 
+#:
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1880,7 +1884,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "Đã cập nhật token {numTokensChanged}"
 
-#: 
+#:
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} blocks"
 
