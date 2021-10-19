@@ -1,4 +1,4 @@
-import { ContractReceipt, utils } from 'ethers'
+import { utils } from 'ethers'
 import { Bridge, OutgoingMessageState } from 'arb-ts'
 import { ChainId } from '@swapr/sdk'
 import { Store } from '@reduxjs/toolkit'
@@ -404,7 +404,7 @@ export class BridgeService {
     }
   }
 
-  public triggerOutboxERC20 = async (l2Tx: BridgeTransactionSummary): Promise<ContractReceipt | null | undefined> => {
+  public triggerOutboxERC20 = async (l2Tx: BridgeTransactionSummary) => {
     const { batchIndex, batchNumber, value } = l2Tx
     if (!this.account || !this.bridge || !this.l1ChainId || !batchIndex || !batchNumber || !value) return
 
@@ -457,10 +457,8 @@ export class BridgeService {
           outgoingMessageState: OutgoingMessageState.EXECUTED
         })
       )
-      return l1Receipt
     } catch (err) {
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
-      return
     }
   }
 }
