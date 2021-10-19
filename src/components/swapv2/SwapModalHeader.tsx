@@ -1,4 +1,4 @@
-import { Currency, TradeType } from 'libs/sdk/src'
+import { Currency, TradeType } from '@dynamic-amm/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

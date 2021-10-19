@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
 import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
-import { ChainId, Currency } from 'libs/sdk/src'
+import { ChainId, Currency } from '@dynamic-amm/sdk'
 import { AppState } from '../index'
 import { updatePools, setLoading, setError } from './actions'
 import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get24hValue } from 'utils'

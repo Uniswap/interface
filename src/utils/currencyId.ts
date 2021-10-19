@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER, Token, WETH } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER, Token, WETH } from '@dynamic-amm/sdk'
 import { convertToNativeTokenFromETH } from './dmm'
 
 export function currencyId(currency: Currency, chainId?: ChainId): string {

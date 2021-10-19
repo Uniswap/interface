@@ -1,4 +1,4 @@
-import { CurrencyAmount } from 'libs/sdk/src'
+import { CurrencyAmount } from '@dynamic-amm/sdk'
 import { DexConfig } from '../../constants/dexes'
 
 export interface AggregationComparer {

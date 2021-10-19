@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
 
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'

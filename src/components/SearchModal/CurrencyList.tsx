@@ -4,7 +4,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'libs/sdk/src'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@dynamic-amm/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalances } from '../../state/wallet/hooks'

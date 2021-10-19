@@ -6,7 +6,7 @@ import { MoreHorizontal } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
 
-import { Fraction, JSBI, Pair } from 'libs/sdk/src'
+import { Fraction, JSBI, Pair } from '@dynamic-amm/sdk'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import DropIcon from 'components/Icons/DropIcon'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'

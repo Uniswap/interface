@@ -7,7 +7,7 @@ import { TrezorConnector } from '@web3-react/trezor-connector'
 import { LedgerConnector } from '@web3-react/ledger-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 
 import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 

@@ -1,5 +1,5 @@
 import { CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
-import { Currency, TokenAmount as TokenAmountDMM } from 'libs/sdk/src'
+import { Currency, TokenAmount as TokenAmountDMM } from '@dynamic-amm/sdk'
 import { useUnAmplifiedPair } from 'data/Reserves'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

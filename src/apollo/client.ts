@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
-import { ChainId } from 'libs/sdk/src'
+import { ChainId } from '@dynamic-amm/sdk'
 
 export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri:

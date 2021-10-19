@@ -4,7 +4,7 @@ import { useMedia } from 'react-use'
 import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
-import { ChainId, Currency } from 'libs/sdk/src'
+import { ChainId, Currency } from '@dynamic-amm/sdk'
 import { POPULAR_PAIRS } from 'constants/index'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
 
-import { ChainId, WETH } from 'libs/sdk/src'
+import { ChainId, WETH } from '@dynamic-amm/sdk'
 import { KNC, ZERO_ADDRESS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useThrottle from 'hooks/useThrottle'

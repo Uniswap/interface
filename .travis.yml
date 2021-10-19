@@ -13,7 +13,6 @@ script:
   - echo "npm test temporarily disabled"
 
 install:
-  - git submodule update --remote
   - yarn
   - bash .travis/build.sh || true
   - ls build || true

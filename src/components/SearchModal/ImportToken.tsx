@@ -1,5 +1,5 @@
 import React from 'react'
-import { Token, Currency } from 'libs/sdk/src'
+import { Token, Currency } from '@dynamic-amm/sdk'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { TYPE, CloseIcon } from 'theme'

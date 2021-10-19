@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, WETH, CurrencyAmount, TokenAmount, JSBI, Token } from 'libs/sdk/src'
+import { ETHER, WETH, CurrencyAmount, TokenAmount, JSBI, Token } from '@dynamic-amm/sdk'
 import { Pair, Percent } from '@sushiswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'

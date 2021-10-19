@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from 'libs/sdk/src'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@dynamic-amm/sdk'
 import { useMemo } from 'react'
 import { t } from '@lingui/macro'
 import { DAI, UNI, USDC, USDT, WBTC } from '../../constants'

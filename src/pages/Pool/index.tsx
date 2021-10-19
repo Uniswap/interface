@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 
-import { Pair, JSBI, Token } from 'libs/sdk/src'
+import { Pair, JSBI, Token } from '@dynamic-amm/sdk'
 import { BIG_INT_ZERO } from '../../constants'
 import { SwapPoolTabs } from 'components/NavigationTabs'
 import FullPositionCard from 'components/PositionCard'

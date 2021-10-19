@@ -1,6 +1,6 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, Rounding, Token } from 'libs/sdk/src'
-import { ZERO } from 'libs/sdk/src/constants'
+import { ChainId, Percent, Rounding, Token } from '@dynamic-amm/sdk'
+import { ZERO } from '@dynamic-amm/sdk'
 import { Aggregator } from './aggregator'
 import { wrappedCurrencyAmount } from './wrappedCurrency'
 import { getAddress } from 'ethers/lib/utils'

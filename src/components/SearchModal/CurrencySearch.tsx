@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { t, Trans } from '@lingui/macro'
 
-import { Currency, ETHER, Token } from 'libs/sdk/src'
+import { Currency, ETHER, Token } from '@dynamic-amm/sdk'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList, useIsTokenActive } from 'hooks/Tokens'

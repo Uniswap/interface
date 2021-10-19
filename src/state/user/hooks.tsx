@@ -1,5 +1,5 @@
 import { useFactoryContract } from 'hooks/useContract'
-import { ChainId, Pair, Token } from 'libs/sdk/src'
+import { ChainId, Pair, Token } from '@dynamic-amm/sdk'
 import { Pair as PairUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
 import { Pair as PairSUSHI, Token as TokenSUSHI } from '@sushiswap/sdk'
 import flatMap from 'lodash.flatmap'

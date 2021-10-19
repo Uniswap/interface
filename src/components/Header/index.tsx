@@ -1,4 +1,4 @@
-import { ChainId, ETHER } from 'libs/sdk/src'
+import { ChainId, ETHER } from '@dynamic-amm/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'

@@ -1,5 +1,5 @@
 import { PairState, usePair } from 'data/Reserves'
-import { Currency, ETHER, Pair, Token } from 'libs/sdk/src'
+import { Currency, ETHER, Pair, Token } from '@dynamic-amm/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'

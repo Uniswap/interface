@@ -1,4 +1,15 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount, WETH } from 'libs/sdk/src'
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  ETHER,
+  JSBI,
+  Pair,
+  Percent,
+  Price,
+  TokenAmount,
+  WETH
+} from '@dynamic-amm/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
