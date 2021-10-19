@@ -86,7 +86,7 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'AVAX',
       decimals: 18
     },
-    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+    rpcUrls: ['https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm'],
     blockExplorerUrls: ['https://cchain.explorer.avax.network/']
   },
   [ChainId.FANTOM]: {
