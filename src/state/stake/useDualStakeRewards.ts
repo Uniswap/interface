@@ -108,7 +108,9 @@ export const useMultiStakeRewards = (
       ? getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRates)
       : totalRewardRates.map((totalRewardRate) => new TokenAmount(totalRewardRate.token, '0'))
 
-    const rewardTokens = [rewardsToken, ...underlyingPool.rewardTokens.reverse()]
+    const rewardTokens = [rewardsToken, ...underlyingPool.rewardTokens].sort((a, b) =>
+      a?.symbol && b?.symbol ? a.symbol.localeCompare(b.symbol) : 0
+    )
     const earnedAmounts = earned
       ? zip<BigNumber, Token>(earned, rewardTokens)
           .map(([amount, token]) => new TokenAmount(token as Token, amount?.toString() ?? '0'))
