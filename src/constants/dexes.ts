@@ -23,7 +23,7 @@ export const dexListConfig: DexList = {
   sushiswap: {
     name: 'SushiSwap',
     icon: 'https://sushi.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
   },
   quickswap: {
     name: 'QuickSwap',
