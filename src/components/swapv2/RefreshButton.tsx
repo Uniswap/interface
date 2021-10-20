@@ -13,7 +13,14 @@ const IconButton = styled.button`
   border: none;
   padding: 0;
   margin: 0;
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: transparent;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
 `
 
 const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
@@ -106,9 +113,9 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
 ArrowLocatorLoading.displayName = 'ArrowLocatorLoading'
 
 const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)`
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text};
   .background-path {
-    fill: #6c7284;
+    fill: ${({ theme }) => theme.disableText};
   }
 `
 

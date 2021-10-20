@@ -136,9 +136,13 @@ msgstr "Add liquidity:"
 msgid "Add {0} to Metamask"
 msgstr "Add {0} to Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "Advanced Mode"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr "Advanced Settings"
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -439,7 +443,7 @@ msgstr "Dark Mode"
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: 
+#:
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi's First"
 
@@ -486,7 +490,7 @@ msgstr "Don't see a pool you joined?"
 msgid "Duration: {duration}"
 msgstr "Duration: {duration}"
 
-#: 
+#:
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr "Duration: ~{lockedTime} days"
 
@@ -511,19 +515,19 @@ msgstr "Dynamic Trade Routing"
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 
-#: 
+#:
 #~ msgid "Eligible Pools"
 #~ msgstr "Eligible Pools"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "Enables high slippage trades. Use at your own risk."
 
@@ -685,7 +689,7 @@ msgstr "Harvest"
 msgid "Harvest All"
 msgstr "Harvest All"
 
-#: 
+#:
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "Harvest your rewards by clicking your eligible pool/s in the list below."
 
@@ -746,7 +750,7 @@ msgstr "Import it."
 msgid "Import your Wallet"
 msgstr "Import your Wallet"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 
@@ -759,7 +763,7 @@ msgstr "Increase LP Profit"
 msgid "Information"
 msgstr "Information"
 
-#: 
+#:
 #~ msgid "Initial ratio"
 #~ msgstr "Initial ratio"
 
@@ -881,7 +885,7 @@ msgstr "Locked Rewards"
 msgid "Lowest Gas"
 msgstr "Lowest Gas"
 
-#: 
+#:
 #~ msgid "Lowest Gas Cost"
 #~ msgstr "Lowest Gas Cost"
 
@@ -968,7 +972,7 @@ msgstr "Migrate     Liquidity"
 msgid "Minimum received"
 msgstr "Minimum received"
 
-#: 
+#:
 #~ msgid "My Dashboard"
 #~ msgstr "My Dashboard"
 
@@ -1054,7 +1058,7 @@ msgstr "OFF"
 msgid "ON"
 msgstr "ON"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 
@@ -1078,7 +1082,7 @@ msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from 
 msgid "Open Access to <0/> Liquidity"
 msgstr "Open Access to <0/> Liquidity"
 
-#: 
+#:
 #~ msgid "Order Routing"
 #~ msgstr "Order Routing"
 
@@ -1095,11 +1099,11 @@ msgstr "Output is estimated. You will receive at least"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "Permissionless and Frictionless Liquidity for DeFi"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Please Confirm"
 
-#: 
+#:
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Please connect to the appropriate Ethereum network."
 
@@ -1209,7 +1213,7 @@ msgstr "Price range {0}/{1}"
 msgid "Price:"
 msgstr "Price:"
 
-#: 
+#:
 #~ msgid "Prices"
 #~ msgstr "Prices"
 
@@ -1312,7 +1316,7 @@ msgstr "Route"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Routing through these tokens resulted in the best price for your trade."
 
-#: 
+#:
 #~ msgid "START IN"
 #~ msgstr "START IN"
 
@@ -1420,15 +1424,15 @@ msgstr "Swap Anyway"
 msgid "Swap Legacy"
 msgstr "Swap Legacy"
 
-#: 
+#:
 #~ msgid "Swap Token"
 #~ msgstr "Swap Token"
 
-#: 
+#:
 #~ msgid "Swap V2"
 #~ msgstr "Swap V2"
 
-#: 
+#:
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr "Swap any token accross different exchange for the best price"
 
@@ -1541,11 +1545,11 @@ msgstr "Total Value Locked:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 
@@ -1587,7 +1591,7 @@ msgstr "Transaction will revert if there is an adverse rate change that is highe
 msgid "Try Again"
 msgstr "Try Again"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "Turn On Advanced Mode"
 
@@ -1627,7 +1631,7 @@ msgstr "Unlocked: {0} {1}"
 msgid "Upcoming Farms"
 msgstr "Upcoming Farms"
 
-#: 
+#:
 #~ msgid "Upcoming Pools"
 #~ msgstr "Upcoming Pools"
 
@@ -1711,7 +1715,7 @@ msgstr "What can KNC be used for?"
 msgid "Wrong Network"
 msgstr "Wrong Network"
 
-#: 
+#:
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
@@ -1751,11 +1755,11 @@ msgstr "Your pool share:"
 msgid "Your position"
 msgstr "Your position"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 
@@ -1792,7 +1796,7 @@ msgstr "Your transactions will appear here..."
 msgid "and"
 msgstr "and"
 
-#: 
+#:
 #~ msgid "and Pool share"
 #~ msgstr "and Pool share"
 
@@ -1854,7 +1858,7 @@ msgstr "{0} Pending"
 msgid "{0} added"
 msgstr "{0} added"
 
-#: 
+#:
 #~ msgid "{0} blocks"
 #~ msgstr "{0} blocks"
 
@@ -1880,7 +1884,7 @@ msgstr "{0}-{1}"
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} tokens updated"
 
-#: 
+#:
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} blocks"
 

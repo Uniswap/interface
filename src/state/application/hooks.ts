@@ -69,6 +69,10 @@ export function useToggleSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.SETTINGS)
 }
 
+export function useToggleTransactionSettingsMenu(): () => void {
+  return useToggleModal(ApplicationModal.TRANSACTION_SETTINGS)
+}
+
 export function useShowClaimPopup(): boolean {
   return useModalOpen(ApplicationModal.CLAIM_POPUP)
 }

@@ -136,9 +136,13 @@ msgstr "Likidite Ekle:"
 msgid "Add {0} to Metamask"
 msgstr "{0} Meta Mask’a Eklensin"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "Gelişmiş Mod"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Kontrol Paneli"
 
-#: 
+#:
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi’de İlk"
 
@@ -486,7 +490,7 @@ msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -511,19 +515,19 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Ödülleri her topladığınızda, ~30 günlük yeni bir vesting süresi oluşturulur. Birden fazla vesting dönemi aynı anda çalışabilir. Vesting süreci sonrası kilidi açılmış ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
-#: 
+#:
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Eligible Pools"
 #~ msgstr "Uygun Havuzlar"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "Yüksek kaymalı işlemlere olanak tanır. Kendi sorumluluğunuzda kullanın."
 
@@ -685,7 +689,7 @@ msgstr "Topla"
 msgid "Harvest All"
 msgstr "Tümünü Topla"
 
-#: 
+#:
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "Aşağıdaki listede bulunan uygun bir veya daha çok havuza tıklayarak ödüllerinizi toplayın."
 
@@ -746,7 +750,7 @@ msgstr "İçe aktar."
 msgid "Import your Wallet"
 msgstr "Cüzdanını içe aktar"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "Gelişmiş Modda, 'işlemi onayla' istemi devre dışı bırakılır. Bu, genellikle kötü oranlarla sonuçlanan yüksek kaymalı işlemlere izin verir."
 
@@ -759,7 +763,7 @@ msgstr "LP Karını Artırın"
 msgid "Information"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -881,7 +885,7 @@ msgstr "Kilitli Ödüller"
 msgid "Lowest Gas"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
@@ -968,7 +972,7 @@ msgstr "Likiditeyi     Taşı"
 msgid "Minimum received"
 msgstr "Minimum alındı"
 
-#: 
+#:
 #~ msgid "My Dashboard"
 #~ msgstr "Gösterge Panelim"
 
@@ -1054,7 +1058,7 @@ msgstr "KAPALI"
 msgid "ON"
 msgstr "AÇIK"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "BU MODU YALNIZCA RİSKLERİN BİLİNCİNDEYSENİZ KULLANIN"
 
@@ -1078,7 +1082,7 @@ msgstr "Hay Aksi! Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin ya da 
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> Likiditeye Açık Erişim"
 
-#: 
+#:
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1095,11 +1099,11 @@ msgstr "Çıktı tahmin ediliyor. En azı alacaksınız"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "DeFi için İzin Gerektirmeyen ve Sorunsuz Likidite"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Lütfen onaylayın"
 
-#: 
+#:
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Lütfen uygun Ethereum ağına bağlanın."
 
@@ -1209,7 +1213,7 @@ msgstr "Fiyat aralığı {0}/{1}"
 msgid "Price:"
 msgstr "Fiyat:"
 
-#: 
+#:
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1312,7 +1316,7 @@ msgstr "Rota"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Bu token’lar aracılığıyla yönlendirme, işleminiz için en iyi fiyatı sağladı."
 
-#: 
+#:
 #~ msgid "START IN"
 #~ msgstr "BAŞLA"
 
@@ -1420,15 +1424,15 @@ msgstr "Yine de Takası Yap"
 msgid "Swap Legacy"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#: 
+#:
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1541,11 +1545,11 @@ msgstr "Kilitli Toplam Değer:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Toplanabilecek toplam ödüllerdir. Hasat edilen ödüller kilitlenir ve ~30 gün boyunca vesting süreci işler."
 
-#: 
+#:
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1587,7 +1591,7 @@ msgstr "Bu %'den daha yüksek bir olumsuz oran değişikliği olursa işlem geri
 msgid "Try Again"
 msgstr "Tekrar deneyin"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "Gelişmiş Modu Aç"
 
@@ -1627,7 +1631,7 @@ msgstr "Kilidi açık: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#: 
+#:
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1711,7 +1715,7 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "Yanlış Ağ"
 
-#: 
+#:
 #~ msgid "Yield"
 #~ msgstr "Getiri"
 
@@ -1751,11 +1755,11 @@ msgstr "Havuz paylaşımınız:"
 msgid "Your position"
 msgstr "Pozisyonun"
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Başından beri toplam hasat ödüllerinizdir. Her yeni ödül toplamanızda, bunlar hasat tarihinden itibaren ~ 30 gün boyunca kilitlenir ve süre içinde kazanılır. Süreç ile birlikte kilidi açılan ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
-#: 
+#:
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1792,7 +1796,7 @@ msgstr "İşlemleriniz burada görünecek..."
 msgid "and"
 msgstr ""
 
-#: 
+#:
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1854,7 +1858,7 @@ msgstr "{0} Beklemede"
 msgid "{0} added"
 msgstr "{0} eklendi"
 
-#: 
+#:
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1880,7 +1884,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} token güncellendi"
 
-#: 
+#:
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} blok"
 
