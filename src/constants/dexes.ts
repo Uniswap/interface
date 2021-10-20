@@ -23,7 +23,7 @@ export const dexListConfig: DexList = {
   sushiswap: {
     name: 'SushiSwap',
     icon: 'https://sushi.com/favicon.ico',
-    chainIds: [ChainId.MAINNET, ChainId.MATIC]
+    chainIds: [ChainId.MAINNET, ChainId.MATIC, ChainId.FANTOM]
   },
   quickswap: {
     name: 'QuickSwap',
@@ -77,6 +77,11 @@ export const dexListConfig: DexList = {
   },
   pancake: {
     name: 'PancakeSwap',
+    icon: 'https://pancakeswap.finance/favicon.ico',
+    chainIds: [ChainId.BSCMAINNET]
+  },
+  'pancake-legacy': {
+    name: 'PancakeSwap Legacy',
     icon: 'https://pancakeswap.finance/favicon.ico',
     chainIds: [ChainId.BSCMAINNET]
   },
