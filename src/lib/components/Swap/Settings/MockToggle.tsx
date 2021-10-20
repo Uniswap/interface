@@ -6,11 +6,11 @@ import { mockTogglableAtom } from '../state'
 import Label from './Label'
 
 export default function MockToggle() {
-  const [simplifyUi, toggleSimplifyUi] = useAtom(mockTogglableAtom)
+  const [mockTogglable, toggleMockTogglable] = useAtom(mockTogglableAtom)
   return (
     <Row>
-      <Label name="Simplified UI" />
-      <Toggle checked={simplifyUi} onToggle={toggleSimplifyUi} />
+      <Label name="Mock Toggle" />
+      <Toggle checked={mockTogglable} onToggle={toggleMockTogglable} />
     </Row>
   )
 }
