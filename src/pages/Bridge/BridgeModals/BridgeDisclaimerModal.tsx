@@ -43,18 +43,20 @@ export const BridgeDisclaimerModal = ({
     <Wrapper>
       <ArrowRightCircle strokeWidth={0.5} size={75} color="#0E9F6E" />
       <TitleWrapper>
-        <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
+        <TYPE.body fontSize="22px" fontWeight="500" color="text1" textAlign="center">
           {txType} {amount} {assetType}
         </TYPE.body>
       </TitleWrapper>
-      <TYPE.main mb="24px">
-        You are about to {txType} {amount} {assetType} from {fromNetworkName} to {toNetworkName}
+      <TYPE.main mb="16px" fontSize="16px" fontWeight="600" color="#EBE9F8" textAlign="center" lineHeight="1.6">
+        You are about to {txType} {amount} {assetType} from <br /> {fromNetworkName} to {toNetworkName}
       </TYPE.main>
-      <TYPE.small mb="24px">
+      <TYPE.small mb="24px" textAlign="center" fontSize="14px" lineHeight="1.6">
         {textInfo}
         Would you like to proceed?
       </TYPE.small>
-      <ButtonPrimary onClick={onConfirm}>CONFIRM</ButtonPrimary>
+      <ButtonPrimary mb="12px" onClick={onConfirm}>
+        CONFIRM
+      </ButtonPrimary>
       <ButtonSecondary onClick={onDismiss}>CANCEL</ButtonSecondary>
     </Wrapper>
   </Modal>
