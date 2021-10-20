@@ -78,11 +78,13 @@ export function PrivacyPolicyModal() {
   const toggle = useTogglePrivacyPolicy()
 
   useEffect(() => {
+    if (!open) return
+
     ReactGA.event({
-      category: 'Modals',
-      action: 'Privacy and terms',
+      category: 'Modal',
+      action: 'Show Legal',
     })
-  }, [])
+  }, [open])
 
   return (
     <Modal isOpen={open} onDismiss={() => toggle()}>
