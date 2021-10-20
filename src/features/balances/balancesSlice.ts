@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SupportedChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
-import { AccountStub } from 'src/features/wallet/accounts/types'
 
 interface Balances {
   byChainId: {
@@ -24,28 +23,28 @@ const slice = createSlice({
     updateBalances: (
       state,
       action: PayloadAction<{
-        account: AccountStub
+        address: Address
+        chainId: SupportedChainId
         updatedBalances: { [tokenAddress: Address]: Balance }
       }>
     ) => {
-      const { account, updatedBalances } = action.payload
-      const { address: accountAddress, chainId } = account
-
+      const { address: accountAddress, chainId, updatedBalances } = action.payload
       Object.keys(updatedBalances).forEach((tokenAddress) => {
         state.byChainId[chainId] ??= {}
+        state.byChainId[chainId]![tokenAddress] ??= {}
         state.byChainId[chainId]![tokenAddress][accountAddress] = updatedBalances[tokenAddress]
       })
     },
     updateBalance: (
       state,
       action: PayloadAction<{
-        account: AccountStub
+        address: Address
+        chainId: SupportedChainId
         tokenAddress: Address
         balance: Balance
       }>
     ) => {
-      const { account, tokenAddress, balance } = action.payload
-      const { address: accountAddress, chainId } = account
+      const { address: accountAddress, chainId, tokenAddress, balance } = action.payload
       state.byChainId[chainId] ??= {}
       state.byChainId[chainId]![tokenAddress] ??= {}
       state.byChainId[chainId]![tokenAddress][accountAddress] = balance

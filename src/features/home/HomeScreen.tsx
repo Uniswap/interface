@@ -39,7 +39,7 @@ export function HomeScreen({ navigation }: Props) {
 
   const onPressGetBalance = async () => {
     if (!activeAccount) return
-    dispatch(fetchBalancesActions.trigger(activeAccount))
+    dispatch(fetchBalancesActions.trigger(activeAccount.address))
     logger.debug(balances)
   }
 
