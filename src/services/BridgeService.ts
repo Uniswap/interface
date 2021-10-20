@@ -184,7 +184,7 @@ export class BridgeService {
     const withdrawalsInfo = await Promise.all(promises)
 
     withdrawalsInfo.forEach(withdrawalInfo => {
-      if (!this.l2ChainId) return // damn you strict ts, I've checked you already
+      if (!this.l2ChainId) return
       const { outgoingMessageState, batchNumber, batchIndex, txHash } = withdrawalInfo
 
       if (outgoingMessageState !== undefined) {
@@ -209,15 +209,6 @@ export class BridgeService {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
-    // this.store.dispatch(
-    //   setBridgeModalData({
-    //     currencyId: 'ETH',
-    //     typedValue: value,
-    //     fromChainId: this.l1ChainId,
-    //     toChainId: this.l2ChainId
-    //   })
-    // )
-
     const weiValue = utils.parseEther(value)
 
     try {
