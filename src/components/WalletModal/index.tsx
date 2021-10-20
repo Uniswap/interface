@@ -200,8 +200,9 @@ export default function WalletModal({
 
     connector &&
       activate(connector, undefined, true)
-        .then(() => {
-          logMonitoringEvent('wallet connected')
+        .then(async () => {
+          const walletAddress = await connector.getAccount()
+          logMonitoringEvent('wallet connected', { walletAddress })
         })
         .catch((error) => {
           if (error instanceof UnsupportedChainIdError) {
