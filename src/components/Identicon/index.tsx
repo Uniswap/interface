@@ -1,4 +1,5 @@
-import Davatar from '@davatar/react'
+import Davatar, { Image } from '@davatar/react'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -13,10 +14,19 @@ const StyledIdenticonContainer = styled.div`
 export default function Identicon() {
   const { account, library } = useActiveWeb3React()
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
+  // restrict usage of Davatar until it stops sending 3p requests
+  // see https://github.com/metaphor-xyz/davatar-helpers/issues/18
+  const supportsENS = useMemo(() => {
+    return ([1, 3, 4, 5] as Array<number | undefined>).includes(library?.network.chainId)
+  }, [library])
+
   return (
     <StyledIdenticonContainer>
-      {account && library?.provider && <Davatar address={account} size={16} provider={library.provider} />}
+      {account && supportsENS ? (
+        <Davatar address={account} size={16} provider={library} />
+      ) : (
+        <Image address={account} size={16} />
+      )}
     </StyledIdenticonContainer>
   )
 }
