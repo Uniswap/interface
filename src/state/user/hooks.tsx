@@ -122,10 +122,7 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
 }
 
 export function useRoutingAPIEnabled(): boolean {
-  const { chainId } = useActiveWeb3React()
-  const [clientSideRouter] = useClientSideRouter()
-
-  return chainId === SupportedChainId.MAINNET && !clientSideRouter
+  return false
 }
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {

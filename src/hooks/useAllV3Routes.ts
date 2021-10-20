@@ -25,7 +25,7 @@ function computeAllRoutes(
   currentPath: Pool[] = [],
   allPaths: Route<Currency, Currency>[] = [],
   startCurrencyIn: Currency = currencyIn,
-  maxHops = 2
+  maxHops = 1
 ): Route<Currency, Currency>[] {
   const tokenIn = currencyIn?.wrapped
   const tokenOut = currencyOut?.wrapped
@@ -37,17 +37,6 @@ function computeAllRoutes(
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {
       allPaths.push(new Route([...currentPath, pool], startCurrencyIn, currencyOut))
-    } else if (maxHops > 1) {
-      computeAllRoutes(
-        outputToken,
-        currencyOut,
-        pools,
-        chainId,
-        [...currentPath, pool],
-        allPaths,
-        startCurrencyIn,
-        maxHops - 1
-      )
     }
   }
 
@@ -69,7 +58,7 @@ export function useAllV3Routes(
   return useMemo(() => {
     if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
 
-    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 2)
+    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId, [], [], currencyIn, 1)
     return { loading: false, routes }
   }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
 }

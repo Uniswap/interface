@@ -18,11 +18,8 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
       <RowBetween>
         <RowFixed>
           <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
-            <Trans>Swap</Trans>
+            <Trans>Limit Order</Trans>
           </TYPE.black>
-        </RowFixed>
-        <RowFixed>
-          <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
     </StyledSwapHeader>

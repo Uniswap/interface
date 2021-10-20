@@ -23,13 +23,18 @@ const DEFAULT_GAS_QUOTE = 2_000_000
  * Returns the best v3 trade for a desired swap
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
+ * @param priceSpecified the target price to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
 export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
+  priceSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
+  // TODO (pai) get the recommended route for the limit order based on the fee / liquidity
+  //  if no such exists; show it (and provide a link to create it first)
+
   const [currencyIn, currencyOut] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -87,7 +92,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       ) => {
         if (!result) return currentBest
 
-        // overwrite the current best if it's not defined or if this route is better
+        // TODO; add another trade type -- > LIMIT ORDER
         if (tradeType === TradeType.EXACT_INPUT) {
           const amountOut = CurrencyAmount.fromRawAmount(currencyOut, result.amountOut.toString())
           if (currentBest.amountOut === null || JSBI.lessThan(currentBest.amountOut.quotient, amountOut.quotient)) {

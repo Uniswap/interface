@@ -52,7 +52,7 @@ export function AutoRouterLabel() {
     <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
   ) : (
     <TYPE.black fontSize={14}>
-      <Trans>Trade Route</Trans>
+      <Trans>Limit Order Pool</Trans>
     </TYPE.black>
   )
 }

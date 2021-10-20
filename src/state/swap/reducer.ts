@@ -1,12 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies } from './actions'
+import { typeInput, typeOutput } from './actions'
 import { queryParametersToSwapState } from './hooks'
 
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
+  readonly priceValue: string
   readonly [Field.INPUT]: {
     readonly currencyId: string | undefined | null
   }
@@ -23,7 +25,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
+      (state, { payload: { typedValue, priceValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
           [Field.INPUT]: {
             currencyId: inputCurrencyId ?? null,
@@ -33,6 +35,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
           },
           independentField: field,
           typedValue,
+          priceValue,
           recipient,
         }
       }
@@ -63,11 +66,16 @@ export default createReducer<SwapState>(initialState, (builder) =>
         [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
       }
     })
-    .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
+    .addCase(typeInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,
-        independentField: field,
         typedValue,
+      }
+    })
+    .addCase(typeOutput, (state, { payload: { priceValue } }) => {
+      return {
+        ...state,
+        priceValue,
       }
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {

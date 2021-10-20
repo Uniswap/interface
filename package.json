@@ -145,7 +145,7 @@
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "postinstall": "yarn contracts:compile && yarn graphql:generate && yarn i18n:compile",
-    "start": "react-scripts start",
+    "start": "HOST=192.168.254.143 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",

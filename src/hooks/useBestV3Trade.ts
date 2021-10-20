@@ -18,48 +18,24 @@ import useIsWindowVisible from './useIsWindowVisible'
 export function useBestV3Trade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
+  priceSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
 } {
-  const routingAPIEnabled = useRoutingAPIEnabled()
-  const isWindowVisible = useIsWindowVisible()
-
   const debouncedAmount = useDebounce(amountSpecified, 100)
+  const debouncedPriceAmount = useDebounce(priceSpecified, 100)
 
-  const routingAPITrade = useRoutingAPITrade(
-    tradeType,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
-  )
+  let isLoading = amountSpecified !== undefined && debouncedAmount === undefined
+  isLoading = isLoading || (priceSpecified !== undefined && debouncedPriceAmount === undefined)
 
-  const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
-
-  // consider trade debouncing when inputs/outputs do not match
-  const debouncing =
-    routingAPITrade.trade &&
-    amountSpecified &&
-    (tradeType === TradeType.EXACT_INPUT
-      ? !routingAPITrade.trade.inputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.inputAmount.currency) ||
-        !otherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
-      : !routingAPITrade.trade.outputAmount.equalTo(amountSpecified) ||
-        !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
-        !otherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
-
-  const useFallback = !routingAPIEnabled || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
-
-  // only use client side router if routing api trade failed
-  const bestV3Trade = useClientSideV3Trade(
-    tradeType,
-    useFallback ? debouncedAmount : undefined,
-    useFallback ? otherCurrency : undefined
-  )
+  // use client side router
+  const bestV3Trade = useClientSideV3Trade(TradeType.EXACT_INPUT, debouncedAmount, debouncedPriceAmount, otherCurrency)
+  console.log(bestV3Trade)
 
   return {
-    ...(useFallback ? bestV3Trade : routingAPITrade),
-    ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+    ...bestV3Trade,
     ...(isLoading ? { state: V3TradeState.LOADING } : {}),
   }
 }

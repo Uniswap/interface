@@ -114,13 +114,14 @@ export default function Swap({ history }: RouteComponentProps) {
   const toggledVersion = useToggledVersion()
 
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue, priceValue, recipient } = useSwapState()
   const {
     v3Trade: { state: v3TradeState },
     bestTrade: trade,
     allowedSlippage,
     currencyBalances,
     parsedAmount,
+    priceAmount,
     currencies,
     inputError: swapInputError,
   } = useDerivedSwapInfo(toggledVersion)
@@ -138,13 +139,13 @@ export default function Swap({ history }: RouteComponentProps) {
       showWrap
         ? {
             [Field.INPUT]: parsedAmount,
-            [Field.OUTPUT]: parsedAmount,
+            [Field.OUTPUT]: priceAmount,
           }
         : {
-            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.INPUT]: parsedAmount,
+            [Field.OUTPUT]: priceAmount,
           },
-    [independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, priceAmount, showWrap, trade]
   )
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
