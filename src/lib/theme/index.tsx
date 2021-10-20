@@ -18,13 +18,10 @@ export const useTheme = useStyled as unknown as () => Theme
 
 export function icon(Icon: Icon, color = 'secondary' as Color) {
   return styled(Icon)<{ theme: Theme }>`
+    clip-path: stroke-box;
     height: 16px;
-    mix-blend-mode: lighten;
+    stroke: ${({ theme }) => theme[color]};
     width: 16px;
-
-    > * {
-      stroke: ${({ theme }) => theme[color]};
-    }
   `
 }
 
