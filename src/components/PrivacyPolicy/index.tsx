@@ -6,6 +6,7 @@ import { ArrowDown, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
+import { isMobile } from 'utils/userAgent'
 
 import { useModalOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -105,7 +106,15 @@ export function PrivacyPolicyModal() {
 
 export function PrivacyPolicy() {
   return (
-    <Wrapper>
+    <Wrapper
+      draggable="true"
+      onTouchMove={(e) => {
+        // prevent modal gesture handler from dismissing modal when content is scrolling
+        if (isMobile) {
+          e.stopPropagation()
+        }
+      }}
+    >
       <AutoColumn gap="16px">
         <AutoColumn gap="8px" style={{ width: '100%' }}>
           <StyledExternalCard>
@@ -136,7 +145,7 @@ export function PrivacyPolicy() {
           </StyledExternalCard>
         </AutoColumn>
         <TYPE.main fontSize={14}>
-          <Trans>This webapp uses APIs to power certain features:</Trans>
+          <Trans>This app uses the following third-party APIs:</Trans>
         </TYPE.main>
         <AutoColumn gap="12px">
           {EXTERNAL_APIS.map(({ name, description }, i) => (

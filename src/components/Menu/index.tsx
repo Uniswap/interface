@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
@@ -8,11 +7,11 @@ import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  Book,
   BookOpen,
   Check,
   ChevronLeft,
   Code,
+  FileText,
   Globe,
   Info,
   MessageCircle,
@@ -291,7 +290,7 @@ export default function Menu() {
                       <div>
                         <Trans>Legal & Privacy</Trans>
                       </div>
-                      <Book opacity={0.6} size={16} />
+                      <FileText opacity={0.6} size={16} />
                     </ToggleMenuItem>
                     {showUNIClaimOption && (
                       <UNIbutton
