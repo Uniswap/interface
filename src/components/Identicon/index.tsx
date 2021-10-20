@@ -1,4 +1,4 @@
-import Davatar from '@davatar/react'
+import Davatar, { Image } from '@davatar/react'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
@@ -22,7 +22,11 @@ export default function Identicon() {
 
   return (
     <StyledIdenticonContainer>
-      {account && supportsENS && <Davatar address={account} size={16} provider={library} />}
+      {account && supportsENS ? (
+        <Davatar address={account} size={16} provider={library} />
+      ) : (
+        <Image address={account} size={16} />
+      )}
     </StyledIdenticonContainer>
   )
 }
