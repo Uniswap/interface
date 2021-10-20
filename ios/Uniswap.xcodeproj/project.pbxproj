@@ -451,6 +451,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = JH3UHGZD75;
 				ENABLE_BITCODE = NO;
@@ -467,6 +468,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev;
 				PRODUCT_NAME = Uniswap;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.uniswap.mobile.dev";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -479,6 +481,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = JH3UHGZD75;
 				INFOPLIST_FILE = Uniswap/Info.plist;
@@ -494,6 +498,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev;
 				PRODUCT_NAME = Uniswap;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
