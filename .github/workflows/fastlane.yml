@@ -24,7 +24,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '12.5.1' # Use 12.5.1 specifically since Detox does not support iOS15 yet. Xcode 12.5.1 uses iOS 14.x
+          xcode-version: '13.0'
 
       - uses: actions/checkout@v2
         with:
