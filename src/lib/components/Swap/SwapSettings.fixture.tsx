@@ -1,12 +1,11 @@
-import { FixtureProvider } from 'lib/theme/FixtureProvider'
-
 import { Modal } from '../Dialog'
+import Widget from '../Widget'
 import { SettingsDialog } from './Settings'
 
 export default (
-  <FixtureProvider height={360}>
+  <Widget>
     <Modal>
       <SettingsDialog onClose={() => void 0} />
     </Modal>
-  </FixtureProvider>
+  </Widget>
 )

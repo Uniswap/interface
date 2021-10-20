@@ -1,4 +1,3 @@
-import { Provider } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils/atoms'
 
@@ -41,5 +40,3 @@ export const gasPriceAtom = pickAtom(settingsAtom, 'gasPrice', setCustomizable(G
 export const maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage', setCustomizable(MaxSlippage))
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
 export const simplifyUiAtom = pickAtom(settingsAtom, 'simplifyUi', setTogglable)
-
-export default Provider
