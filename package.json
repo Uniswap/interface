@@ -8,7 +8,7 @@
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/uniswapV3/types './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "debug": "react-devtools",
-    "deploy:ios:alpha": "fastlane ios alpha",
+    "deploy:ios:alpha": "fastlane ios buildAndShip",
     "i18n:extract": "i18next",
     "ios": "SKIP_BUNDLING=1 react-native run-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
