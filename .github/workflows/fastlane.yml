@@ -2,6 +2,7 @@ name: Fastlane deploy iOS
 # referenced from https://github.com/invertase/react-native-firebase/blob/master/.github/workflows/tests_e2e_ios.yml
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 2 * * 1,3,5' # run at 2 AM UTC MWF
 
