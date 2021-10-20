@@ -31,8 +31,8 @@ export const BridgeModal = ({
   const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
   const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
   const textInfo = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum
-    ? 'It will take ~1 week for you to see your balance credited on L1.'
-    : 'It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if you later wish to do so) takes ~1 week.'
+    ? 'It will take ~1 week for you to see your balance credited on L1. '
+    : 'It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if you later wish to do so) takes ~1 week. '
 
   const selectModal = () => {
     switch (status) {

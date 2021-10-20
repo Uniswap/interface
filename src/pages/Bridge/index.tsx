@@ -115,19 +115,14 @@ export default function Bridge() {
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
   const handleSubmit = useCallback(async () => {
-    if (!chainId || !bridgeService) return
-    if (!NETWORK_DETAIL[chainId].isArbitrum) {
-      setModalData({
-        currencyId: 'ETH',
-        typedValue: typedValue,
-        fromChainId: fromNetwork.chainId,
-        toChainId: toNetwork.chainId
-      })
-      setModalStatus(BridgeModalStatus.DISCLAIMER)
-    } else {
-      await bridgeService.withdrawEth(typedValue)
-    }
-  }, [bridgeService, chainId, fromNetwork.chainId, setModalData, setModalStatus, toNetwork.chainId, typedValue])
+    setModalData({
+      currencyId: 'ETH',
+      typedValue: typedValue,
+      fromChainId: fromNetwork.chainId,
+      toChainId: toNetwork.chainId
+    })
+    setModalStatus(BridgeModalStatus.DISCLAIMER)
+  }, [fromNetwork.chainId, toNetwork.chainId, typedValue, setModalData, setModalStatus])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
@@ -150,9 +145,13 @@ export default function Bridge() {
   }, [bridgeService, collectableTx])
 
   const handleDisclaimerConfirm = useCallback(async () => {
-    if (!bridgeService) return
-    await bridgeService.depositEth(typedValue)
-  }, [bridgeService, typedValue])
+    if (!chainId || !bridgeService) return
+    if (!NETWORK_DETAIL[chainId].isArbitrum) {
+      await bridgeService.depositEth(typedValue)
+    } else {
+      await bridgeService.withdrawEth(typedValue)
+    }
+  }, [bridgeService, chainId, typedValue])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
