@@ -1,7 +1,7 @@
-import styled from 'lib/theme'
+import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 
-const Input = styled.input`
+const Input = styled.input<{ text: string; theme: Theme }>`
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};
@@ -27,7 +27,7 @@ const Input = styled.input`
     content: '';
     display: inline-block;
     height: 1.5em;
-    margin: 0.25em;
+    margin-left: 0.25em;
     width: 1.5em;
     position: absolute;
   }
@@ -49,7 +49,7 @@ const Input = styled.input`
 
   :after {
     color: ${({ theme }) => theme.primary};
-    content: 'OFF';
+    content: '${({ text }) => text}';
     text-align: center;
     width: 2.75em;
 
@@ -58,7 +58,6 @@ const Input = styled.input`
   }
 
   :checked:after {
-    content: 'ON';
     margin-left: 0;
   }
 
@@ -75,7 +74,12 @@ interface ToggleProps {
 export default function Toggle({ checked, onToggle }: ToggleProps) {
   return (
     <TYPE.buttonMedium>
-      <Input type="checkbox" checked={checked} onChange={({ target: { checked } }) => onToggle(checked)} />
+      <Input
+        type="checkbox"
+        checked={checked}
+        text={checked ? 'ON' : 'OFF'}
+        onChange={({ target: { checked } }) => onToggle(checked)}
+      />
     </TYPE.buttonMedium>
   )
 }
