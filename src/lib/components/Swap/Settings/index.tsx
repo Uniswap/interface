@@ -9,7 +9,6 @@ import Column from '../../Column'
 import Dialog, { DialogBody, DialogHeader } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
 import { settingsAtom } from '../state'
-import GasPriceSelect from './GasPriceSelect'
 import MaxSlippageSelect from './MaxSlippageSelect'
 import SimplifyUiToggle from './SimplifyUiToggle'
 import TransactionTtlInput from './TransactionTtlInput'
@@ -41,7 +40,6 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
       <DialogBody ref={setBoundary}>
         <Column gap="1em">
           <BoundaryProvider value={boundary}>
-            <GasPriceSelect />
             <MaxSlippageSelect />
             <TransactionTtlInput />
             <SimplifyUiToggle />
