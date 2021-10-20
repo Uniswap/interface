@@ -90,10 +90,7 @@ platform :ios do
       output_directory: OUTPUT_DIRECTORY,
       output_name: "#{PROJECT_NAME}.ipa",
       export_options: {
-        method: export_options_method,
-        provisioningProfiles: {
-          options[:app_identifier] => ENV["sigh_#{options[:app_identifier]}_#{match_type}_profile-name"],
-        }
+        method: export_options_method
       },
     )
 
