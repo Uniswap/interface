@@ -104,5 +104,6 @@ jobs:
           CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
           GIT_BRANCH_NAME: ${{ github.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
           
 
