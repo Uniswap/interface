@@ -39,7 +39,16 @@ platform :ios do
         lock_when_sleeps: false
       )
       match(
-        type: match_type,
+        type: "development",
+        keychain_name: ENV["CI_KEYCHAIN_NAME"],
+        keychain_password: ENV["CI_KEYCHAIN_PASSWORD"],
+        readonly: true,
+        shallow_clone: true,
+        verbose: false,
+        clone_branch_directly: true,
+      )
+      match(
+        type: "appstore",
         keychain_name: ENV["CI_KEYCHAIN_NAME"],
         keychain_password: ENV["CI_KEYCHAIN_PASSWORD"],
         readonly: true,
