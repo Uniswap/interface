@@ -10,7 +10,7 @@ import Dialog, { DialogBody, DialogHeader } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
 import { settingsAtom } from '../state'
 import MaxSlippageSelect from './MaxSlippageSelect'
-import SimplifyUiToggle from './SimplifyUiToggle'
+import MockToggle from './MockToggle'
 import TransactionTtlInput from './TransactionTtlInput'
 
 const Wrapper = styled.div`
@@ -42,7 +42,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
           <BoundaryProvider value={boundary}>
             <MaxSlippageSelect />
             <TransactionTtlInput />
-            <SimplifyUiToggle />
+            <MockToggle />
           </BoundaryProvider>
         </Column>
       </DialogBody>

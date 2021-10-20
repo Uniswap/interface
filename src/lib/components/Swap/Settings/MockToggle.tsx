@@ -2,11 +2,11 @@ import { useAtom } from 'jotai'
 
 import Row from '../../Row'
 import Toggle from '../../Toggle'
-import { simplifyUiAtom } from '../state'
+import { mockTogglableAtom } from '../state'
 import Label from './Label'
 
-export default function SimplifyUiToggle() {
-  const [simplifyUi, toggleSimplifyUi] = useAtom(simplifyUiAtom)
+export default function MockToggle() {
+  const [simplifyUi, toggleSimplifyUi] = useAtom(mockTogglableAtom)
   return (
     <Row>
       <Label name="Simplified UI" />

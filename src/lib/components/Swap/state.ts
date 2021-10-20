@@ -15,16 +15,16 @@ export enum MaxSlippage {
 export interface Settings {
   maxSlippage: Customizable<MaxSlippage>
   transactionTtl: number
-  simplifyUi: boolean
+  mockTogglable: boolean
 }
 
 const initialSettings: Settings = {
   maxSlippage: { value: MaxSlippage.DEFAULT },
   transactionTtl: 40,
-  simplifyUi: true,
+  mockTogglable: true,
 }
 
 export const settingsAtom = atomWithReset(initialSettings)
 export const maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage', setCustomizable(MaxSlippage))
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
-export const simplifyUiAtom = pickAtom(settingsAtom, 'simplifyUi', setTogglable)
+export const mockTogglableAtom = pickAtom(settingsAtom, 'mockTogglable', setTogglable)
