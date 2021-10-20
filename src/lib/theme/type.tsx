@@ -27,6 +27,9 @@ const TYPE = {
   caption(props: TextProps) {
     return <TextWrapper fontSize={12} fontWeight={400} {...props} />
   },
+  body1(props: TextProps) {
+    return <TextWrapper fontSize={16} fontWeight={400} {...props} />
+  },
   body2(props: TextProps) {
     return <TextWrapper fontSize={14} fontWeight={400} {...props} />
   },
