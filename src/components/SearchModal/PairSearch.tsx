@@ -95,6 +95,10 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
     [filteredSortedPairs, handlePairSelect, searchQuery]
   )
 
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [inputRef])
+
   return (
     <Wrapper>
       <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
