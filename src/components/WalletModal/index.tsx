@@ -124,7 +124,7 @@ const WALLET_VIEWS = {
   OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
   PENDING: 'pending',
-  PRIVACY: 'privacy',
+  LEGAL: 'privacy',
 }
 
 export default function WalletModal({
@@ -328,7 +328,7 @@ export default function WalletModal({
         </UpperSection>
       )
     }
-    if (walletView === WALLET_VIEWS.PRIVACY) {
+    if (walletView === WALLET_VIEWS.LEGAL) {
       return (
         <UpperSection>
           <HeaderRow>
@@ -341,7 +341,7 @@ export default function WalletModal({
             </HoverText>
             <Row justify="center">
               <TYPE.mediumHeader>
-                <Trans>Privacy</Trans>
+                <Trans>Legal</Trans>
               </TYPE.mediumHeader>
             </Row>
           </HeaderRow>
@@ -398,7 +398,7 @@ export default function WalletModal({
                 </TYPE.black>
               </AutoRow>
             </LightCard>
-            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.PRIVACY)}>
+            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

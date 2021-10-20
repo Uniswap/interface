@@ -289,7 +289,7 @@ export default function Menu() {
                     </ToggleMenuItem>
                     <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
                       <div>
-                        <Trans>Privacy and Terms</Trans>
+                        <Trans>Legal</Trans>
                       </div>
                       <Book opacity={0.6} size={16} />
                     </ToggleMenuItem>

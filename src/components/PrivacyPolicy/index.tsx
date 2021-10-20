@@ -13,6 +13,8 @@ import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 
 const Wrapper = styled.div`
+  max-height: 70vh;
+  overflow: auto;
   padding: 0 1rem;
 `
 
@@ -26,11 +28,6 @@ const StyledExternalCard = styled(Card)`
   :active {
     background-color: ${({ theme }) => theme.primary4};
   }
-`
-
-const Header = styled.div`
-  flex: 1;
-  text-align: center;
 `
 
 const HoverText = styled.div`
@@ -51,28 +48,26 @@ const StyledLinkOut = styled(ArrowDown)`
 const EXTERNAL_APIS = [
   {
     name: 'Auto Router',
+    description: <Trans>The app fetches the optimal trade route from a Uniswap Labs server.</Trans>,
+  },
+  {
+    name: 'Infura',
+    description: <Trans>The app fetches on-chain data and constructs contract calls with an Infura API.</Trans>,
+  },
+  {
+    name: 'TRM Labs',
     description: (
       <Trans>
-        The app fetches the optimal trade route from a Uniswap Labs server. Your IP address is shared. You may disable
-        this in settings.
+        The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons.
       </Trans>
     ),
   },
   {
-    name: <Trans>Infura API</Trans>,
-    description: (
-      <Trans>
-        The app fetches on-chain data and constructs contract calls with the Infura API. Your wallet address and IP
-        address are shared.
-      </Trans>
-    ),
+    name: 'Google Analytics',
+    description: <Trans>The app logs anonymized usage statistics in order to improve over time.</Trans>,
   },
   {
-    name: <Trans>Google Analytics</Trans>,
-    description: <Trans>The app logs anonymized usage statistics in order to improve the app over time.</Trans>,
-  },
-  {
-    name: <Trans>The Graph</Trans>,
+    name: 'The Graph',
     description: <Trans>The app fetches blockchain data from The Graph’s hosted service.</Trans>,
   },
 ]
@@ -93,13 +88,11 @@ export function PrivacyPolicyModal() {
     <Modal isOpen={open} onDismiss={() => toggle()}>
       <AutoColumn gap="12px" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
-          <Header>
-            <TYPE.mediumHeader flex="1">
-              <Trans>Privacy</Trans>
-            </TYPE.mediumHeader>
-          </Header>
+          <TYPE.mediumHeader>
+            <Trans>Legal</Trans>
+          </TYPE.mediumHeader>
           <HoverText onClick={() => toggle()}>
-            <X size={18} />
+            <X size={24} />
           </HoverText>
         </RowBetween>
         <PrivacyPolicy />
@@ -111,15 +104,7 @@ export function PrivacyPolicyModal() {
 export function PrivacyPolicy() {
   return (
     <Wrapper>
-      <AutoColumn justify="center" gap="16px">
-        <AutoColumn gap="4px">
-          <TYPE.black fontSize={14}>
-            <Trans>Uniswap privacy protection</Trans>
-          </TYPE.black>
-          <TYPE.main fontSize={14}>
-            <Trans>This webapp stores no cookies, nor does it track or detect your IP address.</Trans>
-          </TYPE.main>
-        </AutoColumn>
+      <AutoColumn gap="16px">
         <AutoColumn gap="8px" style={{ width: '100%' }}>
           <StyledExternalCard>
             <ExternalLink href={'https://uniswap.org/terms-of-service'}>
@@ -127,7 +112,7 @@ export function PrivacyPolicy() {
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <TYPE.main fontSize={14} color={'primaryText1'}>
-                    <Trans>Terms of Service</Trans>
+                    <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </TYPE.main>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -148,6 +133,9 @@ export function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
         </AutoColumn>
+        <TYPE.main fontSize={14}>
+          <Trans>This webapp uses APIs to power certain features:</Trans>
+        </TYPE.main>
         <AutoColumn gap="12px">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGreyCard key={i}>
