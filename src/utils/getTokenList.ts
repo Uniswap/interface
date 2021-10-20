@@ -72,7 +72,11 @@ export default async function getTokenList(
     }
 
     const [json, validator] = await Promise.all([response.json(), tokenListValidator])
-    if (!validator(json)) {
+    let result = json
+    if (listUrl.includes('ceramic')) {
+      result = json.state.content
+    }
+    if (!validator(result)) {
       const validationErrors: string =
         validator.errors?.reduce<string>((memo, error) => {
           const add = `${error.dataPath} ${error.message ?? ''}`
@@ -80,7 +84,7 @@ export default async function getTokenList(
         }, '') ?? 'unknown error'
       throw new Error(`Token list failed validation: ${validationErrors}`)
     }
-    return json
+    return result
   }
   throw new Error('Unrecognized list URL protocol.')
 }

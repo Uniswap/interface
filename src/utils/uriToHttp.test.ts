@@ -22,6 +22,12 @@ describe('uriToHttp', () => {
       'https://ipfs.io/ipns/app.uniswap.org/',
     ])
   })
+  it('returns ceramic gateways for ceramic:// urls', () => {
+    expect(uriToHttp('ceramic://k2t6wyfsu4pg28qrmurs1trozu32ezoa2ix3ehtbs2aul6hseekc7ox0sp1kqj')).toEqual([
+      'https://gateway-clay.ceramic.network/api/v0/streams/k2t6wyfsu4pg28qrmurs1trozu32ezoa2ix3ehtbs2aul6hseekc7ox0sp1kqj',
+      'https://ceramic-clay.3boxlabs.com/api/v0/streams/k2t6wyfsu4pg28qrmurs1trozu32ezoa2ix3ehtbs2aul6hseekc7ox0sp1kqj',
+    ])
+  })
   it('returns empty array for invalid scheme', () => {
     expect(uriToHttp('blah:test')).toEqual([])
   })

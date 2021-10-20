@@ -2224,8 +2224,9 @@ msgid "here."
 msgstr "ที่นี่."
 
 #: src/components/SearchModal/ManageLists.tsx
-msgid "https:// or ipfs:// or ENS name"
-msgstr "https:// หรือ ipfs:// หรือชื่อ ENS"
+msgid "https:// or ipfs:// or ENS name or ceramic://"
+
+msgstr "https:// หรือ ipfs:// หรือชื่อ ENS หรือ ceramic: //"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"

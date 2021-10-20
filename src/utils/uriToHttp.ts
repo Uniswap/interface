@@ -15,6 +15,12 @@ export default function uriToHttp(uri: string): string[] {
     case 'ipns':
       const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
       return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.io/ipns/${name}/`]
+    case 'ceramic':
+      const path = uri.match(/^ceramic:(\/\/)?(.*)$/i)?.[2]
+      return [
+        `https://gateway-clay.ceramic.network/api/v0/streams/${path}`,
+        `https://ceramic-clay.3boxlabs.com/api/v0/streams/${path}`,
+      ]
     default:
       return []
   }
