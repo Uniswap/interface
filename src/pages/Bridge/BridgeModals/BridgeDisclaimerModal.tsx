@@ -1,7 +1,7 @@
 import React from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
-import { ButtonSecondary } from '../../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
 import Modal, { ModalProps } from '../../../components/Modal'
 import { TYPE } from '../../../theme'
 
@@ -50,8 +50,8 @@ export const BridgeDisclaimerModal = ({
         It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if
         you later wish to do so) takes ~1 week. Would you like to proceed?
       </TYPE.small>
+      <ButtonPrimary onClick={onConfirm}>DEPOSIT</ButtonPrimary>
       <ButtonSecondary onClick={onDismiss}>CANCEL</ButtonSecondary>
-      <ButtonSecondary onClick={onConfirm}>DEPOSIT</ButtonSecondary>
     </Wrapper>
   </Modal>
 )

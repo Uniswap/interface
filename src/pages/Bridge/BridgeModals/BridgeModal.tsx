@@ -13,9 +13,18 @@ export interface BridgeModalProps {
   setStep: (step: BridgeStep) => void
   setStatus: (status: BridgeModalStatus, error?: string) => void
   modalData: BridgeModalState
+  handleDisclaimerConfirm: () => void
+  handleDisclaimerDismiss: () => void
 }
 
-export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }: BridgeModalProps) => {
+export const BridgeModal = ({
+  handleResetBridge,
+  setStep,
+  setStatus,
+  modalData,
+  handleDisclaimerConfirm,
+  handleDisclaimerDismiss
+}: BridgeModalProps) => {
   const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
 
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
@@ -67,7 +76,6 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             onTradeButtonClick={handleResetBridge}
@@ -79,7 +87,6 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
           <BridgeErrorModal
             isOpen
             onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             error={error ?? ''}
@@ -90,10 +97,10 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
           <BridgeDisclaimerModal
             isOpen
             onConfirm={() => {
-              setStatus(BridgeModalStatus.PENDING)
+              handleDisclaimerConfirm()
             }}
             onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
+              handleDisclaimerDismiss()
             }}
             amount={typedValue}
             assetType={currencyId ?? ''}

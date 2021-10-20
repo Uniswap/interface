@@ -209,14 +209,14 @@ export class BridgeService {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
-    this.store.dispatch(
-      setBridgeModalData({
-        currencyId: 'ETH',
-        typedValue: value,
-        fromChainId: this.l1ChainId,
-        toChainId: this.l2ChainId
-      })
-    )
+    // this.store.dispatch(
+    //   setBridgeModalData({
+    //     currencyId: 'ETH',
+    //     typedValue: value,
+    //     fromChainId: this.l1ChainId,
+    //     toChainId: this.l2ChainId
+    //   })
+    // )
 
     const weiValue = utils.parseEther(value)
 
