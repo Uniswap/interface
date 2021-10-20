@@ -5,7 +5,7 @@ import { AnyStyledComponent } from 'styled-components'
 import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
-export function styledValue(Value: AnyStyledComponent) {
+export function value(Value: AnyStyledComponent) {
   return styled(Value)<{ selected?: boolean; theme: Theme }>`
     border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
     border-radius: 0.5em;

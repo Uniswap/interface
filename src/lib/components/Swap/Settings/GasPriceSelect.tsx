@@ -1,19 +1,19 @@
 import { useAtom } from 'jotai'
-import styled from 'lib/theme'
-import { StyledButton, styledIcon } from 'lib/theme/components'
+import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
+import Button from '../../Button'
 import Column from '../../Column'
 import { IntegerInput } from '../../NumericInput'
 import Row from '../../Row'
 import { GasPrice, gasPriceAtom } from '../state'
-import Label, { styledValue } from './Label'
+import Label, { value } from './Label'
 
-const Value = styledValue(StyledButton)
+const Value = value(Button)
 
-const Selected = styledIcon(CheckCircle, 'active')
+const SelectedIcon = icon(CheckCircle, 'active')
 
 const InputType = styled(TYPE.body2)`
   color: ${({ theme }) => theme.secondary};
@@ -32,7 +32,7 @@ function Option<T>({ name, value, children, selected, onSelect }: OptionProps<T>
     <Value selected={selected} onClick={() => onSelect(value)}>
       <Row>
         <TYPE.subhead2>{name}</TYPE.subhead2>
-        {selected && <Selected />}
+        {selected && <SelectedIcon />}
       </Row>
       <TYPE.body2 color="secondary">{children ? children : `${value} gwei`}</TYPE.body2>
     </Value>

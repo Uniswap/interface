@@ -1,10 +1,10 @@
 import { useResetAtom } from 'jotai/utils'
-import styled from 'lib/theme'
-import { StyledButton, styledIcon } from 'lib/theme/components'
+import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { useState } from 'react'
-import { Settings as SettingsIcon } from 'react-feather'
+import { Settings as SettingsSvg } from 'react-feather'
 
+import Button from '../../Button'
 import Column from '../../Column'
 import Dialog, { DialogBody, DialogHeader } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
@@ -16,12 +16,13 @@ import TransactionTtlInput from './TransactionTtlInput'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.module};
+  border-radius: inherit;
   height: 100%;
 `
 
-export const StyledSettingsIcon = styledIcon(SettingsIcon)
+export const SettingsIcon = icon(SettingsSvg)
 
-const ResetButton = styled(StyledButton)`
+const ResetButton = styled(Button)`
   color: ${({ theme }) => theme.accent};
 `
 
@@ -55,9 +56,9 @@ export default function Settings() {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <StyledButton onClick={() => setOpen(true)}>
-        <StyledSettingsIcon />
-      </StyledButton>
+      <Button onClick={() => setOpen(true)}>
+        <SettingsIcon />
+      </Button>
       {open && (
         <Dialog>
           <SettingsDialog onClose={() => setOpen(false)} />

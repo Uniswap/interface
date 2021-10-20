@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { Icon } from 'react-feather'
 // eslint-disable-next-line no-restricted-imports
 import styled, {
   ThemedBaseStyledInterface,
@@ -14,6 +15,17 @@ export type Color = keyof Colors
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
 export const useTheme = useStyled as unknown as () => Theme
+
+export function icon(Icon: Icon, color = 'secondary' as Color) {
+  return styled(Icon)<{ theme: Theme }>`
+    height: 16px;
+    width: 16px;
+
+    > * {
+      stroke: ${({ theme }) => theme[color]};
+    }
+  `
+}
 
 function colors(darkMode: boolean): Colors {
   return {

@@ -1,21 +1,21 @@
 import { useAtom } from 'jotai'
-import styled, { Theme } from 'lib/theme'
-import { StyledButton, styledIcon } from 'lib/theme/components'
+import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { ReactNode, useCallback, useMemo, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
+import Button from '../../Button'
 import Column from '../../Column'
 import { DecimalInput } from '../../NumericInput'
 import Row from '../../Row'
 import { MaxSlippage, maxSlippageAtom } from '../state'
-import Label, { styledValue } from './Label'
+import Label, { value } from './Label'
 
 const tooltip = 'Your transaction will revert if the price changes unfavorably by more than this percentage.'
 
-const Value = styledValue(StyledButton)
+const Value = value(Button)
 
-const Selected = styledIcon(CheckCircle, 'active')
+const SelectedIcon = icon(CheckCircle, 'active')
 
 const InputType = styled(TYPE.subhead2)<{ empty: boolean; theme: Theme }>`
   color: ${({ empty, theme }) => (empty ? theme.secondary : theme.primary)};
@@ -33,7 +33,7 @@ function Option<T>({ value, children, selected, onSelect }: OptionProps<T>) {
     <Value selected={selected} onClick={() => onSelect(value)}>
       <Row>
         <TYPE.subhead2>{children ? children : `${value}%`}</TYPE.subhead2>
-        {selected && <Selected />}
+        {selected && <SelectedIcon />}
       </Row>
     </Value>
   )

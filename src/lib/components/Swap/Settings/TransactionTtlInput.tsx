@@ -6,11 +6,11 @@ import Column from '../../Column'
 import { IntegerInput } from '../../NumericInput'
 import Row from '../../Row'
 import { transactionTtlAtom } from '../state'
-import Label, { styledValue } from './Label'
+import Label, { value } from './Label'
 
 const tooltip = 'Your transaction will revert if it has not occured by this deadline.'
 
-const Value = styledValue(Row)
+const Value = value(Row)
 
 export default function TransactionTtlInput() {
   const [transactionTtl, setTransactionTtl] = useAtom(transactionTtlAtom)
