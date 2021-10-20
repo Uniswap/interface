@@ -24,6 +24,8 @@ interface BridgeDisclaimerModalProps extends ModalProps {
   assetType: string
   fromNetworkName: string
   toNetworkName: string
+  txType: string
+  textInfo: string
 }
 
 export const BridgeDisclaimerModal = ({
@@ -33,24 +35,26 @@ export const BridgeDisclaimerModal = ({
   amount,
   assetType,
   fromNetworkName,
-  toNetworkName
+  toNetworkName,
+  txType,
+  textInfo
 }: BridgeDisclaimerModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
     <Wrapper>
       <ArrowRightCircle strokeWidth={0.5} size={75} color="#0E9F6E" />
       <TitleWrapper>
         <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
-          Depositing {amount} {assetType}
+          {txType} {amount} {assetType}
         </TYPE.body>
       </TitleWrapper>
       <TYPE.main mb="24px">
-        You are about to deposit {amount} {assetType} from {fromNetworkName} to {toNetworkName}
+        You are about to {txType} {amount} {assetType} from {fromNetworkName} to {toNetworkName}
       </TYPE.main>
       <TYPE.small mb="24px">
-        It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if
-        you later wish to do so) takes ~1 week. Would you like to proceed?
+        {textInfo}
+        Would you like to proceed?
       </TYPE.small>
-      <ButtonPrimary onClick={onConfirm}>DEPOSIT</ButtonPrimary>
+      <ButtonPrimary onClick={onConfirm}>CONFIRM</ButtonPrimary>
       <ButtonSecondary onClick={onDismiss}>CANCEL</ButtonSecondary>
     </Wrapper>
   </Modal>
