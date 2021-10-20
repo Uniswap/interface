@@ -19,6 +19,7 @@ export const useTheme = useStyled as unknown as () => Theme
 export function icon(Icon: Icon, color = 'secondary' as Color) {
   return styled(Icon)<{ theme: Theme }>`
     height: 16px;
+    mix-blend-mode: lighten;
     width: 16px;
 
     > * {
