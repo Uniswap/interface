@@ -80,6 +80,11 @@ export const dexListConfig: DexList = {
     icon: 'https://pancakeswap.finance/favicon.ico',
     chainIds: [ChainId.BSCMAINNET]
   },
+  'pancake-legacy': {
+    name: 'PancakeSwap Legacy',
+    icon: 'https://pancakeswap.finance/favicon.ico',
+    chainIds: [ChainId.BSCMAINNET]
+  },
   mdex: {
     name: 'Mdex',
     icon: 'https://cdn.jsdelivr.net/gh/mdexSwap/hswap@main/favicon.png',
