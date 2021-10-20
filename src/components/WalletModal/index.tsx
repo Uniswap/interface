@@ -124,7 +124,7 @@ const WALLET_VIEWS = {
   OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
   PENDING: 'pending',
-  LEGAL: 'privacy',
+  LEGAL: 'legal',
 }
 
 export default function WalletModal({
@@ -140,6 +140,7 @@ export default function WalletModal({
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const previousWalletView = usePrevious(walletView)
 
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
@@ -334,14 +335,14 @@ export default function WalletModal({
           <HeaderRow>
             <HoverText
               onClick={() => {
-                setWalletView(WALLET_VIEWS.ACCOUNT)
+                setWalletView(previousWalletView ?? WALLET_VIEWS.ACCOUNT)
               }}
             >
               <ArrowLeft />
             </HoverText>
             <Row justify="center">
               <TYPE.mediumHeader>
-                <Trans>Legal</Trans>
+                <Trans>Legal & Privacy</Trans>
               </TYPE.mediumHeader>
             </Row>
           </HeaderRow>

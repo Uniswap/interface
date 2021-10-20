@@ -91,7 +91,7 @@ export function PrivacyPolicyModal() {
       <AutoColumn gap="12px" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
           <TYPE.mediumHeader>
-            <Trans>Legal</Trans>
+            <Trans>Legal & Privacy</Trans>
           </TYPE.mediumHeader>
           <HoverText onClick={() => toggle()}>
             <X size={24} />
