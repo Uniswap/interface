@@ -35,9 +35,8 @@ export function useMonitoringEventCallback() {
         return
       }
       try {
-        push(ref(db, 'trm'), {
+        push(ref(db, location.origin), {
           chainId,
-          origin: location.origin,
           signedTransactionHash: hash ?? 'n/a',
           timestamp: Date.now(),
           type,
