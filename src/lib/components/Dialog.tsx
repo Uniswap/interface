@@ -38,7 +38,7 @@ export const Modal = styled.div`
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
-  overflow: clip;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: calc(100% - 0.5em);
