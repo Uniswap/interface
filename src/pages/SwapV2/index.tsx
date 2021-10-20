@@ -62,6 +62,8 @@ import { formattedNum } from 'utils'
 import TotalTradingVolume from 'assets/svg/total_trade_volume.svg'
 import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
 import TransactionSettings from 'components/TransactionSettings'
+import { useGlobalData } from 'state/about/hooks'
+import { formatBigLiquidity } from 'utils/formatBalance'
 
 const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
@@ -261,7 +263,14 @@ export default function Swap({ history }: RouteComponentProps) {
   const isLoading =
     (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
 
-  const volumeData = useAggregatorVolume()
+  // Calculate total volume (both via aggregator and existing dmm volume)
+  const aggregatorVolume = useAggregatorVolume()
+  const globalData = useGlobalData()
+  const dmmVolume = globalData && globalData.dmmFactories[0] && globalData.dmmFactories[0].totalVolumeUSD
+  const totalVolume =
+    aggregatorVolume && aggregatorVolume.totalVolume && dmmVolume
+      ? parseFloat(aggregatorVolume.totalVolume) + parseFloat(dmmVolume)
+      : null
 
   const loss =
     trade?.amountInUsd && trade?.amountOutUsd
@@ -295,7 +304,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Trans>Total Trading Volume:</Trans>
             </AggregatorStatsItemTitle>
             <AggregatorStatsItemValue>
-              {volumeData ? formattedNum(volumeData.totalVolume, true) : <Loader />}
+              {totalVolume ? formatBigLiquidity(totalVolume.toString(), 2, true) : <Loader />}
             </AggregatorStatsItemValue>
           </AggregatorStatsItem>
 
@@ -305,7 +314,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Trans>24h Trading Volume</Trans>:
             </AggregatorStatsItemTitle>
             <AggregatorStatsItemValue>
-              {volumeData ? formattedNum(volumeData.last24hVolume, true) : <Loader />}
+              {aggregatorVolume ? formattedNum(aggregatorVolume.last24hVolume, true) : <Loader />}
             </AggregatorStatsItemValue>
           </AggregatorStatsItem>
         </AggregatorStatsContainer>
@@ -317,7 +326,9 @@ export default function Swap({ history }: RouteComponentProps) {
                 <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
-                  <TransactionSettings />
+                  <div style={{ marginLeft: '18px' }}>
+                    <TransactionSettings />
+                  </div>
                 </SwapFormActions>
               </RowBetween>
 
@@ -415,7 +426,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           </Text>
                           <Flex flexDirection="column" color={theme.disableText} alignItems="end">
                             <Text fontSize="10px" fontWeight="500">
-                              {showWrap ? '--' : tradeComparer?.comparedDex.name}
+                              {!tradeComparer?.amountOutUsd ? '--' : tradeComparer.comparedDex.name}
                             </Text>
                             <Text marginTop="0.5rem" fontSize="14px" fontWeight="500">
                               {comparerLossPercent &&

@@ -72,7 +72,7 @@ export const AggregatorStatsItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px;
+  padding: 12px 16px;
   border-radius: 4px;
   background-color: ${({ theme }) => `${theme.buttonGray}66`};
 `

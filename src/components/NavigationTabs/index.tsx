@@ -136,16 +136,19 @@ export function MigrateTab() {
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
+      <RowBetween style={{ padding: '1rem 0' }}>
+        <ButtonBack width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
-        </ButtonEmpty>
-        <ActiveText>
-          <Trans>Migrate Liquidity</Trans>
-        </ActiveText>
-        <QuestionHelper
-          text={t`Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address.`}
-        />
+        </ButtonBack>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <ActiveText>
+            <Trans>Migrate Liquidity</Trans>
+          </ActiveText>
+          <QuestionHelper
+            text={t`Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address.`}
+          />
+        </div>
+        <TransactionSettings />
       </RowBetween>
     </Tabs>
   )
