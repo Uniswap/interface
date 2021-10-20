@@ -44,10 +44,12 @@ export const getExchangeConfig = (exchange: string, chainId: ChainId): ExchangeC
   const getKeyValue = <T extends object, U extends keyof T>(obj: T) => (key: U) => obj[key]
   const ids = (chainId && dexIds[chainId]) || {}
   const types = (chainId && dexTypes[chainId]) || {}
+  const allIds = Object.assign({}, dexIds.all || {}, ids)
+  const allTypes = Object.assign({}, dexTypes.all || {}, types)
   return {
     ...(getKeyValue(dexListConfig)(exchange) || {}),
-    id: getKeyValue(ids)(exchange) ?? 1,
-    type: getKeyValue(types)(exchange) ?? 0
+    id: getKeyValue(allIds)(exchange) ?? 1,
+    type: getKeyValue(allTypes)(exchange) ?? 0
   }
 }
 

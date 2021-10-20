@@ -138,7 +138,7 @@ export const dexListConfig: DexList = {
 }
 
 type DexTypes = {
-  [chainId in ChainId]?: {
+  [chainId in ChainId | 'all']?: {
     [dex: string]: 0 | 1 | 2 | 3 | 4 | 5 | 6
   }
 }
@@ -152,49 +152,38 @@ type DexTypes = {
 6 - 5
 */
 export const dexIds: DexTypes = {
-  [ChainId.BSCMAINNET]: {
+  all: {
     firebird: 1,
     pancake: 2,
+    'pancake-legacy': 2,
     apeswap: 3,
     wault: 3,
-    biswap: 5
-  },
-  [ChainId.MATIC]: {
-    firebird: 1,
+    biswap: 5,
     polydex: 5,
-    wault: 3,
     jetswap: 5,
-    polycat: 2
-  }
+    polycat: 2,
+    spookyswap: 3
+  },
+  [ChainId.BSCMAINNET]: {
+    jetswap: 1
+  },
+  [ChainId.MATIC]: {}
 }
 
 export const dexTypes: DexTypes = {
-  [ChainId.MAINNET]: {
+  all: {
     curve: 2,
-    dmm: 3
-  },
-  [ChainId.BSCMAINNET]: {
+    dmm: 3,
     oneswap: 1,
-    curve: 2,
     ellipsis: 2,
     nerve: 1,
-    dmm: 3
-  },
-  [ChainId.MATIC]: {
-    oneswap: 1,
-    curve: 2,
-    dmm: 3,
     'iron-stable': 4
   },
-  [ChainId.AVAXMAINNET]: {
-    curve: 2,
-    dmm: 3,
-    'iron-stable': 4
-  },
-  [ChainId.FANTOM]: {
-    curve: 2,
-    dmm: 3
-  }
+  [ChainId.MAINNET]: {},
+  [ChainId.BSCMAINNET]: {},
+  [ChainId.MATIC]: {},
+  [ChainId.AVAXMAINNET]: {},
+  [ChainId.FANTOM]: {}
 }
 
 function findDex(exchange: string): DexConfig | undefined {
