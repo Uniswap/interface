@@ -22,6 +22,11 @@ export const AVERAGE_BLOCK_TIME_IN_SECS = 13
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
+export const POOF = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x00400FcbF0816bebB94654259de7273f4A05c762', 18, 'POOF', 'POOF'),
+  [ChainId.ALFAJORES]: new Token(ChainId.ALFAJORES, '0x00400FcbF0816bebB94654259de7273f4A05c762', 18, 'POOF', 'POOF'),
+}
+
 export const MCUSD = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
@@ -86,7 +91,7 @@ export const CEUR = {
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [cUSD, CELO, CEUR, UBE, MCUSD, MCEUR, MCELO].map((el) => el[ChainId.MAINNET]),
+  [ChainId.MAINNET]: [cUSD, CELO, CEUR, UBE, MCUSD, MCEUR, MCELO, POOF].map((el) => el[ChainId.MAINNET]),
   [ChainId.ALFAJORES]: [cUSD, CELO, CEUR].map((el) => el[ChainId.ALFAJORES]),
   [ChainId.BAKLAVA]: [cUSD, CELO].map((el) => el[ChainId.BAKLAVA]),
 }
