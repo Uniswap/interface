@@ -1,5 +1,4 @@
-import { providers, Signer, VoidSigner, Wallet } from 'ethers'
-import { SupportedChainId } from 'src/constants/chains'
+import { Signer, VoidSigner, Wallet } from 'ethers'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 
 export enum AccountType {
@@ -13,16 +12,13 @@ export interface AccountStub {
   type: AccountType
   address: Address
   name: string
-  chainId: SupportedChainId
 }
 
 interface AccountBase {
   type: AccountType
   address: Address
   name: string
-  chainId: SupportedChainId
   signer: Signer
-  provider?: providers.JsonRpcProvider
 }
 
 export interface LocalAccount extends AccountBase {

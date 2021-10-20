@@ -1,7 +1,6 @@
 import { Wallet } from 'ethers'
 import { getWalletAccounts } from 'src/app/walletContext'
 import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
-import { SupportedChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
@@ -25,18 +24,16 @@ export function* importAccount(params: ImportAccountParams) {
   name ??= 'Imported Account'
   const signer = Wallet.fromMnemonic(formattedMnemonic, derivationPath)
   const address = signer.address
-  const chainId = SupportedChainId.GOERLI
   const type = AccountType.local
   manager.addAccount({
     type,
     address,
     name,
     signer,
-    chainId,
   })
-  yield* put(addAccount({ type, address, name, chainId }))
-  yield* put(activateAccount({ address, chainId }))
-  yield* put(fetchBalancesActions.trigger({ type, address, name, chainId }))
+  yield* put(addAccount({ type, address, name }))
+  yield* put(activateAccount(address))
+  yield* put(fetchBalancesActions.trigger(address))
   logger.info('New account imported:', address)
 }
 

@@ -34,7 +34,7 @@ async function _transferToken(
 ) {
   // TODO use the appropriate provider for current chain
   const goerliProvider = providerManager.getProvider(SupportedChainId.GOERLI)
-  const walletAccount = accountManager.getAccount(account.address, SupportedChainId.GOERLI)
+  const walletAccount = accountManager.getAccount(account.address)
 
   if (!walletAccount) throw Error('No active account')
 

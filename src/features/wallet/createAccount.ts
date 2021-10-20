@@ -1,7 +1,6 @@
 import { utils, Wallet } from 'ethers'
 import { getWalletAccounts } from 'src/app/walletContext'
 import { ETHEREUM_DERIVATION_PATH } from 'src/constants/accounts'
-import { SupportedChainId } from 'src/constants/chains'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
@@ -15,7 +14,6 @@ export function* createAccount() {
   const derivationPath = ETHEREUM_DERIVATION_PATH + '/0'
   const signer = Wallet.fromMnemonic(mnemonic, derivationPath)
   const address = signer.address
-  const chainId = SupportedChainId.GOERLI
   const type = AccountType.local
   const name = 'New account'
   manager.addAccount({
@@ -23,10 +21,9 @@ export function* createAccount() {
     address,
     name,
     signer,
-    chainId,
   })
-  yield* put(addAccount({ type, address, name, chainId }))
-  yield* put(activateAccount({ address, chainId }))
+  yield* put(addAccount({ type, address, name }))
+  yield* put(activateAccount(address))
   logger.info('New account created:', address)
 }
 

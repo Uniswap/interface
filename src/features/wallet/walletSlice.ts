@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'src/constants/chains'
 import { AccountStub } from 'src/features/wallet/accounts/types'
-import { getCaip10Id } from 'src/features/wallet/accounts/utils'
+import { normalizeAddress } from 'src/utils/addresses'
 
 interface Wallet {
   isUnlocked: boolean
-  accounts: Record<string, AccountStub> // CAIP-10 id to stub
+  accounts: Record<Address, AccountStub>
   activeAccount: AccountStub | null
 }
 
@@ -20,25 +19,19 @@ const slice = createSlice({
   initialState,
   reducers: {
     addAccount: (state, action: PayloadAction<AccountStub>) => {
-      const { address, chainId } = action.payload
-      const id = getCaip10Id(address, chainId)
+      const { address } = action.payload
+      const id = normalizeAddress(address)
       state.accounts[id] = action.payload
     },
-    removeAccount: (
-      state,
-      action: PayloadAction<{ address: Address; chainId: SupportedChainId }>
-    ) => {
-      const { address, chainId } = action.payload
-      const id = getCaip10Id(address, chainId)
+    removeAccount: (state, action: PayloadAction<{ address: Address }>) => {
+      const { address } = action.payload
+      const id = normalizeAddress(address)
       delete state.accounts[id]
     },
-    activateAccount: (
-      state,
-      action: PayloadAction<{ address: Address; chainId: SupportedChainId }>
-    ) => {
-      const { address, chainId } = action.payload
-      const id = getCaip10Id(address, chainId)
-      if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${address}`)
+    activateAccount: (state, action: PayloadAction<Address>) => {
+      const address = action.payload
+      const id = normalizeAddress(address)
+      if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${id}`)
       state.activeAccount = state.accounts[id]
     },
     unlockWallet: (state) => {
