@@ -6,7 +6,7 @@ import { CheckCircle } from 'react-feather'
 
 import Button from '../../Button'
 import Column from '../../Column'
-import { IntegerInput } from '../../NumericInput'
+import { IntegerInput } from '../../Input'
 import Row from '../../Row'
 import { GasPrice, gasPriceAtom } from '../state'
 import Label, { value } from './Label'

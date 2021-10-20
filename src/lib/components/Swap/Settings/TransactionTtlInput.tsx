@@ -3,7 +3,7 @@ import TYPE from 'lib/theme/type'
 import { useRef } from 'react'
 
 import Column from '../../Column'
-import { IntegerInput } from '../../NumericInput'
+import { IntegerInput } from '../../Input'
 import Row from '../../Row'
 import { transactionTtlAtom } from '../state'
 import Label, { value } from './Label'

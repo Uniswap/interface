@@ -1,7 +1,7 @@
 import styled from 'lib/theme'
 import { forwardRef, HTMLProps, useCallback, useEffect, useState } from 'react'
 
-const StyledInput = styled.input`
+const Input = styled.input`
   -webkit-appearance: textfield;
   background-color: transparent;
   border: none;
@@ -34,18 +34,48 @@ const StyledInput = styled.input`
   }
 `
 
-interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
+export default Input
+
+interface StringInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
+  value: string
+  onChange: (input: string) => void
+}
+
+export const StringInput = forwardRef<HTMLInputElement, StringInputProps>(function StringInput(
+  { value, onChange, ...props }: StringInputProps,
+  ref
+) {
+  return (
+    <Input
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      // universal input options
+      inputMode="text"
+      autoComplete="off"
+      autoCorrect="off"
+      // text-specific options
+      type="text"
+      placeholder={props.placeholder || '-'}
+      minLength={1}
+      spellCheck="false"
+      ref={ref as any}
+      {...props}
+    />
+  )
+})
+
+interface NumericInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'as' | 'value'> {
   value: number | undefined
   onChange: (input: number | undefined) => void
 }
 
-interface EnforcedInputProps extends InputProps {
+interface EnforcedNumericInputProps extends NumericInputProps {
   // Validates nextUserInput; returns stringified value or undefined if valid, or null if invalid
   enforcer: (nextUserInput: string) => string | undefined | null
 }
 
-const Input = forwardRef<HTMLInputElement, EnforcedInputProps>(function Input(
-  { value, onChange, enforcer, pattern, ...props }: EnforcedInputProps,
+const NumericInput = forwardRef<HTMLInputElement, EnforcedNumericInputProps>(function NumericInput(
+  { value, onChange, enforcer, pattern, ...props }: EnforcedNumericInputProps,
   ref
 ) {
   // Allow value/onChange to use number by preventing a  trailing decimal separator from triggering onChange
@@ -70,7 +100,7 @@ const Input = forwardRef<HTMLInputElement, EnforcedInputProps>(function Input(
   )
 
   return (
-    <StyledInput
+    <Input
       value={state}
       onChange={validateChange}
       // universal input options
@@ -97,8 +127,8 @@ const integerEnforcer = (nextUserInput: string) => {
   }
   return null
 }
-export const IntegerInput = forwardRef(function IntegerInput(props: InputProps, ref) {
-  return <Input pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
+export const IntegerInput = forwardRef(function IntegerInput(props: NumericInputProps, ref) {
+  return <NumericInput pattern="^[0-9]*$" enforcer={integerEnforcer} ref={ref as any} {...props} />
 })
 
 const decimalRegexp = /^\d*(?:[\.])?\d*$/
@@ -110,6 +140,6 @@ const decimalEnforcer = (nextUserInput: string) => {
   }
   return null
 }
-export const DecimalInput = forwardRef(function DecimalInput(props: InputProps, ref) {
-  return <Input pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
+export const DecimalInput = forwardRef(function DecimalInput(props: NumericInputProps, ref) {
+  return <NumericInput pattern="^[0-9]*[.,]?[0-9]*$" enforcer={decimalEnforcer} ref={ref as any} {...props} />
 })

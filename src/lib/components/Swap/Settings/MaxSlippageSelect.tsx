@@ -6,7 +6,7 @@ import { CheckCircle } from 'react-feather'
 
 import Button from '../../Button'
 import Column from '../../Column'
-import { DecimalInput } from '../../NumericInput'
+import { DecimalInput } from '../../Input'
 import Row from '../../Row'
 import { MaxSlippage, maxSlippageAtom } from '../state'
 import Label, { value } from './Label'
