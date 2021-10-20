@@ -317,7 +317,9 @@ export default function Swap({ history }: RouteComponentProps) {
                 <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
-                  <TransactionSettings />
+                  <div style={{ marginLeft: '18px' }}>
+                    <TransactionSettings />
+                  </div>
                 </SwapFormActions>
               </RowBetween>
 
