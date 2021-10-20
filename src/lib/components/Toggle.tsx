@@ -33,7 +33,7 @@ const Input = styled.input`
   }
 
   :hover:before {
-    background-color: ${({ theme }) => theme.secondary}B2;
+    background-color: ${({ theme }) => theme.secondary}B2; // 0.7 alpha
   }
 
   :checked:before {
@@ -44,7 +44,7 @@ const Input = styled.input`
   }
 
   :hover:checked:before {
-    background-color: ${({ theme }) => theme.active}B2;
+    background-color: ${({ theme }) => theme.active}B2; // 0.7 alpha
   }
 
   :after {
