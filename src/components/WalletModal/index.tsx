@@ -379,7 +379,7 @@ export default function WalletModal({
         ) : (
           <HeaderRow>
             <HoverText>
-              <Trans>Connect to a wallet</Trans>
+              <Trans>Connect a wallet</Trans>
             </HoverText>
           </HeaderRow>
         )}
@@ -392,8 +392,8 @@ export default function WalletModal({
                   <Trans>
                     By connecting a wallet, you agree to Uniswap Labs’{' '}
                     <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                    acknowledge that you have read and understand the{' '}
-                    <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                    acknowledge that you have read and understand the Uniswap{' '}
+                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
                   </Trans>
                 </TYPE.black>
               </AutoRow>
