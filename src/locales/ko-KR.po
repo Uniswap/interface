@@ -313,9 +313,9 @@ msgstr "보안에 전념"
 msgid "Common bases"
 msgstr "공통 기지"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -443,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "대시보드"
 
-#:
+#: 
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi의 첫 번째"
 
@@ -490,7 +490,7 @@ msgstr "예치한 풀이 보이지 않습니까?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -515,15 +515,15 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "보상을 수확할 때마다 ~30일의 새로운 베스팅 기간이 생성됩니다. 취득은 언제든 가능하며 그때 마다 새로운 베스팅 일정이 시작됩니다. 각 베스팅 페이지에서 베스팅이 해제된 보상은 언제든 청구할 수 있습니다."
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Eligible Pools"
 #~ msgstr "지정 풀"
 
@@ -635,13 +635,14 @@ msgstr "수수료는 유동성 공급자의 수익을 극대화하기 위해 시
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 아래에 주소를 붙여넣주세요."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "포럼"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -689,7 +690,7 @@ msgstr "수확하다"
 msgid "Harvest All"
 msgstr "모두 수확하기"
 
-#:
+#: 
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "아래 목록에서 자신이 예치한 풀을 클릭하여 보상을 받으십시오."
 
@@ -763,7 +764,7 @@ msgstr "LP 수익 증대"
 msgid "Information"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -885,10 +886,11 @@ msgstr "잠긴 보상"
 msgid "Lowest Gas"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "최대"
@@ -957,13 +959,14 @@ msgid "Migrate"
 msgstr "이전"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "유동성 마이그레이션"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "마이그레이션 유동성"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "마이그레이션 유동성"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -972,7 +975,7 @@ msgstr "마이그레이션 유동성"
 msgid "Minimum received"
 msgstr "최소 수령"
 
-#:
+#: 
 #~ msgid "My Dashboard"
 #~ msgstr "대시보드"
 
@@ -1082,7 +1085,7 @@ msgstr "앗! 알 수없는 오류가 발생했습니다. 페이지를 새로고�
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> 유동성에 대한 공개 액세스"
 
-#:
+#: 
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1103,7 +1106,7 @@ msgstr "DeFi를 위한 무허가 및 풍부한 유동성"
 msgid "Please Confirm"
 msgstr "확인해주세요"
 
-#:
+#: 
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "이더리움 네트워크에 연결하십시오."
 
@@ -1184,6 +1187,7 @@ msgstr "Powered by"
 msgid "Preferences"
 msgstr "기본 설정"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "가격"
@@ -1209,11 +1213,10 @@ msgid "Price range {0}/{1}"
 msgstr "가격대 {0}/{1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "가격:"
 
-#:
+#: 
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1316,9 +1319,13 @@ msgstr "경로"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수 있습니다."
 
-#:
+#: 
 #~ msgid "START IN"
 #~ msgstr "에서 시작"
+
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1420,19 +1427,19 @@ msgstr "토큰 스왑"
 msgid "Swap Anyway"
 msgstr "스왑하기"
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Swap Legacy"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1545,11 +1552,11 @@ msgstr "예치된 자산 가치:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "수확할 수 있는 총 보상입니다. 수확한 보상은 ~30일 동안 베스팅됩니다."
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1631,7 +1638,7 @@ msgstr "잠금 해제: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1715,13 +1722,13 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
 
-#:
+#: 
 #~ msgid "Yield"
 #~ msgstr "유동성 마이닝"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1755,11 +1762,11 @@ msgstr "풀 비중:"
 msgid "Your position"
 msgstr "당신의 위치"
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "처음부터 수확한 총 보상입니다. 새로운 보상을 수확할 때마다 수확한 날짜로부터 ~30일 동안 베스팅이 시작됩니다. 잠금 해제된 보상은 언제든지 청구할 수 있습니다. (기간 만료 없음)"
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1796,7 +1803,7 @@ msgstr "거래가 여기에 표시됩니다..."
 msgid "and"
 msgstr ""
 
-#:
+#: 
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1858,7 +1865,7 @@ msgstr "{0} 보류 중"
 msgid "{0} added"
 msgstr "{0} 추가됨"
 
-#:
+#: 
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1884,7 +1891,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} 토큰이 업데이트되었습니다"
 
-#:
+#: 
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} 블록"
 

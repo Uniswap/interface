@@ -274,10 +274,10 @@ const Pools = ({
           )}
         </Panel>
 
-        <div style={{ marginTop: '16px' }}>
+        <Flex marginTop="1rem" alignItems="center">
           <Trans>Popular Pairs</Trans> &nbsp;
           {loadingPoolFarm && <Loader />}
-        </div>
+        </Flex>
         <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
           {Object.values(farms)
             .flat()

@@ -74,20 +74,22 @@ export function useGlobalData() {
     async function getGlobalData() {
       let result
 
-      if (
-        chainId === ChainId.MAINNET ||
-        chainId === ChainId.MATIC ||
-        chainId === ChainId.BSCMAINNET ||
-        chainId === ChainId.AVAXMAINNET
-      ) {
-        result = await getResultByChainIds([ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET])
-      } else if (
-        chainId === ChainId.ROPSTEN ||
-        chainId === ChainId.MUMBAI ||
-        chainId === ChainId.BSCTESTNET ||
-        chainId === ChainId.AVAXTESTNET
-      ) {
-        result = await getResultByChainIds([ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.BSCTESTNET, ChainId.AVAXTESTNET])
+      if (process.env.REACT_APP_MAINNET_ENV === 'production') {
+        result = await getResultByChainIds([
+          ChainId.MAINNET,
+          ChainId.MATIC,
+          ChainId.BSCMAINNET,
+          ChainId.AVAXMAINNET,
+          ChainId.FANTOM
+        ])
+      } else if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+        result = await getResultByChainIds([
+          ChainId.ROPSTEN,
+          ChainId.MUMBAI,
+          ChainId.BSCTESTNET,
+          ChainId.AVAXTESTNET,
+          ChainId.FANTOM
+        ])
       } else {
         result = await apolloClient.query({
           query: GLOBAL_DATA(chainId as ChainId),

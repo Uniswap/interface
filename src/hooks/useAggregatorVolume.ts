@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import useSWR from 'swr'
 
 interface VolumeResponse {
@@ -13,7 +12,7 @@ export default function useAggregatorVolume(): VolumeResponse {
 
   const { data, error } = useSWR(url, fetcher, {
     refreshInterval: 10000,
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+    onErrorRetry: (error, _key, _config, revalidate, { retryCount }) => {
       // Never retry on 404.
       if (error.status === 404) return
 

@@ -313,9 +313,9 @@ msgstr "Güvenlik Taahhüdü"
 msgid "Common bases"
 msgstr "Ortak temeller"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -443,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Kontrol Paneli"
 
-#:
+#: 
 #~ msgid "DeFi's First"
 #~ msgstr "DeFi’de İlk"
 
@@ -490,7 +490,7 @@ msgstr "Katıldığınız bir havuzu göremiyor musunuz?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -515,15 +515,15 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Ödülleri her topladığınızda, ~30 günlük yeni bir vesting süresi oluşturulur. Birden fazla vesting dönemi aynı anda çalışabilir. Vesting süreci sonrası kilidi açılmış ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Eligible Pools"
 #~ msgstr "Uygun Havuzlar"
 
@@ -635,13 +635,14 @@ msgstr "Likidite sağlayıcıları için getirileri en üst düzeye çıkarmak i
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Adını ya da sembolünü arayarak veya adresini aşağıya yapıştırarak bir token bulun."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -689,7 +690,7 @@ msgstr "Topla"
 msgid "Harvest All"
 msgstr "Tümünü Topla"
 
-#:
+#: 
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "Aşağıdaki listede bulunan uygun bir veya daha çok havuza tıklayarak ödüllerinizi toplayın."
 
@@ -763,7 +764,7 @@ msgstr "LP Karını Artırın"
 msgid "Information"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -885,10 +886,11 @@ msgstr "Kilitli Ödüller"
 msgid "Lowest Gas"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAKS"
@@ -957,13 +959,14 @@ msgid "Migrate"
 msgstr "Taşı"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "Likiditeyi Taşı"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "Likiditeyi     Taşı"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "Likiditeyi     Taşı"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -972,7 +975,7 @@ msgstr "Likiditeyi     Taşı"
 msgid "Minimum received"
 msgstr "Minimum alındı"
 
-#:
+#: 
 #~ msgid "My Dashboard"
 #~ msgstr "Gösterge Panelim"
 
@@ -1082,7 +1085,7 @@ msgstr "Hay Aksi! Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin ya da 
 msgid "Open Access to <0/> Liquidity"
 msgstr "<0/> Likiditeye Açık Erişim"
 
-#:
+#: 
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1103,7 +1106,7 @@ msgstr "DeFi için İzin Gerektirmeyen ve Sorunsuz Likidite"
 msgid "Please Confirm"
 msgstr "Lütfen onaylayın"
 
-#:
+#: 
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Lütfen uygun Ethereum ağına bağlanın."
 
@@ -1184,6 +1187,7 @@ msgstr "Tarafından desteklenmektedir"
 msgid "Preferences"
 msgstr "Tercihler"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Fiyat"
@@ -1209,11 +1213,10 @@ msgid "Price range {0}/{1}"
 msgstr "Fiyat aralığı {0}/{1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Fiyat:"
 
-#:
+#: 
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1316,9 +1319,13 @@ msgstr "Rota"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Bu token’lar aracılığıyla yönlendirme, işleminiz için en iyi fiyatı sağladı."
 
-#:
+#: 
 #~ msgid "START IN"
 #~ msgstr "BAŞLA"
+
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1420,19 +1427,19 @@ msgstr "Takas"
 msgid "Swap Anyway"
 msgstr "Yine de Takası Yap"
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Swap Legacy"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1545,11 +1552,11 @@ msgstr "Kilitli Toplam Değer:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Toplanabilecek toplam ödüllerdir. Hasat edilen ödüller kilitlenir ve ~30 gün boyunca vesting süreci işler."
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1631,7 +1638,7 @@ msgstr "Kilidi açık: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1715,13 +1722,13 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "Yanlış Ağ"
 
-#:
+#: 
 #~ msgid "Yield"
 #~ msgstr "Getiri"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1755,11 +1762,11 @@ msgstr "Havuz paylaşımınız:"
 msgid "Your position"
 msgstr "Pozisyonun"
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Başından beri toplam hasat ödüllerinizdir. Her yeni ödül toplamanızda, bunlar hasat tarihinden itibaren ~ 30 gün boyunca kilitlenir ve süre içinde kazanılır. Süreç ile birlikte kilidi açılan ödüller herhangi bir zamanda talep edilebilir (son tarih yoktur)."
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1796,7 +1803,7 @@ msgstr "İşlemleriniz burada görünecek..."
 msgid "and"
 msgstr ""
 
-#:
+#: 
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1858,7 +1865,7 @@ msgstr "{0} Beklemede"
 msgid "{0} added"
 msgstr "{0} eklendi"
 
-#:
+#: 
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1884,7 +1891,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} token güncellendi"
 
-#:
+#: 
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} blok"
 

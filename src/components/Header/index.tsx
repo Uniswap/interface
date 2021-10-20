@@ -326,15 +326,6 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          {/*<StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            <Trans>Swap</Trans>
-          </StyledNavLink>
-          */}
-          {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
-            <StyledNavLink id={`swapv2-nav-link`} to={'/swap-legacy'}>
-              <Trans>Swap Legacy</Trans>
-            </StyledNavLink>
-          )}
           <StyledNavLink id={`swapv2-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>

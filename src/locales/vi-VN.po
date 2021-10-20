@@ -313,9 +313,9 @@ msgstr "Cam kết Bảo mật"
 msgid "Common bases"
 msgstr "Các Cơ Sở Chung"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -443,7 +443,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Bảng điều khiển"
 
-#:
+#: 
 #~ msgid "DeFi's First"
 #~ msgstr "Đầu tiên của DeFi"
 
@@ -490,7 +490,7 @@ msgstr "Không thấy Pool mà bạn đã tham gia?"
 msgid "Duration: {duration}"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Duration: ~{lockedTime} days"
 #~ msgstr ""
 
@@ -515,15 +515,15 @@ msgstr ""
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr "Mỗi khi bạn thu hoạch phần thưởng, một khoảng thời gian vesting mới ~ 30 ngày sẽ được tạo ra. Nhiều giai đoạn vesting có thể chạy đồng thời. Phần thưởng đã mở cho mỗi lượt vesting có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
-#:
+#: 
 #~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Eligible Pools"
 #~ msgstr "Các Pool Đủ Điều Kiện"
 
@@ -635,13 +635,14 @@ msgstr "Phí được điều chỉnh linh hoạt tùy theo điều kiện thị
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Tìm token bằng cách tìm kiếm tên hoặc biểu tượng của nó hoặc bằng cách dán địa chỉ token bên dưới."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Diễn đàn"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -689,7 +690,7 @@ msgstr "Thu hoạch"
 msgid "Harvest All"
 msgstr "Thu hoạch tất cả"
 
-#:
+#: 
 #~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
 #~ msgstr "Thu thập phần thưởng của bạn bằng cách nhấp vào một hoặc nhiều Pool đủ điều kiện của bạn trong danh sách bên dưới."
 
@@ -763,7 +764,7 @@ msgstr "Tăng Lợi nhuận LP"
 msgid "Information"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Initial ratio"
 #~ msgstr ""
 
@@ -885,10 +886,11 @@ msgstr "Các Phần thưởng Đã Khóa"
 msgid "Lowest Gas"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Lowest Gas Cost"
 #~ msgstr ""
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "TỐI ĐA"
@@ -957,13 +959,14 @@ msgid "Migrate"
 msgstr "Di chuyển"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "Chuyển Thanh khoản"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "Di chuyển     Thanh Khoản"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "Di chuyển     Thanh Khoản"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -972,7 +975,7 @@ msgstr "Di chuyển     Thanh Khoản"
 msgid "Minimum received"
 msgstr "Đã nhận Tối thiểu"
 
-#:
+#: 
 #~ msgid "My Dashboard"
 #~ msgstr "Quản lý"
 
@@ -1082,7 +1085,7 @@ msgstr "Oops! Đã xảy ra lỗi không xác định. Vui lòng làm mới tran
 msgid "Open Access to <0/> Liquidity"
 msgstr "Mở quyền truy cập vào <0 /> Thanh khoản"
 
-#:
+#: 
 #~ msgid "Order Routing"
 #~ msgstr ""
 
@@ -1103,7 +1106,7 @@ msgstr "Thanh khoản Không xin phép và Dễ dàng cho DeFi"
 msgid "Please Confirm"
 msgstr "Vui lòng xác nhận"
 
-#:
+#: 
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
 
@@ -1184,6 +1187,7 @@ msgstr "Được cung cấp bởi"
 msgid "Preferences"
 msgstr "Các tùy chọn"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Giá"
@@ -1209,11 +1213,10 @@ msgid "Price range {0}/{1}"
 msgstr "Phạm vi giá {0} / {1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Giá:"
 
-#:
+#: 
 #~ msgid "Prices"
 #~ msgstr ""
 
@@ -1316,9 +1319,13 @@ msgstr "Tuyến"
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Tuyến thông qua các token này dẫn đến giá tốt nhất cho giao dịch của bạn."
 
-#:
+#: 
 #~ msgid "START IN"
 #~ msgstr "BẮT ĐẦU VÀO"
+
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
 
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
@@ -1420,19 +1427,19 @@ msgstr "Chuyển đổi"
 msgid "Swap Anyway"
 msgstr "Vẫn chuyển đổi"
 
-#: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 msgid "Swap Legacy"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Swap Token"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap V2"
 #~ msgstr ""
 
-#:
+#: 
 #~ msgid "Swap any token accross different exchange for the best price"
 #~ msgstr ""
 
@@ -1545,11 +1552,11 @@ msgstr "Tổng Giá trị Đã khóa:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr ""
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
 #~ msgstr "Tổng số phần thưởng có thể thu hoạch. Phần thưởng đã thu hoạch được khóa và trao vesting trong ~ 30 ngày."
 
-#:
+#: 
 #~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
 #~ msgstr ""
 
@@ -1631,7 +1638,7 @@ msgstr "Đã mở khóa: {0} {1}"
 msgid "Upcoming Farms"
 msgstr ""
 
-#:
+#: 
 #~ msgid "Upcoming Pools"
 #~ msgstr ""
 
@@ -1715,13 +1722,13 @@ msgstr ""
 msgid "Wrong Network"
 msgstr "Sai Mạng"
 
-#:
+#: 
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1755,11 +1762,11 @@ msgstr "Tỷ lệ đóng góp nhóm của bạn:"
 msgid "Your position"
 msgstr "Vị trí của bạn"
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr "Tổng số phần thưởng thu hoạch của bạn kể từ đầu. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và được cấp vesting trong ~ 30 ngày, bắt đầu từ ngày thu hoạch. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào (không có thời hạn)."
 
-#:
+#: 
 #~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
 #~ msgstr ""
 
@@ -1796,7 +1803,7 @@ msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
 msgid "and"
 msgstr ""
 
-#:
+#: 
 #~ msgid "and Pool share"
 #~ msgstr ""
 
@@ -1858,7 +1865,7 @@ msgstr "{0} Đang chờ xử lý"
 msgid "{0} added"
 msgstr "{0} đã được thêm vào"
 
-#:
+#: 
 #~ msgid "{0} blocks"
 #~ msgstr ""
 
@@ -1884,7 +1891,7 @@ msgstr ""
 msgid "{numTokensChanged} tokens updated"
 msgstr "Đã cập nhật token {numTokensChanged}"
 
-#:
+#: 
 #~ msgid "{remainingBlocks} blocks"
 #~ msgstr "{remainingBlocks} blocks"
 

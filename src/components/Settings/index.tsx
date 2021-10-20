@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Settings } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -97,6 +97,10 @@ export default function SettingsTab() {
   const [isSelectingLanguage, setIsSelectingLanguage] = useState(false)
 
   useOnClickOutside(node, open ? toggle : undefined)
+
+  useEffect(() => {
+    if (!open) setIsSelectingLanguage(false)
+  }, [open])
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451

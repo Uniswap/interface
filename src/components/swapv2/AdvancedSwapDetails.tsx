@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@dynamic-amm/sdk'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Field } from '../../state/swap/actions'
@@ -11,17 +11,18 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Aggregator } from '../../utils/aggregator'
-import { AggregationComparer } from '../../state/swap/types'
 import { formattedNum } from '../../utils'
+import TradePrice from './TradePrice'
 
 interface TradeSummaryProps {
   trade: Aggregator
   allowedSlippage: number
-  tradeComparer?: AggregationComparer
 }
 
-function TradeSummary({ trade, allowedSlippage, tradeComparer }: TradeSummaryProps) {
+function TradeSummary({ trade, allowedSlippage }: TradeSummaryProps) {
   const theme = useContext(ThemeContext)
+  const [showInverted, setShowInverted] = useState<boolean>(false)
+
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
@@ -31,25 +32,10 @@ function TradeSummary({ trade, allowedSlippage, tradeComparer }: TradeSummaryPro
     <>
       <AutoColumn style={{ padding: '0 20px' }} gap="0.375rem">
         <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {t`You Save`}
-            </TYPE.black>
-            {!!tradeComparer?.comparedDex?.name ? (
-              <QuestionHelper text={t`Compared to ${tradeComparer.comparedDex?.name}`} />
-            ) : null}
-          </RowFixed>
-          <RowFixed>
-            {!!tradeComparer?.tradeSaved?.usd ? (
-              <TYPE.black color={'#2FC99E'} fontSize={16}>
-                {formattedNum(tradeComparer.tradeSaved.usd, true)}
-              </TYPE.black>
-            ) : (
-              <TYPE.black color={theme.text1} fontSize={14}>
-                --
-              </TYPE.black>
-            )}
-          </RowFixed>
+          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            {t`Price`}
+          </TYPE.black>
+          <TradePrice price={trade?.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
         </RowBetween>
         <RowBetween>
           <RowFixed>
@@ -87,17 +73,16 @@ function TradeSummary({ trade, allowedSlippage, tradeComparer }: TradeSummaryPro
 
 export interface AdvancedSwapDetailsProps {
   trade?: Aggregator
-  tradeComparer?: AggregationComparer
 }
 
-export function AdvancedSwapDetails({ trade, tradeComparer }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
 
   return (
     <AutoColumn gap="md">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} tradeComparer={tradeComparer} />
+          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
         </>
       )}
     </AutoColumn>
