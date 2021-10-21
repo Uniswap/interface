@@ -4,6 +4,7 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { historicalChainData } from 'src/features/historicalChainData/slice'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {
@@ -15,9 +16,13 @@ const sagaMiddleware = createSagaMiddleware({
 
 export const store = configureStore({
   reducer: rootReducer,
-  // Disable thunk, use saga instead
   middleware: (getDefaultMiddleware) => {
-    return [...getDefaultMiddleware({ thunk: false }), sagaMiddleware]
+    return [
+      // Disable thunk, use saga instead
+      ...getDefaultMiddleware({ thunk: false }),
+      sagaMiddleware,
+      historicalChainData.middleware,
+    ]
   },
   devTools: config.debug,
 })

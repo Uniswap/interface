@@ -2,3 +2,4 @@ ios
 android
 src/abis/types
 src/abis/uniswapV3
+src/features/historicalChainData/generated.d.ts
