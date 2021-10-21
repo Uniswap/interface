@@ -60,7 +60,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.github_token }}
+          # use repo-scoped personal access token to trigger actions
+          # https://github.com/peter-evans/create-pull-request/issues/48#issuecomment-536204092
+          token: ${{ secrets.JUDO_REPO_PAT }}
           commit-message: '[bot] Update GraphlQL Schema'
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
@@ -76,7 +78,7 @@ jobs:
         if: steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v1
         with:
-          token: ${{ secrets.github_token }}
+          token: ${{ secrets.JUDO_REPO_PAT }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: squash
         
