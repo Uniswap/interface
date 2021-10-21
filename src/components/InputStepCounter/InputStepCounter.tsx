@@ -146,10 +146,9 @@ const StepCounter = ({
     }
   }, [localValue, useLocalValue, value])
 
-  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyA ? currencyA : undefined)
+  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ? currencyB : undefined)
   const baseCurrencyPriceInUSDCNumber = Number(baseCurrencyPriceInUSDC?.toFixed(4))
   const quoteCurrencyAmount = Number(value)
-  const quoteCurrencyPoolPrice = baseCurrencyPriceInUSDCNumber / quoteCurrencyAmount
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -188,7 +187,7 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} per {tokenA} (${quoteCurrencyPoolPrice.toFixed(2)})
+            {tokenB} per {tokenA} (${(baseCurrencyPriceInUSDCNumber * quoteCurrencyAmount).toFixed(2)})
           </Trans>
         </InputTitle>
       </AutoColumn>

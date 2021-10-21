@@ -106,7 +106,7 @@ export default function AddLiquidity({
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
-  const baseCurrencyPriceInUSDC = useUSDCPrice(baseCurrency ? baseCurrency : undefined)
+  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ? currencyB : undefined)
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
@@ -138,7 +138,7 @@ export default function AddLiquidity({
   )
   const usdcBaseCurrencyPriceInNumber = Number(baseCurrencyPriceInUSDC?.toSignificant(4))
   const quoteCurrencyPrice =
-    usdcBaseCurrencyPriceInNumber / Number(invertPrice ? price?.invert().toSignificant(4) : price?.toSignificant(4))
+    usdcBaseCurrencyPriceInNumber * Number(invertPrice ? price?.invert().toSignificant(4) : price?.toSignificant(4))
   const roundedQuoteCurrencyPrice = quoteCurrencyPrice.toFixed(2)
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
