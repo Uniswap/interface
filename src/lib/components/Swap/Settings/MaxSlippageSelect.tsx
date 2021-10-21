@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { ReactNode, useCallback, useMemo, useRef } from 'react'
+import { ReactNode, useCallback, useRef } from 'react'
 import { CheckCircle } from 'react-feather'
 
 import Button from '../../Button'
