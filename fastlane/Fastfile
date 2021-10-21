@@ -132,6 +132,10 @@ platform :ios do
 
     unless BUILD_ONLY
       ship(
+        apple_id: options[:apple_id],
+        apple_team_id: options[:apple_team_id],
+        apple_app_id: options[:apple_app_id],
+        app_identifier: options[:app_identifier],
         match_type: match_type,
       )
     end
