@@ -1804,6 +1804,7 @@ msgid "Your transactions will appear here..."
 msgstr "您的交易将显示在此处..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
 msgstr ""
 

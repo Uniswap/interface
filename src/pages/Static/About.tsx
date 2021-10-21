@@ -52,7 +52,8 @@ import {
   FooterLinkWrapper,
   SocialLinkWrapper,
   TradeButton,
-  SectionAmpContent
+  SectionAmpContent,
+  NoteText
 } from './styleds'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -160,6 +161,9 @@ export default function About() {
               <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
+          <NoteText>
+            *SwapV1 <Trans>and</Trans> SwapV2
+          </NoteText>
         </TradingVolumeSection>
 
         <SectionNumber>
@@ -180,17 +184,9 @@ export default function About() {
               <Trans>Total AMP Liquidity</Trans>*
             </Text>
           </AmpLiquidityNumber>
-          <Text
-            fontSize={10}
-            fontStyle="italic"
-            sx={{
-              position: 'absolute',
-              bottom: '-18px',
-              right: '0px'
-            }}
-          >
+          <NoteText>
             *<Trans>Equivalent TVL when compared to typical AMMs</Trans>
-          </Text>
+          </NoteText>
         </SectionNumber>
 
         {maxApr[chainId as ChainId] >= 0 && (
