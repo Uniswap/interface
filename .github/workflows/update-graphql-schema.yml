@@ -1,0 +1,39 @@
+name: Update GraphQL Schema
+on:
+  schedule:
+    # at the end of every week
+    - cron: '0 0 * * 1'
+
+  # manual trigger
+  workflow_dispatch:
+
+  # TODO: consider using a dispatch from @uniswap/info when @uniswap/mobile is public
+    
+jobs:
+  update-graphql-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Update GraphQL Schema
+        run: yarn graphql:codegen
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.github_token }}
+          commit-message: '[bot] Update GraphlQL Schema'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.github.com
+          signoff: false
+          branch: feature/update-graphql-schema
+          branch-suffix: timestamp
+          delete-branch: true
+          title: 'chore: [bot] Update GraphQL Schema'
+          body: GraphQL schema has been updated
+          labels: automerge
+        
