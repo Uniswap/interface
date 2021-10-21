@@ -63,7 +63,7 @@ jobs:
           token: ${{ secrets.github_token }}
           commit-message: '[bot] Update GraphlQL Schema'
           committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.github.com
+          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
           signoff: false
           branch: feature/update-graphql-schema
           branch-suffix: timestamp
