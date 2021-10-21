@@ -461,4 +461,76 @@ export class BridgeService {
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
+
+  public approveERC20 = async (erc20L1Address: string) => {
+    const tx = await this.bridge.approveToken(erc20L1Address)
+    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address)).ERC20
+
+    if (!this.l2ChainId || !this.account) return
+
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: (tokenData && tokenData.symbol) || '???',
+        assetType: BridgeAssetType.ERC20,
+        value: '',
+        txHash: tx.hash,
+        chainId: this.l2ChainId,
+        sender: this.account,
+        type: 'approve'
+      })
+    )
+
+    const receipt = await tx.wait()
+
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l2ChainId,
+        txHash: tx.hash,
+        receipt: receipt
+      })
+    )
+  }
+
+  public depositERC20 = async (erc20Address: string, typedValue: string) => {
+    const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20Address)
+    if (!(_tokenData && _tokenData.ERC20)) {
+      throw new Error('Token data not found')
+    }
+    const tokenData = _tokenData.ERC20
+    const parsedValue = utils.parseUnits(typedValue, tokenData.decimals)
+
+    if (!this.l2ChainId || !this.account) return
+
+    const tx = await this.bridge.deposit(erc20Address, parsedValue)
+
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: tokenData.symbol,
+        assetType: BridgeAssetType.ERC20,
+        value: typedValue,
+        txHash: tx.hash,
+        chainId: this.l2ChainId,
+        sender: this.account,
+        type: 'deposit-l1'
+      })
+    )
+
+    try {
+      const receipt = await tx.wait()
+      const seqNums = await this.bridge.getInboxSeqNumFromContractTransaction(receipt)
+      if (!seqNums) return
+      const seqNum = seqNums[0].toNumber()
+
+      this.store.dispatch(
+        updateBridgeTxnReceipt({
+          chainId: this.l2ChainId,
+          txHash: tx.hash,
+          receipt: receipt,
+          seqNum
+        })
+      )
+    } catch (err) {
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
+    }
+  }
 }
