@@ -6,6 +6,7 @@ type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
 
 const TextWrapper = styled(Text)<{ color?: Color; theme: Theme }>`
   color: ${({ color = 'primary' as Color, theme }) => theme[color]};
+  line-height: 1;
 `
 
 const TYPE = {
