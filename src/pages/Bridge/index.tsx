@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount } from '@swapr/sdk'
+import { CurrencyAmount, Token } from '@swapr/sdk'
 
 import { Tabs } from './Tabs'
 import AppBody from '../AppBody'
@@ -114,12 +114,18 @@ export default function Bridge() {
 
   const handleSubmit = useCallback(async () => {
     if (!chainId || !bridgeService) return
-    if (!NETWORK_DETAIL[chainId].isArbitrum) {
-      await bridgeService.depositEth(typedValue)
-    } else {
-      await bridgeService.withdrawEth(typedValue)
+    let address: string | undefined = ''
+    if (bridgeCurrency instanceof Token) {
+      address = bridgeCurrency.address
     }
-  }, [bridgeService, chainId, typedValue])
+    if (!NETWORK_DETAIL[chainId].isArbitrum) {
+      await bridgeService.deposit(typedValue, address)
+      console.log('depo', { typedValue, address })
+    } else {
+      await bridgeService.withdraw(typedValue, address)
+      console.log('withdraw', { typedValue, address })
+    }
+  }, [bridgeCurrency, bridgeService, chainId, typedValue])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
