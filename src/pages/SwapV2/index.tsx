@@ -62,7 +62,6 @@ import { formattedNum } from 'utils'
 import TotalTradingVolume from 'assets/svg/total_trade_volume.svg'
 import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
 import TransactionSettings from 'components/TransactionSettings'
-import { useGlobalData } from 'state/about/hooks'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import { MouseoverTooltip } from 'components/Tooltip'
 
@@ -264,14 +263,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const isLoading =
     (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
 
-  // Calculate total volume (both via aggregator and existing dmm volume)
   const aggregatorVolume = useAggregatorVolume()
-  const globalData = useGlobalData()
-  const dmmVolume = globalData && globalData.dmmFactories[0] && globalData.dmmFactories[0].totalVolumeUSD
-  const totalVolume =
-    aggregatorVolume && aggregatorVolume.totalVolume && dmmVolume
-      ? parseFloat(aggregatorVolume.totalVolume) + parseFloat(dmmVolume)
-      : null
 
   const loss =
     trade?.amountInUsd && trade?.amountOutUsd
@@ -316,7 +308,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Trans>Total Trading Volume:</Trans>
             </AggregatorStatsItemTitle>
             <AggregatorStatsItemValue>
-              {totalVolume ? formatBigLiquidity(totalVolume.toString(), 2, true) : <Loader />}
+              {aggregatorVolume ? formatBigLiquidity(aggregatorVolume.totalVolume, 2, true) : <Loader />}
             </AggregatorStatsItemValue>
           </AggregatorStatsItem>
 
