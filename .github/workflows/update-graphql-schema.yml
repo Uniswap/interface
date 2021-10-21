@@ -65,10 +65,18 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
           signoff: false
-          branch: feature/update-graphql-schema
+          branch: chore/update-graphql-schema
           branch-suffix: timestamp
           delete-branch: true
           title: 'chore: [bot] Update GraphQL Schema'
           body: GraphQL schema has been updated
           labels: automerge
+
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.github_token }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
         
