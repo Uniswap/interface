@@ -136,6 +136,8 @@ const decimalRegexp = /^\d*(?:[\.])?\d*$/
 const decimalEnforcer = (nextUserInput: string) => {
   if (nextUserInput === '') {
     return undefined
+  } else if (nextUserInput === '.') {
+    return '0.'
   } else if (decimalRegexp.test(nextUserInput)) {
     return nextUserInput
   }
