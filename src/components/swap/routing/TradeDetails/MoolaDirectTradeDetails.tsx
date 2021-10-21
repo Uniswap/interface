@@ -27,10 +27,8 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   const cusdPrice = pair?.priceOf(cUSD[chainId as unknown as UbeswapChainId])
 
   const [userData, setUserData] = useState<{
-    totalLiquidityETH: BigNumber
     totalCollateralETH: BigNumber
-    totalBorrowsETH: BigNumber
-    totalFeesETH: BigNumber
+    totalDebtETH: BigNumber
     availableBorrowsETH: BigNumber
     currentLiquidationThreshold: BigNumber
     ltv: BigNumber
@@ -51,9 +49,7 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
     const collateral = cusdPrice
       ? new TokenAmount(celo, userData.totalCollateralETH.toString()).multiply(cusdPrice)
       : null
-    const borrows = cusdPrice
-      ? new TokenAmount(celo, userData.totalBorrowsETH.add(userData.totalFeesETH).toString()).multiply(cusdPrice)
-      : null
+    const borrows = cusdPrice ? new TokenAmount(celo, userData.totalDebtETH.toString()).multiply(cusdPrice) : null
 
     userDataArea = (
       <>

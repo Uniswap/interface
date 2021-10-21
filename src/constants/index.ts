@@ -1,4 +1,3 @@
-import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addresses.json'
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 
 import { UBE } from './tokens'
@@ -7,7 +6,7 @@ export { UBE } from './tokens'
 
 export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'
 
-export const UBESWAP_MOOLA_ROUTER_ADDRESS = moolaRouterAddresses.UbeswapMoolaRouter
+export const UBESWAP_MOOLA_ROUTER_ADDRESS = '0x7d28570135a2b1930f331c507f65039d4937f66c'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -30,7 +29,7 @@ export const POOF = {
 export const MCUSD = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
-    '0x64dEFa3544c695db8c535D289d843a189aa26b98',
+    '0x918146359264C492BD6934071c6Bd31C854EDBc3',
     18,
     'mCUSD',
     'Moola cUSD'
@@ -47,7 +46,7 @@ export const MCUSD = {
 export const MCELO = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
-    '0x7037F7296B2fc7908de7b57a89efaa8319f0C500',
+    '0x7D00cd74FF385c955EA3d79e47BF06bD7386387D',
     18,
     'mCELO',
     'Moola CELO'
@@ -64,7 +63,7 @@ export const MCELO = {
 export const MCEUR = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,
-    '0xa8d0E6799FF3Fd19c6459bf02689aE09c4d78Ba7',
+    '0xE273Ad7ee11dCfAA87383aD5977EE1504aC07568',
     18,
     'mCEUR',
     'Moola Celo Euro'

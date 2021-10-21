@@ -228,9 +228,13 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
     })()
 
     if (moolaRoute && tokenAmountIn) {
-      const moolaTrade = MoolaDirectTrade.fromIn(moolaRoute, tokenAmountIn)
-      if (isTradeBetter(bestTrade, moolaTrade, new Percent('0'))) {
-        return moolaTrade
+      try {
+        const moolaTrade = MoolaDirectTrade.fromIn(moolaRoute, tokenAmountIn)
+        if (isTradeBetter(bestTrade, moolaTrade, new Percent('0'))) {
+          return moolaTrade
+        }
+      } catch (e) {
+        console.warn(e)
       }
     }
     return bestTrade
@@ -280,9 +284,13 @@ export function useUbeswapTradeExactOut(tokenIn?: Token, tokenAmountOut?: TokenA
     })()
 
     if (moolaRoute && tokenAmountOut) {
-      const moolaTrade = MoolaDirectTrade.fromOut(moolaRoute, tokenAmountOut)
-      if (isTradeBetter(bestTrade, moolaTrade, new Percent('0'))) {
-        return moolaTrade
+      try {
+        const moolaTrade = MoolaDirectTrade.fromOut(moolaRoute, tokenAmountOut)
+        if (isTradeBetter(bestTrade, moolaTrade, new Percent('0'))) {
+          return moolaTrade
+        }
+      } catch (e) {
+        console.warn(e)
       }
     }
     return bestTrade

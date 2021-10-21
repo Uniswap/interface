@@ -9,7 +9,8 @@ import { LendingPool, LendingPool__factory } from '../../../../generated'
 export const moolaLendingPools = {
   // Addresses from: https://github.com/moolamarket/moola
   [ChainId.ALFAJORES]: {
-    lendingPool: '0x0886f74eEEc443fBb6907fB5528B57C28E813129',
+    dataProvider: '0x31ccB9dC068058672D96E92BAf96B1607855822E',
+    lendingPool: '0x58ad305f1eCe49ca55ADE0D5cCC90114C3902E88',
     lendingPoolCore: '0x090D652d1Bb0FEFbEe2531e9BBbb3604bE71f5de',
     [CeloContract.GoldToken]: CELO[ChainId.ALFAJORES],
     [CeloContract.StableToken]: cUSD[ChainId.ALFAJORES],
@@ -17,7 +18,8 @@ export const moolaLendingPools = {
     mCELO: MCELO[ChainId.ALFAJORES],
   },
   [ChainId.MAINNET]: {
-    lendingPool: '0xc1548F5AA1D76CDcAB7385FA6B5cEA70f941e535',
+    dataProvider: '0x43d067ed784D9DD2ffEda73775e2CC4c560103A1',
+    lendingPool: '0x970b12522CA9b4054807a2c5B736149a5BE6f670',
     lendingPoolCore: '0xAF106F8D4756490E7069027315F4886cc94A8F73',
     [CeloContract.GoldToken]: CELO[ChainId.MAINNET],
     [CeloContract.StableToken]: cUSD[ChainId.MAINNET],
