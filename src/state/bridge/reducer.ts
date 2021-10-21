@@ -30,7 +30,8 @@ export enum BridgeModalStatus {
   CLOSED = 'CLOSED',
   INITIATED = 'INITIATED',
   ERROR = 'ERROR',
-  COLLECTING = 'COLLECTING'
+  COLLECTING = 'COLLECTING',
+  DISCLAIMER = 'DISCLAIMER'
 }
 
 export enum BridgeTxsFilter {
@@ -51,7 +52,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: 'ETH', // hardcoded until ERC20 implemented
+  currencyId: 'ETH',
   fromNetwork: {
     chainId: 1
   },
@@ -63,8 +64,8 @@ const initialState: BridgeState = {
   isCheckingWithdrawals: true,
   modal: {
     status: BridgeModalStatus.CLOSED,
-    currencyId: 'ETH', // hardcoded until ERC20 implemented
-    typedValue: '',
+    currencyId: '',
+    typedValue: 'ETH',
     fromNetwork: {
       chainId: 1
     },
