@@ -43,7 +43,7 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import useUSDCPrice, { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -106,7 +106,7 @@ export default function AddLiquidity({
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
-
+  const baseCurrencyPriceInUSDC = useUSDCPrice(baseCurrency ? baseCurrency : undefined)
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
@@ -136,7 +136,10 @@ export default function AddLiquidity({
     baseCurrency ?? undefined,
     existingPosition
   )
-
+  const usdcBaseCurrencyPriceInNumber = Number(baseCurrencyPriceInUSDC?.toSignificant(4))
+  const quoteCurrencyPrice =
+    usdcBaseCurrencyPriceInNumber / Number(invertPrice ? price?.invert().toSignificant(4) : price?.toSignificant(4))
+  const roundedQuoteCurrencyPrice = quoteCurrencyPrice.toFixed(2)
   const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
     useV3MintActionHandlers(noLiquidity)
 

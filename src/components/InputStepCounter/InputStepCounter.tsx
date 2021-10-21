@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import useUSDCPrice from 'hooks/useUSDCPrice'
-import JSBI from 'jsbi'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components/macro'
@@ -85,6 +84,7 @@ interface StepCounterProps {
   tokenA: string | undefined
   tokenB: string | undefined
   currencyA?: Currency | null
+  currencyB?: Currency | null
 }
 
 const StepCounter = ({
@@ -100,6 +100,7 @@ const StepCounter = ({
   tokenA,
   tokenB,
   currencyA,
+  currencyB,
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -144,8 +145,11 @@ const StepCounter = ({
       }, 0)
     }
   }, [localValue, useLocalValue, value])
-  const currencyAPriceInUSDC = useUSDCPrice(currencyA ? currencyA : undefined)
-  const poolCurrencyBPrice = Number(Number(currencyAPriceInUSDC?.toSignificant(4)) / Number(value)).toFixed(3)
+
+  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyA ? currencyA : undefined)
+  const baseCurrencyPriceInUSDCNumber = Number(baseCurrencyPriceInUSDC?.toFixed(4))
+  const quoteCurrencyAmount = Number(value)
+  const quoteCurrencyPoolPrice = baseCurrencyPriceInUSDCNumber / quoteCurrencyAmount
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
@@ -184,7 +188,7 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} per {tokenA} (${poolCurrencyBPrice})
+            {tokenB} per {tokenA} (${quoteCurrencyPoolPrice.toFixed(2)})
           </Trans>
         </InputTitle>
       </AutoColumn>
