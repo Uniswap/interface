@@ -12,7 +12,7 @@ const Context = createContext<HTMLDivElement | null>(null)
 
 export const Provider = Context.Provider
 
-const XIcon = icon(X, 'primary')
+const XIcon = icon(X, { color: 'primary' })
 
 interface DialogHeaderProps {
   title?: string

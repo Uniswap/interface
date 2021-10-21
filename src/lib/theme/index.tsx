@@ -16,12 +16,17 @@ export type Color = keyof Colors
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
 export const useTheme = useStyled as unknown as () => Theme
 
-export function icon(Icon: Icon, color = 'secondary' as Color) {
+interface IconOptions {
+  color?: Color
+  inline?: boolean
+}
+
+export function icon(Icon: Icon, { color = 'secondary', inline = false }: IconOptions = {}) {
   return styled(Icon)<{ theme: Theme }>`
     clip-path: stroke-box;
-    height: 16px;
+    height: ${inline ? '1em' : '16px'};
     stroke: ${({ theme }) => theme[color]};
-    width: 16px;
+    width: ${inline ? '1em' : '16px'};
   `
 }
 

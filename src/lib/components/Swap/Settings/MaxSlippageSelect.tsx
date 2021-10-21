@@ -15,7 +15,7 @@ const tooltip = 'Your transaction will revert if the price changes unfavorably b
 
 const Value = value(Button)
 
-const SelectedIcon = icon(CheckCircle, 'active')
+const SelectedIcon = icon(CheckCircle, { color: 'active' })
 
 const InputType = styled(TYPE.subhead2)<{ empty: boolean; theme: Theme }>`
   color: ${({ empty, theme }) => (empty ? theme.secondary : theme.primary)};
