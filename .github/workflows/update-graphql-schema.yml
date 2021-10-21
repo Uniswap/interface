@@ -20,7 +20,7 @@ jobs:
         run: yarn install
 
       - name: Update GraphQL Schema
-        run: yarn graphql:codegen
+        run: yarn graphql:generate
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
