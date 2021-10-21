@@ -162,7 +162,7 @@ export default function About() {
             </Text>
           </div>
           <NoteText>
-            *SwapV1 <Trans>and</Trans> SwapV2
+            *DEX aggregation <Trans>and</Trans> DMM
           </NoteText>
         </TradingVolumeSection>
 
