@@ -31,7 +31,6 @@ export function usePools(
       const tokenA = currencyA?.wrapped
       const tokenB = currencyB?.wrapped
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null
-      if (tokenA.chainId !== tokenB.chainId) return null
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [token0, token1, feeAmount]
     })
