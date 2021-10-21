@@ -4,6 +4,7 @@ const Button = styled.button`
   background-color: transparent;
   border: none;
   border-radius: 0.5em;
+  color: currentColor;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;

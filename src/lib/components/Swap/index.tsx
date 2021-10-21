@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Column from '../Column'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
+import Wallet from '../Wallet'
 import Settings from './Settings'
 import SwapAction from './SwapAction'
 import SwapInput from './SwapInput'
@@ -26,6 +27,7 @@ export default function Swap() {
   return (
     <>
       <Header logo title="Swap">
+        <Wallet />
         <Settings />
       </Header>
       <div ref={setBoundary}>
