@@ -4,7 +4,7 @@ import TYPE from 'lib/theme/type'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
 
-import Button from '../../Button'
+import Button, { TextButton } from '../../Button'
 import Column from '../../Column'
 import Dialog, { DialogBody, DialogHeader } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
@@ -21,10 +21,6 @@ const Wrapper = styled.div`
 
 export const SettingsIcon = icon(SettingsSvg)
 
-const ResetButton = styled(Button)`
-  color: ${({ theme }) => theme.accent};
-`
-
 export function SettingsDialog({ onClose }: { onClose: () => void }) {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   const resetSettings = useResetAtom(settingsAtom)
@@ -32,9 +28,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
     <Wrapper>
       <DialogHeader title="Settings" onClose={onClose}>
         <TYPE.subhead2>
-          <ResetButton color="active" onClick={resetSettings}>
-            Reset
-          </ResetButton>
+          <TextButton onClick={resetSettings}>Reset</TextButton>
         </TYPE.subhead2>
       </DialogHeader>
       <DialogBody ref={setBoundary}>
