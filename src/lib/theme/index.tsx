@@ -18,15 +18,14 @@ export const useTheme = useStyled as unknown as () => Theme
 
 interface IconOptions {
   color?: Color
-  inline?: boolean
 }
 
-export function icon(Icon: Icon, { color = 'secondary', inline = false }: IconOptions = {}) {
+export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
   return styled(Icon)<{ theme: Theme }>`
     clip-path: stroke-box;
-    height: ${inline ? '1em' : '16px'};
+    height: 1em;
     stroke: ${({ theme }) => theme[color]};
-    width: ${inline ? '1em' : '16px'};
+    width: 1em;
   `
 }
 

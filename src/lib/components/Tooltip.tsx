@@ -26,12 +26,10 @@ export default function Tooltip({ icon: Icon = HelpCircleIcon, children }: Toolt
     [children]
   )
   return (
-    <TYPE.body2>
-      <Popover content={content} show={show} placement="top">
-        <IconWrapper>
-          <Icon onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
-        </IconWrapper>
-      </Popover>
-    </TYPE.body2>
+    <Popover content={content} show={show} placement="top">
+      <IconWrapper>
+        <Icon onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
+      </IconWrapper>
+    </Popover>
   )
 }

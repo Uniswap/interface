@@ -12,7 +12,7 @@ const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
-const BookIcon = icon(Book, { inline: true })
+const BookIcon = icon(Book)
 
 interface Token {
   address: string
