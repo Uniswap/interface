@@ -359,26 +359,26 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </TokenRatioText>
             </FixedHeightRow>
             <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                <Trans>AMP</Trans>{' '}
+              <Text fontSize={14} fontWeight={500} display="flex">
+                <Trans>AMP</Trans>
                 <QuestionHelper
                   text={t`Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.`}
                 />
-                :
+                &nbsp;:
               </Text>
               <Text fontSize={14} fontWeight={500}>
                 {amp.toSignificant(5)}
               </Text>
             </FixedHeightRow>
             <RowBetween>
-              <Text fontSize={14} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500} display="flex">
                 <Trans>
                   Price range {pair.token0.symbol}/{pair.token1.symbol}
                 </Trans>{' '}
                 <QuestionHelper
                   text={t`Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive.`}
                 />
-                :
+                &nbsp;:
               </Text>
               <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 0  */}
@@ -387,12 +387,12 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </Text>
             </RowBetween>
             <RowBetween>
-              <Text fontSize={14} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500} display="flex">
                 Price range {pair.token1.symbol}/{pair.token0.symbol}{' '}
                 <QuestionHelper
                   text={t`Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive.`}
                 />
-                :
+                &nbsp;:
               </Text>
               <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 1  */}
