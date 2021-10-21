@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Text } from 'rebass'
 import aboutGraph from 'assets/svg/about_graph.svg'
 import aboutIcon4 from 'assets/svg/about_icon_4.svg'
 import aboutIcon5 from 'assets/svg/about_icon_5.svg'
@@ -431,4 +432,17 @@ export const Footer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: -1rem;
   `}
+`
+
+export const NoteText = styled(Text)`
+  font-size: 10px;
+  font-weight: 400;
+  font-style: italic;
+  position: absolute;
+  bottom: -18px;
+  right: 0px;
+
+  @media only screen and (min-width: 768px) {
+    font-size: 12px;
+  }
 `

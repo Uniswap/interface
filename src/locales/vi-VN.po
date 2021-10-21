@@ -1804,8 +1804,9 @@ msgid "Your transactions will appear here..."
 msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
-msgstr ""
+msgstr "và"
 
 #: 
 #~ msgid "and Pool share"
