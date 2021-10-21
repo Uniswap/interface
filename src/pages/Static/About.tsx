@@ -93,6 +93,7 @@ export default function About() {
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
+  const aggregatorData = data?.aggregatorData
 
   const { data: farms } = useFarmsData()
 
@@ -153,7 +154,7 @@ export default function About() {
         <TradingVolumeSection>
           <div>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
-              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+              {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2} color={theme.subText} minWidth="max-content">
               <Trans>Total Trading Volume</Trans>

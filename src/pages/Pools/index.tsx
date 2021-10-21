@@ -115,6 +115,7 @@ const Pools = ({
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
+  const aggregatorData = data?.aggregatorData
 
   const { loading: loadingPoolFarm, data: farms } = useFarmsData()
 
@@ -129,7 +130,7 @@ const Pools = ({
               <Trans>Total Trading Volume:</Trans>
             </GlobalDataItemTitle>
             <GlobalDataItemValue>
-              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+              {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
             </GlobalDataItemValue>
           </GlobalDataItem>
           <GlobalDataItem>
