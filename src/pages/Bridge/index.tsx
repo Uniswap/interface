@@ -115,7 +115,7 @@ export default function Bridge() {
     }
   }, [bridgeService, chainId, typedValue])
 
-  const handleDisclaimer = useCallback(async () => {
+  const handleModal = useCallback(async () => {
     setModalData({
       currencyId: 'ETH',
       typedValue: typedValue,
@@ -214,7 +214,7 @@ export default function Bridge() {
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
-          handleSubmit={handleDisclaimer}
+          handleModal={handleModal}
           handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
