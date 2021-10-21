@@ -13,26 +13,21 @@ export interface BridgeModalProps {
   setStep: (step: BridgeStep) => void
   setStatus: (status: BridgeModalStatus, error?: string) => void
   modalData: BridgeModalState
-  handleDisclaimerConfirm: () => void
-  handleDisclaimerDismiss: () => void
+  handleSubmit: () => void
 }
 
-export const BridgeModal = ({
-  handleResetBridge,
-  setStep,
-  setStatus,
-  modalData,
-  handleDisclaimerConfirm,
-  handleDisclaimerDismiss
-}: BridgeModalProps) => {
+const setDisclaimerText = (isArbitrum: boolean) => {
+  if (isArbitrum) return 'It will take ~1 week for you to see your balance credited on L1. '
+  return 'It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if you later wish to do so) takes ~1 week. '
+}
+
+export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, handleSubmit }: BridgeModalProps) => {
   const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
 
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
   const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
   const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
-  const textInfo = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum
-    ? 'It will take ~1 week for you to see your balance credited on L1. '
-    : 'It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if you later wish to do so) takes ~1 week. '
+  const disclaimerText = setDisclaimerText(NETWORK_DETAIL[fromNetwork.chainId].isArbitrum)
 
   const selectModal = () => {
     switch (status) {
@@ -101,17 +96,17 @@ export const BridgeModal = ({
           <BridgeDisclaimerModal
             isOpen
             onConfirm={() => {
-              handleDisclaimerConfirm()
+              handleSubmit()
             }}
             onDismiss={() => {
-              handleDisclaimerDismiss()
+              handleResetBridge()
             }}
             amount={typedValue}
             assetType={currencyId ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
-            txType={txType}
-            textInfo={textInfo}
+            heading={txType}
+            disclaimerText={disclaimerText}
           />
         )
       default:

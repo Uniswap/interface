@@ -115,6 +115,15 @@ export default function Bridge() {
   }, [maxAmountInput, isNetworkConnected, onUserInput])
 
   const handleSubmit = useCallback(async () => {
+    if (!chainId || !bridgeService) return
+    if (!NETWORK_DETAIL[chainId].isArbitrum) {
+      await bridgeService.depositEth(typedValue)
+    } else {
+      await bridgeService.withdrawEth(typedValue)
+    }
+  }, [bridgeService, chainId, typedValue])
+
+  const handleDisclaimer = useCallback(async () => {
     setModalData({
       currencyId: 'ETH',
       typedValue: typedValue,
@@ -143,15 +152,6 @@ export default function Bridge() {
     await bridgeService.triggerOutboxEth(collectableTx)
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
-
-  const handleDisclaimerConfirm = useCallback(async () => {
-    if (!chainId || !bridgeService) return
-    if (!NETWORK_DETAIL[chainId].isArbitrum) {
-      await bridgeService.depositEth(typedValue)
-    } else {
-      await bridgeService.withdrawEth(typedValue)
-    }
-  }, [bridgeService, chainId, typedValue])
 
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
@@ -223,7 +223,7 @@ export default function Bridge() {
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
-          handleSubmit={handleSubmit}
+          handleSubmit={handleDisclaimer}
           handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
@@ -243,8 +243,7 @@ export default function Bridge() {
         setStep={setStep}
         setStatus={setModalStatus}
         modalData={modalData}
-        handleDisclaimerConfirm={handleDisclaimerConfirm}
-        handleDisclaimerDismiss={handleResetBridge}
+        handleSubmit={handleSubmit}
       />
     </Wrapper>
   )
