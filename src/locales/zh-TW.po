@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 18:06\n"
+"PO-Revision-Date: 2021-10-21 06:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -915,7 +915,7 @@ msgstr "現有流動量不足以支持此交易。"
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
-msgstr "{0} 余額不足"
+msgstr "{0} 餘額不足"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -1127,7 +1127,7 @@ msgstr "無運行中的流動池"
 
 #: src/components/FeeSelector/index.tsx
 msgid "No data"
-msgstr "沒有數據"
+msgstr "沒有資料"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1786,11 +1786,11 @@ msgstr "未定"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "意外的錯誤。無法估計交換的gas。"
+msgstr "意外的錯誤。無法估計交換的 gas。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "估計氣體的意外問題。請再試一次。"
+msgstr "估計 gas 時遭遇意外問題。請再試一次。"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
