@@ -26,8 +26,7 @@ export function useBestV3Trade(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmount = useDebounce(amountSpecified, 200)
-  const debouncedOtherCurrency = useDebounce(otherCurrency, 200)
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
