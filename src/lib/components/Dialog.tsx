@@ -17,7 +17,7 @@ const XIcon = icon(X, { color: 'primary' })
 interface DialogHeaderProps {
   title?: string
   onClose?: () => void
-  children: ReactNode
+  children?: ReactNode
 }
 
 export function DialogHeader({ title, onClose, children }: DialogHeaderProps) {
