@@ -87,6 +87,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // KNX-CELO
+  {
+    address: '0x1f1678Cc7358F4ed808B53733Bc49c4CFFe8A075',
+    underlyingPool: '0x7313fDf9D8Cab87E54efc8905B9D7d4BA3Fe7c8D',
+    basePool: '0x7313fDf9D8Cab87E54efc8905B9D7d4BA3Fe7c8D',
+    numRewards: 2,
+    active: true,
+  },
 
   // CELO-mcUSDxOLD
   {
