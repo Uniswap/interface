@@ -205,7 +205,7 @@ export class BridgeService {
   }
 
   // Handlers
-  public depositEth = async (value: string) => {
+  private depositEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
@@ -251,7 +251,7 @@ export class BridgeService {
     }
   }
 
-  public withdrawEth = async (value: string) => {
+  private withdrawEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
@@ -356,7 +356,7 @@ export class BridgeService {
     }
   }
 
-  public withdrawERC20 = async (l1TokenAddress: string, value: string) => {
+  private withdrawERC20 = async (l1TokenAddress: string, value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
     const tokenData = (await this.bridge.getAndUpdateL1TokenData(l1TokenAddress)).ERC20
     if (!tokenData) {
@@ -462,7 +462,7 @@ export class BridgeService {
     }
   }
 
-  public approveERC20 = async (erc20L1Address: string) => {
+  private approveERC20 = async (erc20L1Address: string) => {
     const tx = await this.bridge.approveToken(erc20L1Address)
     const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address)).ERC20
 
@@ -491,7 +491,7 @@ export class BridgeService {
     )
   }
 
-  public depositERC20 = async (erc20Address: string, typedValue: string) => {
+  private depositERC20 = async (erc20Address: string, typedValue: string) => {
     const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20Address)
     if (!(_tokenData && _tokenData.ERC20)) {
       throw new Error('Token data not found')
@@ -531,6 +531,24 @@ export class BridgeService {
       )
     } catch (err) {
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
+    }
+  }
+
+  // ADAPTER
+  public deposit = async (value: string, tokenAddress?: string) => {
+    if (tokenAddress) {
+      await this.approveERC20(tokenAddress)
+      await this.depositERC20(tokenAddress, value)
+    } else {
+      await this.depositEth(value)
+    }
+  }
+
+  public withdraw = async (value: string, tokenAddress?: string) => {
+    if (tokenAddress) {
+      await this.withdrawERC20(tokenAddress, value)
+    } else {
+      await this.withdrawEth(value)
     }
   }
 }
