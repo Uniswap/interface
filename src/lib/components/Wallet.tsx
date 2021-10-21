@@ -105,7 +105,7 @@ function Transaction({ tx }: { tx: Transaction }) {
       case TransactionStatus.PENDING:
         return SpinnerIcon
     }
-  }, tx)
+  }, [tx.status])
   return (
     <TransactionRow grow>
       <Row>
