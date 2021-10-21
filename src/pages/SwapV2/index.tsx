@@ -1,6 +1,6 @@
-import { CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
+import { CurrencyAmount, JSBI, Token, Percent } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text, Flex } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
@@ -64,6 +64,7 @@ import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
 import TransactionSettings from 'components/TransactionSettings'
 import { useGlobalData } from 'state/about/hooks'
 import { formatBigLiquidity } from 'utils/formatBalance'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
@@ -277,7 +278,7 @@ export default function Swap({ history }: RouteComponentProps) {
       ? (100 * (Number(trade.amountInUsd) - Number(trade.amountOutUsd))) / Number(trade.amountInUsd)
       : 0
 
-  const lossPercent = loss > 0 ? `-${loss.toFixed(3)}%` : loss < 0 ? `+${Math.abs(loss).toFixed(3)}%` : ''
+  const lossFormat = loss > 0 ? `-${loss.toFixed(3)}%` : loss < 0 ? `+${Math.abs(loss).toFixed(3)}%` : ''
 
   const comparerLoss =
     tradeComparer?.amountInUsd && tradeComparer?.amountOutUsd
@@ -285,8 +286,19 @@ export default function Swap({ history }: RouteComponentProps) {
         Number(tradeComparer.amountInUsd)
       : 0
 
-  const comparerLossPercent =
+  const comparerLossFormat =
     comparerLoss > 0 ? `-${comparerLoss.toFixed(3)}%` : comparerLoss < 0 ? `+${Math.abs(comparerLoss).toFixed(3)}%` : ''
+
+  const minDisplayValue = new Percent(JSBI.BigInt(1), JSBI.BigInt(1e5))
+
+  const displayOutput =
+    parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT]?.lessThan(minDisplayValue)
+      ? '< 0.00001'
+      : parsedAmounts[Field.OUTPUT]?.toSignificant(6)
+  const displayComparerAmount =
+    tradeComparer?.outputAmount && tradeComparer.outputAmount?.lessThan(minDisplayValue)
+      ? '< 0.00001'
+      : tradeComparer?.outputAmount?.toSignificant(6)
 
   return (
     <>
@@ -326,9 +338,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
-                  <div style={{ marginLeft: '18px' }}>
-                    <TransactionSettings />
-                  </div>
+                  <TransactionSettings />
                 </SwapFormActions>
               </RowBetween>
 
@@ -348,7 +358,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   tokenAddtoMetaMask={currencies[Field.OUTPUT]}
                 />
 
-                <AutoColumn gap={'7px'}>
+                <Flex flexDirection="column" sx={{ gap: '0.5rem' }}>
                   <CurrencyInputPanel
                     label={independentField === Field.OUTPUT && !showWrap && trade ? t`From (estimated)` : t`From`}
                     value={formattedAmounts[Field.INPUT]}
@@ -404,34 +414,64 @@ export default function Swap({ history }: RouteComponentProps) {
                               'KyberDMM'
                             )}
                           </KyberTag>
-                          <Text fontWeight="500" fontSize="1.5rem" marginTop="0.75rem">
-                            {formattedAmounts[Field.OUTPUT] || '0.0'}
+                          <Text fontWeight="500" fontSize="1.5rem" marginTop="0.75rem" flex={1}>
+                            {formattedAmounts[Field.OUTPUT] ? displayOutput : '0.0'}
                           </Text>
-                          <Flex flexDirection="column" color={theme.subText} alignItems="end">
+                          <Flex flexDirection="column" color={theme.subText} alignItems="end" width="fit-content">
                             <Text fontSize="10px" fontWeight="500">
                               KyberDMM
                             </Text>
                             <Text marginTop="0.5rem" fontSize="14px" fontWeight="500">
-                              {lossPercent &&
-                                !!trade?.amountOutUsd &&
-                                `~${formattedNum(trade.amountOutUsd, true)} (${lossPercent})`}
+                              {lossFormat && !!trade?.amountOutUsd && (
+                                <Flex alignItems="center">
+                                  ~{formattedNum(trade.amountOutUsd, true)}
+                                  <Flex
+                                    marginLeft="0.25rem"
+                                    sx={{ gap: '4px' }}
+                                    color={loss > 10 ? theme.red1 : undefined}
+                                    alignItems="center"
+                                  >
+                                    ({lossFormat})
+                                    {loss > 10 && (
+                                      <MouseoverTooltip text="High slippage! More than 10% drop">
+                                        <AlertTriangle size={16} />
+                                      </MouseoverTooltip>
+                                    )}
+                                  </Flex>
+                                </Flex>
+                              )}
                             </Text>
                           </Flex>
                         </KyberDmmOutput>
                         <CompareDexOuput>
-                          <Text fontWeight="500" fontSize="1.5rem" color={theme.disableText}>
+                          <Text fontWeight="500" fontSize="1.5rem" color={theme.disableText} flex={1} overflow="hidden">
                             {tradeComparer?.outputAmount && tradeComparer?.outputAmount?.toExact() !== '0'
-                              ? tradeComparer?.outputAmount?.toSignificant(6)
+                              ? displayComparerAmount
                               : '0.0'}
                           </Text>
-                          <Flex flexDirection="column" color={theme.disableText} alignItems="end">
+                          <Flex flexDirection="column" color={theme.disableText} alignItems="end" width="fit-content">
                             <Text fontSize="10px" fontWeight="500">
                               {!tradeComparer?.amountOutUsd ? '--' : tradeComparer.comparedDex.name}
                             </Text>
                             <Text marginTop="0.5rem" fontSize="14px" fontWeight="500">
-                              {comparerLossPercent &&
-                                !!tradeComparer?.amountOutUsd &&
-                                `~${formattedNum(tradeComparer.amountOutUsd, true)} (${comparerLossPercent})`}
+                              {comparerLossFormat && !!tradeComparer?.amountOutUsd && (
+                                <Flex alignItems="center">
+                                  ~{formattedNum(tradeComparer.amountOutUsd, true)}{' '}
+                                  <Flex
+                                    marginLeft="0.25rem"
+                                    sx={{ gap: '4px' }}
+                                    color={comparerLoss > 10 ? theme.red1 : undefined}
+                                    alignItems="center"
+                                  >
+                                    ({comparerLossFormat})
+                                    {comparerLoss > 10 && (
+                                      <MouseoverTooltip text="High slippage! More than 10% drop">
+                                        <AlertTriangle size={16} />
+                                      </MouseoverTooltip>
+                                    )}
+                                  </Flex>
+                                </Flex>
+                              )}
                             </Text>
                           </Flex>
                         </CompareDexOuput>
@@ -469,7 +509,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </AutoColumn>
                     </Card>
                   )}
-                </AutoColumn>
+                </Flex>
 
                 <TradeTypeSelection />
 

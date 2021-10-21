@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import Popover, { PopoverProps } from '../Popover'
+import { Flex } from 'rebass'
 
 const TooltipContainer = styled.div`
   width: 228px;
@@ -23,9 +24,9 @@ export function MouseoverTooltip({ children, ...rest }: Omit<TooltipProps, 'show
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <Tooltip {...rest} show={show}>
-      <div onMouseEnter={open} onMouseLeave={close}>
+      <Flex onMouseEnter={open} onMouseLeave={close} alignItems="center">
         {children}
-      </div>
+      </Flex>
     </Tooltip>
   )
 }

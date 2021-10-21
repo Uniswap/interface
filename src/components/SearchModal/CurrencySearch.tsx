@@ -165,7 +165,7 @@ export function CurrencySearch({
     <ContentWrapper>
       <PaddedColumn gap="14px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={16} display="flex">
             <Trans>Select a token</Trans>
             <QuestionHelper
               text={t`Find a token by searching for its name or symbol or by pasting its address below.`}

@@ -121,7 +121,10 @@ export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
       : 'https://bsc-info.dmm.exchange',
   [ChainId.AVAXTESTNET]: '',
   [ChainId.AVAXMAINNET]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : 'https://avax-info.dmm.exchange',
-  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : ''
+  [ChainId.FANTOM]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? 'https://staging-fantom-dmm-info.knstats.com'
+      : 'https://fantom-info.dmm.exchange'
 }
 
 // a list of tokens by chain

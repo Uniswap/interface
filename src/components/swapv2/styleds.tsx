@@ -238,7 +238,7 @@ export const GroupButtonReturnTypes = styled.div`
     height: 32px;
     padding: 7px;
     line-height: 14px;
-    font-size: 12px;
+    font-size: 14px;
     border-radius: 0;
     cursor: pointer;
     &:first-child {
@@ -262,6 +262,7 @@ export const GroupButtonReturnTypes = styled.div`
 export const SwapFormActions = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 `
 
 export const KyberDmmOutput = styled.div`

@@ -76,6 +76,8 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/AVAX`
     case ChainId.AVAXMAINNET:
       return `/pools/AVAX`
+    case ChainId.FANTOM:
+      return `/pools/FTM`
     default:
       return '/pools/ETH'
   }

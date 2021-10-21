@@ -275,7 +275,11 @@ const Pools = ({
         </Panel>
 
         <Flex marginTop="1rem" alignItems="center">
-          <Trans>Popular Pairs</Trans> &nbsp;
+          {(loadingPoolFarm ||
+            (!loadingPoolFarm && (!!Object.values(farms).flat().length || !!popularPairs.length))) && (
+            <Trans>Popular Pairs</Trans>
+          )}
+          &nbsp;
           {loadingPoolFarm && <Loader />}
         </Flex>
         <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
