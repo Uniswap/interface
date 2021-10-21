@@ -52,7 +52,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: '',
+  currencyId: 'ETH',
   fromNetwork: {
     chainId: 1
   },
@@ -65,7 +65,7 @@ const initialState: BridgeState = {
   modal: {
     status: BridgeModalStatus.CLOSED,
     currencyId: '',
-    typedValue: '',
+    typedValue: 'ETH',
     fromNetwork: {
       chainId: 1
     },
