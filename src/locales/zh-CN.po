@@ -1110,8 +1110,12 @@ msgstr "请确认"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "请连接到适合的以太坊网络。"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr ""
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx

@@ -1110,8 +1110,12 @@ msgstr "확인해주세요"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "이더리움 네트워크에 연결하십시오."
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr ""
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx

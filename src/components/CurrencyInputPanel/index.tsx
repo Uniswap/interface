@@ -176,7 +176,7 @@ export default function CurrencyInputPanel({
     <div style={{ width: '100%' }}>
       {(account || label) && (
         <Card2 borderRadius={'20px'} balancePosition={balancePosition}>
-          <Flex justifyContent="space-between" alignItems="center">
+          <Flex justifyContent={label ? 'space-between' : 'end'} alignItems="center">
             {label && (
               <Text fontSize={14} color={theme.text2} fontWeight={500}>
                 {label}:
