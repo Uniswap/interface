@@ -18,7 +18,7 @@ export default function TransactionTtlInput() {
   return (
     <Column gap="0.75em">
       <Label name="Transaction Deadline" tooltip={tooltip} />
-      <Value onClick={() => input.current?.focus()}>
+      <Value onClick={() => input.current?.focus()} cursor="text">
         <TYPE.subhead2>
           <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
         </TYPE.subhead2>

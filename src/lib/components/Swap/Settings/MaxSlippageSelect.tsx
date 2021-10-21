@@ -26,11 +26,12 @@ interface OptionProps<T> {
   children?: ReactNode
   onSelect: (value: T) => void
   selected: boolean
+  cursor?: string
 }
 
-function Option<T>({ value, children, selected, onSelect }: OptionProps<T>) {
+function Option<T>({ value, children, selected, cursor, onSelect }: OptionProps<T>) {
   return (
-    <Value selected={selected} onClick={() => onSelect(value)}>
+    <Value selected={selected} onClick={() => onSelect(value)} cursor={cursor}>
       <Row>
         <TYPE.subhead2>{children ? children : `${value}%`}</TYPE.subhead2>
         {selected && <SelectedIcon />}
@@ -54,7 +55,6 @@ export default function MaxSlippageSelect() {
     },
     [CUSTOM, focus, setMaxSlippage]
   )
-  const hasCustomInput = useMemo(() => custom !== undefined, [custom])
 
   return (
     <Column gap="0.75em">
@@ -62,18 +62,18 @@ export default function MaxSlippageSelect() {
       <Row gap="0.5em" grow>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
-        <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM}>
+        <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM} cursor="text">
           <Row>
-            <InputType empty={!hasCustomInput}>
+            <InputType empty={custom === undefined}>
               <DecimalInput
-                style={{ width: hasCustomInput ? '4ch' : '100%' }}
+                size={custom === undefined ? undefined : 5}
                 value={custom}
                 onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
                 placeholder="Custom"
                 ref={input}
               />
-              {hasCustomInput && '%'}
             </InputType>
+            {custom !== undefined && <span>%</span>}
           </Row>
         </Option>
       </Row>
