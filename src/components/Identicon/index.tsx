@@ -17,7 +17,7 @@ export default function Identicon() {
   // restrict usage of Davatar until it stops sending 3p requests
   // see https://github.com/metaphor-xyz/davatar-helpers/issues/18
   const supportsENS = useMemo(() => {
-    return ([1, 3, 4, 5] as Array<number | undefined>).includes(library?.network.chainId)
+    return ([1, 3, 4, 5] as Array<number | undefined>).includes(library?.network?.chainId)
   }, [library])
 
   return (
