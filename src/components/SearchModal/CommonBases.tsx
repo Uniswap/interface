@@ -59,6 +59,7 @@ export default function CommonBases({
             {chainId && [137, 80001].includes(chainId) && `MATIC`}
             {chainId && [97, 56].includes(chainId) && `BNB`}
             {chainId && [43113, 43114].includes(chainId) && `AVAX`}
+            {chainId && [250].includes(chainId) && `FTM`}
           </Text>
         </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {

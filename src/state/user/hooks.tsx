@@ -30,25 +30,39 @@ import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
+import { WrappedTokenInfo } from 'state/lists/hooks'
 
-function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
+function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
     decimals: token.decimals,
     symbol: token.symbol,
-    name: token.name
+    name: token.name,
+    logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined
   }
 }
 
 function deserializeToken(serializedToken: SerializedToken): Token {
-  return new Token(
-    serializedToken.chainId,
-    serializedToken.address,
-    serializedToken.decimals,
-    serializedToken.symbol,
-    serializedToken.name
-  )
+  return serializedToken?.logoURI
+    ? new WrappedTokenInfo(
+        {
+          chainId: serializedToken.chainId,
+          address: serializedToken.address,
+          name: serializedToken.name ?? '',
+          symbol: serializedToken.symbol ?? '',
+          decimals: serializedToken.decimals,
+          logoURI: serializedToken.logoURI
+        },
+        []
+      )
+    : new Token(
+        serializedToken.chainId,
+        serializedToken.address,
+        serializedToken.decimals,
+        serializedToken.symbol,
+        serializedToken.name
+      )
 }
 // function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
 //   return new TokenUNI(

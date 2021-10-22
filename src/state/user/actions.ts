@@ -7,6 +7,7 @@ export interface SerializedToken {
   decimals: number
   symbol?: string
   name?: string
+  logoURI?: string
 }
 
 export interface SerializedPair {

@@ -72,7 +72,7 @@ export const AggregatorStatsItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px;
+  padding: 12px 16px;
   border-radius: 4px;
   background-color: ${({ theme }) => `${theme.buttonGray}66`};
 `
@@ -238,7 +238,7 @@ export const GroupButtonReturnTypes = styled.div`
     height: 32px;
     padding: 7px;
     line-height: 14px;
-    font-size: 12px;
+    font-size: 14px;
     border-radius: 0;
     cursor: pointer;
     &:first-child {
@@ -261,4 +261,34 @@ export const GroupButtonReturnTypes = styled.div`
 
 export const SwapFormActions = styled.div`
   display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+export const KyberDmmOutput = styled.div`
+  border-radius: 0.25rem;
+  background-color: ${({ theme }) => `${theme.primary1}33`};
+  position: relative;
+  overflow: hidden;
+  padding: 0.875rem 0.75rem;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+`
+
+export const CompareDexOuput = styled(KyberDmmOutput)`
+  background-color: ${({ theme }) => theme.buttonGray}40;
+`
+
+export const KyberTag = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 500;
+  border-bottom-right-radius: 0.25rem;
+  background: ${({ theme }) => theme.primary1};
+  padding: 0.125rem 0.5rem;
+  color: #fff;
+  font-size: 0.75rem;
 `

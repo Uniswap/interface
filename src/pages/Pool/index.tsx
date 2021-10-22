@@ -167,6 +167,8 @@ export default function Pool() {
       ? 'BNB'
       : [43113, 43114].includes(chainId)
       ? 'AVAX'
+      : [250].includes(chainId)
+      ? 'FTM'
       : ''
   }
   return (

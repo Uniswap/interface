@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen, FileText, Monitor, User, Triangle } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import { Trans } from '@lingui/macro'
@@ -78,6 +78,8 @@ const NavMenuItem = styled(NavLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   text-decoration: none;
+  display: flex;
+  align-items: center;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -91,6 +93,8 @@ const NavMenuItem = styled(NavLink)`
 const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
+  display: flex;
+  align-items: center;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -128,7 +132,7 @@ export default function Menu() {
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <NavMenuItem to="/migration">
               <Zap size={14} />
-              <Trans>Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity</Trans>
+              <Trans>Migrate Liquidity</Trans>
             </NavMenuItem>
           )}
           <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
@@ -141,12 +145,19 @@ export default function Menu() {
           </MenuItem>
           <MenuItem id="link" href="https://gov.kyber.org">
             <User size={14} />
-            <Trans>Forums</Trans>
+            <Trans>Forum</Trans>
           </MenuItem>
           <MenuItem id="link" href="https://files.dmm.exchange/tac.pdf">
             <FileText size={14} />
             <Trans>Terms</Trans>
           </MenuItem>
+
+          {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
+            <NavMenuItem to="/swap-legacy">
+              <Triangle size={14} />
+              <Trans>Swap Legacy</Trans>
+            </NavMenuItem>
+          )}
         </MenuFlyout>
       )}
     </StyledMenu>

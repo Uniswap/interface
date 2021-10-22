@@ -136,9 +136,13 @@ msgstr "유동성 추가:"
 msgid "Add {0} to Metamask"
 msgstr "메타마스크에 {0} 추가"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "고급 모드"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -309,9 +313,9 @@ msgstr "보안에 전념"
 msgid "Common bases"
 msgstr "공통 기지"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -412,6 +416,11 @@ msgstr "사용자 정의"
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "DEPOSIT"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -518,7 +527,7 @@ msgstr ""
 #~ msgid "Eligible Pools"
 #~ msgstr "지정 풀"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "높은 슬리피지가 발생해도 거래를 가능하게 합니다. 자신의 책임하에 사용하십시오."
 
@@ -626,13 +635,14 @@ msgstr "수수료는 유동성 공급자의 수익을 극대화하기 위해 시
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "토큰을 찾으시려면 토큰 이름이나 심볼를 검색하거나 아래에 주소를 붙여넣주세요."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "포럼"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -741,7 +751,7 @@ msgstr "가져오기."
 msgid "Import your Wallet"
 msgstr "지갑 가져오기"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "고급 모드에서는 '트랜잭션 확인' 하기 버튼이 비활성화되어 있습니다. 높은 슬립피지거래를 허용함으로써 좋지 못한 결과를 초래할수있습니다."
 
@@ -881,6 +891,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "최대"
 
@@ -948,13 +959,14 @@ msgid "Migrate"
 msgstr "이전"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "유동성 마이그레이션"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "마이그레이션 유동성"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "마이그레이션 유동성"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1049,7 +1061,7 @@ msgstr "꺼짐"
 msgid "ON"
 msgstr "켜짐"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "위험을 알고 있는 경우에만 이 모드를 사용하십시오"
 
@@ -1090,7 +1102,7 @@ msgstr "최소한 받을 수 있는 예상된 결과 액수입니다"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "DeFi를 위한 무허가 및 풍부한 유동성"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "확인해주세요"
 
@@ -1098,8 +1110,12 @@ msgstr "확인해주세요"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "이더리움 네트워크에 연결하십시오."
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr ""
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
@@ -1175,6 +1191,7 @@ msgstr "Powered by"
 msgid "Preferences"
 msgstr "기본 설정"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "가격"
@@ -1200,7 +1217,6 @@ msgid "Price range {0}/{1}"
 msgstr "가격대 {0}/{1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "가격:"
 
@@ -1311,6 +1327,10 @@ msgstr "라우팅을 통해 최고의 토큰 가격으로 거래를 진행할수
 #~ msgid "START IN"
 #~ msgstr "에서 시작"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr "풀 주소로 검색"
@@ -1410,6 +1430,10 @@ msgstr "토큰 스왑"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "스왑하기"
+
+#: src/components/Menu/index.tsx
+msgid "Swap Legacy"
+msgstr ""
 
 #: 
 #~ msgid "Swap Token"
@@ -1578,7 +1602,7 @@ msgstr "이 %보다 높은 비율 변경이 있는 경우 거래가 거절됩니
 msgid "Try Again"
 msgstr "다시 시도"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "고급 모드 켜기"
 
@@ -1706,9 +1730,9 @@ msgstr "잘못된 네트워크"
 #~ msgid "Yield"
 #~ msgstr "유동성 마이닝"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1780,6 +1804,7 @@ msgid "Your transactions will appear here..."
 msgstr "거래가 여기에 표시됩니다..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
 msgstr ""
 

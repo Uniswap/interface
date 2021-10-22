@@ -24,6 +24,7 @@ export enum ApplicationModal {
   NETWORK,
   WALLET,
   SETTINGS,
+  TRANSACTION_SETTINGS,
   SELF_CLAIM,
   ADDRESS_CLAIM,
   CLAIM_POPUP,

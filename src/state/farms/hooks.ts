@@ -123,6 +123,7 @@ export const useFarmsData = () => {
     async function checkForFarms() {
       try {
         if (!fairLaunchContracts) {
+          dispatch(setFarmsData({}))
           return
         }
 

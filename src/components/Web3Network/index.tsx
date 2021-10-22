@@ -69,7 +69,7 @@ function Web3Network(): JSX.Element | null {
           <img
             src={NETWORK_ICON[chainId]}
             alt="Switch Network"
-            style={{ width: 23, height: 23, marginRight: '12px' }}
+            style={{ width: 24, height: 24, marginRight: '12px' }}
           />
           <NetworkLabel>{NETWORK_LABEL[chainId]}</NetworkLabel>
         </Row>

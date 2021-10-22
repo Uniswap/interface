@@ -19,6 +19,8 @@ import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
+import githubImg from 'assets/svg/about_icon_github.png'
+import githubImgLight from 'assets/svg/about_icon_github_light.png'
 
 import { Farm } from 'state/farms/types'
 import { useFarmsData } from 'state/farms/hooks'
@@ -46,7 +48,12 @@ import {
   Footer,
   Image3,
   Image2,
-  Image1
+  Image1,
+  FooterLinkWrapper,
+  SocialLinkWrapper,
+  TradeButton,
+  SectionAmpContent,
+  NoteText
 } from './styleds'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -70,6 +77,8 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/AVAX`
     case ChainId.AVAXMAINNET:
       return `/pools/AVAX`
+    case ChainId.FANTOM:
+      return `/pools/FTM`
     default:
       return '/pools/ETH'
   }
@@ -85,6 +94,7 @@ export default function About() {
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
+  const aggregatorData = data?.aggregatorData
 
   const { data: farms } = useFarmsData()
 
@@ -145,12 +155,15 @@ export default function About() {
         <TradingVolumeSection>
           <div>
             <Text fontSize={[24, 28]} fontWeight={[600, 700]} color={theme.text}>
-              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+              {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
             </Text>
             <Text fontSize={14} mt={2} color={theme.subText} minWidth="max-content">
               <Trans>Total Trading Volume</Trans>
             </Text>
           </div>
+          <NoteText>
+            *DEX aggregation <Trans>and</Trans> DMM
+          </NoteText>
         </TradingVolumeSection>
 
         <SectionNumber>
@@ -171,17 +184,9 @@ export default function About() {
               <Trans>Total AMP Liquidity</Trans>*
             </Text>
           </AmpLiquidityNumber>
-          <Text
-            fontSize={10}
-            fontStyle="italic"
-            sx={{
-              position: 'absolute',
-              bottom: '-18px',
-              right: '0px'
-            }}
-          >
+          <NoteText>
             *<Trans>Equivalent TVL when compared to typical AMMs</Trans>
-          </Text>
+          </NoteText>
         </SectionNumber>
 
         {maxApr[chainId as ChainId] >= 0 && (
@@ -197,21 +202,23 @@ export default function About() {
       </SectionNumberContainer>
 
       <Panel0>
-        <ButtonPrimary padding="12px 10px" as={Link} to={'/swap'}>
+        <TradeButton padding="12px 0px" as={Link} to={'/swap'}>
           <Trans>Trade Now</Trans>
-        </ButtonPrimary>
-        <ButtonOutlined padding="12px 10px" as={Link} to={poolsMenuLink} style={{ fontSize: '16px' }}>
-          <Trans>Add Liquidity</Trans>
-        </ButtonOutlined>
-        <ButtonOutlined
-          padding="12px 10px"
-          as={ExternalLink}
-          href={`https://docs.dmm.exchange`}
-          target="_blank"
-          style={{ fontSize: '16px' }}
-        >
-          <Trans>Documentation</Trans>
-        </ButtonOutlined>
+        </TradeButton>
+        <Flex sx={{ gap: '1rem' }}>
+          <ButtonOutlined padding="12px 0px" as={Link} to={poolsMenuLink} style={{ fontSize: '16px' }}>
+            <Trans>Add Liquidity</Trans>
+          </ButtonOutlined>
+          <ButtonOutlined
+            padding="12px 0px"
+            as={ExternalLink}
+            href={`https://docs.dmm.exchange`}
+            target="_blank"
+            style={{ fontSize: '16px' }}
+          >
+            <Trans>Documentation</Trans>
+          </ButtonOutlined>
+        </Flex>
       </Panel0>
 
       <Text mt={[70, 100]} color={theme.text} fontSize={[24, 40]}>
@@ -245,36 +252,59 @@ export default function About() {
         <Trans>DMM can be up to 100x more capital efficient than typical AMMs</Trans>
       </Text>
       <SectionAmp>
-        <div className="box box_1">
-          <div>
+        <SectionAmpContent bgColor="#105d81">
+          <Text fontSize="18px">
             <Trans>Typical AMM</Trans>
+          </Text>
+          <div className="left">
+            <Text fontSize="42px" fontWeight={600}>
+              ~11%
+            </Text>
+            <Text fontSize="14px">
+              <Trans>Slippage</Trans>
+            </Text>
           </div>
-          <div>&nbsp;</div>
-          <div>~11%</div>
+        </SectionAmpContent>
+
+        <SectionAmpContent bgColor="#1183b7">
           <div>
-            <Trans>Slippage</Trans>
+            <Text fontSize="18px">
+              <Trans>DMM</Trans>
+            </Text>
+            <Text fontSize="12px" mt="4px">
+              <Trans>Capital Amp Factor = 5</Trans>
+            </Text>
           </div>
-        </div>
-        <div className="box box_1">
-          <div>DMM</div>
+
+          <div className="left">
+            <Text fontSize="42px" fontWeight={600}>
+              ~2%
+            </Text>
+            <Text fontSize="14px">
+              <Trans>Slippage</Trans>
+            </Text>
+          </div>
+        </SectionAmpContent>
+
+        <SectionAmpContent bgColor="#08a1e7">
           <div>
-            <Trans>Capital Amp Factor = 5</Trans>
+            <Text fontSize="18px">
+              <Trans>DMM</Trans>
+            </Text>
+            <Text fontSize="12px" mt="4px">
+              <Trans>Capital Amp Factor = 10</Trans>
+            </Text>
           </div>
-          <div>~2%</div>
-          <div>
-            <Trans>Slippage</Trans>
+
+          <div className="left">
+            <Text fontSize="42px" fontWeight={600}>
+              ~0.1%
+            </Text>
+            <Text fontSize="14px">
+              <Trans>Slippage</Trans>
+            </Text>
           </div>
-        </div>
-        <div className="box box_1">
-          <div>DMM</div>
-          <div>
-            <Trans>Capital Amp Factor = 10</Trans>
-          </div>
-          <div>~0.1%</div>
-          <div>
-            <Trans>Slippage</Trans>
-          </div>
-        </div>
+        </SectionAmpContent>
       </SectionAmp>
       <i>
         <Text fontSize={[12, 14]} px={2}>
@@ -311,7 +341,7 @@ export default function About() {
           }}
         />
         <div className="right">
-          <div className="item" style={{ borderLeft: above576 ? undefined : '1px dashed #303e46' }}>
+          <div className="item" style={{ borderLeft: above576 ? undefined : `1px dashed ${theme.border4}99` }}>
             <div className="box box_1"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Reduce the impact of IL</Trans>
@@ -323,7 +353,7 @@ export default function About() {
               <Trans>Increase LP Profit</Trans>
             </Text>
           </div>
-          <div className="item" style={{ borderBottom: 'dashed 1px #303e46' }}>
+          <div className="item" style={{ borderBottom: `dashed 1px ${theme.border4}99` }}>
             <div className="box box_3"></div>
             <Text fontSize={[12, 14]} mt={[10, 25]}>
               <Trans>Encourage trading</Trans>
@@ -453,19 +483,19 @@ export default function About() {
           </ExternalLink>
         </div>
         <div>
-          <Text fontSize={[12, 18]} fontWeight={500}>
+          <Text fontSize={18} fontWeight={500}>
             <Trans>On-chain and Open Source</Trans>
           </Text>
-          <img src={require('../../assets/svg/about_icon_github.jpg')} alt="" />
+          <img src={isDarkMode ? githubImg : githubImgLight} alt="" height="44px" />
         </div>
         <div>
-          <Text fontSize={[12, 18]} fontWeight={500}>
+          <Text fontSize={18} fontWeight={500}>
             <Trans>Bug Bounty</Trans>
           </Text>
-          <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} alt="" />
+          <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} alt="" height="48px" />
         </div>
         <div>
-          <Text fontSize={[12, 18]} fontWeight={500}>
+          <Text fontSize={18} fontWeight={500}>
             <Trans>Insured by</Trans>
           </Text>
           <img
@@ -473,11 +503,13 @@ export default function About() {
               !isDarkMode ? require('../../assets/svg/unslashed_light.svg') : require('../../assets/svg/unslashed.svg')
             }
             alt=""
+            height="34px"
+            style={{ marginTop: '36px' }}
           />
         </div>
       </Security>
 
-      <Text fontSize={[12, 18]} fontWeight={500} mt={5}>
+      <Text fontSize={18} fontWeight={500} mt={5}>
         <Trans>Powered by</Trans>
       </Text>
       <Powered>
@@ -502,66 +534,65 @@ export default function About() {
         <img src={require('../../assets/svg/about_icon_bsc.png')} alt="" />
       </Powered>
       <Footer>
-        <div className={'content'}>
-          <div className={'left'}>
-            <Text>
-              <ExternalLink href={`https://docs.dmm.exchange`}>
-                <Trans>DevPortal</Trans>
-              </ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`https://github.com/dynamic-amm`}>
-                <Trans>Github</Trans>
-              </ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`https://kyber.org`}>KyberDAO</ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`https://gov.kyber.org`}>
-                <Trans>Forum</Trans>
-              </ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>
-                <Trans>DMM Litepaper</Trans>
-              </ExternalLink>
-            </Text>
-            {/* <Text>
+        <FooterLinkWrapper>
+          <Text>
+            <ExternalLink href={`https://docs.dmm.exchange`}>
+              <Trans>DevPortal</Trans>
+            </ExternalLink>
+          </Text>
+          <Text>
+            <ExternalLink href={`https://github.com/dynamic-amm`}>
+              <Trans>Github</Trans>
+            </ExternalLink>
+          </Text>
+          <Text>
+            <ExternalLink href={`https://kyber.org`}>KyberDAO</ExternalLink>
+          </Text>
+          <Text>
+            <ExternalLink href={`https://gov.kyber.org`}>
+              <Trans>Forum</Trans>
+            </ExternalLink>
+          </Text>
+          <Text>
+            <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>
+              <Trans>DMM Litepaper</Trans>
+            </ExternalLink>
+          </Text>
+          {/* <Text>
               <a>FAQ</a>
             </Text> */}
-            <Text>
-              <ExternalLink href={`http://files.dmm.exchange/privacy.pdf`}>
-                <Trans>Privacy</Trans>
-              </ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`http://files.dmm.exchange/tac.pdf`}>
-                <Trans>Terms</Trans>
-              </ExternalLink>
-            </Text>
-            <Text>
-              <ExternalLink href={`https://kyber.network/`}>Kyber Network</ExternalLink>
-            </Text>
-          </div>
-          <div className={'right'}>
-            <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
-              <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
+          <Text>
+            <ExternalLink href={`http://files.dmm.exchange/privacy.pdf`}>
+              <Trans>Privacy</Trans>
             </ExternalLink>
-            <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
-              <Image src={require('../../assets/svg/about_icon_discord.svg')} />
+          </Text>
+          <Text>
+            <ExternalLink href={`http://files.dmm.exchange/tac.pdf`}>
+              <Trans>Terms</Trans>
             </ExternalLink>
-            <ExternalLink href={`https://blog.kyber.network`}>
-              <Image src={require('../../assets/svg/about_icon_medium.svg')} />
-            </ExternalLink>
-            <Text fontSize={12} ml={['auto', 0]}>
-              (c) dmm.exchange
-            </Text>
-          </div>
-          {Object.values(farms)
-            .flat()
-            .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
-        </div>
+          </Text>
+          <Text>
+            <ExternalLink href={`https://kyber.network/`}>Kyber Network</ExternalLink>
+          </Text>
+        </FooterLinkWrapper>
+        <SocialLinkWrapper>
+          <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
+            <Image src={require('../../assets/svg/about_icon_twitter.svg')} size="24px" />
+          </ExternalLink>
+          <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
+            <Image src={require('../../assets/svg/about_icon_discord.svg')} size="24px" />
+          </ExternalLink>
+          <ExternalLink href={`https://blog.kyber.network`}>
+            <Image src={require('../../assets/svg/about_icon_medium.svg')} size="24px" />
+          </ExternalLink>
+        </SocialLinkWrapper>
+        <Text fontSize={12} ml={['auto', 0]} marginTop="0.75rem">
+          (c) dmm.exchange
+        </Text>
+
+        {Object.values(farms)
+          .flat()
+          .map((farm, index) => index === indexx && <Apr key={farm.id} farm={farm} onAprUpdate={handleAprUpdate} />)}
       </Footer>
     </Wrapper>
   )

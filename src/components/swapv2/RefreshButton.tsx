@@ -5,15 +5,25 @@ import { Aggregator } from '../../utils/aggregator'
 
 const IconButton = styled.button`
   cursor: pointer;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
+  height: 36px;
+  width: 36px;
+  border-radius: 4px;
   //transition: background 0.2s;
   outline: none;
   border: none;
   padding: 0;
   margin: 0;
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
 `
 
 const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
@@ -22,10 +32,10 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
       ref={ref}
       id="arrow_loading"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="-2 -2 28 28"
+      viewBox="2 2 20 20"
       className="arrow-loading"
-      width="24"
-      height="24"
+      width="20"
+      height="20"
       {...props}
     >
       <path
@@ -106,9 +116,9 @@ const ArrowLocatorLoading = React.forwardRef<any>((props, ref) => {
 ArrowLocatorLoading.displayName = 'ArrowLocatorLoading'
 
 const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)`
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text};
   .background-path {
-    fill: #6c7284;
+    fill: ${({ theme }) => theme.disableText};
   }
 `
 
@@ -123,12 +133,12 @@ export default function RefreshButton({ isConfirming, trade, onClick }: RefreshB
 
   const hasOutput = useMemo((): boolean => {
     return !!trade?.outputAmount
-  }, [trade?.outputAmount.toSignificant(10)])
+  }, [trade])
 
   useEffect(() => {
     let interval: any
     if (svgLoadingRef?.current) {
-      if (!isConfirming && trade?.outputAmount) {
+      if (!isConfirming && hasOutput) {
         // reset svg animate duration to 0 and UNPAUSE animations
         svgLoadingRef.current.setCurrentTime(0)
         svgLoadingRef.current.unpauseAnimations()

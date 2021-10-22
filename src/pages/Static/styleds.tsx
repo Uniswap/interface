@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Text } from 'rebass'
 import aboutGraph from 'assets/svg/about_graph.svg'
 import aboutIcon4 from 'assets/svg/about_icon_4.svg'
 import aboutIcon5 from 'assets/svg/about_icon_5.svg'
@@ -6,6 +7,7 @@ import aboutIcon6 from 'assets/svg/about_icon_6.svg'
 import image1 from 'assets/svg/bg1.svg'
 import image2 from 'assets/svg/bg2.svg'
 import image3 from 'assets/svg/bg3.svg'
+import { ButtonPrimary } from 'components/Button'
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -80,7 +82,6 @@ export const SectionNumberContainer = styled.div`
 export const SectionNumber = styled.div`
   max-width: 450px;
   background: ${({ theme }) => theme.background};
-  border: 1px solid ${({ theme }) => theme.border2};
   border-radius: 20px;
   padding: 28px 44px;
   display: flex;
@@ -141,20 +142,28 @@ export const AmpLiquidityNumber = styled.div`
 
 export const Panel0 = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   max-width: fit-content;
-  gap: 20px;
+  padding: 0 1rem;
+  gap: 1rem;
   margin: 50px auto auto auto;
   a {
     width: 200px;
     max-width: 100%;
-    margin: 0 10px;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
-    gap: 16px;
+    > a {
+      width: unset;
+    }
+  `}
+`
+
+export const TradeButton = styled(ButtonPrimary)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex: 1;
   `}
 `
 
@@ -194,64 +203,39 @@ export const SectionCurveDetail = styled.div`
 export const SectionAmp = styled.div`
   color: #fff;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 1.5rem;
   max-width: 700px;
+  padding: 0 1rem;
   margin: 30px auto;
-  .box div {
-    &:nth-child(1) {
-      font-size: 18px;
-    }
-    &:nth-child(2) {
-      margin-bottom: 10px;
-      font-size: 12px;
-    }
-    &:nth-child(3) {
-      font-size: 42px;
-      font-weight: 600;
-      margin-top: auto;
-    }
-    &:nth-child(4) {
-      font-size: 14px;
-    }
 
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      &:nth-child(1) {
-        font-size: 12px;
-      }
-      &:nth-child(2) {
-        margin-bottom: 5px;
-        font-size: 10px;
-      }
-      &:nth-child(3) {
-        font-size: 18px;
-      }
-      &:nth-child(4) {
-        font-size: 10px;
-      }
-    `}
-  }
-  .box_1 {
-    text-align: center;
-    width: 220px;
-    border-radius: 20px;
-    padding: 25px;
-    display: flex;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
-    &:nth-child(1) {
-      background-color: #105d81;
-    }
-    &:nth-child(2) {
-      background-color: #1183b7;
-    }
-    &:nth-child(3) {
-      background-color: #08a1e7;
-    }
+    gap: 1rem;
+  `}
+`
 
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      width: 100px;
-      padding: 10px;
-    `}
-  }
+export const SectionAmpContent = styled.div<{ bgColor: string }>`
+  display: flex;
+  background-color: ${props => props.bgColor};
+  padding: 1.5rem;
+  border-radius: 20px;
+  gap: 16px;
+  width: 220px;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+
+    .left {
+      text-align: center;
+    }
+  `}
 `
 
 export const SectionFee = styled.div`
@@ -284,12 +268,12 @@ export const SectionGraph = styled.div`
     background-size: cover;
     background-position: center;
     background-color: ${({ theme }) => `${theme.buttonBlack}66`};
-    border: dashed 1px #303e46;
+    border: dashed 1px ${({ theme }) => `${theme.border4}99`};
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       height: 300px;
       flex: auto;
-      margin-bottom: 20px;
+      border-bottom: none;
     `}
   }
   .right {
@@ -301,13 +285,13 @@ export const SectionGraph = styled.div`
     .item {
       padding: 25px;
       border-radius: 4px;
-      border: dashed 1px #303e46;
+      border: dashed 1px ${({ theme }) => `${theme.border4}99`};
       border-left: none;
       background-color: ${({ theme }) => `${theme.buttonBlack}66`};
       border-bottom: none;
 
       ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        border-bottom: dashed 1px #303e46;
+        border-bottom: dashed 1px ${({ theme }) => `${theme.border4}99`};
       `}
 
       .box {
@@ -356,21 +340,24 @@ export const Security = styled.div`
   margin-top: 50px;
   margin: 50px auto auto auto;
   flex-wrap: wrap;
+  gap: 28px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+
   div {
     text-align: center;
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       flex-basis: 50%;
     `}
+
     img {
       display: inline;
       margin: 32px 10px 0 10px;
       border-radius: 10px;
-      height: 80px;
-      max-width: 180px;
       ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         flex-basis: 50%;
-        max-height: 55px;
-        max-width: 130px;
         margin-top: 20px;
         margin-bottom: 40px;
       `}
@@ -383,7 +370,7 @@ export const Powered = styled.div`
   justify-content: space-around;
   width: 100%;
   max-width: 800px;
-  margin: 60px auto 140px;
+  margin: 24px auto 140px;
   align-items: flex-end;
   flex-wrap: wrap;
 
@@ -396,7 +383,7 @@ export const Powered = styled.div`
   }
   img {
     // flex-basis: 50%;
-    height: 80px;
+    height: 70px;
     margin: 0 20px;
     padding-bottom: 20px;
     vertical-align: middle;
@@ -414,59 +401,48 @@ export const Powered = styled.div`
   }
 `
 
-export const Footer = styled.div`
-  background: #0c1012;
+export const FooterLinkWrapper = styled.div`
   display: flex;
-  padding: 10px 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  a {
+    color: #a7b6bd;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+      gap: 16px;
+  `}
+`
+
+export const SocialLinkWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  align-items: center;
+  margin-top: 1.5rem;
+`
+
+export const Footer = styled.div`
+  background: #11171a;
+  padding: 24px;
   margin-bottom: -5rem;
-  height: 85px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin-bottom: unset;
-    height: unset;
+    margin-bottom: -1rem;
   `}
+`
 
-  .content {
-    width: 100%;
-    max-width: 1000px;
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    flex-wrap: wrap;
-    .left {
-      padding-top: 6px;
-      display: flex;
-      flex-wrap: wrap;
+export const NoteText = styled(Text)`
+  font-size: 10px;
+  font-weight: 400;
+  font-style: italic;
+  position: absolute;
+  bottom: -18px;
+  right: 0px;
 
-      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        font-size: 12px;
-      `}
-
-      div {
-        cursor: pointer;
-        display: inline;
-        margin-right: 20px;
-        margin-top: 10px;
-        a {
-          color: #859aa5;
-        }
-      }
-    }
-    .right {
-      ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        display: flex;
-        margin-top: 20px;
-        justify-content: space-between;
-      `}
-
-      a {
-        cursor: pointer;
-        img {
-          width: 16px;
-          height: 16px;
-          margin: 0 3px;
-        }
-      }
-    }
+  @media only screen and (min-width: 768px) {
+    font-size: 12px;
   }
 `

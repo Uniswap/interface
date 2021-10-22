@@ -6,6 +6,7 @@ import { ChainId } from '@dynamic-amm/sdk'
 import { useBlockNumber, useExchangeClient } from 'state/application/hooks'
 import { getExchangeSubgraphUrls } from 'apollo/manager'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
+import useAggregatorVolume from 'hooks/useAggregatorVolume'
 
 interface GlobalData {
   dmmFactories: {
@@ -20,6 +21,10 @@ interface GlobalData {
     totalAmplifiedLiquidityETH: string
     [key: string]: string
   }[]
+  aggregatorData?: {
+    totalVolume?: string
+    last24hVolume?: string
+  }
 }
 
 export function useGlobalData() {
@@ -27,6 +32,7 @@ export function useGlobalData() {
   const blockNumber = useBlockNumber()
   const apolloClient = useExchangeClient()
   const [globalData, setGlobalData] = useState<GlobalData>()
+  const aggregatorData = useAggregatorVolume()
 
   useEffect(() => {
     const getSumValues = (results: { data: GlobalData }[], field: string) => {
@@ -74,20 +80,22 @@ export function useGlobalData() {
     async function getGlobalData() {
       let result
 
-      if (
-        chainId === ChainId.MAINNET ||
-        chainId === ChainId.MATIC ||
-        chainId === ChainId.BSCMAINNET ||
-        chainId === ChainId.AVAXMAINNET
-      ) {
-        result = await getResultByChainIds([ChainId.MAINNET, ChainId.MATIC, ChainId.BSCMAINNET, ChainId.AVAXMAINNET])
-      } else if (
-        chainId === ChainId.ROPSTEN ||
-        chainId === ChainId.MUMBAI ||
-        chainId === ChainId.BSCTESTNET ||
-        chainId === ChainId.AVAXTESTNET
-      ) {
-        result = await getResultByChainIds([ChainId.ROPSTEN, ChainId.MUMBAI, ChainId.BSCTESTNET, ChainId.AVAXTESTNET])
+      if (process.env.REACT_APP_MAINNET_ENV === 'production') {
+        result = await getResultByChainIds([
+          ChainId.MAINNET,
+          ChainId.MATIC,
+          ChainId.BSCMAINNET,
+          ChainId.AVAXMAINNET,
+          ChainId.FANTOM
+        ])
+      } else if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
+        result = await getResultByChainIds([
+          ChainId.ROPSTEN,
+          ChainId.MUMBAI,
+          ChainId.BSCTESTNET,
+          ChainId.AVAXTESTNET,
+          ChainId.FANTOM
+        ])
       } else {
         result = await apolloClient.query({
           query: GLOBAL_DATA(chainId as ChainId),
@@ -95,11 +103,17 @@ export function useGlobalData() {
         })
       }
 
-      setGlobalData(result.data)
+      setGlobalData({
+        ...result.data,
+        aggregatorData: {
+          totalVolume: aggregatorData?.totalVolume,
+          last24hVolume: aggregatorData?.last24hVolume
+        }
+      })
     }
 
     getGlobalData()
-  }, [chainId, blockNumber, apolloClient])
+  }, [chainId, blockNumber, apolloClient, aggregatorData])
 
   return globalData
 }

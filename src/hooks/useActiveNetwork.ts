@@ -26,6 +26,9 @@ export const SWITCH_NETWORK_PARAMS: {
   },
   [ChainId.AVAXMAINNET]: {
     chainId: '0xA86A'
+  },
+  [ChainId.FANTOM]: {
+    chainId: '0xFA'
   }
 }
 
@@ -83,8 +86,19 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'AVAX',
       decimals: 18
     },
-    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+    rpcUrls: ['https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm'],
     blockExplorerUrls: ['https://cchain.explorer.avax.network/']
+  },
+  [ChainId.FANTOM]: {
+    chainId: '0xFA',
+    chainName: 'FANTOM',
+    nativeCurrency: {
+      name: 'FTM',
+      symbol: 'FTM',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpcapi.fantom.network'],
+    blockExplorerUrls: ['https://ftmscan.com/']
   }
 }
 

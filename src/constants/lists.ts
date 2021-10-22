@@ -17,9 +17,10 @@ const QUICK_SWAP = 'https://unpkg.com/quickswap-default-token-list@1.0.67/build/
 const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
+const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
-export const BYPASS_LIST = [PANGOLIN]
+export const BYPASS_LIST = [PANGOLIN, SPOOKY]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   COMPOUND_LIST,
@@ -38,12 +39,14 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   PANCAKE_TOP100,
   PANCAKE_EXTENDED,
   PANGOLIN,
+  SPOOKY,
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 
 export const MATIC_TOKEN_LISTS: string[] = [QUICK_SWAP]
 export const BSC_TOKEN_LISTS: string[] = [PANCAKE_TOP100, PANCAKE_EXTENDED]
 export const AVAX_TOKEN_LISTS: string[] = [PANGOLIN]
+export const FANTOM_TOKEN_LISTS: string[] = [SPOOKY]
 
 // default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = []

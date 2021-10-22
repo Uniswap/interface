@@ -55,12 +55,12 @@ const Aligner = styled.span`
   `};
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown)`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ theme }) => theme.text1};
     stroke-width: 1.5px;
   }
 `
@@ -158,7 +158,7 @@ export default function CurrencyInputPanel({
                   </StyledTokenName>
                 )}
               </LogoNameWrapper>
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+              {!disableCurrencySelect && <StyledDropDown />}
             </Aligner>
           </CurrencySelect>
         </InputRow>

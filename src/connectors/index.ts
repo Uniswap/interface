@@ -33,7 +33,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114]
+  supportedChainIds: [1, 3, 4, 5, 42, 80001, 137, 56, 97, 43113, 43114, 250]
 })
 
 const SUPPORTED_CHAIN_IDS: ChainId[] = [
@@ -44,7 +44,8 @@ const SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.BSCTESTNET,
   ChainId.BSCMAINNET,
   ChainId.AVAXTESTNET,
-  ChainId.AVAXTESTNET
+  ChainId.AVAXTESTNET,
+  ChainId.FANTOM
 ]
 export const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -59,7 +60,8 @@ export const NETWORK_URLS: {
   [ChainId.BSCTESTNET]: `https://data-seed-prebsc-1-s1.binance.org:8545`,
   [ChainId.BSCMAINNET]: `https://bsc-dataseed.binance.org/`,
   [ChainId.AVAXTESTNET]: `https://api.avax-test.network/ext/bc/C/rpc`,
-  [ChainId.AVAXMAINNET]: `https://api.avax.network/ext/bc/C/rpc`
+  [ChainId.AVAXMAINNET]: `https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm`,
+  [ChainId.FANTOM]: `https://rpcapi.fantom.network `
 }
 
 export const walletconnect = new WalletConnectConnector({

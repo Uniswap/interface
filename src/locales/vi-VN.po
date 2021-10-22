@@ -136,9 +136,13 @@ msgstr "Thêm thanh khoản:"
 msgid "Add {0} to Metamask"
 msgstr "Thêm {0} vào Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "Chế Độ Nâng Cao"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -309,9 +313,9 @@ msgstr "Cam kết Bảo mật"
 msgid "Common bases"
 msgstr "Các Cơ Sở Chung"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -412,6 +416,11 @@ msgstr "Tự chọn"
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "DEPOSIT"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -518,7 +527,7 @@ msgstr ""
 #~ msgid "Eligible Pools"
 #~ msgstr "Các Pool Đủ Điều Kiện"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "Cho phép các giao dịch trượt giá cao. Chỉ sử dụng khi bạn hiểu rõ rủi ro."
 
@@ -626,13 +635,14 @@ msgstr "Phí được điều chỉnh linh hoạt tùy theo điều kiện thị
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Tìm token bằng cách tìm kiếm tên hoặc biểu tượng của nó hoặc bằng cách dán địa chỉ token bên dưới."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Diễn đàn"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -741,7 +751,7 @@ msgstr "Nhập."
 msgid "Import your Wallet"
 msgstr "Nhập Ví của bạn"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "Trong Chế độ Nâng cao, lời nhắc 'xác nhận giao dịch' bị vô hiệu hóa. Điều này cho phép thực hiện các giao dịch có độ trượt giá cao và thường dẫn đến tỷ giá xấu."
 
@@ -881,6 +891,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "TỐI ĐA"
 
@@ -948,13 +959,14 @@ msgid "Migrate"
 msgstr "Di chuyển"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "Chuyển Thanh khoản"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "Di chuyển     Thanh Khoản"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "Di chuyển     Thanh Khoản"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1049,7 +1061,7 @@ msgstr "OFF"
 msgid "ON"
 msgstr "ON"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN Ý THỨC ĐƯỢC CÁC RỦI RO"
 
@@ -1090,7 +1102,7 @@ msgstr "Đầu ra được ước tính. Bạn sẽ nhận được ít nhất"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "Thanh khoản Không xin phép và Dễ dàng cho DeFi"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Vui lòng xác nhận"
 
@@ -1098,8 +1110,12 @@ msgstr "Vui lòng xác nhận"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr ""
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
@@ -1175,6 +1191,7 @@ msgstr "Được cung cấp bởi"
 msgid "Preferences"
 msgstr "Các tùy chọn"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Giá"
@@ -1200,7 +1217,6 @@ msgid "Price range {0}/{1}"
 msgstr "Phạm vi giá {0} / {1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Giá:"
 
@@ -1311,6 +1327,10 @@ msgstr "Tuyến thông qua các token này dẫn đến giá tốt nhất cho gi
 #~ msgid "START IN"
 #~ msgstr "BẮT ĐẦU VÀO"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr "Tìm kiếm theo địa chỉ Pool"
@@ -1410,6 +1430,10 @@ msgstr "Chuyển đổi"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Vẫn chuyển đổi"
+
+#: src/components/Menu/index.tsx
+msgid "Swap Legacy"
+msgstr ""
 
 #: 
 #~ msgid "Swap Token"
@@ -1578,7 +1602,7 @@ msgstr "Giao dịch sẽ hoàn nguyên nếu có sự thay đổi tỷ giá bấ
 msgid "Try Again"
 msgstr "Thử lại"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "Bật chế độ nâng cao"
 
@@ -1706,9 +1730,9 @@ msgstr "Sai Mạng"
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1780,8 +1804,9 @@ msgid "Your transactions will appear here..."
 msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
-msgstr ""
+msgstr "và"
 
 #: 
 #~ msgid "and Pool share"

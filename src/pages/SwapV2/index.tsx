@@ -1,7 +1,7 @@
-import { CurrencyAmount, JSBI, Token } from '@dynamic-amm/sdk'
+import { CurrencyAmount, JSBI, Token, Percent } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import { Text } from 'rebass'
+import { ArrowDown, AlertTriangle } from 'react-feather'
+import { Text, Flex } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
@@ -20,9 +20,11 @@ import {
   Dots,
   SwapCallbackError,
   SwapFormActions,
-  Wrapper
+  Wrapper,
+  KyberDmmOutput,
+  CompareDexOuput,
+  KyberTag
 } from '../../components/swapv2/styleds'
-import TradePrice from '../../components/swapv2/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -59,8 +61,12 @@ import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { formattedNum } from 'utils'
 import TotalTradingVolume from 'assets/svg/total_trade_volume.svg'
 import TradingVolume24h from 'assets/svg/24h_trade_volume.svg'
+import TransactionSettings from 'components/TransactionSettings'
+import { formatBigLiquidity } from 'utils/formatBalance'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const AppBodyWrapped = styled(AppBody)`
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 1;
 `
 
@@ -194,7 +200,6 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [approval, approvalSubmitted])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(trade, allowedSlippage, recipient)
@@ -218,9 +223,6 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [tradeToConfirm, showConfirm, swapCallback])
-
-  // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
@@ -261,7 +263,34 @@ export default function Swap({ history }: RouteComponentProps) {
   const isLoading =
     (!currencyBalances[Field.INPUT] || !currencyBalances[Field.OUTPUT]) && userHasSpecifiedInputOutput && !v2Trade
 
-  const volumeData = useAggregatorVolume()
+  const aggregatorVolume = useAggregatorVolume()
+
+  const loss =
+    trade?.amountInUsd && trade?.amountOutUsd
+      ? (100 * (Number(trade.amountInUsd) - Number(trade.amountOutUsd))) / Number(trade.amountInUsd)
+      : 0
+
+  const lossFormat = loss > 0 ? `-${loss.toFixed(3)}%` : loss < 0 ? `+${Math.abs(loss).toFixed(3)}%` : ''
+
+  const comparerLoss =
+    tradeComparer?.amountInUsd && tradeComparer?.amountOutUsd
+      ? (100 * (Number(tradeComparer.amountInUsd) - Number(tradeComparer.amountOutUsd))) /
+        Number(tradeComparer.amountInUsd)
+      : 0
+
+  const comparerLossFormat =
+    comparerLoss > 0 ? `-${comparerLoss.toFixed(3)}%` : comparerLoss < 0 ? `+${Math.abs(comparerLoss).toFixed(3)}%` : ''
+
+  const minDisplayValue = new Percent(JSBI.BigInt(1), JSBI.BigInt(1e5))
+
+  const displayOutput =
+    parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT]?.lessThan(minDisplayValue)
+      ? '< 0.00001'
+      : parsedAmounts[Field.OUTPUT]?.toSignificant(6)
+  const displayComparerAmount =
+    tradeComparer?.outputAmount && tradeComparer.outputAmount?.lessThan(minDisplayValue)
+      ? '< 0.00001'
+      : tradeComparer?.outputAmount?.toSignificant(6)
 
   return (
     <>
@@ -279,7 +308,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Trans>Total Trading Volume:</Trans>
             </AggregatorStatsItemTitle>
             <AggregatorStatsItemValue>
-              {volumeData ? formattedNum(volumeData.totalVolume, true) : <Loader />}
+              {aggregatorVolume ? formatBigLiquidity(aggregatorVolume.totalVolume, 2, true) : <Loader />}
             </AggregatorStatsItemValue>
           </AggregatorStatsItem>
 
@@ -289,7 +318,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <Trans>24h Trading Volume</Trans>:
             </AggregatorStatsItemTitle>
             <AggregatorStatsItemValue>
-              {volumeData ? formattedNum(volumeData.last24hVolume, true) : <Loader />}
+              {aggregatorVolume ? formattedNum(aggregatorVolume.last24hVolume, true) : <Loader />}
             </AggregatorStatsItemValue>
           </AggregatorStatsItem>
         </AggregatorStatsContainer>
@@ -301,6 +330,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
                 <SwapFormActions>
                   <RefreshButton isConfirming={showConfirm} trade={trade} onClick={onRefresh} />
+                  <TransactionSettings />
                 </SwapFormActions>
               </RowBetween>
 
@@ -320,11 +350,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   tokenAddtoMetaMask={currencies[Field.OUTPUT]}
                 />
 
-                <AutoColumn gap={'7px'}>
+                <Flex flexDirection="column" sx={{ gap: '0.5rem' }}>
                   <CurrencyInputPanel
                     label={independentField === Field.OUTPUT && !showWrap && trade ? t`From (estimated)` : t`From`}
                     value={formattedAmounts[Field.INPUT]}
-                    showMaxButton={!atMaxAmountInput}
+                    positionMax="top"
+                    showMaxButton
                     currency={currencies[Field.INPUT]}
                     onUserInput={handleTypeInput}
                     onMax={handleMaxInput}
@@ -332,6 +363,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     otherCurrency={currencies[Field.OUTPUT]}
                     id="swap-currency-input"
                     showCommonBases={true}
+                    estimatedUsd={trade?.amountInUsd ? `~${formattedNum(trade.amountInUsd, true)}` : undefined}
                   />
                   <AutoColumn justify="space-between">
                     <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
@@ -355,7 +387,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   </AutoColumn>
                   <CurrencyInputPanel
                     disabledInput
-                    value={formattedAmounts[Field.OUTPUT]}
+                    value={' '}
                     onUserInput={handleTypeOutput}
                     label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
                     showMaxButton={false}
@@ -364,6 +396,79 @@ export default function Swap({ history }: RouteComponentProps) {
                     otherCurrency={currencies[Field.INPUT]}
                     id="swap-currency-output"
                     showCommonBases={true}
+                    customNode={
+                      <>
+                        <KyberDmmOutput>
+                          <KyberTag>
+                            {tradeComparer?.tradeSaved?.usd ? (
+                              <Trans>Save {formattedNum(tradeComparer.tradeSaved.usd, true)}</Trans>
+                            ) : (
+                              'KyberDMM'
+                            )}
+                          </KyberTag>
+                          <Text fontWeight="500" fontSize="1.5rem" marginTop="0.75rem" flex={1}>
+                            {formattedAmounts[Field.OUTPUT] ? displayOutput : '0.0'}
+                          </Text>
+                          <Flex flexDirection="column" color={theme.subText} alignItems="end" width="fit-content">
+                            <Text fontSize="10px" fontWeight="500">
+                              KyberDMM
+                            </Text>
+                            <Text marginTop="0.5rem" fontSize="14px" fontWeight="500">
+                              {lossFormat && !!trade?.amountOutUsd && (
+                                <Flex alignItems="center">
+                                  ~{formattedNum(trade.amountOutUsd, true)}
+                                  <Flex
+                                    marginLeft="0.25rem"
+                                    sx={{ gap: '4px' }}
+                                    color={loss > 10 ? theme.red1 : undefined}
+                                    alignItems="center"
+                                  >
+                                    ({lossFormat})
+                                    {loss > 10 && (
+                                      <MouseoverTooltip text="High slippage! More than 10% drop">
+                                        <AlertTriangle size={16} />
+                                      </MouseoverTooltip>
+                                    )}
+                                  </Flex>
+                                </Flex>
+                              )}
+                            </Text>
+                          </Flex>
+                        </KyberDmmOutput>
+                        <CompareDexOuput>
+                          <Text fontWeight="500" fontSize="1.5rem" color={theme.disableText} flex={1} overflow="hidden">
+                            {tradeComparer?.outputAmount && tradeComparer?.outputAmount?.toExact() !== '0'
+                              ? displayComparerAmount
+                              : '0.0'}
+                          </Text>
+                          <Flex flexDirection="column" color={theme.disableText} alignItems="end" width="fit-content">
+                            <Text fontSize="10px" fontWeight="500">
+                              {!tradeComparer?.amountOutUsd ? '--' : tradeComparer.comparedDex.name}
+                            </Text>
+                            <Text marginTop="0.5rem" fontSize="14px" fontWeight="500">
+                              {comparerLossFormat && !!tradeComparer?.amountOutUsd && (
+                                <Flex alignItems="center">
+                                  ~{formattedNum(tradeComparer.amountOutUsd, true)}{' '}
+                                  <Flex
+                                    marginLeft="0.25rem"
+                                    sx={{ gap: '4px' }}
+                                    color={comparerLoss > 10 ? theme.red1 : undefined}
+                                    alignItems="center"
+                                  >
+                                    ({comparerLossFormat})
+                                    {comparerLoss > 10 && (
+                                      <MouseoverTooltip text="High slippage! More than 10% drop">
+                                        <AlertTriangle size={16} />
+                                      </MouseoverTooltip>
+                                    )}
+                                  </Flex>
+                                </Flex>
+                              )}
+                            </Text>
+                          </Flex>
+                        </CompareDexOuput>
+                      </>
+                    }
                   />
 
                   {recipient !== null && !showWrap ? (
@@ -381,20 +486,8 @@ export default function Swap({ history }: RouteComponentProps) {
                   ) : null}
 
                   {showWrap ? null : (
-                    <Card padding={'0 .75rem 0 .75rem'} borderRadius={'20px'}>
+                    <Card padding={'0 .75rem 0 .25rem'} borderRadius={'20px'}>
                       <AutoColumn gap="4px">
-                        {Boolean(trade) && (
-                          <div style={{ alignItems: 'center', display: 'flex' }}>
-                            <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                              <Trans>Price:</Trans>&nbsp;
-                            </Text>
-                            <TradePrice
-                              price={trade?.executionPrice}
-                              showInverted={showInverted}
-                              setShowInverted={setShowInverted}
-                            />
-                          </div>
-                        )}
                         {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                           <div style={{ alignItems: 'center', display: 'flex' }}>
                             <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
@@ -408,7 +501,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </AutoColumn>
                     </Card>
                   )}
-                </AutoColumn>
+                </Flex>
 
                 <TradeTypeSelection />
 
@@ -514,7 +607,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 </BottomGrouping>
               </Wrapper>
             </AppBodyWrapped>
-            <AdvancedSwapDetailsDropdown trade={trade} tradeComparer={tradeComparer} />
+            <AdvancedSwapDetailsDropdown trade={trade} />
             <SwitchLocaleLink />
           </div>
           <Routing trade={trade} currencies={currencies} parsedAmounts={parsedAmounts} />

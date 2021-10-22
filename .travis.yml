@@ -16,6 +16,7 @@ install:
   - yarn
   - bash .travis/build.sh || true
   - ls build || true
+  - ls build-ropsten || true
 
 deploy:
   - provider: gcs
@@ -23,7 +24,7 @@ deploy:
     secret_access_key: $GCS_SECRET_KEY_ID
     bucket: dev-dmm.knstats.com
     skip_cleanup: true
-    local-dir: build
+    local-dir: build-ropsten
     cache_control: "no-cache"
     on:
       all_branches: true
@@ -38,7 +39,7 @@ deploy:
     cache_control: "no-cache"
     on:
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^develop_split_trade$
+      condition: $TRAVIS_BRANCH =~ ^develop$
 
   - provider: gcs
     access_key_id: $GCS_ACCESS_KEY_ID

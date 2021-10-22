@@ -136,9 +136,13 @@ msgstr "Add liquidity:"
 msgid "Add {0} to Metamask"
 msgstr "Add {0} to Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "Advanced Mode"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr "Advanced Settings"
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -309,9 +313,9 @@ msgstr "Committed to Security"
 msgid "Common bases"
 msgstr "Common bases"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr "Compared to {0}"
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr "Compared to {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -413,6 +417,11 @@ msgstr "Custom"
 #: src/components/FarmHistoryModal/index.tsx
 msgid "DEPOSIT"
 msgstr "DEPOSIT"
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
+msgstr "DMM"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "DMM Exchange available in: <0>{0}</0>"
@@ -518,7 +527,7 @@ msgstr "Each time you harvest new rewards, a new vesting schedule (duration depe
 #~ msgid "Eligible Pools"
 #~ msgstr "Eligible Pools"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "Enables high slippage trades. Use at your own risk."
 
@@ -626,13 +635,14 @@ msgstr "Fees are adjusted dynamically according to market conditions to maximise
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "Find a token by searching for its name or symbol or by pasting its address below."
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr "Forums"
+#: 
+#~ msgid "Forums"
+#~ msgstr "Forums"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -741,7 +751,7 @@ msgstr "Import it."
 msgid "Import your Wallet"
 msgstr "Import your Wallet"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 
@@ -881,6 +891,7 @@ msgstr "Lowest Gas"
 #~ msgstr "Lowest Gas Cost"
 
 #: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "MAX"
 
@@ -948,13 +959,14 @@ msgid "Migrate"
 msgstr "Migrate"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "Migrate Liquidity"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "Migrate     Liquidity"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "Migrate     Liquidity"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1049,7 +1061,7 @@ msgstr "OFF"
 msgid "ON"
 msgstr "ON"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 
@@ -1090,7 +1102,7 @@ msgstr "Output is estimated. You will receive at least"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "Permissionless and Frictionless Liquidity for DeFi"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Please Confirm"
 
@@ -1098,9 +1110,13 @@ msgstr "Please Confirm"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "Please connect to the appropriate Ethereum network."
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
-msgstr "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
+msgstr "Please connect to the appropriate network."
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ListItem.tsx
@@ -1175,6 +1191,7 @@ msgstr "Powered by"
 msgid "Preferences"
 msgstr "Preferences"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Price"
@@ -1200,7 +1217,6 @@ msgid "Price range {0}/{1}"
 msgstr "Price range {0}/{1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "Price:"
 
@@ -1311,6 +1327,10 @@ msgstr "Routing through these tokens resulted in the best price for your trade."
 #~ msgid "START IN"
 #~ msgstr "START IN"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr "Save {0}"
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr "Search by pool address"
@@ -1410,6 +1430,10 @@ msgstr "Swap"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Swap Anyway"
+
+#: src/components/Menu/index.tsx
+msgid "Swap Legacy"
+msgstr "Swap Legacy"
 
 #: 
 #~ msgid "Swap Token"
@@ -1578,7 +1602,7 @@ msgstr "Transaction will revert if there is an adverse rate change that is highe
 msgid "Try Again"
 msgstr "Try Again"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "Turn On Advanced Mode"
 
@@ -1706,9 +1730,9 @@ msgstr "Wrong Network"
 #~ msgid "Yield"
 #~ msgstr "Yield"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr "You Save"
+#: 
+#~ msgid "You Save"
+#~ msgstr "You Save"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1780,6 +1804,7 @@ msgid "Your transactions will appear here..."
 msgstr "Your transactions will appear here..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
 msgstr "and"
 

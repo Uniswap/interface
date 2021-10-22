@@ -146,6 +146,8 @@ export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
       return ChainIdSUSHI.FUJI
     case ChainIdDMM.AVAXMAINNET:
       return ChainIdSUSHI.AVALANCHE
+    case ChainIdDMM.FANTOM:
+      return ChainIdSUSHI.FANTOM
   }
 }
 
@@ -300,6 +302,7 @@ export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainI
     if ([137, 80001].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
     if ([97, 56].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'BNB', 'BNB')
     if ([43113, 43114].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'AVAX', 'AVAX')
+    if ([250].includes(chainId)) return new TokenDMM(chainId, WETH[chainId].address, 18, 'FTM', 'FTM')
   }
 
   return currency
@@ -402,6 +405,8 @@ export function useRewardTokensFullInfo(): Token[] {
       ? 'BNB'
       : chainId && [43113, 43114].includes(chainId)
       ? 'AVAX'
+      : chainId && [250].includes(chainId)
+      ? 'FTM'
       : 'ETH'
 
   return useMemo(

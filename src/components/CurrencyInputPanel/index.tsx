@@ -1,5 +1,5 @@
 import { Currency, Pair } from '@dynamic-amm/sdk'
-import React, { useState, useContext, useCallback } from 'react'
+import React, { useState, useContext, useCallback, ReactNode } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
 import { t, Trans } from '@lingui/macro'
@@ -15,14 +15,12 @@ import Card from '../Card'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { Flex, Text } from 'rebass'
 
-const InputRow = styled.div<{ selected: boolean }>`
+const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
   path {
@@ -33,7 +31,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
-  height: 2.2rem;
+  height: 2.125rem;
   font-size: 20px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.buttonBlack : theme.buttonBlack)};
@@ -73,14 +71,15 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled.div<{ selected: boolean; hideInput: boolean }>`
   border-radius: 8px;
   border: 1px solid ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg2)};
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.buttonBlack)};
+  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
-  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  margin: 0 0.375rem 0 0.5rem;
   font-size: ${({ active, fontSize }) => (fontSize ? fontSize : active ? '20px' : '16px')};
 `
 
@@ -109,7 +108,7 @@ const StyledBalanceMax = styled.button`
 `
 
 const Card2 = styled(Card)<{ balancePosition: string }>`
-  padding: 0 0.25rem 0.4rem;
+  padding: 0 0.25rem 0.5rem;
   text-align: ${({ balancePosition }) => `${balancePosition}`};
 `
 
@@ -118,6 +117,7 @@ interface CurrencyInputPanelProps {
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
+  positionMax?: 'inline' | 'top'
   label?: string
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
@@ -133,6 +133,8 @@ interface CurrencyInputPanelProps {
   balancePosition?: string
   hideLogo?: boolean
   fontSize?: string
+  customNode?: ReactNode
+  estimatedUsd?: string
 }
 
 export default function CurrencyInputPanel({
@@ -140,6 +142,7 @@ export default function CurrencyInputPanel({
   onUserInput,
   onMax,
   showMaxButton,
+  positionMax = 'inline',
   label = '',
   onCurrencySelect,
   currency,
@@ -154,7 +157,9 @@ export default function CurrencyInputPanel({
   customBalanceText,
   balancePosition = 'right',
   hideLogo = false,
-  fontSize
+  fontSize,
+  customNode,
+  estimatedUsd
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
@@ -171,34 +176,38 @@ export default function CurrencyInputPanel({
     <div style={{ width: '100%' }}>
       {(account || label) && (
         <Card2 borderRadius={'20px'} balancePosition={balancePosition}>
-          <Flex justifyContent="space-between" alignItems="center">
+          <Flex justifyContent={label ? 'space-between' : 'end'} alignItems="center">
             {label && (
               <Text fontSize={14} color={theme.text2} fontWeight={500}>
-                {label}
+                {label}:
               </Text>
             )}
             {account && (
-              <TYPE.body
+              <Flex
                 onClick={onMax}
-                color={theme.text2}
-                fontWeight={500}
-                fontSize={14}
-                style={{
-                  flex: 1,
-                  display: 'inline',
+                role="button"
+                alignItems="center"
+                sx={{
                   cursor: `${!disabledInput && label !== 'To' ? 'pointer' : 'initial'}`
                 }}
               >
-                {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
-                  t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
-              </TYPE.body>
+                <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                  {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
+                    t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
+                </TYPE.body>
+                {showMaxButton && positionMax === 'top' && currency && (
+                  <Text color={theme.primary1} fontSize="14px" marginLeft="0.5rem" fontWeight="500">
+                    <Trans>MAX</Trans>
+                  </Text>
+                )}
+              </Flex>
             )}
           </Flex>
         </Card2>
       )}
       <InputPanel id={id} hideInput={hideInput}>
-        <Container hideInput={hideInput}>
-          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+        <Container hideInput={hideInput} selected={disableCurrencySelect}>
+          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
               <>
                 <NumericalInput
@@ -209,10 +218,19 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                 />
-                {account && currency && showMaxButton && label !== 'To' && (
-                  <StyledBalanceMax onClick={onMax}>
-                    <Trans>MAX</Trans>
-                  </StyledBalanceMax>
+                {estimatedUsd ? (
+                  <Text fontSize="0.875rem" fontWeight="500" color={theme.subText}>
+                    {estimatedUsd}
+                  </Text>
+                ) : (
+                  account &&
+                  currency &&
+                  showMaxButton &&
+                  positionMax === 'inline' && (
+                    <StyledBalanceMax onClick={onMax}>
+                      <Trans>MAX</Trans>
+                    </StyledBalanceMax>
+                  )
                 )}
               </>
             )}
@@ -252,6 +270,7 @@ export default function CurrencyInputPanel({
               </Aligner>
             </CurrencySelect>
           </InputRow>
+          {customNode}
         </Container>
         {!disableCurrencySelect && onCurrencySelect && (
           <CurrencySearchModal

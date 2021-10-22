@@ -1,6 +1,8 @@
 import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
+import { Text } from 'rebass'
+import { X } from 'react-feather'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -8,6 +10,15 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
 import { darken } from 'polished'
+import { useExpertModeManager, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import useTheme from 'hooks/useTheme'
+import { useModalOpen, useToggleTransactionSettingsMenu } from 'state/application/hooks'
+import Toggle from 'components/Toggle'
+import Modal from 'components/Modal'
+import { ButtonError } from 'components/Button'
+import { ApplicationModal } from 'state/application/actions'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -86,6 +97,93 @@ const SlippageEmojiContainer = styled.span`
   `}
 `
 
+const StyledCloseIcon = styled(X)`
+  height: 20px;
+  width: 20px;
+  :hover {
+    cursor: pointer;
+  }
+
+  > * {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
+
+const Break = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg3};
+`
+
+const ModalContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 20px;
+`
+
+const StyledMenuButton = styled.button`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+`
+const EmojiWrapper = styled.div`
+  position: absolute;
+  bottom: -6px;
+  right: 0px;
+  font-size: 14px;
+`
+
+const StyledMenu = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: none;
+  text-align: left;
+`
+
+const MenuFlyout = styled.span`
+  min-width: 20.125rem;
+  background-color: ${({ theme }) => theme.tableHeader};
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.36));
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  position: absolute;
+  top: 3rem;
+  right: 0;
+  z-index: 100;
+`
+
+const MenuFlyoutTitle = styled.div`
+  padding-bottom: 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.border4};
+  color: ${({ theme }) => theme.text};
+`
+
 export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
@@ -93,7 +191,7 @@ export interface SlippageTabsProps {
   setDeadline: (deadline: number) => void
 }
 
-export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
+export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
   const theme = useContext(ThemeContext)
 
   const inputRef = useRef<HTMLInputElement>()
@@ -251,5 +349,119 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
         </RowFixed>
       </AutoColumn>
     </AutoColumn>
+  )
+}
+
+export default function TransactionSettings() {
+  const theme = useTheme()
+  const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
+  const [ttl, setTtl] = useUserTransactionTTL()
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const toggle = useToggleTransactionSettingsMenu()
+  // show confirmation view before turning on
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const open = useModalOpen(ApplicationModal.TRANSACTION_SETTINGS)
+  const node = useRef<HTMLDivElement>()
+  useOnClickOutside(node, open ? toggle : undefined)
+
+  return (
+    <>
+      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+        <ModalContentWrapper>
+          <AutoColumn gap="lg">
+            <RowBetween style={{ padding: '0 2rem' }}>
+              <div />
+              <Text fontWeight={500} fontSize={20}>
+                <Trans>Please Confirm</Trans>
+              </Text>
+              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+            </RowBetween>
+            <Break />
+            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
+              <Text fontWeight={500} fontSize={20}>
+                <Trans>
+                  In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades
+                  that often result in bad rates.
+                </Trans>
+              </Text>
+              <Text fontWeight={600} fontSize={20}>
+                <Trans>ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS</Trans>
+              </Text>
+              <ButtonError
+                error={true}
+                padding={'12px'}
+                onClick={() => {
+                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
+                    toggleExpertMode()
+                    setShowConfirmation(false)
+                  }
+                }}
+              >
+                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                  <Trans>Turn On Advanced Mode</Trans>
+                </Text>
+              </ButtonError>
+            </AutoColumn>
+          </AutoColumn>
+        </ModalContentWrapper>
+      </Modal>
+
+      {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
+      <StyledMenu ref={node as any}>
+        <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Transaction Settings">
+          <TransactionSettingsIcon fill={theme.text} />
+          {expertMode ? (
+            <EmojiWrapper>
+              <span role="img" aria-label="wizard-icon">
+                🧙
+              </span>
+            </EmojiWrapper>
+          ) : null}
+        </StyledMenuButton>
+
+        {open && (
+          <MenuFlyout>
+            <AutoColumn gap="16px" style={{ padding: '20px' }}>
+              <MenuFlyoutTitle>
+                <Text fontWeight={500} fontSize={16} color={theme.text}>
+                  <Trans>Advanced Settings</Trans>
+                </Text>
+              </MenuFlyoutTitle>
+
+              <SlippageTabs
+                rawSlippage={userSlippageTolerance}
+                setRawSlippage={setUserslippageTolerance}
+                deadline={ttl}
+                setDeadline={setTtl}
+              />
+
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
+                    <Trans>Advanced Mode</Trans>
+                  </TYPE.black>
+                  <QuestionHelper text={t`Enables high slippage trades. Use at your own risk.`} />
+                </RowFixed>
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={expertMode}
+                  toggle={
+                    expertMode
+                      ? () => {
+                          toggleExpertMode()
+                          setShowConfirmation(false)
+                        }
+                      : () => {
+                          toggle()
+                          setShowConfirmation(true)
+                        }
+                  }
+                />
+              </RowBetween>
+            </AutoColumn>
+          </MenuFlyout>
+        )}
+      </StyledMenu>
+    </>
   )
 }

@@ -129,7 +129,7 @@ export function useDerivedSwapInfoV2(): {
     slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
   ]
 
-  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+  if (amountIn && ((balanceIn && balanceIn.lessThan(amountIn)) || !balanceIn)) {
     inputError = t`Insufficient ${convertToNativeTokenFromETH(amountIn.currency, chainId).symbol} balance`
   }
 

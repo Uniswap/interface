@@ -115,6 +115,7 @@ const Pools = ({
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
+  const aggregatorData = data?.aggregatorData
 
   const { loading: loadingPoolFarm, data: farms } = useFarmsData()
 
@@ -129,7 +130,7 @@ const Pools = ({
               <Trans>Total Trading Volume:</Trans>
             </GlobalDataItemTitle>
             <GlobalDataItemValue>
-              {globalData ? formatBigLiquidity(globalData.totalVolumeUSD, 2, true) : <Loader />}
+              {aggregatorData?.totalVolume ? formatBigLiquidity(aggregatorData.totalVolume, 2, true) : <Loader />}
             </GlobalDataItemValue>
           </GlobalDataItem>
           <GlobalDataItem>
@@ -274,10 +275,14 @@ const Pools = ({
           )}
         </Panel>
 
-        <div style={{ marginTop: '16px' }}>
-          <Trans>Popular Pairs</Trans> &nbsp;
+        <Flex marginTop="1rem" alignItems="center">
+          {(loadingPoolFarm ||
+            (!loadingPoolFarm && (!!Object.values(farms).flat().length || !!popularPairs.length))) && (
+            <Trans>Popular Pairs</Trans>
+          )}
+          &nbsp;
           {loadingPoolFarm && <Loader />}
-        </div>
+        </Flex>
         <Flex alignItems="center" justifyContent="flexStart" flexWrap="wrap">
           {Object.values(farms)
             .flat()

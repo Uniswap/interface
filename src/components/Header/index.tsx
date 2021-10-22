@@ -293,6 +293,8 @@ const getPoolsMenuLink = (chainId?: ChainId) => {
       return `/pools/AVAX`
     case ChainId.AVAXMAINNET:
       return `/pools/AVAX`
+    case ChainId.FANTOM:
+      return `/pools/FTM`
     default:
       return '/pools/ETH'
   }
@@ -309,6 +311,7 @@ export default function Header() {
     if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
     if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
     if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
+    if ([ChainId.FANTOM].includes(chainId)) return 'https://bnbridge.exchange'
     return ''
   }
 
@@ -323,10 +326,6 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          {/*<StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            <Trans>Swap</Trans>
-          </StyledNavLink>
-          */}
           <StyledNavLink id={`swapv2-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>
@@ -410,6 +409,8 @@ export default function Header() {
                   ? `MATIC`
                   : chainId && [43113, 43114].includes(chainId)
                   ? `AVAX`
+                  : chainId && [250].includes(chainId)
+                  ? `FTM`
                   : `BNB`}
               </BalanceText>
             ) : null}

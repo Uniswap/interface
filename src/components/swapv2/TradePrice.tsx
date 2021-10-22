@@ -26,7 +26,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
     : `${nativeBase?.symbol} = 1 ${nativeQuote?.symbol}`
 
   return (
-    <Text fontWeight={500} fontSize={14} color={theme.text2} style={{ alignItems: 'center', display: 'flex' }}>
+    <Text fontWeight={500} fontSize={14} color={theme.text1} style={{ alignItems: 'center', display: 'flex' }}>
       {show ? (
         <>
           {formattedPrice ?? '-'} {label}

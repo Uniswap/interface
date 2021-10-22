@@ -8,6 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { ButtonEmpty } from 'components/Button'
 import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
+import TransactionSettings from 'components/TransactionSettings'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -51,6 +52,15 @@ const ActiveText = styled.div`
 
 const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
+`
+
+const ButtonBack = styled(ButtonEmpty)`
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
@@ -97,18 +107,21 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
+      <RowBetween style={{ padding: '1rem 0' }}>
+        <ButtonBack width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
-        </ButtonEmpty>
-        <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
-        <QuestionHelper
-          text={
-            adding
-              ? t`Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.`
-              : t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.`
-          }
-        />
+        </ButtonBack>
+        <div style={{ display: 'flex' }}>
+          <ActiveText>{creating ? t`Create a new pool` : adding ? t`Add Liquidity` : t`Remove Liquidity`}</ActiveText>
+          <QuestionHelper
+            text={
+              adding
+                ? t`Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.`
+                : t`Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.`
+            }
+          />
+        </div>
+        <TransactionSettings />
       </RowBetween>
     </Tabs>
   )
@@ -123,16 +136,19 @@ export function MigrateTab() {
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
+      <RowBetween style={{ padding: '1rem 0' }}>
+        <ButtonBack width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
-        </ButtonEmpty>
-        <ActiveText>
-          <Trans>Migrate Liquidity</Trans>
-        </ActiveText>
-        <QuestionHelper
-          text={t`Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address.`}
-        />
+        </ButtonBack>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <ActiveText>
+            <Trans>Migrate Liquidity</Trans>
+          </ActiveText>
+          <QuestionHelper
+            text={t`Converts your liquidity position on Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address.`}
+          />
+        </div>
+        <TransactionSettings />
       </RowBetween>
     </Tabs>
   )

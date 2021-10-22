@@ -136,9 +136,13 @@ msgstr "添加流动性:"
 msgid "Add {0} to Metamask"
 msgstr "将 {0} 添加到Metamask"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Advanced Mode"
 msgstr "进阶模式"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced Settings"
+msgstr ""
 
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
@@ -309,9 +313,9 @@ msgstr "致力于安全"
 msgid "Common bases"
 msgstr "通用基础"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "Compared to {0}"
-msgstr ""
+#: 
+#~ msgid "Compared to {0}"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
@@ -412,6 +416,11 @@ msgstr "自定义"
 
 #: src/components/FarmHistoryModal/index.tsx
 msgid "DEPOSIT"
+msgstr ""
+
+#: src/pages/Static/About.tsx
+#: src/pages/Static/About.tsx
+msgid "DMM"
 msgstr ""
 
 #: src/components/SwitchLocaleLink/index.tsx
@@ -518,7 +527,7 @@ msgstr ""
 #~ msgid "Eligible Pools"
 #~ msgstr "符合条件的池"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
 msgstr "允许高滑点交易。使用的风险自负。"
 
@@ -626,13 +635,14 @@ msgstr "費用會根據市場狀況動態調整，以最大限度地提高流動
 msgid "Find a token by searching for its name or symbol or by pasting its address below."
 msgstr "通過搜索其名稱或符號或在下方粘貼其地址來查找代币。"
 
+#: src/components/Menu/index.tsx
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "论坛"
 
-#: src/components/Menu/index.tsx
-msgid "Forums"
-msgstr ""
+#: 
+#~ msgid "Forums"
+#~ msgstr ""
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -741,7 +751,7 @@ msgstr "导入它。"
 msgid "Import your Wallet"
 msgstr "导入您的钱包"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that often result in bad rates."
 msgstr "在进阶模式下，“确认交易”提示被停用。 这可能导致不良利率的高滑点交易。"
 
@@ -881,6 +891,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "最大值"
 
@@ -948,13 +959,14 @@ msgid "Migrate"
 msgstr "迁移"
 
 #: src/components/Header/index.tsx
+#: src/components/Menu/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Migrate Liquidity"
 msgstr "迁移流动性"
 
-#: src/components/Menu/index.tsx
-msgid "Migrate     Liquidity"
-msgstr "迁移     流动性"
+#: 
+#~ msgid "Migrate     Liquidity"
+#~ msgstr "迁移     流动性"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1049,7 +1061,7 @@ msgstr "关"
 msgid "ON"
 msgstr "开"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS"
 msgstr "只有当您意识到风险时才使用此模式"
 
@@ -1090,7 +1102,7 @@ msgstr "输出估计。 至少您将收到"
 msgid "Permissionless and Frictionless Liquidity for DeFi"
 msgstr "DeFi 的无权准入和无摩擦的流动性"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "请确认"
 
@@ -1098,8 +1110,12 @@ msgstr "请确认"
 #~ msgid "Please connect to the appropriate Ethereum network."
 #~ msgstr "请连接到适合的以太坊网络。"
 
+#: 
+#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+#~ msgstr ""
+
 #: src/components/WalletModal/index.tsx
-msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
+msgid "Please connect to the appropriate network."
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
@@ -1175,6 +1191,7 @@ msgstr "驱动"
 msgid "Preferences"
 msgstr "偏好"
 
+#: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "价格"
@@ -1200,7 +1217,6 @@ msgid "Price range {0}/{1}"
 msgstr "价格范围 {0}/{1}"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "Price:"
 msgstr "价格:"
 
@@ -1311,6 +1327,10 @@ msgstr "通过这些代币的路由为您的交易带来了最好的价格。"
 #~ msgid "START IN"
 #~ msgstr "开始"
 
+#: src/pages/SwapV2/index.tsx
+msgid "Save {0}"
+msgstr ""
+
 #: src/components/Search/index.tsx
 msgid "Search by pool address"
 msgstr "按池地址搜索"
@@ -1410,6 +1430,10 @@ msgstr "兑换"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Swap Anyway"
+
+#: src/components/Menu/index.tsx
+msgid "Swap Legacy"
+msgstr ""
 
 #: 
 #~ msgid "Swap Token"
@@ -1578,7 +1602,7 @@ msgstr "如果出现高于此 % 的不利利率变化，交易将恢复"
 msgid "Try Again"
 msgstr "再试一次"
 
-#: src/components/Settings/index.tsx
+#: src/components/TransactionSettings/index.tsx
 msgid "Turn On Advanced Mode"
 msgstr "打进阶模式"
 
@@ -1706,9 +1730,9 @@ msgstr "错误的网络"
 #~ msgid "Yield"
 #~ msgstr "收益"
 
-#: src/components/swapv2/AdvancedSwapDetails.tsx
-msgid "You Save"
-msgstr ""
+#: 
+#~ msgid "You Save"
+#~ msgstr ""
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1780,6 +1804,7 @@ msgid "Your transactions will appear here..."
 msgstr "您的交易将显示在此处..."
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Static/About.tsx
 msgid "and"
 msgstr ""
 

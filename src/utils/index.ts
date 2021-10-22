@@ -34,6 +34,7 @@ import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
+import { getFantomTokenLogoURL } from './fantomTokenMapping'
 import { ethers } from 'ethers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -77,6 +78,8 @@ function getEtherscanDomain(chainId: ChainId): string {
       return 'https://cchain.explorer.avax-test.network'
     case ChainId.AVAXMAINNET:
       return 'https://cchain.explorer.avax.network'
+    case ChainId.FANTOM:
+      return 'https://ftmscan.com'
   }
 }
 
@@ -114,6 +117,10 @@ export function getEtherscanLinkText(chainId: ChainId): string {
 
   if ([ChainId.AVAXTESTNET, ChainId.AVAXMAINNET].includes(chainId)) {
     return 'View on C-Chain Explorer'
+  }
+
+  if ([ChainId.FANTOM].includes(chainId)) {
+    return 'View on Ftmscan'
   }
 
   return 'View on Etherscan'
@@ -440,6 +447,9 @@ export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
     case ChainId.AVAXMAINNET:
       imageURL = getAvaxMainnetTokenLogoURL(address)
       break
+    case ChainId.FANTOM:
+      imageURL = getFantomTokenLogoURL(address)
+      break
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address
@@ -465,6 +475,8 @@ export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
         return 'AVAX'
       case ChainId.AVAXMAINNET:
         return 'AVAX'
+      case ChainId.FANTOM:
+        return 'FTM'
       default:
         return 'ETH'
     }

@@ -3,7 +3,6 @@ import { ChainId, Percent, Rounding, Token } from '@dynamic-amm/sdk'
 import { ZERO } from '@dynamic-amm/sdk'
 import { Aggregator } from './aggregator'
 import { wrappedCurrencyAmount } from './wrappedCurrency'
-import { getTokenAddressMap } from 'state/lists/hooks'
 import { getAddress } from 'ethers/lib/utils'
 
 interface SwapPool {
