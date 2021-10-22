@@ -25,7 +25,10 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.AVAXTESTNET]: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
   [ChainId.AVAXMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8',
-  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x8efa5a9ad6d594cf76830267077b78ce0bc5a5f8' : ''
+  [ChainId.FANTOM]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x8efa5a9ad6d594cf76830267077b78ce0bc5a5f8'
+      : '0x5d5A5a0a465129848c2549669e12cDC2f8DE039A'
 }
 
 // TODO-swapv2: change router v2 contract
@@ -68,7 +71,10 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.AVAXTESTNET]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453',
   [ChainId.AVAXMAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x10908C875D865C66f271F5d3949848971c9595C9',
-  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0x10908C875D865C66f271F5d3949848971c9595C9' : ''
+  [ChainId.FANTOM]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0x10908C875D865C66f271F5d3949848971c9595C9'
+      : '0x78df70615ffc8066cc0887917f2Cd72092C86409'
 }
 
 export const MIGRATE_ADDRESSES: { [chainId in ChainId]: string } = {
