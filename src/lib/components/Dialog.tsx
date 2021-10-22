@@ -12,12 +12,12 @@ const Context = createContext<HTMLDivElement | null>(null)
 
 export const Provider = Context.Provider
 
-const XIcon = icon(X, 'primary')
+const XIcon = icon(X, { color: 'primary' })
 
 interface DialogHeaderProps {
   title?: string
   onClose?: () => void
-  children: ReactNode
+  children?: ReactNode
 }
 
 export function DialogHeader({ title, onClose, children }: DialogHeaderProps) {
@@ -46,9 +46,8 @@ export const Modal = styled.div`
 `
 
 export const DialogBody = styled.div`
-  height: calc(100% - 5em - 2px);
+  height: calc(100% - 3em - 2px);
   overflow-y: scroll;
-  padding: 1em;
 `
 
 interface DialogProps {

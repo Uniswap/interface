@@ -4,7 +4,7 @@ import TYPE from 'lib/theme/type'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
 
-import Button from '../../Button'
+import Button, { TextButton } from '../../Button'
 import Column from '../../Column'
 import Dialog, { DialogBody, DialogHeader } from '../../Dialog'
 import { BoundaryProvider } from '../../Popover'
@@ -19,11 +19,11 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-export const SettingsIcon = icon(SettingsSvg)
-
-const ResetButton = styled(Button)`
-  color: ${({ theme }) => theme.accent};
+const Body = styled(Column)`
+  padding: 1em;
 `
+
+const SettingsIcon = icon(SettingsSvg)
 
 export function SettingsDialog({ onClose }: { onClose: () => void }) {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
@@ -32,19 +32,17 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
     <Wrapper>
       <DialogHeader title="Settings" onClose={onClose}>
         <TYPE.subhead2>
-          <ResetButton color="active" onClick={resetSettings}>
-            Reset
-          </ResetButton>
+          <TextButton onClick={resetSettings}>Reset</TextButton>
         </TYPE.subhead2>
       </DialogHeader>
       <DialogBody ref={setBoundary}>
-        <Column gap="1em">
+        <Body gap="1em">
           <BoundaryProvider value={boundary}>
             <MaxSlippageSelect />
             <TransactionTtlInput />
             <MockToggle />
           </BoundaryProvider>
-        </Column>
+        </Body>
       </DialogBody>
     </Wrapper>
   )
