@@ -117,6 +117,7 @@ export default function Bridge() {
     let address: string | undefined = ''
     if (bridgeCurrency instanceof Token) {
       address = bridgeCurrency.address
+      console.log('tokenik', { bridgeCurrency, address })
     }
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       await bridgeService.deposit(typedValue, address)

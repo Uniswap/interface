@@ -24,6 +24,7 @@ import { txnTypeToLayer } from '../utils/arbitrum'
 import { AppState } from '../state'
 import { BridgeModalStatus } from '../state/bridge/reducer'
 import { BridgeAssetType, BridgeTransactionSummary, BridgeTxn } from '../state/bridgeTransactions/types'
+import { ERC20 } from 'arb-ts/dist/lib/abi'
 
 const getErrorMsg = (error: any) => {
   if (error?.code === 4001) {
@@ -357,8 +358,8 @@ export class BridgeService {
   }
 
   private withdrawERC20 = async (l1TokenAddress: string, value: string) => {
-    if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
-    const tokenData = (await this.bridge.getAndUpdateL1TokenData(l1TokenAddress)).ERC20
+    if (!l1TokenAddress || !this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
+    const tokenData = (await this.bridge.getAndUpdateL2TokenData(l1TokenAddress))?.ERC20 //l1 czy l2 ??????????????????
     if (!tokenData) {
       throw new Error("Can't withdraw; token not found")
     }
