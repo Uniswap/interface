@@ -26,12 +26,12 @@ export function useBestV3Trade(
   const routingAPIEnabled = useRoutingAPIEnabled()
   const isWindowVisible = useIsWindowVisible()
 
-  const debouncedAmount = useDebounce(amountSpecified, 100)
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
 
   const routingAPITrade = useRoutingAPITrade(
     tradeType,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
+    debouncedOtherCurrency
   )
 
   const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
@@ -43,10 +43,10 @@ export function useBestV3Trade(
     (tradeType === TradeType.EXACT_INPUT
       ? !routingAPITrade.trade.inputAmount.equalTo(amountSpecified) ||
         !amountSpecified.currency.equals(routingAPITrade.trade.inputAmount.currency) ||
-        !otherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
+        !debouncedOtherCurrency?.equals(routingAPITrade.trade.outputAmount.currency)
       : !routingAPITrade.trade.outputAmount.equalTo(amountSpecified) ||
         !amountSpecified.currency.equals(routingAPITrade.trade.outputAmount.currency) ||
-        !otherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
+        !debouncedOtherCurrency?.equals(routingAPITrade.trade.inputAmount.currency))
 
   const useFallback = !routingAPIEnabled || (!debouncing && routingAPITrade.state === V3TradeState.NO_ROUTE_FOUND)
 
@@ -54,7 +54,7 @@ export function useBestV3Trade(
   const bestV3Trade = useClientSideV3Trade(
     tradeType,
     useFallback ? debouncedAmount : undefined,
-    useFallback ? otherCurrency : undefined
+    useFallback ? debouncedOtherCurrency : undefined
   )
 
   return {
