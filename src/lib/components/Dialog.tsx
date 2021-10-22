@@ -46,9 +46,8 @@ export const Modal = styled.div`
 `
 
 export const DialogBody = styled.div`
-  height: calc(100% - 5em - 2px);
+  height: calc(100% - 3em - 2px);
   overflow-y: scroll;
-  padding: 1em;
 `
 
 interface DialogProps {

@@ -19,7 +19,11 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-export const SettingsIcon = icon(SettingsSvg)
+const Body = styled(Column)`
+  padding: 1em;
+`
+
+const SettingsIcon = icon(SettingsSvg)
 
 export function SettingsDialog({ onClose }: { onClose: () => void }) {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
@@ -32,13 +36,13 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
         </TYPE.subhead2>
       </DialogHeader>
       <DialogBody ref={setBoundary}>
-        <Column gap="1em">
+        <Body gap="1em">
           <BoundaryProvider value={boundary}>
             <MaxSlippageSelect />
             <TransactionTtlInput />
             <MockToggle />
           </BoundaryProvider>
-        </Column>
+        </Body>
       </DialogBody>
     </Wrapper>
   )

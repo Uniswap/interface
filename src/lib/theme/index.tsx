@@ -1,7 +1,8 @@
+/* eslint-disable no-restricted-imports */
 import { ReactNode } from 'react'
 import { Icon } from 'react-feather'
-// eslint-disable-next-line no-restricted-imports
 import styled, {
+  keyframes as styledKeyframes,
   ThemedBaseStyledInterface,
   ThemeProvider as StyledProvider,
   ThemeProviderComponent,
@@ -14,6 +15,7 @@ export type { Colors, Theme } from './theme'
 export type Color = keyof Colors
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
+export const keyframes = styledKeyframes
 export const useTheme = useStyled as unknown as () => Theme
 
 interface IconOptions {
