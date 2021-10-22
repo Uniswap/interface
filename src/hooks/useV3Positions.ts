@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { PositionDetails } from 'types/position'
 
-import { useV3NFTPositionManagerContract } from './useContract'
+import { useLimitOrderManager, useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -63,11 +63,13 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 }
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
-  const positionManager = useV3NFTPositionManagerContract()
+  const limitOrderManager = useLimitOrderManager()
 
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
-    account ?? undefined,
-  ])
+  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(
+    limitOrderManager,
+    'tokenIdsPerAddressLength',
+    [account ?? undefined]
+  )
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
@@ -83,7 +85,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return []
   }, [account, accountBalance])
 
-  const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
+  const tokenIdResults = useSingleContractMultipleData(limitOrderManager, 'tokenIdsPerAddress', tokenIdsArgs)
   const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
   const tokenIds = useMemo(() => {

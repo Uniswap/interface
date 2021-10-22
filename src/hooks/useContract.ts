@@ -16,6 +16,7 @@ import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
+import LIMIT_ORDER_MANAGER_ABI from 'abis/limit-order-manager.json'
 import WETH_ABI from 'abis/weth.json'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
@@ -23,6 +24,7 @@ import {
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
+  LIMIT_ORDER_MANAGER_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL_ADDRESS,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -35,7 +37,7 @@ import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 't
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Weth } from '../abis/types'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, LimitOrderManager, Weth } from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
@@ -144,4 +146,8 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 
 export function useV3Quoter() {
   return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+}
+
+export function useLimitOrderManager(): Contract | null {
+  return useContract<LimitOrderManager>(LIMIT_ORDER_MANAGER_ADDRESSES, LIMIT_ORDER_MANAGER_ABI, true)
 }

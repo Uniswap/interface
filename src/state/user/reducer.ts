@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
+import { DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_GAS_PRICE } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -18,6 +18,7 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserGasPrice,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'
@@ -50,6 +51,8 @@ export interface UserState {
   // deadline set by user in minutes, used in all txns
   userDeadline: number
 
+  userGasPrice: string
+
   tokens: {
     [chainId: number]: {
       [address: string]: SerializedToken
@@ -75,7 +78,7 @@ export const initialState: UserState = {
   arbitrumAlphaAcknowledged: false,
   matchesDarkMode: false,
   optimismAlphaAcknowledged: false,
-  userDarkMode: null,
+  userDarkMode: true,
   userExpertMode: false,
   userLocale: null,
   userClientSideRouter: false,
@@ -83,6 +86,7 @@ export const initialState: UserState = {
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
+  userGasPrice: DEFAULT_USER_GAS_PRICE,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -152,6 +156,10 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserGasPrice, (state, action) => {
+      state.userGasPrice = action.payload.userGasPrice
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserClientSideRouter, (state, action) => {

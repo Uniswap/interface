@@ -5,7 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
+import { LIMIT_ORDER_MANAGER_ADDRESSES, SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
@@ -103,15 +103,11 @@ export function useApproveCallback(
 
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
-  allowedSlippage: Percent
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
 ) {
   const { chainId } = useActiveWeb3React()
-  const v3SwapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-  const amountToApprove = useMemo(
-    () => (trade && trade.inputAmount.currency.isToken ? trade.maximumAmountIn(allowedSlippage) : undefined),
-    [trade, allowedSlippage]
-  )
+  const v3SwapRouterAddress = chainId ? LIMIT_ORDER_MANAGER_ADDRESSES[chainId] : undefined
+  const amountToApprove = useMemo(() => (trade ? trade.inputAmount : undefined), [trade])
   return useApproveCallback(
     amountToApprove,
     chainId

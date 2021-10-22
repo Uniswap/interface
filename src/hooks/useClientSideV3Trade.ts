@@ -92,7 +92,6 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       ) => {
         if (!result) return currentBest
 
-        // TODO; add another trade type -- > LIMIT ORDER
         if (tradeType === TradeType.EXACT_INPUT) {
           const amountOut = CurrencyAmount.fromRawAmount(currencyOut, result.amountOut.toString())
           if (currentBest.amountOut === null || JSBI.lessThan(currentBest.amountOut.quotient, amountOut.quotient)) {

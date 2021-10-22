@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { BigintIsh, Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useTokenComparator } from 'components/SearchModal/sorting'
+import { WETH9_EXTENDED } from 'constants/tokens'
+import JSBI from 'jsbi'
 import { ReactNode, useMemo } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
@@ -14,10 +15,9 @@ import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { currencyId } from '../utils/currencyId'
 import isZero from '../utils/isZero'
 import { useArgentWalletContract } from './useArgentWalletContract'
-import { useV2RouterContract } from './useContract'
+import { useLimitOrderManager } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
-import useTransactionDeadline from './useTransactionDeadline'
 import { useActiveWeb3React } from './web3'
 
 enum SwapCallbackState {
@@ -54,136 +54,162 @@ interface FailedCall extends SwapCallEstimate {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
-  allowedSlippage: Percent, // in bips
+  trade: V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  gasAmount: CurrencyAmount<Currency> | undefined,
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | null | undefined
+  signatureData: SignatureData | null | undefined,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
+  priceAmount: Price<Currency, Currency> | undefined,
+  serviceFee: CurrencyAmount<Currency> | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
-  const deadline = useTransactionDeadline()
-  const routerContract = useV2RouterContract()
+  const limitOrderManager = useLimitOrderManager()
   const argentWalletContract = useArgentWalletContract()
+  const tokenComparator = useTokenComparator(false)
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (
+      !trade ||
+      !recipient ||
+      !library ||
+      !account ||
+      !chainId ||
+      !limitOrderManager ||
+      !parsedAmount ||
+      !priceAmount ||
+      !serviceFee ||
+      !gasAmount
+    )
+      return []
+    // trade is V3Trade
+    const limitManagerAddress = limitOrderManager.address
+    if (!limitManagerAddress) return []
 
-    if (trade instanceof V2Trade) {
-      if (!routerContract) return []
-      const swapMethods = []
+    const calldatas: string[] = []
 
-      swapMethods.push(
-        Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
-          allowedSlippage,
-          recipient,
-          deadline: deadline.toNumber(),
-        })
-      )
+    if (signatureData) {
+      // create call data
+      const inputTokenPermit =
+        'allowed' in signatureData
+          ? {
+              expiry: signatureData.deadline,
+              nonce: signatureData.nonce,
+              s: signatureData.s,
+              r: signatureData.r,
+              v: signatureData.v as any,
+            }
+          : {
+              deadline: signatureData.deadline,
+              amount: signatureData.amount,
+              s: signatureData.s,
+              r: signatureData.r,
+              v: signatureData.v as any,
+            }
 
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
-            recipient,
-            deadline: deadline.toNumber(),
-          })
+      if ('nonce' in inputTokenPermit) {
+        calldatas.push(
+          limitOrderManager.interface.encodeFunctionData('selfPermitAllowed', [
+            parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+            inputTokenPermit.nonce,
+            inputTokenPermit.expiry,
+            inputTokenPermit.v,
+            inputTokenPermit.r,
+            inputTokenPermit.s,
+          ])
+        )
+      } else {
+        calldatas.push(
+          limitOrderManager.interface.encodeFunctionData('selfPermit', [
+            parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
+            inputTokenPermit.amount,
+            inputTokenPermit.deadline,
+            inputTokenPermit.v,
+            inputTokenPermit.r,
+            inputTokenPermit.s,
+          ])
         )
       }
-      return swapMethods.map(({ methodName, args, value }) => {
-        if (argentWalletContract && trade.inputAmount.currency.isToken) {
-          return {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
-                {
-                  to: routerContract.address,
-                  value,
-                  data: routerContract.interface.encodeFunctionData(methodName, args),
-                },
-              ],
-            ]),
-            value: '0x0',
-          }
-        } else {
-          return {
-            address: routerContract.address,
-            calldata: routerContract.interface.encodeFunctionData(methodName, args),
-            value,
-          }
-        }
-      })
-    } else {
-      // trade is V3Trade
-      const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-      if (!swapRouterAddress) return []
+    }
 
-      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
-        recipient,
-        slippageTolerance: allowedSlippage,
-        deadline: deadline.toString(),
-        ...(signatureData
-          ? {
-              inputTokenPermit:
-                'allowed' in signatureData
-                  ? {
-                      expiry: signatureData.deadline,
-                      nonce: signatureData.nonce,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    }
-                  : {
-                      deadline: signatureData.deadline,
-                      amount: signatureData.amount,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    },
-            }
-          : {}),
-      })
-      if (argentWalletContract && trade.inputAmount.currency.isToken) {
-        return [
-          {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
-                {
-                  to: swapRouterAddress,
-                  value,
-                  data: calldata,
-                },
-              ],
-            ]),
-            value: '0x0',
-          },
-        ]
-      }
+    const value = parsedAmount.currency.isNative
+      ? toHex(serviceFee.add(parsedAmount).quotient)
+      : toHex(serviceFee.quotient)
+
+    const weth = WETH9_EXTENDED[chainId]
+
+    const token0: Token = parsedAmount.currency.isToken ? parsedAmount.currency.wrapped : weth
+    const token1: Token = priceAmount.quoteCurrency.isToken ? priceAmount.quoteCurrency.wrapped : weth
+    let amount0: CurrencyAmount<Currency> = parsedAmount
+    let amount1: CurrencyAmount<Currency> = CurrencyAmount.fromRawAmount(priceAmount.quoteCurrency, 0)
+
+    // sort tokens
+    const sortedTokens: Token[] = [token0, token1].sort(tokenComparator)
+    let targetPrice = priceAmount
+
+    if (sortedTokens[1] == token0) {
+      // invert
+      ;[amount0, amount1] = [amount1, amount0]
+      targetPrice = priceAmount.invert()
+    }
+
+    if (targetPrice && sortedTokens) {
+      const openOrderData = [
+        sortedTokens[0].address,
+        sortedTokens[1].address,
+        trade.route.pools[0].fee.toString(),
+        encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
+        toHex(amount0?.quotient),
+        toHex(amount1?.quotient),
+        toHex(gasAmount?.quotient),
+      ]
+      calldatas.push(limitOrderManager.interface.encodeFunctionData('openOrder', openOrderData))
+    }
+
+    const calldata =
+      calldatas.length === 1 ? calldatas[0] : limitOrderManager.interface.encodeFunctionData('multicall', [calldatas])
+
+    if (argentWalletContract && parsedAmount.currency.isToken) {
       return [
         {
-          address: swapRouterAddress,
-          calldata,
-          value,
+          address: argentWalletContract.address,
+          calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+            [
+              approveAmountCalldata(parsedAmount, limitManagerAddress),
+              {
+                to: limitManagerAddress,
+                value,
+                data: calldata,
+              },
+            ],
+          ]),
+          value: '0x0',
         },
       ]
     }
+    return [
+      {
+        address: limitManagerAddress,
+        calldata,
+        value,
+      },
+    ]
   }, [
-    account,
-    allowedSlippage,
-    argentWalletContract,
-    chainId,
-    deadline,
-    library,
-    recipient,
-    routerContract,
-    signatureData,
     trade,
+    recipient,
+    library,
+    account,
+    chainId,
+    limitOrderManager,
+    parsedAmount,
+    priceAmount,
+    serviceFee,
+    gasAmount,
+    signatureData,
+    tokenComparator,
+    argentWalletContract,
   ])
 }
 
@@ -264,17 +290,37 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
   }
 }
 
+export function toHex(bigintIsh: BigintIsh) {
+  const bigInt = JSBI.BigInt(bigintIsh)
+  let hex = bigInt.toString(16)
+  if (hex.length % 2 !== 0) {
+    hex = `0${hex}`
+  }
+  return `0x${hex}`
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
-  allowedSlippage: Percent, // in bips
+  trade: V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  gasAmount: CurrencyAmount<Currency> | undefined,
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  signatureData: SignatureData | undefined | null
+  signatureData: SignatureData | undefined | null,
+  parsedAmount: CurrencyAmount<Currency> | undefined,
+  priceAmount: Price<Currency, Currency> | undefined,
+  serviceFee: CurrencyAmount<Currency> | undefined
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
+  const swapCalls = useSwapCallArguments(
+    trade,
+    gasAmount,
+    recipientAddressOrName,
+    signatureData,
+    parsedAmount,
+    priceAmount,
+    serviceFee
+  )
 
   const addTransaction = useTransactionAdder()
 
@@ -282,7 +328,7 @@ export function useSwapCallback(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !library || !account || !chainId || !priceAmount || !parsedAmount) {
       return { state: SwapCallbackState.INVALID, callback: null, error: <Trans>Missing dependencies</Trans> }
     }
     if (!recipient) {
@@ -379,13 +425,13 @@ export function useSwapCallback(
                     inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
                     expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                     outputCurrencyId: currencyId(trade.outputAmount.currency),
-                    minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+                    minimumOutputCurrencyAmountRaw: '',
                   }
                 : {
                     type: TransactionType.SWAP,
                     tradeType: TradeType.EXACT_OUTPUT,
                     inputCurrencyId: currencyId(trade.inputAmount.currency),
-                    maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+                    maximumInputCurrencyAmountRaw: '',
                     outputCurrencyId: currencyId(trade.outputAmount.currency),
                     outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
                     expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
@@ -408,5 +454,16 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction, allowedSlippage])
+  }, [
+    trade,
+    library,
+    account,
+    chainId,
+    priceAmount,
+    parsedAmount,
+    recipient,
+    recipientAddressOrName,
+    swapCalls,
+    addTransaction,
+  ])
 }

@@ -1,9 +1,11 @@
+import { formatEther, formatUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
+import { useUserTransactionGas } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -15,7 +17,8 @@ import { TransactionDetailsLabel } from './styleds'
 
 interface AdvancedSwapDetailsProps {
   trade?: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
-  allowedSlippage: Percent
+  serviceFee: CurrencyAmount<Currency> | undefined
+  priceAmount: Price<Currency, Currency> | undefined
   syncing?: boolean
 }
 
@@ -37,19 +40,12 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, serviceFee, priceAmount, syncing = false }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const { realizedLPFee, priceImpact } = useMemo(() => {
-    if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
+  const [userGasPrice] = useUserTransactionGas()
 
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const realizedLPFee = trade.inputAmount.multiply(realizedLpFeePercent)
-    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent)
-    return { priceImpact, realizedLPFee }
-  }, [trade])
-
-  return !trade ? null : (
+  return trade && priceAmount && userGasPrice ? (
     <AutoColumn gap="8px">
       <TransactionDetailsLabel fontWeight={500} fontSize={14}>
         <Trans>Transaction Details</Trans>
@@ -57,38 +53,24 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            <Trans>Liquidity Provider Fee</Trans>
+            <Trans>Maximum Gas Price</Trans>
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : '-'}
+            {userGasPrice ? `${userGasPrice} GWei` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
-
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            <Trans>Price Impact</Trans>
+            <Trans>Service Provider Fee</Trans>
           </TYPE.subHeader>
         </RowFixed>
-        <TextWithLoadingPlaceholder syncing={syncing} width={50}>
+        <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
-            <FormattedPriceImpact priceImpact={priceImpact} />
-          </TYPE.black>
-        </TextWithLoadingPlaceholder>
-      </RowBetween>
-
-      <RowBetween>
-        <RowFixed>
-          <TYPE.subHeader color={theme.text1}>
-            <Trans>Allowed Slippage</Trans>
-          </TYPE.subHeader>
-        </RowFixed>
-        <TextWithLoadingPlaceholder syncing={syncing} width={45}>
-          <TYPE.black textAlign="right" fontSize={14}>
-            {allowedSlippage.toFixed(2)}%
+            {serviceFee ? `${serviceFee.toFixed(8)} ${serviceFee.currency.symbol}` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -102,11 +84,11 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-              : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+              ? `${priceAmount.quote(trade.inputAmount).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+              : `${priceAmount.quote(trade.outputAmount).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
     </AutoColumn>
-  )
+  ) : null
 }

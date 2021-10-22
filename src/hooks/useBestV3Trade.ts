@@ -31,8 +31,7 @@ export function useBestV3Trade(
   isLoading = isLoading || (priceSpecified !== undefined && debouncedPriceAmount === undefined)
 
   // use client side router
-  const bestV3Trade = useClientSideV3Trade(TradeType.EXACT_INPUT, debouncedAmount, debouncedPriceAmount, otherCurrency)
-  console.log(bestV3Trade)
+  const bestV3Trade = useClientSideV3Trade(tradeType, debouncedAmount, debouncedPriceAmount, otherCurrency)
 
   return {
     ...bestV3Trade,

@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
@@ -9,12 +9,11 @@ import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { V3TradeState } from 'state/routing/types'
+import { useUserGasPrice } from 'state/user/hooks'
 
 import { useCurrency } from '../../hooks/Tokens'
 import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
-import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
-import { Version } from '../../hooks/useToggledVersion'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
@@ -119,24 +118,23 @@ function involvesAddress(
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
+export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
-  priceAmount: CurrencyAmount<Currency> | undefined
+  priceAmount: Price<Currency, Currency> | undefined
   inputError?: ReactNode
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
   }
-  bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
-  allowedSlippage: Percent
+  bestTrade: V3Trade<Currency, Currency, TradeType> | undefined
+  serviceFee: CurrencyAmount<Currency> | undefined
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
-    independentField,
     typedValue,
     priceValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
@@ -154,24 +152,21 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     outputCurrency ?? undefined,
   ])
 
-  const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = useMemo(
     () => tryParseAmount(typedValue, inputCurrency ?? undefined),
-    [inputCurrency, isExactIn, outputCurrency, typedValue, priceValue]
+    [inputCurrency, typedValue]
   )
-  const priceAmount = useMemo(
+
+  const parsedPriceAmount = useMemo(
     () => tryParseAmount(priceValue, outputCurrency ?? undefined),
-    [inputCurrency, isExactIn, outputCurrency, typedValue, priceValue]
+    [outputCurrency, priceValue]
   )
+
+  const gasAmount = useUserGasPrice()
 
   // // get v2 and v3 quotes
   const v2Trade = undefined
-  const v3Trade = useBestV3Trade(
-    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    parsedAmount,
-    priceAmount,
-    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
-  )
+  const v3Trade = useBestV3Trade(TradeType.EXACT_INPUT, parsedAmount, parsedPriceAmount, outputCurrency ?? undefined)
 
   const bestTrade = v3Trade.trade
 
@@ -193,7 +188,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   if (!parsedAmount) {
     inputError = inputError ?? <Trans>Enter an amount</Trans>
   }
-  if (!priceAmount) {
+  if (!parsedPriceAmount) {
     inputError = inputError ?? <Trans>Enter a price</Trans>
   }
 
@@ -210,7 +205,23 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     }
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
+  const [whole, fraction] = priceValue.split('.')
+
+  const decimals = fraction?.length ?? 0
+  const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
+
+  // TODO (pai) get the gasUnits from smart contract instead of hardcoding 200k
+  const serviceFee = chainId ? gasAmount?.multiply(JSBI.BigInt(200000)) : undefined
+  const allowedSlippage = new Percent(0, 1)
+  const priceAmount =
+    inputCurrency && outputCurrency && parsedAmount && parsedPriceAmount
+      ? new Price(
+          inputCurrency,
+          outputCurrency,
+          JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** inputCurrency.decimals)),
+          JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** outputCurrency.decimals))
+        )
+      : undefined
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
@@ -228,7 +239,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     v2Trade: v2Trade ?? undefined,
     v3Trade,
     bestTrade: bestTrade ?? undefined,
-    allowedSlippage,
+    serviceFee,
   }
 }
 

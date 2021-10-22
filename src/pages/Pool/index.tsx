@@ -147,50 +147,6 @@ export default function Pool() {
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = !!chainId && !L2_CHAIN_IDS.includes(chainId)
-
-  const menuItems = [
-    {
-      content: (
-        <MenuItem>
-          <Trans>Create a pool</Trans>
-          <PlusCircle size={16} />
-        </MenuItem>
-      ),
-      link: '/add/ETH',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
-          <Trans>Migrate</Trans>
-          <ChevronsRight size={16} />
-        </MenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
-          <Trans>V2 liquidity</Trans>
-          <Layers size={16} />
-        </MenuItem>
-      ),
-      link: '/pool/v2',
-      external: false,
-    },
-    {
-      content: (
-        <MenuItem>
-          <Trans>Learn</Trans>
-          <BookOpen size={16} />
-        </MenuItem>
-      ),
-      link: 'https://docs.uniswap.org/',
-      external: true,
-    },
-  ]
 
   return (
     <>
@@ -200,25 +156,11 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <TYPE.body fontSize={'20px'}>
-                <Trans>Pools Overview</Trans>
+                <Trans>Limit Orders</Trans>
               </TYPE.body>
               <ButtonRow>
-                {showV2Features && (
-                  <Menu
-                    menuItems={menuItems}
-                    flyoutAlignment={FlyoutAlignment.LEFT}
-                    ToggleUI={(props: any) => (
-                      <MoreOptionsButton {...props}>
-                        <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                          <Trans>More</Trans>
-                          <ChevronDown size={15} />
-                        </TYPE.body>
-                      </MoreOptionsButton>
-                    )}
-                  />
-                )}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New Position</Trans>
+                  + <Trans>Migrate Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -226,7 +168,6 @@ export default function Pool() {
             <HideSmall>
               <NetworkAlert thin />
               <DowntimeWarning />
-              <CTACards />
             </HideSmall>
 
             <MainContentWrapper>
@@ -265,44 +206,6 @@ export default function Pool() {
             </MainContentWrapper>
 
             <ResponsiveRow>
-              {showV2Features && (
-                <RowFixed>
-                  <ButtonOutlined
-                    as={Link}
-                    to="/pool/v2"
-                    id="import-pool-link"
-                    style={{
-                      padding: '8px 16px',
-                      margin: '0 4px',
-                      borderRadius: '12px',
-                      width: 'fit-content',
-                      fontSize: '14px',
-                    }}
-                  >
-                    <Layers size={14} style={{ marginRight: '8px' }} />
-
-                    <Trans>View V2 Liquidity</Trans>
-                  </ButtonOutlined>
-                  {positions && positions.length > 0 && (
-                    <ButtonOutlined
-                      as={Link}
-                      to="/migrate/v2"
-                      id="import-pool-link"
-                      style={{
-                        padding: '8px 16px',
-                        margin: '0 4px',
-                        borderRadius: '12px',
-                        width: 'fit-content',
-                        fontSize: '14px',
-                      }}
-                    >
-                      <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-
-                      <Trans>Migrate Liquidity</Trans>
-                    </ButtonOutlined>
-                  )}
-                </RowFixed>
-              )}
               {closedPositions.length > 0 ? (
                 <ShowInactiveToggle>
                   <label>

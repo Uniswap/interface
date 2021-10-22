@@ -1,8 +1,9 @@
-import { Percent, Token } from '@uniswap/sdk-core'
+import { parseUnits } from '@ethersproject/units'
+import { Currency, CurrencyAmount, Ether, Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
-import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { DEFAULT_USER_GAS_PRICE, L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -26,6 +27,7 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserGasPrice,
   updateUserLocale,
   updateUserSlippageTolerance,
 } from './actions'
@@ -203,6 +205,35 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   )
 
   return [deadline, setUserDeadline]
+}
+
+export function useUserTransactionGas(): [string, (gasPrice: string) => void] {
+  const dispatch = useAppDispatch()
+  const userGasPrice = useAppSelector((state) => state.user.userGasPrice)
+
+  const setUserGasPrice = useCallback(
+    (userGasPrice: string) => {
+      dispatch(updateUserGasPrice({ userGasPrice }))
+    },
+    [dispatch]
+  )
+
+  return [userGasPrice, setUserGasPrice]
+}
+
+export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
+  const { chainId } = useActiveWeb3React()
+  const userGasPrice = useAppSelector((state) => {
+    return state.user.userGasPrice
+  })
+
+  const parsedUserGasPrice = userGasPrice ? userGasPrice : DEFAULT_USER_GAS_PRICE
+  const parsed = parseUnits(parsedUserGasPrice, 'gwei').toString()
+
+  return useMemo(
+    () => (chainId ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parsed)) : undefined),
+    [chainId, parsed]
+  )
 }
 
 export function useAddUserToken(): (token: Token) => void {

@@ -12,7 +12,7 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
+export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <RowBetween>
@@ -20,6 +20,9 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
             <Trans>Limit Order</Trans>
           </TYPE.black>
+        </RowFixed>
+        <RowFixed>
+          <SettingsTab />
         </RowFixed>
       </RowBetween>
     </StyledSwapHeader>

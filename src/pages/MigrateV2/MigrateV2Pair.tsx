@@ -723,7 +723,7 @@ export default function MigrateV2Pair({
           <TYPE.mediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
           </TYPE.mediumHeader>
-          <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
+          {/* <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} /> */}
         </AutoRow>
 
         {!account ? (

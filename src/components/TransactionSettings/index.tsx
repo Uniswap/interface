@@ -1,11 +1,13 @@
+import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, Percent } from '@uniswap/sdk-core'
 import { L2_CHAIN_IDS } from 'constants/chains'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
+import { DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_GAS_PRICE } from 'constants/misc'
 import { useActiveWeb3React } from 'hooks/web3'
+import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useSetUserSlippageTolerance, useUserTransactionGas, useUserTransactionTTL } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -18,6 +20,10 @@ enum SlippageError {
 }
 
 enum DeadlineError {
+  InvalidInput = 'InvalidInput',
+}
+
+enum UserGasPriceError {
   InvalidInput = 'InvalidInput',
 }
 
@@ -89,174 +95,72 @@ const SlippageEmojiContainer = styled.span`
   `}
 `
 
-interface TransactionSettingsProps {
-  placeholderSlippage: Percent // varies according to the context in which the settings dialog is placed
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface TransactionSettingsProps {}
 
-export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
+export default function TransactionSettings({}: TransactionSettingsProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const userSlippageTolerance = useUserSlippageTolerance()
-  const setUserSlippageTolerance = useSetUserSlippageTolerance()
+  const [userGasPrice, setUserGasPrice] = useUserTransactionGas()
 
-  const [deadline, setDeadline] = useUserTransactionTTL()
+  const [userGasPriceInput, setUserGasPriceInput] = useState('')
+  const [userGasPriceError, setUserGasPriceError] = useState<UserGasPriceError | false>(false)
 
-  const [slippageInput, setSlippageInput] = useState('')
-  const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
-
-  const [deadlineInput, setDeadlineInput] = useState('')
-  const [deadlineError, setDeadlineError] = useState<DeadlineError | false>(false)
-
-  function parseSlippageInput(value: string) {
+  function parseCustomGasPrice(value: string) {
     // populate what the user typed and clear the error
-    setSlippageInput(value)
-    setSlippageError(false)
+    setUserGasPriceInput(value)
+    setUserGasPriceError(false)
 
     if (value.length === 0) {
-      setUserSlippageTolerance('auto')
-    } else {
-      const parsed = Math.floor(Number.parseFloat(value) * 100)
-
-      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 5000) {
-        setUserSlippageTolerance('auto')
-        if (value !== '.') {
-          setSlippageError(SlippageError.InvalidInput)
-        }
-      } else {
-        setUserSlippageTolerance(new Percent(parsed, 10_000))
-      }
-    }
-  }
-
-  const tooLow = userSlippageTolerance !== 'auto' && userSlippageTolerance.lessThan(new Percent(5, 10_000))
-  const tooHigh = userSlippageTolerance !== 'auto' && userSlippageTolerance.greaterThan(new Percent(1, 100))
-
-  function parseCustomDeadline(value: string) {
-    // populate what the user typed and clear the error
-    setDeadlineInput(value)
-    setDeadlineError(false)
-
-    if (value.length === 0) {
-      setDeadline(DEFAULT_DEADLINE_FROM_NOW)
+      setUserGasPrice(DEFAULT_USER_GAS_PRICE)
     } else {
       try {
-        const parsed: number = Math.floor(Number.parseFloat(value) * 60)
-        if (!Number.isInteger(parsed) || parsed < 60 || parsed > 180 * 60) {
-          setDeadlineError(DeadlineError.InvalidInput)
-        } else {
-          setDeadline(parsed)
+        const parsed = parseUnits(value, 'gwei').toString()
+        if (parsed !== '0' && chainId) {
+          CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parsed))
         }
+        setUserGasPrice(value)
       } catch (error) {
         console.error(error)
-        setDeadlineError(DeadlineError.InvalidInput)
+        setUserGasPriceError(UserGasPriceError.InvalidInput)
       }
     }
   }
 
-  const showCustomDeadlineRow = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showCustomDeadlineRow = true
 
   return (
     <AutoColumn gap="md">
-      <AutoColumn gap="sm">
-        <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-            <Trans>Slippage tolerance</Trans>
-          </TYPE.black>
-          <QuestionHelper
-            text={
-              <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-            }
-          />
-        </RowFixed>
-        <RowBetween>
-          <Option
-            onClick={() => {
-              parseSlippageInput('')
-            }}
-            active={userSlippageTolerance === 'auto'}
-          >
-            <Trans>Auto</Trans>
-          </Option>
-          <OptionCustom active={userSlippageTolerance !== 'auto'} warning={!!slippageError} tabIndex={-1}>
-            <RowBetween>
-              {tooLow || tooHigh ? (
-                <SlippageEmojiContainer>
-                  <span role="img" aria-label="warning">
-                    ⚠️
-                  </span>
-                </SlippageEmojiContainer>
-              ) : null}
-              <Input
-                placeholder={placeholderSlippage.toFixed(2)}
-                value={
-                  slippageInput.length > 0
-                    ? slippageInput
-                    : userSlippageTolerance === 'auto'
-                    ? ''
-                    : userSlippageTolerance.toFixed(2)
-                }
-                onChange={(e) => parseSlippageInput(e.target.value)}
-                onBlur={() => {
-                  setSlippageInput('')
-                  setSlippageError(false)
-                }}
-                color={slippageError ? 'red' : ''}
-              />
-              %
-            </RowBetween>
-          </OptionCustom>
-        </RowBetween>
-        {slippageError || tooLow || tooHigh ? (
-          <RowBetween
-            style={{
-              fontSize: '14px',
-              paddingTop: '7px',
-              color: slippageError ? 'red' : '#F3841E',
-            }}
-          >
-            {slippageError ? (
-              <Trans>Enter a valid slippage percentage</Trans>
-            ) : tooLow ? (
-              <Trans>Your transaction may fail</Trans>
-            ) : (
-              <Trans>Your transaction may be frontrun</Trans>
-            )}
-          </RowBetween>
-        ) : null}
-      </AutoColumn>
-
       {showCustomDeadlineRow && (
         <AutoColumn gap="sm">
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              <Trans>Transaction deadline</Trans>
+              <Trans>Maximum gas price</Trans>
             </TYPE.black>
             <QuestionHelper
-              text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
+              text={
+                <Trans>
+                  Your limit order will be processed if your maximum gas price is GREATER than the network gas price.
+                </Trans>
+              }
             />
           </RowFixed>
           <RowFixed>
-            <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
+            <OptionCustom style={{ width: '80px' }} warning={!!userGasPriceError} tabIndex={-1}>
               <Input
-                placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
-                value={
-                  deadlineInput.length > 0
-                    ? deadlineInput
-                    : deadline === DEFAULT_DEADLINE_FROM_NOW
-                    ? ''
-                    : (deadline / 60).toString()
-                }
-                onChange={(e) => parseCustomDeadline(e.target.value)}
+                placeholder={DEFAULT_USER_GAS_PRICE.toString()}
+                value={userGasPrice}
+                onChange={(e) => parseCustomGasPrice(e.target.value)}
                 onBlur={() => {
-                  setDeadlineInput('')
-                  setDeadlineError(false)
+                  setUserGasPriceInput('')
+                  setUserGasPriceError(false)
                 }}
-                color={deadlineError ? 'red' : ''}
+                color={userGasPriceError ? 'red' : ''}
               />
             </OptionCustom>
             <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-              <Trans>minutes</Trans>
+              <Trans>GWei</Trans>
             </TYPE.body>
           </RowFixed>
         </AutoColumn>

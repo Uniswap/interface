@@ -29,7 +29,7 @@ export default function SwapModalFooter({
           id="confirm-swap-or-send"
         >
           <Text fontSize={20} fontWeight={500}>
-            <Trans>Confirm Swap</Trans>
+            <Trans>Confirm</Trans>
           </Text>
         </ButtonError>
 

@@ -11,6 +11,8 @@ export const IS_IN_IFRAME = window.parent !== window
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30
 export const L2_DEADLINE_FROM_NOW = 60 * 5
 
+export const DEFAULT_USER_GAS_PRICE = '60'
+
 // transaction popup dismisal amounts
 export const DEFAULT_TXN_DISMISS_MS = 25000
 export const L2_TXN_DISMISS_MS = 5000
