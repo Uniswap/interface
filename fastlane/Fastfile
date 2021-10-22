@@ -128,7 +128,7 @@ platform :ios do
       xcodeproj: XCODE_PROJECT,
     )
 
-    pushChangesBack(options)
+    # pushChangesBack(options)
 
     unless BUILD_ONLY
       ship(
