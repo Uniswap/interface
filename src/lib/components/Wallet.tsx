@@ -1,18 +1,19 @@
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { DAI, ETH, UNI, USDC } from 'lib/token/mocks'
+import { Token } from 'lib/token/types'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Clock, Trash2 } from 'react-feather'
 
 import Button from './Button'
 import Column from './Column'
-import Dialog, { DialogBody, DialogHeader } from './Dialog'
+import Dialog, { Header } from './Dialog'
 import Row from './Row'
 import SpinnerIcon from './SpinnerIcon'
 
 interface TokenAmount {
   value: number
-  symbol: string
-  logoUri?: string
+  token: Token
 }
 
 enum TransactionStatus {
@@ -30,44 +31,21 @@ interface Transaction {
 // TODO: integrate with web3-react context
 const mockTxs: Transaction[] = [
   {
-    input: {
-      value: 4170.15,
-      symbol: 'USDC',
-      logoUri:
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-    },
-    output: { value: 4167.44, symbol: 'DAI', logoUri: 'https://gemini.com/images/currencies/icons/default/dai.svg' },
+    input: { value: 4170.15, token: USDC },
+    output: { value: 4167.44, token: DAI },
     status: TransactionStatus.SUCCESS,
   },
   {
-    input: {
-      value: 1.23,
-      symbol: 'ETH',
-      logoUri: 'https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/ethereum-logo.png',
-    },
-    output: { value: 4125.02, symbol: 'DAI', logoUri: 'https://gemini.com/images/currencies/icons/default/dai.svg' },
+    input: { value: 1.23, token: ETH },
+    output: { value: 4125.02, token: DAI },
     status: TransactionStatus.PENDING,
   },
   {
-    input: { value: 10, symbol: 'UNI', logoUri: 'https://gemini.com/images/currencies/icons/default/uni.svg' },
-    output: {
-      value: 2125.02,
-      symbol: 'ETH',
-      logoUri: 'https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/ethereum-logo.png',
-    },
+    input: { value: 10, token: UNI },
+    output: { value: 2125.02, token: ETH },
     status: TransactionStatus.ERROR,
   },
 ]
-
-const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: inherit;
-  height: 100%;
-`
-
-const Body = styled(Column)`
-  padding: 0.5em 0;
-`
 
 const TrashIcon = icon(Trash2)
 const ArrowIcon = icon(ArrowRight)
@@ -76,20 +54,24 @@ const ErrorIcon = icon(AlertTriangle, { color: 'error' })
 
 const TransactionRow = styled(Row)`
   padding: 0.5em 1em;
+
+  :first-of-type {
+    padding-top: 1em;
+  }
 `
 
 const TokenImg = styled.img`
-  border-radius: 0.5em;
+  border-radius: 1em;
   height: 1em;
   width: 1em;
 `
 
-function TokenAmount({ value: { value, symbol, logoUri } }: { value: TokenAmount }) {
+function TokenAmount({ value: { value, token } }: { value: TokenAmount }) {
   return (
-    <Row gap="0.375em">
-      <TokenImg src={logoUri} />
+    <Row gap={0.375}>
+      <TokenImg src={token.logoURI} />
       <TYPE.body2>
-        {value.toLocaleString('en')} {symbol}
+        {value.toLocaleString('en')} {token.symbol}
       </TYPE.body2>
     </Row>
   )
@@ -109,7 +91,7 @@ function Transaction({ tx }: { tx: Transaction }) {
   return (
     <TransactionRow grow>
       <Row>
-        <Row gap="0.5em">
+        <Row gap={0.5}>
           <TokenAmount value={tx.input} />
           <ArrowIcon />
           <TokenAmount value={tx.output} />
@@ -124,20 +106,18 @@ export function TransactionsDialog({ onClose }: { onClose: () => void }) {
   const [txs, setTxs] = useState(mockTxs)
 
   return (
-    <Wrapper>
-      <DialogHeader title="Recent transactions" onClose={onClose}>
+    <>
+      <Header title="Recent transactions" onClose={onClose} ruled>
         <Button>
           <TrashIcon onClick={() => setTxs([])} />
         </Button>
-      </DialogHeader>
-      <DialogBody>
-        <Body>
-          {txs.map((tx, key) => (
-            <Transaction tx={tx} key={key} />
-          ))}
-        </Body>
-      </DialogBody>
-    </Wrapper>
+      </Header>
+      <Column scrollable>
+        {txs.map((tx, key) => (
+          <Transaction tx={tx} key={key} />
+        ))}
+      </Column>
+    </>
   )
 }
 
@@ -160,7 +140,7 @@ export default function Wallet() {
           <Icon />
         </Button>
         {open && (
-          <Dialog>
+          <Dialog color="module">
             <TransactionsDialog onClose={() => setOpen(false)} />
           </Dialog>
         )}

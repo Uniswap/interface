@@ -32,10 +32,10 @@ export default function Swap() {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <InputColumn gap="0.75em">
+          <InputColumn gap={0.75}>
             <SwapInput />
           </InputColumn>
-          <OutputColumn gap="0.75em">
+          <OutputColumn gap={0.75}>
             <SwapReverse onClick={() => void 0} />
             <SwapOutput />
             <SwapToolbar />

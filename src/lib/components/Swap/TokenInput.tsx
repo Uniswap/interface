@@ -1,5 +1,6 @@
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { Token } from 'lib/token/types'
 import { Book } from 'react-feather'
 
 import { TextButton } from '../Button'
@@ -14,36 +15,31 @@ const TokenInputRow = styled(Row)`
 
 const BookIcon = icon(Book)
 
-interface Token {
-  address: string
-  symbol: string
-  logoUri?: string
-}
-
 interface TokenInputProps {
   value?: number
   token?: Token
-  onChange: (value: number | undefined) => void
-  onMax?: (value: number) => void
+  onChangeValue: (value: number | undefined) => void
+  onChangeToken: (token: Token) => void
+  showMax?: true
 }
 
-export default function TokenInput({ value, token, onChange, onMax }: TokenInputProps) {
+export default function TokenInput({ value, token, onChangeValue, onChangeToken, showMax }: TokenInputProps) {
   return (
-    <Column gap="0.25em">
+    <Column gap={0.25}>
       <TokenInputRow>
         <TYPE.h2>
-          <DecimalInput value={value} onChange={onChange} placeholder="0.0"></DecimalInput>
+          <DecimalInput value={value} onChange={onChangeValue} placeholder="0.0"></DecimalInput>
         </TYPE.h2>
-        <TokenSelect value={token} onChange={() => void 0} />
+        <TokenSelect value={token} onChange={onChangeToken} />
       </TokenInputRow>
       <TYPE.body2 color="secondary">
         <Row>
           -
-          <Row gap="0.5em">
+          <Row gap={0.5}>
             <Row>
               <BookIcon />
             </Row>
-            {onMax && <TextButton disabled>Max</TextButton>}
+            {showMax && <TextButton disabled>Max</TextButton>}
           </Row>
         </Row>
       </TYPE.body2>

@@ -4,7 +4,7 @@ import Widget from './Widget'
 
 export default (
   <Widget>
-    <Modal>
+    <Modal color="module">
       <TransactionsDialog onClose={() => void 0} />
     </Modal>
   </Widget>

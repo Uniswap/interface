@@ -4,7 +4,7 @@ import { ReactNode, useMemo, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'
 
-const Wrapper = styled.div`
+const WidgetWrapper = styled.div`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
@@ -27,10 +27,10 @@ export default function Widget({ children }: WidgetProps) {
   return (
     <Provider>
       <ThemeProvider theme={theme}>
-        <Wrapper>
+        <WidgetWrapper>
           <div ref={setDialog} />
           <DialogProvider value={dialog}>{children}</DialogProvider>
-        </Wrapper>
+        </WidgetWrapper>
       </ThemeProvider>
     </Provider>
   )

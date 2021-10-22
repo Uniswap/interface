@@ -4,7 +4,7 @@ import { SettingsDialog } from './Settings'
 
 export default (
   <Widget>
-    <Modal>
+    <Modal color="module">
       <SettingsDialog onClose={() => void 0} />
     </Modal>
   </Widget>

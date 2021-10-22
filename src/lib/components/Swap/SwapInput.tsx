@@ -1,24 +1,19 @@
 import TYPE from 'lib/theme/type'
+import { ETH } from 'lib/token/mocks'
+import { Token } from 'lib/token/types'
+import { useState } from 'react'
 
 import Row from '../Row'
 import TokenInput from './TokenInput'
 
 export default function SwapInput() {
+  const [token, setToken] = useState<Token | undefined>(ETH)
   return (
     <>
       <Row>
         <TYPE.subhead3 color="secondary">Trading</TYPE.subhead3>
       </Row>
-      <TokenInput
-        value={undefined}
-        token={{
-          address: 'ether',
-          symbol: 'ETH',
-          logoUri: 'https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/ethereum-logo.png',
-        }}
-        onChange={() => void 0}
-        onMax={() => void 0}
-      />
+      <TokenInput value={undefined} token={token} onChangeValue={() => void 0} onChangeToken={setToken} showMax />
       <Row />
     </>
   )

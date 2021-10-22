@@ -16,7 +16,7 @@ export default function TransactionTtlInput() {
   const [transactionTtl, setTransactionTtl] = useAtom(transactionTtlAtom)
   const input = useRef<HTMLInputElement>(null)
   return (
-    <Column gap="0.75em">
+    <Column gap={0.75}>
       <Label name="Transaction Deadline" tooltip={tooltip} />
       <Value onClick={() => input.current?.focus()} cursor="text">
         <TYPE.subhead2>

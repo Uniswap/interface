@@ -1,8 +1,4 @@
-interface Token {
-  address: string
-  symbol: string
-  logoUri?: string
-}
+import { Token } from 'lib/token/types'
 
 interface TokenSelectProps {
   value?: Token
