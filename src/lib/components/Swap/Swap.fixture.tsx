@@ -1,3 +1,8 @@
+import Widget from '../Widget'
 import Swap from '.'
 
-export default <Swap />
+export default (
+  <Widget>
+    <Swap />
+  </Widget>
+)

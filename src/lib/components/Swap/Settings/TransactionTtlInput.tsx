@@ -3,14 +3,14 @@ import TYPE from 'lib/theme/type'
 import { useRef } from 'react'
 
 import Column from '../../Column'
-import { IntegerInput } from '../../NumericInput'
+import { IntegerInput } from '../../Input'
 import Row from '../../Row'
 import { transactionTtlAtom } from '../state'
-import Label, { styledValue } from './Label'
+import Label, { value } from './Label'
 
 const tooltip = 'Your transaction will revert if it has not occured by this deadline.'
 
-const Value = styledValue(Row)
+const Value = value(Row)
 
 export default function TransactionTtlInput() {
   const [transactionTtl, setTransactionTtl] = useAtom(transactionTtlAtom)
@@ -18,7 +18,7 @@ export default function TransactionTtlInput() {
   return (
     <Column gap="0.75em">
       <Label name="Transaction Deadline" tooltip={tooltip} />
-      <Value onClick={() => input.current?.focus()}>
+      <Value onClick={() => input.current?.focus()} cursor="text">
         <TYPE.subhead2>
           <IntegerInput value={transactionTtl} onChange={(value) => setTransactionTtl(value ?? 0)} ref={input} />
         </TYPE.subhead2>

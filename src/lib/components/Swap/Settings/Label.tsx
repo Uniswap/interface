@@ -5,11 +5,11 @@ import { AnyStyledComponent } from 'styled-components'
 import Row from '../../Row'
 import Tooltip from '../../Tooltip'
 
-export function styledValue(Value: AnyStyledComponent) {
-  return styled(Value)<{ selected?: boolean; theme: Theme }>`
+export function value(Value: AnyStyledComponent) {
+  return styled(Value)<{ selected?: boolean; cursor?: string; theme: Theme }>`
     border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
     border-radius: 0.5em;
-    cursor: pointer;
+    cursor: ${({ cursor }) => cursor ?? 'pointer'};
     display: grid;
     grid-gap: 0.25em;
     padding: 0.5em;
