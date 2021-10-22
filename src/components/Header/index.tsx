@@ -311,7 +311,7 @@ export default function Header() {
     if ([ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) return 'https://wallet.matic.network/bridge'
     if ([ChainId.BSCMAINNET, ChainId.BSCTESTNET].includes(chainId)) return 'https://www.binance.org/en/bridge'
     if ([ChainId.AVAXMAINNET, ChainId.AVAXTESTNET].includes(chainId)) return 'https://bridge.avax.network'
-    if ([ChainId.FANTOM].includes(chainId)) return 'https://bnbridge.exchange'
+    if ([ChainId.FANTOM].includes(chainId)) return 'https://multichain.xyz'
     return ''
   }
 
