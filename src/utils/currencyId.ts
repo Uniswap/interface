@@ -36,5 +36,9 @@ export function currencyIdFromAddress(address: string, chainId?: ChainId): strin
     return 'AVAX'
   }
 
+  if (chainId === ChainId.FANTOM && WETH[chainId].address.toLowerCase() === address.toLowerCase()) {
+    return 'FTM'
+  }
+
   return address
 }

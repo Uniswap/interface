@@ -405,6 +405,8 @@ export function useRewardTokensFullInfo(): Token[] {
       ? 'BNB'
       : chainId && [43113, 43114].includes(chainId)
       ? 'AVAX'
+      : chainId && [250].includes(chainId)
+      ? 'FTM'
       : 'ETH'
 
   return useMemo(
