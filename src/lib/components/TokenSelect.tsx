@@ -2,7 +2,7 @@ import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 
 import Button from './Button'
@@ -152,13 +152,21 @@ export function TokenSelectDialog({ onChange }: TokenSelectDialogProps) {
     [onChange]
   )
 
+  const input = useRef<HTMLInputElement>(null)
+  useEffect(() => input.current?.focus(), [input])
+
   return (
     <>
       <Column gap={0.75}>
         <Header title="Select a token" />
         <Row padded grow>
           <TYPE.body1 color={search ? 'primary' : 'secondary'}>
-            <SearchInput value={search} onChange={setSearch} placeholder="Search by token name or address" />
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search by token name or address"
+              ref={input}
+            />
           </TYPE.body1>
         </Row>
         {baseTokens && (
