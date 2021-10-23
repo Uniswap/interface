@@ -1,7 +1,7 @@
+import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { DAI, ETH, UNI, USDC } from 'lib/token/mocks'
-import { Token } from 'lib/token/types'
+import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, ArrowRight, CheckCircle, Clock, Trash2 } from 'react-feather'
 

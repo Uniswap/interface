@@ -1,5 +1,5 @@
 import TYPE from 'lib/theme/type'
-import { Token } from 'lib/token/types'
+import { Token } from 'lib/types'
 import { useState } from 'react'
 
 import Row from '../Row'

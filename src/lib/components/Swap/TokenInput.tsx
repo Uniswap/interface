@@ -1,6 +1,6 @@
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { Token } from 'lib/token/types'
+import { Token } from 'lib/types'
 import { Book } from 'react-feather'
 
 import { TextButton } from '../Button'
