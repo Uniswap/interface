@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-23 09:06\n"
+"PO-Revision-Date: 2021-10-23 10:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1412,7 +1412,7 @@ msgstr "正在去除 {0} {1} 和 {2} {3}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
-msgstr "刪除 {0} {1} 和{2} {3}"
+msgstr "移除 {0} {1} 和 {2} {3}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1536,7 +1536,7 @@ msgstr "供應"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and{2} {3}"
-msgstr "供應 {0} {1} 和{2} {3}"
+msgstr "供應 {0} {1} 和 {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1562,7 +1562,7 @@ msgstr "將恰好 <0/> 兌換成 <1/>"
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
-msgstr "交換失敗： {0}"
+msgstr "兑换失败： {0}"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1786,11 +1786,11 @@ msgstr "未定"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "意外的錯誤。無法估計交換的 gas。"
+msgstr "錯誤。無法估計兑换所需的 gas。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "估計 gas 時遭遇意外問題。請再試一次。"
+msgstr "估計 gas 時遇到問題。請再試一次。"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
