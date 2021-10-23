@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-21 06:06\n"
+"PO-Revision-Date: 2021-10-23 09:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1102,7 +1102,7 @@ msgstr "收到的最低數額"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
-msgstr "缺少依賴項"
+msgstr "缺少依賴套件"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
