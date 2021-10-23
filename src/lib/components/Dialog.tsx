@@ -1,6 +1,6 @@
 import styled, { Color, icon, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
@@ -9,28 +9,26 @@ import { default as BaseHeader } from './Header'
 import Rule from './Rule'
 
 const Context = createContext<HTMLDivElement | null>(null)
-
 export const Provider = Context.Provider
+
+const OnCloseContext = createContext<() => void>(() => void 0)
 
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
   title?: string
-  onClose?: () => void
   ruled?: boolean
   children?: ReactNode
 }
 
-export function Header({ title, onClose, children, ruled }: HeaderProps) {
+export function Header({ title, children, ruled }: HeaderProps) {
   return (
     <>
       <BaseHeader title={title}>
         {children}
-        {onClose && (
-          <Button onClick={onClose}>
-            <XIcon />
-          </Button>
-        )}
+        <Button onClick={useContext(OnCloseContext)}>
+          <XIcon />
+        </Button>
       </BaseHeader>
       {ruled && <Rule padded style={{ marginTop: 'calc(1em - 1px)' }} />}
     </>
@@ -54,9 +52,32 @@ export const Modal = styled.div<{ color: Color; theme: Theme }>`
 interface DialogProps {
   color: Color
   children: ReactNode
+  onClose: () => void
 }
 
-export default function Dialog({ color, children }: DialogProps) {
+export default function Dialog({ color, children, onClose }: DialogProps) {
+  const onKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose?.()
+      }
+    },
+    [onClose]
+  )
+  useEffect(
+    () => (
+      document.addEventListener('keydown', onKeydown, true),
+      () => document.removeEventListener('keydown', onKeydown, true)
+    )
+  )
   const modal = useContext(Context)
-  return modal && createPortal(<Modal color={color}>{children}</Modal>, modal)
+  return (
+    modal &&
+    createPortal(
+      <Modal color={color}>
+        <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
+      </Modal>,
+      modal
+    )
+  )
 }

@@ -102,12 +102,12 @@ function Transaction({ tx }: { tx: Transaction }) {
   )
 }
 
-export function TransactionsDialog({ onClose }: { onClose: () => void }) {
+export function TransactionsDialog() {
   const [txs, setTxs] = useState(mockTxs)
 
   return (
     <>
-      <Header title="Recent transactions" onClose={onClose} ruled>
+      <Header title="Recent transactions" ruled>
         <Button>
           <TrashIcon onClick={() => setTxs([])} />
         </Button>
@@ -140,8 +140,8 @@ export default function Wallet() {
           <Icon />
         </Button>
         {open && (
-          <Dialog color="module">
-            <TransactionsDialog onClose={() => setOpen(false)} />
+          <Dialog color="module" onClose={() => setOpen(false)}>
+            <TransactionsDialog />
           </Dialog>
         )}
       </>

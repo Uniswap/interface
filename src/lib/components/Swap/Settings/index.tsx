@@ -15,12 +15,12 @@ import TransactionTtlInput from './TransactionTtlInput'
 
 const SettingsIcon = icon(SettingsSvg)
 
-export function SettingsDialog({ onClose }: { onClose: () => void }) {
+export function SettingsDialog() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   const resetSettings = useResetAtom(settingsAtom)
   return (
     <>
-      <Header title="Settings" onClose={onClose} ruled>
+      <Header title="Settings" ruled>
         <TYPE.subhead2>
           <TextButton onClick={resetSettings}>Reset</TextButton>
         </TYPE.subhead2>
@@ -44,8 +44,8 @@ export default function Settings() {
         <SettingsIcon />
       </Button>
       {open && (
-        <Dialog color="module">
-          <SettingsDialog onClose={() => setOpen(false)} />
+        <Dialog color="module" onClose={() => setOpen(false)}>
+          <SettingsDialog />
         </Dialog>
       )}
     </>

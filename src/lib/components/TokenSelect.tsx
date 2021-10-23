@@ -138,10 +138,9 @@ function RowToken({ value, onClick }: TokenButtonProps) {
 
 interface TokenSelectDialogProps {
   onChange: (token: Token) => void
-  onClose: () => void
 }
 
-export function TokenSelectDialog({ onChange, onClose }: TokenSelectDialogProps) {
+export function TokenSelectDialog({ onChange }: TokenSelectDialogProps) {
   const baseTokens = mockTokens
   const tokens = mockTokens
 
@@ -149,15 +148,14 @@ export function TokenSelectDialog({ onChange, onClose }: TokenSelectDialogProps)
   const onSelect = useCallback(
     (token: Token) => {
       onChange(token)
-      onClose()
     },
-    [onChange, onClose]
+    [onChange]
   )
 
   return (
     <>
       <Column gap={0.75}>
-        <Header title="Select a token" onClose={onClose} />
+        <Header title="Select a token" />
         <Row padded grow>
           <TYPE.body1 color={search ? 'primary' : 'secondary'}>
             <SearchInput value={search} onChange={setSearch} placeholder="Search by token name or address" />
@@ -188,12 +186,19 @@ interface TokenSelectProps {
 
 export default function TokenSelect({ value, onChange }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
+  const onSelect = useCallback(
+    (value: Token) => {
+      onChange(value)
+      setOpen(false)
+    },
+    [onChange, setOpen]
+  )
   return (
     <>
       <TokenOption value={value} onClick={() => setOpen(true)} />
       {open && (
-        <Dialog color="module">
-          <TokenSelectDialog onChange={onChange} onClose={() => setOpen(false)} />
+        <Dialog color="module" onClose={() => setOpen(false)}>
+          <TokenSelectDialog onChange={onSelect} />
         </Dialog>
       )}
     </>
