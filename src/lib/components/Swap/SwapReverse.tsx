@@ -1,24 +1,26 @@
 import styled, { icon } from 'lib/theme'
+import Layer from 'lib/theme/layer'
 import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
 
 const SwapReverseRow = styled(Row)`
+  bottom: -1.5em;
   position: absolute;
-  top: calc(-20px - 0.25em);
   width: 100%;
+  z-index: ${Layer.OVERLAY};
 `
 
 const ArrowUpIcon = styled(icon(ArrowUp, { color: 'primary' }))`
   position: absolute;
-  right: 8px;
-  top: 6px;
+  right: 0.5em;
+  top: 0.375em;
 `
 
 const ArrowDownIcon = styled(icon(ArrowDown, { color: 'primary' }))`
-  bottom: 6px;
-  left: 8px;
+  bottom: 0.375em;
+  left: 0.5em;
   position: absolute;
 `
 
@@ -31,9 +33,9 @@ const Overlay = styled.div`
 const SwapButton = styled(Button)`
   background-color: ${({ theme }) => theme.interactive};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-  height: 40px;
+  height: 2.5em;
   position: relative;
-  width: 40px;
+  width: 2.5em;
 
   > * {
     stroke-width: 4;

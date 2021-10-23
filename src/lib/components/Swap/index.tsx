@@ -1,7 +1,5 @@
-import styled from 'lib/theme'
 import { useState } from 'react'
 
-import Column from '../Column'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -11,16 +9,6 @@ import SwapInput from './SwapInput'
 import SwapOutput from './SwapOutput'
 import SwapReverse from './SwapReverse'
 import SwapToolbar from './SwapToolbar'
-
-const InputColumn = styled(Column)`
-  padding: 0.75em;
-  position: relative;
-`
-
-const OutputColumn = styled(InputColumn)`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-`
 
 export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
@@ -32,15 +20,13 @@ export default function Swap() {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <InputColumn gap={0.75}>
-            <SwapInput />
-          </InputColumn>
-          <OutputColumn gap={0.75}>
+          <SwapInput>
             <SwapReverse onClick={() => void 0} />
-            <SwapOutput />
+          </SwapInput>
+          <SwapOutput>
             <SwapToolbar />
             <SwapAction />
-          </OutputColumn>
+          </SwapOutput>
         </BoundaryProvider>
       </div>
     </>
