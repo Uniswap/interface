@@ -103,7 +103,7 @@ export default function Bridge() {
     setStep(BridgeStep.Initial)
     setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
-      currencyId: 'ETH',
+      symbol: 'ETH',
       typedValue: '',
       fromChainId: 1,
       toChainId: 42161
@@ -118,8 +118,11 @@ export default function Bridge() {
     if (!chainId || !bridgeService) return
     let address: string | undefined = ''
     if (bridgeCurrency instanceof Token) {
+      console.log('elo', { bridgeCurrency, typedValue, address })
+
       address = bridgeCurrency.address
     }
+    console.log('xd', { bridgeCurrency, typedValue, address })
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       await bridgeService.deposit(typedValue, address)
     } else {
@@ -129,7 +132,7 @@ export default function Bridge() {
 
   const handleModal = useCallback(async () => {
     setModalData({
-      currencyId: 'ETH',
+      symbol: 'ETH',
       typedValue: typedValue,
       fromChainId: fromNetwork.chainId,
       toChainId: toNetwork.chainId
@@ -142,7 +145,7 @@ export default function Bridge() {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       setModalData({
-        currencyId: tx.assetName,
+        symbol: tx.assetName,
         typedValue: tx.value,
         fromChainId: tx.fromChainId,
         toChainId: tx.toChainId

@@ -22,7 +22,7 @@ const setDisclaimerText = (isArbitrum: boolean) => {
 }
 
 export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, handleSubmit }: BridgeModalProps) => {
-  const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
+  const { status, symbol, typedValue, fromNetwork, toNetwork, error } = modalData
 
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
   const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
@@ -37,7 +37,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             amount={typedValue}
-            assetType={currencyId ?? ''}
+            assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             heading={'Bridging Initiated'}
@@ -48,7 +48,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgePendingModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            pendingText={`${typedValue} ${currencyId ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            pendingText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.COLLECTING:
@@ -60,7 +60,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
               setStep(BridgeStep.Initial)
             }}
             amount={typedValue}
-            assetType={currencyId ?? ''}
+            assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             heading={'Collecting Initiated'}
@@ -71,7 +71,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgeSuccesModal
             isOpen
             amount={typedValue}
-            assetType={currencyId ?? ''}
+            assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             onDismiss={() => {
@@ -102,7 +102,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
               handleResetBridge()
             }}
             amount={typedValue}
-            assetType={currencyId ?? ''}
+            assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             heading={txType}
