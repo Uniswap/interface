@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import Card, { DarkGreyCard } from 'components/Card'
-import { AutoRow, RowBetween } from 'components/Row'
+import Row, { AutoRow, RowBetween } from 'components/Row'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -161,7 +161,11 @@ export function PrivacyPolicy() {
               </AutoColumn>
             </DarkGreyCard>
           ))}
-          <div />
+          <Row justify="center" marginBottom="1rem">
+            <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </Row>
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
