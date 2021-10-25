@@ -1,6 +1,6 @@
 import { Provider as AtomProvider } from 'jotai'
-import styled, { getTheme, Provider as ThemeProvider, Theme } from 'lib/theme'
-import { ReactNode, useMemo, useState } from 'react'
+import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
+import { ReactNode, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'
 
@@ -19,7 +19,7 @@ const WidgetWrapper = styled.div`
 
 export interface WidgetProps {
   children: ReactNode
-  theme: { light: Partial<Theme>; dark: Partial<Theme>; darkMode?: boolean }
+  theme: Partial<Theme>
 }
 
 export default function Widget({ children, theme }: WidgetProps) {
