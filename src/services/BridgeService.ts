@@ -482,7 +482,6 @@ export class BridgeService {
         })
       )
     } catch (err) {
-      console.log('depo err:', { err })
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
@@ -529,7 +528,6 @@ export class BridgeService {
         })
       )
     } catch (err) {
-      console.log('depo err:', { err })
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }
   }
