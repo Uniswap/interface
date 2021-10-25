@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@ethersproject/providers'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, push, ref } from 'firebase/database'
 import { useCallback } from 'react'
@@ -16,7 +17,7 @@ const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_KEY
 
 const firebaseEnabled = typeof FIREBASE_API_KEY !== 'undefined'
 
-initializeFirebase()
+if (firebaseEnabled) initializeFirebase()
 
 export function useMonitoringEventCallback() {
   const { account, chainId } = useActiveWeb3React()
@@ -24,7 +25,10 @@ export function useMonitoringEventCallback() {
   return useCallback(
     async function log(
       type: MonitoringEvent,
-      { hash, walletAddress = account }: { hash?: string; walletAddress?: typeof account }
+      {
+        transactionResponse,
+        walletAddress = account,
+      }: { transactionResponse?: TransactionResponse; walletAddress?: typeof account }
     ) {
       if (!firebaseEnabled) return
 
@@ -38,7 +42,11 @@ export function useMonitoringEventCallback() {
         push(ref(db, 'trm'), {
           chainId,
           origin: location.origin,
-          signedTransactionHash: hash ?? 'n/a',
+          tx: transactionResponse
+            ? (({ hash, v, r, s }: Pick<TransactionResponse, 'hash' | 'v' | 'r' | 's'>) => ({ hash, v, r, s }))(
+                transactionResponse
+              )
+            : undefined,
           timestamp: Date.now(),
           type,
           walletAddress,
@@ -52,7 +60,6 @@ export function useMonitoringEventCallback() {
 }
 
 function initializeFirebase() {
-  if (!firebaseEnabled) return
   initializeApp({
     apiKey: process.env.REACT_APP_FIREBASE_KEY,
     authDomain: 'interface-monitoring.firebaseapp.com',

@@ -348,7 +348,7 @@ export default function AddLiquidity({
                 action: 'Add',
                 label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
               })
-              logMonitoringEvent('add liquidity/v3', { hash: response.hash })
+              logMonitoringEvent('add liquidity/v3', { transactionResponse: response })
             })
         })
         .catch((error) => {

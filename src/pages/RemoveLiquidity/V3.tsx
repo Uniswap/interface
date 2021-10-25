@@ -155,7 +155,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               action: 'RemoveV3',
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             })
-            logMonitoringEvent('remove liquidity/v3', { hash: response.hash })
+            logMonitoringEvent('remove liquidity/v3', { transactionResponse: response })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {

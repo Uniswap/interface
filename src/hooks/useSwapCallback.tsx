@@ -17,6 +17,7 @@ import { useArgentWalletContract } from './useArgentWalletContract'
 import { useV2RouterContract } from './useContract'
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
+import { useMonitoringEventCallback } from './useMonitoringEventCallback'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useActiveWeb3React } from './web3'
 
@@ -278,6 +279,8 @@ export function useSwapCallback(
 
   const addTransaction = useTransactionAdder()
 
+  const logMonitoringEvent = useMonitoringEventCallback()
+
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
@@ -391,6 +394,7 @@ export function useSwapCallback(
                     expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
                   }
             )
+            logMonitoringEvent('swap', { transactionResponse: response })
 
             return response.hash
           })
@@ -408,5 +412,16 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction, allowedSlippage])
+  }, [
+    trade,
+    library,
+    account,
+    chainId,
+    recipient,
+    recipientAddressOrName,
+    swapCalls,
+    addTransaction,
+    allowedSlippage,
+    logMonitoringEvent,
+  ])
 }

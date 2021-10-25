@@ -283,7 +283,7 @@ export default function RemoveLiquidity({
             action: 'Remove',
             label: [currencyA.symbol, currencyB.symbol].join('/'),
           })
-          logMonitoringEvent('remove liquidity/v2', { hash: response.hash })
+          logMonitoringEvent('remove liquidity/v2', { transactionResponse: response })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)
