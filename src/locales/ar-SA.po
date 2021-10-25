@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 13:12\n"
+"PO-Revision-Date: 2021-10-25 16:06\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -960,6 +960,10 @@ msgstr "يتعلم أكثر"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "تعرف على توفير السيولة"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "يتعلم أكثر"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

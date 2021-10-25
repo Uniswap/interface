@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 13:12\n"
+"PO-Revision-Date: 2021-10-25 16:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -961,6 +961,10 @@ msgstr "Tudj meg többet"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Tudjon meg többet a likviditás biztosításáról"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Tudj meg többet"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx

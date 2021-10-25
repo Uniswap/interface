@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 13:12\n"
+"PO-Revision-Date: 2021-10-25 16:06\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -960,6 +960,10 @@ msgstr "더 알아보기"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "유동성 제공에 대해 알아보기"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "더 알아보기"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
