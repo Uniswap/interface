@@ -2,33 +2,34 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, push, ref } from 'firebase/database'
 import { useCallback } from 'react'
+import { TransactionInfo, TransactionType } from 'state/transactions/actions'
 
 import { useActiveWeb3React } from './web3'
 
-type MonitoringEvent =
-  | 'wallet connected'
-  | 'swap'
-  | 'add liquidity/v3'
-  | 'add liquidity/v2'
-  | 'remove liquidity/v3'
-  | 'remove liquidity/v2'
+type PartialTransactionResponse = Pick<TransactionResponse, 'hash' | 'v' | 'r' | 's'>
+
+const SUPPORTED_TRANSACTION_TYPES = [
+  TransactionType.ADD_LIQUIDITY_V2_POOL,
+  TransactionType.ADD_LIQUIDITY_V3_POOL,
+  TransactionType.CREATE_V3_POOL,
+  TransactionType.REMOVE_LIQUIDITY_V3,
+  TransactionType.SWAP,
+]
 
 const FIREBASE_API_KEY = process.env.REACT_APP_FIREBASE_KEY
-
 const firebaseEnabled = typeof FIREBASE_API_KEY !== 'undefined'
-
 if (firebaseEnabled) initializeFirebase()
 
-export function useMonitoringEventCallback() {
-  const { account, chainId } = useActiveWeb3React()
+function useMonitoringEventCallback() {
+  const { chainId } = useActiveWeb3React()
 
   return useCallback(
     async function log(
-      type: MonitoringEvent,
+      type: string,
       {
         transactionResponse,
-        walletAddress = account,
-      }: { transactionResponse?: TransactionResponse; walletAddress?: typeof account }
+        walletAddress,
+      }: { transactionResponse?: PartialTransactionResponse; walletAddress: string | undefined }
     ) {
       if (!firebaseEnabled) return
 
@@ -42,12 +43,8 @@ export function useMonitoringEventCallback() {
         push(ref(db, 'trm'), {
           chainId,
           origin: location.origin,
-          tx: transactionResponse
-            ? (({ hash, v, r, s }: Pick<TransactionResponse, 'hash' | 'v' | 'r' | 's'>) => ({ hash, v, r, s }))(
-                transactionResponse
-              )
-            : undefined,
           timestamp: Date.now(),
+          tx: transactionResponse,
           type,
           walletAddress,
         })
@@ -55,7 +52,37 @@ export function useMonitoringEventCallback() {
         console.debug('Error adding document: ', e)
       }
     },
-    [account, chainId]
+    [chainId]
+  )
+}
+
+export function useTransactionMonitoringEventCallback() {
+  const { account } = useActiveWeb3React()
+  const log = useMonitoringEventCallback()
+
+  return useCallback(
+    (info: TransactionInfo, transactionResponse: TransactionResponse) => {
+      if (SUPPORTED_TRANSACTION_TYPES.includes(info.type)) {
+        log(TransactionType[info.type], {
+          transactionResponse: (({ hash, v, r, s }: PartialTransactionResponse) => ({ hash, v, r, s }))(
+            transactionResponse
+          ),
+          walletAddress: account ?? undefined,
+        })
+      }
+    },
+    [account, log]
+  )
+}
+
+export function useWalletConnectMonitoringEventCallback() {
+  const log = useMonitoringEventCallback()
+
+  return useCallback(
+    (walletAddress) => {
+      log('WALLET_CONNECTED', { walletAddress })
+    },
+    [log]
   )
 }
 

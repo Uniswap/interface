@@ -5,7 +5,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AutoColumn } from 'components/Column'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
+import { useWalletConnectMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -151,7 +151,7 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const logMonitoringEvent = useMonitoringEventCallback()
+  const logMonitoringEvent = useWalletConnectMonitoringEventCallback()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -203,7 +203,7 @@ export default function WalletModal({
       activate(connector, undefined, true)
         .then(async () => {
           const walletAddress = await connector.getAccount()
-          logMonitoringEvent('wallet connected', { walletAddress })
+          logMonitoringEvent({ walletAddress })
         })
         .catch((error) => {
           if (error instanceof UnsupportedChainIdError) {
