@@ -10,6 +10,7 @@ import SwapRoute from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
@@ -79,6 +80,8 @@ const StyledInfo = styled(Info)`
 export default function Swap({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+
+  const logMonitoringEvent = useMonitoringEventCallback()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -285,6 +288,7 @@ export default function Swap({ history }: RouteComponentProps) {
             'MH',
           ].join('/'),
         })
+        logMonitoringEvent('swap', { hash })
       })
       .catch((error) => {
         setSwapState({
@@ -295,7 +299,17 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [swapCallback, priceImpact, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
+  }, [
+    swapCallback,
+    priceImpact,
+    tradeToConfirm,
+    showConfirm,
+    recipient,
+    recipientAddress,
+    account,
+    trade,
+    logMonitoringEvent,
+  ])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)

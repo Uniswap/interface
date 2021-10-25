@@ -3,6 +3,7 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -56,6 +57,8 @@ export default function RemoveLiquidity({
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useContext(ThemeContext)
+
+  const logMonitoringEvent = useMonitoringEventCallback()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -280,6 +283,7 @@ export default function RemoveLiquidity({
             action: 'Remove',
             label: [currencyA.symbol, currencyB.symbol].join('/'),
           })
+          logMonitoringEvent('remove liquidity/v2', { hash: response.hash })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)

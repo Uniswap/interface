@@ -5,6 +5,7 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import DowntimeWarning from 'components/DowntimeWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -88,6 +89,8 @@ export default function AddLiquidity({
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
+
+  const logMonitoringEvent = useMonitoringEventCallback()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
@@ -345,6 +348,7 @@ export default function AddLiquidity({
                 action: 'Add',
                 label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
               })
+              logMonitoringEvent('add liquidity/v3', { hash: response.hash })
             })
         })
         .catch((error) => {

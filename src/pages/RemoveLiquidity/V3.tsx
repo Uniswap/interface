@@ -19,6 +19,7 @@ import Toggle from 'components/Toggle'
 import { SupportedChainId } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -67,6 +68,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
   const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
+
+  const logMonitoringEvent = useMonitoringEventCallback()
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
@@ -152,6 +155,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               action: 'RemoveV3',
               label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             })
+            logMonitoringEvent('remove liquidity/v3', { hash: response.hash })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {
@@ -168,20 +172,21 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         console.error(error)
       })
   }, [
-    tokenId,
+    positionManager,
     liquidityValue0,
     liquidityValue1,
     deadline,
-    allowedSlippage,
     account,
-    addTransaction,
-    positionManager,
     chainId,
     feeValue0,
     feeValue1,
-    library,
-    liquidityPercentage,
     positionSDK,
+    liquidityPercentage,
+    library,
+    tokenId,
+    allowedSlippage,
+    logMonitoringEvent,
+    addTransaction,
   ])
 
   const handleDismissConfirmation = useCallback(() => {

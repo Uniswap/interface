@@ -2,9 +2,12 @@ import { Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { AutoRow } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import { PrivacyPolicy } from 'components/PrivacyPolicy'
+import Row, { AutoRow, RowBetween } from 'components/Row'
+import { useMonitoringEventCallback } from 'hooks/useMonitoringEventCallback'
 import { useEffect, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, ArrowRight, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import styled from 'styled-components/macro'
 
@@ -19,7 +22,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, TYPE } from '../../theme'
 import { isMobile } from '../../utils/userAgent'
 import AccountDetails from '../AccountDetails'
-import { LightCard } from '../Card'
+import Card, { LightCard } from '../Card'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -106,11 +109,22 @@ const HoverText = styled.div`
   }
 `
 
+const LinkCard = styled(Card)`
+  background-color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.white};
+
+  :hover {
+    cursor: pointer;
+    filter: brightness(0.9);
+  }
+`
+
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
   PENDING: 'pending',
+  LEGAL: 'legal',
 }
 
 export default function WalletModal({
@@ -126,6 +140,7 @@ export default function WalletModal({
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const previousWalletView = usePrevious(walletView)
 
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
@@ -135,6 +150,8 @@ export default function WalletModal({
   const toggleWalletModal = useWalletModalToggle()
 
   const previousAccount = usePrevious(account)
+
+  const logMonitoringEvent = useMonitoringEventCallback()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -183,13 +200,18 @@ export default function WalletModal({
     }
 
     connector &&
-      activate(connector, undefined, true).catch((error) => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(connector) // a little janky...can't use setError because the connector isn't set
-        } else {
-          setPendingError(true)
-        }
-      })
+      activate(connector, undefined, true)
+        .then(async () => {
+          const walletAddress = await connector.getAccount()
+          logMonitoringEvent('wallet connected', { walletAddress })
+        })
+        .catch((error) => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(connector) // a little janky...can't use setError because the connector isn't set
+          } else {
+            setPendingError(true)
+          }
+        })
   }
 
   // close wallet modal if fortmatic modal is active
@@ -307,6 +329,27 @@ export default function WalletModal({
         </UpperSection>
       )
     }
+    if (walletView === WALLET_VIEWS.LEGAL) {
+      return (
+        <UpperSection>
+          <HeaderRow>
+            <HoverText
+              onClick={() => {
+                setWalletView(previousWalletView ?? WALLET_VIEWS.ACCOUNT)
+              }}
+            >
+              <ArrowLeft />
+            </HoverText>
+            <Row justify="center">
+              <TYPE.mediumHeader>
+                <Trans>Legal & Privacy</Trans>
+              </TYPE.mediumHeader>
+            </Row>
+          </HeaderRow>
+          <PrivacyPolicy />
+        </UpperSection>
+      )
+    }
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
@@ -337,34 +380,47 @@ export default function WalletModal({
         ) : (
           <HeaderRow>
             <HoverText>
-              <Trans>Connect to a wallet</Trans>
+              <Trans>Connect a wallet</Trans>
             </HoverText>
           </HeaderRow>
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '16px' }}>
-            <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.black fontSize={14}>
-                <Trans>
-                  By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                  acknowledge that you have read and understand the{' '}
-                  <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
-                </Trans>
-              </TYPE.black>
-            </AutoRow>
-          </LightCard>
-          {walletView === WALLET_VIEWS.PENDING ? (
-            <PendingView
-              connector={pendingWallet}
-              error={pendingError}
-              setPendingError={setPendingError}
-              tryActivation={tryActivation}
-            />
-          ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
+          <AutoColumn gap="16px">
+            <LightCard>
+              <AutoRow style={{ flexWrap: 'nowrap' }}>
+                <TYPE.black fontSize={14}>
+                  <Trans>
+                    By connecting a wallet, you agree to Uniswap Labs’{' '}
+                    <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                    acknowledge that you have read and understand the Uniswap{' '}
+                    <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+                  </Trans>
+                </TYPE.black>
+              </AutoRow>
+            </LightCard>
+            <LinkCard padding=".5rem" $borderRadius=".75rem" onClick={() => setWalletView(WALLET_VIEWS.LEGAL)}>
+              <RowBetween>
+                <AutoRow gap="4px">
+                  <Info size={20} />
+                  <TYPE.white fontSize={14}>
+                    <Trans>How this app uses APIs</Trans>
+                  </TYPE.white>
+                </AutoRow>
+                <ArrowRight size={16} />
+              </RowBetween>
+            </LinkCard>
+            {walletView === WALLET_VIEWS.PENDING ? (
+              <PendingView
+                connector={pendingWallet}
+                error={pendingError}
+                setPendingError={setPendingError}
+                tryActivation={tryActivation}
+              />
+            ) : (
+              <OptionGrid>{getOptions()}</OptionGrid>
+            )}
+          </AutoColumn>
         </ContentWrapper>
       </UpperSection>
     )
