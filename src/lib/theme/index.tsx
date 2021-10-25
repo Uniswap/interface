@@ -108,7 +108,7 @@ function getDefaultTheme(): Omit<Theme, Color> {
 }
 
 interface ThemeProviderProps {
-  theme: Partial<Theme>
+  theme?: Partial<Theme>
   children: ReactNode
 }
 

@@ -19,7 +19,7 @@ const WidgetWrapper = styled.div`
 
 export interface WidgetProps {
   children: ReactNode
-  theme: Partial<Theme>
+  theme?: Partial<Theme>
 }
 
 export default function Widget({ children, theme }: WidgetProps) {

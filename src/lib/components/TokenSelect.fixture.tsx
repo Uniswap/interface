@@ -5,7 +5,7 @@ import Widget from './Widget'
 export default (
   <Widget>
     <Modal color="module">
-      <TokenSelectDialog onChange={() => void 0} onClose={() => void 0} />
+      <TokenSelectDialog onChange={() => void 0} />
     </Modal>
   </Widget>
 )
