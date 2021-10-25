@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount, Token } from '@swapr/sdk'
+import { CurrencyAmount } from '@swapr/sdk'
 
 import { Tabs } from './Tabs'
 import AppBody from '../AppBody'
@@ -23,6 +23,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
+import { isToken } from '../../hooks/Tokens'
 
 const Wrapper = styled.div`
   max-width: 432px;
@@ -117,12 +118,10 @@ export default function Bridge() {
   const handleSubmit = useCallback(async () => {
     if (!chainId || !bridgeService) return
     let address: string | undefined = ''
-    if (bridgeCurrency instanceof Token) {
-      console.log('elo', { bridgeCurrency, typedValue, address })
 
+    if (isToken(bridgeCurrency)) {
       address = bridgeCurrency.address
     }
-    console.log('xd', { bridgeCurrency, typedValue, address })
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
       await bridgeService.deposit(typedValue, address)
     } else {
@@ -132,13 +131,13 @@ export default function Bridge() {
 
   const handleModal = useCallback(async () => {
     setModalData({
-      symbol: 'ETH',
+      symbol: bridgeCurrency?.symbol,
       typedValue: typedValue,
       fromChainId: fromNetwork.chainId,
       toChainId: toNetwork.chainId
     })
     setModalStatus(BridgeModalStatus.DISCLAIMER)
-  }, [fromNetwork.chainId, toNetwork.chainId, typedValue, setModalData, setModalStatus])
+  }, [setModalData, bridgeCurrency?.symbol, typedValue, fromNetwork.chainId, toNetwork.chainId, setModalStatus])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {

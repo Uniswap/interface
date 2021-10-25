@@ -95,12 +95,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
         return (
           <BridgeDisclaimerModal
             isOpen
-            onConfirm={() => {
-              handleSubmit()
-            }}
-            onDismiss={() => {
-              handleResetBridge()
-            }}
+            onConfirm={handleSubmit}
+            onDismiss={handleResetBridge}
             amount={typedValue}
             assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}

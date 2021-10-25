@@ -117,7 +117,6 @@ export function useBridgeInfo() {
   const { account, chainId } = useActiveWeb3React()
   const { typedValue, currencyId, fromNetwork, toNetwork } = useBridgeState()
 
-  console.log(currencyId)
   const bridgeCurrency = useCurrency(currencyId)
   const parsedAmount = tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId)
 

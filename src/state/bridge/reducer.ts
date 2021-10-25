@@ -143,7 +143,7 @@ export default createReducer<BridgeState>(initialState, builder =>
     .addCase(setBridgeModalData, (state, { payload: { symbol, typedValue, fromChainId, toChainId } }) => {
       return {
         ...state,
-        symbol,
+        // currencyId: symbol,
         typedValue,
         fromNetwork: {
           ...state.fromNetwork,
