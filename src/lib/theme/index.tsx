@@ -1,5 +1,9 @@
 /* eslint-disable no-restricted-imports */
-import { ReactNode } from 'react'
+import assert from 'assert'
+import merge from 'lodash/merge'
+import { transparentize } from 'polished'
+import { readableColor } from 'polished'
+import { createContext, Fragment, ReactNode, useContext, useMemo } from 'react'
 import { Icon } from 'react-feather'
 import styled, {
   keyframes as styledKeyframes,
@@ -31,44 +35,116 @@ export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
   `
 }
 
-function colors(darkMode: boolean): Colors {
-  return {
-    // surface
-    accent: '#2172E5',
-    container: '#191B1F',
-    module: '#2C2F36',
-    interactive: '#40444F',
-    outline: '#565A59',
-    dialog: '#000000',
+const light: Colors = {
+  // surface
+  accent: '#FF007A',
+  container: '#191B1F',
+  module: '#2C2F36',
+  interactive: '#40444F',
+  outline: '#565A59',
+  dialog: '#000000',
 
-    // text
-    primary: darkMode ? '#FFFFFF' : '#000000',
-    secondary: '#888D9B',
-    hint: '#6C7284',
+  // text
+  primary: '#000000',
+  secondary: '#888D9B',
+  hint: '#6C7284',
+  contrast: '#FFFFFF',
 
-    // state
-    active: '#2172E5',
-    success: '#27AE60',
-    warning: '#F3B71E',
-    error: '#FD4040',
-  }
+  // state
+  active: '#2172E5',
+  success: '#27AE60',
+  warning: '#F3B71E',
+  error: '#FD4040',
 }
 
-export function getTheme(darkMode: boolean): Theme {
+const dark: Colors = {
+  // surface
+  accent: '#2172E5',
+  container: '#191B1F',
+  module: '#2C2F36',
+  interactive: '#40444F',
+  outline: '#565A59',
+  dialog: '#000000',
+
+  // text
+  primary: '#FFFFFF',
+  secondary: '#888D9B',
+  hint: '#6C7284',
+  contrast: '#FFFFFF',
+
+  // state
+  active: '#2172E5',
+  success: '#27AE60',
+  warning: '#F3B71E',
+  error: '#FD4040',
+}
+
+function useColors(color: string, { light, dark }: Theme): Partial<Colors> {
+  return useMemo(() => {
+    const primary = readableColor(color, light.primary, dark.primary)
+    const interactive = transparentize(0.46, primary)
+    return {
+      // surface
+      interactive,
+      outline: transparentize(0.76, primary),
+
+      // text
+      primary: transparentize(0.4, primary),
+      secondary: transparentize(0.46, primary),
+      hint: transparentize(0.76, primary),
+      contrast: readableColor(interactive),
+    }
+  }, [color, light, dark])
+}
+
+function getDefaultTheme(): Omit<Theme, Color> {
   return {
-    ...colors(darkMode),
+    darkMode: true,
     fontFamily: '"Inter var", sans-serif',
     borderRadius: 1,
+    light,
+    dark,
   }
 }
 
 interface ThemeProviderProps {
-  theme: Theme
+  theme: Partial<Theme>
   children: ReactNode
 }
 
 const ThemedProvider = StyledProvider as unknown as ThemeProviderComponent<Theme>
+const OriginalTheme = createContext<Theme | undefined>(undefined)
 
 export function Provider({ theme, children }: ThemeProviderProps) {
+  const value: Theme = useMemo(() => {
+    const value = merge({}, getDefaultTheme(), theme)
+    const colors: Colors = value.darkMode ? value.dark : value.light
+    return merge({}, colors, value)
+  }, [theme])
+  return (
+    <OriginalTheme.Provider value={value}>
+      <ThemedProvider theme={value}>{children}</ThemedProvider>
+    </OriginalTheme.Provider>
+  )
+}
+
+interface DynamicThemeProviderProps {
+  color?: string
+  children: ReactNode
+}
+
+/** Applies a dynamic theme. */
+export function DynamicProvider({ color, children }: DynamicThemeProviderProps) {
+  const theme = useTheme()
+  const { module } = theme
+  const colors = useColors(color || module, theme)
+  const value = useMemo(() => ({ ...theme, module: color || module, ...colors }), [theme, module, color, colors])
+  return color ? <ThemedProvider theme={value}>{children}</ThemedProvider> : <>{children}</>
+}
+
+/** Applies the original theme, ignoring any dynamic theme. */
+export function OriginalProvider({ children }: { children: ReactNode }) {
+  const theme = useContext(OriginalTheme)
+  assert(theme)
   return <ThemedProvider theme={theme}>{children}</ThemedProvider>
 }

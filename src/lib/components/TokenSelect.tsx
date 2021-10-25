@@ -2,6 +2,7 @@ import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
+import { transparentize } from 'polished'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 
@@ -41,8 +42,8 @@ const OptionTokenButton = styled(TokenButton)<{ empty?: boolean; theme: Theme }>
   padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
 
   :hover {
+    background-color: ${({ empty, theme }) => transparentize(0.3, empty ? theme.active : theme.interactive)};
     opacity: 1;
-    background-color: ${({ empty, theme }) => (empty ? theme.active : theme.interactive)}B2; // 0.7 alpha
   }
 `
 
@@ -70,7 +71,7 @@ const TokenImg = styled.img`
   width: 1.25em;
 `
 
-const ChevronDownIcon = styled(icon(ChevronDown, { color: 'primary' }))`
+const ChevronDownIcon = styled(icon(ChevronDown, { color: 'contrast' }))`
   stroke-width: 3;
 `
 
@@ -82,7 +83,7 @@ interface TokenOptionProps {
 function TokenOption({ value, onClick }: TokenOptionProps) {
   return (
     <OptionTokenButton onClick={onClick} empty={!value}>
-      <TYPE.buttonLarge>
+      <TYPE.buttonLarge color="contrast">
         <TokenButtonRow gap={0.5}>
           {value ? (
             <>

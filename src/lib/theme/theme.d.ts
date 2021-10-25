@@ -1,3 +1,5 @@
+import { toColorString } from 'polished'
+
 export type Color = string
 
 export interface Colors {
@@ -13,6 +15,7 @@ export interface Colors {
   primary: Color
   secondary: Color
   hint: Color
+  contrast: Color // white or black
 
   // state
   active: Color
@@ -21,7 +24,13 @@ export interface Colors {
   error: Color
 }
 
-export interface Theme extends Colors {
+export interface Attributes {
+  darkMode: boolean
   fontFamily: string
   borderRadius: number // em
+}
+
+export interface Theme extends Colors, Attributes {
+  light: Colors
+  dark: Colors
 }

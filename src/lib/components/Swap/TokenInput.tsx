@@ -15,7 +15,7 @@ const TokenInputRow = styled(Row)`
 
 const BookIcon = icon(Book)
 
-interface TokenInputProps {
+export interface TokenInputProps {
   value?: number
   token?: Token
   onChangeValue: (value: number | undefined) => void

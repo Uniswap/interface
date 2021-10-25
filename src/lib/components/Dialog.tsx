@@ -1,4 +1,4 @@
-import styled, { Color, icon, Theme } from 'lib/theme'
+import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
 import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
 import { createPortal } from 'react-dom'
@@ -74,9 +74,11 @@ export default function Dialog({ color, children, onClose }: DialogProps) {
   return (
     modal &&
     createPortal(
-      <Modal color={color}>
-        <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
-      </Modal>,
+      <OriginalThemeProvider>
+        <Modal color={color}>
+          <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
+        </Modal>
+      </OriginalThemeProvider>,
       modal
     )
   )
