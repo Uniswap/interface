@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-17 01:29\n"
+"PO-Revision-Date: 2021-10-25 13:12\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Добавляя этот список, вы подразумеваете, что доверяете его данным. Любой может создать список, включая создание поддельных версий существующих списков, а также списков, якобы сделанных проектами, у которых нет списков."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap</1>."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "Подключая кошелек, вы соглашаетесь с Условиями обслуживания</0> <0>и подтверждаете, что прочитали и поняли Отказ от ответственности</1><1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -516,6 +516,7 @@ msgstr "Подтвердите эту транзакцию в своём кош�
 msgid "Confirm transaction in wallet"
 msgstr "Подтвердите транзакцию в кошельке"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,14 +531,10 @@ msgstr "Подтвердите транзакцию в кошельке"
 msgid "Connect Wallet"
 msgstr "Подключить кошелёк"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Подключить кошелёк"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
 msgstr "Подключить кошелёк"
 
 #: src/pages/PoolFinder/index.tsx
@@ -849,6 +846,10 @@ msgstr "Скрыть"
 msgid "High Price Impact"
 msgstr "Высокое влияние на цену"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Как это приложение использует API"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -959,6 +960,12 @@ msgstr "Узнать больше"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Узнать подробнее о предоставлении ликвидности"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Юридическая информация и конфиденциальность"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1344,6 +1351,10 @@ msgstr "Предлагаемое действие"
 msgid "Proposer"
 msgstr "Автор предложения"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Заявление об отказе от ответственности по протоколу"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "В очереди"
@@ -1580,6 +1591,26 @@ msgstr "%, который вы заработаете в виде комисси
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Инвариант Uniswap x * y = k не соблюдается при обмене. Обычно это означает, что один из токенов, которые вы обмениваете, имеет особенности поведения при его передаче."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Приложение извлекает данные блокчейна из размещенной службы The Graph."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Приложение извлекает данные из сети и создает вызовы контрактов с помощью Infura API."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Приложение получает оптимальный торговый маршрут с сервера Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Приложение регистрирует анонимную статистику использования, чтобы со временем улучшаться."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Приложение безопасно собирает адрес вашего кошелька и передает его TRM Labs Inc. из соображений риска и соблюдения требований."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Невозможно перевести входящий токен. Возможно, имеется проблема с входящим токеном."
@@ -1619,6 +1650,10 @@ msgstr "Нет данных о ликвидности."
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Пары с этими токенами создаются чаще всего."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Это приложение использует следующие сторонние API:"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
@@ -1795,6 +1830,10 @@ msgstr "Неожиданная проблема при прогнозирова�
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Управление Uniswap"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Условия использования Uniswap Labs"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
