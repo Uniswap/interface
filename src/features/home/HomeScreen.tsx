@@ -37,6 +37,10 @@ export function HomeScreen({ navigation }: Props) {
     navigation.navigate(Screens.Transfer)
   }
 
+  const onPressViewBalances = () => {
+    navigation.navigate(Screens.Balances)
+  }
+
   const onPressGetBalance = async () => {
     if (!activeAccount) return
     dispatch(fetchBalancesActions.trigger(activeAccount.address))
@@ -55,6 +59,7 @@ export function HomeScreen({ navigation }: Props) {
         </Text>
         <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
         <Button label={t('List Accounts')} onPress={onPressList} mt="md" />
+        <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
         <Text textAlign="center" mt="xl">

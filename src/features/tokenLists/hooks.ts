@@ -1,34 +1,25 @@
+// Copied from https://github.com/Uniswap/interface/blob/main/src/state/lists/hooks.ts
+
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { Token } from '@uniswap/sdk-core'
-import { TokenInfo, TokenList } from '@uniswap/token-lists'
+import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { SupportedChainId } from 'src/constants/chains'
 import BROKEN_LIST from 'src/constants/tokenLists/broken.tokenlist.json'
 import { UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
 import UNSUPPORTED_TOKEN_LIST from 'src/constants/tokenLists/unsupported.tokenlist.json'
-import { TokenAddressMap } from 'src/features/tokenLists/types'
+import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import sortByListPriority from 'src/features/tokenLists/utils'
 import { WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
-import { useUserAddedTokens } from 'src/features/tokens/hooks'
-import { normalizeAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 
-/**
- * =========
- * SECTION 1
- * =========
- * COPIED FROM https://github.com/Uniswap/interface/blob/main/src/state/lists/hooks.ts
- */
+const listCache: WeakMap<TokenList, ChainIdToListedTokens> | null =
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, ChainIdToListedTokens>() : null
 
-const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
-
-function listToTokenMap(list: TokenList): TokenAddressMap {
+function listToTokenMap(list: TokenList): ChainIdToListedTokens {
   const result = listCache?.get(list)
   if (result) return result
 
-  const map = list.tokens.reduce<TokenAddressMap>((tokenMap, tokenInfo) => {
+  const map = list.tokens.reduce<ChainIdToListedTokens>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
       logger.error(`Duplicate token! ${token.address}`)
@@ -40,7 +31,7 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
       list,
     }
     return tokenMap
-  }, {}) as TokenAddressMap
+  }, {}) as ChainIdToListedTokens
   listCache?.set(list, map)
   return map
 }
@@ -56,7 +47,10 @@ export function useAllLists() {
  * @param map1 the base token map
  * @param map2 the map of additional tokens to add to the base map
  */
-export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+export function combineMaps(
+  map1: ChainIdToListedTokens,
+  map2: ChainIdToListedTokens
+): ChainIdToListedTokens {
   const chainIds = Object.keys(
     Object.keys(map1)
       .concat(Object.keys(map2))
@@ -66,18 +60,18 @@ export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): Token
       }, {})
   ).map((id) => parseInt(id, 10))
 
-  return chainIds.reduce<TokenAddressMap>((memo, chainId) => {
+  return chainIds.reduce<ChainIdToListedTokens>((memo, chainId) => {
     memo[chainId] = {
       ...map2[chainId],
       // map1 takes precedence
       ...map1[chainId],
     }
     return memo
-  }, {}) as TokenAddressMap
+  }, {}) as ChainIdToListedTokens
 }
 
 // merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
+function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainIdToListedTokens {
   const lists = useAllLists()
   return useMemo(() => {
     if (!urls) return {}
@@ -116,14 +110,14 @@ export function useInactiveListUrls(): string[] {
 }
 
 // get all the tokens from active lists, combine with local default tokens
-export function useCombinedActiveList(): TokenAddressMap {
+export function useCombinedActiveList(): ChainIdToListedTokens {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
   return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
 }
 
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
-export function useUnsupportedTokenList(): TokenAddressMap {
+export function useUnsupportedTokenList(): ChainIdToListedTokens {
   // get hard-coded broken tokens
   const brokenListMap = useMemo(() => listToTokenMap(BROKEN_LIST), [])
 
@@ -143,139 +137,4 @@ export function useUnsupportedTokenList(): TokenAddressMap {
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))
-}
-
-/**
- * =========
- * SECTION 2
- * =========
- * COPIED FROM https://github.com/Uniswap/interface/blob/main/src/hooks/Tokens.ts
- */
-
-// reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(
-  tokenMap: TokenAddressMap,
-  includeUserAdded: boolean
-): { [address: Address]: Token } {
-  const chainId = SupportedChainId.MAINNET // TODO get chainId from context
-  const userAddedTokens = useUserAddedTokens()
-
-  return useMemo(() => {
-    if (!chainId) return {}
-
-    // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId] ?? {}).reduce<{
-      [address: Address]: Token
-    }>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token
-      return newMap
-    }, {})
-
-    if (includeUserAdded) {
-      return (
-        userAddedTokens
-          // reduce into all ALL_TOKENS filtered by the current chain
-          .reduce<{ [address: Address]: Token }>(
-            (memo, token) => {
-              memo[token.address] = token
-              return memo
-            },
-            // must make a copy because reduce modifies the map, and we do not
-            // want to make a copy in every iteration
-            { ...mapWithoutUrls }
-          )
-      )
-    }
-
-    return mapWithoutUrls
-  }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
-}
-
-export function useAllTokens(): { [address: Address]: Token } {
-  const allTokens = useCombinedActiveList()
-  return useTokensFromMap(allTokens, true)
-}
-
-export function useUnsupportedTokens(): { [address: Address]: Token } {
-  const unsupportedTokensMap = useUnsupportedTokenList()
-  return useTokensFromMap(unsupportedTokensMap, false)
-}
-
-export function useSearchInactiveTokenLists(
-  search: string | undefined,
-  minResults = 10
-): WrappedTokenInfo[] {
-  const lists = useAllLists()
-  const inactiveUrls = useInactiveListUrls()
-  const chainId = SupportedChainId.MAINNET // TODO get chainId from context
-  const activeTokens = useAllTokens()
-  return useMemo(() => {
-    if (!search || search.trim().length === 0) return []
-    const tokenFilter = createTokenFilterFunction(search)
-    const result: WrappedTokenInfo[] = []
-    const addressSet: { [address: Address]: true } = {}
-    for (const url of inactiveUrls) {
-      const list = lists[url].current
-      if (!list) continue
-      for (const tokenInfo of list.tokens) {
-        if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-          const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
-          if (!(wrapped.address in activeTokens) && !addressSet[wrapped.address]) {
-            addressSet[wrapped.address] = true
-            result.push(wrapped)
-            if (result.length >= minResults) return result
-          }
-        }
-      }
-    }
-    return result
-  }, [activeTokens, chainId, inactiveUrls, lists, minResults, search])
-}
-
-export function useIsTokenActive(token: Token | undefined | null): boolean {
-  const activeTokens = useAllTokens()
-
-  if (!activeTokens || !token) {
-    return false
-  }
-
-  return !!activeTokens[token.address]
-}
-
-/**
- * Create a filter function to apply to a token for whether it matches a particular search query
- * @param search the search query to apply to the token
- * Copied from https://github.com/Uniswap/interface/blob/main/src/components/SearchModal/filtering.ts
- */
-export function createTokenFilterFunction<T extends Token | TokenInfo>(
-  search: string
-): (tokens: T) => boolean {
-  const searchingAddress = normalizeAddress(search)
-
-  if (searchingAddress) {
-    const lower = searchingAddress.toLowerCase()
-    return (t: T) =>
-      'isToken' in t ? searchingAddress === t.address : lower === t.address.toLowerCase()
-  }
-
-  const lowerSearchParts = search
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((s) => s.length > 0)
-
-  if (lowerSearchParts.length === 0) return () => true
-
-  const matchesSearch = (s: string): boolean => {
-    const sParts = s
-      .toLowerCase()
-      .split(/\s+/)
-      .filter((str) => str.length > 0)
-
-    return lowerSearchParts.every(
-      (p) => p.length === 0 || sParts.some((sp) => sp.startsWith(p) || sp.endsWith(p))
-    )
-  }
-
-  return ({ name, symbol }: T): boolean =>
-    Boolean((symbol && matchesSearch(symbol)) || (name && matchesSearch(name)))
 }

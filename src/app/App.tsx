@@ -13,12 +13,14 @@ import { Screens } from 'src/app/Screens'
 import { store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { BalancesScreen } from 'src/features/balances/BalancesScreen'
 import { HomeScreen } from 'src/features/home/HomeScreen'
 import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdater } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
+import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { darkTheme, theme } from 'src/styles/theme'
 
@@ -62,6 +64,16 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
               name={Screens.Home}
               component={HomeScreen}
               options={{ title: 'Uniswap | Home' }}
+            />
+            <Stack.Screen
+              name={Screens.Balances}
+              component={BalancesScreen}
+              options={{ title: 'Uniswap | Balances' }}
+            />
+            <Stack.Screen
+              name={Screens.TokenDetails}
+              component={TokenDetailsScreen}
+              options={{ title: 'Uniswap | Token' }}
             />
             <Stack.Screen
               name={Screens.Transfer}

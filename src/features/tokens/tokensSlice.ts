@@ -1,9 +1,15 @@
 // Shares similarities with https://github.com/Uniswap/interface/blob/main/src/state/user/reducer.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { DEFAULT_WATCHED_TOKENS } from 'src/constants/watchedTokens'
 import { SerializedPair, SerializedToken } from 'src/features/tokenLists/types'
 
 interface Tokens {
-  tokens: {
+  watchedTokens: {
+    [chainId: number]: {
+      [address: Address]: boolean
+    }
+  }
+  customTokens: {
     [chainId: number]: {
       [address: Address]: SerializedToken
     }
@@ -17,7 +23,8 @@ interface Tokens {
 }
 
 const initialState: Tokens = {
-  tokens: {},
+  watchedTokens: DEFAULT_WATCHED_TOKENS,
+  customTokens: {},
   tokenPairs: {},
 }
 
@@ -25,15 +32,25 @@ const slice = createSlice({
   name: 'tokens',
   initialState,
   reducers: {
-    addToken: (state, action: PayloadAction<SerializedToken>) => {
-      const newToken = action.payload
-      state.tokens[newToken.chainId] ||= {}
-      state.tokens[newToken.chainId][newToken.address] = newToken
+    addWatchedToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
+      const { chainId, address } = action.payload
+      state.watchedTokens[chainId] ||= {}
+      state.watchedTokens[chainId][address] = true
     },
-    removeToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
+    removeWatchedToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
       const { address, chainId } = action.payload
-      if (!state.tokens[chainId] || !!state.tokens[chainId][address]) return
-      delete state.tokens[chainId][address]
+      if (!state.watchedTokens[chainId] || !!state.watchedTokens[chainId][address]) return
+      delete state.watchedTokens[chainId][address]
+    },
+    addCustomToken: (state, action: PayloadAction<SerializedToken>) => {
+      const newToken = action.payload
+      state.customTokens[newToken.chainId] ||= {}
+      state.customTokens[newToken.chainId][newToken.address] = newToken
+    },
+    removeCustomToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
+      const { address, chainId } = action.payload
+      if (!state.customTokens[chainId] || !!state.customTokens[chainId][address]) return
+      delete state.customTokens[chainId][address]
     },
     addTokenPair: (state, action: PayloadAction<SerializedPair>) => {
       const newPair = action.payload
@@ -51,15 +68,23 @@ const slice = createSlice({
       action: PayloadAction<{ chainId: number; token1Address: Address; token2Address: Address }>
     ) => {
       const { chainId, token1Address, token2Address } = action.payload
-      if (!state.tokens[chainId]) return
-      delete state.tokens[chainId][pairKey(token1Address, token2Address)]
-      delete state.tokens[chainId][pairKey(token2Address, token1Address)]
+      if (!state.customTokens[chainId]) return
+      delete state.customTokens[chainId][pairKey(token1Address, token2Address)]
+      delete state.customTokens[chainId][pairKey(token2Address, token1Address)]
     },
     resetTokens: () => initialState,
   },
 })
 
-export const { addToken, removeToken, addTokenPair, removeTokenPair, resetTokens } = slice.actions
+export const {
+  addWatchedToken,
+  removeWatchedToken,
+  addCustomToken,
+  removeCustomToken,
+  addTokenPair,
+  removeTokenPair,
+  resetTokens,
+} = slice.actions
 
 export const tokensReducer = slice.reducer
 

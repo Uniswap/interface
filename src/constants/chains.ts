@@ -1,5 +1,7 @@
 // Based on https://github.com/Uniswap/interface/blob/main/src/constants/chains.ts
 
+export type ChainIdTo<T> = Partial<Record<SupportedChainId, T>>
+
 export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,

@@ -9,7 +9,7 @@ export enum AddressStringFormat {
   shortened,
 }
 
-export function isValidAddress(address: Address, allowZero = true) {
+export function isValidAddress(address: Nullable<Address>, allowZero = true) {
   // Need to catch because ethers' isAddress throws in some cases (bad checksum)
   try {
     const isValid = address && utils.isAddress(address)
@@ -21,16 +21,20 @@ export function isValidAddress(address: Address, allowZero = true) {
   }
 }
 
-export function validateAddress(address: Address, context?: string) {
+export function validateAddress(address: Nullable<Address>, context?: string) {
   if (!isValidAddress(address)) {
     const errorMsg = `Invalid addresses ${address} (${context})`
     logger.error(errorMsg)
     throw new Error(errorMsg)
   }
+  return address as Address
 }
 
-export function normalizeAddress(address: Address, format = AddressStringFormat.checksum): Address {
-  validateAddress(address, 'normalize')
+export function normalizeAddress(
+  _address: Nullable<Address>,
+  format = AddressStringFormat.checksum
+): Address {
+  const address = validateAddress(_address, 'normalize')
   switch (format) {
     case AddressStringFormat.lowercase:
       return address.toLowerCase()
@@ -44,14 +48,14 @@ export function normalizeAddress(address: Address, format = AddressStringFormat.
   }
 }
 
-export function parseAddress(input: string): Address | null {
+export function parseAddress(input: Nullable<string>): Address | null {
   if (isValidAddress(input)) return normalizeAddress(input)
   else return null
 }
 
-export function areAddressesEqual(a1: Address, a2: Address) {
-  validateAddress(a1, 'compare')
-  validateAddress(a2, 'compare')
+export function areAddressesEqual(_a1: Nullable<Address>, _a2: Nullable<Address>) {
+  const a1 = validateAddress(_a1, 'compare')
+  const a2 = validateAddress(_a2, 'compare')
   return utils.getAddress(a1) === utils.getAddress(a2)
 }
 

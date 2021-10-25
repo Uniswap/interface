@@ -3,8 +3,8 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { SupportedChainId } from 'src/constants/chains'
 import { SerializedToken } from 'src/features/tokenLists/types'
+import { getKeys } from 'src/utils/objects'
 
 export function serializeToken(token: Token): SerializedToken {
   return {
@@ -27,22 +27,22 @@ export function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useUserAddedTokens(): Token[] {
-  const chainId = SupportedChainId.MAINNET // TODO get chainId from context
-  const serializedTokensMap = useAppSelector((state) => state.tokens.tokens)
+  const serializedTokensMap = useAppSelector((state) => state.tokens.customTokens)
 
   return useMemo(() => {
-    if (!chainId) return []
-    return Object.values(serializedTokensMap?.[chainId] ?? {}).map(deserializeToken)
-  }, [serializedTokensMap, chainId])
+    let result: Token[] = []
+    for (const chainId of getKeys(serializedTokensMap)) {
+      result = result.concat(
+        Object.values(serializedTokensMap[chainId] ?? {}).map(deserializeToken)
+      )
+    }
+    return result
+  }, [serializedTokensMap])
 }
 
 // Check if currency is included in custom list from user storage
 export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
   const userAddedTokens = useUserAddedTokens()
-
-  if (!currency) {
-    return false
-  }
-
+  if (!currency) return false
   return !!userAddedTokens.find((token) => currency.equals(token))
 }

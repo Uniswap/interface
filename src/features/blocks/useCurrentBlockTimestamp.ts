@@ -8,11 +8,6 @@ import { useSingleCallResult } from 'src/features/multicall'
 export function useCurrentBlockTimestamp(chainId: SupportedChainId): BigNumber | undefined {
   const multicall = useMulticall2Contract(chainId)
   const latestBlock = useLatestBlock(chainId)
-  const result = useSingleCallResult(
-    chainId,
-    latestBlock ?? 0,
-    multicall,
-    'getCurrentBlockTimestamp'
-  )
+  const result = useSingleCallResult(chainId, latestBlock, multicall, 'getCurrentBlockTimestamp')
   return result.result?.[0]
 }

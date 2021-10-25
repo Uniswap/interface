@@ -52,6 +52,12 @@ export const monitoredSagas: {
     reducer: createAccountReducer,
     actions: createAccountActions,
   },
+  [fetchBalancesSagaName]: {
+    name: fetchBalancesSagaName,
+    wrappedSaga: fetchBalancesSaga,
+    reducer: fetchBalancesReducer,
+    actions: fetchBalancesActions,
+  },
   [importAccountSagaName]: {
     name: importAccountSagaName,
     wrappedSaga: importAccountSaga,
@@ -63,12 +69,6 @@ export const monitoredSagas: {
     wrappedSaga: transferTokenSaga,
     reducer: transferTokenReducer,
     actions: transferTokenActions,
-  },
-  [fetchBalancesSagaName]: {
-    name: fetchBalancesSagaName,
-    wrappedSaga: fetchBalancesSaga,
-    reducer: fetchBalancesReducer,
-    actions: fetchBalancesActions,
   },
 }
 

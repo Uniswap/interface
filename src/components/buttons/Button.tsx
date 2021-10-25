@@ -6,7 +6,7 @@ import {
   SpacingProps,
   SpacingShorthandProps,
 } from '@shopify/restyle'
-import React from 'react'
+import React, { ComponentProps, PropsWithChildren } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
@@ -20,18 +20,21 @@ type RestyleProps = SpacingProps<Theme> &
   ColorProps<Theme>
 
 export type ButtonProps = {
-  label: string
+  label?: string
   // Add more custom props here as needed
-} & React.ComponentProps<typeof BaseButton> &
+} & ComponentProps<typeof BaseButton> &
   RestyleProps
 
-export function Button(props: ButtonProps) {
-  const { label, color, ...rest } = props
+export function Button(props: PropsWithChildren<ButtonProps>) {
+  const { label, color, children, ...rest } = props
   return (
     <BaseButton {...rest}>
-      <Text variant="buttonLabel" color={color}>
-        {label}
-      </Text>
+      {label && (
+        <Text variant="buttonLabel" color={color}>
+          {label}
+        </Text>
+      )}
+      {children}
     </BaseButton>
   )
 }

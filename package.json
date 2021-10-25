@@ -29,7 +29,7 @@
     "@sentry/react-native": "^3.1.1",
     "@shopify/restyle": "^1.4.0",
     "@uniswap/default-token-list": "^2.0.0",
-    "multicall-query": "^0.1.0",
+    "multicall-query": "^0.1.1",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/token-lists": "^1.0.0-beta.26",
     "@uniswap/v2-sdk": "^3.0.0",

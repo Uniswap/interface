@@ -1,3 +1,4 @@
+import { appSelect } from 'src/app/hooks'
 import { getWalletProviders } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
 import { SupportedChainId } from 'src/constants/chains'
@@ -8,13 +9,22 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
 import { updateBalances } from './balancesSlice'
 
+// Use in place of address to fetch for all accounts
+export const ALL_ACCOUNTS = '__all_accounts__'
+
 export function* fetchBalances(address: Address) {
   const manager = yield* call(getWalletProviders)
+  const accounts = yield* appSelect((state) => state.wallet.accounts)
+  const allAddresses = Object.keys(accounts)
+  const addrsToFetch = address === ALL_ACCOUNTS ? allAddresses : [address]
   // TODO get actual set of chainIds here
-  const chainIds = [SupportedChainId.GOERLI]
-  for (const chainId of chainIds) {
-    const updatedBalances = yield* call(_fetchBalances, address, chainId, manager)
-    yield* put(updateBalances({ address, chainId, updatedBalances }))
+  const chainsToFetch = [SupportedChainId.GOERLI]
+
+  for (const addr of addrsToFetch) {
+    for (const chainId of chainsToFetch) {
+      const updatedBalances = yield* call(_fetchBalances, addr, chainId, manager)
+      yield* put(updateBalances({ address, chainId, updatedBalances }))
+    }
   }
 }
 
