@@ -521,7 +521,7 @@ export class BridgeService {
 
       this.store.dispatch(
         updateBridgeTxnReceipt({
-          chainId: this.l2ChainId,
+          chainId: this.l1ChainId,
           txHash: txn.hash,
           receipt: l1Receipt,
           seqNum
