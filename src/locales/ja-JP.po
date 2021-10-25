@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:06\n"
+"PO-Revision-Date: 2021-10-25 17:09\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -963,7 +963,7 @@ msgstr "流動性の提供について学ぶ"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
-msgstr "もっと詳しく知る"
+msgstr "より詳しく"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
