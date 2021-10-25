@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:07\n"
+"PO-Revision-Date: 2021-10-25 18:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -345,7 +345,7 @@ msgstr "Добавляя этот список, вы подразумевает�
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "Подключая кошелек, вы соглашаетесь с Условиями обслуживания</0> <0>и подтверждаете, что прочитали и поняли Отказ от ответственности</1><1>."
+msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -969,7 +969,7 @@ msgstr "Узнать больше"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
-msgstr "Юридическая информация и конфиденциальность"
+msgstr "Юридическая информация и политика конфиденциальности"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1357,7 +1357,7 @@ msgstr "Автор предложения"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Protocol Disclaimer"
-msgstr "Заявление об отказе от ответственности по протоколу"
+msgstr "Отказ от ответственности протокола"
 
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
@@ -1597,23 +1597,23 @@ msgstr "Инвариант Uniswap x * y = k не соблюдается при 
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
-msgstr "Приложение извлекает данные блокчейна из размещенной службы The Graph."
+msgstr "Приложение получает данные блокчейна из сервиса The Graph."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
-msgstr "Приложение извлекает данные из сети и создает вызовы контрактов с помощью Infura API."
+msgstr "Приложение получает данные, хранящиеся в блокчейне, и конструирует вызовы контрактов при помощи API от Infura."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Приложение получает оптимальный торговый маршрут с сервера Uniswap Labs."
+msgstr "Приложение получает оптимальный маршрут для сделки с сервера Uniswap Labs."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "Приложение регистрирует анонимную статистику использования, чтобы со временем улучшаться."
+msgstr "Приложение собирает анонимную статистику использования, чтобы улучшаться со временем."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
-msgstr "Приложение безопасно собирает адрес вашего кошелька и передает его TRM Labs Inc. из соображений риска и соблюдения требований."
+msgstr "Приложение безопасно получает адрес вашего кошелька и передает его TRM Labs Inc. в целях управления рисками и соблюдения требований законодательства."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1837,7 +1837,7 @@ msgstr "Управление Uniswap"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Uniswap Labs' Terms of Service"
-msgstr "Условия использования Uniswap Labs"
+msgstr "Условия предоставления услуг Uniswap Labs"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
