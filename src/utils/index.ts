@@ -32,7 +32,7 @@ const getExplorerPrefix = (chainId: ChainId) => {
     case ChainId.ARBITRUM_ONE:
       return 'https://arbiscan.io'
     case ChainId.ARBITRUM_RINKEBY:
-      return 'https://rinkeby-explorer.arbitrum.io/#'
+      return 'https://testnet.arbiscan.io'
     case ChainId.XDAI:
       return 'https://blockscout.com/xdai/mainnet'
     default:

@@ -6,19 +6,28 @@ import { BridgePendingModal } from './BridgePendingModal'
 import { BridgeSuccesModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
 import { NETWORK_DETAIL } from '../../../constants'
+import { BridgeDisclaimerModal } from './BridgeDisclaimerModal'
 
 export interface BridgeModalProps {
   handleResetBridge: () => void
   setStep: (step: BridgeStep) => void
   setStatus: (status: BridgeModalStatus, error?: string) => void
   modalData: BridgeModalState
+  handleSubmit: () => void
 }
 
-export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }: BridgeModalProps) => {
+const setDisclaimerText = (isArbitrum: boolean) => {
+  if (isArbitrum) return 'It will take ~1 week for you to see your balance credited on L1. '
+  return 'It will take 10 minutes for you to see your balance credited on L2. Moving your funds back to L1 Ethereum (if you later wish to do so) takes ~1 week. '
+}
+
+export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, handleSubmit }: BridgeModalProps) => {
   const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modalData
 
   const toNetworkName = NETWORK_DETAIL[toNetwork.chainId].chainName
   const fromNetworkName = NETWORK_DETAIL[fromNetwork.chainId].chainName
+  const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
+  const disclaimerText = setDisclaimerText(NETWORK_DETAIL[fromNetwork.chainId].isArbitrum)
 
   const selectModal = () => {
     switch (status) {
@@ -66,7 +75,6 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
             onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             onTradeButtonClick={handleResetBridge}
@@ -78,10 +86,27 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData }
           <BridgeErrorModal
             isOpen
             onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
               handleResetBridge()
             }}
             error={error ?? ''}
+          />
+        )
+      case BridgeModalStatus.DISCLAIMER:
+        return (
+          <BridgeDisclaimerModal
+            isOpen
+            onConfirm={() => {
+              handleSubmit()
+            }}
+            onDismiss={() => {
+              handleResetBridge()
+            }}
+            amount={typedValue}
+            assetType={currencyId ?? ''}
+            fromNetworkName={fromNetworkName}
+            toNetworkName={toNetworkName}
+            heading={txType}
+            disclaimerText={disclaimerText}
           />
         )
       default:

@@ -15,7 +15,7 @@ export type BridgeActionPanelProps = {
   isNetworkConnected: boolean
   step: BridgeStep
   setStep: (step: BridgeStep) => void
-  handleSubmit: () => void
+  handleModal: () => void
   handleCollect: () => void
   typedValue: string
 }
@@ -24,7 +24,7 @@ export const BridgeActionPanel = ({
   step,
   account,
   typedValue,
-  handleSubmit,
+  handleModal,
   handleCollect,
   toNetworkChainId,
   fromNetworkChainId,
@@ -71,7 +71,7 @@ export const BridgeActionPanel = ({
     }
 
     return (
-      <BridgeButton to={toNetworkChainId} from={fromNetworkChainId} disabled={isButtonDisabled} onClick={handleSubmit}>
+      <BridgeButton to={toNetworkChainId} from={fromNetworkChainId} disabled={isButtonDisabled} onClick={handleModal}>
         {!typedValue
           ? 'Enter amount'
           : `Brigde to ${networkOptionsPreset.find(network => network.chainId === toNetworkChainId)?.name}`}

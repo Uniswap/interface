@@ -22,6 +22,7 @@ import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../st
 import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeModalStatus } from '../../state/bridge/reducer'
 
 const Wrapper = styled.div`
   max-width: 432px;
@@ -100,13 +101,14 @@ export default function Bridge() {
   const handleResetBridge = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
+    setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
       currencyId: 'ETH',
       typedValue: '',
       fromChainId: 1,
       toChainId: 42161
     })
-  }, [onUserInput, setModalData])
+  }, [onUserInput, setModalData, setModalStatus])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -127,6 +129,16 @@ export default function Bridge() {
       console.log('withdraw', { typedValue, address })
     }
   }, [bridgeCurrency, bridgeService, chainId, typedValue])
+
+  const handleModal = useCallback(async () => {
+    setModalData({
+      currencyId: 'ETH',
+      typedValue: typedValue,
+      fromChainId: fromNetwork.chainId,
+      toChainId: toNetwork.chainId
+    })
+    setModalStatus(BridgeModalStatus.DISCLAIMER)
+  }, [fromNetwork.chainId, toNetwork.chainId, typedValue, setModalData, setModalStatus])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
@@ -218,7 +230,7 @@ export default function Bridge() {
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
-          handleSubmit={handleSubmit}
+          handleModal={handleModal}
           handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
@@ -238,6 +250,7 @@ export default function Bridge() {
         setStep={setStep}
         setStatus={setModalStatus}
         modalData={modalData}
+        handleSubmit={handleSubmit}
       />
     </Wrapper>
   )
