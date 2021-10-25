@@ -162,7 +162,7 @@ export function PrivacyPolicy() {
             </DarkGreyCard>
           ))}
           <Row justify="center" marginBottom="1rem">
-            <ExternalLink href="https://app.intercom.com/a/apps/ggour1ku/articles/articles/5675203/show">
+            <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
               <Trans>Learn more</Trans>
             </ExternalLink>
           </Row>
