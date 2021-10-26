@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-26 08:06\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -859,6 +859,7 @@ msgstr "理解しました"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "このリストからトークンを購入すると、トークンを売却できなくなる可能性があります。"
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "このルートは、分割ルート、複数のホップ、およびガ
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "このトークンはご利用中のトークンリストに存在しません。取引したいトークンであることを確認してください。"
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "このトークンは、UniswapLabsアプリではサポートされていません"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "本ツールで {0} の流動性をV3に安全に移行します。このプロセスは以下によって特定の第三者を信用する必要が一切ないものになっています。"
@@ -1705,6 +1710,10 @@ msgstr "買うトークン（少なくとも）"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "{0}で取引を開始するには、最初に資産をL1からL2にブリッジします。 {1}を使用する前に、これをベータリリースとして扱い、リスクについて学習してください。"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "トークンはサポートされていません"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "Uniswap移行コントラクト↗"
 msgid "Uniswap on {0}"
 msgstr "{0}ユニスワップ"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "不明なソース"
 
@@ -2278,7 +2287,7 @@ msgstr "分"
 msgid "via {0}"
 msgstr "{0} から"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} トークンリストから"
 

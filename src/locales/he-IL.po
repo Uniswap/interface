@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:06\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -859,6 +859,7 @@ msgstr "אני מבין"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "אם אתה רוכש אסימון מרשימה זו, ייתכן שלא תוכל למכור אותו בחזרה."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "מסלול זה מייעל את המחיר שלך על ידי התחשב
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "אסימון זה אינו מופיע ברשימות האסימונים הפעילות. ודא שזה האסימון שאתה רוצה לסחור בו."
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "אסימון זה אינו נתמך באפליקציית Uniswap Labs"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "כלי זה יעביר בבטחה את נזילות {0} שלך ל- V3. התהליך חסר אמון לחלוטין בזכות"
@@ -1705,6 +1710,10 @@ msgstr "עבור (לפחות)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "כדי להתחיל לסחור ב {0}, תחילה גשר את הנכסים שלך מ- L1 ל- L2. אנא התייחס לזה כאל גרסת בטא ולמד על הסיכונים לפני השימוש {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "אסימון אינו נתמך"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "חוזה הגירה מביטול החלפה↗"
 msgid "Uniswap on {0}"
 msgstr "ביטול החלפה ב- {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "מקור לא ידוע"
 
@@ -2278,7 +2287,7 @@ msgstr "דקות"
 msgid "via {0}"
 msgstr "דרך {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "דרך רשימת אסימונים {0}"
 
