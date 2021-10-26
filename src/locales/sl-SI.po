@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:07\n"
+"PO-Revision-Date: 2021-10-26 09:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -345,7 +345,7 @@ msgstr "Z dodajanjem tega seznama zaupate pravilnosti podatkov. Vsakdo lahko ust
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "S povezovanjem denarnice se strinjate s pogoji storitve <0></0> in potrjujete, da ste prebrali in razumeli izjavo o omejitvi odgovornosti</1><1>."
+msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitve Uniswap Labs</0> in potrjujete, da ste prebrali in razumeli <1>izjavo o omejitvi odgovornosti</1> protokola Uniswap."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -963,13 +963,13 @@ msgstr "Naučite se vse o polaganju likvidnosti"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Learn more"
-msgstr "Nauči se več"
+msgstr "Več o tem"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
-msgstr "Pravo in zasebnost"
+msgstr "Pravna obvestila in zasebnost"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1597,23 +1597,23 @@ msgstr "Uniswapovi stalnici x*y = k s menjavo ni bilo zadoščeno. To običajno 
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches blockchain data from The Graph’s hosted service."
-msgstr "Aplikacija pridobi podatke blockchain iz gostujoče storitve The Graph."
+msgstr "Aplikacija pridobi podatke verige blokov iz gostujoče storitve The Graph."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
-msgstr "Aplikacija pridobi podatke v verigi in zgradi pogodbene klice z API-jem Infura."
+msgstr "Aplikacija pridobi podatke in verige in zgradi pogodbene klice z API-jem Infura."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "Aplikacija pridobi optimalno trgovinsko pot s strežnika Uniswap Labs."
+msgstr "Aplikacija pridobi optimalno pot trgovanja s strežnika Uniswap Labs."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "Aplikacija beleži anonimizirano statistiko uporabe, da se sčasoma izboljša."
+msgstr "Aplikacija z namenom prihodnjih izboljšav beleži anonimizirano statistiko uporabe."
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
-msgstr "Aplikacija varno zbira vaš naslov denarnice in ga deli s TRM Labs Inc. zaradi tveganja in skladnosti."
+msgstr "Aplikacija na varen način prebere naslov vaše denarnice in ga deli s TRM Labs Inc. zaradi ocene tveganja in skladnosti z zakoni."
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
