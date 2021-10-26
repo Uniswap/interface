@@ -335,7 +335,10 @@ export default function WalletModal({
           <HeaderRow>
             <HoverText
               onClick={() => {
-                setWalletView(previousWalletView ?? WALLET_VIEWS.ACCOUNT)
+                setWalletView(
+                  (previousWalletView === WALLET_VIEWS.LEGAL ? WALLET_VIEWS.ACCOUNT : previousWalletView) ??
+                    WALLET_VIEWS.ACCOUNT
+                )
               }}
             >
               <ArrowLeft />
