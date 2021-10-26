@@ -12,7 +12,7 @@ function UriForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png?color`
 }
 
-async function getColorFromToken(token: Token, theme: Theme): Promise<string | null> {
+async function getColorFromToken(token: Token): Promise<string | null> {
   const { address, chainId, logoURI } = token
 
   // Color extraction must use a CORS-compatible resource, but the resource is already cached.
@@ -23,13 +23,13 @@ async function getColorFromToken(token: Token, theme: Theme): Promise<string | n
   // If we've already determined that a fallback is necessary, use it immediately to prevent a flash.
   const fallbackUri = fallbackCache.get(uri)
   if (fallbackUri) {
-    return await getColorFromUriPath(fallbackUri, theme)
+    return await getColorFromUriPath(fallbackUri)
   }
 
-  let color = await getColorFromUriPath(uri, theme)
+  let color = await getColorFromUriPath(uri)
   if (!color && chainId === 1) {
     const fallbackUri = UriForEthToken(address)
-    color = await getColorFromUriPath(fallbackUri, theme)
+    color = await getColorFromUriPath(fallbackUri)
     if (color) {
       fallbackCache.set(uri, fallbackUri)
     }
@@ -38,28 +38,32 @@ async function getColorFromToken(token: Token, theme: Theme): Promise<string | n
   return color
 }
 
-async function getColorFromUriPath(uri: string, theme: Theme): Promise<string | null> {
-  let detectedHex
+async function getColorFromUriPath(uri: string): Promise<string | null> {
   try {
     const palette = await Vibrant.from(uri).getPalette()
-    detectedHex = palette.Vibrant?.hex ?? null
+    return palette.Vibrant?.hex ?? null
   } catch {
     return null
   }
+}
 
-  if (detectedHex) {
-    const dynamic = getDynamicTheme(detectedHex, theme)
-    const { darkMode } = dynamic
-    let { primary } = dynamic
-    let AAscore = hex(detectedHex, primary)
-    while (AAscore < 3) {
-      detectedHex = darkMode ? tint(0.005, detectedHex) : shade(0.005, detectedHex)
-      primary = getDynamicTheme(detectedHex, theme).primary
-      AAscore = hex(detectedHex, primary)
-    }
+function getAccessibleColor(color: string, theme: Theme) {
+  const dynamic = getDynamicTheme(color, theme)
+  const { darkMode } = dynamic
+  let { primary } = dynamic
+  let AAscore = hex(color, primary)
+  while (AAscore < 3) {
+    color = darkMode ? tint(0.005, color) : shade(0.005, color)
+    primary = getDynamicTheme(color, theme).primary
+    AAscore = hex(color, primary)
   }
+  return color
+}
 
-  return detectedHex
+export function prefetchColor(token?: Token) {
+  if (token) {
+    getColorFromToken(token)
+  }
 }
 
 export default function useColor(token?: Token) {
@@ -70,9 +74,10 @@ export default function useColor(token?: Token) {
     let stale = false
 
     if (token) {
-      getColorFromToken(token, theme).then((tokenColor) => {
-        if (!stale && tokenColor !== null) {
-          setColor(tokenColor)
+      getColorFromToken(token).then((color) => {
+        if (!stale && color !== null) {
+          color = getAccessibleColor(color, theme)
+          setColor(color)
         }
       })
     }

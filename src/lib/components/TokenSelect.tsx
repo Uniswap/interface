@@ -1,3 +1,4 @@
+import { prefetchColor } from 'lib/hooks/useColor'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -107,7 +108,7 @@ interface TokenButtonProps {
 
 function BaseToken({ value, onClick }: TokenButtonProps) {
   return (
-    <BaseTokenButton onClick={() => onClick(value)}>
+    <BaseTokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)}>
       <TYPE.buttonMedium>
         <TokenButtonRow gap={0.5}>
           <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} />
@@ -120,7 +121,7 @@ function BaseToken({ value, onClick }: TokenButtonProps) {
 
 function RowToken({ value, onClick }: TokenButtonProps) {
   return (
-    <RowTokenButton onClick={() => onClick(value)}>
+    <RowTokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)}>
       <TYPE.body1>
         <Row justify="flex-start" gap={0.5} style={{ gridTemplateColumns: '1.25em 1fr' }}>
           <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} />

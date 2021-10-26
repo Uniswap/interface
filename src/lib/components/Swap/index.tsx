@@ -1,5 +1,5 @@
 import { atom, useAtom } from 'jotai'
-import useColor from 'lib/hooks/useColor'
+import useColor, { prefetchColor } from 'lib/hooks/useColor'
 import { ETH } from 'lib/mocks'
 import { Token } from 'lib/types'
 import { useCallback, useState } from 'react'
@@ -47,7 +47,7 @@ export default function Swap() {
   }, [setInputValue, outputValue, setInputToken, outputToken, setOutputValue, inputValue, setOutputToken, inputToken])
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  useColor(inputToken) // extract eagerly in case of reversal
+  prefetchColor(inputToken) // extract eagerly in case of reversal
   const color = useColor(outputToken)
 
   return (
