@@ -99,7 +99,6 @@
     "ms.macro": "^2.0.0",
     "multicodec": "^3.0.1",
     "multihashes": "^4.0.2",
-    "node-vibrant": "^3.2.1-alpha.1",
     "polished": "^3.3.2",
     "polyfill-object.fromentries": "^1.0.1",
     "prettier": "^2.2.1",
@@ -178,6 +177,7 @@
     "react-feather": "^2.0.8",
     "react-popper": "^2.2.3",
     "rebass": "^4.0.7",
-    "styled-components": "^5.3.0"
+    "styled-components": "^5.3.0",
+    "node-vibrant": "^3.2.1-alpha.1"
   }
 }

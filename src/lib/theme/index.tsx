@@ -3,7 +3,7 @@ import assert from 'assert'
 import merge from 'lodash/merge'
 import { transparentize } from 'polished'
 import { readableColor } from 'polished'
-import { createContext, Fragment, ReactNode, useContext, useMemo } from 'react'
+import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { Icon } from 'react-feather'
 import styled, {
   keyframes as styledKeyframes,
