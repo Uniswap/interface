@@ -1,4 +1,3 @@
-import useColor from 'lib/hooks/useColor'
 import styled, { DynamicProvider as DynamicThemeProvider } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { ReactNode } from 'react'
@@ -14,8 +13,12 @@ const OutputColumn = styled(Column)`
   position: relative;
 `
 
-export default function SwapOutput({ children, ...props }: { children: ReactNode } & TokenInputProps) {
-  const color = useColor(props.token)
+interface SwapOutputProps extends TokenInputProps {
+  color?: string
+  children: ReactNode
+}
+
+export default function SwapOutput({ children, color, ...props }: SwapOutputProps) {
   return (
     <DynamicThemeProvider color={color}>
       <OutputColumn gap={0.75}>

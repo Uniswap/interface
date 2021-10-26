@@ -1,4 +1,5 @@
 import { atom, useAtom } from 'jotai'
+import useColor from 'lib/hooks/useColor'
 import { ETH } from 'lib/mocks'
 import { Token } from 'lib/types'
 import { useCallback, useState } from 'react'
@@ -43,6 +44,9 @@ export default function Swap() {
   }, [setInputValue, outputValue, setInputToken, outputToken, setOutputValue, inputValue, setOutputToken, inputToken])
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  useColor(inputToken) // extract eagerly in case of reverse
+  const color = useColor(outputToken)
+
   return (
     <>
       <Header logo title="Swap">
@@ -54,7 +58,7 @@ export default function Swap() {
           <SwapInput {...input}>
             <SwapReverse onClick={onReverse} />
           </SwapInput>
-          <SwapOutput {...output}>
+          <SwapOutput color={color} {...output}>
             <SwapToolbar />
             <SwapAction />
           </SwapOutput>
