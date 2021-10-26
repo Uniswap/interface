@@ -168,20 +168,20 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         console.error(error)
       })
   }, [
-    tokenId,
+    positionManager,
     liquidityValue0,
     liquidityValue1,
     deadline,
-    allowedSlippage,
     account,
-    addTransaction,
-    positionManager,
     chainId,
     feeValue0,
     feeValue1,
-    library,
-    liquidityPercentage,
     positionSDK,
+    liquidityPercentage,
+    library,
+    tokenId,
+    allowedSlippage,
+    addTransaction,
   ])
 
   const handleDismissConfirmation = useCallback(() => {

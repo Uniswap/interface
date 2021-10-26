@@ -1073,6 +1073,13 @@
       "name": "sLINK",
       "symbol": "Synth Link",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x6B60eE11b73230045cF9095E6e43AE9Ea638e172",
+      "name": "Shatner",
+      "symbol": "SHAT",
+      "decimals": 18
     }
   ]
 }

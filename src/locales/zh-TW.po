@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-14 18:06\n"
+"PO-Revision-Date: 2021-10-25 16:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -344,8 +344,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都可以創建代幣列表，包括創建假冒實際列表的造假版本，以及自我聲稱代表了某項目的代幣列表。"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "通過連接錢包，您同意接受 Uniswap 實驗室的<0>服務條款</0>，並確認您已閱讀和理解<1>Uniswap協議免責聲明</1>。"
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並承認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -516,6 +516,7 @@ msgstr "在您的錢包中確認這筆交易"
 msgid "Confirm transaction in wallet"
 msgstr "在錢包中確認交易"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -530,14 +531,10 @@ msgstr "在錢包中確認交易"
 msgid "Connect Wallet"
 msgstr "連接錢包"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "連接錢包"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
 msgstr "連接錢包"
 
 #: src/pages/PoolFinder/index.tsx
@@ -849,6 +846,10 @@ msgstr "隱藏"
 msgid "High Price Impact"
 msgstr "高兌換率影響"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "此應用程序如何使用 API"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -915,7 +916,7 @@ msgstr "現有流動量不足以支持此交易。"
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
-msgstr "{0} 余額不足"
+msgstr "{0} 餘額不足"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -959,6 +960,16 @@ msgstr "了解更多"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "閱讀有關提供流動資金的資訊"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "瞭解更多"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "法律與隱私"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1102,7 +1113,7 @@ msgstr "收到的最低數額"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
-msgstr "缺少依賴項"
+msgstr "缺少依賴套件"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1127,7 +1138,7 @@ msgstr "無運行中的流動池"
 
 #: src/components/FeeSelector/index.tsx
 msgid "No data"
-msgstr "沒有數據"
+msgstr "沒有資料"
 
 #: src/state/governance/hooks.ts
 msgid "No description."
@@ -1344,6 +1355,10 @@ msgstr "提議操作"
 msgid "Proposer"
 msgstr "提案人"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "協議免責聲明"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "待執行"
@@ -1412,7 +1427,7 @@ msgstr "正在去除 {0} {1} 和 {2} {3}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
-msgstr "刪除 {0} {1} 和{2} {3}"
+msgstr "移除 {0} {1} 和 {2} {3}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1536,7 +1551,7 @@ msgstr "供應"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and{2} {3}"
-msgstr "供應 {0} {1} 和{2} {3}"
+msgstr "供應 {0} {1} 和 {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1562,7 +1577,7 @@ msgstr "將恰好 <0/> 兌換成 <1/>"
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
-msgstr "交換失敗： {0}"
+msgstr "兑换失败： {0}"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1579,6 +1594,26 @@ msgstr "您將賺取的手續費百分比。"
 #: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "兌換交易不滿足 Uniswap 不變量 X × Y = K 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "該應用程序從 The Graph 的託管服務中獲取區塊鏈數據。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "該應用程序獲取鏈上數據並使用 Infura API 構建合約調用。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "該應用程序從 Uniswap Labs 服務器獲取最佳貿易路線。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "該應用程序會記錄匿名使用情況統計信息，以便隨著時間的推移不斷改進。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "出於風險和合規性原因，該應用程序會安全地收集您的錢包地址並與 TRM Labs Inc. 共享。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1619,6 +1654,10 @@ msgstr "沒有流動性數據。"
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "這些代幣通常與其他代幣配對。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "此應用程序使用以下第三方 API："
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
@@ -1786,15 +1825,19 @@ msgstr "未定"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "意外的錯誤。無法估計交換的gas。"
+msgstr "錯誤。無法估計兑换所需的 gas。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "估計氣體的意外問題。請再試一次。"
+msgstr "估計 gas 時遇到問題。請再試一次。"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Uniswap Labs 的服務條款"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
