@@ -40,7 +40,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             assetType={symbol ?? ''}
             fromNetworkName={fromNetworkName}
             toNetworkName={toNetworkName}
-            heading={'Transaction Initiated'}
+            heading={'Bridging Initiated'}
           />
         )
       case BridgeModalStatus.PENDING:
@@ -111,6 +111,18 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             pendingText={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
+          />
+        )
+      case BridgeModalStatus.APPROVING:
+        return (
+          <BridgingInitiatedModal
+            isOpen
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+            amount={''}
+            assetType={''}
+            fromNetworkName={fromNetworkName}
+            toNetworkName={toNetworkName}
+            heading={'Approving Initiated'}
           />
         )
       default:

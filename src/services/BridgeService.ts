@@ -470,7 +470,7 @@ export class BridgeService {
         sender: this.account
       })
     )
-    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.APPROVING }))
 
     try {
       const l1Receipt = await txn.wait()
