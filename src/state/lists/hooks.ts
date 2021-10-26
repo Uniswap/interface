@@ -1,6 +1,7 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
+import { singletonHook } from 'react-singleton-hook'
 import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
 
@@ -53,7 +54,7 @@ export function useAllLists(): AppState['lists']['byUrl'] {
  * @param map1 the base token map
  * @param map2 the map of additioanl tokens to add to the base map
  */
-export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   const chainIds = Object.keys(
     Object.keys(map1)
       .concat(Object.keys(map2))
@@ -109,14 +110,14 @@ export function useInactiveListUrls(): string[] {
 }
 
 // get all the tokens from active lists, combine with local default tokens
-export function useCombinedActiveList(): TokenAddressMap {
+export const useCombinedActiveList = singletonHook({}, function (): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
   return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
-}
+})
 
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds
-export function useUnsupportedTokenList(): TokenAddressMap {
+export const useUnsupportedTokenList = singletonHook({}, function (): TokenAddressMap {
   // get hard-coded broken tokens
   const brokenListMap = useMemo(() => listToTokenMap(BROKEN_LIST), [])
 
@@ -131,7 +132,8 @@ export function useUnsupportedTokenList(): TokenAddressMap {
     () => combineMaps(brokenListMap, combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)),
     [brokenListMap, localUnsupportedListMap, loadedUnsupportedListMap]
   )
-}
+})
+
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
   return Boolean(activeListUrls?.includes(url))

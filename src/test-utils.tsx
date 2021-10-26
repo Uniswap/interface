@@ -1,12 +1,14 @@
 import { render, RenderOptions } from '@testing-library/react'
 import React, { FC, ReactElement, ReactNode } from 'react'
 import { Provider } from 'react-redux'
+import { SingletonHooksContainer } from 'react-singleton-hook'
 import store from 'state'
 import ThemeProvider from 'theme'
 
 const WithProviders: FC = ({ children }: { children?: ReactNode }) => {
   return (
     <Provider store={store}>
+      <SingletonHooksContainer />
       <ThemeProvider>{children}</ThemeProvider>
     </Provider>
   )

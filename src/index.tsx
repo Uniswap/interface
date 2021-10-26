@@ -8,6 +8,7 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { SingletonHooksContainer } from 'react-singleton-hook'
 
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
@@ -48,6 +49,7 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
+      <SingletonHooksContainer />
       <HashRouter>
         <LanguageProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
