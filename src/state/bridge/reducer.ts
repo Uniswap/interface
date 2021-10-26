@@ -31,7 +31,8 @@ export enum BridgeModalStatus {
   INITIATED = 'INITIATED',
   ERROR = 'ERROR',
   COLLECTING = 'COLLECTING',
-  DISCLAIMER = 'DISCLAIMER'
+  DISCLAIMER = 'DISCLAIMER',
+  APPROVE = 'APPROVE'
 }
 
 export enum BridgeTxsFilter {
@@ -143,7 +144,6 @@ export default createReducer<BridgeState>(initialState, builder =>
     .addCase(setBridgeModalData, (state, { payload: { symbol, typedValue, fromChainId, toChainId } }) => {
       return {
         ...state,
-        // currencyId: symbol,
         typedValue,
         fromNetwork: {
           ...state.fromNetwork,

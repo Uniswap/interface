@@ -454,10 +454,10 @@ export class BridgeService {
   }
 
   private approveERC20 = async (erc20L1Address: string) => {
+    if (!this.l1ChainId || !this.l2ChainId || !this.account) return
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.APPROVE }))
     const txn = await this.bridge.approveToken(erc20L1Address)
     const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address)).ERC20
-
-    if (!this.l1ChainId || !this.l2ChainId || !this.account) return
 
     this.store.dispatch(
       addBridgeTxn({
@@ -470,6 +470,7 @@ export class BridgeService {
         sender: this.account
       })
     )
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
     try {
       const l1Receipt = await txn.wait()
