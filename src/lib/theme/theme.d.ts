@@ -1,5 +1,3 @@
-import { toColorString } from 'polished'
-
 export type Color = string
 
 export interface Colors {
