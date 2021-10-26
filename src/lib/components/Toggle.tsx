@@ -63,7 +63,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :before {
-    transition: margin ease 150ms;
+    transition: margin 0.15s ease;
   }
 `
 

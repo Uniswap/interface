@@ -20,6 +20,8 @@ const outputValueAtom = atom<number | undefined>(undefined)
 const outputTokenAtom = atom<Token | undefined>(undefined)
 
 export default function Swap() {
+  const [transition, setTransition] = useState(false)
+
   const [inputValue, setInputValue] = useAtom(inputValueAtom)
   const [inputToken, setInputToken] = useAtom(inputTokenAtom)
   const [outputValue, setOutputValue] = useAtom(outputValueAtom)
@@ -34,17 +36,18 @@ export default function Swap() {
     value: outputValue,
     token: outputToken,
     onChangeValue: setOutputValue,
-    onChangeToken: setOutputToken,
+    onChangeToken: (token: Token) => (setTransition(false), setOutputToken(token)),
   }
   const onReverse = useCallback(() => {
     setInputValue(outputValue)
     setInputToken(outputToken)
     setOutputValue(inputValue)
     setOutputToken(inputToken)
+    setTransition(true)
   }, [setInputValue, outputValue, setInputToken, outputToken, setOutputValue, inputValue, setOutputToken, inputToken])
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  useColor(inputToken) // extract eagerly in case of reverse
+  useColor(inputToken) // extract eagerly in case of reversal
   const color = useColor(outputToken)
 
   return (
@@ -58,7 +61,7 @@ export default function Swap() {
           <SwapInput {...input}>
             <SwapReverse onClick={onReverse} />
           </SwapInput>
-          <SwapOutput color={color} {...output}>
+          <SwapOutput color={color} transition={transition} {...output}>
             <SwapToolbar />
             <SwapAction />
           </SwapOutput>
