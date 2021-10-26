@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 17:09\n"
+"PO-Revision-Date: 2021-10-26 08:06\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -1563,7 +1563,7 @@ msgstr "スワップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "<0 />を<1 />に正確にスワップする"
+msgstr "<0/> を <1/>に正確にスワップする"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1572,7 +1572,7 @@ msgstr "問題発生の可能性があるが、スワップする"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "<0 />を<1 />に正確にスワップする"
+msgstr "正確に<0/>を<1/>に交換します"
 
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
