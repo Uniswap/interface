@@ -79,22 +79,25 @@ const dark: Colors = {
   error: '#FD4040',
 }
 
-function useColors(color: string, { light, dark }: Theme): Partial<Colors> {
-  return useMemo(() => {
-    const primary = readableColor(color, light.primary, dark.primary)
-    const interactive = transparentize(0.46, primary)
-    return {
-      // surface
-      interactive,
-      outline: transparentize(0.76, primary),
+export function getDynamicTheme(color: string, theme: Theme): Theme {
+  const primary = readableColor(color, light.primary, dark.primary)
+  const darkMode = JSON.parse(readableColor(color, 'true', 'false', false))
+  const interactive = transparentize(0.46, primary)
+  return {
+    ...theme,
+    darkMode,
 
-      // text
-      primary: transparentize(0.4, primary),
-      secondary: transparentize(0.46, primary),
-      hint: transparentize(0.76, primary),
-      contrast: readableColor(interactive),
-    }
-  }, [color, light, dark])
+    // surface
+    module: color,
+    interactive,
+    outline: transparentize(0.76, primary),
+
+    // text
+    primary: transparentize(0.4, primary),
+    secondary: transparentize(0.46, primary),
+    hint: transparentize(0.76, primary),
+    contrast: readableColor(interactive),
+  }
 }
 
 function getDefaultTheme(): Omit<Theme, Color> {
@@ -136,10 +139,8 @@ interface DynamicThemeProviderProps {
 /** Applies a dynamic theme. */
 export function DynamicProvider({ color, children }: DynamicThemeProviderProps) {
   const theme = useTheme()
-  const { module } = theme
-  const colors = useColors(color || module, theme)
-  const value = useMemo(() => ({ ...theme, module: color || module, ...colors }), [theme, module, color, colors])
-  return color ? <ThemedProvider theme={value}>{children}</ThemedProvider> : <>{children}</>
+  const value = useMemo(() => (color ? getDynamicTheme(color, theme) : theme), [color, theme])
+  return <ThemedProvider theme={value}>{children}</ThemedProvider>
 }
 
 /** Applies the original theme, ignoring any dynamic theme. */
