@@ -12,8 +12,10 @@ interface UseV3PositionsResults {
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
+  const limitOrderManager = useLimitOrderManager()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   const results = useSingleContractMultipleData(positionManager, 'positions', inputs)
+  const deposits = useSingleContractMultipleData(limitOrderManager, 'deposits', inputs)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
@@ -22,6 +24,7 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     if (!loading && !error && tokenIds) {
       return results.map((call, i) => {
         const tokenId = tokenIds[i]
+        const depositResult = deposits[i].result as Result
         const result = call.result as Result
         return {
           tokenId,
@@ -37,11 +40,16 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
           token1: result.token1,
           tokensOwed0: result.tokensOwed0,
           tokensOwed1: result.tokensOwed1,
+          batchId: depositResult.batchId,
+          closed: depositResult.closed,
+          gasDeposit: depositResult.gasDeposit,
+          opened: depositResult.opened,
+          owner: depositResult.owner,
         }
       })
     }
     return undefined
-  }, [loading, error, results, tokenIds])
+  }, [loading, error, tokenIds, results, deposits])
 
   return {
     loading,

@@ -59,6 +59,7 @@ export const PositionPreview = ({
   }, [quoteCurrency])
 
   const removed = position?.liquidity && JSBI.equal(position?.liquidity, JSBI.BigInt(0))
+  const closedOrder = false
 
   return (
     <AutoColumn gap="md" style={{ marginTop: '0.5rem' }}>
@@ -74,7 +75,7 @@ export const PositionPreview = ({
             {currency0?.symbol} / {currency1?.symbol}
           </TYPE.label>
         </RowFixed>
-        <RangeBadge removed={removed} inRange={inRange} />
+        <RangeBadge removed={removed} inRange={inRange} closed={closedOrder} />
       </RowBetween>
 
       <LightCard>

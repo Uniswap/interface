@@ -27,14 +27,16 @@ const ActiveDot = styled.span`
 export default function RangeBadge({
   removed,
   inRange,
+  closed,
 }: {
   removed: boolean | undefined
   inRange: boolean | undefined
+  closed: boolean | undefined
 }) {
   return (
     <BadgeWrapper>
-      {removed ? (
-        <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees.</Trans>}>
+      {closed ? (
+        <MouseoverTooltip text={<Trans>Your limit order has been closed. Please claim the amounts.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
@@ -44,17 +46,11 @@ export default function RangeBadge({
           </Badge>
         </MouseoverTooltip>
       ) : inRange ? (
-        <MouseoverTooltip
-          text={
-            <Trans>
-              The price of this pool is within your selected range. Your position is currently earning fees.
-            </Trans>
-          }
-        >
+        <MouseoverTooltip text={<Trans>The limit order is filling in.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
             <BadgeText>
-              <Trans>In range</Trans>
+              <Trans>Filling</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
@@ -62,7 +58,7 @@ export default function RangeBadge({
         <MouseoverTooltip
           text={
             <Trans>
-              The price of this pool is outside of your selected range. Your position is not currently earning fees.
+              The limit order is pending, waiting for the price of the pool to move into the target price range.
             </Trans>
           }
         >
@@ -70,7 +66,7 @@ export default function RangeBadge({
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans>Out of range</Trans>
+              <Trans>Pending</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>

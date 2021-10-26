@@ -193,6 +193,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     liquidity,
     tickLower,
     tickUpper,
+    closed,
+    opened,
+    gasDeposit,
   } = positionDetails
 
   const token0 = useToken(token0Address)
@@ -219,8 +222,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const currencyQuote = quote && unwrappedToken(quote)
   const currencyBase = base && unwrappedToken(base)
 
-  // check if price is within range
+  // check if price is within range ; if out of range; the status is pennding
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
+  const closedOrder: boolean = closed.isZero() ? false : true
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
@@ -241,7 +245,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </BadgeText>
           </Badge>
         </PrimaryPositionIdData>
-        <RangeBadge removed={removed} inRange={!outOfRange} />
+        <RangeBadge removed={removed} inRange={!outOfRange} closed={closedOrder} />
       </RowBetween>
 
       {priceLower && priceUpper ? (

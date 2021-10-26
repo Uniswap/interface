@@ -311,7 +311,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     fontSize="20px"
                   >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</TYPE.label>
                 </RowFixed>
-                <RangeBadge removed={removed} inRange={!outOfRange} />
+                <RangeBadge removed={removed} inRange={!outOfRange} closed={false} />
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">

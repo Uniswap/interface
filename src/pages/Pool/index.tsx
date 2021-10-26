@@ -139,7 +139,7 @@ export default function Pool() {
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
-      acc[p.liquidity?.isZero() ? 1 : 0].push(p)
+      acc[p.closed?.isZero() ? 0 : 1].push(p)
       return acc
     },
     [[], []]
@@ -193,7 +193,7 @@ export default function Pool() {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your V3 liquidity positions will appear here.</Trans>
+                      <Trans>Your limit orders will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
@@ -210,7 +210,7 @@ export default function Pool() {
                 <ShowInactiveToggle>
                   <label>
                     <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show closed positions</Trans>
+                      <Trans>Show closed limit orders</Trans>
                     </TYPE.body>
                   </label>
                   <input

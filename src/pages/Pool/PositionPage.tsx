@@ -332,6 +332,9 @@ export function PositionPage({
     tickLower,
     tickUpper,
     tokenId,
+    closed,
+    gasDeposit,
+    owner,
   } = positionDetails || {}
 
   const removed = liquidity?.eq(0)
@@ -357,6 +360,7 @@ export function PositionPage({
   }, [liquidity, pool, tickLower, tickUpper])
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const isClosed = closed?.isZero ? false : true
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
@@ -472,7 +476,6 @@ export function PositionPage({
       })
   }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
-  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
@@ -561,7 +564,7 @@ export function PositionPage({
           <AutoColumn gap="sm">
             <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
               <HoverText>
-                <Trans>← Back to Pools Overview</Trans>
+                <Trans>← Back to Limit Orders</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>
@@ -575,7 +578,7 @@ export function PositionPage({
                     <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
                   </BadgeText>
                 </Badge>
-                <RangeBadge removed={removed} inRange={inRange} />
+                <RangeBadge removed={removed} inRange={inRange} closed={false} />
               </RowFixed>
               {ownsNFT && (
                 <RowFixed>
@@ -588,10 +591,10 @@ export function PositionPage({
                       $borderRadius="12px"
                       style={{ marginRight: '8px' }}
                     >
-                      <Trans>Increase Liquidity</Trans>
+                      <Trans>Retrieve NFT Position</Trans>
                     </ButtonGray>
                   ) : null}
-                  {tokenId && !removed ? (
+                  {tokenId && !isClosed ? (
                     <ResponsiveButtonPrimary
                       as={Link}
                       to={`/remove/${tokenId}`}
@@ -599,7 +602,7 @@ export function PositionPage({
                       padding="6px 8px"
                       $borderRadius="12px"
                     >
-                      <Trans>Remove Liquidity</Trans>
+                      <Trans>Cancel Limit Order</Trans>
                     </ResponsiveButtonPrimary>
                   ) : null}
                 </RowFixed>
@@ -735,7 +738,7 @@ export function PositionPage({
                           ) : (
                             <>
                               <TYPE.main color={theme.white}>
-                                <Trans>Collect fees</Trans>
+                                <Trans>Collect amount</Trans>
                               </TYPE.main>
                             </>
                           )}
@@ -800,7 +803,7 @@ export function PositionPage({
                   </Label>
                   <HideExtraSmall>
                     <>
-                      <RangeBadge removed={removed} inRange={inRange} />
+                      <RangeBadge removed={removed} inRange={inRange} closed={false} />
                       <span style={{ width: '8px' }} />
                     </>
                   </HideExtraSmall>
