@@ -41,6 +41,8 @@ target 'Uniswap' do
         if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < '9.0'.to_f
           config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
         end
+
+        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
       end
      end
   end
