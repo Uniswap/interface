@@ -102,7 +102,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             text={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
           />
         )
-      case BridgeModalStatus.CLOSED:
+      case BridgeModalStatus.APPROVING:
         return (
           <BridgingInitiatedModal
             isOpen
