@@ -3,12 +3,13 @@ import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useActiveWeb3React } from 'hooks/web3'
 import ms from 'ms.macro'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api, CHAIN_TAG } from 'state/data/enhanced'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
+import useInterval from '../../hooks/useInterval'
 import { useBlockNumber } from './hooks'
 import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './reducer'
 
@@ -32,7 +33,6 @@ function useBlockWarningTimer() {
   const { chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const chainConnectivityWarningActive = useAppSelector((state) => state.application.chainConnectivityWarning)
-  const timeout = useRef<NodeJS.Timeout>()
   const isWindowVisible = useIsWindowVisible()
   const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
   const currentBlock = useBlockNumber()
@@ -41,25 +41,24 @@ function useBlockWarningTimer() {
     setMsSinceLastBlock(0)
   }, [currentBlock])
 
+  useInterval(() => {
+    setMsSinceLastBlock((ms) => ms + NETWORK_HEALTH_CHECK_MS)
+  }, NETWORK_HEALTH_CHECK_MS)
+
+  const waitMsBeforeWarning = useMemo(
+    () =>
+      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ??
+      DEFAULT_MS_BEFORE_WARNING,
+    [chainId]
+  )
+
   useEffect(() => {
-    const waitMsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
-
-    timeout.current = setTimeout(() => {
-      setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
-      if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
-        dispatch(setChainConnectivityWarning({ warn: true }))
-      } else if (chainConnectivityWarningActive) {
-        dispatch(setChainConnectivityWarning({ warn: false }))
-      }
-    }, NETWORK_HEALTH_CHECK_MS)
-
-    return function cleanup() {
-      if (timeout.current) {
-        clearTimeout(timeout.current)
-      }
+    if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
+      dispatch(setChainConnectivityWarning({ warn: true }))
+    } else if (chainConnectivityWarningActive) {
+      dispatch(setChainConnectivityWarning({ warn: false }))
     }
-  }, [chainId, chainConnectivityWarningActive, dispatch, isWindowVisible, msSinceLastBlock, setMsSinceLastBlock])
+  }, [chainConnectivityWarningActive, dispatch, isWindowVisible, msSinceLastBlock, waitMsBeforeWarning])
 }
 
 export default function Updater(): null {
