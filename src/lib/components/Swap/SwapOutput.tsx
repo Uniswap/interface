@@ -14,11 +14,11 @@ const OutputColumn = styled(Column)<{ color?: string; token?: Token; theme: Them
   position: relative;
 
   // Set transitions to reduce color flashes when switching color/token.
-  // When color loads, transition the background so that it always transitions from the empty state.
+  // When color loads, transition the background so that it transitions from the empty or last state, but not _to_ the empty state.
   transition: ${({ color }) => (color ? 'background-color 0.3s ease-out' : undefined)};
   * {
-    // When color is loading, transition the color so that it always transitions from the last state.
-    transition: ${({ color, token }) => (!color && token ? 'color 0.3s ease-out, stroke 0.3s ease-out' : undefined)};
+    // When color is loading, delay the color/stroke so that it seems to transition from the last state.
+    transition: ${({ color, token }) => (!color && token ? 'color 0.3s ease-in, stroke 0.3s ease-in' : undefined)};
   }
 `
 

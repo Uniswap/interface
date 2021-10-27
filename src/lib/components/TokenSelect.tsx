@@ -67,7 +67,7 @@ const TokenButtonRow = styled(Row)`
 `
 
 const TokenImg = styled.img`
-  border-radius: 1em;
+  border-radius: 100%;
   height: 1.25em;
   width: 1.25em;
 `

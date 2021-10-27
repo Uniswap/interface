@@ -61,7 +61,7 @@ const TransactionRow = styled(Row)`
 `
 
 const TokenImg = styled.img`
-  border-radius: 1em;
+  border-radius: 100%;
   height: 1em;
   width: 1em;
 `

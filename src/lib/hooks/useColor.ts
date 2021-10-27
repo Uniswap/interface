@@ -6,13 +6,17 @@ import { shade, tint } from 'polished'
 import { useLayoutEffect, useState } from 'react'
 import { hex } from 'wcag-contrast'
 
-const fallbackCache = new Map<string, string>()
+const colors = new Map<string, string>()
 
 function UriForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png?color`
 }
 
-async function getColorFromToken(token: Token): Promise<string | null> {
+/**
+ * Extracts the prominent color from a token.
+ * NB: If cached, this function returns synchronously; using a callback allows sync or async returns.
+ */
+async function getColorFromToken(token: Token, cb: (color: string | undefined) => void = () => void 0) {
   const { address, chainId, logoURI } = token
 
   // Color extraction must use a CORS-compatible resource, but the resource is already cached.
@@ -20,31 +24,29 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   // Without this, color extraction prevent resource caching.
   const uri = uriToHttp(logoURI)[0] + '?color'
 
-  // If we've already determined that a fallback is necessary, use it immediately to prevent a flash.
-  const fallbackUri = fallbackCache.get(uri)
-  if (fallbackUri) {
-    return await getColorFromUriPath(fallbackUri)
+  let color = colors.get(uri)
+  if (color) {
+    return cb(color)
   }
 
-  let color = await getColorFromUriPath(uri)
+  color = await getColorFromUriPath(uri)
   if (!color && chainId === 1) {
     const fallbackUri = UriForEthToken(address)
     color = await getColorFromUriPath(fallbackUri)
-    if (color) {
-      fallbackCache.set(uri, fallbackUri)
-    }
+  }
+  if (color) {
+    colors.set(uri, color)
   }
 
-  return color
+  return cb(color)
 }
 
-async function getColorFromUriPath(uri: string): Promise<string | null> {
+async function getColorFromUriPath(uri: string): Promise<string | undefined> {
   try {
     const palette = await Vibrant.from(uri).getPalette()
-    return palette.Vibrant?.hex ?? null
-  } catch {
-    return null
-  }
+    return palette.Vibrant?.hex
+  } catch {}
+  return
 }
 
 function getAccessibleColor(color: string, theme: Theme) {
@@ -74,8 +76,8 @@ export default function useColor(token?: Token) {
     let stale = false
 
     if (token) {
-      getColorFromToken(token).then((color) => {
-        if (!stale && color !== null) {
+      getColorFromToken(token, (color) => {
+        if (!stale && color) {
           color = getAccessibleColor(color, theme)
           setColor(color)
         }
