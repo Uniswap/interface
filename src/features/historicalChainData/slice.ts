@@ -6,36 +6,44 @@ import { SupportedChainId } from 'src/constants/chains'
 // List of supported subgraphs
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
-  [SupportedChainId.RINKEBY]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  [SupportedChainId.RINKEBY]:
+    'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-v3-rinkeby',
   [SupportedChainId.ARBITRUM_ONE]:
     'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
   [SupportedChainId.OPTIMISM]:
     'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-optimism-dev',
 }
 
-interface TokenPriceHourlyVariables {
-  address: string
-  chainId: number
-  startTime: number
-  skip: number
-}
-
-export const historicalChainData = createApi({
+export const api = createApi({
   reducerPath: 'historicalChainData',
   baseQuery: graphqlRequestBaseQuery(),
   endpoints: (builder) => ({
-    tokenPriceHourly: builder.query({
-      query: (variables: TokenPriceHourlyVariables) => ({
+    prices: builder.query({
+      query: (variables) => ({
         document: gql`
-          query tokenHourDatas($address: String!, $startTime: Int!, $skip: Int!) {
+          query prices($address: String!, $skip: Int!, $chainId: Int!) {
             tokenHourDatas(
               first: 100
               skip: $skip
-              where: { token: $address, periodStartUnix_gt: $startTime }
+              where: { token: $address }
               orderBy: periodStartUnix
-              orderDirection: asc
+              orderDirection: desc
             ) {
-              periodStartUnix
+              timestamp: periodStartUnix
+              high
+              low
+              open
+              close
+            }
+
+            tokenDayDatas(
+              first: 100
+              skip: $skip
+              where: { token: $address }
+              orderBy: date
+              orderDirection: desc
+            ) {
+              timestamp: date
               high
               low
               open
@@ -51,7 +59,7 @@ export const historicalChainData = createApi({
 
 // Graphql query client wrapper that builds a dynamic url based on chain id
 function graphqlRequestBaseQuery(): BaseQueryFn<
-  { document: string | DocumentNode; variables?: TokenPriceHourlyVariables },
+  { document: string | DocumentNode; variables?: { chainId: number } },
   unknown,
   Pick<ClientError, 'name' | 'message' | 'stack'>,
   Partial<Pick<ClientError, 'request' | 'response'>>
@@ -71,6 +79,7 @@ function graphqlRequestBaseQuery(): BaseQueryFn<
           },
         }
       }
+
       return { data: await new GraphQLClient(subgraphUrl).request(document, variables), meta: {} }
     } catch (error) {
       if (error instanceof ClientError) {

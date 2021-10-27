@@ -4295,26 +4295,39 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type TokenHourDatasQueryVariables = Exact<{
+export type PricesQueryVariables = Exact<{
   address: Scalars['String'];
-  startTime: Scalars['Int'];
   skip: Scalars['Int'];
+  chainId: Scalars['Int'];
 }>;
 
 
-export type TokenHourDatasQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __typename?: 'TokenHourData', periodStartUnix: number, high: any, low: any, open: any, close: any }> };
+export type PricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __typename?: 'TokenHourData', high: any, low: any, open: any, close: any, timestamp: number }>, tokenDayDatas: Array<{ __typename?: 'TokenDayData', high: any, low: any, open: any, close: any, timestamp: number }> };
 
 
-export const TokenHourDatasDocument = `
-    query tokenHourDatas($address: String!, $startTime: Int!, $skip: Int!) {
+export const PricesDocument = `
+    query prices($address: String!, $skip: Int!, $chainId: Int!) {
   tokenHourDatas(
     first: 100
     skip: $skip
-    where: {token: $address, periodStartUnix_gt: $startTime}
+    where: {token: $address}
     orderBy: periodStartUnix
-    orderDirection: asc
+    orderDirection: desc
   ) {
-    periodStartUnix
+    timestamp: periodStartUnix
+    high
+    low
+    open
+    close
+  }
+  tokenDayDatas(
+    first: 100
+    skip: $skip
+    where: {token: $address}
+    orderBy: date
+    orderDirection: desc
+  ) {
+    timestamp: date
     high
     low
     open
@@ -4324,13 +4337,14 @@ export const TokenHourDatasDocument = `
     `;
 
 const injectedRtkApi = api.injectEndpoints({
+  overrideExisting: true,
   endpoints: (build) => ({
-    tokenHourDatas: build.query<TokenHourDatasQuery, TokenHourDatasQueryVariables>({
-      query: (variables) => ({ document: TokenHourDatasDocument, variables })
+    prices: build.query<PricesQuery, PricesQueryVariables>({
+      query: (variables) => ({ document: PricesDocument, variables })
     }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useTokenHourDatasQuery, useLazyTokenHourDatasQuery } = injectedRtkApi;
+export const { usePricesQuery, useLazyPricesQuery } = injectedRtkApi;
 
