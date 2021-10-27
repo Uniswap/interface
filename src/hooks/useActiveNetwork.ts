@@ -75,7 +75,7 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'BNB',
       decimals: 18
     },
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    rpcUrls: ['https://bsc.kyber.org/v1/mainnet/geth?appId=prod-dmm'],
     blockExplorerUrls: ['https://bscscan.com/']
   },
   [ChainId.AVAXMAINNET]: {
