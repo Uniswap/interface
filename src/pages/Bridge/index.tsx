@@ -138,7 +138,7 @@ export default function Bridge() {
       toChainId: toNetwork.chainId
     })
     setModalStatus(BridgeModalStatus.DISCLAIMER)
-  }, [setModalData, bridgeCurrency?.symbol, typedValue, fromNetwork.chainId, toNetwork.chainId, setModalStatus])
+  }, [bridgeCurrency, typedValue, fromNetwork.chainId, toNetwork.chainId, setModalData, setModalStatus])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
