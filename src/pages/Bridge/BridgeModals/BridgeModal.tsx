@@ -29,90 +29,86 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
   const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
   const disclaimerText = setDisclaimerText(NETWORK_DETAIL[fromNetwork.chainId].isArbitrum)
 
-  const selectModal = () => {
-    switch (status) {
-      case BridgeModalStatus.INITIATED:
-        return (
-          <BridgingInitiatedModal
-            isOpen
-            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            amount={typedValue}
-            assetType={currencyId ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
-            heading={'Bridging Initiated'}
-          />
-        )
-      case BridgeModalStatus.PENDING:
-        return (
-          <BridgePendingModal
-            isOpen
-            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            pendingText={`${typedValue} ${currencyId ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
-          />
-        )
-      case BridgeModalStatus.COLLECTING:
-        return (
-          <BridgingInitiatedModal
-            isOpen
-            onDismiss={() => {
-              setStatus(BridgeModalStatus.CLOSED)
-              setStep(BridgeStep.Initial)
-            }}
-            amount={typedValue}
-            assetType={currencyId ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
-            heading={'Collecting Initiated'}
-          />
-        )
-      case BridgeModalStatus.SUCCESS:
-        return (
-          <BridgeSuccesModal
-            isOpen
-            amount={typedValue}
-            assetType={currencyId ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
-            onDismiss={() => {
-              handleResetBridge()
-            }}
-            onTradeButtonClick={handleResetBridge}
-            onBackButtonClick={handleResetBridge}
-          />
-        )
-      case BridgeModalStatus.ERROR:
-        return (
-          <BridgeErrorModal
-            isOpen
-            onDismiss={() => {
-              handleResetBridge()
-            }}
-            error={error ?? ''}
-          />
-        )
-      case BridgeModalStatus.DISCLAIMER:
-        return (
-          <BridgeDisclaimerModal
-            isOpen
-            onConfirm={() => {
-              handleSubmit()
-            }}
-            onDismiss={() => {
-              handleResetBridge()
-            }}
-            amount={typedValue}
-            assetType={currencyId ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
-            heading={txType}
-            disclaimerText={disclaimerText}
-          />
-        )
-      default:
-        return null
-    }
+  switch (status) {
+    case BridgeModalStatus.INITIATED:
+      return (
+        <BridgingInitiatedModal
+          isOpen
+          onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+          amount={typedValue}
+          assetType={currencyId ?? ''}
+          fromNetworkName={fromNetworkName}
+          toNetworkName={toNetworkName}
+          heading={'Bridging Initiated'}
+        />
+      )
+    case BridgeModalStatus.PENDING:
+      return (
+        <BridgePendingModal
+          isOpen
+          onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+          pendingText={`${typedValue} ${currencyId ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+        />
+      )
+    case BridgeModalStatus.COLLECTING:
+      return (
+        <BridgingInitiatedModal
+          isOpen
+          onDismiss={() => {
+            setStatus(BridgeModalStatus.CLOSED)
+            setStep(BridgeStep.Initial)
+          }}
+          amount={typedValue}
+          assetType={currencyId ?? ''}
+          fromNetworkName={fromNetworkName}
+          toNetworkName={toNetworkName}
+          heading={'Collecting Initiated'}
+        />
+      )
+    case BridgeModalStatus.SUCCESS:
+      return (
+        <BridgeSuccesModal
+          isOpen
+          amount={typedValue}
+          assetType={currencyId ?? ''}
+          fromNetworkName={fromNetworkName}
+          toNetworkName={toNetworkName}
+          onDismiss={() => {
+            handleResetBridge()
+          }}
+          onTradeButtonClick={handleResetBridge}
+          onBackButtonClick={handleResetBridge}
+        />
+      )
+    case BridgeModalStatus.ERROR:
+      return (
+        <BridgeErrorModal
+          isOpen
+          onDismiss={() => {
+            handleResetBridge()
+          }}
+          error={error ?? ''}
+        />
+      )
+    case BridgeModalStatus.DISCLAIMER:
+      return (
+        <BridgeDisclaimerModal
+          isOpen
+          onConfirm={() => {
+            handleSubmit()
+          }}
+          onDismiss={() => {
+            handleResetBridge()
+          }}
+          amount={typedValue}
+          assetType={currencyId ?? ''}
+          fromNetworkName={fromNetworkName}
+          toNetworkName={toNetworkName}
+          heading={txType}
+          disclaimerText={disclaimerText}
+        />
+      )
+    default:
+      return null
   }
-
-  return selectModal()
 }
