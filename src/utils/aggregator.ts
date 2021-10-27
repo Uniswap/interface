@@ -67,8 +67,18 @@ function encodeUniSwap(data: any) {
 
 function encodeStableSwap(sequence: any) {
   return encodeParameters(
-    ['address', 'address', 'address', 'uint256', 'uint256'],
-    [sequence.pool, sequence.tokenIn, sequence.tokenOut, sequence.swapAmount, '1']
+    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'uint256', 'address'],
+    [
+      sequence.pool,
+      sequence.tokenIn,
+      sequence.tokenOut,
+      sequence.extra?.tokenInIndex,
+      sequence.extra?.tokenOutIndex,
+      sequence.swapAmount,
+      '1',
+      sequence.poolLength,
+      sequence.pool
+    ]
   )
 }
 
@@ -76,11 +86,22 @@ function encodeCurveSwap(data: any) {
   const poolType = data.poolType?.toLowerCase()
   // curve-base: exchange
   // curve-meta: exchange_underlying
-  const usePoolUnderlying = poolType !== 'curve-base'
-  // [pool, tokenFrom, tokenTo, dx, minDy, poolLength, usePoolUnderlying]
+  const usePoolUnderlying = data.extra?.underlying
+  const isTriCrypto = poolType === 'curve-tricrypto'
+
   return encodeParameters(
-    ['address', 'address', 'address', 'uint256', 'uint256', 'uint256', 'bool'],
-    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, '1', data.poolLength, usePoolUnderlying]
+    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'bool', 'bool'],
+    [
+      data.pool,
+      data.tokenIn,
+      data.tokenOut,
+      data.extra?.tokenInIndex,
+      data.extra?.tokenOutIndex,
+      data.swapAmount,
+      '0',
+      usePoolUnderlying,
+      isTriCrypto
+    ]
   )
 }
 
@@ -225,7 +246,8 @@ export class Aggregator {
     baseURL: string,
     currencyAmountIn: CurrencyAmount,
     currencyOut: Currency,
-    saveGas = false
+    saveGas = false,
+    dexes = ''
   ): Promise<Aggregator | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -246,7 +268,8 @@ export class Aggregator {
         tokenOut: tokenOutAddress.toLowerCase(),
         amountIn: currencyAmountIn.raw?.toString(),
         saveGas: saveGas ? '1' : '0',
-        gasInclude: '1'
+        gasInclude: '1',
+        ...(dexes ? { dexes } : {})
       })
       try {
         const response = await fetch(`${baseURL}?${search}`)
