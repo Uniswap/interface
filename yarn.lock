@@ -3011,10 +3011,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/token-lists@^1.0.0-beta.26":
-  version "1.0.0-beta.26"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.26.tgz#6436e6bffda6a753f6412a48a7ce7548fa6a0f01"
-  integrity sha512-lDeB81CVds2ISqTbANyxgProFtoux4WRJFv9OoFV3NRnn10SYr0kVjgSOuBmbqa8gJorqomQYqOSGksIDQqthw==
+"@uniswap/token-lists@^1.0.0-beta.27":
+  version "1.0.0-beta.27"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.27.tgz#8b02a979b0b0024cc96f60e694a3f6db6b2ccab2"
+  integrity sha512-x5hmIniQ9TGqOBCRqfWcmZi/U5kB0qrHMDQ9igs3nMbK0wwmYLraL4owbIwXFGR/co6/lJYJC4K/Gjn4wZY5mQ==
 
 "@uniswap/v2-core@1.0.1":
   version "1.0.1"
@@ -3141,6 +3141,13 @@ agent-base@6:
   dependencies:
     debug "4"
 
+ajv-formats@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
+  integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
+  dependencies:
+    ajv "^8.0.0"
+
 ajv@^6.10.0, ajv@^6.12.4:
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
@@ -3151,7 +3158,7 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.1:
+ajv@^8.0.0, ajv@^8.0.1, ajv@^8.6.3:
   version "8.6.3"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.6.3.tgz#11a66527761dc3e9a3845ea775d2d3c0414e8764"
   integrity sha512-SMJOdDP6LqTkD0Uq8qLi+gMwSt0imXLSV080qFVwJCpH9U6Mb+SUGHAXM0KNbcBPguytWyvFxcHgMLe2D2XSpw==
@@ -8777,6 +8784,8 @@ multicall-query@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.1.tgz#e70ac40c27e80d33e0915767b0eea48942e5f2ef"
   integrity sha512-wr7Vz6zmFOC/2CXoSPun2kTr7CabzWhvSL7t/N7yHKlsaqxtnh/h5VbfIZYFU2GeJzTFcv5pqDg9uaOnWa75xg==
+  dependencies:
+    "@uniswap/v3-periphery" "^1.2.1"
 
 mute-stream@0.0.8:
   version "0.0.8"

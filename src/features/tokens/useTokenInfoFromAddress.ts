@@ -6,7 +6,6 @@ import { utils } from 'ethers'
 import { NEVER_RELOAD } from 'multicall-query'
 import { useMemo } from 'react'
 import { SupportedChainId } from 'src/constants/chains'
-import { useLatestBlock } from 'src/features/blocks/hooks'
 import { useBytes32TokenContract, useTokenContract } from 'src/features/contracts/useContract'
 import { useSingleCallResult } from 'src/features/multicall'
 import { useAllTokens } from 'src/features/tokens/useTokens'
@@ -27,10 +26,8 @@ export function useTokenInfoFromAddress(
   const tokens = chainIdToTokens[chainId] ?? {}
   const token: Token | undefined = address ? tokens[address] : undefined
 
-  const latestBlock = useLatestBlock(chainId)
   const tokenName = useSingleCallResult(
     chainId,
-    latestBlock,
     token ? undefined : tokenContract,
     'name',
     undefined,
@@ -38,7 +35,6 @@ export function useTokenInfoFromAddress(
   )
   const tokenNameBytes32 = useSingleCallResult(
     chainId,
-    latestBlock,
     token ? undefined : tokenContractBytes32,
     'name',
     undefined,
@@ -46,7 +42,6 @@ export function useTokenInfoFromAddress(
   )
   const symbol = useSingleCallResult(
     chainId,
-    latestBlock,
     token ? undefined : tokenContract,
     'symbol',
     undefined,
@@ -54,7 +49,6 @@ export function useTokenInfoFromAddress(
   )
   const symbolBytes32 = useSingleCallResult(
     chainId,
-    latestBlock,
     token ? undefined : tokenContractBytes32,
     'symbol',
     undefined,
@@ -62,7 +56,6 @@ export function useTokenInfoFromAddress(
   )
   const decimals = useSingleCallResult(
     chainId,
-    latestBlock,
     token ? undefined : tokenContract,
     'decimals',
     undefined,

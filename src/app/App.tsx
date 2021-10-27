@@ -20,6 +20,7 @@ import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdater } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
+import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { darkTheme, theme } from 'src/styles/theme'
@@ -42,7 +43,7 @@ export function App() {
           <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
             <ErrorBoundary>
               <WalletContextProvider>
-                <MulticallUpdater />
+                <DataUpdaters />
                 <NavStack isDarkMode={isDarkMode} />
               </WalletContextProvider>
             </ErrorBoundary>
@@ -50,6 +51,15 @@ export function App() {
         </Provider>
       </SafeAreaProvider>
     </StrictMode>
+  )
+}
+
+function DataUpdaters() {
+  return (
+    <>
+      <MulticallUpdater />
+      <TokenListUpdater />
+    </>
   )
 }
 

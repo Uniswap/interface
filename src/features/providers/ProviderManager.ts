@@ -3,7 +3,7 @@ import { config } from 'src/config'
 import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
-import { promiseTimeout, sleep } from 'src/utils/timeout'
+import { promiseTimeout, sleep } from 'src/utils/timing'
 
 enum ProviderStatus {
   Disconnected,
