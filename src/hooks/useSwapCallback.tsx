@@ -134,9 +134,7 @@ function useSwapCallArguments(
       }
     }
 
-    const value = parsedAmount.currency.isNative
-      ? toHex(serviceFee.add(parsedAmount).quotient)
-      : toHex(serviceFee.quotient)
+    const value = parsedAmount.currency.isNative ? toHex(parsedAmount.quotient) : toHex('0')
 
     const weth = WETH9_EXTENDED[chainId]
 
