@@ -70,41 +70,5 @@ export const UPCOMING_POOLS: UpcomingPool[] = [
       }
     ],
     information: 'https://gov.kyber.org/t/joint-liquidity-mining-on-ethereum-with-unbound-finance-on-kyber-dmm/486'
-  },
-  {
-    poolToken1Symbol: 'EVRY',
-    poolToken1Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png',
-    poolToken2Symbol: 'ETH',
-    poolToken2Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-    network: ChainId.MAINNET,
-    rewards: [
-      {
-        symbol: 'KNC',
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png'
-      },
-      {
-        symbol: 'EVRY',
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
-      }
-    ],
-    information: 'https://gov.kyber.org/t/evrynet-evry-joint-liquidity-mining-on-kyber-dmm/481'
-  },
-  {
-    poolToken1Symbol: 'EVRY',
-    poolToken1Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png',
-    poolToken2Symbol: 'USDT',
-    poolToken2Logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
-    network: ChainId.MAINNET,
-    rewards: [
-      {
-        symbol: 'KNC',
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png'
-      },
-      {
-        symbol: 'EVRY',
-        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
-      }
-    ],
-    information: 'https://gov.kyber.org/t/evrynet-evry-joint-liquidity-mining-on-kyber-dmm/481'
   }
 ]
