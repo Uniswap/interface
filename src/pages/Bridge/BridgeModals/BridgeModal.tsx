@@ -36,11 +36,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgingInitiatedModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            amount={typedValue}
-            assetType={symbol ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
             heading={'Bridging Initiated'}
+            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.PENDING:
@@ -59,11 +56,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
               setStatus(BridgeModalStatus.CLOSED)
               setStep(BridgeStep.Initial)
             }}
-            amount={typedValue}
-            assetType={symbol ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
             heading={'Collecting Initiated'}
+            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.SUCCESS:
@@ -97,11 +91,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             isOpen
             onConfirm={handleSubmit}
             onDismiss={handleResetBridge}
-            amount={typedValue}
-            assetType={symbol ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
-            heading={txType}
+            heading={`${txType} ${typedValue} ${symbol ?? ''}`}
+            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
             disclaimerText={disclaimerText}
           />
         )
@@ -118,11 +109,8 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgingInitiatedModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            amount={''}
-            assetType={''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
             heading={'Approving Initiated'}
+            txInitiatedText={`When approved you will be able to bridge tokens from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       default:

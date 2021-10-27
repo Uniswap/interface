@@ -19,21 +19,15 @@ export const TitleWrapper = styled.div`
 `
 
 export interface BridgingInitiatedModalProps extends ModalProps {
-  amount: string
-  assetType: string
-  fromNetworkName: string
-  toNetworkName: string
   heading: string
+  txInitiatedText: string
 }
 
 export const BridgingInitiatedModal = ({
   isOpen,
   onDismiss,
-  amount,
-  assetType,
-  fromNetworkName,
-  toNetworkName,
-  heading
+  heading,
+  txInitiatedText
 }: BridgingInitiatedModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
     <Wrapper>
@@ -43,9 +37,7 @@ export const BridgingInitiatedModal = ({
           {heading}
         </TYPE.body>
       </TitleWrapper>
-      <TYPE.main mb="24px">
-        {amount} {assetType} from {fromNetworkName} to {toNetworkName}
-      </TYPE.main>
+      <TYPE.main mb="24px">{txInitiatedText}</TYPE.main>
       <ButtonPrimary onClick={onDismiss}>Back to Bridge</ButtonPrimary>
     </Wrapper>
   </Modal>

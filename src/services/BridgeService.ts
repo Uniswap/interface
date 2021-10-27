@@ -352,7 +352,7 @@ export class BridgeService {
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
     this.store.dispatch(
       setBridgeModalData({
-        symbol: BridgeAssetType.ERC20,
+        symbol: tokenData.symbol,
         typedValue: value,
         fromChainId: this.l2ChainId,
         toChainId: this.l1ChainId
