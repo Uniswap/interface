@@ -65,7 +65,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgeSuccessModal
             isOpen
             heading={'Bridging Successful'}
-            successText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
             onDismiss={() => {
               handleResetBridge()
             }}

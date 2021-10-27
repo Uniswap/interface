@@ -33,13 +33,13 @@ const Button = styled(ButtonSecondary)`
 interface BridgeSuccessModalProps {
   isOpen: boolean
   heading: string
-  successText: string
+  text: string
   onDismiss: () => void
   onTradeButtonClick: () => void
   onBackButtonClick: () => void
 }
 
-export const BridgeSuccessModal = ({ isOpen, onDismiss, heading, successText }: BridgeSuccessModalProps) => {
+export const BridgeSuccessModal = ({ isOpen, onDismiss, heading, text }: BridgeSuccessModalProps) => {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <Wrapper>
@@ -49,7 +49,7 @@ export const BridgeSuccessModal = ({ isOpen, onDismiss, heading, successText }: 
             {heading}
           </TYPE.body>
         </TitleWrapper>
-        <TYPE.main>{successText}</TYPE.main>
+        <TYPE.main>{text}</TYPE.main>
         <ButtonsWrapper>
           <Button onClick={onDismiss}>Back to bridge</Button>
         </ButtonsWrapper>

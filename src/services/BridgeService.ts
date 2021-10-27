@@ -342,7 +342,9 @@ export class BridgeService {
     if (!erc20L2Address || !this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     const erc20L1Address = await this.bridge.l2Bridge.getERC20L1Address(erc20L2Address)
-    if (!erc20L1Address) return
+    if (!erc20L1Address) {
+      throw new Error('Token address not recognized')
+    }
 
     const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address))?.ERC20
     if (!tokenData) {
