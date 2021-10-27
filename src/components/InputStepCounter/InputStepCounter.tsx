@@ -81,8 +81,6 @@ interface StepCounterProps {
   width?: string
   locked?: boolean // disable input
   title: ReactNode
-  tokenA: string | undefined
-  tokenB: string | undefined
   currencyA?: Currency | null
   currencyB?: Currency | null
 }
@@ -97,13 +95,13 @@ const StepCounter = ({
   locked,
   onUserInput,
   title,
-  tokenA,
-  tokenB,
   currencyA,
   currencyB,
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
+  const tokenA = currencyA?.symbol
+  const tokenB = currencyB?.symbol
 
   // let user type value and only update parent value on blur
   const [localValue, setLocalValue] = useState('')
@@ -146,8 +144,9 @@ const StepCounter = ({
     }
   }, [localValue, useLocalValue, value])
 
-  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ? currencyB : undefined)
+  const baseCurrencyPriceInUSDC = useUSDCPrice(currencyB ?? undefined)
   const baseCurrencyPriceInUSDCNumber = Number(baseCurrencyPriceInUSDC?.toFixed(4))
+  const baseCurrencyPriceIsNotNaN = !isNaN(baseCurrencyPriceInUSDCNumber)
   const quoteCurrencyAmount = Number(value)
 
   return (
@@ -187,7 +186,8 @@ const StepCounter = ({
 
         <InputTitle fontSize={12} textAlign="center">
           <Trans>
-            {tokenB} per {tokenA} (${(baseCurrencyPriceInUSDCNumber * quoteCurrencyAmount).toFixed(2)})
+            {tokenB} per {tokenA}{' '}
+            {baseCurrencyPriceIsNotNaN ? `$${(baseCurrencyPriceInUSDCNumber * quoteCurrencyAmount).toFixed(2)}` : ''}
           </Trans>
         </InputTitle>
       </AutoColumn>

@@ -54,8 +54,6 @@ export default function RangeSelector({
           feeAmount={feeAmount}
           label={leftPrice ? `${currencyB?.symbol}` : '-'}
           title={<Trans>Min Price</Trans>}
-          tokenA={currencyA?.symbol}
-          tokenB={currencyB?.symbol}
           currencyA={currencyA}
           currencyB={currencyB}
         />
@@ -69,8 +67,6 @@ export default function RangeSelector({
           decrementDisabled={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]}
           feeAmount={feeAmount}
           label={rightPrice ? `${currencyB?.symbol}` : '-'}
-          tokenA={currencyA?.symbol}
-          tokenB={currencyB?.symbol}
           currencyA={currencyA}
           currencyB={currencyB}
           title={<Trans>Max Price</Trans>}
