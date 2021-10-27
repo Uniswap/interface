@@ -6,6 +6,7 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
@@ -24,6 +25,7 @@ import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { darkTheme, theme } from 'src/styles/theme'
+import { persistor } from './store'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
@@ -40,14 +42,16 @@ export function App() {
     <StrictMode>
       <SafeAreaProvider>
         <Provider store={store}>
-          <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
-            <ErrorBoundary>
-              <WalletContextProvider>
-                <DataUpdaters />
-                <NavStack isDarkMode={isDarkMode} />
-              </WalletContextProvider>
-            </ErrorBoundary>
-          </ThemeProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+              <ErrorBoundary>
+                <WalletContextProvider>
+                  <DataUpdaters />
+                  <NavStack isDarkMode={isDarkMode} />
+                </WalletContextProvider>
+              </ErrorBoundary>
+            </ThemeProvider>
+          </PersistGate>
         </Provider>
       </SafeAreaProvider>
     </StrictMode>

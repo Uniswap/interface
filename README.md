@@ -21,6 +21,17 @@ Follow the general [React Native setup instructions](https://reactnative.dev/doc
 
 Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn contracts:compile`. Re-run this if the ABIs or uniswap sdk libs are ever changed.
 
+#### Cocoapods and Disabling Flipper Inclusion
+
+We do not check in Flipper into source. To prevent `pod install` from adding Flipper, set an environment variable in your `.bash_profile` or `.zshrc`:
+
+```
+# To disable flipper inclusion
+export GITHUB_WORKFLOW=1
+```
+
+Run `yarn` to install packages, then run `pod install` in the `/ios` directory. 
+
 ### Running
 
 Start the mobile app by running `yarn ios` or `yarn android`. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.

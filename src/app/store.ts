@@ -1,4 +1,15 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore } from '@reduxjs/toolkit'
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
@@ -14,12 +25,25 @@ const sagaMiddleware = createSagaMiddleware({
   },
 })
 
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['wallet', 'balances'],
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => {
     return [
       // Disable thunk, use saga instead
-      ...getDefaultMiddleware({ thunk: false }),
+      ...getDefaultMiddleware({
+        thunk: false,
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
       sagaMiddleware,
       historicalChainData.middleware,
     ]
@@ -27,6 +51,7 @@ export const store = configureStore({
   devTools: config.debug,
 })
 
+export const persistor = persistStore(store)
 sagaMiddleware.run(rootSaga)
 
 export type AppDispatch = typeof store.dispatch
