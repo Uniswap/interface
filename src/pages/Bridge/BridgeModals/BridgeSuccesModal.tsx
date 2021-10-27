@@ -30,37 +30,26 @@ const Button = styled(ButtonSecondary)`
   line-height: 13px;
 `
 
-interface BridgeSuccesModalProps {
+interface BridgeSuccessModalProps {
   isOpen: boolean
-  amount: string
-  assetType: string
-  fromNetworkName: string
-  toNetworkName: string
+  heading: string
+  successText: string
   onDismiss: () => void
   onTradeButtonClick: () => void
   onBackButtonClick: () => void
 }
 
-export const BridgeSuccesModal = ({
-  amount,
-  isOpen,
-  onDismiss,
-  assetType,
-  fromNetworkName,
-  toNetworkName
-}: BridgeSuccesModalProps) => {
+export const BridgeSuccessModal = ({ isOpen, onDismiss, heading, successText }: BridgeSuccessModalProps) => {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
       <Wrapper>
         <ArrowRightCircle strokeWidth={0.5} size={75} color="#0E9F6E" />
         <TitleWrapper>
           <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
-            Bridging Succesful
+            {heading}
           </TYPE.body>
         </TitleWrapper>
-        <TYPE.main>
-          {amount} {assetType} from {fromNetworkName} to {toNetworkName}
-        </TYPE.main>
+        <TYPE.main>{successText}</TYPE.main>
         <ButtonsWrapper>
           <Button onClick={onDismiss}>Back to bridge</Button>
         </ButtonsWrapper>

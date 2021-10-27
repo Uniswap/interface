@@ -3,7 +3,7 @@ import { BridgeModalState, BridgeModalStatus } from '../../../state/bridge/reduc
 import { BridgeStep } from '../utils'
 import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
-import { BridgeSuccesModal } from './BridgeSuccesModal'
+import { BridgeSuccessModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
 import { NETWORK_DETAIL } from '../../../constants'
 import { BridgeDisclaimerModal } from './BridgeDisclaimerModal'
@@ -62,12 +62,10 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
         )
       case BridgeModalStatus.SUCCESS:
         return (
-          <BridgeSuccesModal
+          <BridgeSuccessModal
             isOpen
-            amount={typedValue}
-            assetType={symbol ?? ''}
-            fromNetworkName={fromNetworkName}
-            toNetworkName={toNetworkName}
+            heading={'Bridging Successful'}
+            successText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
             onDismiss={() => {
               handleResetBridge()
             }}
