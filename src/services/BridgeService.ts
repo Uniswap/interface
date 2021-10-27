@@ -338,9 +338,13 @@ export class BridgeService {
     }
   }
 
-  private withdrawERC20 = async (l1TokenAddress: string, value: string) => {
-    if (!l1TokenAddress || !this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
-    const tokenData = (await this.bridge.getAndUpdateL1TokenData(l1TokenAddress))?.ERC20
+  private withdrawERC20 = async (erc20L2Address: string, value: string) => {
+    if (!erc20L2Address || !this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
+
+    const erc20L1Address = await this.bridge.l2Bridge.getERC20L1Address(erc20L2Address)
+    if (!erc20L1Address) return
+
+    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address))?.ERC20
     if (!tokenData) {
       throw new Error("Can't withdraw; token not found")
     }
@@ -356,7 +360,7 @@ export class BridgeService {
     )
 
     const weiValue = utils.parseUnits(value, tokenData.decimals)
-    const txn = await this.bridge.withdrawERC20(l1TokenAddress, weiValue)
+    const txn = await this.bridge.withdrawERC20(erc20L1Address, weiValue)
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
     this.store.dispatch(
@@ -470,18 +474,18 @@ export class BridgeService {
     )
   }
 
-  private depositERC20 = async (erc20Address: string, typedValue: string) => {
+  private depositERC20 = async (erc20L1Address: string, typedValue: string) => {
     if (!this.l1ChainId || !this.l2ChainId || !this.account) return
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
 
-    const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20Address)
+    const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20L1Address)
     if (!(_tokenData && _tokenData.ERC20)) {
       throw new Error('Token data not found')
     }
     const tokenData = _tokenData.ERC20
     const parsedValue = utils.parseUnits(typedValue, tokenData.decimals)
 
-    const txn = await this.bridge.deposit(erc20Address, parsedValue)
+    const txn = await this.bridge.deposit(erc20L1Address, parsedValue)
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
