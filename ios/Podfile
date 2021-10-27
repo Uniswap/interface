@@ -5,6 +5,9 @@ require File.join(File.dirname(`node --print "require.resolve('react-native-unim
 
 platform :ios, '11.0'
 
+$FirebaseSDKVersion = '8.8.0'
+$RNFirebaseAnalyticsWithoutAdIdSupport=true
+
 target 'Uniswap' do
   use_unimodules!(exclude: ['expo-constants','expo-file-system', 'expo-image-loader'])
 

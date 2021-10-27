@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@ethersproject/shims": "^5.4.0",
+    "@react-native-firebase/analytics": "^12.9.3",
+    "@react-native-firebase/app": "^12.9.3",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "@reduxjs/toolkit": "^1.6.1",
