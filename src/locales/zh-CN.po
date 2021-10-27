@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-26 22:06\n"
+"PO-Revision-Date: 2021-10-27 13:10\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1606,11 +1606,11 @@ msgstr "该应用程序获取链上数据并使用 Infura API 构建合约调用
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "该应用程序从 Uniswap Labs 服务器获取最佳贸易路线。"
+msgstr "该应用程序从 Uniswap Labs 服务器获取最佳交易路由。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "该应用程序会记录匿名使用情况统计信息，以便随着时间的推移不断改进。"
+msgstr "该应用程序会匿名记录使用情况统计信息，以便随着时间的推移不断改进。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
@@ -1678,7 +1678,7 @@ msgstr "此代币未出现在激活的代币列表中。请确保这是您想要
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Uniswap Labs 应用程序不支持此令牌"
+msgstr "Uniswap Labs 应用程序不支持此代币"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1713,7 +1713,7 @@ msgstr "在 {0} 上交易，首先须将您的资产从 L1 桥接到 L2。请将
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
-msgstr "不支持令牌"
+msgstr "不支持该代币"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
