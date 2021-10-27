@@ -6,11 +6,13 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
 import { useBestV2Trade } from 'hooks/useBestV2Trade'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { V3TradeState } from 'state/routing/types'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { isTradeBetter } from 'utils/isTradeBetter'
 
 import { useCurrency } from '../../hooks/Tokens'
@@ -18,6 +20,7 @@ import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { Version } from '../../hooks/useToggledVersion'
+import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
@@ -129,6 +132,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
+  priceImpact: Percent | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -139,7 +143,6 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
   } = useSwapState()
-
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
@@ -184,7 +187,6 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
   }, [toggledVersion, v2Trade, v3Trade.state, v3Trade.trade])
 
   const bestTrade = isV2TradeBetter == undefined ? undefined : isV2TradeBetter ? v2Trade : v3Trade.trade
-
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
     [Field.OUTPUT]: relevantTokenBalances[1],
@@ -194,6 +196,21 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     [Field.INPUT]: inputCurrency,
     [Field.OUTPUT]: outputCurrency,
   }
+
+  const { wrapType } = useWrapCallback(inputCurrency, outputCurrency, typedValue)
+  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  let tradeInputValue
+  let tradeOutputValue
+  if (showWrap) {
+    tradeInputValue = parsedAmount
+    tradeOutputValue = parsedAmount
+  } else {
+    tradeInputValue = independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount
+    tradeOutputValue = independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
+  }
+  const fiatValueInput = useUSDCValue(tradeInputValue)
+  const fiatValueOutput = useUSDCValue(tradeOutputValue)
+  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
   let inputError: ReactNode | undefined
   if (!account) {
@@ -235,6 +252,7 @@ export function useDerivedSwapInfo(toggledVersion: Version | undefined): {
     v3Trade,
     bestTrade: bestTrade ?? undefined,
     allowedSlippage,
+    priceImpact,
   }
 }
 
