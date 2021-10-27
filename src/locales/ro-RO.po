@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:07\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -859,6 +859,7 @@ msgstr "Înţeleg"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Dacă cumperi un jeton din această listă, s-ar putea să nu îl poți vinde înapoi."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "Această rută vă optimizează prețul luând în considerare traseele 
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Acest jeton nu apare pe lista (listele) de jetoane active. Asigură-te că acesta este jetonul pe care vrei să îl tranzacționezi."
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Acest simbol nu este acceptat în aplicația Uniswap Labs"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Acest instrument va migra în siguranță lichiditatea ta {0} în V3. Procesul este complet lipsit de încredere datorită"
@@ -1705,6 +1710,10 @@ msgstr "La (cel puțin)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Pentru a începe tranzacționarea pe {0}, mai întâi conectați-vă activele de la L1 la L2. Vă rugăm să tratați acest lucru ca o versiune beta și să aflați despre riscuri înainte de a utiliza {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Tokenul nu este acceptat"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "Contract de migrare Uniswap↗"
 msgid "Uniswap on {0}"
 msgstr "Uniswap pe {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Sursă Necunoscută"
 
@@ -2278,7 +2287,7 @@ msgstr "minute"
 msgid "via {0}"
 msgstr "prin {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "prin {0} lista de jetoane"
 

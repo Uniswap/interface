@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:06\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -859,6 +859,7 @@ msgstr "Κατανοώ"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Αν αγοράσετε μία μάρκα από αυτή τη λίστα, μπορεί να μην μπορείτε να την πουλήσετε πίσω."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "Αυτή η διαδρομή βελτιστοποιεί την τιμή 
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Αυτή η μάρκα δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτή είναι η μάρκα που θέλετε να διαπραγματευτείτε."
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Αυτό το διακριτικό δεν υποστηρίζεται στην εφαρμογή Uniswap Labs"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία αυτή διακρίνεται από έλλειψη εμπιστοσύνης μεταξύ των μερών χάρη στο"
@@ -1705,6 +1710,10 @@ msgstr "Έως (από το ελάχιστο)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Για να ξεκινήσετε τις συναλλαγές με {0}, γεφυρώστε πρώτα τα περιουσιακά σας στοιχεία από το L1 στο L2. Αντιμετωπίστε το ως έκδοση beta και μάθετε για τους κινδύνους πριν χρησιμοποιήσετε το {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Το διακριτικό δεν υποστηρίζεται"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
 msgid "Uniswap on {0}"
 msgstr "Απεμπλοκή στο {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Άγνωστη πηγή"
 
@@ -2278,7 +2287,7 @@ msgstr "λεπτά"
 msgid "via {0}"
 msgstr "μέσω {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "μέσω {0} λίστας μάρκας"
 

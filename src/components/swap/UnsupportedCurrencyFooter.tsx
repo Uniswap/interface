@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -62,7 +62,7 @@ export default function UnsupportedCurrencyFooter({
         })
       : []
 
-  const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
+  const unsupportedTokens = useUnsupportedTokens()
 
   return (
     <DetailsFooter show={show}>

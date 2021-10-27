@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:07\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -859,6 +859,7 @@ msgstr "Entiendo"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Si compra una ficha de esta lista, es posible que no pueda venderla de nuevo."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "Esta ruta optimiza su precio considerando rutas divididas, múltiples sa
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Este token no aparece en las listas de tokens activos. Asegúrese de que este sea el token que desea intercambiar."
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Este token no es compatible con la aplicación Uniswap Labs."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Esta herramienta migrará su liquidez {0} a V3. El proceso es totalmente infalible gracias a la"
@@ -1705,6 +1710,10 @@ msgstr "A (al menos)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Para comenzar a operar en {0}, primero establezca un puente entre sus activos de L1 a L2. Trate esto como una versión beta y conozca los riesgos antes de usar {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Token no admitido"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "Contrato de migración Uniswap"
 msgid "Uniswap on {0}"
 msgstr "Uniswap en {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Fuente desconocida"
 
@@ -2278,7 +2287,7 @@ msgstr "minutos"
 msgid "via {0}"
 msgstr "vía {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "a través de la lista de fichas {0}"
 

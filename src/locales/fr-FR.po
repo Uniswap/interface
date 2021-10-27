@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-25 16:06\n"
+"PO-Revision-Date: 2021-10-26 22:06\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -859,6 +859,7 @@ msgstr "Je comprends"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Si vous achetez un jeton de cette liste, il se peut que vous ne puissiez pas le réclamer."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -1675,6 +1676,10 @@ msgstr "Cet itinéraire optimise votre prix en tenant compte des itinéraires fr
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Ce jeton n'apparaît pas sur la ou les listes de jetons actifs. Assurez-vous qu'il s'agit du jeton que vous souhaitez échanger."
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Ce jeton n'est pas pris en charge dans l'application Uniswap Labs"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Cet outil va migrer en toute sécurité vos liquidités {0} vers V3. Le processus est complètement sans confiance grâce à la"
@@ -1705,6 +1710,10 @@ msgstr "Vers (au moins)"
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Pour commencer à trader à {0}, commencez par relier vos actifs de L1 à L2. Veuillez considérer ceci comme une version bêta et vous renseigner sur les risques avant d'utiliser {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Jeton non pris en charge"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1859,7 +1868,7 @@ msgstr "Contrat de migration Uniswap↗"
 msgid "Uniswap on {0}"
 msgstr "Uniswap sur {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Source inconnue"
 
@@ -2278,7 +2287,7 @@ msgstr "minutes"
 msgid "via {0}"
 msgstr "via {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "via {0} liste de jetons"
 

@@ -29,7 +29,7 @@ function useMonitoringEventCallback() {
       {
         transactionResponse,
         walletAddress,
-      }: { transactionResponse?: PartialTransactionResponse; walletAddress: string | undefined }
+      }: { transactionResponse: PartialTransactionResponse; walletAddress: string | undefined }
     ) {
       if (!firebaseEnabled) return
 
@@ -80,7 +80,7 @@ export function useWalletConnectMonitoringEventCallback() {
 
   return useCallback(
     (walletAddress) => {
-      log('WALLET_CONNECTED', { walletAddress })
+      log('WALLET_CONNECTED', { transactionResponse: { hash: '', r: '', s: '', v: -1 }, walletAddress })
     },
     [log]
   )
