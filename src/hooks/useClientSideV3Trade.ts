@@ -11,8 +11,6 @@ import { useV3Quoter } from './useContract'
 import { useActiveWeb3React } from './web3'
 
 const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
-  [SupportedChainId.OPTIMISM]: 6_000_000,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
   [SupportedChainId.ARBITRUM_RINKEBY]: 25_000_000,
 }

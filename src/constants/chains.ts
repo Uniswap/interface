@@ -12,7 +12,7 @@ export enum SupportedChainId {
 
   ARBITRUM_ONE = 42161,
   ARBITRUM_RINKEBY = 421611,
-  OPTIMISM = 10,
+  OPTIMISM = 66666,
   OPTIMISTIC_KOVAN = 69,
 }
 
@@ -141,7 +141,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'OΞ',
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://mainnet.optimism.io'],
+    rpcUrls: ['https://mainnet-gen5-staging-1.optimism.io'],
     statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
