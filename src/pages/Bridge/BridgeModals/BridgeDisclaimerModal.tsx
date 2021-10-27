@@ -15,7 +15,7 @@ export const BridgeDisclaimerModal = ({
   onConfirm,
   onDismiss,
   heading,
-  txInitiatedText,
+  text,
   disclaimerText
 }: BridgeDisclaimerModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
@@ -27,7 +27,7 @@ export const BridgeDisclaimerModal = ({
         </TYPE.body>
       </TitleWrapper>
       <TYPE.main mb="16px" fontSize="16px" fontWeight="600" color="#EBE9F8" textAlign="center" lineHeight="1.6">
-        {txInitiatedText}
+        {text}
       </TYPE.main>
       <TYPE.small mb="24px" textAlign="center" fontSize="14px" lineHeight="1.6">
         {disclaimerText}

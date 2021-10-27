@@ -37,7 +37,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             heading={'Bridging Initiated'}
-            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.PENDING:
@@ -45,7 +45,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgePendingModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            pendingText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.COLLECTING:
@@ -57,7 +57,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
               setStep(BridgeStep.Initial)
             }}
             heading={'Collecting Initiated'}
-            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       case BridgeModalStatus.SUCCESS:
@@ -90,7 +90,7 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             onConfirm={handleSubmit}
             onDismiss={handleResetBridge}
             heading={`${txType} ${typedValue} ${symbol ?? ''}`}
-            txInitiatedText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
             disclaimerText={disclaimerText}
           />
         )
@@ -99,16 +99,16 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
           <BridgePendingModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            pendingText={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
+            text={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
           />
         )
-      case BridgeModalStatus.APPROVING:
+      case BridgeModalStatus.CLOSED:
         return (
           <BridgingInitiatedModal
             isOpen
             onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
             heading={'Approving Initiated'}
-            txInitiatedText={`When approved you will be able to bridge tokens from ${fromNetworkName} to ${toNetworkName}`}
+            text={`Bridging from ${fromNetworkName} to ${toNetworkName}`}
           />
         )
       default:
