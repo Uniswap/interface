@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount, Token } from '@swapr/sdk'
+import { CurrencyAmount } from '@swapr/sdk'
 
 import { Tabs } from './Tabs'
 import AppBody from '../AppBody'
@@ -23,6 +23,7 @@ import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
+import { isToken } from '../../hooks/Tokens'
 
 const Wrapper = styled.div`
   max-width: 432px;
@@ -100,15 +101,16 @@ export default function Bridge() {
 
   const handleResetBridge = useCallback(() => {
     onUserInput('')
+    onCurrencySelection('')
     setStep(BridgeStep.Initial)
     setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
-      currencyId: 'ETH',
+      symbol: '',
       typedValue: '',
       fromChainId: 1,
       toChainId: 42161
     })
-  }, [onUserInput, setModalData, setModalStatus])
+  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -117,7 +119,8 @@ export default function Bridge() {
   const handleSubmit = useCallback(async () => {
     if (!chainId || !bridgeService) return
     let address: string | undefined = ''
-    if (bridgeCurrency instanceof Token) {
+
+    if (isToken(bridgeCurrency)) {
       address = bridgeCurrency.address
     }
     if (!NETWORK_DETAIL[chainId].isArbitrum) {
@@ -129,20 +132,20 @@ export default function Bridge() {
 
   const handleModal = useCallback(async () => {
     setModalData({
-      currencyId: 'ETH',
+      symbol: bridgeCurrency?.symbol,
       typedValue: typedValue,
       fromChainId: fromNetwork.chainId,
       toChainId: toNetwork.chainId
     })
     setModalStatus(BridgeModalStatus.DISCLAIMER)
-  }, [fromNetwork.chainId, toNetwork.chainId, typedValue, setModalData, setModalStatus])
+  }, [bridgeCurrency, typedValue, fromNetwork.chainId, toNetwork.chainId, setModalData, setModalStatus])
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       setModalData({
-        currencyId: tx.assetName,
+        symbol: tx.assetName,
         typedValue: tx.value,
         fromChainId: tx.fromChainId,
         toChainId: tx.toChainId

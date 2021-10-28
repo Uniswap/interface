@@ -18,7 +18,7 @@ export interface BridgeNetworkInput {
 }
 export interface BridgeModalState {
   readonly status: BridgeModalStatus
-  readonly currencyId: string | undefined
+  readonly symbol: string | undefined
   readonly typedValue: string
   readonly fromNetwork: BridgeNetworkInput
   readonly toNetwork: BridgeNetworkInput
@@ -31,7 +31,9 @@ export enum BridgeModalStatus {
   INITIATED = 'INITIATED',
   ERROR = 'ERROR',
   COLLECTING = 'COLLECTING',
-  DISCLAIMER = 'DISCLAIMER'
+  DISCLAIMER = 'DISCLAIMER',
+  APPROVE = 'APPROVE',
+  APPROVING = 'APPROVING'
 }
 
 export enum BridgeTxsFilter {
@@ -64,7 +66,7 @@ const initialState: BridgeState = {
   isCheckingWithdrawals: true,
   modal: {
     status: BridgeModalStatus.CLOSED,
-    currencyId: '',
+    symbol: '',
     typedValue: 'ETH',
     fromNetwork: {
       chainId: 1
@@ -140,10 +142,9 @@ export default createReducer<BridgeState>(initialState, builder =>
         }
       }
     })
-    .addCase(setBridgeModalData, (state, { payload: { currencyId, typedValue, fromChainId, toChainId } }) => {
+    .addCase(setBridgeModalData, (state, { payload: { symbol, typedValue, fromChainId, toChainId } }) => {
       return {
         ...state,
-        currencyId,
         typedValue,
         fromNetwork: {
           ...state.fromNetwork,
@@ -155,7 +156,7 @@ export default createReducer<BridgeState>(initialState, builder =>
         },
         modal: {
           ...state.modal,
-          currencyId,
+          symbol,
           typedValue,
           fromNetwork: {
             ...state.fromNetwork,
