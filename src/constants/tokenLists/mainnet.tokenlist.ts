@@ -152,6 +152,14 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'XTK',
       name: 'xToken',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xd7DCd9B99787C619b4D57979521258D1A7267ad7',
+      symbol: 'EVRY',
+      name: 'Evrynet Token',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
     }
   ],
   version: {
