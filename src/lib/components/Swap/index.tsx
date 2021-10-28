@@ -1,51 +1,26 @@
-import { atom, useAtom } from 'jotai'
-import useColor, { prefetchColor } from 'lib/hooks/useColor'
-import { ETH } from 'lib/mocks'
-import { Token } from 'lib/types'
+import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
 import Settings from './Settings'
+import { inputAtom, outputAtom } from './state'
 import SwapAction from './SwapAction'
 import SwapInput from './SwapInput'
 import SwapOutput from './SwapOutput'
 import SwapReverse from './SwapReverse'
 import SwapToolbar from './SwapToolbar'
 
-const inputValueAtom = atom<number | undefined>(undefined)
-const inputTokenAtom = atom<Token | undefined>(ETH)
-const outputValueAtom = atom<number | undefined>(undefined)
-const outputTokenAtom = atom<Token | undefined>(undefined)
-
 export default function Swap() {
-  const [inputValue, setInputValue] = useAtom(inputValueAtom)
-  const [inputToken, setInputToken] = useAtom(inputTokenAtom)
-  const [outputValue, setOutputValue] = useAtom(outputValueAtom)
-  const [outputToken, setOutputToken] = useAtom(outputTokenAtom)
-  const input = {
-    value: inputValue,
-    token: inputToken,
-    onChangeValue: setInputValue,
-    onChangeToken: setInputToken,
-  }
-  const output = {
-    value: outputValue,
-    token: outputToken,
-    onChangeValue: setOutputValue,
-    onChangeToken: setOutputToken,
-  }
+  const [input, setInput] = useAtom(inputAtom)
+  const [output, setOutput] = useAtom(outputAtom)
   const onReverse = useCallback(() => {
-    setInputValue(outputValue)
-    setInputToken(outputToken)
-    setOutputValue(inputValue)
-    setOutputToken(inputToken)
-  }, [setInputValue, outputValue, setInputToken, outputToken, setOutputValue, inputValue, setOutputToken, inputToken])
+    setInput(output)
+    setOutput(input)
+  }, [input, output, setInput, setOutput])
 
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
-  prefetchColor(inputToken) // extract eagerly in case of reversal
-  const color = useColor(outputToken)
 
   return (
     <>
@@ -55,10 +30,10 @@ export default function Swap() {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <SwapInput {...input}>
+          <SwapInput>
             <SwapReverse onClick={onReverse} />
           </SwapInput>
-          <SwapOutput color={color} {...output}>
+          <SwapOutput>
             <SwapToolbar />
             <SwapAction />
           </SwapOutput>
