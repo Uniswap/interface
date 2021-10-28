@@ -10,6 +10,9 @@ export const getEthereumMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0xd7DCd9B99787C619b4D57979521258D1A7267ad7'.toLowerCase()) {
     //EVRY
     uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
+  } else if (address?.toLowerCase() === '0x656C00e1BcD96f256F224AD9112FF426Ef053733'.toLowerCase()) {
+    //EFI
+    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/8985.png'
   }
 
   if (!uri) {

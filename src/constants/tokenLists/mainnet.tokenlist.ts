@@ -160,6 +160,13 @@ export const MAINNET_TOKEN_LIST = {
       name: 'Evrynet Token',
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11458.png'
+    },
+    {
+      chainId: 1,
+      address: '0x656C00e1BcD96f256F224AD9112FF426Ef053733',
+      symbol: 'EFI',
+      name: 'Efinity Token',
+      decimals: 18
     }
   ],
   version: {
