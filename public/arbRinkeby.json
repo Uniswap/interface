@@ -1,0 +1,89 @@
+{
+    "name": "Dummy token list",
+    "timestamp": "2021-09-23T09:11:39.629Z",
+    "version": {
+        "major": 1,
+        "minor": 4,
+        "patch": 0
+    },
+    "tags": {},
+    "logoURI": "ipfs://bafybeiahgkvhgmzep4jclwgwntfaee3ca7azjsxj47lfvrecupuv6rcxo4/favicon.png",
+    "keywords": [
+        "swapr",
+        "default"
+    ],
+    "tokens": [
+        {
+            "chainId": 421611,
+            "address": "0xCFe72FD1638783ebF31E18dBFB6e3D0E97b998Eb",
+            "name": "DXdao",
+            "decimals": 18,
+            "symbol": "DXD",
+            "extensions": {
+                "l1Address": "0x554898A0BF98aB0C03ff86C7DccBE29269cc4d29",
+                "l1GatewayAddress": "0x91169Dbb45e6804743F94609De50D511C437572E",
+                "l2GatewayAddress": "0x195C107F3F75c4C93Eba7d9a1312F19305d6375f"
+            }
+        },
+        {
+            "chainId": 421611,
+            "address": "0x5c6e8F8B4f657b1aC81BFA1aF9145ed048bB1E48",
+            "name": "Weenus",
+            "decimals": 18,
+            "symbol": "WEENUS",
+            "extensions": {
+                "l1Address": "0xaFF4481D10270F50f203E0763e2597776068CBc5",
+                "l1GatewayAddress": "0x91169Dbb45e6804743F94609De50D511C437572E",
+                "l2GatewayAddress": "0x195C107F3F75c4C93Eba7d9a1312F19305d6375f"
+            }
+        },
+        {
+            "chainId": 421611,
+            "address": "0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681",
+            "name": "Wrapped Ether",
+            "decimals": 18,
+            "symbol": "WETH",
+            "extensions": {
+                "l1Address": "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+                "l1GatewayAddress": "0x81d1a19cf7071732D4313c75dE8DD5b8CF697eFD",
+                "l2GatewayAddress": "0xf94bc045c4E926CC0b34e8D1c41Cd7a043304ac9"
+            }
+        },
+        {
+            "chainId": 421611,
+            "address": "0xE76c8D027f54882ab1B0Ae8C193ac4Cb791A456a",
+            "name": "Xeenus",
+            "decimals": 18,
+            "symbol": "XEENUS",
+            "extensions": {
+                "l1Address": "0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c",
+                "l1GatewayAddress": "0x91169Dbb45e6804743F94609De50D511C437572E",
+                "l2GatewayAddress": "0x195C107F3F75c4C93Eba7d9a1312F19305d6375f"
+            }
+        },
+        {
+            "chainId": 421611,
+            "address": "0x409318c1a5b3Abd1058fe4b91402268A26b9b159",
+            "name": "Yeenus",
+            "decimals": 8,
+            "symbol": "YEENUS",
+            "extensions": {
+                "l1Address": "0xc6fDe3FD2Cc2b173aEC24cc3f267cb3Cd78a26B7",
+                "l1GatewayAddress": "0x91169Dbb45e6804743F94609De50D511C437572E",
+                "l2GatewayAddress": "0x195C107F3F75c4C93Eba7d9a1312F19305d6375f"
+            }
+        },
+        {
+            "chainId": 421611,
+            "address": "0x5EBb2f2A13F5a23efFFEc7c04Cc9446526B38a5A",
+            "name": "Zeenus",
+            "decimals": 0,
+            "symbol": "ZEENUS",
+            "extensions": {
+                "l1Address": "0x1f9061B953bBa0E36BF50F21876132DcF276fC6e",
+                "l1GatewayAddress": "0x91169Dbb45e6804743F94609De50D511C437572E",
+                "l2GatewayAddress": "0x195C107F3F75c4C93Eba7d9a1312F19305d6375f"
+            }
+        }
+    ]
+}
