@@ -6,11 +6,13 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import useStakingInfo from 'state/stake/useStakingInfo'
 import styled from 'styled-components'
 
 import { BIG_INT_ZERO } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useColor } from '../../hooks/useColor'
+import { multiRewardPools } from '../../state/stake/farms'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -189,6 +191,16 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
+  const stakingInfo = useStakingInfo(pair)?.find((x) => x.active)
+
+  const multiRewards = multiRewardPools
+    .filter((multiPool) => {
+      return multiPool.active && multiPool.basePool === stakingInfo?.poolInfo?.poolAddress
+    })
+    .sort((a, b) => (a.numRewards === b.numRewards ? 0 : a.numRewards > b.numRewards ? -1 : 1))
+
+  const farmAddress = multiRewards[0]?.address ?? stakingInfo?.stakingRewardAddress
+
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
@@ -319,15 +331,15 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 </ButtonPrimary>
               </RowBetween>
             )}
-            {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
+            {farmAddress && (
               <ButtonPrimary
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
-                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/farm/${currencyId(currency0)}/${currencyId(currency1)}/${farmAddress}`}
                 width="100%"
               >
-                Manage Liquidity in Rewards Pool
+                Farm
               </ButtonPrimary>
             )}
           </AutoColumn>
