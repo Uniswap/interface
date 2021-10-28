@@ -7,52 +7,13 @@ export type MultiRewardPool = {
 }
 
 export const multiRewardPools: MultiRewardPool[] = [
+  // ** Friends ** //
   // CELO-MOBI
   {
     address: '0xb450940c5297e9b5e7167FAC5903fD1e90b439b8',
     underlyingPool: '0xd930501A0848DC0AA3E301c7B9b8AFE8134D7f5F',
     basePool: '0x19F1A692C77B481C23e9916E3E83Af919eD49765',
     numRewards: 3,
-    active: true,
-  },
-  // UBE-CELO
-  {
-    address: '0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B',
-    underlyingPool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
-    basePool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
-    numRewards: 2,
-    active: true,
-  },
-  // rCELO-CELO
-  {
-    address: '0x194478Aa91e4D7762c3E51EeE57376ea9ac72761',
-    underlyingPool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
-    basePool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
-    numRewards: 2,
-    active: true,
-  },
-  // CELO-MOBI
-  {
-    address: '0xd930501A0848DC0AA3E301c7B9b8AFE8134D7f5F',
-    underlyingPool: '0x19F1A692C77B481C23e9916E3E83Af919eD49765',
-    basePool: '0x19F1A692C77B481C23e9916E3E83Af919eD49765',
-    numRewards: 2,
-    active: false,
-  },
-  // CELO-mcUSD
-  {
-    address: '0x161c77b4919271B7ED59AdB2151FdaDe3F907a1F',
-    underlyingPool: '0xcca933D2ffEDCa69495435049a878C4DC34B079d',
-    basePool: '0xcca933D2ffEDCa69495435049a878C4DC34B079d',
-    numRewards: 2,
-    active: true,
-  },
-  // CELO-mcEUR
-  {
-    address: '0x728C650D1Fb4da2D18ccF4DF45Af70c5AEb09f81',
-    underlyingPool: '0x32779E096bF913093933Ea94d31956AF8a763CE9',
-    basePool: '0x32779E096bF913093933Ea94d31956AF8a763CE9',
-    numRewards: 2,
     active: true,
   },
   // mCUSD-mcEUR
@@ -96,6 +57,89 @@ export const multiRewardPools: MultiRewardPool[] = [
     active: true,
   },
 
+  // ** D4P ** //
+  // UBE-CELO
+  {
+    address: '0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B',
+    underlyingPool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+    basePool: '0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1',
+    numRewards: 2,
+    active: true,
+  },
+  // rCELO-CELO
+  {
+    address: '0x194478Aa91e4D7762c3E51EeE57376ea9ac72761',
+    underlyingPool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+    basePool: '0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468',
+    numRewards: 2,
+    active: true,
+  },
+  // CELO-mcUSD
+  {
+    address: '0x161c77b4919271B7ED59AdB2151FdaDe3F907a1F',
+    underlyingPool: '0xcca933D2ffEDCa69495435049a878C4DC34B079d',
+    basePool: '0xcca933D2ffEDCa69495435049a878C4DC34B079d',
+    numRewards: 2,
+    active: true,
+  },
+  // CELO-mcEUR
+  {
+    address: '0x728C650D1Fb4da2D18ccF4DF45Af70c5AEb09f81',
+    underlyingPool: '0x32779E096bF913093933Ea94d31956AF8a763CE9',
+    basePool: '0x32779E096bF913093933Ea94d31956AF8a763CE9',
+    numRewards: 2,
+    active: true,
+  },
+  // WBTC-mcUSD
+  {
+    address: '0xf3D9E027B131Af5162451601038EddBF456d824B',
+    underlyingPool: '0x0079418D54F887e7859c7A3Ecc16cE96A416527b',
+    basePool: '0x0079418D54F887e7859c7A3Ecc16cE96A416527b',
+    numRewards: 2,
+    active: true,
+  },
+  // WETH-mcUSD
+  {
+    address: '0xD6E28720Fcd1C1aB6da2d1043a6763FDBb67b3aA',
+    underlyingPool: '0x666C59E75271f1fF5a52b58D4563afdc76a53b4e',
+    basePool: '0x666C59E75271f1fF5a52b58D4563afdc76a53b4e',
+    numRewards: 2,
+    active: true,
+  },
+  // SUSHI-mcUSD
+  {
+    address: '0x0E83662A17B8A3a0585DcA34E5BE81ea6bd59556',
+    underlyingPool: '0xA2674f69B2BEf4ca3E75589aD4f4d36F061048a9',
+    basePool: '0xA2674f69B2BEf4ca3E75589aD4f4d36F061048a9',
+    numRewards: 2,
+    active: true,
+  },
+  // CRV-mcUSD
+  {
+    address: '0x85B21208C0058019bc8004D85eFEa881E7598D17',
+    underlyingPool: '0xA92Bb4D6399Be5403d6c8DF3cce4dd991ca8EaFc',
+    basePool: '0xA92Bb4D6399Be5403d6c8DF3cce4dd991ca8EaFc',
+    numRewards: 2,
+    active: true,
+  },
+  // AAVE-mcUSD
+  {
+    address: '0x09c1cF8669f9A026c59EDd4792944a9aCd2d2a2E',
+    underlyingPool: '0xF20448aaF8CC60432FC2E774F9ED965D4bf77cDc',
+    basePool: '0xF20448aaF8CC60432FC2E774F9ED965D4bf77cDc',
+    numRewards: 2,
+    active: true,
+  },
+
+  // ** Inactive ** //
+  // CELO-MOBI
+  {
+    address: '0xd930501A0848DC0AA3E301c7B9b8AFE8134D7f5F',
+    underlyingPool: '0x19F1A692C77B481C23e9916E3E83Af919eD49765',
+    basePool: '0x19F1A692C77B481C23e9916E3E83Af919eD49765',
+    numRewards: 2,
+    active: false,
+  },
   // CELO-mcUSDxOLD
   {
     address: '0xbbC8C824c638fd238178a71F5b1E5Ce7e4Ce586B',
