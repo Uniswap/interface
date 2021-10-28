@@ -12,6 +12,7 @@ export const AdvancedDetailsFooter = styled.div<{
     width: calc(100% - 8px);
     `}
   max-width: 432px;
+  min-width: 100%;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};

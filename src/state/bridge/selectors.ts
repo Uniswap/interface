@@ -9,11 +9,11 @@ export const bridgeTxsFilterSelector = createSelector(bridgeStateSelector, bridg
 export const bridgeTxsLoadingSelector = createSelector(bridgeStateSelector, bridge => bridge.isCheckingWithdrawals)
 
 export const bridgeModalDataSelector = createSelector(bridgeModalStateSelector, modal => {
-  const { status, currencyId, typedValue, fromNetwork, toNetwork, error } = modal
+  const { status, symbol, typedValue, fromNetwork, toNetwork, error } = modal
 
   return {
     status,
-    currencyId,
+    symbol,
     typedValue,
     toNetwork,
     fromNetwork,

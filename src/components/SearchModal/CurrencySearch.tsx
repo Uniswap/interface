@@ -162,6 +162,10 @@ export function CurrencySearch({
     return []
   }, [filteredInactiveTokens, filteredTokens.length, searchToken])
 
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [inputRef])
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="16px">

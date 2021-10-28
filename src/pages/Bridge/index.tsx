@@ -23,6 +23,12 @@ import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
+import { BridgeModalStatus } from '../../state/bridge/reducer'
+
+const Wrapper = styled.div`
+  max-width: 432px;
+  margin: 0 auto;
+`
 
 const Title = styled.p`
   margin: 0;
@@ -37,6 +43,7 @@ const Row = styled(RowBetween)`
   align-items: stretch;
 
   & > div {
+    min-width: 141px;
     width: 100%;
   }
 
@@ -51,6 +58,10 @@ const SwapButton = styled.button<{ disabled: boolean }>`
   border: none;
   background: none;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+
+  @media only screen and (max-width: 600px) {
+    padding: 0 8px;
+  }
 `
 
 export default function Bridge() {
@@ -65,8 +76,6 @@ export default function Bridge() {
   const fromPanelRef = useRef(null)
 
   const [step, setStep] = useState(BridgeStep.Initial)
-  const [showToList, setShowToList] = useState(false)
-  const [showFromList, setShowFromList] = useState(false)
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
@@ -99,7 +108,14 @@ export default function Bridge() {
   const handleResetBridge = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
-  }, [onUserInput])
+    setModalStatus(BridgeModalStatus.CLOSED)
+    setModalData({
+      symbol: 'ETH',
+      typedValue: '',
+      fromChainId: 1,
+      toChainId: 42161
+    })
+  }, [onUserInput, setModalData, setModalStatus])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -114,13 +130,23 @@ export default function Bridge() {
     }
   }, [bridgeService, chainId, typedValue])
 
+  const handleModal = useCallback(async () => {
+    setModalData({
+      symbol: 'ETH',
+      typedValue: typedValue,
+      fromChainId: fromNetwork.chainId,
+      toChainId: toNetwork.chainId
+    })
+    setModalStatus(BridgeModalStatus.DISCLAIMER)
+  }, [fromNetwork.chainId, toNetwork.chainId, typedValue, setModalData, setModalStatus])
+
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setTxsFilter(BridgeTxsFilter.HIDE)
       setCollectableTx(tx)
       setModalData({
-        currencyId: tx.assetName,
+        symbol: tx.assetName,
         typedValue: tx.value,
         fromChainId: tx.fromChainId,
         toChainId: tx.toChainId
@@ -152,7 +178,7 @@ export default function Bridge() {
   })
 
   return (
-    <>
+    <Wrapper>
       <AppBody>
         <Tabs
           step={step}
@@ -169,15 +195,15 @@ export default function Bridge() {
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              onClick={() => setShowFromList(val => !val)}
-              disabled={isCollecting}
+              disabled
+              onClick={() => null}
             />
             <NetworkSwitcherPopover
-              show={showFromList}
-              onOuterClick={() => setShowFromList(false)}
               options={fromOptions}
               showWalletConnector={false}
               parentRef={fromPanelRef}
+              show={false}
+              onOuterClick={() => null}
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -187,15 +213,15 @@ export default function Bridge() {
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              onClick={() => setShowToList(val => !val)}
-              disabled={isCollecting}
+              disabled
+              onClick={() => null}
             />
             <NetworkSwitcherPopover
-              show={showToList}
-              onOuterClick={() => setShowToList(false)}
               options={toOptions}
               showWalletConnector={false}
               parentRef={toPanelRef}
+              show={false}
+              onOuterClick={() => null}
             />
           </div>
         </Row>
@@ -214,7 +240,7 @@ export default function Bridge() {
           account={account}
           fromNetworkChainId={fromNetwork.chainId}
           toNetworkChainId={isCollecting ? collectableTx.toChainId : toNetwork.chainId}
-          handleSubmit={handleSubmit}
+          handleModal={handleModal}
           handleCollect={handleCollectConfirm}
           isNetworkConnected={isNetworkConnected}
           step={step}
@@ -234,7 +260,8 @@ export default function Bridge() {
         setStep={setStep}
         setStatus={setModalStatus}
         modalData={modalData}
+        handleSubmit={handleSubmit}
       />
-    </>
+    </Wrapper>
   )
 }

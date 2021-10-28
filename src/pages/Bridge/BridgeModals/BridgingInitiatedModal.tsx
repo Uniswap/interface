@@ -5,7 +5,7 @@ import { ButtonPrimary } from '../../../components/Button'
 import Modal, { ModalProps } from '../../../components/Modal'
 import { TYPE } from '../../../theme'
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,11 +14,11 @@ const Wrapper = styled.div`
   background: #181920;
 `
 
-const TitleWrapper = styled.div`
+export const TitleWrapper = styled.div`
   margin: 10px 0px;
 `
 
-interface BridgingInitiatedModalProps extends ModalProps {
+export interface BridgingInitiatedModalProps extends ModalProps {
   amount: string
   assetType: string
   fromNetworkName: string

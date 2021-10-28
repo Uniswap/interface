@@ -13,5 +13,5 @@ export const setBridgeModalStatus = createAction<Pick<BridgeModalState, 'status'
   'bridge/setBridgeModalStatus'
 )
 export const setBridgeModalData = createAction<
-  Pick<BridgeModalState, 'currencyId' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }
+  Pick<BridgeModalState, 'symbol' | 'typedValue'> & { fromChainId: ChainId; toChainId: ChainId }
 >('bridge/setBridgeModalData')

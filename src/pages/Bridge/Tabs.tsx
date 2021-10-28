@@ -44,11 +44,9 @@ export const Tabs = ({ step, collectableTxAmount, setStep, handleResetBridge, ha
 }
 
 const TabsRow = styled(Row)`
-  position: absolute;
-  top: -10px;
-  left: 0;
+  display: inline-flex;
   width: auto;
-  transform: translateY(-100%);
+  margin: 0 0 10px;
   padding: 2px;
   background: #191a24;
   border-radius: 12px;
