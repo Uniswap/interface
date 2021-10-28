@@ -7,7 +7,9 @@ const COMPOUND_LIST = 'https://raw.githubusercontent.com/compound-finance/token-
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
 export const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
 const KLEROS_LIST = 't2crtokens.eth'
-export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
+// export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
+// temporary edited version of the list that has copies for chain id 66666
+export const OPTIMISM_LIST = 'https://test-tokenlists-moody.s3.us-east-2.amazonaws.com/edited-optimism.tokenlist.json'
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
