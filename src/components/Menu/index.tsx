@@ -13,6 +13,7 @@ import {
   Code,
   FileText,
   Globe,
+  HelpCircle,
   Info,
   MessageCircle,
   Moon,
@@ -252,6 +253,12 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
+                    <MenuItem href="https://help.uniswap.org/">
+                      <div>
+                        <Trans>Help Center</Trans>
+                      </div>
+                      <HelpCircle opacity={0.6} size={16} />
+                    </MenuItem>
                     <MenuItem href="https://docs.uniswap.org/">
                       <div>
                         <Trans>Docs</Trans>
@@ -269,12 +276,6 @@ export default function Menu() {
                         <Trans>Discord</Trans>
                       </div>
                       <MessageCircle opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href={infoLink}>
-                      <div>
-                        <Trans>Analytics</Trans>
-                      </div>
-                      <PieChart opacity={0.6} size={16} />
                     </MenuItem>
                     <ToggleMenuItem onClick={() => setMenu('lang')}>
                       <div>
