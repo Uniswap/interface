@@ -346,7 +346,7 @@ export class BridgeService {
       throw new Error('Token address not recognized')
     }
 
-    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address))?.ERC20
+    const tokenData = await this.bridge.l1Bridge.getL1TokenData(erc20L1Address)
     if (!tokenData) {
       throw new Error("Can't withdraw; token not found")
     }
@@ -450,7 +450,7 @@ export class BridgeService {
     if (!this.l1ChainId || !this.l2ChainId || !this.account) return
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.APPROVE }))
     const txn = await this.bridge.approveToken(erc20L1Address)
-    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address)).ERC20
+    const tokenData = await this.bridge.l1Bridge.getL1TokenData(erc20L1Address)
 
     this.store.dispatch(
       addBridgeTxn({
@@ -480,14 +480,17 @@ export class BridgeService {
     if (!this.l1ChainId || !this.l2ChainId || !this.account) return
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
 
-    const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20L1Address)
-    if (!(_tokenData && _tokenData.ERC20)) {
+    const tokenData = await this.bridge.l1Bridge.getL1TokenData(erc20L1Address)
+    if (!tokenData) {
       throw new Error('Token data not found')
     }
-    const tokenData = _tokenData.ERC20
+
     const parsedValue = utils.parseUnits(typedValue, tokenData.decimals)
 
-    const txn = await this.bridge.deposit(erc20L1Address, parsedValue)
+    const txn = await this.bridge.deposit({
+      erc20L1Address,
+      amount: parsedValue
+    })
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
