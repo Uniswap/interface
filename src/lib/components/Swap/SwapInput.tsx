@@ -9,7 +9,7 @@ import { Book } from 'react-feather'
 import { TextButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, swapAtom } from './state'
+import { inputAtom, State, swapAtom } from './state'
 import TokenInput from './TokenInput'
 
 const BookIcon = icon(Book)
@@ -31,7 +31,12 @@ export default function SwapInput({ children }: { children: ReactNode }) {
       <Row>
         <TYPE.subhead3 color="secondary">Trading</TYPE.subhead3>
       </Row>
-      <TokenInput input={input} onChangeInput={setValue} onChangeToken={setToken}>
+      <TokenInput
+        input={input}
+        disabled={swap.state === State.TOKEN_APPROVAL}
+        onChangeInput={setValue}
+        onChangeToken={setToken}
+      >
         <TYPE.body2 color="secondary">
           <Row>
             {swap.input ? `~ $${swap.input.usdc.toLocaleString('en')}` : '-'}
