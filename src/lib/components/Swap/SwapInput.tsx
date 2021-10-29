@@ -12,7 +12,7 @@ import Row from '../Row'
 import { inputAtom, State, swapAtom } from './state'
 import TokenInput from './TokenInput'
 
-const BookIcon = icon(Book)
+const BookIcon = icon(Book, { color: 'currentColor' })
 
 const InputColumn = styled(Column)`
   padding: 0.75em;
@@ -42,7 +42,7 @@ export default function SwapInput({ children }: { children: ReactNode }) {
             {swap.input ? `~ $${swap.input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
               <Row gap={0.5}>
-                <Row gap={0.25}>
+                <Row gap={0.25} color={swap.state === State.BALANCE_INSUFFICIENT ? 'error' : undefined}>
                   <BookIcon />
                   {balance}
                 </Row>

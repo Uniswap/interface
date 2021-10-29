@@ -23,14 +23,14 @@ export const keyframes = styledKeyframes
 export const useTheme = useStyled as unknown as () => Theme
 
 interface IconOptions {
-  color?: Color
+  color?: Color | 'currentColor'
 }
 
 export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
   return styled(Icon)<{ theme: Theme }>`
     clip-path: stroke-box;
     height: 1em;
-    stroke: ${({ theme }) => theme[color]};
+    stroke: ${({ theme }) => (color === 'currentColor' ? 'currentColor' : theme[color])};
     width: 1em;
   `
 }

@@ -1,14 +1,17 @@
-import styled from 'lib/theme'
+import styled, { Color, Theme } from 'lib/theme'
 
 const Column = styled.div<{
   align?: string
+  color?: Color
   justify?: string
   gap?: number
   padded?: true
   scrollable?: true
   flex?: true
+  theme: Theme
 }>`
   align-items: ${({ align }) => align ?? 'center'};
+  color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-direction: column;
   gap: ${({ gap }) => gap && `${gap}em`};
