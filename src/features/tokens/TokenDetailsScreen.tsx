@@ -5,6 +5,7 @@ import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 
@@ -36,6 +37,7 @@ export function TokenDetailsScreen({ route }: Props) {
           {t('Symbol: {{symbol}}', { symbol: token.symbol ?? 'Unknown symbol' })}
         </Text>
       </Box>
+      <PriceChart token={token} />
     </Screen>
   )
 }

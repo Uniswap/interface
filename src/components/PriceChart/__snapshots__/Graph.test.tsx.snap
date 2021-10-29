@@ -1,0 +1,521 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "display": "flex",
+        "flex": 1,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flex": 1,
+          "justifyContent": "center",
+          "padding": 16,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "display": "flex",
+            "flex": 1,
+          },
+        ]
+      }
+    >
+      <TextInput
+        animatedStyle={
+          Object {
+            "value": Object {},
+          }
+        }
+        collapsable={false}
+        editable={false}
+        style={
+          Object {
+            "color": "#27252E",
+            "fontFamily": "System",
+            "fontSize": 34,
+            "fontWeight": "bold",
+            "lineHeight": 42.5,
+          }
+        }
+        text="$200"
+        underlineColorAndroid="transparent"
+        value="$200"
+      />
+      <TextInput
+        animatedStyle={
+          Object {
+            "value": Object {
+              "color": "#007D35",
+            },
+          }
+        }
+        collapsable={false}
+        editable={false}
+        style={
+          Object {
+            "color": "#007D35",
+            "fontFamily": "System",
+            "fontSize": 20,
+            "fontWeight": "600",
+            "lineHeight": 26,
+          }
+        }
+        text="1%"
+        underlineColorAndroid="transparent"
+        value="1%"
+      />
+    </View>
+  </View>
+  <View>
+    <RNSVGSvgView
+      bbHeight={180}
+      bbWidth={750}
+      focusable={false}
+      height={180}
+      style={
+        Array [
+          Object {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          Object {
+            "flex": 0,
+            "height": 180,
+            "width": 750,
+          },
+        ]
+      }
+      width={750}
+    >
+      <RNSVGGroup>
+        <RNSVGPath
+          d="M750,0 C750,0 0,180 0,180"
+          fill={0}
+          propList={
+            Array [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={4294901882}
+          strokeWidth={3}
+        />
+        <RNSVGDefs>
+          <RNSVGLinearGradient
+            gradient={
+              Array [
+                0,
+                1727987834,
+                1,
+                15164138,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="gradient"
+            x1="50%"
+            x2="50%"
+            y1="0%"
+            y2="100%"
+          />
+        </RNSVGDefs>
+        <RNSVGPath
+          d="M750,0 C750,0 0,180 0,180 L 750 180 L 0 180"
+          fill={
+            Array [
+              1,
+              "gradient",
+            ]
+          }
+          propList={
+            Array [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={0}
+          strokeWidth={3}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+    <View
+      style={
+        Array [
+          Object {
+            "display": "flex",
+            "flex": 1,
+          },
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
+      }
+    >
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {},
+          }
+        }
+        collapsable={false}
+        forwardedRef={[Function]}
+        onGestureHandlerEvent={[Function]}
+        onGestureHandlerStateChange={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "display": "flex",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      >
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "transform": Array [
+                  Object {
+                    "translateX": -25,
+                  },
+                  Object {
+                    "translateY": -25,
+                  },
+                  Object {
+                    "scale": 0,
+                  },
+                ],
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Object {
+              "alignItems": "center",
+              "borderRadius": 999999,
+              "display": "flex",
+              "height": 50,
+              "justifyContent": "center",
+              "transform": Array [
+                Object {
+                  "translateX": -25,
+                },
+                Object {
+                  "translateY": -25,
+                },
+                Object {
+                  "scale": 0,
+                },
+              ],
+              "width": 50,
+            }
+          }
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#E8006F",
+                  "borderRadius": 999999,
+                  "display": "flex",
+                  "height": 15,
+                  "width": 15,
+                },
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignSelf": "center",
+          "display": "flex",
+          "flexDirection": "row",
+          "width": 718,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        animatedStyle={
+          Object {
+            "value": Object {
+              "transform": Array [
+                Object {
+                  "translateX": 0,
+                },
+              ],
+            },
+          }
+        }
+        collapsable={false}
+        style={
+          Object {
+            "backgroundColor": "#e3e3e3",
+            "borderRadius": 6,
+            "bottom": 0,
+            "display": "flex",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "transform": Array [
+              Object {
+                "translateX": 0,
+              },
+            ],
+            "width": 143.6,
+          }
+        }
+      />
+    </View>
+    <View
+      accessible={true}
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "padding": 8,
+          "width": 143.6,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#E8006F",
+              "display": "flex",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Graph 0
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "padding": 8,
+          "width": 143.6,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#E8006F",
+              "display": "flex",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Graph 1
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "padding": 8,
+          "width": 143.6,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#E8006F",
+              "display": "flex",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Graph 2
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "padding": 8,
+          "width": 143.6,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#E8006F",
+              "display": "flex",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Graph 3
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      animatedStyle={
+        Object {
+          "value": Object {},
+        }
+      }
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "display": "flex",
+          "padding": 8,
+          "width": 143.6,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#E8006F",
+              "display": "flex",
+              "fontFamily": "System",
+              "fontSize": 16,
+              "fontWeight": "500",
+              "lineHeight": 24,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Graph 4
+      </Text>
+    </View>
+  </View>
+</View>
+`;
