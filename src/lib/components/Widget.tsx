@@ -9,12 +9,16 @@ const WidgetWrapper = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
   flex-direction: column;
-  font-family: ${({ theme }) => theme.fontFamily};
   font-size: 16px;
-  min-height: 240px;
-  min-width: 240px;
+  min-height: 15em;
+  min-width: 15em;
   padding: 0.25em;
   position: relative;
+
+  * {
+    box-sizing: border-box;
+    font-family: ${({ theme }) => theme.fontFamily};
+  }
 `
 
 export interface WidgetProps {

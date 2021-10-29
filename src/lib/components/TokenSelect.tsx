@@ -20,11 +20,11 @@ const mockTokens = [DAI, ETH, UNI, USDC]
 const SearchInput = styled(StringInput)`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => (theme.borderRadius ? theme.borderRadius + 0.25 : 0)}em;
+  height: unset;
   padding: 0.75em;
 
   :focus-within {
-    border: 1px solid ${({ theme }) => theme.active};
-    padding: calc(0.75em - 1px);
+    outline: 1px solid ${({ theme }) => theme.active};
   }
 `
 

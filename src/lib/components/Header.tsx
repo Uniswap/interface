@@ -13,9 +13,10 @@ const HeaderRow = styled(Row)`
 const StyledLogo = styled(Logo)`
   cursor: pointer;
   fill: ${({ theme }) => theme.secondary};
+  height: 1em;
   mix-blend-mode: lighten;
-  padding: 0 1px 3px 1px;
   transition: transform 0.3s ease;
+  width: 1em;
 
   :hover {
     opacity: 0.7;
