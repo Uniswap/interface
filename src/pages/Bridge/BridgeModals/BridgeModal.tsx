@@ -3,7 +3,7 @@ import { BridgeModalState, BridgeModalStatus } from '../../../state/bridge/reduc
 import { BridgeStep } from '../utils'
 import { BridgeErrorModal } from './BridgeErrorModal'
 import { BridgePendingModal } from './BridgePendingModal'
-import { BridgeSuccesModal } from './BridgeSuccesModal'
+import { BridgeSuccessModal } from './BridgeSuccesModal'
 import { BridgingInitiatedModal } from './BridgingInitiatedModal'
 import { NETWORK_DETAIL } from '../../../constants'
 import { BridgeDisclaimerModal } from './BridgeDisclaimerModal'
@@ -29,86 +29,91 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
   const txType = NETWORK_DETAIL[fromNetwork.chainId].isArbitrum ? 'Withdraw' : 'Deposit'
   const disclaimerText = setDisclaimerText(NETWORK_DETAIL[fromNetwork.chainId].isArbitrum)
 
-  switch (status) {
-    case BridgeModalStatus.INITIATED:
-      return (
-        <BridgingInitiatedModal
-          isOpen
-          onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-          amount={typedValue}
-          assetType={symbol ?? ''}
-          fromNetworkName={fromNetworkName}
-          toNetworkName={toNetworkName}
-          heading={'Bridging Initiated'}
-        />
-      )
-    case BridgeModalStatus.PENDING:
-      return (
-        <BridgePendingModal
-          isOpen
-          onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-          pendingText={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
-        />
-      )
-    case BridgeModalStatus.COLLECTING:
-      return (
-        <BridgingInitiatedModal
-          isOpen
-          onDismiss={() => {
-            setStatus(BridgeModalStatus.CLOSED)
-            setStep(BridgeStep.Initial)
-          }}
-          amount={typedValue}
-          assetType={symbol ?? ''}
-          fromNetworkName={fromNetworkName}
-          toNetworkName={toNetworkName}
-          heading={'Collecting Initiated'}
-        />
-      )
-    case BridgeModalStatus.SUCCESS:
-      return (
-        <BridgeSuccesModal
-          isOpen
-          amount={typedValue}
-          assetType={symbol ?? ''}
-          fromNetworkName={fromNetworkName}
-          toNetworkName={toNetworkName}
-          onDismiss={() => {
-            handleResetBridge()
-          }}
-          onTradeButtonClick={handleResetBridge}
-          onBackButtonClick={handleResetBridge}
-        />
-      )
-    case BridgeModalStatus.ERROR:
-      return (
-        <BridgeErrorModal
-          isOpen
-          onDismiss={() => {
-            handleResetBridge()
-          }}
-          error={error ?? ''}
-        />
-      )
-    case BridgeModalStatus.DISCLAIMER:
-      return (
-        <BridgeDisclaimerModal
-          isOpen
-          onConfirm={() => {
-            handleSubmit()
-          }}
-          onDismiss={() => {
-            handleResetBridge()
-          }}
-          amount={typedValue}
-          assetType={symbol ?? ''}
-          fromNetworkName={fromNetworkName}
-          toNetworkName={toNetworkName}
-          heading={txType}
-          disclaimerText={disclaimerText}
-        />
-      )
-    default:
-      return null
+  const selectModal = () => {
+    switch (status) {
+      case BridgeModalStatus.INITIATED:
+        return (
+          <BridgingInitiatedModal
+            isOpen
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+            heading={'Bridging Initiated'}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+          />
+        )
+      case BridgeModalStatus.PENDING:
+        return (
+          <BridgePendingModal
+            isOpen
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+          />
+        )
+      case BridgeModalStatus.COLLECTING:
+        return (
+          <BridgingInitiatedModal
+            isOpen
+            onDismiss={() => {
+              setStatus(BridgeModalStatus.CLOSED)
+              setStep(BridgeStep.Initial)
+            }}
+            heading={'Collecting Initiated'}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+          />
+        )
+      case BridgeModalStatus.SUCCESS:
+        return (
+          <BridgeSuccessModal
+            isOpen
+            heading={'Bridging Successful'}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            onDismiss={() => {
+              handleResetBridge()
+            }}
+            onTradeButtonClick={handleResetBridge}
+            onBackButtonClick={handleResetBridge}
+          />
+        )
+      case BridgeModalStatus.ERROR:
+        return (
+          <BridgeErrorModal
+            isOpen
+            onDismiss={() => {
+              handleResetBridge()
+            }}
+            error={error ?? ''}
+          />
+        )
+      case BridgeModalStatus.DISCLAIMER:
+        return (
+          <BridgeDisclaimerModal
+            isOpen
+            onConfirm={handleSubmit}
+            onDismiss={handleResetBridge}
+            heading={`${txType} ${typedValue} ${symbol ?? ''}`}
+            text={`${typedValue} ${symbol ?? ''} from ${fromNetworkName} to ${toNetworkName}`}
+            disclaimerText={disclaimerText}
+          />
+        )
+      case BridgeModalStatus.APPROVE:
+        return (
+          <BridgePendingModal
+            isOpen
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+            text={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
+          />
+        )
+      case BridgeModalStatus.APPROVING:
+        return (
+          <BridgingInitiatedModal
+            isOpen
+            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
+            heading={'Approving Initiated'}
+            text={`Bridging from ${fromNetworkName} to ${toNetworkName}`}
+          />
+        )
+      default:
+        return null
+    }
   }
+  return selectModal()
 }

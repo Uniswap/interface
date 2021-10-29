@@ -205,44 +205,40 @@ export class BridgeService {
   }
 
   // Handlers
-  public depositEth = async (value: string) => {
+  private depositEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
     const weiValue = utils.parseEther(value)
 
-    try {
-      const txn = await this.bridge.depositETH(weiValue)
+    const txn = await this.bridge.depositETH(weiValue)
 
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
 
-      this.store.dispatch(
-        addBridgeTxn({
-          assetName: 'ETH',
-          assetType: BridgeAssetType.ETH,
-          type: 'deposit-l1',
-          value,
-          txHash: txn.hash,
-          chainId: this.l1ChainId,
-          sender: this.account
-        })
-      )
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: 'ETH',
+        assetType: BridgeAssetType.ETH,
+        type: 'deposit-l1',
+        value,
+        txHash: txn.hash,
+        chainId: this.l1ChainId,
+        sender: this.account
+      })
+    )
 
-      const l1Receipt = await txn.wait()
+    const l1Receipt = await txn.wait()
 
-      this.store.dispatch(
-        updateBridgeTxnReceipt({
-          chainId: this.l1ChainId,
-          txHash: txn.hash,
-          receipt: l1Receipt
-        })
-      )
-    } catch (err) {
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
-    }
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l1ChainId,
+        txHash: txn.hash,
+        receipt: l1Receipt
+      })
+    )
   }
 
-  public withdrawEth = async (value: string) => {
+  private withdrawEth = async (value: string) => {
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
 
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
@@ -256,35 +252,30 @@ export class BridgeService {
     )
 
     const weiValue = utils.parseEther(value)
+    const txn = await this.bridge.withdrawETH(weiValue)
 
-    try {
-      const txn = await this.bridge.withdrawETH(weiValue)
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: 'ETH',
+        assetType: BridgeAssetType.ETH,
+        type: 'withdraw',
+        value,
+        txHash: txn.hash,
+        chainId: this.l2ChainId,
+        sender: this.account
+      })
+    )
 
-      this.store.dispatch(
-        addBridgeTxn({
-          assetName: 'ETH',
-          assetType: BridgeAssetType.ETH,
-          type: 'withdraw',
-          value,
-          txHash: txn.hash,
-          chainId: this.l2ChainId,
-          sender: this.account
-        })
-      )
+    const withdrawReceipt = await txn.wait()
 
-      const withdrawReceipt = await txn.wait()
-
-      this.store.dispatch(
-        updateBridgeTxnReceipt({
-          chainId: this.l2ChainId,
-          txHash: txn.hash,
-          receipt: withdrawReceipt
-        })
-      )
-    } catch (err) {
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
-    }
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l2ChainId,
+        txHash: txn.hash,
+        receipt: withdrawReceipt
+      })
+    )
   }
 
   public triggerOutboxEth = async (l2Tx: BridgeTransactionSummary) => {
@@ -347,9 +338,15 @@ export class BridgeService {
     }
   }
 
-  public withdrawERC20 = async (l1TokenAddress: string, value: string) => {
-    if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
-    const tokenData = (await this.bridge.getAndUpdateL1TokenData(l1TokenAddress)).ERC20
+  private withdrawERC20 = async (erc20L2Address: string, value: string) => {
+    if (!erc20L2Address || !this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId) return
+
+    const erc20L1Address = await this.bridge.l2Bridge.getERC20L1Address(erc20L2Address)
+    if (!erc20L1Address) {
+      throw new Error('Token address not recognized')
+    }
+
+    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address))?.ERC20
     if (!tokenData) {
       throw new Error("Can't withdraw; token not found")
     }
@@ -357,7 +354,7 @@ export class BridgeService {
     this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
     this.store.dispatch(
       setBridgeModalData({
-        symbol: BridgeAssetType.ERC20,
+        symbol: tokenData.symbol,
         typedValue: value,
         fromChainId: this.l2ChainId,
         toChainId: this.l1ChainId
@@ -365,34 +362,30 @@ export class BridgeService {
     )
 
     const weiValue = utils.parseUnits(value, tokenData.decimals)
+    const txn = await this.bridge.withdrawERC20(erc20L1Address, weiValue)
 
-    try {
-      const txn = await this.bridge.withdrawERC20(l1TokenAddress, weiValue)
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
-      this.store.dispatch(
-        addBridgeTxn({
-          assetName: tokenData.symbol,
-          assetType: BridgeAssetType.ERC20,
-          type: 'withdraw',
-          value,
-          txHash: txn.hash,
-          chainId: this.l2ChainId,
-          sender: this.account
-        })
-      )
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: tokenData.symbol,
+        assetType: BridgeAssetType.ERC20,
+        type: 'withdraw',
+        value,
+        txHash: txn.hash,
+        chainId: this.l2ChainId,
+        sender: this.account
+      })
+    )
 
-      const withdrawReceipt = await txn.wait()
+    const withdrawReceipt = await txn.wait()
 
-      this.store.dispatch(
-        updateBridgeTxnReceipt({
-          chainId: this.l2ChainId,
-          txHash: txn.hash,
-          receipt: withdrawReceipt
-        })
-      )
-    } catch (err) {
-      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
-    }
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l2ChainId,
+        txHash: txn.hash,
+        receipt: withdrawReceipt
+      })
+    )
   }
 
   public triggerOutboxERC20 = async (l2Tx: BridgeTransactionSummary) => {
@@ -448,6 +441,104 @@ export class BridgeService {
           outgoingMessageState: OutgoingMessageState.EXECUTED
         })
       )
+    } catch (err) {
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
+    }
+  }
+
+  private approveERC20 = async (erc20L1Address: string) => {
+    if (!this.l1ChainId || !this.l2ChainId || !this.account) return
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.APPROVE }))
+    const txn = await this.bridge.approveToken(erc20L1Address)
+    const tokenData = (await this.bridge.getAndUpdateL1TokenData(erc20L1Address)).ERC20
+
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: (tokenData && tokenData.symbol) || '???',
+        assetType: BridgeAssetType.ERC20,
+        type: 'approve',
+        value: '',
+        txHash: txn.hash,
+        chainId: this.l1ChainId,
+        sender: this.account
+      })
+    )
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.APPROVING }))
+
+    const l1Receipt = await txn.wait()
+
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l1ChainId,
+        txHash: txn.hash,
+        receipt: l1Receipt
+      })
+    )
+  }
+
+  private depositERC20 = async (erc20L1Address: string, typedValue: string) => {
+    if (!this.l1ChainId || !this.l2ChainId || !this.account) return
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.PENDING }))
+
+    const _tokenData = await this.bridge.getAndUpdateL1TokenData(erc20L1Address)
+    if (!(_tokenData && _tokenData.ERC20)) {
+      throw new Error('Token data not found')
+    }
+    const tokenData = _tokenData.ERC20
+    const parsedValue = utils.parseUnits(typedValue, tokenData.decimals)
+
+    const txn = await this.bridge.deposit(erc20L1Address, parsedValue)
+
+    this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.INITIATED }))
+
+    this.store.dispatch(
+      addBridgeTxn({
+        assetName: tokenData.symbol,
+        assetType: BridgeAssetType.ERC20,
+        type: 'deposit-l1',
+        value: typedValue,
+        txHash: txn.hash,
+        chainId: this.l1ChainId,
+        sender: this.account
+      })
+    )
+
+    const l1Receipt = await txn.wait()
+    const seqNums = await this.bridge.getInboxSeqNumFromContractTransaction(l1Receipt)
+    if (!seqNums) return
+    const seqNum = seqNums[0].toNumber()
+
+    this.store.dispatch(
+      updateBridgeTxnReceipt({
+        chainId: this.l1ChainId,
+        txHash: txn.hash,
+        receipt: l1Receipt,
+        seqNum
+      })
+    )
+  }
+
+  // ADAPTER
+  public deposit = async (value: string, tokenAddress?: string) => {
+    try {
+      if (tokenAddress) {
+        await this.approveERC20(tokenAddress)
+        await this.depositERC20(tokenAddress, value)
+      } else {
+        await this.depositEth(value)
+      }
+    } catch (err) {
+      this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
+    }
+  }
+
+  public withdraw = async (value: string, tokenAddress?: string) => {
+    try {
+      if (tokenAddress) {
+        await this.withdrawERC20(tokenAddress, value)
+      } else {
+        await this.withdrawEth(value)
+      }
     } catch (err) {
       this.store.dispatch(setBridgeModalStatus({ status: BridgeModalStatus.ERROR, error: getErrorMsg(err) }))
     }

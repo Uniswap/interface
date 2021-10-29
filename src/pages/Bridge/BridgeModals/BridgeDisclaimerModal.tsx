@@ -14,11 +14,8 @@ export const BridgeDisclaimerModal = ({
   isOpen,
   onConfirm,
   onDismiss,
-  amount,
-  assetType,
-  fromNetworkName,
-  toNetworkName,
   heading,
+  text,
   disclaimerText
 }: BridgeDisclaimerModalProps) => (
   <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
@@ -26,11 +23,11 @@ export const BridgeDisclaimerModal = ({
       <ArrowRightCircle strokeWidth={0.5} size={75} color="#0E9F6E" />
       <TitleWrapper>
         <TYPE.body fontSize="22px" fontWeight="500" color="text1" textAlign="center">
-          {heading} {amount} {assetType}
+          {heading}
         </TYPE.body>
       </TitleWrapper>
       <TYPE.main mb="16px" fontSize="16px" fontWeight="600" color="#EBE9F8" textAlign="center" lineHeight="1.6">
-        You are about to {heading} {amount} {assetType} from <br /> {fromNetworkName} to {toNetworkName}
+        {text}
       </TYPE.main>
       <TYPE.small mb="24px" textAlign="center" fontSize="14px" lineHeight="1.6">
         {disclaimerText}
