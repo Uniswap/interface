@@ -33,7 +33,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 10px 0;
 `
 
-function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
+export function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
   return (
     <Wrapper>
       <Section>

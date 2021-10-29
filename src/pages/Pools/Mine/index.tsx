@@ -85,7 +85,7 @@ export default function MyPairs() {
               {liquidityMiningEnabled && (
                 <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
                   <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                    CREATE LIQ. MINING
+                    CREATE REWARDS
                   </Text>
                 </ResponsiveButtonSecondary>
               )}

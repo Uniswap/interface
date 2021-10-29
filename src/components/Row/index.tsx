@@ -12,7 +12,7 @@ const Row = styled(Box)<{
   width: 100%;
   display: flex;
   padding: 0;
-  flex: ${({ flex }) => (flex ? flex : '0 1 auto')}
+  flex: ${({ flex }) => (flex ? flex : '0 1 auto')};
   align-items: ${({ align }) => (align ? align : 'center')};
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
