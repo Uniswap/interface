@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
 import Button from './Button'
+import Column from './Column'
 import { default as BaseHeader } from './Header'
 import Rule from './Rule'
 
@@ -24,13 +25,15 @@ interface HeaderProps {
 export function Header({ title, children, ruled }: HeaderProps) {
   return (
     <>
-      <BaseHeader title={title}>
-        {children}
-        <Button onClick={useContext(OnCloseContext)}>
-          <XIcon />
-        </Button>
-      </BaseHeader>
-      {ruled && <Rule padded style={{ marginTop: 'calc(1em - 1px)' }} />}
+      <Column gap={1}>
+        <BaseHeader title={title}>
+          {children}
+          <Button onClick={useContext(OnCloseContext)}>
+            <XIcon />
+          </Button>
+        </BaseHeader>
+        {ruled && <Rule padded />}
+      </Column>
     </>
   )
 }

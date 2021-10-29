@@ -9,10 +9,11 @@ const Input = styled.input`
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
+  height: 1em;
   margin: 0;
   outline: none;
   overflow: hidden;
-  padding: 0px;
+  padding: 0;
   text-align: left;
   text-overflow: ellipsis;
   width: 100%;

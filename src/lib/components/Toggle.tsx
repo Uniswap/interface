@@ -10,7 +10,6 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   border-radius: 1.25em;
   cursor: pointer;
   display: flex;
-  font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
   height: 2em;
@@ -55,7 +54,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
     width: 2.75em;
 
     // use margin because it can transition
-    margin-left: 28px;
+    margin-left: 1.75em;
   }
 
   :checked:after {
