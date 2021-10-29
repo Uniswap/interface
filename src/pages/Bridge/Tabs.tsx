@@ -2,31 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 import { NumberBadge } from '../../components/NumberBadge'
 import Row from '../../components/Row'
-import { BridgeStep } from './utils'
-
 interface TabsProps {
-  step: BridgeStep
   collectableTxAmount: number
   isCollecting: boolean
-  setStep: (step: BridgeStep) => void
-  handleBridgeTab: () => void
+  handleResetBridge: () => void
   handleCollectTab: () => void
 }
 
-export const Tabs = ({
-  step,
-  collectableTxAmount,
-  isCollecting,
-  setStep,
-  handleBridgeTab,
-  handleCollectTab
-}: TabsProps) => {
+export const Tabs = ({ collectableTxAmount, isCollecting, handleResetBridge, handleCollectTab }: TabsProps) => {
   return (
     <TabsRow>
       <Button
         onClick={() => {
-          if (isCollecting) handleBridgeTab()
-          if (step !== BridgeStep.Initial) setStep(BridgeStep.Initial)
+          handleResetBridge()
         }}
         className={!isCollecting ? 'active' : ''}
       >

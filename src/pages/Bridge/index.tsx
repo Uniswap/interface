@@ -86,19 +86,8 @@ export default function Bridge() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
 
-  // needed here?
   const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
-  const isCollecting2 = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
-  // const handleBridgeTxsList = useCallback(() => {
-  //   if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.COLLECTABLE)
-  //     setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-  //   else if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.RECENT) setTxsFilter(BridgeTxsFilter.RECENT)
-  //   else if (step === BridgeStep.Collect && txsFilter === BridgeTxsFilter.HIDE)
-  //     setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-
-  //   // if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-  //   // else setTxsFilter(BridgeTxsFilter.RECENT)
-  // }, [setTxsFilter, step, txsFilter])
+  const isCollectableFilter = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -106,7 +95,7 @@ export default function Bridge() {
     }
   }, [chainId, collectableTx, isCollecting, step])
 
-  const handleBridgeTab = useCallback(() => {
+  const handleResetBridge = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
     setTxsFilter(BridgeTxsFilter.RECENT)
@@ -152,7 +141,6 @@ export default function Bridge() {
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
-      setTxsFilter(BridgeTxsFilter.HIDE)
       setCollectableTx(tx)
       setModalData({
         symbol: tx.assetName,
@@ -161,7 +149,7 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [setModalData, setTxsFilter]
+    [setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -186,11 +174,9 @@ export default function Bridge() {
     <Wrapper>
       <AppBody>
         <Tabs
-          step={step}
           collectableTxAmount={collectableTxAmount}
-          isCollecting={isCollecting2}
-          setStep={setStep}
-          handleBridgeTab={handleBridgeTab}
+          isCollecting={isCollectableFilter}
+          handleResetBridge={handleResetBridge}
           handleCollectTab={handleCollectTab}
         />
         <RowBetween mb="12px">
@@ -262,7 +248,7 @@ export default function Bridge() {
         />
       )}
       <BridgeModal
-        handleResetBridge={handleBridgeTab}
+        handleResetBridge={handleResetBridge}
         setStep={setStep}
         setStatus={setModalStatus}
         modalData={modalData}

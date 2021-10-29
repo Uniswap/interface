@@ -37,8 +37,7 @@ export enum BridgeModalStatus {
 export enum BridgeTxsFilter {
   NONE = 'NONE',
   COLLECTABLE = 'COLLECTABLE',
-  RECENT = 'RECENT',
-  HIDE = 'HIDE'
+  RECENT = 'RECENT'
 }
 export interface BridgeState {
   readonly typedValue: string
