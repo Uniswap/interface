@@ -5,18 +5,25 @@ import Row from '../../components/Row'
 interface TabsProps {
   collectableTxAmount: number
   isCollecting: boolean
+  isCollectableFilter: boolean
   handleResetBridge: () => void
   handleCollectTab: () => void
 }
 
-export const Tabs = ({ collectableTxAmount, isCollecting, handleResetBridge, handleCollectTab }: TabsProps) => {
+export const Tabs = ({
+  collectableTxAmount,
+  isCollecting,
+  isCollectableFilter,
+  handleResetBridge,
+  handleCollectTab
+}: TabsProps) => {
   return (
     <TabsRow>
       <Button
         onClick={() => {
           handleResetBridge()
         }}
-        className={!isCollecting ? 'active' : ''}
+        className={!(isCollecting || isCollectableFilter) ? 'active' : ''}
       >
         Bridge
       </Button>
@@ -24,7 +31,8 @@ export const Tabs = ({ collectableTxAmount, isCollecting, handleResetBridge, han
         onClick={() => {
           handleCollectTab()
         }}
-        className={isCollecting ? 'active' : ''}
+        className={isCollecting || isCollectableFilter ? 'active' : ''}
+        disabled={isCollecting}
       >
         Collect
         {<Badge badgeTheme="green">{collectableTxAmount}</Badge>}

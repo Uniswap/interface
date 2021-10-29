@@ -79,15 +79,14 @@ export default function Bridge() {
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
+  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
   const collectableTxAmount = bridgeSummaries.filter(tx => tx.status === 'redeem').length
   const isCollecting = step === BridgeStep.Collect
+  const isCollectableFilter = txsFilter === BridgeTxsFilter.COLLECTABLE
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
-
-  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
-  const isCollectableFilter = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -173,7 +172,8 @@ export default function Bridge() {
       <AppBody>
         <Tabs
           collectableTxAmount={collectableTxAmount}
-          isCollecting={isCollectableFilter}
+          isCollecting={isCollecting}
+          isCollectableFilter={isCollectableFilter}
           handleResetBridge={handleResetBridge}
           handleCollectTab={handleCollectTab}
         />
