@@ -3,6 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO, L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import useIsFlashbotsProtectRPC from 'hooks/useIsFlashbotsProtectRPC'
 import { ReactNode, useContext } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
@@ -98,6 +99,8 @@ function TransactionSubmittedContent({
 
   const { library } = useActiveWeb3React()
 
+  const [isFlashRPC] = useIsFlashbotsProtectRPC()
+
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
   return (
@@ -138,6 +141,19 @@ function TransactionSubmittedContent({
                 </RowFixed>
               )}
             </ButtonLight>
+          )}
+          {isFlashRPC && (
+            <>
+              <RowFixed>
+                <Trans>We have detected that you are using the Flashbots Protect RPC.</Trans>
+              </RowFixed>
+              <RowFixed>
+                <Trans>
+                  Please do not change the RPC while the transaction is pending, doing so may cause your transaction to
+                  become public and your swap to be frontrun.
+                </Trans>
+              </RowFixed>
+            </>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>

@@ -23,6 +23,7 @@ import Modal from '../Modal'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
+import FlashbotsProtect from './FlashbotsProtectStatus'
 import NetworkSelector from './NetworkSelector'
 import UniBalanceContent from './UniBalanceContent'
 
@@ -302,6 +303,9 @@ export default function Header() {
       </HeaderLinks>
 
       <HeaderControls>
+        <HeaderElement>
+          <FlashbotsProtect />
+        </HeaderElement>
         <HeaderElement>
           <NetworkSelector />
         </HeaderElement>

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -13,6 +14,23 @@ interface TxInterface {
   addedTime: number
   receipt?: Record<string, any>
   lastCheckedBlockNumber?: number
+}
+
+export function checkPrivateTxStatusFailed(txHash: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    axios.get(`https://protection-api.flashbots.net/tx/${txHash}`).then((result) => {
+      if (
+        result &&
+        result.data &&
+        result.data.status &&
+        (result.data.status === 'FAILED' || result.data.status === 'FAILED_BUNDLE')
+      ) {
+        // transaction has failed and dropped from MetaMask
+        return resolve(true)
+      }
+      return resolve(false)
+    })
+  })
 }
 
 export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
@@ -118,6 +136,10 @@ export default function Updater(): null {
                 dispatch(updateBlockNumber({ chainId, blockNumber: receipt.blockNumber }))
               }
             } else {
+              checkPrivateTxStatusFailed(hash).then((isFailed) => {
+                // Set transaction status as failed or dropped
+                console.log('checkPrivateTxStatusFailed resolved:', isFailed)
+              })
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
           })
@@ -125,6 +147,10 @@ export default function Updater(): null {
             if (!error.isCancelledError) {
               console.error(`Failed to check transaction hash: ${hash}`, error)
             }
+            checkPrivateTxStatusFailed(hash).then((isFailed) => {
+              // Set transaction status as failed or dropped
+              console.log('checkPrivateTxStatusFailed resolved:', isFailed)
+            })
           })
         return cancel
       })

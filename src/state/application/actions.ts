@@ -17,6 +17,7 @@ export enum ApplicationModal {
   VOTE,
   POOL_OVERVIEW_OPTIONS,
   NETWORK_SELECTOR,
+  FLASHBOTS_PROTECT,
 }
 
 export const updateChainId = createAction<{ chainId: number | null }>('application/updateChainId')
