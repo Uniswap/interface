@@ -1,11 +1,10 @@
 schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
-documents: 'src/**/!(*.d).{ts,tsx}'
+documents: 'src/**/*.graphql'
 generates:
   ./src/features/historicalChainData/generated.ts:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-rtk-query:
-          importBaseApiFrom: './slice'
-          exportHooks: true
-          overrideExisting: true
+      - typescript-react-query:
+    config:
+    fetcher: graphql-request

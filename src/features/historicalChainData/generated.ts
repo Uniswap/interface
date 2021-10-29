@@ -1,8 +1,28 @@
-import { api } from './slice';
+import { useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+
+function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
+  return async (): Promise<TData> => {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      ...requestInit,
+      body: JSON.stringify({ query, variables }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      const { message } = json.errors[0];
+
+      throw new Error(message);
+    }
+
+    return json.data;
+  }
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -4299,6 +4319,7 @@ export type PricesQueryVariables = Exact<{
   address: Scalars['String'];
   skip: Scalars['Int'];
   chainId: Scalars['Int'];
+  first?: Scalars['Int'];
 }>;
 
 
@@ -4306,9 +4327,9 @@ export type PricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __type
 
 
 export const PricesDocument = `
-    query prices($address: String!, $skip: Int!, $chainId: Int!) {
+    query prices($address: String!, $skip: Int!, $chainId: Int!, $first: Int! = 100) {
   tokenHourDatas(
-    first: 100
+    first: $first
     skip: $skip
     where: {token: $address}
     orderBy: periodStartUnix
@@ -4321,7 +4342,7 @@ export const PricesDocument = `
     close
   }
   tokenDayDatas(
-    first: 100
+    first: $first
     skip: $skip
     where: {token: $address}
     orderBy: date
@@ -4335,16 +4356,16 @@ export const PricesDocument = `
   }
 }
     `;
-
-const injectedRtkApi = api.injectEndpoints({
-  overrideExisting: true,
-  endpoints: (build) => ({
-    prices: build.query<PricesQuery, PricesQueryVariables>({
-      query: (variables) => ({ document: PricesDocument, variables })
-    }),
-  }),
-});
-
-export { injectedRtkApi as api };
-export const { usePricesQuery, useLazyPricesQuery } = injectedRtkApi;
-
+export const usePricesQuery = <
+      TData = PricesQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: PricesQueryVariables,
+      options?: UseQueryOptions<PricesQuery, TError, TData>
+    ) =>
+    useQuery<PricesQuery, TError, TData>(
+      ['prices', variables],
+      fetcher<PricesQuery, PricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, PricesDocument, variables),
+      options
+    );

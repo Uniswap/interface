@@ -55,6 +55,7 @@ export interface L1ChainInfo {
   readonly label: string
   readonly logoUrl?: string
   readonly rpcUrls?: string[]
+  readonly subgraphUrl?: string
   readonly nativeCurrency: {
     name: string // 'Goerli ETH',
     symbol: string // 'gorETH',
@@ -81,6 +82,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Arbitrum',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal',
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     blockWaitMsBeforeWarning: 600000, // 10 minutes
@@ -99,6 +101,7 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
   [SupportedChainId.RINKEBY]: {
     docs: 'https://docs.uniswap.org/',
@@ -106,6 +109,7 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Rinkeby',
     nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
+    subgraphUrl: 'https://thegraph.com/hosted-service/subgraph/ianlapham/uniswap-v3-rinkeby',
   },
   [SupportedChainId.ROPSTEN]: {
     docs: 'https://docs.uniswap.org/',

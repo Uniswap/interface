@@ -15,7 +15,6 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
-import { api as historicalChainData } from 'src/features/historicalChainData/slice'
 
 const sagaMiddleware = createSagaMiddleware({
   context: {
@@ -38,13 +37,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return [
       ...getDefaultMiddleware({
-        thunk: true, // thunk required for rtk-query
+        thunk: false,
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
       }),
       sagaMiddleware,
-      historicalChainData.middleware,
     ]
   },
   devTools: config.debug,

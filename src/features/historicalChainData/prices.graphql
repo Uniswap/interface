@@ -1,0 +1,29 @@
+query prices($address: String!, $skip: Int!, $chainId: Int!, $first: Int! = 100) {
+  tokenHourDatas(
+    first: $first
+    skip: $skip
+    where: { token: $address }
+    orderBy: periodStartUnix
+    orderDirection: desc
+  ) {
+    timestamp: periodStartUnix
+    high
+    low
+    open
+    close
+  }
+
+  tokenDayDatas(
+    first: $first
+    skip: $skip
+    where: { token: $address }
+    orderBy: date
+    orderDirection: desc
+  ) {
+    timestamp: date
+    high
+    low
+    open
+    close
+  }
+}
