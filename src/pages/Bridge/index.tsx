@@ -88,16 +88,17 @@ export default function Bridge() {
 
   // needed here?
   const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
-  const handleBridgeTxsList = useCallback(() => {
-    if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.COLLECTABLE)
-      setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-    else if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.RECENT) setTxsFilter(BridgeTxsFilter.RECENT)
-    else if (step === BridgeStep.Collect && txsFilter === BridgeTxsFilter.HIDE)
-      setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+  const isCollecting2 = step === BridgeStep.Collect || txsFilter === BridgeTxsFilter.COLLECTABLE
+  // const handleBridgeTxsList = useCallback(() => {
+  //   if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.COLLECTABLE)
+  //     setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+  //   else if (step === BridgeStep.Initial && txsFilter !== BridgeTxsFilter.RECENT) setTxsFilter(BridgeTxsFilter.RECENT)
+  //   else if (step === BridgeStep.Collect && txsFilter === BridgeTxsFilter.HIDE)
+  //     setTxsFilter(BridgeTxsFilter.COLLECTABLE)
 
-    // if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
-    // else setTxsFilter(BridgeTxsFilter.RECENT)
-  }, [setTxsFilter, step, txsFilter])
+  //   // if (txsFilter !== BridgeTxsFilter.COLLECTABLE) setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+  //   // else setTxsFilter(BridgeTxsFilter.RECENT)
+  // }, [setTxsFilter, step, txsFilter])
 
   useEffect(() => {
     if (collectableTx && isCollecting && chainId !== collectableTx.fromChainId && chainId !== collectableTx.toChainId) {
@@ -105,9 +106,10 @@ export default function Bridge() {
     }
   }, [chainId, collectableTx, isCollecting, step])
 
-  const handleResetBridge = useCallback(() => {
+  const handleBridgeTab = useCallback(() => {
     onUserInput('')
     setStep(BridgeStep.Initial)
+    setTxsFilter(BridgeTxsFilter.RECENT)
     setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
       symbol: 'ETH',
@@ -115,7 +117,14 @@ export default function Bridge() {
       fromChainId: 1,
       toChainId: 42161
     })
-  }, [onUserInput, setModalData, setModalStatus])
+  }, [onUserInput, setModalData, setModalStatus, setTxsFilter])
+
+  const handleCollectTab = useCallback(() => {
+    setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+    if (step === BridgeStep.Collect) {
+      setStep(BridgeStep.Initial)
+    }
+  }, [setTxsFilter, step])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -161,10 +170,6 @@ export default function Bridge() {
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
-  const handleCollectTab = useCallback(() => {
-    handleBridgeTxsList()
-  }, [handleBridgeTxsList])
-
   const fromOptions = createNetworkOptions({
     value: fromNetwork.chainId,
     setValue: onFromNetworkChange,
@@ -183,8 +188,9 @@ export default function Bridge() {
         <Tabs
           step={step}
           collectableTxAmount={collectableTxAmount}
+          isCollecting={isCollecting2}
           setStep={setStep}
-          handleResetBridge={handleResetBridge}
+          handleBridgeTab={handleBridgeTab}
           handleCollectTab={handleCollectTab}
         />
         <RowBetween mb="12px">
@@ -248,7 +254,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {txsFilter !== BridgeTxsFilter.HIDE && bridgeService && !!bridgeSummaries.length && (
+      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
@@ -256,7 +262,7 @@ export default function Bridge() {
         />
       )}
       <BridgeModal
-        handleResetBridge={handleResetBridge}
+        handleResetBridge={handleBridgeTab}
         setStep={setStep}
         setStatus={setModalStatus}
         modalData={modalData}
