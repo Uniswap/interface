@@ -66,8 +66,9 @@ const TokenButtonRow = styled(Row)`
   height: 1.25em;
 `
 
-const TokenImg = styled.img`
+const TokenImg = styled.img<{ disabled?: boolean }>`
   border-radius: 100%;
+  filter: ${({ disabled }) => disabled && 'saturate(0) opacity(0.6)'};
   height: 1.25em;
   width: 1.25em;
 `
@@ -78,17 +79,18 @@ const ChevronDownIcon = styled(icon(ChevronDown, { color: 'contrast' }))`
 
 interface TokenOptionProps {
   value?: Token
+  disabled?: boolean
   onClick: () => void
 }
 
-function TokenOption({ value, onClick }: TokenOptionProps) {
+function TokenOption({ value, disabled, onClick }: TokenOptionProps) {
   return (
     <OptionTokenButton onClick={onClick} empty={!value}>
       <TYPE.buttonLarge color="contrast">
         <TokenButtonRow gap={0.5}>
           {value ? (
             <>
-              <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} />
+              <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} disabled={disabled} />
               {value.symbol}
             </>
           ) : (
@@ -191,10 +193,11 @@ export function TokenSelectDialog({ onChange }: TokenSelectDialogProps) {
 
 interface TokenSelectProps {
   value?: Token
+  disabled?: boolean
   onChange: (value: Token) => void
 }
 
-export default function TokenSelect({ value, onChange }: TokenSelectProps) {
+export default function TokenSelect({ value, disabled, onChange }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
   const onSelect = useCallback(
     (value: Token) => {
@@ -205,7 +208,7 @@ export default function TokenSelect({ value, onChange }: TokenSelectProps) {
   )
   return (
     <>
-      <TokenOption value={value} onClick={() => setOpen(true)} />
+      <TokenOption value={value} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
           <TokenSelectDialog onChange={onSelect} />

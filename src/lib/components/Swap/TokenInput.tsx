@@ -15,6 +15,7 @@ const TokenInputRow = styled(Row)`
 
 interface TokenInputProps {
   input: Input
+  disabled?: boolean
   onChangeInput: (input: number | undefined) => void
   onChangeToken: (token: Token) => void
   children: ReactNode
@@ -22,6 +23,7 @@ interface TokenInputProps {
 
 export default function TokenInput({
   input: { value, token },
+  disabled,
   onChangeInput,
   onChangeToken,
   children,
@@ -32,7 +34,7 @@ export default function TokenInput({
         <TYPE.h2>
           <DecimalInput value={value} onChange={onChangeInput} placeholder="0.0"></DecimalInput>
         </TYPE.h2>
-        <TokenSelect value={token} onChange={onChangeToken} />
+        <TokenSelect value={token} disabled={disabled} onChange={onChangeToken} />
       </TokenInputRow>
       {children}
     </Column>
