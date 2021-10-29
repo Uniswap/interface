@@ -1,5 +1,5 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
-import { call, spawn } from 'redux-saga/effects'
+import { spawn } from 'redux-saga/effects'
 import {
   fetchBalancesActions,
   fetchBalancesReducer,
@@ -12,7 +12,7 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from 'src/features/import/importAccount'
-import { initProviders } from 'src/features/providers/initProviders'
+import { initProviders } from 'src/features/providers/providerSaga'
 import {
   transferTokenActions,
   transferTokenReducer,
@@ -27,13 +27,8 @@ import {
 } from 'src/features/wallet/createAccount'
 import { SagaActions, SagaState } from 'src/utils/saga'
 
-// Things that should happen before other sagas start go here
-function* init() {
-  yield call(initProviders)
-}
-
 // All regular sagas must be included here
-const sagas: any[] = []
+const sagas: any[] = [initProviders]
 
 interface MonitoredSaga {
   name: string
@@ -84,11 +79,10 @@ export const monitoredSagaReducers: MonitoredSagaReducer = combineReducers(
 )
 
 export function* rootSaga() {
-  yield spawn(init)
-  for (const m of Object.values(monitoredSagas)) {
-    yield spawn(m.wrappedSaga)
-  }
   for (const s of sagas) {
     yield spawn(s)
+  }
+  for (const m of Object.values(monitoredSagas)) {
+    yield spawn(m.wrappedSaga)
   }
 }

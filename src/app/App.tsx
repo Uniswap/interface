@@ -12,21 +12,20 @@ import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
-import { store } from 'src/app/store'
+import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { BalancesScreen } from 'src/features/balances/BalancesScreen'
 import { HomeScreen } from 'src/features/home/HomeScreen'
 import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
-import { MulticallUpdater } from 'src/features/multicall'
+import { MulticallUpdaters } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { darkTheme, theme } from 'src/styles/theme'
-import { persistor } from './store'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
@@ -66,7 +65,7 @@ export function App() {
 function DataUpdaters() {
   return (
     <>
-      <MulticallUpdater />
+      <MulticallUpdaters />
       <TokenListUpdater />
     </>
   )

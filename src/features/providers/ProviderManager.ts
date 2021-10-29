@@ -1,4 +1,5 @@
 import { providers as ethersProviders } from 'ethers'
+import { Task } from 'redux-saga'
 import { config } from 'src/config'
 import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
@@ -15,6 +16,7 @@ enum ProviderStatus {
 interface ProviderDetails {
   provider: ethersProviders.JsonRpcProvider
   status: ProviderStatus
+  blockWatcher?: Task
 }
 
 export type ChainIdToProvider = Partial<Record<SupportedChainId, ProviderDetails>>
@@ -55,8 +57,13 @@ export class ProviderManager {
       logger.warn('Attempting to remove non-existing provider', chainId)
       return
     }
+    this._providers[chainId]?.provider.removeAllListeners()
     delete this._providers[chainId]
     this.onUpdate?.()
+  }
+
+  hasProvider(chainId: SupportedChainId) {
+    return !!this._providers[chainId]
   }
 
   tryGetProvider(chainId: SupportedChainId) {
@@ -79,6 +86,20 @@ export class ProviderManager {
 
   getAllProviders() {
     return this._providers
+  }
+
+  getProviderBlockWatcher(chainId: SupportedChainId) {
+    if (!this._providers[chainId]) {
+      throw new Error(`No provider initialized for chain: ${chainId}`)
+    }
+    return this._providers[chainId]?.blockWatcher
+  }
+
+  setProviderBlockWatcher(chainId: SupportedChainId, watcher: Task) {
+    if (!this._providers[chainId]) {
+      throw new Error(`No provider initialized for chain: ${chainId}`)
+    }
+    this._providers[chainId]!.blockWatcher = watcher
   }
 
   private async initProvider(chainId: SupportedChainId, chainDetails: L1ChainInfo) {

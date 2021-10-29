@@ -13,6 +13,8 @@ import { SupportedChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
+import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
+import { useActiveChainIds } from 'src/features/chains/hooks'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
@@ -47,6 +49,12 @@ export function HomeScreen({ navigation }: Props) {
     logger.debug(balances)
   }
 
+  const activeChains = useActiveChainIds()
+  const onPressToggleChain = () => {
+    const isGoerliActive = activeChains.includes(SupportedChainId.GOERLI)
+    dispatch(setChainActiveStatus({ chainId: SupportedChainId.GOERLI, isActive: !isGoerliActive }))
+  }
+
   const blockTimestamp = useCurrentBlockTimestamp(SupportedChainId.GOERLI)
 
   const { t } = useTranslation()
@@ -62,6 +70,7 @@ export function HomeScreen({ navigation }: Props) {
         <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
+        <Button label={t('Toggle Goerli')} onPress={onPressToggleChain} mt="md" />
         <Text textAlign="center" mt="xl">
           {`Block Timestamp: ${blockTimestamp}`}
         </Text>

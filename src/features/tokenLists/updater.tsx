@@ -14,10 +14,6 @@ import { logger } from 'src/utils/logger'
 import { useInterval, useTimeout } from 'src/utils/timing'
 
 export function TokenListUpdater() {
-  // TODO like the multicall updater, this currently handles one chainId at a time
-  // So we'd need to set up one per active chain or change this to query all chains
-  const chainId = SupportedChainId.MAINNET
-
   // Delay any list updating to avoid slowing down app init work
   const [isReady, setIsReady] = useState(false)
   useTimeout(() => {
@@ -30,8 +26,8 @@ export function TokenListUpdater() {
   const lists = useAllLists()
   const activeListUrls = useActiveListUrls()
 
-  const provider = useWalletProvider(chainId)
-  const fetchList = useFetchListCallback(chainId)
+  const provider = useWalletProvider(SupportedChainId.MAINNET)
+  const fetchList = useFetchListCallback(SupportedChainId.MAINNET)
   const fetchAllListsCallback = useCallback(() => {
     if (!provider || !isReady) return
     Object.keys(lists).forEach((url) =>

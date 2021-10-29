@@ -4,7 +4,7 @@
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock'
 
 // mock initProviders to avoid creating real ethers providers for each test
-jest.mock('src/features/providers/initProviders')
+jest.mock('src/features/providers/providerSaga')
 
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({ init: () => jest.fn() }))
