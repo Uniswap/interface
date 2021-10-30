@@ -20,10 +20,10 @@ function Fixture() {
       case 'EMPTY':
         setInput(RESET)
         setOutput(RESET)
-        setSwap(RESET)
+        setSwap({ state: State.EMPTY })
         break
       case 'LOADING':
-        setSwap(RESET)
+        setSwap({ state: State.LOADING })
         break
       case 'TOKEN APPROVAL':
         setInput((value) => (value.token ? value : { token: ETH }))
