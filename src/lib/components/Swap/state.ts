@@ -40,6 +40,7 @@ export const inputAtom = atomWithDefault<Input>(() => ({ token: ETH }))
 export const outputAtom = atomWithDefault<Input>(() => ({}))
 
 export enum State {
+  EMPTY,
   LOADING,
   TOKEN_APPROVAL,
   BALANCE_INSUFFICIENT,

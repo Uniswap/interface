@@ -48,9 +48,13 @@ export default function SwapToolbar() {
     <>
       <Rule />
       <Row grow>
-        <Ratio onClick={() => setFlip(!flip)}>
-          <TYPE.caption>{loaded ? ratio : 'Uniswap V3'}</TYPE.caption>
-        </Ratio>
+        {loaded ? (
+          <Ratio onClick={() => setFlip(!flip)}>
+            <TYPE.caption>{ratio}</TYPE.caption>
+          </Ratio>
+        ) : (
+          <TYPE.caption>Uniswap V3</TYPE.caption>
+        )}
       </Row>
     </>
   )
