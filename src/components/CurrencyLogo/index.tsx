@@ -54,9 +54,9 @@ export default function CurrencyLogo({
   }
 
 
-  if (currency?.address?.toLowerCase() === '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase())
-  return <StyledLogo size={size} srcs={[squeezeLogo]} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-  if (currency?.address?.toLowerCase() === '0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://i.ibb.co/nsQDgkQ/567-ED8-AC-6026-4-F93-8-F2-C-0284-A697-F762.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  if (currency?.address?.toLowerCase() === '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase())
+  return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/10/photo_2021-10-30-06.48.25-204x300.jpeg']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  
+  
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
 }

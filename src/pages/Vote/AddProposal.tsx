@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { DarkCard, OutlineCard } from 'components/Card';
 import React from 'react'
 import { useTokenBalance } from 'state/wallet/hooks';
-import { useTrumpBalance } from './VotePage'
+import { useKiba } from './VotePage'
 import styled from 'styled-components/macro'
 import Input from 'components/NumericalInput';
 import { useIsDarkMode } from 'state/user/hooks';
