@@ -63,7 +63,6 @@ export default function SwapModalHeader({
   const [showInverted, setShowInverted] = useState<boolean>(true)
 
   const fiatValueInput = useUSDCValue(inputAmount)
-  const allowedSlippage = new Percent(0, 1)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>

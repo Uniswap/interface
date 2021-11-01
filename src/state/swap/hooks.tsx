@@ -307,6 +307,14 @@ export function useDerivedSwapInfo(): {
     })
   }, [parsedAmounts.input, parsedAmounts.output])
 
+  if (
+    price &&
+    bestTrade?.route &&
+    (price?.lessThan(bestTrade?.route.midPrice) || price?.equalTo(bestTrade?.route.midPrice))
+  ) {
+    inputError = inputError ?? <Trans>Invalid Target Price</Trans>
+  }
+
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], inputAmount]
 
