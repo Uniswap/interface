@@ -167,6 +167,14 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'EFI',
       name: 'Efinity Token',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x0C0F2b41F758d66bB8e694693B0f9e6FaE726499',
+      symbol: 'UND',
+      name: 'Unbound Dollar',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png'
     }
   ],
   version: {
