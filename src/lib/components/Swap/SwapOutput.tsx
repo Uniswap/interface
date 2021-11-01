@@ -56,7 +56,7 @@ export default function SwapOutput({ children }: { children: ReactNode }) {
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputColumn color={color} token={output.token} gap={0.75}>
+      <OutputColumn token={output.token} gap={0.75}>
         <Row>
           <TYPE.subhead3>For</TYPE.subhead3>
         </Row>
