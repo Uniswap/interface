@@ -87,9 +87,11 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
     }
   })
 
-  const displayFarms = farmsList.filter(farm =>
-    Boolean(stakedOnly ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0) : farm)
-  )
+  const displayFarms = farmsList
+    .filter(farm =>
+      Boolean(stakedOnly ? farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0) : farm)
+    )
+    .sort((a, b) => b.endBlock - a.endBlock)
 
   return (
     <FairLaunchPoolsWrapper>
