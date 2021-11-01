@@ -13,6 +13,7 @@ import {
   BarChart2,
   Twitter,
   Lock,
+  Star,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -248,6 +249,12 @@ export default function Menu() {
               return (
             
                 <MenuFlyout>
+                <InternalLinkMenuItem to="/fomo">
+                  <div>
+                    <Trans>KibaFomo</Trans>
+                  </div>
+                  <Star opacity={0.6} size={16} />
+                </InternalLinkMenuItem>
                 <InternalLinkMenuItem to="/honeypot-checker">
                 <div>
                   <Trans>Honeypot Checker</Trans>
