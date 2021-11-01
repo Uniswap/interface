@@ -33,16 +33,16 @@ async function _transferToken(
   providerManager: ProviderManager
 ) {
   // TODO use the appropriate provider for current chain
-  const goerliProvider = providerManager.getProvider(ChainId.GOERLI)
+  const provider = providerManager.getProvider(ChainId.RINKEBY)
   const walletAccount = accountManager.getAccount(account.address)
 
   if (!walletAccount) throw Error('No active account')
 
   // TODO check balance?
   // TODO handle non ETH sending by checking tokenAddress
-  const currentGasPrice = await goerliProvider.getGasPrice()
+  const currentGasPrice = await provider.getGasPrice()
   const gasPrice = utils.hexlify(parseInt(currentGasPrice.toString(), 10))
-  const nonce = await goerliProvider.getTransactionCount(account.address, 'pending')
+  const nonce = await provider.getTransactionCount(account.address, 'pending')
   const transaction: providers.TransactionRequest = {
     from: account.address,
     to: toAddress,
@@ -50,10 +50,10 @@ async function _transferToken(
     nonce,
     gasPrice,
   }
-  const gasLimit = await goerliProvider.estimateGas(transaction)
+  const gasLimit = await provider.estimateGas(transaction)
   transaction.gasLimit = gasLimit
   const signedTransaction = await walletAccount.signer.signTransaction(transaction)
-  const transactionResult = await goerliProvider.sendTransaction(signedTransaction)
+  const transactionResult = await provider.sendTransaction(signedTransaction)
   logger.debug('Send finished!', transactionResult)
 }
 

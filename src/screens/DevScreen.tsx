@@ -21,11 +21,11 @@ import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
-export function HomeScreen({ navigation }: Props) {
+export function DevScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const activeAccount = useActiveAccount()
-  const balances = useActiveAccountEthBalance(ChainId.GOERLI)
+  const ethBalance = useActiveAccountEthBalance(ChainId.GOERLI)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -46,7 +46,11 @@ export function HomeScreen({ navigation }: Props) {
   const onPressGetBalance = async () => {
     if (!activeAccount) return
     dispatch(fetchBalancesActions.trigger(activeAccount.address))
-    logger.debug(balances)
+    logger.debug(ethBalance)
+  }
+
+  const onPressHome = async () => {
+    navigation.navigate(Screens.Home)
   }
 
   const activeChains = useActiveChainIds()
@@ -65,6 +69,7 @@ export function HomeScreen({ navigation }: Props) {
         <Text variant="h3" textAlign="center" mt="xl">
           {t('Your Account: {{addr}}', { addr: activeAccount?.address || 'none' })}
         </Text>
+        <Button label={'Home'} onPress={onPressHome} mt="md" />
         <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
         <Button label={t('List Accounts')} onPress={onPressList} mt="md" />
         <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />

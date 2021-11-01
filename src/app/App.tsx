@@ -16,7 +16,6 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { BalancesScreen } from 'src/features/balances/BalancesScreen'
-import { HomeScreen } from 'src/features/home/HomeScreen'
 import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -25,6 +24,8 @@ import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
+import { DevScreen } from 'src/screens/DevScreen'
+import { HomeScreen } from 'src/screens/HomeScreen'
 import { darkTheme, theme } from 'src/styles/theme'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -79,8 +80,8 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         {isUnlocked ? (
           <>
             <Stack.Screen
-              name={Screens.Home}
-              component={HomeScreen}
+              name={Screens.Dev}
+              component={DevScreen}
               options={{ title: 'Uniswap | Home' }}
             />
             <Stack.Screen
@@ -97,6 +98,11 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
               name={Screens.Transfer}
               component={TransferTokenScreen}
               options={{ title: 'Uniswap | Send' }}
+            />
+            <Stack.Screen
+              name={Screens.Home}
+              component={HomeScreen}
+              options={{ headerShown: false }}
             />
           </>
         ) : (

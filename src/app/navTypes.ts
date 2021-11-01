@@ -5,6 +5,7 @@ import { ChainId } from 'src/constants/chains'
 export type RootStackParamList = {
   [Screens.Balances]: undefined
   [Screens.Camera]: undefined
+  [Screens.Dev]: undefined
   [Screens.Home]: undefined
   [Screens.ImportAccount]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
