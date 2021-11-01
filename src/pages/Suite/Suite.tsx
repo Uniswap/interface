@@ -6,7 +6,7 @@ import { BlueCard } from 'components/Card'
 import Header from 'components/Header'
 import { StackedContainer } from 'pages/AddLiquidity/styled'
 import { ResponsiveHeaderText, Wrapper } from 'pages/RemoveLiquidity/styled'
-import { useTrumpBalance } from 'pages/Vote/VotePage'
+import { useKiba } from 'pages/Vote/VotePage'
 import React from 'react'
 import { BarChart2, Check, ChevronRight, DollarSign, ExternalLink, List } from 'react-feather'
 import { Card } from 'rebass'
@@ -15,7 +15,7 @@ import { StyledInternalLink } from 'theme/components'
 
 export const Suite = () => {
   const { account } = useWeb3React()
-  const trumpBalance = useTrumpBalance(account)
+  const trumpBalance = useKiba(account)
   const isHolder = React.useMemo(() => {
     return trumpBalance && +trumpBalance?.toFixed(2) > 0
   }, [account, trumpBalance])
@@ -25,7 +25,7 @@ export const Suite = () => {
       route: '#rug-checker',
       label: 'Rug Checker',
       description:
-        'The BabyTrump Rug Checker is designed to help all ranges of investors run checks on Smart Contracts that will process the contract and determine key details like if their liquidity is locked and ownership is renounced',
+        'The Kiba Rug Checker is designed to help all ranges of investors run checks on Smart Contracts that will process the contract and determine key details like if their liquidity is locked and ownership is renounced',
         icon: Check
     },
     {
@@ -35,10 +35,10 @@ export const Suite = () => {
         icon: DollarSign
     },
     {
-      route: 'https://stats.babytrumptoken.com',
+      route: '#',
       external: true,
-      label: 'TrumpStats',
-      description: "TrumpStats allows you to see detailed transaction data, track wallets, view portfolio stats, and more.",
+      label: 'Kibastats',
+      description: "Kibastats allows you to see detailed transaction data, track wallets, view portfolio stats, and more.",
       icon: BarChart2
     }
   ]
@@ -47,7 +47,7 @@ export const Suite = () => {
     <Card>
       <ResponsiveHeaderText style={{ display: 'flex' }}>
         <h5 style={{color:'#fff'}}>
-          TrumpTools&trade;
+          KibaTools&trade;
         </h5>
       </ResponsiveHeaderText>
       <BlueCard style={{ maxWidth: 600 }}>

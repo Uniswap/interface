@@ -72,36 +72,26 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     })
 
     const allowedContracts = [
-      '0x99d36e97676a68313ffdc627fd6b56382a2a08b6'.toLowerCase(),
-      '0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4'.toLowerCase(),
-      '0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013'.toLowerCase(),
-      '0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc'.toLowerCase(),
+      '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase(),
+
       WETH9[1].address,
       USDC.address,
       USDT.address,
     ]
-    const squeezeCoin = new Token(
+    const kiba = new Token(
       1,
-      "0xaBd4dc8fDe9848CBc4Ff2c0Ee81d4A49F4803Da4",
+      "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
       9,
-      "Squeeze",
-      "Squeeze Token"
+      "Kiba",
+      "Kiba Inu"
     );
 
-    const avakus =  new Token(
-      1,
-      "0x724dd18be5de3ed3d6ad7bb46d7387d867cdbdcc",
-      9,
-      "AVAK",
-      "Avakus"
-    );
-
-  const squeezeListedCoins = [squeezeCoin, avakus];
+  const squeezeListedCoins = [kiba];
 
     return _.uniqBy( [...exactMatches, ...symbolSubtrings, ...rest, ...squeezeListedCoins], item => item.address.toLowerCase()).filter((item: any) => {
       if (!showOnlyTrumpCoins) return !!item;
-      const isTrumpApproved = allowedContracts.includes(item.address.toLowerCase())
-      return isTrumpApproved
+      const isApproved = allowedContracts.includes(item.address.toLowerCase())
+      return isApproved
     })
   }, [tokens, searchQuery, showOnlyTrumpCoins])
 }

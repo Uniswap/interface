@@ -1,8 +1,8 @@
 {
   "background_color": "#fff",
   "display": "standalone",
-  "homepage_url": "https://app.uniswap.org",
-  "providedBy": { "name": "Uniswap", "url": "https://uniswap.org" },
+  "homepage_url": "https://kibaswap.app",
+  "providedBy": { "name": "Kiba Inu", "url": "https://kibainu.space" },
   "icons": [
     {
       "src": "./images/192x192_App_Icon.png",
@@ -18,10 +18,10 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Uniswap",
-  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "name": "Kiba Swap",
+  "description": "Swap or provide liquidity on the Kibaswap Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
-  "short_name": "Uniswap",
+  "short_name": "Kibaswap",
   "start_url": ".",
   "theme_color": "#ff007a"
 }

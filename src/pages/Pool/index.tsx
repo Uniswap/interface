@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
-import { FlyoutAlignment, NewMenu } from 'components/Menu'
+import Menu, { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -44,7 +44,7 @@ const ButtonRow = styled(RowFixed)`
   & > *:not(:last-child) {
     margin-left: 8px;
   }
-
+  position:relative;z-index:9;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
     flex-direction: row;
@@ -52,13 +52,9 @@ const ButtonRow = styled(RowFixed)`
     flex-direction: row-reverse;
   `};
 `
-const Menu = styled(NewMenu)`
+const MenuX = styled(NewMenu)`
   margin-left: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex: 1 1 auto;
-    width: 49%;
-    right: 0px;
-  `};
+  z-index:9;
 
   a {
     width: 100%;
@@ -78,6 +74,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   width: 100%;
   background-color: ${({ theme }) => theme.bg0};
   margin-right: 8px;
+  z-index:9;
 `
 const NoLiquidity = styled.div`
   align-items: center;
@@ -92,6 +89,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
+  z-index:9;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex: 1 1 auto;
     width: 100%;
@@ -184,7 +182,7 @@ export default function Pool() {
           <BookOpen size={16} />
         </MenuItem>
       ),
-      link: 'https://babytrumptoken.com/',
+      link: 'https://kibainu.space/',
       external: true,
     },
   ]
@@ -201,9 +199,9 @@ export default function Pool() {
               </TYPE.white>
               <ButtonRow>
                 {showV2Features && (
-                  <Menu
+                  <MenuX
                     menuItems={menuItems}
-                    flyoutAlignment={FlyoutAlignment.LEFT}
+                    flyoutAlignment={FlyoutAlignment.RIGHT}
                     ToggleUI={(props: any) => (
                       <MoreOptionsButton {...props}>
                         <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
@@ -214,7 +212,7 @@ export default function Pool() {
                     )}
                   />
                 )}
-                <ResponsiveButtonPrimary  id="join-pool-button" as={Link} to="/add/ETH">
+                <ResponsiveButtonPrimary as={Link}  id="join-pool-button" to="/add/ETH">
                   + <Trans>New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -272,7 +270,7 @@ export default function Pool() {
                       borderRadius: '12px',
                       width: 'fit-content',
                       fontSize: '14px',
-                      background: "#FFF"
+                      background: "#222"
                     }}
                   >
                     <Layers size={14} style={{ marginRight: '8px' }} />

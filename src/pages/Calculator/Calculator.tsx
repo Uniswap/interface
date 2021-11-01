@@ -6,12 +6,12 @@ import { useUSDCValue } from 'hooks/useUSDCPrice';
 import React from 'react';
 import { Plus } from 'react-feather';
 import { TYPE } from 'theme';
-import { useTrumpBalance } from '../Vote/VotePage';
+import { useKiba } from '../Vote/VotePage';
 
 export const Calculator = () => {
     const { account } = useWeb3React();
     const [marketCap, setMarketCap] = React.useState('')
-    const balance = useTrumpBalance(account)
+    const balance = useKiba(account)
     const value = useUSDCValue(balance)
     const renderConnectMessage = () => (
         <React.Fragment>
@@ -27,7 +27,7 @@ export const Calculator = () => {
             <CardSection>
                 <Plus />
                 <div>
-                    <TYPE.main>Select a market cap to see what your current babytrump would be worth</TYPE.main>
+                    <TYPE.main>Select a market cap to see what your current Kiba would be worth</TYPE.main>
                     <select onChange={e => setMarketCap(e.target.value)}>
                         <option>Select a market cap</option>
                         <option value="30">30 Million</option>

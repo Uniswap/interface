@@ -42,16 +42,16 @@ function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#222' : '#d9dc51',
-    text2: darkMode ? '#111' : '#565A69',
+    text1: darkMode ? '#fff' : '#d9dc51',
+    text2: darkMode ? '#fff' : '#565A69',
     text3: darkMode ? '#111' : '#6E727D',
     text4: darkMode ? '#fff ' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? 'rgb(168, 228, 44)' : '#FFF',
-    bg1: darkMode ? '#FFF' : '#F7F8FA',
-    bg2: darkMode ? '#FFF' : '#EDEEF2',
+    bg0: darkMode ? '#7b3744' : '#FFF',
+    bg1: darkMode ? '#222' : '#F7F8FA',
+    bg2: darkMode ? '#a5757a' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
     bg5: darkMode ? '#6C7284' : '#888D9B',
@@ -65,7 +65,7 @@ function colors(darkMode: boolean): Colors {
     primary1: darkMode ? '#111' : '#73b588',
     primary2: darkMode ? '#222' : '#d9dc51',
     primary3: darkMode ? '#eee' : '#d9dc51',
-    primary4: darkMode ? 'rgb(139, 197, 63)' : '#F6DDE8',
+    primary4: darkMode ? 'rgb(170, 64, 88)' : '#F6DDE8',
     primary5: darkMode ? '#FFF' : '#FDEAF1',
 
     // color text
@@ -138,7 +138,7 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
 
 export const TYPE = {
   main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper  fontWeight={500} color={'text2'} {...props} />
   },
   link(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />

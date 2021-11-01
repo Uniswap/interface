@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { ShowSellTaxComponent } from 'components/ShowSellTax'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
@@ -10,6 +11,7 @@ import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
+import React from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components/macro'
@@ -349,8 +351,15 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+  const [view, setView] = React.useState<'bridge' | 'swap' | 
+  'honey'
+  >('swap')
 
-  return (
+  const StyledDiv = styled.div`
+  font-family: 'Bangers', cursive;
+  font-size:25px;
+  `
+ return (
     <>
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -360,8 +369,8 @@ export default function Swap({ history }: RouteComponentProps) {
       />
       <NetworkAlert />
       <AppBody>
-        <SwapHeader allowedSlippage={allowedSlippage} />
-        <Wrapper id="swap-page">
+        <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
+        {view === 'swap' && <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
             trade={trade}
@@ -506,6 +515,9 @@ export default function Swap({ history }: RouteComponentProps) {
               </Row>
             )}
 
+            {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <ShowSellTaxComponent />
+</div>}
             <div>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
@@ -657,9 +669,18 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+            
             </div>
           </AutoColumn>
-        </Wrapper>
+        </Wrapper>}
+
+        {view === 'bridge' && (
+          <Wrapper id="bridgepage">
+            <AutoColumn style={{padding:15}} gap={'md'}>
+              <StyledDiv>COMING SOON</StyledDiv>
+            </AutoColumn>
+          </Wrapper>
+        )}
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

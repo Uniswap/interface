@@ -12,11 +12,7 @@ import {
   Check,
   BarChart2,
   Twitter,
-  Monitor,
-  Image,
-  BarChart,
-  Tool,
-  Watch,
+  Lock,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -34,9 +30,6 @@ import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useWeb3React } from '@web3-react/core'
-import { useTrumpBalance } from 'pages/Vote/VotePage'
-import { StyledInternalLink } from 'theme/components'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -123,21 +116,6 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   `};
 `
 
-export const InternalMenuItemTwo = styled(Link)`
-display: flex;
-flex: 1;
-flex-direction: row;
-align-items: center;
-padding: 0.5rem 0.5rem;
-justify-content: space-between;
-color: ${({ theme }) => theme.text2};
-:hover {
-  color: ${({ theme }) => theme.text1};
-  cursor: pointer;
-  text-decoration: none;
-}
-`
-
 const MenuItem = styled(ExternalLink)`
   display: flex;
   flex: 1;
@@ -167,18 +145,20 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const InternalLinkMenuItem = styled(InternalMenuItem)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0.5rem 0.5rem;
-  justify-content: space-between;
+const InternalLinkMenuItem = styled(Link)`
+display: flex;
+flex: 1;
+flex-direction: row;
+align-items: center;
+padding: 0.5rem 0.5rem;
+justify-content: space-between;
+text-decoration:none;
+color: ${({ theme }) => theme.text2};
+:hover {
+  color: ${({ theme }) => theme.text1};
+  cursor: pointer;
   text-decoration: none;
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    cursor: pointer;
-    text-decoration: none;
-  }
+}
 `
 
 const ToggleMenuItem = styled.button`
@@ -246,12 +226,10 @@ export default function Menu() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
-const babyTrumpBalance = useTrumpBalance(account);
+
   useEffect(() => {
     setMenu('main')
   }, [open])
-
-  const routeToGainsTracker = () => window.history.pushState(null, 'GainsTracker', '/gains-tracker');
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
@@ -268,50 +246,33 @@ const babyTrumpBalance = useTrumpBalance(account);
             case 'main':
             default:
               return (
+            
                 <MenuFlyout>
-                 <InternalLinkMenuItem style={{cursor:'not-allowed'}} to="#">
-                 <div>
-                   <Trans>SqueezeTools <small>COMING SOON</small></Trans>
-                   </div>
-                   <Tool style={{position:'relative', left: 5}} opacity={0.6} size={16} />
-                </InternalLinkMenuItem>
-                <InternalLinkMenuItem to="/gains-tracker">
-                   <div>
-                      <Trans>GainsTracker</Trans>
-                   </div>
-                   <PieChart style={{position:'relative', left: 10}} opacity={0.6} size={16} />
-                </InternalLinkMenuItem>
-                 <MenuItem href="https://squeezestats.app">
-                     <div>
-                      <Trans>SqueezeStats</Trans>
-                    </div> 
-                    <BarChart2  opacity={0.6} size={16} />
-                 </MenuItem>
-                 {/* <InternalMenuItemTwo to="/themed-background">
-                    <div>
-                      <Trans>Edit background</Trans>
-                    </div>
-                    <Image opacity={0.6} size={16} />
-                  </InternalMenuItemTwo> */}
-                  <MenuItem href="https://squeezetoken.finance">
+                <InternalLinkMenuItem to="/honeypot-checker">
+                <div>
+                  <Trans>Honeypot Checker</Trans>
+                </div>
+                <Lock opacity={0.6} size={16} />
+              </InternalLinkMenuItem>
+                  <MenuItem href="https://kibainu.space/">
                     <div>
                       <Trans>About</Trans>
                     </div>
                     <Info opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://t.me/squeezetoken/">
+                  <MenuItem href="https://t.me/kibainueth/">
                     <div>
                       <Trans>Telegram</Trans>
                     </div>
                     <BookOpen opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://www.dextools.io/app/uniswap/pair-explorer/0x506276d09f18db8d3ba93e39e9a1175fcc61c89d">
+                  <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xac6776d1c8d455ad282c76eb4c2ade2b07170104">
                     <div>
                       <Trans>Dextools</Trans>
                     </div>
                     <BarChart2 opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href={'https://twitter.com/SqueezeToken'}>
+                  <MenuItem href={'https://twitter.com/kibainu_eth'}>
                     <div>
                       <Trans>Twitter</Trans>
                     </div>
@@ -323,12 +284,6 @@ const babyTrumpBalance = useTrumpBalance(account);
                     </div>
                     <ChevronRight size={16} opacity={0.6} />
                   </ToggleMenuItem>
-                  <InternalLinkMenuItem to="/donation-tracker">
-                   <div>
-                      <Trans>Donation Tracker</Trans>
-                   </div>
-                   <Watch style={{position:'relative', left: 10}} opacity={0.6} size={16} />
-                </InternalLinkMenuItem>
                 </MenuFlyout>
               )
           }
@@ -359,30 +314,6 @@ const ExternalMenuItem = styled(MenuItem)`
   width: max-content;
   text-decoration: none;
 `
-
-export const GainsMenu = () => {
-  const node = useRef<HTMLDivElement>()
-  const { account } = useWeb3React()
-  const trumpBalance = useTrumpBalance(account)
-  const [show, setShow]  = React.useState(false)
-  const open = useModalOpen(ApplicationModal.GAINS)
-  const toggle = useToggleModal(ApplicationModal.GAINS)
-  useOnClickOutside(node, show ? () => setShow(false)  : undefined)
-  const ToggleElement = StyledMenuIcon
-  return (
-    <StyledMenu ref={node as any}>
-      <ToggleElement onClick={() => setShow(true)} />
-      {show && (
-        <NewMenuFlyout flyoutAlignment={FlyoutAlignment.RIGHT}>
-              <NewMenuItem to={"/gains"}>
-               TRUMPGAINS
-              </NewMenuItem>
-      <NewMenuItem  to={trumpBalance ? "/gains-tracker" : '#'}> UNIVERSAL GAINS TRACKER {!trumpBalance && <Info />}</NewMenuItem>
-        </NewMenuFlyout>
-      )}
-    </StyledMenu>
-  )
-}
 
 export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
   const node = useRef<HTMLDivElement>()
