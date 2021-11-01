@@ -66,6 +66,13 @@ export default function CurrencySearchModal({
   const [importList, setImportList] = useState<TokenList | undefined>()
   const [listURL, setListUrl] = useState<string | undefined>()
 
+  const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [setModalView])
+  const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
+  const handleBackImport = useCallback(
+    () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
+    [setModalView, prevView]
+  )
+
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
   let content = null
@@ -81,9 +88,9 @@ export default function CurrencySearchModal({
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
-          showImportView={() => setModalView(CurrencyModalView.importToken)}
+          showImportView={showImportView}
           setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
+          showManageView={showManageView}
         />
       )
       break
@@ -94,9 +101,7 @@ export default function CurrencySearchModal({
             tokens={[importToken]}
             onDismiss={onDismiss}
             list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-            onBack={() =>
-              setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
-            }
+            onBack={handleBackImport}
             handleCurrencySelect={handleCurrencySelect}
           />
         )
