@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-27 19:06\n"
+"PO-Revision-Date: 2021-11-01 21:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -1512,7 +1512,7 @@ msgstr "Допустимое проскальзывание"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "Некоторые активы недоступны через этот интерфейс, потому что они могут неправильно работать со смарт-контрактами или мы не можем разрешить торговлю по юридическим причинам."
+msgstr "Некоторые активы недоступны через этот интерфейс, потому что они могут неправильно работать со смарт-контрактами или из-за того, что мы не можем разрешить торговлю по юридическим причинам."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
