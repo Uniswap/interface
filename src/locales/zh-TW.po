@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-26 22:06\n"
+"PO-Revision-Date: 2021-11-01 15:08\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -345,7 +345,7 @@ msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並承認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
+msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並確認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1606,11 +1606,11 @@ msgstr "該應用程序獲取鏈上數據並使用 Infura API 構建合約調用
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "該應用程序從 Uniswap Labs 服務器獲取最佳貿易路線。"
+msgstr "該應用程序從 Uniswap Labs 服務器獲取最佳交易路徑。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "該應用程序會記錄匿名使用情況統計信息，以便隨著時間的推移不斷改進。"
+msgstr "該應用程序會記錄匿名使用情況統計信息，以便不斷改進。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
@@ -1678,7 +1678,7 @@ msgstr "此代幣未出現在激活的代幣列表中。請確保這是您想要
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
-msgstr "Uniswap Labs 應用程序不支持此令牌"
+msgstr "Uniswap Labs 應用程序不支持此代幣"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1713,7 +1713,7 @@ msgstr "在 {0} 上交易，首先須將您的資產從 L1 橋接到 L2。請將
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
-msgstr "不支持令牌"
+msgstr "不支持此代幣"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
