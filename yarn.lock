@@ -4565,10 +4565,10 @@
     "@web3-react/types" "^6.0.7"
     tiny-invariant "^1.0.6"
 
-"@web3-react/walletlink-connector@^6.2.6":
-  version "6.2.6"
-  resolved "https://registry.yarnpkg.com/@web3-react/walletlink-connector/-/walletlink-connector-6.2.6.tgz#e717cd3562511715a6c67313eee62db5b8c3b909"
-  integrity sha512-LRdVVQ6FZVUmMkNMZGiZpGaDu1wLPKbVWfnHXP0wie2G+Kmbx6xiipqvjLMm6qHe9LT7A1GcIbRrTTGxyshK/Q==
+"@web3-react/walletlink-connector@^6.2.7":
+  version "6.2.7"
+  resolved "https://registry.yarnpkg.com/@web3-react/walletlink-connector/-/walletlink-connector-6.2.7.tgz#f8c63556d1ddd569b88e0f27390b362e60dece3f"
+  integrity sha512-FW/+03XpDLFT3ZCJZzAV5pgqKnbDWkqy85bOyA4iHDMkWAo1Y1yz7M6y9GkYTipzKHO2IEn5zbP7XXwOzOxLZA==
   dependencies:
     "@web3-react/abstract-connector" "^6.0.7"
     "@web3-react/types" "^6.0.7"
