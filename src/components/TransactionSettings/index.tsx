@@ -1,4 +1,4 @@
-import { parseUnits } from '@ethersproject/units'
+import { formatUnits, parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Ether, Percent } from '@uniswap/sdk-core'
 import { L2_CHAIN_IDS } from 'constants/chains'
@@ -6,7 +6,7 @@ import { DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_GAS_PRICE } from 'constants/mis
 import { useActiveWeb3React } from 'hooks/web3'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { useSetUserSlippageTolerance, useUserTransactionGas, useUserTransactionTTL } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -99,13 +99,26 @@ const SlippageEmojiContainer = styled.span`
 interface TransactionSettingsProps {}
 
 export default function TransactionSettings({}: TransactionSettingsProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [userGasPrice, setUserGasPrice] = useUserTransactionGas()
 
   const [userGasPriceInput, setUserGasPriceInput] = useState('')
   const [userGasPriceError, setUserGasPriceError] = useState<UserGasPriceError | false>(false)
+
+  const gasPriceCallback = useCallback(() => {
+    library
+      ?.getGasPrice()
+      .then((userGasPrice) => {
+        setUserGasPrice(formatUnits(userGasPrice, 'gwei'))
+      })
+      .catch((error) => console.error(`Failed to get gas price for chainId: ${chainId}`, error))
+  }, [chainId, library, setUserGasPrice])
+
+  if (!userGasPrice) {
+    gasPriceCallback()
+  }
 
   function parseCustomGasPrice(value: string) {
     // populate what the user typed and clear the error

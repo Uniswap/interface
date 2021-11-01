@@ -43,6 +43,8 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
+  inputAmount,
+  outputAmount,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -56,6 +58,8 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
+  inputAmount: CurrencyAmount<Currency> | undefined
+  outputAmount: CurrencyAmount<Currency> | undefined
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -76,6 +80,8 @@ export default function ConfirmSwapModal({
         trade={trade}
         serviceFee={serviceFee}
         priceAmount={priceAmount}
+        inputAmount={inputAmount}
+        outputAmount={outputAmount}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
@@ -97,8 +103,8 @@ export default function ConfirmSwapModal({
   // text to show while loading
   const pendingText = trade ? (
     <Trans>
-      Placing Limit Order of {trade?.inputAmount?.toSignificant(6)} {trade?.inputAmount?.currency?.symbol} for{' '}
-      {priceAmount?.toSignificant(6)} {trade?.outputAmount?.currency?.symbol}
+      Placing Limit Order of {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for{' '}
+      {priceAmount?.toSignificant(6)} {outputAmount?.currency?.symbol}
     </Trans>
   ) : null
 

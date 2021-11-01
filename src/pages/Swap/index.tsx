@@ -11,7 +11,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -45,7 +45,6 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -57,7 +56,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserGasPrice } from '../../state/user/hooks'
+import { useUserGasPrice } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { getTradeVersion } from '../../utils/getTradeVersion'
@@ -113,15 +112,16 @@ export default function Swap({ history }: RouteComponentProps) {
   const toggleWalletModal = useWalletModalToggle()
 
   // swap state
-  const { independentField, typedValue, priceValue, recipient } = useSwapState()
+  const { independentField, typedValue, recipient } = useSwapState()
   const {
     v3Trade: { state: v3TradeState },
     bestTrade: trade,
     serviceFee,
     currencyBalances,
-    parsedAmount,
-    priceAmount,
+    price,
     currencies,
+    parsedAmounts,
+    formattedAmounts,
     inputError: swapInputError,
   } = useDerivedSwapInfo()
 
@@ -135,25 +135,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
 
-  const parsedAmounts = useMemo(
-    () =>
-      showWrap
-        ? {
-            [Field.INPUT]: parsedAmount,
-            [Field.OUTPUT]: parsedAmount,
-          }
-        : {
-            [Field.INPUT]: parsedAmount,
-            [Field.OUTPUT]: priceAmount?.quoteCurrency
-              ? CurrencyAmount.fromRawAmount(
-                  priceAmount?.quoteCurrency as Currency,
-                  priceAmount?.quotient ? priceAmount?.quotient : 0
-                )
-              : undefined,
-          },
-    [parsedAmount, priceAmount, showWrap]
-  )
-
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
       trade instanceof V3Trade ? !trade?.swaps : undefined,
@@ -163,13 +144,12 @@ export default function Swap({ history }: RouteComponentProps) {
     [trade, v3TradeState]
   )
 
-  const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
-  const fiatValueOutput = undefined
+  const fiatValueInput = useUSDCValue(parsedAmounts.input)
+  const fiatValueOutput = useUSDCValue(parsedAmounts.output)
   const priceImpact = routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
-  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -180,6 +160,12 @@ export default function Swap({ history }: RouteComponentProps) {
   const handleTypeOutput = useCallback(
     (value: string) => {
       onUserInput(Field.OUTPUT, value)
+    },
+    [onUserInput]
+  )
+  const handleTypePrice = useCallback(
+    (value: string) => {
+      onUserInput(Field.PRICE, value)
     },
     [onUserInput]
   )
@@ -205,13 +191,10 @@ export default function Swap({ history }: RouteComponentProps) {
     txHash: undefined,
   })
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: priceValue,
-  }
-
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+    currencies[Field.INPUT] &&
+      currencies[Field.OUTPUT] &&
+      (independentField === Field.INPUT || independentField === Field.OUTPUT)
   )
 
   // check whether the user has approved the router on the input token
@@ -250,7 +233,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [approvalState, approvalSubmitted])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
+  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts.input?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
@@ -258,8 +241,8 @@ export default function Swap({ history }: RouteComponentProps) {
     gasAmount,
     recipient,
     signatureData,
-    parsedAmount,
-    priceAmount,
+    parsedAmounts.input,
+    price,
     serviceFee
   )
 
@@ -299,7 +282,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [swapCallback, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
 
   // errors
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -364,19 +347,21 @@ export default function Swap({ history }: RouteComponentProps) {
             txHash={txHash}
             recipient={recipient}
             serviceFee={serviceFee}
-            priceAmount={priceAmount}
+            priceAmount={price}
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
+            inputAmount={parsedAmounts.input}
+            outputAmount={parsedAmounts.output}
           />
 
-          <AutoColumn gap={'sm'}>
+          <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
                 label={
                   independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                 }
-                value={formattedAmounts[Field.INPUT]}
+                value={formattedAmounts.input}
                 showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
                 onUserInput={handleTypeInput}
@@ -388,6 +373,29 @@ export default function Swap({ history }: RouteComponentProps) {
                 id="swap-currency-input"
                 loading={independentField === Field.OUTPUT && routeIsSyncing}
               />
+
+              <ArrowWrapper clickable={false}>
+                <X size="16" />
+              </ArrowWrapper>
+
+              <CurrencyInputPanel
+                value={formattedAmounts.price}
+                onUserInput={handleTypePrice}
+                label={<Trans>Target Price</Trans>}
+                showMaxButton={false}
+                hideBalance={true}
+                currency={currencies[Field.OUTPUT] ?? null}
+                otherCurrency={currencies[Field.INPUT]}
+                id="target-price"
+                showCommonBases={false}
+                locked={false}
+                showCurrencySelector={false}
+                showRate={true}
+                isInvertedRate={false}
+                price={price}
+                loading={independentField === Field.INPUT && routeIsSyncing}
+              />
+
               <ArrowWrapper clickable>
                 <ArrowDown
                   size="16"
@@ -398,8 +406,9 @@ export default function Swap({ history }: RouteComponentProps) {
                   color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
                 />
               </ArrowWrapper>
+
               <CurrencyInputPanel
-                value={formattedAmounts[Field.OUTPUT]}
+                value={formattedAmounts.output}
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
@@ -472,7 +481,8 @@ export default function Swap({ history }: RouteComponentProps) {
                         <AdvancedSwapDetails
                           trade={trade}
                           serviceFee={serviceFee}
-                          priceAmount={priceAmount}
+                          priceAmount={price}
+                          outputAmount={parsedAmounts.output}
                           syncing={routeIsSyncing}
                         />
                       </ResponsiveTooltipContainer>

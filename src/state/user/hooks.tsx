@@ -1,4 +1,4 @@
-import { parseUnits } from '@ethersproject/units'
+import { formatUnits, parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Ether, Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
@@ -222,17 +222,28 @@ export function useUserTransactionGas(): [string, (gasPrice: string) => void] {
 }
 
 export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
-  const { chainId } = useActiveWeb3React()
-  const userGasPrice = useAppSelector((state) => {
-    return state.user.userGasPrice
-  })
+  const { chainId, library } = useActiveWeb3React()
+  const [userGasPrice, setUserGasPrice] = useUserTransactionGas()
 
-  const parsedUserGasPrice = userGasPrice ? userGasPrice : DEFAULT_USER_GAS_PRICE
-  const parsed = parseUnits(parsedUserGasPrice, 'gwei').toString()
+  const gasPriceCallback = useCallback(() => {
+    library
+      ?.getGasPrice()
+      .then((userGasPrice) => {
+        setUserGasPrice(formatUnits(userGasPrice, 'gwei'))
+      })
+      .catch((error) => console.error(`Failed to get gas price for chainId: ${chainId}`, error))
+  }, [chainId, library, setUserGasPrice])
+
+  if (!userGasPrice) {
+    gasPriceCallback()
+  }
 
   return useMemo(
-    () => (chainId ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parsed)) : undefined),
-    [chainId, parsed]
+    () =>
+      userGasPrice && chainId
+        ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parseUnits(userGasPrice, 'gwei').toString()))
+        : undefined,
+    [chainId, userGasPrice]
   )
 }
 

@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 
-import { DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_GAS_PRICE } from '../../constants/misc'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -86,7 +86,7 @@ export const initialState: UserState = {
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
-  userGasPrice: DEFAULT_USER_GAS_PRICE,
+  userGasPrice: '',
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),

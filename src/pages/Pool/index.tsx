@@ -148,6 +148,19 @@ export default function Pool() {
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
 
+  const menuItems = [
+    {
+      content: (
+        <MenuItem>
+          <Trans>Migrate Position</Trans>
+          <ChevronsRight size={16} />
+        </MenuItem>
+      ),
+      link: '/migrate/v3',
+      external: false,
+    },
+  ]
+
   return (
     <>
       <PageWrapper>
@@ -159,8 +172,20 @@ export default function Pool() {
                 <Trans>Limit Orders</Trans>
               </TYPE.body>
               <ButtonRow>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>Migrate Position</Trans>
+                <Menu
+                  menuItems={menuItems}
+                  flyoutAlignment={FlyoutAlignment.LEFT}
+                  ToggleUI={(props: any) => (
+                    <MoreOptionsButton {...props}>
+                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                        <Trans>More</Trans>
+                        <ChevronDown size={15} />
+                      </TYPE.body>
+                    </MoreOptionsButton>
+                  )}
+                />
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/funds">
+                  + <Trans>Add Funds</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>

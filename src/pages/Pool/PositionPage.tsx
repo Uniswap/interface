@@ -553,12 +553,12 @@ export function PositionPage({
           hash={collectMigrationHash ?? ''}
           content={() => (
             <ConfirmationModalContent
-              title={<Trans>Claim fees</Trans>}
+              title={<Trans>Collect</Trans>}
               onDismiss={() => setShowConfirm(false)}
               topContent={modalHeader}
             />
           )}
-          pendingText={<Trans>Collecting fees</Trans>}
+          pendingText={<Trans>Collecting tokens</Trans>}
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
@@ -585,7 +585,7 @@ export function PositionPage({
                   {currency0 && currency1 && feeAmount && tokenId ? (
                     <ButtonGray
                       as={Link}
-                      to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
+                      to={`/retrieve/${tokenId}`}
                       width="fit-content"
                       padding="6px 8px"
                       $borderRadius="12px"

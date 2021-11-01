@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import TradePrice from 'components/swap/TradePrice'
 import { darken } from 'polished'
-import { ReactNode, useCallback, useState } from 'react'
+import { Fragment, ReactNode, useCallback, useMemo, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -173,6 +174,10 @@ interface CurrencyInputPanelProps {
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
+  showCurrencySelector?: boolean
+  showRate?: boolean
+  isInvertedRate?: boolean
+  price?: Price<Currency, Currency> | undefined
 }
 
 export default function CurrencyInputPanel({
@@ -195,6 +200,10 @@ export default function CurrencyInputPanel({
   hideInput = false,
   locked = false,
   loading = false,
+  showCurrencySelector = true,
+  showRate = false,
+  isInvertedRate = false,
+  price,
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
@@ -205,6 +214,8 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -220,43 +231,50 @@ export default function CurrencyInputPanel({
       )}
       <Container hideInput={hideInput}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
-          <CurrencySelect
-            visible={currency !== undefined}
-            selected={!!currency}
-            hideInput={hideInput}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (onCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              <RowFixed>
-                {pair ? (
-                  <span style={{ marginRight: '0.5rem' }}>
-                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-                  </span>
-                ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
-                ) : null}
-                {pair ? (
-                  <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
-                  </StyledTokenName>
-                ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                    {(currency && currency.symbol && currency.symbol.length > 20
-                      ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select a token</Trans>}
-                  </StyledTokenName>
-                )}
-              </RowFixed>
-              {onCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>
+          {showCurrencySelector ? (
+            <CurrencySelect
+              visible={currency !== undefined}
+              selected={!!currency}
+              hideInput={hideInput}
+              className="open-currency-select-button"
+              onClick={() => {
+                if (onCurrencySelect) {
+                  setModalOpen(true)
+                }
+              }}
+            >
+              <Aligner>
+                <RowFixed>
+                  {pair ? (
+                    <span style={{ marginRight: '0.5rem' }}>
+                      <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                    </span>
+                  ) : currency ? (
+                    <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                      {(currency && currency.symbol && currency.symbol.length > 20
+                        ? currency.symbol.slice(0, 4) +
+                          '...' +
+                          currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        : currency?.symbol) || <Trans>Select a token</Trans>}
+                    </StyledTokenName>
+                  )}
+                </RowFixed>
+                {onCurrencySelect && <StyledDropDown selected={!!currency} />}
+              </Aligner>
+            </CurrencySelect>
+          ) : null}
+          {showRate && (
+            <RowFixed style={{ height: '17px' }}>
+              <TYPE.main>{'Target Price'}</TYPE.main>
+            </RowFixed>
+          )}
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
@@ -266,7 +284,7 @@ export default function CurrencyInputPanel({
             />
           )}
         </InputRow>
-        {!hideInput && !hideBalance && (
+        {!hideInput && !hideBalance && !showRate && (
           <FiatRow>
             <RowBetween>
               {account ? (
@@ -302,6 +320,15 @@ export default function CurrencyInputPanel({
               </LoadingOpacityContainer>
             </RowBetween>
           </FiatRow>
+        )}
+        {showRate && value && price && (
+          <Fragment>
+            <FiatRow>
+              <RowBetween>
+                <TradePrice price={price} showInverted={showInverted} setShowInverted={setShowInverted} />
+              </RowBetween>
+            </FiatRow>
+          </Fragment>
         )}
       </Container>
       {onCurrencySelect && (

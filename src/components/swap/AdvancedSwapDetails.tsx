@@ -5,7 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
 import { useContext, useMemo } from 'react'
-import { useUserTransactionGas } from 'state/user/hooks'
+import { useUserGasPrice } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -20,6 +20,7 @@ interface AdvancedSwapDetailsProps {
   serviceFee: CurrencyAmount<Currency> | undefined
   priceAmount: Price<Currency, Currency> | undefined
   syncing?: boolean
+  outputAmount: CurrencyAmount<Currency> | undefined
 }
 
 function TextWithLoadingPlaceholder({
@@ -40,12 +41,18 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function AdvancedSwapDetails({ trade, serviceFee, priceAmount, syncing = false }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({
+  trade,
+  serviceFee,
+  outputAmount,
+  priceAmount,
+  syncing = false,
+}: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const [userGasPrice] = useUserTransactionGas()
+  const userGasPrice = useUserGasPrice()
 
-  return trade && priceAmount && userGasPrice ? (
+  return trade && priceAmount ? (
     <AutoColumn gap="8px">
       <TransactionDetailsLabel fontWeight={500} fontSize={14}>
         <Trans>Transaction Details</Trans>
@@ -58,7 +65,7 @@ export function AdvancedSwapDetails({ trade, serviceFee, priceAmount, syncing = 
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {userGasPrice ? `${userGasPrice} GWei` : '-'}
+            {userGasPrice ? `${formatUnits(userGasPrice.quotient.toString(), 'gwei')} GWei` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -70,7 +77,7 @@ export function AdvancedSwapDetails({ trade, serviceFee, priceAmount, syncing = 
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={65}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {serviceFee ? `${serviceFee.toFixed(8)} ${serviceFee.currency.symbol}` : '-'}
+            {serviceFee ? `${serviceFee.toSignificant(8)} ${serviceFee.currency.symbol}` : '-'}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
@@ -78,14 +85,12 @@ export function AdvancedSwapDetails({ trade, serviceFee, priceAmount, syncing = 
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
+            <Trans>Minimum received</Trans>
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${priceAmount.quote(trade.inputAmount).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
-              : `${priceAmount.quote(trade.outputAmount).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+            {outputAmount?.toSignificant(6)} {outputAmount?.currency.symbol}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>

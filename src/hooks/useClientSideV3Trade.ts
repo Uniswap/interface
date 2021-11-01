@@ -29,7 +29,6 @@ const DEFAULT_GAS_QUOTE = 2_000_000
 export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  priceSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
   // TODO (pai) get the recommended route for the limit order based on the fee / liquidity

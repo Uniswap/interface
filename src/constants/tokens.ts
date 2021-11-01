@@ -1,6 +1,6 @@
 import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
 
-import { UNI_ADDRESS } from './addresses'
+import { KROM_TOKEN_ADDRESSES, UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(
@@ -136,6 +136,15 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
+export const KROM: { [chainId: number]: Token } = {
+  [SupportedChainId.KOVAN]: new Token(
+    SupportedChainId.KOVAN,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.KOVAN],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
+}
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),

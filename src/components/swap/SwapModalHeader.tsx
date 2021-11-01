@@ -46,6 +46,8 @@ export default function SwapModalHeader({
   recipient,
   showAcceptChanges,
   onAcceptChanges,
+  inputAmount,
+  outputAmount,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   serviceFee: CurrencyAmount<Currency> | undefined
@@ -53,12 +55,14 @@ export default function SwapModalHeader({
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  inputAmount: CurrencyAmount<Currency> | undefined
+  outputAmount: CurrencyAmount<Currency> | undefined
 }) {
   const theme = useContext(ThemeContext)
 
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [showInverted, setShowInverted] = useState<boolean>(true)
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
+  const fiatValueInput = useUSDCValue(inputAmount)
   const allowedSlippage = new Percent(0, 1)
 
   return (
@@ -73,9 +77,9 @@ export default function SwapModalHeader({
           </RowBetween>
           <RowBetween align="center">
             <RowFixed gap={'0px'}>
-              <CurrencyLogo currency={trade.inputAmount.currency} size={'20px'} style={{ marginRight: '12px' }} />
+              <CurrencyLogo currency={inputAmount?.currency} size={'20px'} style={{ marginRight: '12px' }} />
               <Text fontSize={20} fontWeight={500}>
-                {trade.inputAmount.currency.symbol}
+                {inputAmount?.currency.symbol}
               </Text>
             </RowFixed>
             <RowFixed gap={'0px'}>
@@ -84,7 +88,7 @@ export default function SwapModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
               >
-                {trade.inputAmount.toSignificant(6)}
+                {inputAmount?.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
           </RowBetween>
@@ -107,7 +111,12 @@ export default function SwapModalHeader({
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedSwapDetails trade={trade} priceAmount={priceAmount} serviceFee={serviceFee} />
+        <AdvancedSwapDetails
+          trade={trade}
+          priceAmount={priceAmount}
+          outputAmount={outputAmount}
+          serviceFee={serviceFee}
+        />
       </LightCard>
 
       {showAcceptChanges ? (
@@ -130,28 +139,15 @@ export default function SwapModalHeader({
       ) : null}
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
-        {trade.tradeType === TradeType.EXACT_INPUT ? (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
-            <Trans>
-              Output is estimated. You will receive at least{' '}
-              <b>
-                {priceAmount ? priceAmount.quote(trade.inputAmount).toSignificant(6) : 0}{' '}
-                {trade.outputAmount.currency.symbol}
-              </b>{' '}
-              when the current market price reaches your target price.
-            </Trans>
-          </TYPE.italic>
-        ) : (
-          <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
-            <Trans>
-              Input is estimated. You will sell at most{' '}
-              <b>
-                {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
-              </b>{' '}
-              or the transaction will revert.
-            </Trans>
-          </TYPE.italic>
-        )}
+        <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <Trans>
+            Output is estimated. You will receive at least{' '}
+            <b>
+              {outputAmount ? outputAmount.toSignificant(6) : 0} {outputAmount?.currency.symbol}
+            </b>{' '}
+            when the current market price reaches your target price.
+          </Trans>
+        </TYPE.italic>
       </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>

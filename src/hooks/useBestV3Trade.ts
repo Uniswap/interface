@@ -18,20 +18,17 @@ import useIsWindowVisible from './useIsWindowVisible'
 export function useBestV3Trade(
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  priceSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
 ): {
   state: V3TradeState
   trade: Trade<Currency, Currency, typeof tradeType> | null
 } {
-  const debouncedAmount = useDebounce(amountSpecified, 100)
-  const debouncedPriceAmount = useDebounce(priceSpecified, 100)
+  const [debouncedAmount, debouncedOtherCurrency] = useDebounce([amountSpecified, otherCurrency], 200)
 
-  let isLoading = amountSpecified !== undefined && debouncedAmount === undefined
-  isLoading = isLoading || (priceSpecified !== undefined && debouncedPriceAmount === undefined)
+  const isLoading = amountSpecified !== undefined && debouncedAmount === undefined
 
   // use client side router
-  const bestV3Trade = useClientSideV3Trade(tradeType, debouncedAmount, debouncedPriceAmount, otherCurrency)
+  const bestV3Trade = useClientSideV3Trade(tradeType, debouncedAmount, debouncedOtherCurrency)
 
   return {
     ...bestV3Trade,

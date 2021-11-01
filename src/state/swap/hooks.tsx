@@ -1,25 +1,28 @@
 import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Ether, NativeCurrency, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { KROM } from 'constants/tokens'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
 import { useUserGasPrice } from 'state/user/hooks'
 
 import { useCurrency } from '../../hooks/Tokens'
+import { useLimitOrderManager } from '../../hooks/useContract'
 import useENS from '../../hooks/useENS'
-import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { isAddress } from '../../utils'
 import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies } from './actions'
-import { typeInput, typeOutput } from './actions'
+import { Field, Rate, replaceSwapState, selectCurrency, setRecipient, switchCurrencies } from './actions'
+import { typeInput } from './actions'
 import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
@@ -50,12 +53,8 @@ export function useSwapActionHandlers(): {
   }, [dispatch])
 
   const onUserInput = useCallback(
-    (field: Field, value: string) => {
-      if (field === Field.INPUT) {
-        dispatch(typeInput({ typedValue: value }))
-      } else {
-        dispatch(typeOutput({ priceValue: value }))
-      }
+    (field: Field, typedValue: string) => {
+      dispatch(typeInput({ field, typedValue }))
     },
     [dispatch]
   )
@@ -117,17 +116,53 @@ function involvesAddress(
   )
 }
 
+export function applyExchangeRateTo(
+  inputValue: string,
+  exchangeRate: string,
+  inputCurrency: Currency,
+  outputCurrency: Currency,
+  isInverted: boolean
+): CurrencyAmount<NativeCurrency | Token> | undefined {
+  const parsedInputAmount = tryParseAmount(inputValue, isInverted ? outputCurrency : inputCurrency)
+  const parsedExchangeRate = tryParseAmount(exchangeRate, isInverted ? inputCurrency : outputCurrency)
+
+  if (isInverted) {
+    return parsedExchangeRate && parsedInputAmount
+      ? parsedInputAmount
+          ?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency.decimals)))
+          ?.divide(parsedExchangeRate.asFraction)
+      : undefined
+  } else {
+    return parsedExchangeRate && parsedInputAmount
+      ? parsedInputAmount
+          ?.multiply(parsedExchangeRate.asFraction)
+          .divide(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(outputCurrency.decimals)))
+      : undefined
+  }
+}
+
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  parsedAmount: CurrencyAmount<Currency> | undefined
-  priceAmount: Price<Currency, Currency> | undefined
+  price: Price<Currency, Currency> | undefined
   inputError?: ReactNode
-  v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3Trade: {
     trade: V3Trade<Currency, Currency, TradeType> | null
     state: V3TradeState
+  }
+  parsedAmounts: {
+    input: CurrencyAmount<Currency> | undefined
+    output: CurrencyAmount<Currency> | undefined
+  }
+  formattedAmounts: {
+    input: string
+    output: string
+    price: string
+  }
+  rawAmounts: {
+    input: string | undefined
+    output: string | undefined
   }
   bestTrade: V3Trade<Currency, Currency, TradeType> | undefined
   serviceFee: CurrencyAmount<Currency> | undefined
@@ -135,8 +170,9 @@ export function useDerivedSwapInfo(): {
   const { account, chainId } = useActiveWeb3React()
 
   const {
+    independentField,
     typedValue,
-    priceValue,
+    inputValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient,
@@ -152,23 +188,39 @@ export function useDerivedSwapInfo(): {
     outputCurrency ?? undefined,
   ])
 
-  const parsedAmount = useMemo(
-    () => tryParseAmount(typedValue, inputCurrency ?? undefined),
-    [inputCurrency, typedValue]
-  )
+  const isExactIn: boolean = independentField === Field.INPUT
+  const isDesiredRateUpdate = independentField === Field.PRICE
+  const desiredRateAppliedAsCurrencyAmount =
+    isDesiredRateUpdate && inputValue && inputCurrency && outputCurrency
+      ? applyExchangeRateTo(inputValue, typedValue, inputCurrency, outputCurrency, false)
+      : undefined
 
-  const parsedPriceAmount = useMemo(
-    () => tryParseAmount(priceValue, outputCurrency ?? undefined),
-    [outputCurrency, priceValue]
-  )
+  const desiredRateApplied =
+    isDesiredRateUpdate && inputValue && inputCurrency && outputCurrency && desiredRateAppliedAsCurrencyAmount
+      ? desiredRateAppliedAsCurrencyAmount?.toSignificant(6)
+      : typedValue
+
+  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+
+  const parsedAmountToUse = isDesiredRateUpdate
+    ? tryParseAmount(desiredRateApplied, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+    : tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
   const gasAmount = useUserGasPrice()
 
-  // // get v2 and v3 quotes
-  const v2Trade = undefined
-  const v3Trade = useBestV3Trade(TradeType.EXACT_INPUT, parsedAmount, parsedPriceAmount, outputCurrency ?? undefined)
+  // get quotes
+  const v3Trade = useBestV3Trade(
+    isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    isExactIn ? parsedAmount : parsedAmountToUse,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined
+  )
 
   const bestTrade = v3Trade.trade
+
+  const inputAmount = useMemo(() => {
+    return tryParseAmount(inputValue, inputCurrency ?? undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue, inputCurrencyId])
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -180,16 +232,41 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: outputCurrency,
   }
 
+  const marketPrice = useMemo(() => {
+    const priceTmp =
+      isDesiredRateUpdate && inputCurrency
+        ? new Price({
+            baseAmount: tryParseAmount('1', inputCurrency) as CurrencyAmount<Currency>,
+            quoteAmount: parsedAmount as CurrencyAmount<Currency>,
+          })
+        : bestTrade?.route.midPrice
+
+    if (priceTmp?.baseCurrency != inputCurrency) {
+      return priceTmp?.invert()
+    }
+    return priceTmp
+  }, [bestTrade, parsedAmount, inputCurrency, isDesiredRateUpdate])
+
+  const parsedAmounts = useMemo(
+    () => ({
+      input: independentField === Field.INPUT ? parsedAmount : inputAmount,
+      output:
+        independentField === Field.OUTPUT ? parsedAmount : inputAmount ? marketPrice?.quote(inputAmount) : undefined,
+    }),
+    [independentField, parsedAmount, inputAmount, marketPrice]
+  )
+
+  if (!parsedAmounts.output && desiredRateAppliedAsCurrencyAmount) {
+    parsedAmounts.output = desiredRateAppliedAsCurrencyAmount
+  }
+
   let inputError: ReactNode | undefined
   if (!account) {
     inputError = <Trans>Connect Wallet</Trans>
   }
 
-  if (!parsedAmount) {
+  if (!parsedAmounts.input || !parsedAmounts.output) {
     inputError = inputError ?? <Trans>Enter an amount</Trans>
-  }
-  if (!parsedPriceAmount) {
-    inputError = inputError ?? <Trans>Enter a price</Trans>
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -200,46 +277,77 @@ export function useDerivedSwapInfo(): {
   if (!to || !formattedTo) {
     inputError = inputError ?? <Trans>Enter a recipient</Trans>
   } else {
-    if (BAD_RECIPIENT_ADDRESSES[formattedTo] || (v2Trade && involvesAddress(v2Trade, formattedTo))) {
+    if (BAD_RECIPIENT_ADDRESSES[formattedTo]) {
       inputError = inputError ?? <Trans>Invalid recipient</Trans>
     }
   }
 
-  const [whole, fraction] = priceValue.split('.')
+  const limitOrderManager = useLimitOrderManager()
 
-  const decimals = fraction?.length ?? 0
-  const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
+  const { result: estimatedServiceFeeResult } = useSingleCallResult(limitOrderManager, 'estimateServiceFeeWei', [
+    gasAmount?.quotient.toString() ?? undefined,
+  ])
 
-  // TODO (pai) get the gasUnits from smart contract instead of hardcoding 200k
-  const serviceFee = chainId ? gasAmount?.multiply(JSBI.BigInt(200000)) : undefined
-  const allowedSlippage = new Percent(0, 1)
-  const priceAmount =
-    inputCurrency && outputCurrency && parsedAmount && parsedPriceAmount
-      ? new Price(
-          inputCurrency,
-          outputCurrency,
-          JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** inputCurrency.decimals)),
-          JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** outputCurrency.decimals))
-        )
-      : undefined
+  const { result: estimatedKROMServiceFeeResult } = useSingleCallResult(limitOrderManager, 'quoteKROM', [
+    estimatedServiceFeeResult?.[0] ?? undefined,
+  ])
+
+  const serviceFee = useMemo(() => {
+    if (!chainId || !estimatedKROMServiceFeeResult) return undefined
+
+    return CurrencyAmount.fromRawAmount(KROM[chainId], estimatedKROMServiceFeeResult?.[0])
+  }, [chainId, estimatedKROMServiceFeeResult])
+
+  const price = useMemo(() => {
+    if (!parsedAmounts.input || !parsedAmounts.output) return undefined
+
+    return new Price({
+      baseAmount: parsedAmounts.input,
+      quoteAmount: parsedAmounts.output,
+    })
+  }, [parsedAmounts.input, parsedAmounts.output])
 
   // compare input balance to max input based on version
-  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], bestTrade?.maximumAmountIn(allowedSlippage)]
+  const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], inputAmount]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = <Trans>Insufficient {amountIn.currency.symbol} balance</Trans>
   }
 
+  const formattedAmounts = {
+    input: inputValue ?? '',
+    output: independentField === Field.OUTPUT ? typedValue : parsedAmounts.output?.toSignificant(6) ?? '',
+    price: independentField === Field.PRICE ? typedValue : price?.toSignificant(6) ?? '',
+  }
+
+  const rawAmounts = useMemo(
+    () => ({
+      input: inputCurrency
+        ? parsedAmounts.input
+            ?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency.decimals)))
+            .toFixed(0)
+        : undefined,
+
+      output: outputCurrency
+        ? parsedAmounts.output
+            ?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(outputCurrency.decimals)))
+            .toFixed(0)
+        : undefined,
+    }),
+    [inputCurrency, outputCurrency, parsedAmounts]
+  )
+
   return {
     currencies,
     currencyBalances,
-    parsedAmount,
-    priceAmount,
+    price,
     inputError,
-    v2Trade: v2Trade ?? undefined,
     v3Trade,
     bestTrade: bestTrade ?? undefined,
     serviceFee,
+    parsedAmounts,
+    formattedAmounts,
+    rawAmounts,
   }
 }
 
@@ -258,17 +366,6 @@ function parseTokenAmountURLParameter(urlParam: any): string {
 
 function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
-}
-
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
-const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
-  if (address) return address
-  if (ENS_NAME_REGEX.test(recipient)) return recipient
-  if (ADDRESS_REGEX.test(recipient)) return recipient
-  return null
 }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
@@ -291,10 +388,14 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     [Field.OUTPUT]: {
       currencyId: outputCurrency === '' ? null : outputCurrency ?? null,
     },
+    [Field.PRICE]: {
+      currencyId: outputCurrency === '' ? null : outputCurrency ?? null,
+    },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    priceValue: parseTokenAmountURLParameter(parsedQs.priceAmount),
+    inputValue: parseTokenAmountURLParameter(parsedQs.inputAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
+    fixedField: Field.INPUT,
   }
 }
 
@@ -318,11 +419,12 @@ export function useDefaultsFromURLSearch():
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
-        priceValue: parsed.priceValue,
+        inputValue: parsed.inputValue,
         field: parsed.independentField,
         inputCurrencyId,
         outputCurrencyId,
         recipient: parsed.recipient,
+        fixedField: parsed.fixedField,
       })
     )
 
@@ -331,4 +433,15 @@ export function useDefaultsFromURLSearch():
   }, [dispatch, chainId])
 
   return result
+}
+
+const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+function validatedRecipient(recipient: any): string | null {
+  if (typeof recipient !== 'string') return null
+  const address = isAddress(recipient)
+  if (address) return address
+  if (ENS_NAME_REGEX.test(recipient)) return recipient
+  if (ADDRESS_REGEX.test(recipient)) return recipient
+  return null
 }
