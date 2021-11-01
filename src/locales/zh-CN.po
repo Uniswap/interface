@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-27 13:10\n"
+"PO-Revision-Date: 2021-11-01 15:08\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -345,7 +345,7 @@ msgstr "添加此代币列表代表您信任其数据是正确的。任何人都
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "连接钱包即表示您同意 Uniswap Labs 的 <0>服务条款</0> 并承认您已阅读并理解 Uniswap <1>协议免责声明</1>。"
+msgstr "连接钱包即表示您同意 Uniswap Labs 的 <0>服务条款</0> 并确认您已阅读并理解 Uniswap <1>协议免责声明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -1606,11 +1606,11 @@ msgstr "该应用程序获取链上数据并使用 Infura API 构建合约调用
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app fetches the optimal trade route from a Uniswap Labs server."
-msgstr "该应用程序从 Uniswap Labs 服务器获取最佳交易路由。"
+msgstr "该应用程序从 Uniswap Labs 服务器获取最佳交易路径。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app logs anonymized usage statistics in order to improve over time."
-msgstr "该应用程序会匿名记录使用情况统计信息，以便随着时间的推移不断改进。"
+msgstr "该应用程序会匿名记录使用情况统计信息，以便不断改进。"
 
 #: src/components/PrivacyPolicy/index.tsx
 msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
