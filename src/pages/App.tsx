@@ -295,6 +295,15 @@ return (    <Wrapper style={{maxWidth:400}} id="honeypage">
 )
 }
 
+const Fomo = ( ) => {
+  return (<Wrapper>
+    <div style={{padding:'9px 14px'}}>
+      <StyledHeader>KibaFOMO <br/><small style={{fontSize:12}}>Powered by tokenfomo.io</small></StyledHeader>
+      <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{width:'800px', height: '65vh', borderRadius:6}} /> 
+    </div>
+  </Wrapper>)
+}
+
 export default function App() {
   const [showContracts, setShowContracts] = useState(false)
   const [clip, setClip] = useCopyClipboard(undefined)
@@ -309,16 +318,12 @@ const {
   currencies,
   inputError: swapInputError,
 } = useDerivedSwapInfo(Version.v2)
-
-const tokenData = useTokenData((currencies[Field.OUTPUT] as any)?.address ?? '')
-console.log(tokenData)
 const { account } = useWeb3React()
   const setThemeCb = (newTheme: string) => {
       localStorage.setItem(THEME_BG_KEY, newTheme)
       setTheme(newTheme)
   }
 
-  const [showChart, setShowChart] = React.useState(false)
   const themeSource = React.useMemo(() => {
     return  theme;
   }, [theme, localStorage.getItem('themedBG')])
@@ -372,6 +377,7 @@ const { account } = useWeb3React()
               <Route exact strict path="/themed-background" render={(props) => (
                 <ThemedBg theme={theme} setTheme={setThemeCb} />
               )} />
+              <Route exact strict path="/fomo" component={Fomo} />
               <Route exact strict path="/donation-tracker" component={DonationTracker} />
               <Route exact strict path="/proposal/create" component={AddProposal} />
               <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
@@ -420,12 +426,6 @@ const { account } = useWeb3React()
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
 
-            {tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && <p onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
-                <Modal onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol &&  currencies[Field.OUTPUT]}> 
-              <div style={{padding:15, display: 'block', width: '100%' }}>
-                  <iframe src={`https://www.chartex.pro/?symbol=UNISWAP%3A${tokenData?.symbol}&interval=240&theme=dark`} style={{ display: 'block', border: '1px solid rgb(34, 34, 34)', width: 600, height: 600, position: 'relative', top: 0 }}></iframe>
-              </div>
-             </Modal>
             <Marginer />  
 
           
