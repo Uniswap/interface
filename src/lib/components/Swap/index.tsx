@@ -1,7 +1,9 @@
-import styled from 'lib/theme'
-import { useState } from 'react'
+import { atom, useAtom } from 'jotai'
+import useColor, { prefetchColor } from 'lib/hooks/useColor'
+import { ETH } from 'lib/mocks'
+import { Token } from 'lib/types'
+import { useCallback, useState } from 'react'
 
-import Column from '../Column'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
@@ -12,18 +14,39 @@ import SwapOutput from './SwapOutput'
 import SwapReverse from './SwapReverse'
 import SwapToolbar from './SwapToolbar'
 
-const InputColumn = styled(Column)`
-  padding: 0.75em;
-  position: relative;
-`
-
-const OutputColumn = styled(InputColumn)`
-  background-color: ${({ theme }) => theme.module};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
-`
+const inputValueAtom = atom<number | undefined>(undefined)
+const inputTokenAtom = atom<Token | undefined>(ETH)
+const outputValueAtom = atom<number | undefined>(undefined)
+const outputTokenAtom = atom<Token | undefined>(undefined)
 
 export default function Swap() {
+  const [inputValue, setInputValue] = useAtom(inputValueAtom)
+  const [inputToken, setInputToken] = useAtom(inputTokenAtom)
+  const [outputValue, setOutputValue] = useAtom(outputValueAtom)
+  const [outputToken, setOutputToken] = useAtom(outputTokenAtom)
+  const input = {
+    value: inputValue,
+    token: inputToken,
+    onChangeValue: setInputValue,
+    onChangeToken: setInputToken,
+  }
+  const output = {
+    value: outputValue,
+    token: outputToken,
+    onChangeValue: setOutputValue,
+    onChangeToken: setOutputToken,
+  }
+  const onReverse = useCallback(() => {
+    setInputValue(outputValue)
+    setInputToken(outputToken)
+    setOutputValue(inputValue)
+    setOutputToken(inputToken)
+  }, [setInputValue, outputValue, setInputToken, outputToken, setOutputValue, inputValue, setOutputToken, inputToken])
+
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
+  prefetchColor(inputToken) // extract eagerly in case of reversal
+  const color = useColor(outputToken)
+
   return (
     <>
       <Header logo title="Swap">
@@ -32,15 +55,13 @@ export default function Swap() {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <InputColumn gap="0.75em">
-            <SwapInput />
-          </InputColumn>
-          <OutputColumn gap="0.75em">
-            <SwapReverse onClick={() => void 0} />
-            <SwapOutput />
+          <SwapInput {...input}>
+            <SwapReverse onClick={onReverse} />
+          </SwapInput>
+          <SwapOutput color={color} {...output}>
             <SwapToolbar />
             <SwapAction />
-          </OutputColumn>
+          </SwapOutput>
         </BoundaryProvider>
       </div>
     </>

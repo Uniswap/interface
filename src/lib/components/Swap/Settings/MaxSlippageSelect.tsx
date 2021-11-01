@@ -57,9 +57,9 @@ export default function MaxSlippageSelect() {
   )
 
   return (
-    <Column gap="0.75em">
+    <Column gap={0.75}>
       <Label name="Max Slippage" tooltip={tooltip} />
-      <Row gap="0.5em" grow>
+      <Row gap={0.5} grow>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
         <Option value={custom} onSelect={onCustomSelect} selected={maxSlippage === CUSTOM} cursor="text">

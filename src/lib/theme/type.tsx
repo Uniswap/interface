@@ -2,10 +2,12 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
 import styled, { Color, Theme } from '.'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { color?: Color }
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
 
-const TextWrapper = styled(Text)<{ color?: Color; theme: Theme }>`
+const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color; theme: Theme }>`
   color: ${({ color = 'primary' as Color, theme }) => theme[color]};
+  line-height: 1;
+  user-select: ${({ userSelect }) => userSelect};
 `
 
 const TYPE = {

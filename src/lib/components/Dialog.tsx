@@ -1,60 +1,85 @@
-import styled from 'lib/theme'
-import { icon } from 'lib/theme'
+import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
 import Button from './Button'
-import Header from './Header'
+import { default as BaseHeader } from './Header'
+import Rule from './Rule'
 
 const Context = createContext<HTMLDivElement | null>(null)
-
 export const Provider = Context.Provider
+
+const OnCloseContext = createContext<() => void>(() => void 0)
 
 const XIcon = icon(X, { color: 'primary' })
 
-interface DialogHeaderProps {
+interface HeaderProps {
   title?: string
-  onClose?: () => void
+  ruled?: boolean
   children?: ReactNode
 }
 
-export function DialogHeader({ title, onClose, children }: DialogHeaderProps) {
+export function Header({ title, children, ruled }: HeaderProps) {
   return (
-    <Header title={title} divider={true}>
-      {children}
-      {onClose && (
-        <Button onClick={onClose}>
+    <>
+      <BaseHeader title={title}>
+        {children}
+        <Button onClick={useContext(OnCloseContext)}>
           <XIcon />
         </Button>
-      )}
-    </Header>
+      </BaseHeader>
+      {ruled && <Rule padded style={{ marginTop: 'calc(1em - 1px)' }} />}
+    </>
   )
 }
 
-export const Modal = styled.div`
+export const Modal = styled.div<{ color: Color; theme: Theme }>`
+  background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  display: flex;
+  flex-direction: column;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
-  overflow: hidden;
   position: absolute;
   top: 0;
   width: calc(100% - 0.5em);
   z-index: ${Layer.DIALOG};
 `
 
-export const DialogBody = styled.div`
-  height: calc(100% - 3em - 2px);
-  overflow-y: scroll;
-`
-
 interface DialogProps {
+  color: Color
   children: ReactNode
+  onClose: () => void
 }
 
-export default function Dialog({ children }: DialogProps) {
+export default function Dialog({ color, children, onClose }: DialogProps) {
+  const onKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose?.()
+      }
+    },
+    [onClose]
+  )
+  useEffect(
+    () => (
+      document.addEventListener('keydown', onKeydown, true),
+      () => document.removeEventListener('keydown', onKeydown, true)
+    )
+  )
   const modal = useContext(Context)
-  return modal && createPortal(<Modal>{children}</Modal>, modal)
+  return (
+    modal &&
+    createPortal(
+      <OriginalThemeProvider>
+        <Modal color={color}>
+          <OnCloseContext.Provider value={onClose}>{children}</OnCloseContext.Provider>
+        </Modal>
+      </OriginalThemeProvider>,
+      modal
+    )
+  )
 }

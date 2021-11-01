@@ -1,25 +1,25 @@
+import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { ReactNode } from 'react'
 
+import Column from '../Column'
 import Row from '../Row'
-import TokenInput from './TokenInput'
+import TokenInput, { TokenInputProps } from './TokenInput'
 
-export default function SwapInput() {
+const InputColumn = styled(Column)`
+  padding: 0.75em;
+  position: relative;
+`
+
+export default function SwapInput({ children, ...props }: { children: ReactNode } & TokenInputProps) {
   return (
-    <>
+    <InputColumn gap={0.75}>
       <Row>
         <TYPE.subhead3 color="secondary">Trading</TYPE.subhead3>
       </Row>
-      <TokenInput
-        value={undefined}
-        token={{
-          address: 'ether',
-          symbol: 'ETH',
-          logoUri: 'https://raw.githubusercontent.com/Uniswap/interface/main/src/assets/images/ethereum-logo.png',
-        }}
-        onChange={() => void 0}
-        onMax={() => void 0}
-      />
+      <TokenInput {...props} showMax />
       <Row />
-    </>
+      {children}
+    </InputColumn>
   )
 }

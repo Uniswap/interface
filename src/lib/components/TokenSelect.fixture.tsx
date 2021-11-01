@@ -1,11 +1,11 @@
 import { Modal } from './Dialog'
-import { TransactionsDialog } from './Wallet'
+import { TokenSelectDialog } from './TokenSelect'
 import Widget from './Widget'
 
 export default (
   <Widget>
     <Modal color="module">
-      <TransactionsDialog />
+      <TokenSelectDialog onChange={() => void 0} />
     </Modal>
   </Widget>
 )

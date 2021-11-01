@@ -27,16 +27,11 @@ interface LabelProps {
   tooltip?: string
 }
 
-const LabelRow = styled(Row)`
-  justify-content: flex-start;
-  user-select: none;
-`
-
 export default function Label({ name, tooltip }: LabelProps) {
   return (
-    <LabelRow gap="0.5em">
-      <TYPE.subhead2>{name}</TYPE.subhead2>
+    <Row gap={0.5} justify="flex-start">
+      <TYPE.subhead2 userSelect="none">{name}</TYPE.subhead2>
       {tooltip && <Tooltip>{tooltip}</Tooltip>}
-    </LabelRow>
+    </Row>
   )
 }

@@ -1,14 +1,12 @@
 import Logo from 'lib/assets/Logo'
-import styled, { Theme } from 'lib/theme'
+import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { ReactNode } from 'react'
 
 import Row from './Row'
 
-const HeaderRow = styled(Row)<{ divider?: boolean; theme: Theme }>`
-  border-bottom: 1px solid ${({ divider, theme }) => (divider ? theme.outline : 'transparent')};
+const HeaderRow = styled(Row)`
   margin: 0 1em;
-  padding-bottom: ${({ divider }) => (divider ? '1em' : undefined)};
   padding-top: 1em;
 `
 
@@ -25,29 +23,24 @@ const StyledLogo = styled(Logo)`
   }
 `
 
-const TitleType = styled(TYPE.subhead1)`
-  user-select: none;
-`
-
 export interface HeaderProps {
   title?: string
   logo?: boolean
-  divider?: boolean
   children: ReactNode
 }
 
-export default function Header({ title, logo, divider, children }: HeaderProps) {
+export default function Header({ title, logo, children }: HeaderProps) {
   return (
-    <HeaderRow divider={divider}>
-      <Row gap="0.5em">
+    <HeaderRow>
+      <Row gap={0.5}>
         {logo && (
           <a href={`https://app.uniswap.org/`}>
             <StyledLogo />
           </a>
         )}
-        {title && <TitleType>{title}</TitleType>}
+        {title && <TYPE.subhead1 userSelect="none">{title}</TYPE.subhead1>}
       </Row>
-      <Row gap="0.5em">{children}</Row>
+      <Row gap={0.5}>{children}</Row>
     </HeaderRow>
   )
 }

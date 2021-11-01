@@ -1,10 +1,10 @@
-import { Provider } from 'jotai'
-import styled, { getTheme, Provider as ThemeProvider } from 'lib/theme'
-import { ReactNode, useMemo, useState } from 'react'
+import { Provider as AtomProvider } from 'jotai'
+import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
+import { ReactNode, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'
 
-const Wrapper = styled.div`
+const WidgetWrapper = styled.div`
   background-color: ${({ theme }) => theme.container};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   display: flex;
@@ -19,19 +19,19 @@ const Wrapper = styled.div`
 
 export interface WidgetProps {
   children: ReactNode
+  theme?: Partial<Theme>
 }
 
-export default function Widget({ children }: WidgetProps) {
-  const theme = useMemo(() => getTheme(/*darkMode=*/ true), [])
+export default function Widget({ children, theme }: WidgetProps) {
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
-    <Provider>
+    <AtomProvider>
       <ThemeProvider theme={theme}>
-        <Wrapper>
+        <WidgetWrapper>
           <div ref={setDialog} />
           <DialogProvider value={dialog}>{children}</DialogProvider>
-        </Wrapper>
+        </WidgetWrapper>
       </ThemeProvider>
-    </Provider>
+    </AtomProvider>
   )
 }

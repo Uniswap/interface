@@ -1,5 +1,6 @@
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { transparentize } from 'polished'
 
 const Input = styled.input<{ text: string; theme: Theme }>`
   align-items: center;
@@ -33,7 +34,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :hover:before {
-    background-color: ${({ theme }) => theme.secondary}B2; // 0.7 alpha
+    background-color: ${({ theme }) => transparentize(0.3, theme.secondary)};
   }
 
   :checked:before {
@@ -44,7 +45,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :hover:checked:before {
-    background-color: ${({ theme }) => theme.active}B2; // 0.7 alpha
+    background-color: ${({ theme }) => transparentize(0.3, theme.active)};
   }
 
   :after {
@@ -62,7 +63,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :before {
-    transition: margin ease 150ms;
+    transition: margin 0.15s ease;
   }
 `
 
