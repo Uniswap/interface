@@ -2,7 +2,9 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
+import { ARBITRUM_LIST, OPTIMISM_LIST } from 'constants/lists'
 import { useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
 
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
@@ -57,9 +59,53 @@ export function useAllTokens(): { [address: string]: Token } {
   return useTokensFromMap(allTokens, true)
 }
 
+interface BridgeInfo {
+  [chainId: SupportedChainId | number | string]: {
+    tokenAddress: string
+    originBridgeAddress: string
+    destBridgeAddress: string
+  }
+}
 export function useUnsupportedTokens(): { [address: string]: Token } {
+  const { chainId } = useActiveWeb3React()
+  const listsByUrl = useAppSelector((state) => state.lists.byUrl)
   const unsupportedTokensMap = useUnsupportedTokenList()
-  return useTokensFromMap(unsupportedTokensMap, false)
+  const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, false)
+
+  // checks the default L2 lists to see if `bridgeInfo` has an L1 address value that is unsupported
+  const L2InferredBlockedTokens: { [address: string]: Token } = useMemo(() => {
+    if (!chainId || ![SupportedChainId.ARBITRUM_ONE, SupportedChainId.OPTIMISM].includes(chainId)) {
+      return {}
+    }
+
+    if (!listsByUrl) {
+      return {}
+    }
+
+    const { current: list } = listsByUrl[chainId === SupportedChainId.OPTIMISM ? OPTIMISM_LIST : ARBITRUM_LIST]
+    if (!list) {
+      return {}
+    }
+
+    const unsupportedSet = new Set(Object.keys(unsupportedTokens))
+
+    return list.tokens.reduce((acc, tokenInfo) => {
+      const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
+      if (
+        bridgeInfo &&
+        bridgeInfo[SupportedChainId.MAINNET] &&
+        bridgeInfo[SupportedChainId.MAINNET].tokenAddress &&
+        unsupportedSet.has(bridgeInfo[SupportedChainId.MAINNET].tokenAddress)
+      ) {
+        const address = bridgeInfo[SupportedChainId.MAINNET].tokenAddress
+        // don't rely on decimals--it's possible that a token could be bridged w/ different decimals on the L2
+        return { ...acc, [address]: new Token(SupportedChainId.MAINNET, address, tokenInfo.decimals) }
+      }
+      return acc
+    }, {})
+  }, [chainId, listsByUrl, unsupportedTokens])
+
+  return { ...unsupportedTokens, ...L2InferredBlockedTokens }
 }
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
