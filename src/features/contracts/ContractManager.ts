@@ -1,17 +1,12 @@
 import { Contract, providers } from 'ethers'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { isValidAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 
 export class ContractManager {
-  private _contracts: Partial<Record<SupportedChainId, Record<string, Contract>>> = {}
+  private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}
 
-  createContract(
-    chainId: SupportedChainId,
-    address: Address,
-    provider: providers.Provider,
-    ABI: any
-  ) {
+  createContract(chainId: ChainId, address: Address, provider: providers.Provider, ABI: any) {
     if (!isValidAddress(address, false)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
@@ -26,7 +21,7 @@ export class ContractManager {
     }
   }
 
-  removeContract(chainId: SupportedChainId, address: Address) {
+  removeContract(chainId: ChainId, address: Address) {
     if (!this._contracts[chainId]?.[address]) {
       logger.warn('Attempting to remove non-existing contract', chainId, address)
       return
@@ -39,16 +34,11 @@ export class ContractManager {
   }
 
   // Returns contract or null
-  getContract(chainId: SupportedChainId, address: Address) {
+  getContract(chainId: ChainId, address: Address) {
     return this._contracts[chainId]?.[address] ?? null
   }
 
-  getOrCreateContract(
-    chainId: SupportedChainId,
-    address: Address,
-    provider: providers.Provider,
-    ABI: any
-  ) {
+  getOrCreateContract(chainId: ChainId, address: Address, provider: providers.Provider, ABI: any) {
     const cachedContract = this.getContract(chainId, address)
     if (cachedContract) return cachedContract
     else return this.createContract(chainId, address, provider, ABI)

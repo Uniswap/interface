@@ -9,7 +9,7 @@ import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { ALL_ACCOUNTS, fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { getKeys } from 'src/utils/objects'
@@ -29,7 +29,7 @@ export function BalancesScreen({ navigation }: Props) {
   }
 
   const onPressTokenDetails = (tokenAddress: string) => () => {
-    navigation.navigate(Screens.TokenDetails, { tokenAddress, chainId: SupportedChainId.MAINNET })
+    navigation.navigate(Screens.TokenDetails, { tokenAddress, chainId: ChainId.MAINNET })
   }
 
   const { t } = useTranslation()

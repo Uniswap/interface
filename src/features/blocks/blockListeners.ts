@@ -6,13 +6,13 @@
 
 import { providers } from 'ethers'
 import { eventChannel, EventChannel } from 'redux-saga'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { updateLatestBlock } from 'src/features/blocks/blocksSlice'
 import { BlockUpdate } from 'src/features/blocks/types'
 import { logger } from 'src/utils/logger'
 import { put, take } from 'typed-redux-saga'
 
-export function createBlockChannel(provider: providers.JsonRpcProvider, chainId: SupportedChainId) {
+export function createBlockChannel(provider: providers.JsonRpcProvider, chainId: ChainId) {
   return eventChannel<BlockUpdate>((emit) => {
     const blockHandler = (blockNumber: number) => {
       emit({ blockNumber, chainId })
@@ -26,10 +26,7 @@ export function createBlockChannel(provider: providers.JsonRpcProvider, chainId:
   })
 }
 
-export function* blockChannelWatcher(
-  channel: EventChannel<BlockUpdate>,
-  chainId: SupportedChainId
-) {
+export function* blockChannelWatcher(channel: EventChannel<BlockUpdate>, chainId: ChainId) {
   try {
     logger.debug('Watching block channel for:', chainId)
     while (true) {

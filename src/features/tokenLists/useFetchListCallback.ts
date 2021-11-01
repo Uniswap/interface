@@ -6,7 +6,7 @@ import { TokenList } from '@uniswap/token-lists'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useWalletProvider } from 'src/app/walletContext'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { fetchTokenList } from 'src/features/tokenLists/actions'
 import { getTokenList } from 'src/features/tokenLists/getTokenList'
 import { logger } from 'src/utils/logger'
@@ -15,7 +15,7 @@ import { logger } from 'src/utils/logger'
 // Automatically resolves ENS names in the list
 // Relies on getTokenList util to do the actual fetching
 export function useFetchListCallback(
-  chainId: SupportedChainId
+  chainId: ChainId
 ): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
   const dispatch = useAppDispatch()
 

@@ -2,7 +2,7 @@
 
 import { utils } from 'ethers'
 import { useMemo } from 'react'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useENSRegistrarContract, useENSResolverContract } from 'src/features/contracts/useContract'
 import { useSingleCallResult } from 'src/features/multicall'
 import {
@@ -19,7 +19,7 @@ import { useDebounce } from 'src/utils/timing'
  * Note this is not the same as looking up an ENS name to find an address.
  */
 export function useENSName(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   address?: string
 ): { ENSName: string | null; loading: boolean } {
   const debouncedAddress = useDebounce(address, 200)

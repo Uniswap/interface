@@ -6,7 +6,7 @@ import {
   SENTRY_DSN,
   VERSION,
 } from 'react-native-dotenv'
-import { ChainIdTo, SupportedChainId } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 import { logger } from 'src/utils/logger'
 
@@ -35,7 +35,7 @@ function parseBoolean(value: string): boolean {
 function parseActiveChains(activeChainsString: string) {
   const activeChains: ChainIdTo<ChainState> = {}
   for (const _id of activeChainsString.split(',')) {
-    const id = parseInt(_id, 10) as SupportedChainId
+    const id = parseInt(_id, 10) as ChainId
     activeChains[id] = { isActive: true }
   }
   return activeChains

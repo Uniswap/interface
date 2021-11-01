@@ -4,7 +4,7 @@ import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/toke
 import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useWalletProvider } from 'src/app/walletContext'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { LIST_INITIAL_FETCH_DELAY, LIST_POLL_DELAY } from 'src/constants/tokenLists/delays'
 import { UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
 import { acceptListUpdate } from 'src/features/tokenLists/actions'
@@ -26,8 +26,8 @@ export function TokenListUpdater() {
   const lists = useAllLists()
   const activeListUrls = useActiveListUrls()
 
-  const provider = useWalletProvider(SupportedChainId.MAINNET)
-  const fetchList = useFetchListCallback(SupportedChainId.MAINNET)
+  const provider = useWalletProvider(ChainId.MAINNET)
+  const fetchList = useFetchListCallback(ChainId.MAINNET)
   const fetchAllListsCallback = useCallback(() => {
     if (!provider || !isReady) return
     Object.keys(lists).forEach((url) =>

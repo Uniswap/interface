@@ -26,11 +26,11 @@ import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   QUOTER_ADDRESSES,
 } from 'src/constants/addresses'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
 
 export function useContract<T extends Contract = Contract>(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any
 ): T | null {
@@ -53,42 +53,36 @@ export function useContract<T extends Contract = Contract>(
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T
 }
 
-export function useBytes32TokenContract(
-  chainId: SupportedChainId,
-  tokenAddress?: Address
-): Contract | null {
+export function useBytes32TokenContract(chainId: ChainId, tokenAddress?: Address): Contract | null {
   return useContract(chainId, tokenAddress, ERC20_BYTES32_ABI)
 }
 
-export function useEIP2612Contract(
-  chainId: SupportedChainId,
-  tokenAddress?: Address
-): Contract | null {
+export function useEIP2612Contract(chainId: ChainId, tokenAddress?: Address): Contract | null {
   return useContract(chainId, tokenAddress, EIP_2612)
 }
 
-export function useENSRegistrarContract(chainId: SupportedChainId) {
+export function useENSRegistrarContract(chainId: ChainId) {
   return useContract<EnsRegistrar>(chainId, ENS_REGISTRAR_ADDRESSES, ENS_ABI)
 }
 
-export function useENSResolverContract(chainId: SupportedChainId, address: Address | undefined) {
+export function useENSResolverContract(chainId: ChainId, address: Address | undefined) {
   return useContract<EnsPublicResolver>(chainId, address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
-export function useMulticall2Contract(chainId: SupportedChainId) {
+export function useMulticall2Contract(chainId: ChainId) {
   return useContract<UniswapInterfaceMulticall>(chainId, MULTICALL_ADDRESS, MulticallABI)
 }
 
-export function usePairContract(chainId: SupportedChainId, pairAddress?: Address): Contract | null {
+export function usePairContract(chainId: ChainId, pairAddress?: Address): Contract | null {
   return useContract(chainId, pairAddress, IUniswapV2PairABI)
 }
 
-export function useTokenContract(chainId: SupportedChainId, tokenAddress?: Address) {
+export function useTokenContract(chainId: ChainId, tokenAddress?: Address) {
   return useContract<Erc20>(chainId, tokenAddress, ERC20_ABI)
 }
 
 export function useV3NFTPositionManagerContract(
-  chainId: SupportedChainId
+  chainId: ChainId
 ): NonfungiblePositionManager | null {
   return useContract<NonfungiblePositionManager>(
     chainId,
@@ -97,10 +91,10 @@ export function useV3NFTPositionManagerContract(
   )
 }
 
-export function useV3Quoter(chainId: SupportedChainId) {
+export function useV3Quoter(chainId: ChainId) {
   return useContract<Quoter>(chainId, QUOTER_ADDRESSES, QuoterABI)
 }
 
-export function useWETHContract(chainId: SupportedChainId) {
+export function useWETHContract(chainId: ChainId) {
   return useContract<Weth>(chainId, WETH9[chainId]?.address, WETH_ABI)
 }

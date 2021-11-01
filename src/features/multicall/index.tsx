@@ -1,6 +1,6 @@
 import { createMulticall } from 'multicall-query'
 import React from 'react'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useLatestBlock } from 'src/features/blocks/hooks'
 import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useMulticall2Contract } from 'src/features/contracts/useContract'
@@ -22,7 +22,7 @@ const {
 type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<T>, 2>
 
 export function useMultipleContractSingleData(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   ...args: SkipFirstTwoParams<typeof _useMultipleContractSingleData>
 ) {
   const latestBlock = useLatestBlock(chainId)
@@ -30,7 +30,7 @@ export function useMultipleContractSingleData(
 }
 
 export function useSingleCallResult(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   ...args: SkipFirstTwoParams<typeof _useSingleCallResult>
 ) {
   const latestBlock = useLatestBlock(chainId)
@@ -38,7 +38,7 @@ export function useSingleCallResult(
 }
 
 export function useSingleContractMultipleData(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   ...args: SkipFirstTwoParams<typeof _useSingleContractMultipleData>
 ) {
   const latestBlock = useLatestBlock(chainId)
@@ -46,7 +46,7 @@ export function useSingleContractMultipleData(
 }
 
 export function useSingleContractWithCallData(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   ...args: SkipFirstTwoParams<typeof _useSingleContractWithCallData>
 ) {
   const latestBlock = useLatestBlock(chainId)
@@ -65,7 +65,7 @@ export function MulticallUpdaters() {
 }
 
 // Create Updater wrappers that pull needed info from store
-function SingleChainUpdater({ chainId }: { chainId: SupportedChainId }) {
+function SingleChainUpdater({ chainId }: { chainId: ChainId }) {
   const contract = useMulticall2Contract(chainId)
   const latestBlock = useLatestBlock(chainId)
   return <Updater chainId={chainId} latestBlockNumber={latestBlock} contract={contract} />

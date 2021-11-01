@@ -1,7 +1,7 @@
 import { appSelect } from 'src/app/hooks'
 import { getWalletProviders } from 'src/app/walletContext'
 import { NULL_ADDRESS } from 'src/constants/accounts'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
 import { getActiveChainIds } from 'src/features/chains/hooks'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
@@ -30,7 +30,7 @@ export function* fetchBalances(address: Address) {
 
 async function _fetchBalances(
   address: Address,
-  chainId: SupportedChainId,
+  chainId: ChainId,
   manager: ProviderManager
 ): Promise<{ [currencyKey: string]: Balance }> {
   logger.debug('Fetching balances for:', address)

@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENS.ts
 
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { useENSName } from 'src/features/ens/useENSName'
 import { parseAddress } from 'src/utils/addresses'
@@ -10,7 +10,7 @@ import { parseAddress } from 'src/utils/addresses'
  * @param nameOrAddress ENS name or address
  */
 export function useENS(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   nameOrAddress?: string | null
 ): {
   loading: boolean

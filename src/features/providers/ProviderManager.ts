@@ -1,7 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
-import { CHAIN_INFO, L1ChainInfo, SupportedChainId } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO, L1ChainInfo } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timing'
@@ -19,7 +19,7 @@ interface ProviderDetails {
   blockWatcher?: Task
 }
 
-export type ChainIdToProvider = Partial<Record<SupportedChainId, ProviderDetails>>
+export type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
@@ -29,7 +29,7 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  async createProvider(chainId: SupportedChainId) {
+  async createProvider(chainId: ChainId) {
     if (this._providers[chainId]) {
       throw new Error(`Attempting to overwrite existing provider for ${chainId}`)
     }
@@ -52,7 +52,7 @@ export class ProviderManager {
     }
   }
 
-  removeProvider(chainId: SupportedChainId) {
+  removeProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
       logger.warn('Attempting to remove non-existing provider', chainId)
       return
@@ -62,18 +62,18 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  hasProvider(chainId: SupportedChainId) {
+  hasProvider(chainId: ChainId) {
     return !!this._providers[chainId]
   }
 
-  tryGetProvider(chainId: SupportedChainId) {
+  tryGetProvider(chainId: ChainId) {
     if (!this._providers[chainId]) return null
     const provider = this._providers[chainId]
     if (provider?.status !== ProviderStatus.Connected) return null
     return provider.provider
   }
 
-  getProvider(chainId: SupportedChainId) {
+  getProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }
@@ -88,21 +88,21 @@ export class ProviderManager {
     return this._providers
   }
 
-  getProviderBlockWatcher(chainId: SupportedChainId) {
+  getProviderBlockWatcher(chainId: ChainId) {
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }
     return this._providers[chainId]?.blockWatcher
   }
 
-  setProviderBlockWatcher(chainId: SupportedChainId, watcher: Task) {
+  setProviderBlockWatcher(chainId: ChainId, watcher: Task) {
     if (!this._providers[chainId]) {
       throw new Error(`No provider initialized for chain: ${chainId}`)
     }
     this._providers[chainId]!.blockWatcher = watcher
   }
 
-  private async initProvider(chainId: SupportedChainId, chainDetails: L1ChainInfo) {
+  private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo) {
     try {
       const chainName = this.getInfuraChainName(chainId)
       logger.info(`Connecting to infura rpc provider for ${chainName}`)
@@ -128,7 +128,7 @@ export class ProviderManager {
   }
 
   private isProviderSynced(
-    chainId: SupportedChainId,
+    chainId: ChainId,
     chainDetails: L1ChainInfo,
     block?: ethersProviders.Block,
     network?: ethersProviders.Network
@@ -144,17 +144,17 @@ export class ProviderManager {
     )
   }
 
-  private getInfuraChainName(chainId: SupportedChainId) {
+  private getInfuraChainName(chainId: ChainId) {
     switch (chainId) {
-      case SupportedChainId.MAINNET:
+      case ChainId.MAINNET:
         return 'homestead'
-      case SupportedChainId.RINKEBY:
+      case ChainId.RINKEBY:
         return 'rinkeby'
-      case SupportedChainId.ROPSTEN:
+      case ChainId.ROPSTEN:
         return 'ropsten'
-      case SupportedChainId.GOERLI:
+      case ChainId.GOERLI:
         return 'goerli'
-      case SupportedChainId.KOVAN:
+      case ChainId.KOVAN:
         return 'kovan'
       default:
         throw new Error(`Unsupported eth infura chainId for ${chainId}`)

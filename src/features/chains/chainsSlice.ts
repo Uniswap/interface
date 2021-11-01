@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { config } from 'src/config'
-import { ChainIdTo, SupportedChainId } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
 interface ChainsState {
@@ -17,7 +17,7 @@ const slice = createSlice({
   reducers: {
     setChainActiveStatus: (
       state,
-      action: PayloadAction<{ chainId: SupportedChainId; isActive: boolean }>
+      action: PayloadAction<{ chainId: ChainId; isActive: boolean }>
     ) => {
       const { chainId, isActive } = action.payload
       state.byChainId[chainId] ??= { isActive }

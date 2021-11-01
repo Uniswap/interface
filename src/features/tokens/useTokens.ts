@@ -2,7 +2,7 @@
 
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { ChainIdTo, SupportedChainId } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import { useUserAddedTokens } from 'src/features/tokens/userAddedTokens'
@@ -24,7 +24,7 @@ export function useUnsupportedTokens(): ChainIdToAddressToToken {
 export function useIsTokenActive(token: Nullable<Token>): boolean {
   const activeTokens = useAllTokens()
   if (!activeTokens || !token) return false
-  const chainId = token.chainId as SupportedChainId
+  const chainId = token.chainId as ChainId
   return !!activeTokens[chainId]?.[token.address]
 }
 

@@ -5,7 +5,7 @@ import { Token } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
 import { NEVER_RELOAD } from 'multicall-query'
 import { useMemo } from 'react'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'src/features/contracts/useContract'
 import { useSingleCallResult } from 'src/features/multicall'
 import { useAllTokens } from 'src/features/tokens/useTokens'
@@ -14,7 +14,7 @@ import { isValidAddress, normalizeAddress } from 'src/utils/addresses'
 // Uses an Ethers contract for the token address to retrieve info directly from the chain
 // undefined if invalid or does not exist, null if loading, otherwise returns token
 export function useTokenInfoFromAddress(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   tokenAddress?: string | null
 ): Token | undefined | null {
   const address = isValidAddress(tokenAddress) ? normalizeAddress(tokenAddress) : null

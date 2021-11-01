@@ -2,7 +2,7 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import { REHYDRATE } from 'redux-persist'
 import { appSelect } from 'src/app/hooks'
 import { getWalletProviders } from 'src/app/walletContext'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { getActiveChainIds } from 'src/features/chains/hooks'
@@ -25,7 +25,7 @@ export function* initProviders() {
   yield* takeEvery(setChainActiveStatus.type, modifyProviders)
 }
 
-function* initProvider(chainId: SupportedChainId, manager: ProviderManager) {
+function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
     logger.debug('Creating a provider for:', chainId)
     if (manager.hasProvider(chainId)) {
@@ -42,7 +42,7 @@ function* initProvider(chainId: SupportedChainId, manager: ProviderManager) {
   }
 }
 
-function* destroyProvider(chainId: SupportedChainId, manager: ProviderManager) {
+function* destroyProvider(chainId: ChainId, manager: ProviderManager) {
   logger.debug('Disabling a provider for:', chainId)
   if (!manager.hasProvider(chainId)) {
     logger.debug('Provider does not exists for:', chainId)
@@ -55,7 +55,7 @@ function* destroyProvider(chainId: SupportedChainId, manager: ProviderManager) {
   manager.removeProvider(chainId)
 }
 
-function* modifyProviders(action: PayloadAction<{ chainId: SupportedChainId; isActive: boolean }>) {
+function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: boolean }>) {
   const { chainId, isActive } = action.payload
   try {
     const manager = yield* call(getWalletProviders)
@@ -70,7 +70,7 @@ function* modifyProviders(action: PayloadAction<{ chainId: SupportedChainId; isA
   }
 }
 
-async function createProvider(chainId: SupportedChainId, manager: ProviderManager) {
+async function createProvider(chainId: ChainId, manager: ProviderManager) {
   logger.debug('Creating a provider for:', chainId)
   const provider = await manager.createProvider(chainId)
   return provider

@@ -2,7 +2,7 @@
 
 import { utils } from 'ethers'
 import { useMemo } from 'react'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useENSRegistrarContract, useENSResolverContract } from 'src/features/contracts/useContract'
 import { useSingleCallResult } from 'src/features/multicall'
 import { isZero } from 'src/utils/number'
@@ -11,7 +11,7 @@ import { isZero } from 'src/utils/number'
  * Does a lookup for an ENS name to find its contenthash.
  */
 export function useENSContentHash(
-  chainId: SupportedChainId,
+  chainId: ChainId,
   ensName?: string | null
 ): {
   loading: boolean

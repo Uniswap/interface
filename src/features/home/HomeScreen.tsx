@@ -9,7 +9,7 @@ import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { config } from 'src/config'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
@@ -25,7 +25,7 @@ export function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const activeAccount = useActiveAccount()
-  const balances = useActiveAccountEthBalance(SupportedChainId.GOERLI)
+  const balances = useActiveAccountEthBalance(ChainId.GOERLI)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -51,11 +51,11 @@ export function HomeScreen({ navigation }: Props) {
 
   const activeChains = useActiveChainIds()
   const onPressToggleChain = () => {
-    const isGoerliActive = activeChains.includes(SupportedChainId.GOERLI)
-    dispatch(setChainActiveStatus({ chainId: SupportedChainId.GOERLI, isActive: !isGoerliActive }))
+    const isGoerliActive = activeChains.includes(ChainId.GOERLI)
+    dispatch(setChainActiveStatus({ chainId: ChainId.GOERLI, isActive: !isGoerliActive }))
   }
 
-  const blockTimestamp = useCurrentBlockTimestamp(SupportedChainId.GOERLI)
+  const blockTimestamp = useCurrentBlockTimestamp(ChainId.GOERLI)
 
   const { t } = useTranslation()
 

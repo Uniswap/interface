@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { Balance } from 'src/features/balances/types'
 
 interface Balances {
   byChainId: {
-    [chainId in SupportedChainId]?: {
+    [chainId in ChainId]?: {
       [tokenAddress: Address]: {
         [accountAddress: Address]: Balance
       }
@@ -24,7 +24,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         address: Address
-        chainId: SupportedChainId
+        chainId: ChainId
         updatedBalances: { [tokenAddress: Address]: Balance }
       }>
     ) => {
@@ -39,7 +39,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         address: Address
-        chainId: SupportedChainId
+        chainId: ChainId
         tokenAddress: Address
         balance: Balance
       }>

@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { ChainIdTo, SupportedChainId } from 'src/constants/chains'
+import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
-export function useActiveChainIds(): SupportedChainId[] {
+export function useActiveChainIds(): ChainId[] {
   const chains = useAppSelector((state) => state.chains.byChainId)
   return useMemo(() => getActiveChainIds(chains), [chains])
 }
@@ -11,5 +11,5 @@ export function useActiveChainIds(): SupportedChainId[] {
 export function getActiveChainIds(chains: ChainIdTo<ChainState>) {
   return Object.keys(chains)
     .map(Number)
-    .filter((n: SupportedChainId) => !!chains[n]?.isActive) as SupportedChainId[]
+    .filter((n: ChainId) => !!chains[n]?.isActive) as ChainId[]
 }

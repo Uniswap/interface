@@ -1,15 +1,15 @@
 import { NULL_ADDRESS } from 'src/constants/accounts'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { UNI, USDC } from 'src/constants/tokens'
 
 export const DEFAULT_WATCHED_TOKENS = {
-  [SupportedChainId.MAINNET]: {
+  [ChainId.MAINNET]: {
     [NULL_ADDRESS]: true, // Native Eth
     [USDC.address]: true,
-    [UNI[SupportedChainId.MAINNET].address]: true,
+    [UNI[ChainId.MAINNET].address]: true,
   },
-  [SupportedChainId.GOERLI]: {
+  [ChainId.GOERLI]: {
     [NULL_ADDRESS]: true, // Native Eth
-    [UNI[SupportedChainId.GOERLI].address]: true,
+    [UNI[ChainId.GOERLI].address]: true,
   },
 }

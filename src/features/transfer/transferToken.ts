@@ -1,6 +1,6 @@
 import { providers, utils } from 'ethers'
 import { getWalletAccounts, getWalletProviders } from 'src/app/walletContext'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { TransferTokenParams } from 'src/features/transfer/types'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
@@ -33,7 +33,7 @@ async function _transferToken(
   providerManager: ProviderManager
 ) {
   // TODO use the appropriate provider for current chain
-  const goerliProvider = providerManager.getProvider(SupportedChainId.GOERLI)
+  const goerliProvider = providerManager.getProvider(ChainId.GOERLI)
   const walletAccount = accountManager.getAccount(account.address)
 
   if (!walletAccount) throw Error('No active account')

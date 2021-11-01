@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import { SupportedChainId } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { ProviderManager } from 'src/features/providers/ProviderManager'
 import { AccountManager } from 'src/features/wallet/accounts/AccountManager'
@@ -71,7 +71,7 @@ export function useWalletProviders(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useWalletProvider(chainId: SupportedChainId) {
+export function useWalletProvider(chainId: ChainId) {
   return useWalletProviders().tryGetProvider(chainId)
 }
 
