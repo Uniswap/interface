@@ -9,7 +9,7 @@ import { Book } from 'react-feather'
 import { TextButton } from '../Button'
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, State, swapAtom } from './state'
+import { inputAtom, State, stateAtom } from './state'
 import TokenInput from './TokenInput'
 
 const BookIcon = icon(Book, { color: 'currentColor' })
@@ -23,7 +23,7 @@ export default function SwapInput({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
   const setValue = useUpdateAtom(pickAtom(inputAtom, 'value'))
   const setToken = useUpdateAtom(pickAtom(inputAtom, 'token'))
-  const swap = useAtomValue(swapAtom)
+  const state = useAtomValue(stateAtom)
   const balance = 123.45
 
   return (
@@ -33,16 +33,16 @@ export default function SwapInput({ children }: { children: ReactNode }) {
       </Row>
       <TokenInput
         input={input}
-        disabled={swap.state === State.TOKEN_APPROVAL}
+        disabled={state === State.TOKEN_APPROVAL}
         onChangeInput={setValue}
         onChangeToken={setToken}
       >
         <TYPE.body2 color="secondary">
           <Row>
-            {swap.input ? `~ $${swap.input.usdc.toLocaleString('en')}` : '-'}
+            {input.usdc ? `~ $${input.usdc.toLocaleString('en')}` : '-'}
             {balance && (
               <Row gap={0.5}>
-                <Row gap={0.25} color={swap.state === State.BALANCE_INSUFFICIENT ? 'error' : undefined}>
+                <Row gap={0.25} color={state === State.BALANCE_INSUFFICIENT ? 'error' : undefined}>
                   <BookIcon />
                   {balance}
                 </Row>

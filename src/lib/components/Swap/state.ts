@@ -1,4 +1,6 @@
-import { atomWithDefault, atomWithReset } from 'jotai/utils'
+import { atom } from 'jotai'
+import { atomWithImmer } from 'jotai/immer'
+import { atomWithReset } from 'jotai/utils'
 import { ETH } from 'lib/mocks'
 import { Token } from 'lib/types'
 import { Customizable, pickAtom, setCustomizable, setTogglable } from 'lib/utils/atoms'
@@ -31,14 +33,6 @@ export const maxSlippageAtom = pickAtom(settingsAtom, 'maxSlippage', setCustomiz
 export const transactionTtlAtom = pickAtom(settingsAtom, 'transactionTtl')
 export const mockTogglableAtom = pickAtom(settingsAtom, 'mockTogglable', setTogglable)
 
-export interface Input {
-  value?: number
-  token?: Token
-}
-
-export const inputAtom = atomWithDefault<Input>(() => ({ token: ETH }))
-export const outputAtom = atomWithDefault<Input>(() => ({}))
-
 export enum State {
   EMPTY,
   LOADING,
@@ -47,16 +41,57 @@ export enum State {
   LOADED,
 }
 
-export interface Swap {
-  state: State
-  input?: { usdc: number }
-  output?: { usdc: number }
-  lpFee?: number
-  integratorFee?: number
-  priceImpact?: number
-  maximumSent?: number
-  minimumReceived?: number
-  slippageTolerance?: number
+export enum Field {
+  INPUT = 'input',
+  OUTPUT = 'output',
 }
 
-export const swapAtom = atomWithDefault<Swap>(() => ({ state: State.LOADING }))
+export interface Input {
+  value?: number
+  token?: Token
+  usdc?: number
+}
+
+export interface Swap {
+  state: State
+  activeInput: Field
+  [Field.INPUT]: Input
+  [Field.OUTPUT]: Input
+  swap?: {
+    lpFee: number
+    priceImpact: number
+    slippageTolerance: number
+    integratorFee?: number
+    maximumSent?: number
+    minimumReceived?: number
+  }
+}
+
+export const swapAtom = atomWithImmer<Swap>({
+  state: State.LOADING,
+  activeInput: Field.INPUT,
+  input: { token: ETH },
+  output: {},
+})
+
+export const stateAtom = pickAtom(swapAtom, 'state')
+
+export const inputAtom = atom(
+  (get) => get(swapAtom).input,
+  (get, set, update: Input) => {
+    set(swapAtom, (swap) => {
+      swap.activeInput = Field.INPUT
+      swap.input = update
+    })
+  }
+)
+
+export const outputAtom = atom(
+  (get) => get(swapAtom).output,
+  (get, set, update: Input) => {
+    set(swapAtom, (swap) => {
+      swap.activeInput = Field.OUTPUT
+      swap.output = update
+    })
+  }
+)

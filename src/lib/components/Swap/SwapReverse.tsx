@@ -1,9 +1,12 @@
+import { useAtom } from 'jotai'
 import styled, { icon } from 'lib/theme'
 import Layer from 'lib/theme/layer'
+import { useCallback } from 'react'
 import { ArrowDown, ArrowUp } from 'react-feather'
 
 import Button from '../Button'
 import Row from '../Row'
+import { swapAtom } from './state'
 
 const SwapReverseRow = styled(Row)`
   bottom: -1.5em;
@@ -50,7 +53,16 @@ const SwapButton = styled(Button)`
   }
 `
 
-export default function SwapReverse({ onClick }: { onClick: () => void }) {
+export default function SwapReverse() {
+  const [swap, setSwap] = useAtom(swapAtom)
+  const onClick = useCallback(() => {
+    const { input, output } = swap
+    setSwap((swap) => {
+      swap.input = output
+      swap.output = input
+    })
+  }, [swap, setSwap])
+
   return (
     <SwapReverseRow justify="center">
       <Overlay>

@@ -9,7 +9,7 @@ import { Book } from 'react-feather'
 
 import Column from '../Column'
 import Row from '../Row'
-import { inputAtom, outputAtom, swapAtom } from './state'
+import { inputAtom, outputAtom } from './state'
 import TokenInput from './TokenInput'
 
 const BookIcon = icon(Book)
@@ -30,14 +30,14 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
 `
 
 export default function SwapOutput({ children }: { children: ReactNode }) {
+  const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
   const setValue = useUpdateAtom(pickAtom(outputAtom, 'value'))
   const setToken = useUpdateAtom(pickAtom(outputAtom, 'token'))
-  const swap = useAtomValue(swapAtom)
   const balance = 123.45
 
   const color = useColor(output.token)
-  prefetchColor(useAtomValue(pickAtom(inputAtom, 'token'))) // extract eagerly in case of reversal
+  prefetchColor(input.token) // extract eagerly in case of reversal
 
   const hasColor = useMemo(() => {
     if (color) {
@@ -47,19 +47,19 @@ export default function SwapOutput({ children }: { children: ReactNode }) {
   }, [color, output.token])
 
   const change = useMemo(() => {
-    if (swap.output && swap.input) {
-      const change = swap.output.usdc / swap.input.usdc - 1
+    if (input.usdc && output.usdc) {
+      const change = output.usdc / input.usdc - 1
       const percent = (change * 100).toPrecision(3)
       return change > 0 ? ` (+${percent}%)` : `(${percent}%)`
     }
     return ''
-  }, [swap.input, swap.output])
+  }, [input, output])
   const usdc = useMemo(() => {
-    if (swap.output) {
-      return `~ $${swap.output.usdc.toLocaleString('en')}${change}`
+    if (output.usdc) {
+      return `~ $${output.usdc.toLocaleString('en')}${change}`
     }
     return '-'
-  }, [change, swap.output])
+  }, [change, output])
 
   return (
     <DynamicThemeProvider color={color}>
