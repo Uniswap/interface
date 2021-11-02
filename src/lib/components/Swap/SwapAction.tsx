@@ -4,15 +4,15 @@ import { useMemo, useState } from 'react'
 
 import Action, { Approval, Disabled, Loading } from '../Action'
 import Dialog from '../Dialog'
-import { inputAtom, State, swapAtom } from './state'
+import { inputAtom, State, stateAtom } from './state'
 import { SwapSummaryDialog } from './SwapSummary'
 
 export default function SwapAction() {
-  const swap = useAtomValue(swapAtom)
+  const state = useAtomValue(stateAtom)
   const { token } = useAtomValue(inputAtom)
   const [open, setOpen] = useState(false)
   const action = useMemo(() => {
-    switch (swap.state) {
+    switch (state) {
       case State.EMPTY:
         return <Disabled>Enter amount</Disabled>
       case State.LOADING:
@@ -28,7 +28,7 @@ export default function SwapAction() {
       default:
         return <Disabled>Confirmation pending</Disabled>
     }
-  }, [swap.state, token])
+  }, [state, token])
   return (
     <>
       {action}

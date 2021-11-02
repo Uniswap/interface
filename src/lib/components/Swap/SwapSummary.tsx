@@ -1,7 +1,6 @@
 import { useAtomValue } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { Token } from 'lib/types'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 
@@ -10,7 +9,7 @@ import Column from '../Column'
 import { Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
-import { inputAtom, outputAtom, swapAtom } from './state'
+import { Input, inputAtom, outputAtom, swapAtom } from './state'
 
 const ArrowIcon = icon(ArrowRight)
 
@@ -20,14 +19,7 @@ const TokenImg = styled.img`
   width: 1em;
 `
 
-interface TokenSummaryProps {
-  token: Token
-  value: number
-  usdc?: number
-  change?: number
-}
-
-function TokenSummary({ token, value, usdc, change }: TokenSummaryProps) {
+function InputSummary({ token, value, usdc, change }: Required<Input> & { change?: number }) {
   const percent = useMemo(() => {
     if (change === undefined) {
       return undefined
@@ -50,7 +42,7 @@ function TokenSummary({ token, value, usdc, change }: TokenSummaryProps) {
 }
 
 export function SwapSummaryDialog() {
-  const swap = useAtomValue(swapAtom)
+  const { swap } = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
 
@@ -63,13 +55,13 @@ export function SwapSummaryDialog() {
   const [confirmedPrice, confirmPrice] = useState(price)
 
   const change = useMemo(() => {
-    if (swap.output && swap.input) {
-      return swap.output.usdc / swap.input.usdc - 1
+    if (input.usdc && output.usdc) {
+      return output.usdc / input.usdc - 1
     }
     return undefined
-  }, [swap.input, swap.output])
+  }, [input.usdc, output.usdc])
 
-  if (!(input.token && input.value && output.token && output.value)) {
+  if (!(input.token && input.value && input.usdc && output.token && output.value && output.usdc && swap)) {
     return null
   }
 
@@ -80,9 +72,9 @@ export function SwapSummaryDialog() {
         <Column gap={1} flex>
           <TYPE.body2>
             <Row gap={1}>
-              <TokenSummary token={input.token} value={input.value} usdc={swap.input?.usdc} />
+              <InputSummary token={input.token} value={input.value} usdc={input.usdc} />
               <ArrowIcon />
-              <TokenSummary token={output.token} value={output.value} usdc={swap.output?.usdc} change={change} />
+              <InputSummary token={output.token} value={output.value} usdc={output.usdc} change={change} />
             </Row>
           </TYPE.body2>
           <TYPE.caption>
@@ -92,8 +84,12 @@ export function SwapSummaryDialog() {
         <Rule />
         <Rule />
         <TYPE.caption color="secondary">
-          Output is estimated. You will receive at least {swap.minimumReceived} {input.token.symbol} or the transaction
-          will revert.
+          Output is estimated.
+          {swap.minimumReceived &&
+            `You will receive at least ${swap.minimumReceived} ${output.token.symbol} or the transaction
+          will revert.`}
+          {swap.maximumSent &&
+            `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
         {price === confirmedPrice ? (
           <Action color="active" onClick={() => void 0}>

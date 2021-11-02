@@ -1,15 +1,16 @@
-import { RESET, useUpdateAtom } from 'jotai/utils'
+import { useUpdateAtom } from 'jotai/utils'
 import { DAI, ETH } from 'lib/mocks'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 
 import Widget from '../Widget'
 import Swap from '.'
-import { inputAtom, outputAtom, State, swapAtom } from './state'
+import { Field, inputAtom, outputAtom, State, stateAtom, swapAtom } from './state'
 
 function Fixture() {
   const setInput = useUpdateAtom(inputAtom)
   const setOutput = useUpdateAtom(outputAtom)
+  const setState = useUpdateAtom(stateAtom)
   const setSwap = useUpdateAtom(swapAtom)
 
   const [state] = useSelect('state', {
@@ -18,36 +19,37 @@ function Fixture() {
   useEffect(() => {
     switch (state) {
       case 'EMPTY':
-        setInput(RESET)
-        setOutput(RESET)
-        setSwap({ state: State.EMPTY })
+        setInput({ token: ETH })
+        setOutput({})
+        setState(State.EMPTY)
         break
       case 'LOADING':
-        setSwap({ state: State.LOADING })
+        setState(State.LOADING)
         break
       case 'TOKEN APPROVAL':
-        setInput((value) => (value.token ? value : { token: ETH }))
-        setSwap({ state: State.TOKEN_APPROVAL })
+        setInput({ token: ETH })
+        setState(State.TOKEN_APPROVAL)
         break
       case 'BALANCE INSUFFICIENT':
-        setInput((value) => (value.token ? value : { token: ETH }))
-        setSwap({ state: State.BALANCE_INSUFFICIENT })
+        setInput({ token: ETH })
+        setState(State.BALANCE_INSUFFICIENT)
         break
       case 'LOADED':
-        setInput((value) => (value.token && value.value ? value : { token: ETH, value: 1 }))
-        setOutput((value) => (value.token && value.value ? value : { token: DAI, value: 4200 }))
         setSwap({
           state: State.LOADED,
-          input: { usdc: 4195 },
-          output: { usdc: 4200 },
-          lpFee: 0.0005,
-          priceImpact: 0.01,
-          slippageTolerance: 0.5,
-          minimumReceived: 4190,
+          activeInput: Field.INPUT,
+          input: { token: ETH, value: 1, usdc: 4195 },
+          output: { token: DAI, value: 4200, usdc: 4200 },
+          swap: {
+            lpFee: 0.0005,
+            priceImpact: 0.01,
+            slippageTolerance: 0.5,
+            minimumReceived: 4190,
+          },
         })
         break
     }
-  }, [setInput, setOutput, setSwap, state])
+  }, [setInput, setOutput, setState, setSwap, state])
   return <Swap />
 }
 
