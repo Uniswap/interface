@@ -100,18 +100,18 @@ export function SummaryDialog() {
           {swap.maximumSent &&
             `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
+        <Footer>
+          {price === confirmedPrice ? (
+            <Action color="active" onClick={() => void 0}>
+              Confirm
+            </Action>
+          ) : (
+            <Approval color="active" onClick={() => confirmPrice(price)}>
+              Price updated
+            </Approval>
+          )}
+        </Footer>
       </Column>
-      <Footer>
-        {price === confirmedPrice ? (
-          <Action color="active" onClick={() => void 0}>
-            Confirm
-          </Action>
-        ) : (
-          <Approval color="active" onClick={() => confirmPrice(price)}>
-            Price updated
-          </Approval>
-        )}
-      </Footer>
     </>
   )
 }
