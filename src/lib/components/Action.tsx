@@ -7,7 +7,7 @@ import Button from './Button'
 import Row from './Row'
 
 const BaseButton = styled(Button)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 3.5em;
 
   :disabled {
@@ -87,7 +87,7 @@ const LoadingButton = styled(BaseButton)<{ width?: number; height?: number; them
 
   :after {
     background: inherit;
-    clip-path: inset(1px round ${({ theme }) => theme.borderRadius * 0.5}em);
+    clip-path: inset(1px round ${({ theme }) => theme.borderRadius}em);
   }
 `
 
@@ -113,7 +113,8 @@ export interface ActionProps {
 const AlertIcon = icon(AlertTriangle, { color: 'primary' })
 
 const ApprovalRow = styled(Row)`
-  border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
+  background-color: currentColor;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 3.5em;
   outline: 1px solid ${({ theme }) => theme.outline};
   padding: 0.5em;
@@ -121,7 +122,7 @@ const ApprovalRow = styled(Row)`
 
 const ApproveButton = styled(Button)<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
+  border-radius: ${({ theme }) => theme.borderRadius}em;
   color: ${({ theme }) => theme.contrast};
   height: 100%;
   padding: 0 1em;
