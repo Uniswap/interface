@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import {
   ChainId,
   Currency,
@@ -18,6 +18,7 @@ import {
 import { dexIds, dexTypes, dexListConfig, DexConfig, DEX_TO_COMPARE } from '../constants/dexes'
 import invariant from 'tiny-invariant'
 import { AggregationComparer } from 'state/swap/types'
+import { GasPrice } from 'state/application/reducer'
 
 function dec2bin(dec: number, length: number): string {
   // let bin = (dec >>> 0).toString(2)
@@ -247,7 +248,8 @@ export class Aggregator {
     currencyAmountIn: CurrencyAmount,
     currencyOut: Currency,
     saveGas = false,
-    dexes = ''
+    dexes = '',
+    gasPrice?: GasPrice
   ): Promise<Aggregator | null> {
     const chainId: ChainId | undefined =
       currencyAmountIn instanceof TokenAmount
@@ -268,7 +270,14 @@ export class Aggregator {
         tokenOut: tokenOutAddress.toLowerCase(),
         amountIn: currencyAmountIn.raw?.toString(),
         saveGas: saveGas ? '1' : '0',
-        gasInclude: '1',
+        gasInclude: saveGas ? '1' : '0',
+        ...(gasPrice
+          ? {
+              gasPrice: BigNumber.from(gasPrice.standard)
+                .mul(10 ** 9)
+                .toString()
+            }
+          : {}),
         ...(dexes ? { dexes } : {})
       })
       try {

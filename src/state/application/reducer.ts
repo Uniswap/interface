@@ -11,7 +11,8 @@ import {
   updateETHPrice,
   updateKNCPrice,
   updateChainIdWhenNotConnected,
-  setExchangeSubgraphClient
+  setExchangeSubgraphClient,
+  setGasPrice
 } from './actions'
 import { exchangeClients } from 'apollo/client'
 
@@ -23,6 +24,7 @@ type ETHPrice = {
   pricePercentChange?: number
 }
 
+export type GasPrice = { fast: string; standard: string; low: string; default: string }
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
@@ -31,6 +33,7 @@ export interface ApplicationState {
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
   exchangeSubgraphClients: { [key: string]: ApolloClient<NormalizedCacheObject> }
+  readonly gasPrice?: GasPrice
 }
 
 const initialState: ApplicationState = {
@@ -86,5 +89,8 @@ export default createReducer(initialState, builder =>
     })
     .addCase(setExchangeSubgraphClient, (state, { payload: exchangeSubgraphClients }) => {
       state.exchangeSubgraphClients = exchangeSubgraphClients as any
+    })
+    .addCase(setGasPrice, (state, { payload: gasPrice }) => {
+      state.gasPrice = gasPrice as GasPrice
     })
 )
