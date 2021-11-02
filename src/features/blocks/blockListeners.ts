@@ -28,7 +28,7 @@ export function createBlockChannel(provider: providers.JsonRpcProvider, chainId:
 
 export function* blockChannelWatcher(channel: EventChannel<BlockUpdate>, chainId: ChainId) {
   try {
-    logger.debug('Watching block channel for:', chainId)
+    logger.debug('blockListeners', 'blockChannelWatcher', 'Watching block channel for:', chainId)
     while (true) {
       const block = yield* take(channel)
       // TODO validate block
@@ -37,7 +37,7 @@ export function* blockChannelWatcher(channel: EventChannel<BlockUpdate>, chainId
       )
     }
   } finally {
-    logger.debug('Closing block channel for:', chainId)
+    logger.debug('blockListeners', 'blockChannelWatcher', 'Closing block channel for:', chainId)
     channel.close()
   }
 }

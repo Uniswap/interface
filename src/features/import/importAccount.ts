@@ -34,7 +34,7 @@ export function* importAccount(params: ImportAccountParams) {
   yield* put(addAccount({ type, address, name }))
   yield* put(activateAccount(address))
   yield* put(fetchBalancesActions.trigger(address))
-  logger.info('New account imported:', address)
+  logger.info('importAccount', '', 'New account imported:', address)
 }
 
 export const {

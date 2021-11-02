@@ -9,6 +9,6 @@ export async function logEvent(name: string, params: {}) {
   try {
     await firebase.analytics().logEvent(name, params)
   } catch (err) {
-    logger.error('analytics#logEvent: ', err)
+    logger.error('analytics', 'logEvent', 'error from firebase', err)
   }
 }

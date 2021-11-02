@@ -32,7 +32,7 @@ export function DevScreen({ navigation }: Props) {
   }
 
   const onPressList = () => {
-    logger.debug(Object.values(accounts))
+    logger.debug('HomeScreen', '', 'accounts', Object.values(accounts))
   }
 
   const onPressSend = () => {
@@ -46,7 +46,7 @@ export function DevScreen({ navigation }: Props) {
   const onPressGetBalance = async () => {
     if (!activeAccount) return
     dispatch(fetchBalancesActions.trigger(activeAccount.address))
-    logger.debug(ethBalance)
+    logger.debug('HomeScreen', '', 'balances', ethBalance)
   }
 
   const onPressHome = async () => {

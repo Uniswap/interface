@@ -54,7 +54,12 @@ export class ProviderManager {
 
   removeProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
-      logger.warn('Attempting to remove non-existing provider', chainId)
+      logger.warn(
+        'ProviderManager',
+        'removeProvider',
+        'Attempting to remove non-existing provider',
+        chainId
+      )
       return
     }
     this._providers[chainId]?.provider.removeAllListeners()
@@ -105,7 +110,11 @@ export class ProviderManager {
   private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo) {
     try {
       const chainName = this.getInfuraChainName(chainId)
-      logger.info(`Connecting to infura rpc provider for ${chainName}`)
+      logger.info(
+        'ProviderManager',
+        'initProvider',
+        `Connecting to infura rpc provider for ${chainName}`
+      )
       const provider = new ethersProviders.InfuraProvider(chainName, config.infuraProjectId)
       for (let i = 0; i < 3; i++) {
         const blockAndNetworkP = Promise.all([provider.getBlock('latest'), provider.getNetwork()])
@@ -114,7 +123,7 @@ export class ProviderManager {
           blockAndNetwork &&
           this.isProviderSynced(chainId, chainDetails, blockAndNetwork[0], blockAndNetwork[1])
         ) {
-          logger.info('Provider is connected')
+          logger.info('ProviderManager', 'initProvider', 'Provider is connected')
           return provider
         }
         // Otherwise wait a bit and then try again
@@ -122,7 +131,12 @@ export class ProviderManager {
       }
       throw new Error('Unable to sync after 3 attempts')
     } catch (error) {
-      logger.error(`Failed to connect to infura rpc provider for: ${chainId}`, error)
+      logger.error(
+        'ProviderManager',
+        'initProvider',
+        `Failed to connect to infura rpc provider for: ${chainId}`,
+        error
+      )
       return null
     }
   }

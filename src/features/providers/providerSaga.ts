@@ -15,7 +15,7 @@ export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
   yield* take(REHYDRATE)
 
-  logger.debug('Initializing providers')
+  logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getWalletProviders)
   const chains = yield* appSelect((s) => s.chains.byChainId)
   const activeChains = getActiveChainIds(chains)
@@ -27,9 +27,9 @@ export function* initProviders() {
 
 function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
-    logger.debug('Creating a provider for:', chainId)
+    logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     if (manager.hasProvider(chainId)) {
-      logger.debug('Provider already exists for:', chainId)
+      logger.debug('providerSaga', 'initProvider', 'Provider already exists for:', chainId)
       return
     }
     const provider = yield* call(createProvider, chainId, manager)
@@ -38,14 +38,19 @@ function* initProvider(chainId: ChainId, manager: ProviderManager) {
     manager.setProviderBlockWatcher(chainId, blockWatcher)
   } catch (error) {
     // TODO surface to UI when there's a global error modal setup
-    logger.error(`Error while initializing provider ${chainId}`, error)
+    logger.error(
+      'providerSaga',
+      'initProvider',
+      `Error while initializing provider ${chainId}`,
+      error
+    )
   }
 }
 
 function* destroyProvider(chainId: ChainId, manager: ProviderManager) {
-  logger.debug('Disabling a provider for:', chainId)
+  logger.debug('providerSaga', 'destroyProvider', 'Disabling a provider for:', chainId)
   if (!manager.hasProvider(chainId)) {
-    logger.debug('Provider does not exists for:', chainId)
+    logger.debug('providerSaga', 'destroyProvider', 'Provider does not exists for:', chainId)
     return
   }
   const blockWatcher = manager.getProviderBlockWatcher(chainId)
@@ -66,12 +71,17 @@ function* modifyProviders(action: PayloadAction<{ chainId: ChainId; isActive: bo
     }
   } catch (error) {
     // TODO surface to UI when there's a global error modal setup
-    logger.error(`Error while modifying provider ${chainId}`, error)
+    logger.error(
+      'providerSaga',
+      'modifyProviders',
+      `Error while modifying provider ${chainId}`,
+      error
+    )
   }
 }
 
 async function createProvider(chainId: ChainId, manager: ProviderManager) {
-  logger.debug('Creating a provider for:', chainId)
+  logger.debug('providerSaga', 'createProvider', 'Creating a provider for:', chainId)
   const provider = await manager.createProvider(chainId)
   return provider
 }

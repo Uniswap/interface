@@ -38,7 +38,7 @@ export async function getTokenList(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>
 ): Promise<TokenList> {
-  logger.debug('Fetching list for:', listUrl)
+  logger.debug('getTokenList', 'getTokenList', 'Fetching list for:', listUrl)
   const tokenListValidator = getTokenListValidator()
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
@@ -48,7 +48,12 @@ export async function getTokenList(
       contentHashUri = await resolveENSContentHash(parsedENS.ensName)
       if (!contentHashUri) throw new Error('No content hash resolved')
     } catch (error) {
-      logger.error(`Failed to resolve ENS name: ${parsedENS.ensName}`, error)
+      logger.error(
+        'getTokenList',
+        'getTokenList',
+        `Failed to resolve ENS name: ${parsedENS.ensName}`,
+        error
+      )
       throw new Error(`Failed to resolve ENS name: ${parsedENS.ensName}`)
     }
     urls = uriToHttp(`${contentHashUri}${parsedENS.ensPath ?? ''}`)
@@ -62,7 +67,7 @@ export async function getTokenList(
     try {
       response = await fetch(url, { credentials: 'omit' })
     } catch (error) {
-      logger.error('Failed to fetch list', listUrl, error)
+      logger.error('getTokenList', 'getTokenList', 'Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
       continue
     }

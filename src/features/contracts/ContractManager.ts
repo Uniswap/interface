@@ -14,7 +14,11 @@ export class ContractManager {
     if (this._contracts[chainId]![address]) {
       throw new Error(`Contract already exists for: ${chainId} ${address}`)
     } else {
-      logger.debug(`Creating a new contract for: ${chainId} ${address} `)
+      logger.debug(
+        'ContractManager',
+        'createContract',
+        `Creating a new contract for: ${chainId} ${address}`
+      )
       const contract = new Contract(address, ABI, provider)
       this._contracts[chainId]![address] = contract
       return contract
@@ -23,7 +27,11 @@ export class ContractManager {
 
   removeContract(chainId: ChainId, address: Address) {
     if (!this._contracts[chainId]?.[address]) {
-      logger.warn('Attempting to remove non-existing contract', chainId, address)
+      logger.warn(
+        'ContractManager',
+        'removeContract',
+        `Attempting to remove non-existing contract for: ${chainId} ${address}`
+      )
       return
     }
     delete this._contracts[chainId]![address]

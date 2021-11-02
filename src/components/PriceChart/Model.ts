@@ -24,7 +24,7 @@ export function useGraphs(token: Token): GraphMetadatas | null {
   })
 
   if (isError) {
-    logger.error(error)
+    logger.error('PriceChart/Model', 'useGraphs', 'Historical prices error', error)
   }
 
   const dataByRange = useMemo(

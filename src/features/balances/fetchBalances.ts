@@ -33,14 +33,14 @@ async function _fetchBalances(
   chainId: ChainId,
   manager: ProviderManager
 ): Promise<{ [currencyKey: string]: Balance }> {
-  logger.debug('Fetching balances for:', address)
+  logger.debug('fetchBalances', '', 'Fetching for:', address)
   const provider = manager.getProvider(chainId)
 
   // TODO using NULL_ADDRESS for Eth, eventually use currencyToKey util function
   const amount = await provider.getBalance(address)
   const tokenAddress = NULL_ADDRESS
   const balance: Balance = { amount: amount.toString() }
-  logger.debug('Fetched Balance:', amount.toString())
+  logger.debug('fetchBalances', '', 'Fetched balance:', amount.toString())
 
   return { [tokenAddress]: balance }
 }

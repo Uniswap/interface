@@ -22,7 +22,7 @@ function listToTokenMap(list: TokenList): ChainIdToListedTokens {
   const map = list.tokens.reduce<ChainIdToListedTokens>((tokenMap, tokenInfo) => {
     const token = new WrappedTokenInfo(tokenInfo, list)
     if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      logger.error(`Duplicate token! ${token.address}`)
+      logger.error('tokenLists/hooks', 'listToTokenMap', `Duplicate token! ${token.address}`)
       return tokenMap
     }
     if (!tokenMap[token.chainId]) tokenMap[token.chainId] = {}
@@ -86,7 +86,12 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainIdToListe
           try {
             return combineMaps(allTokens, listToTokenMap(current))
           } catch (error) {
-            logger.error('Could not show token list due to error', error)
+            logger.error(
+              'tokenLists/hooks',
+              'useCombinedTokenMapFromUrls',
+              'Could not show token list due to error',
+              error
+            )
             return allTokens
           }
         }, {})

@@ -16,7 +16,12 @@ export class AccountManager {
   removeAccount(address: Address) {
     const id = normalizeAddress(address)
     if (!this._accounts[id]) {
-      logger.warn('Attempting to remove non-existing account', address)
+      logger.warn(
+        'AccountManager',
+        'removeAccount',
+        'Attempting to remove non-existing account',
+        address
+      )
       return
     }
     delete this._accounts[id]
@@ -25,7 +30,7 @@ export class AccountManager {
   getAccount(address: Address) {
     const id = normalizeAddress(address)
     if (!this._accounts[id]) {
-      logger.warn('Attempting to get missing account', address)
+      logger.warn('AccountManager', 'getAccount', 'Attempting to get missing account', address)
       return null
     }
     return this._accounts[id]

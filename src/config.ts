@@ -3,18 +3,19 @@ import {
   API_URL,
   DEBUG,
   INFURA_PROJECT_ID,
+  LOG_BUFFER_SIZE,
   SENTRY_DSN,
   VERSION,
 } from 'react-native-dotenv'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
-import { logger } from 'src/utils/logger'
 
 interface Config {
   activeChains: ChainIdTo<ChainState>
   apiUrl: string
   debug: boolean
   infuraProjectId: string
+  logBufferSize: number
   sentryDsn: string
   version: string
 }
@@ -24,6 +25,7 @@ const _config: Config = {
   apiUrl: API_URL,
   debug: parseBoolean(DEBUG),
   infuraProjectId: INFURA_PROJECT_ID,
+  logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
   sentryDsn: SENTRY_DSN,
   version: VERSION,
 }
@@ -44,5 +46,7 @@ function parseActiveChains(activeChainsString: string) {
 export const config = Object.freeze(_config)
 
 if (config.debug) {
-  logger.debug('Using config:', config)
+  // Cannot use logger here, causes error from circular dep
+  // eslint-disable-next-line no-console
+  console.debug('Using app config:', config)
 }

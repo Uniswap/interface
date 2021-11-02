@@ -21,7 +21,7 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // TODO analytics here
-    logger.error('Error caught by boundary', error, errorInfo)
+    logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
   }
 
   render() {

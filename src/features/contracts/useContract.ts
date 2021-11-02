@@ -47,7 +47,7 @@ export function useContract<T extends Contract = Contract>(
     try {
       return contractsManager.getOrCreateContract(chainId, address, provider, ABI)
     } catch (error) {
-      logger.error('Failed to get contract', error)
+      logger.error('useContract', 'useContract', 'Failed to get contract', error)
       return null
     }
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T

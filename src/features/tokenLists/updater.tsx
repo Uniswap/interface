@@ -31,7 +31,14 @@ export function TokenListUpdater() {
   const fetchAllListsCallback = useCallback(() => {
     if (!provider || !isReady) return
     Object.keys(lists).forEach((url) =>
-      fetchList(url).catch((error) => logger.debug('interval list fetching error', error))
+      fetchList(url).catch((error) =>
+        logger.debug(
+          'tokenLists/updater',
+          'TokenListUpdater',
+          'interval list fetching error',
+          error
+        )
+      )
     )
   }, [fetchList, lists, provider, isReady])
 
@@ -44,7 +51,9 @@ export function TokenListUpdater() {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error) => logger.error('list added fetching error', error))
+        fetchList(listUrl).catch((error) =>
+          logger.error('tokenLists/updater', 'TokenListUpdater', 'list added fetching error', error)
+        )
       }
     })
   }, [dispatch, fetchList, lists, provider, isReady])
@@ -55,7 +64,9 @@ export function TokenListUpdater() {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl).catch((error) => logger.error('list added fetching error', error))
+        fetchList(listUrl).catch((error) =>
+          logger.error('tokenLists/updater', 'TokenListUpdater', 'list added fetching error', error)
+        )
       }
     })
   }, [dispatch, fetchList, lists, provider, isReady])
@@ -77,6 +88,8 @@ export function TokenListUpdater() {
               dispatch(acceptListUpdate(listUrl))
             } else {
               logger.error(
+                'tokenLists/updater',
+                'TokenListUpdater',
                 `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
               )
             }

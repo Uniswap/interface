@@ -54,7 +54,7 @@ async function _transferToken(
   transaction.gasLimit = gasLimit
   const signedTransaction = await walletAccount.signer.signTransaction(transaction)
   const transactionResult = await provider.sendTransaction(signedTransaction)
-  logger.debug('Send finished!', transactionResult)
+  logger.debug('transferToken', '', 'Send finished!', transactionResult)
 }
 
 export const {

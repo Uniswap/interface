@@ -25,7 +25,7 @@ export function isValidAddress(address: Nullable<Address>, allowZero = true) {
     if (allowZero) return !!isValid
     else return !!isValid && address !== NULL_ADDRESS
   } catch (error) {
-    logger.warn('Invalid address', error, address)
+    logger.warn('addresses', 'isValidAddress', 'Invalid address', error, address)
     return false
   }
 }
@@ -33,7 +33,7 @@ export function isValidAddress(address: Nullable<Address>, allowZero = true) {
 export function validateAddress(address: Nullable<Address>, context?: string) {
   if (!isValidAddress(address)) {
     const errorMsg = `Invalid addresses ${address} (${context})`
-    logger.error(errorMsg)
+    logger.error('addresses', 'validateAddress', errorMsg)
     throw new Error(errorMsg)
   }
   return address as Address

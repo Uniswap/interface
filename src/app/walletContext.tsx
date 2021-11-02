@@ -35,7 +35,11 @@ export const WalletContextProvider = ({ children }: PropsWithChildren<any>) => {
   // Probably not strictly necessary but more robust than relying on 'organic' re-renders
   const [contextVersion, updateContextVersion] = useState(0)
   const incrementContextVersion = useCallback(() => {
-    logger.debug('Wallet context update count:', contextVersion + 1)
+    logger.debug(
+      'walletContext',
+      'WalletContextProvider',
+      `Context update count: ${contextVersion + 1}`
+    )
     updateContextVersion(contextVersion + 1)
   }, [contextVersion, updateContextVersion])
   useEffect(() => {
@@ -58,8 +62,7 @@ export function useWalletAccounts(): AccountManager {
 }
 
 export function useWalletAccount(address: string) {
-  // TODO after changing schema of AccountManager to remove chainId param
-  logger.debug(address)
+  return useWalletAccounts().getAccount(address)
 }
 
 export function* getWalletAccounts() {

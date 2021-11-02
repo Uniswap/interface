@@ -15,10 +15,10 @@ export function createSaga<SagaParams = void>(saga: (...args: any[]) => any, nam
     while (true) {
       try {
         const trigger: Effect = yield take(triggerAction.type)
-        logger.debug(`${name} triggered`)
+        logger.debug('saga', 'wrappedSaga', `${name} triggered`)
         yield call(saga, trigger.payload)
       } catch (error) {
-        logger.error(`${name} error`, error)
+        logger.error('saga', 'wrappedSaga', `${name} error`, error)
       }
     }
   }
@@ -94,7 +94,7 @@ export function createMonitoredSaga<SagaParams = void>(
     while (true) {
       try {
         const trigger: Effect = yield take(triggerAction.type)
-        logger.debug(`${name} triggered`)
+        logger.debug('saga', 'monitoredSaga', `${name} triggered`)
         yield put(statusAction(SagaStatus.Started))
         const { result, cancel, timeout } = yield race({
           // Note: Use fork here instead if parallelism is required for the saga
@@ -104,27 +104,27 @@ export function createMonitoredSaga<SagaParams = void>(
         })
 
         if (cancel) {
-          logger.debug(`${name} canceled`)
+          logger.debug('saga', 'monitoredSaga', `${name} canceled`)
           yield put(errorAction('Action was cancelled.'))
           continue
         }
 
         if (timeout) {
-          logger.warn(`${name} timed out`)
+          logger.warn('saga', 'monitoredSaga', `${name} timed out`)
           yield put(errorAction('Action timed out.'))
           continue
         }
 
         if (result === false) {
-          logger.warn(`${name} returned failure result`)
+          logger.warn('saga', 'monitoredSaga', `${name} returned failure result`)
           yield put(errorAction('Action returned failure result.'))
           continue
         }
 
         yield put(statusAction(SagaStatus.Success))
-        logger.debug(`${name} finished`)
+        logger.debug('saga', 'monitoredSaga', `${name} finished`)
       } catch (error: any) {
-        logger.error(`${name} error`, error)
+        logger.error('saga', 'monitoredSaga', `${name} error`, error)
         yield put(errorAction(errorToString(error)))
       }
     }
