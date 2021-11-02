@@ -1,10 +1,9 @@
 import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from 'constants/chains'
 import { ARBITRUM_LIST, OPTIMISM_LIST } from 'constants/lists'
 import { useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
 
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
 import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
@@ -59,22 +58,24 @@ export function useAllTokens(): { [address: string]: Token } {
   return useTokensFromMap(allTokens, true)
 }
 
-interface BridgeInfo {
-  [chainId: SupportedChainId | number | string]: {
+type BridgeInfo = Record<
+  SupportedChainId,
+  {
     tokenAddress: string
     originBridgeAddress: string
     destBridgeAddress: string
   }
-}
+>
+
 export function useUnsupportedTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
-  const listsByUrl = useAppSelector((state) => state.lists.byUrl)
+  const listsByUrl = useAllLists()
   const unsupportedTokensMap = useUnsupportedTokenList()
   const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, false)
 
   // checks the default L2 lists to see if `bridgeInfo` has an L1 address value that is unsupported
-  const L2InferredBlockedTokens: { [address: string]: Token } = useMemo(() => {
-    if (!chainId || ![SupportedChainId.ARBITRUM_ONE, SupportedChainId.OPTIMISM].includes(chainId)) {
+  const l2InferredBlockedTokens: typeof unsupportedTokens = useMemo(() => {
+    if (!chainId || !L2_CHAIN_IDS.includes(chainId)) {
       return {}
     }
 
@@ -82,7 +83,8 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
       return {}
     }
 
-    const { current: list } = listsByUrl[chainId === SupportedChainId.OPTIMISM ? OPTIMISM_LIST : ARBITRUM_LIST]
+    const listUrl = CHAIN_INFO[chainId as SupportedL2ChainId].defaultListUrl
+    const { current: list } = listsByUrl[listUrl]
     if (!list) {
       return {}
     }
@@ -105,7 +107,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
     }, {})
   }, [chainId, listsByUrl, unsupportedTokens])
 
-  return { ...unsupportedTokens, ...L2InferredBlockedTokens }
+  return { ...unsupportedTokens, ...l2InferredBlockedTokens }
 }
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
