@@ -83,7 +83,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms, stakedOnly }: FarmsListProp
     }
     return {
       ...farm,
-      time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Start in ') + formattedEstimatedRemainingTime}`
+      time: `${isFarmEnded ? 'Ended' : (isFarmStarted ? '' : 'Starting in ') + formattedEstimatedRemainingTime}`
     }
   })
 
