@@ -9,8 +9,8 @@ import Column from '../Column'
 import { Footer, Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
+import Details from './Details'
 import { Input, inputAtom, outputAtom, swapAtom } from './state'
-import SwapDetails from './SwapDetails'
 
 const ArrowIcon = icon(ArrowRight)
 const InfoIcon = icon(Info)
@@ -43,7 +43,7 @@ function InputSummary({ token, value, usdc, change }: Required<Input> & { change
   )
 }
 
-export function SwapSummaryDialog() {
+export function SummaryDialog() {
   const { swap } = useAtomValue(swapAtom)
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
@@ -89,7 +89,7 @@ export function SwapSummaryDialog() {
             <InfoIcon />
             <TYPE.subhead2 color="secondary">Transaction details</TYPE.subhead2>
           </Row>
-          <SwapDetails />
+          <Details />
         </Column>
         <Rule />
         <TYPE.caption color="secondary">

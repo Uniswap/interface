@@ -19,7 +19,7 @@ const InputColumn = styled(Column)`
   position: relative;
 `
 
-export default function SwapInput({ children }: { children: ReactNode }) {
+export default function Input({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
   const setValue = useUpdateAtom(pickAtom(inputAtom, 'value'))
   const setToken = useUpdateAtom(pickAtom(inputAtom, 'token'))

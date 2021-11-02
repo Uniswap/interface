@@ -2,12 +2,12 @@ import assert from 'assert'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 
-import Action, { Approval, Disabled, Loading } from '../Action'
+import BaseAction, { Approval, Disabled, Loading } from '../Action'
 import Dialog from '../Dialog'
 import { inputAtom, State, stateAtom } from './state'
-import { SwapSummaryDialog } from './SwapSummary'
+import { SummaryDialog } from './Summary'
 
-export default function SwapAction() {
+export default function Action() {
   const state = useAtomValue(stateAtom)
   const { token } = useAtomValue(inputAtom)
   const [open, setOpen] = useState(false)
@@ -24,7 +24,7 @@ export default function SwapAction() {
         assert(token)
         return <Disabled>Insufficient {token.symbol} balance</Disabled>
       case State.LOADED:
-        return <Action onClick={() => setOpen(true)}>Swap</Action>
+        return <BaseAction onClick={() => setOpen(true)}>Swap</BaseAction>
       default:
         return <Disabled>Confirmation pending</Disabled>
     }
@@ -34,7 +34,7 @@ export default function SwapAction() {
       {action}
       {open && (
         <Dialog color="dialog" onClose={() => setOpen(false)}>
-          <SwapSummaryDialog />
+          <SummaryDialog />
         </Dialog>
       )}
     </>
