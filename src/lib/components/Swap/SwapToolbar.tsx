@@ -1,12 +1,18 @@
 import { useAtomValue } from 'jotai/utils'
-import styled from 'lib/theme'
+import styled, { icon, OriginalProvider } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { useMemo, useState } from 'react'
+import { Info } from 'react-feather'
 
 import { TextButton } from '../Button'
+import Column from '../Column'
 import Row from '../Row'
 import Rule from '../Rule'
-import { inputAtom, outputAtom } from './state'
+import Tooltip from '../Tooltip'
+import { inputAtom, outputAtom, swapAtom } from './state'
+import SwapDetails from './SwapDetails'
+
+const InfoIcon = icon(Info, { color: 'primary' })
 
 const Ratio = styled(TextButton)`
   text-align: start;
@@ -16,9 +22,24 @@ const Ratio = styled(TextButton)`
   }
 `
 
+function SwapDetailsTooltip() {
+  return (
+    <Tooltip icon={InfoIcon} placement="bottom">
+      <OriginalProvider>
+        <Column gap={0.75}>
+          <TYPE.subhead2>Transaction details</TYPE.subhead2>
+          <Rule />
+          <SwapDetails />
+        </Column>
+      </OriginalProvider>
+    </Tooltip>
+  )
+}
+
 export default function SwapToolbar() {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
+  const { swap } = useAtomValue(swapAtom)
 
   const [flip, setFlip] = useState(true)
   const [loaded, ratio] = useMemo(() => {
@@ -38,7 +59,8 @@ export default function SwapToolbar() {
   return (
     <>
       <Rule />
-      <Row grow>
+      <Row justify="flex-start" gap={0.5}>
+        {swap && <SwapDetailsTooltip />}
         {loaded ? (
           <Ratio onClick={() => setFlip(!flip)}>
             <TYPE.caption>{ratio}</TYPE.caption>

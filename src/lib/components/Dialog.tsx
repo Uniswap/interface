@@ -38,6 +38,12 @@ export function Header({ title, children, ruled }: HeaderProps) {
   )
 }
 
+export const Footer = styled(Column)`
+  box-shadow: 0 -0.5em 0.25em -0.25em currentColor;
+  padding: 0 1em 1em 1em;
+  z-index: ${Layer.OVERLAY};
+`
+
 export const Modal = styled.div<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;

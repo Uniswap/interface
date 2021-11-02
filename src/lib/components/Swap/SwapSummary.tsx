@@ -2,16 +2,18 @@ import { useAtomValue } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { useMemo, useState } from 'react'
-import { ArrowRight } from 'react-feather'
+import { ArrowRight, Info } from 'react-feather'
 
 import Action, { Approval } from '../Action'
 import Column from '../Column'
-import { Header } from '../Dialog'
+import { Footer, Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
 import { Input, inputAtom, outputAtom, swapAtom } from './state'
+import SwapDetails from './SwapDetails'
 
 const ArrowIcon = icon(ArrowRight)
+const InfoIcon = icon(Info)
 
 const TokenImg = styled.img`
   border-radius: 100%;
@@ -82,6 +84,13 @@ export function SwapSummaryDialog() {
           </TYPE.caption>
         </Column>
         <Rule />
+        <Column gap={0.75}>
+          <Row justify="flex-start" gap={0.5}>
+            <InfoIcon />
+            <TYPE.subhead2 color="secondary">Transaction details</TYPE.subhead2>
+          </Row>
+          <SwapDetails />
+        </Column>
         <Rule />
         <TYPE.caption color="secondary">
           Output is estimated.
@@ -91,6 +100,8 @@ export function SwapSummaryDialog() {
           {swap.maximumSent &&
             `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
+      </Column>
+      <Footer>
         {price === confirmedPrice ? (
           <Action color="active" onClick={() => void 0}>
             Confirm
@@ -100,7 +111,7 @@ export function SwapSummaryDialog() {
             Price updated
           </Approval>
         )}
-      </Column>
+      </Footer>
     </>
   )
 }
