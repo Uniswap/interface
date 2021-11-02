@@ -19,7 +19,7 @@ import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
 
-import { NETWORK_DETAIL } from '../../constants'
+import { NETWORK_DETAIL, SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
@@ -69,12 +69,20 @@ export default function Bridge() {
   const bridgeSummaries = useBridgeTransactionsSummary()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
-  const { onUserInput, onToNetworkChange, onFromNetworkChange, onSwapBridgeNetworks } = useBridgeActionHandlers()
+  const {
+    onUserInput,
+    onToNetworkChange,
+    onFromNetworkChange,
+    onSwapBridgeNetworks,
+    onCurrencySelection
+  } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
   const fromPanelRef = useRef(null)
 
   const [step, setStep] = useState(BridgeStep.Initial)
+  const [showToList, setShowToList] = useState(false)
+  const [showFromList, setShowFromList] = useState(false)
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
@@ -156,7 +164,7 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-
+  console.log(step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length)
   return (
     <Wrapper>
       <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
@@ -169,15 +177,15 @@ export default function Bridge() {
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              disabled
-              onClick={() => null}
+              onClick={SHOW_TESTNETS ? () => setShowFromList(val => !val) : () => null}
+              disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
               options={fromOptions}
               showWalletConnector={false}
               parentRef={fromPanelRef}
-              show={false}
-              onOuterClick={() => null}
+              show={SHOW_TESTNETS ? showFromList : false}
+              onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -187,15 +195,15 @@ export default function Bridge() {
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              disabled
-              onClick={() => null}
+              onClick={SHOW_TESTNETS ? () => setShowToList(val => !val) : () => null}
+              disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
               options={toOptions}
               showWalletConnector={false}
               parentRef={toPanelRef}
-              show={false}
-              onOuterClick={() => null}
+              show={SHOW_TESTNETS ? showToList : false}
+              onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
             />
           </div>
         </Row>
@@ -206,8 +214,9 @@ export default function Bridge() {
           currency={bridgeCurrency}
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
-          disableCurrencySelect={true}
           disabled={isCollecting}
+          onCurrencySelect={SHOW_TESTNETS ? onCurrencySelection : () => null}
+          disableCurrencySelect={SHOW_TESTNETS ? isCollecting : true}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
@@ -222,7 +231,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
+      {step !== BridgeStep.Collect && bridgeService && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}

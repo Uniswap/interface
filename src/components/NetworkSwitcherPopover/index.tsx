@@ -1,11 +1,13 @@
 import React, { ReactNode, useEffect } from 'react'
 import { ChainId } from '@swapr/sdk'
 import { Placement } from '@popperjs/core'
+import { SHOW_TESTNETS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals } from '../../state/application/hooks'
 import { NetworkSwitcher, NetworkOptionProps, networkOptionsPreset } from '../NetworkSwitcher'
+
 interface NetworkSwitcherPopoverProps {
   children: ReactNode
   modal: ApplicationModal
@@ -34,7 +36,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }
 
   const options = networkOptionsPreset
-    .filter(option => !TESTNETS.includes(option.chainId))
+    .filter(option => SHOW_TESTNETS || !TESTNETS.includes(option.chainId))
     .map<NetworkOptionProps>(network => {
       const { chainId, logoSrc, name } = network
 

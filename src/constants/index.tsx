@@ -377,3 +377,5 @@ export const OLD_SWPR: { [key: number]: Token } = {
     'Swapr'
   )
 }
+
+export const SHOW_TESTNETS = true
