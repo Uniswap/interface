@@ -175,6 +175,33 @@ export const MAINNET_TOKEN_LIST = {
       name: 'Unbound Dollar',
       decimals: 18,
       logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png'
+    },
+    {
+      chainId: 1,
+      address: '0x431ad2ff6a9C365805eBaD47Ee021148d6f7DBe0',
+      symbol: 'DF',
+      name: 'dForce',
+      decimals: 18,
+      logoURI:
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/DF.svg'
+    },
+    {
+      chainId: 1,
+      address: '0x0a5E677a6A24b2F1A2Bf4F3bFfC443231d2fDEc8',
+      symbol: 'USX',
+      name: 'dForce USD',
+      decimals: 18,
+      logoURI:
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/USX.svg'
+    },
+    {
+      chainId: 1,
+      address: '0xb986F3a2d91d3704Dc974A24FB735dCc5E3C1E70',
+      symbol: 'EUX',
+      name: 'dForce EUR',
+      decimals: 18,
+      logoURI:
+        'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg'
     }
   ],
   version: {
