@@ -48,8 +48,9 @@ export default function SwapOutput({ children }: { children: ReactNode }) {
 
   const change = useMemo(() => {
     if (swap.output && swap.input) {
-      const change = 1 - swap.output.usdc / swap.input.usdc
-      return change > 0 ? ` (+${change})` : `(${change})`
+      const change = swap.output.usdc / swap.input.usdc - 1
+      const percent = (change * 100).toPrecision(3)
+      return change > 0 ? ` (+${percent}%)` : `(${percent}%)`
     }
     return ''
   }, [swap.input, swap.output])

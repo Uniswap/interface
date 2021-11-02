@@ -6,7 +6,7 @@ import { AlertTriangle } from 'react-feather'
 import Button from './Button'
 import Row from './Row'
 
-const BaseButton = styled(Button)<{ color?: Color; theme: Theme }>`
+const BaseButton = styled(Button)`
   border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
   height: 3.5em;
 
@@ -105,6 +105,7 @@ export function Loading() {
 }
 
 export interface ActionProps {
+  color?: Color
   onClick: () => void
   children: ReactNode
 }
@@ -118,34 +119,36 @@ const ApprovalRow = styled(Row)`
   padding: 0.5em;
 `
 
-const ApproveButton = styled(Button)`
-  background-color: ${({ theme }) => theme.interactive};
+const ApproveButton = styled(Button)<{ color: Color; theme: Theme }>`
+  background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
   color: ${({ theme }) => theme.contrast};
   height: 100%;
   padding: 0 1em;
 `
 
-export function Approval({ onClick, children }: ActionProps) {
+export function Approval({ color, onClick, children }: ActionProps) {
   return (
     <ApprovalRow>
       <Row gap={0.5}>
         <AlertIcon />
         <TYPE.subhead2>{children}</TYPE.subhead2>
       </Row>
-      <ApproveButton onClick={onClick}>Approve</ApproveButton>
+      <ApproveButton color={color || 'interactive'} onClick={onClick}>
+        Approve
+      </ApproveButton>
     </ApprovalRow>
   )
   return null
 }
 
-const ActionButton = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.interactive};
+const ActionButton = styled(BaseButton)<{ color: Color; theme: Theme }>`
+  background-color: ${({ color, theme }) => theme[color]};
 `
 
-export default function Action({ onClick, children }: ActionProps) {
+export default function Action({ color, onClick, children }: ActionProps) {
   return (
-    <ActionButton color="interactive" onClick={onClick}>
+    <ActionButton color={color || 'interactive'} onClick={onClick}>
       <TYPE.buttonLarge color="contrast">{children}</TYPE.buttonLarge>
     </ActionButton>
   )
