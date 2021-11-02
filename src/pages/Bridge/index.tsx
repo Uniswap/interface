@@ -153,7 +153,6 @@ export default function Bridge() {
     (tx: BridgeTransactionSummary) => {
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
-      setTxsFilter(BridgeTxsFilter.HIDE)
       setModalData({
         symbol: tx.assetName,
         typedValue: tx.value,
@@ -161,7 +160,7 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [setModalData, setTxsFilter]
+    [setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
@@ -254,7 +253,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {txsFilter !== BridgeTxsFilter.HIDE && bridgeService && !!bridgeSummaries.length && (
+      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
