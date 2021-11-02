@@ -12,8 +12,6 @@ export const NumberBadge = styled.div<NumberBadgeProps>`
   border: 1px solid ${props => props.theme.bg3};
   border-radius: 50%;
   background-color: ${props => transparentize(0.3, props.theme.bg3)};
-  font-size: 9px;
-  letter-spacing: 0;
 
   & > span {
     position: absolute;

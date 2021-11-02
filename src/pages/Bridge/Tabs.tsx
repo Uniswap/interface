@@ -80,4 +80,6 @@ const Badge = styled(NumberBadge)`
   justify-content: center;
   align-items: center;
   margin-left: 6px;
+  font-size: 9px;
+  letter-spacing: 0;
 `
