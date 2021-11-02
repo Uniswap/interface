@@ -7,6 +7,7 @@ import {
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
+  DMY,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
@@ -41,7 +42,7 @@ const WETH_ONLY: ChainTokenList = Object.fromEntries(
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [SupportedChainId.MAINNET]: [...WETH_ONLY[SupportedChainId.MAINNET], DAI, USDC, USDT, WBTC, DMY],
   [SupportedChainId.OPTIMISM]: [...WETH_ONLY[SupportedChainId.OPTIMISM], DAI_OPTIMISM, USDT_OPTIMISM, WBTC_OPTIMISM],
   [SupportedChainId.ARBITRUM_ONE]: [
     ...WETH_ONLY[SupportedChainId.ARBITRUM_ONE],

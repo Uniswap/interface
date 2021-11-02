@@ -3,6 +3,13 @@ import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
+export const DMY = new Token(
+  SupportedChainId.MAINNET,
+  '0xA1a5D56126e1410a2C8E78384b7384F28E3f6971',
+  18,
+  'DMY',
+  'DummyToken'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
