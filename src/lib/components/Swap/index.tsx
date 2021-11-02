@@ -3,11 +3,11 @@ import { useState } from 'react'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
-import Action from './Action'
 import Input from './Input'
 import Output from './Output'
-import Reverse from './Reverse'
+import ReverseButton from './ReverseButton'
 import Settings from './Settings'
+import SwapButton from './SwapButton'
 import Toolbar from './Toolbar'
 
 export default function Swap() {
@@ -21,11 +21,11 @@ export default function Swap() {
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
           <Input>
-            <Reverse />
+            <ReverseButton />
           </Input>
           <Output>
             <Toolbar />
-            <Action />
+            <SwapButton />
           </Output>
         </BoundaryProvider>
       </div>
