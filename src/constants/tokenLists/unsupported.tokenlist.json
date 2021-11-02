@@ -1087,6 +1087,13 @@
       "name": "FAANG Index",
       "symbol": "FAANG",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x76175599887730786bdA1545D0D7AcE8737fEBB1",
+      "name": "ENS DAO",
+      "symbol": "ENS",
+      "decimals": 18
     }
   ]
 }
