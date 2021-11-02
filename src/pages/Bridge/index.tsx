@@ -164,7 +164,7 @@ export default function Bridge() {
     setValue: onToNetworkChange,
     activeChainId: !!account ? chainId : -1
   })
-  console.log(step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length)
+
   return (
     <Wrapper>
       <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
@@ -231,7 +231,7 @@ export default function Bridge() {
           typedValue={typedValue}
         />
       </AppBody>
-      {step !== BridgeStep.Collect && bridgeService && (
+      {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
         <BridgeTransactionsSummary
           transactions={bridgeSummaries}
           collectableTx={collectableTx}
