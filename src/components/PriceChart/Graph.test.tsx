@@ -4,7 +4,7 @@ import React from 'react'
 import 'react-native'
 import 'react-native-gesture-handler'
 import { Graph } from 'src/components/PriceChart/Graph'
-import { buildGraph, GraphIndex, GraphMetadata } from 'src/components/PriceChart/Model'
+import { buildGraph } from 'src/components/PriceChart/Model'
 import { theme } from 'src/styles/theme'
 
 const graphDatapoints = buildGraph([
@@ -20,11 +20,20 @@ const graphDatapoints = buildGraph([
   },
 ])
 
-const graphs: GraphMetadata[] = [0, 1, 2, 3, 4].map((i) => ({
-  label: `Graph ${i}`,
-  value: i as GraphIndex,
-  data: graphDatapoints,
-}))
+const buildGraphMetadata = (index: number) =>
+  ({
+    label: `Graph ${index}`,
+    index,
+    data: graphDatapoints,
+  } as const)
+
+const graphs = [
+  buildGraphMetadata(0),
+  buildGraphMetadata(1),
+  buildGraphMetadata(2),
+  buildGraphMetadata(3),
+  buildGraphMetadata(4),
+] as const
 
 it('renders correctly', () => {
   const tree = render(

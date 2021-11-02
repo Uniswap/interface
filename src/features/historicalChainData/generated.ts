@@ -4317,9 +4317,8 @@ export enum _SubgraphErrorPolicy_ {
 
 export type PricesQueryVariables = Exact<{
   address: Scalars['String'];
-  skip: Scalars['Int'];
+  hourlyPeriodStartUnix: Scalars['Int'];
   chainId: Scalars['Int'];
-  first?: Scalars['Int'];
 }>;
 
 
@@ -4327,11 +4326,9 @@ export type PricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __type
 
 
 export const PricesDocument = `
-    query prices($address: String!, $skip: Int!, $chainId: Int!, $first: Int! = 100) {
+    query prices($address: String!, $hourlyPeriodStartUnix: Int!, $chainId: Int!) {
   tokenHourDatas(
-    first: $first
-    skip: $skip
-    where: {token: $address}
+    where: {token: $address, periodStartUnix_gt: $hourlyPeriodStartUnix}
     orderBy: periodStartUnix
     orderDirection: desc
   ) {
@@ -4341,13 +4338,7 @@ export const PricesDocument = `
     open
     close
   }
-  tokenDayDatas(
-    first: $first
-    skip: $skip
-    where: {token: $address}
-    orderBy: date
-    orderDirection: desc
-  ) {
+  tokenDayDatas(where: {token: $address}, orderBy: date, orderDirection: desc) {
     timestamp: date
     high
     low

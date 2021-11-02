@@ -11,13 +11,8 @@ import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { Header } from 'src/components/PriceChart/Header'
-import {
-  GraphIndex,
-  GraphMetadata,
-  HEIGHT,
-  NUM_GRAPHS,
-  WIDTH,
-} from 'src/components/PriceChart/Model'
+import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
+import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { Text } from 'src/components/Text'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
@@ -26,7 +21,7 @@ const SELECTION_WIDTH = WIDTH - 32
 const BUTTON_WIDTH = (WIDTH - 32) / NUM_GRAPHS
 
 interface GraphProps {
-  graphs: GraphMetadata[]
+  graphs: GraphMetadatas
 }
 
 /**
@@ -37,18 +32,20 @@ export const Graph = ({ graphs }: GraphProps) => {
   const translation = useVector()
   const transition = useSharedValue(0)
 
-  const previousGraphIndex = useSharedValue<GraphIndex>(0)
-  const currentGraphIndex = useSharedValue<GraphIndex>(0)
+  const previousGraphIndex = useSharedValue<number>(0)
+  const currentGraphIndex = useSharedValue<number>(0)
 
   // mixes graph paths on index change
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
     const previousPath = graphs[previousGraphIndex.value].data.path
     const currentPath = graphs[currentGraphIndex.value].data.path
     return {
+      //TODO(judo): make animation interruptible
       d: mixPath(transition.value, previousPath, currentPath),
     }
   })
   const graphTransitionClosedAnimatedProps = useAnimatedProps(() => {
+    //TODO(judo): figure out a way to merge with `graphTransitionAnimatedProps`
     const previousPath = graphs[previousGraphIndex.value].data.path
     const currentPath = graphs[currentGraphIndex.value].data.path
     return {
@@ -108,7 +105,7 @@ export const Graph = ({ graphs }: GraphProps) => {
               onPress={() => {
                 previousGraphIndex.value = currentGraphIndex.value
                 transition.value = 0
-                currentGraphIndex.value = index as GraphIndex
+                currentGraphIndex.value = index
                 transition.value = withTiming(1)
               }}>
               <AnimatedBox padding="sm" width={BUTTON_WIDTH}>

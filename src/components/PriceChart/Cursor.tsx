@@ -1,22 +1,22 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, {
+import {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import { getYForX, Vector } from 'react-native-redash'
+import { getYForX } from 'react-native-redash'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
-import { GraphIndex, GraphMetadata } from 'src/components/PriceChart/Model'
+import { AnimatedIndex, AnimatedTranslation, GraphMetadatas } from 'src/components/PriceChart/types'
 
 const CURSOR_SIZE = 50
 
 interface CursorProps {
-  index: Animated.SharedValue<GraphIndex>
-  translation: Vector<Animated.SharedValue<number>>
-  graphs: GraphMetadata[]
+  index: AnimatedIndex
+  translation: AnimatedTranslation
+  graphs: GraphMetadatas
 }
 
 export const Cursor = ({ index, translation, graphs }: CursorProps) => {
@@ -30,6 +30,7 @@ export const Cursor = ({ index, translation, graphs }: CursorProps) => {
       translation.y.value = getYForX(graphs[index.value].data.path, translation.x.value) || 0
     },
     onEnd: () => {
+      //TODO(judo): reset cursor
       isActive.value = false
     },
   })
@@ -48,11 +49,10 @@ export const Cursor = ({ index, translation, graphs }: CursorProps) => {
         <AnimatedBox style={StyleSheet.absoluteFill}>
           <AnimatedBox
             alignItems="center"
-            // bg="white"
             borderRadius="full"
             height={CURSOR_SIZE}
             justifyContent="center"
-            style={style}
+            style={[styles.cursor, style]}
             width={CURSOR_SIZE}>
             <Box width={15} height={15} borderRadius="full" bg="primary1" />
           </AnimatedBox>
@@ -61,3 +61,9 @@ export const Cursor = ({ index, translation, graphs }: CursorProps) => {
     </Box>
   )
 }
+
+const styles = StyleSheet.create({
+  cursor: {
+    backgroundColor: 'rgba(243, 71, 191, 0.171)',
+  },
+})

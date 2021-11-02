@@ -1,5 +1,5 @@
 schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
-documents: 'src/**/*.graphql'
+documents: 'src/features/historicalChainData/*.graphql'
 generates:
   ./src/features/historicalChainData/generated.ts:
     plugins:

@@ -59,7 +59,7 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#007D35",
+              "color": "#DA2D2B",
             },
           }
         }
@@ -67,16 +67,16 @@ exports[`renders correctly 1`] = `
         editable={false}
         style={
           Object {
-            "color": "#007D35",
+            "color": "#DA2D2B",
             "fontFamily": "System",
             "fontSize": 20,
             "fontWeight": "600",
             "lineHeight": 26,
           }
         }
-        text="1%"
+        text="0%"
         underlineColorAndroid="transparent"
-        value="1%"
+        value="0%"
       />
     </View>
   </View>
@@ -103,7 +103,7 @@ exports[`renders correctly 1`] = `
     >
       <RNSVGGroup>
         <RNSVGPath
-          d="M750,0 C750,0 0,180 0,180"
+          d="M0,0 C0,0 750,180 750,180"
           fill={0}
           propList={
             Array [
@@ -135,7 +135,7 @@ exports[`renders correctly 1`] = `
           />
         </RNSVGDefs>
         <RNSVGPath
-          d="M750,0 C750,0 0,180 0,180 L 750 180 L 0 180"
+          d="M0,0 C0,0 750,180 750,180 L 750 180 L 0 180"
           fill={
             Array [
               1,
@@ -214,6 +214,7 @@ exports[`renders correctly 1`] = `
           style={
             Object {
               "alignItems": "center",
+              "backgroundColor": "rgba(243, 71, 191, 0.171)",
               "borderRadius": 999999,
               "display": "flex",
               "height": 50,

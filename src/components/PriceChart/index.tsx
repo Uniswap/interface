@@ -9,7 +9,7 @@ interface PriceChartProps {
 }
 
 export const PriceChart = ({ token }: PriceChartProps) => {
-  const { isLoading, graphs } = useGraphs(token)
+  const graphs = useGraphs(token)
 
-  return isLoading ? <Text variant="h2">Loading</Text> : <Graph graphs={graphs} />
+  return graphs && graphs.length ? <Graph graphs={graphs} /> : <Text variant="h2">Loading</Text>
 }

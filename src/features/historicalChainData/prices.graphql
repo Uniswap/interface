@@ -1,8 +1,6 @@
-query prices($address: String!, $skip: Int!, $chainId: Int!, $first: Int! = 100) {
+query prices($address: String!, $hourlyPeriodStartUnix: Int!,$chainId: Int!) {
   tokenHourDatas(
-    first: $first
-    skip: $skip
-    where: { token: $address }
+    where: { token: $address, periodStartUnix_gt: $hourlyPeriodStartUnix }
     orderBy: periodStartUnix
     orderDirection: desc
   ) {
@@ -14,8 +12,6 @@ query prices($address: String!, $skip: Int!, $chainId: Int!, $first: Int! = 100)
   }
 
   tokenDayDatas(
-    first: $first
-    skip: $skip
     where: { token: $address }
     orderBy: date
     orderDirection: desc
