@@ -1,11 +1,11 @@
 import { Modal } from './Dialog'
-import { TransactionsDialog } from './Wallet'
+import RecentTransactionsDialog from './RecentTransactions'
 import Widget from './Widget'
 
 export default (
   <Widget>
     <Modal color="module">
-      <TransactionsDialog />
+      <RecentTransactionsDialog />
     </Modal>
   </Widget>
 )
