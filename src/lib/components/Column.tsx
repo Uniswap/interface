@@ -19,7 +19,7 @@ const Column = styled.div<{
   grid-template-columns: 1fr;
   justify-content: ${({ justify }) => justify ?? 'space-between'};
   overflow-y: ${({ scrollable }) => scrollable && 'scroll'};
-  padding: ${({ padded }) => padded && '1em'};
+  padding: ${({ padded }) => padded && '0.75em'};
 `
 
 export default Column

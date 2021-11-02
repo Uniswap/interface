@@ -29,7 +29,7 @@ export default function TokenInput({
   children,
 }: TokenInputProps) {
   return (
-    <Column gap={0.25}>
+    <Column gap={0.375}>
       <TokenInputRow>
         <TYPE.h2>
           <DecimalInput value={value} onChange={onChangeInput} placeholder="0.0"></DecimalInput>
