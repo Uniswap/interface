@@ -6,8 +6,8 @@ import { ReactNode } from 'react'
 import Row from './Row'
 
 const HeaderRow = styled(Row)`
-  margin: 0 1em;
-  padding-top: 1em;
+  margin: 0 0.75em;
+  padding-top: 0.75em;
 `
 
 const StyledLogo = styled(Logo)`
