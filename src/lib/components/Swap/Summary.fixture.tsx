@@ -6,7 +6,7 @@ import { useValue } from 'react-cosmos/fixture'
 import { Modal } from '../Dialog'
 import Widget from '../Widget'
 import { Field, outputAtom, State, swapAtom } from './state'
-import { SwapSummaryDialog } from './SwapSummary'
+import { SummaryDialog } from './Summary'
 
 function Fixture() {
   const setSwap = useUpdateAtom(swapAtom)
@@ -33,7 +33,7 @@ function Fixture() {
 
   return (
     <Modal color="dialog">
-      <SwapSummaryDialog />
+      <SummaryDialog />
     </Modal>
   )
 }

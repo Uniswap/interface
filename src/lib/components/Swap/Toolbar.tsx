@@ -9,8 +9,8 @@ import Column from '../Column'
 import Row from '../Row'
 import Rule from '../Rule'
 import Tooltip from '../Tooltip'
+import Details from './Details'
 import { inputAtom, outputAtom, swapAtom } from './state'
-import SwapDetails from './SwapDetails'
 
 const InfoIcon = icon(Info, { color: 'primary' })
 
@@ -22,21 +22,21 @@ const Ratio = styled(TextButton)`
   }
 `
 
-function SwapDetailsTooltip() {
+function DetailsTooltip() {
   return (
     <Tooltip icon={InfoIcon} placement="bottom">
       <OriginalProvider>
         <Column gap={0.75}>
           <TYPE.subhead2>Transaction details</TYPE.subhead2>
           <Rule />
-          <SwapDetails />
+          <Details />
         </Column>
       </OriginalProvider>
     </Tooltip>
   )
 }
 
-export default function SwapToolbar() {
+export default function Toolbar() {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
   const { swap } = useAtomValue(swapAtom)
@@ -60,7 +60,7 @@ export default function SwapToolbar() {
     <>
       <Rule />
       <Row justify="flex-start" gap={0.5}>
-        {swap && <SwapDetailsTooltip />}
+        {swap && <DetailsTooltip />}
         {loaded ? (
           <Ratio onClick={() => setFlip(!flip)}>
             <TYPE.caption>{ratio}</TYPE.caption>

@@ -14,7 +14,7 @@ function Detail({ children }: { children: ReactNode }) {
   )
 }
 
-export default function SwapDetails() {
+export default function Details() {
   const { input, output, swap } = useAtomValue(swapAtom)
   if (!(input.token && output.token && swap)) {
     return null

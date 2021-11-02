@@ -29,7 +29,7 @@ const OutputColumn = styled(Column)<{ hasColor: boolean | null; theme: Theme }>`
   }
 `
 
-export default function SwapOutput({ children }: { children: ReactNode }) {
+export default function Output({ children }: { children: ReactNode }) {
   const input = useAtomValue(inputAtom)
   const output = useAtomValue(outputAtom)
   const setValue = useUpdateAtom(pickAtom(outputAtom, 'value'))

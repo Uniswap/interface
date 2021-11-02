@@ -3,12 +3,12 @@ import { useState } from 'react'
 import Header from '../Header'
 import { BoundaryProvider } from '../Popover'
 import Wallet from '../Wallet'
+import Action from './Action'
+import Input from './Input'
+import Output from './Output'
+import Reverse from './Reverse'
 import Settings from './Settings'
-import SwapAction from './SwapAction'
-import SwapInput from './SwapInput'
-import SwapOutput from './SwapOutput'
-import SwapReverse from './SwapReverse'
-import SwapToolbar from './SwapToolbar'
+import Toolbar from './Toolbar'
 
 export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
@@ -20,13 +20,13 @@ export default function Swap() {
       </Header>
       <div ref={setBoundary}>
         <BoundaryProvider value={boundary}>
-          <SwapInput>
-            <SwapReverse />
-          </SwapInput>
-          <SwapOutput>
-            <SwapToolbar />
-            <SwapAction />
-          </SwapOutput>
+          <Input>
+            <Reverse />
+          </Input>
+          <Output>
+            <Toolbar />
+            <Action />
+          </Output>
         </BoundaryProvider>
       </div>
     </>

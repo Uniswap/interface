@@ -8,7 +8,7 @@ import Button from '../Button'
 import Row from '../Row'
 import { swapAtom } from './state'
 
-const SwapReverseRow = styled(Row)`
+const ReverseRow = styled(Row)`
   bottom: -1.5em;
   position: absolute;
   width: 100%;
@@ -33,7 +33,7 @@ const Overlay = styled.div`
   padding: 0.25em;
 `
 
-const SwapButton = styled(Button)`
+const ReverseButton = styled(Button)`
   background-color: ${({ theme }) => theme.interactive};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   height: 2.5em;
@@ -53,7 +53,7 @@ const SwapButton = styled(Button)`
   }
 `
 
-export default function SwapReverse() {
+export default function Reverse() {
   const [swap, setSwap] = useAtom(swapAtom)
   const onClick = useCallback(() => {
     const { input, output } = swap
@@ -64,13 +64,13 @@ export default function SwapReverse() {
   }, [swap, setSwap])
 
   return (
-    <SwapReverseRow justify="center">
+    <ReverseRow justify="center">
       <Overlay>
-        <SwapButton onClick={onClick}>
+        <ReverseButton onClick={onClick}>
           <ArrowUpIcon />
           <ArrowDownIcon />
-        </SwapButton>
+        </ReverseButton>
       </Overlay>
-    </SwapReverseRow>
+    </ReverseRow>
   )
 }
