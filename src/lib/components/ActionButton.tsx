@@ -15,15 +15,15 @@ const BaseButton = styled(Button)`
   }
 `
 
-const DisabledButton = styled(BaseButton)`
+const StyledDisabledButton = styled(BaseButton)`
   outline: 1px solid ${({ theme }) => theme.outline};
 `
 
-export function Disabled({ children }: { children: ReactNode }) {
+export function DisabledButton({ children }: { children: ReactNode }) {
   return (
-    <DisabledButton disabled>
+    <StyledDisabledButton disabled>
       <TYPE.buttonLarge>{children}</TYPE.buttonLarge>
-    </DisabledButton>
+    </StyledDisabledButton>
   )
 }
 
@@ -63,7 +63,7 @@ const rotate = ({ width, height }: { width?: number; height?: number }) => {
 `
 }
 
-const LoadingButton = styled(BaseButton)<{ width?: number; height?: number; theme: Theme }>`
+const StyledLoadingButton = styled(BaseButton)<{ width?: number; height?: number; theme: Theme }>`
   background: inherit;
   overflow: hidden;
   position: relative;
@@ -91,20 +91,20 @@ const LoadingButton = styled(BaseButton)<{ width?: number; height?: number; them
   }
 `
 
-export function Loading() {
+export function LoadingButton() {
   const [ref, setRef] = useState<HTMLButtonElement | null>(null)
   const rect = useMemo(() => {
     const rect = ref?.getBoundingClientRect()
     return rect && { width: rect.width, height: rect.height }
   }, [ref])
   return (
-    <LoadingButton ref={setRef} {...rect} disabled>
+    <StyledLoadingButton ref={setRef} {...rect} disabled>
       <TYPE.buttonLarge>Loading…</TYPE.buttonLarge>
-    </LoadingButton>
+    </StyledLoadingButton>
   )
 }
 
-export interface ActionProps {
+export interface ActionButtonProps {
   color?: Color
   onClick: () => void
   children: ReactNode
@@ -120,7 +120,7 @@ const ApprovalRow = styled(Row)`
   padding: 0.5em;
 `
 
-const ApproveButton = styled(Button)<{ color: Color; theme: Theme }>`
+const StyledApprovalButton = styled(Button)<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius}em;
   color: ${({ theme }) => theme.contrast};
@@ -128,29 +128,29 @@ const ApproveButton = styled(Button)<{ color: Color; theme: Theme }>`
   padding: 0 1em;
 `
 
-export function Approval({ color, onClick, children }: ActionProps) {
+export function ApprovalButton({ color, onClick, children }: ActionButtonProps) {
   return (
     <ApprovalRow>
       <Row gap={0.5}>
         <AlertIcon />
         <TYPE.subhead2>{children}</TYPE.subhead2>
       </Row>
-      <ApproveButton color={color || 'interactive'} onClick={onClick}>
+      <StyledApprovalButton color={color || 'interactive'} onClick={onClick}>
         Approve
-      </ApproveButton>
+      </StyledApprovalButton>
     </ApprovalRow>
   )
   return null
 }
 
-const ActionButton = styled(BaseButton)<{ color: Color; theme: Theme }>`
+const StyledActionButton = styled(BaseButton)<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
 `
 
-export default function Action({ color, onClick, children }: ActionProps) {
+export default function ActionButton({ color, onClick, children }: ActionButtonProps) {
   return (
-    <ActionButton color={color || 'interactive'} onClick={onClick}>
+    <StyledActionButton color={color || 'interactive'} onClick={onClick}>
       <TYPE.buttonLarge color="contrast">{children}</TYPE.buttonLarge>
-    </ActionButton>
+    </StyledActionButton>
   )
 }

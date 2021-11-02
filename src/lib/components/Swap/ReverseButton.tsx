@@ -33,7 +33,7 @@ const Overlay = styled.div`
   padding: 0.25em;
 `
 
-const ReverseButton = styled(Button)`
+const StyledReverseButton = styled(Button)`
   background-color: ${({ theme }) => theme.interactive};
   border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
   height: 2.5em;
@@ -53,7 +53,7 @@ const ReverseButton = styled(Button)`
   }
 `
 
-export default function Reverse() {
+export default function ReverseButton() {
   const [swap, setSwap] = useAtom(swapAtom)
   const onClick = useCallback(() => {
     const { input, output } = swap
@@ -66,10 +66,10 @@ export default function Reverse() {
   return (
     <ReverseRow justify="center">
       <Overlay>
-        <ReverseButton onClick={onClick}>
+        <StyledReverseButton onClick={onClick}>
           <ArrowUpIcon />
           <ArrowDownIcon />
-        </ReverseButton>
+        </StyledReverseButton>
       </Overlay>
     </ReverseRow>
   )

@@ -4,7 +4,7 @@ import TYPE from 'lib/theme/type'
 import { useMemo, useState } from 'react'
 import { ArrowRight, Info } from 'react-feather'
 
-import Action, { Approval } from '../Action'
+import ActionButton, { ApprovalButton } from '../ActionButton'
 import Column from '../Column'
 import { Footer, Header } from '../Dialog'
 import Row from '../Row'
@@ -102,13 +102,13 @@ export function SummaryDialog() {
         </TYPE.caption>
         <Footer>
           {price === confirmedPrice ? (
-            <Action color="active" onClick={() => void 0}>
+            <ActionButton color="active" onClick={() => void 0}>
               Confirm
-            </Action>
+            </ActionButton>
           ) : (
-            <Approval color="active" onClick={() => confirmPrice(price)}>
+            <ApprovalButton color="active" onClick={() => confirmPrice(price)}>
               Price updated
-            </Approval>
+            </ApprovalButton>
           )}
         </Footer>
       </Column>
