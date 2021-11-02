@@ -39,6 +39,7 @@ export enum State {
   TOKEN_APPROVAL,
   BALANCE_INSUFFICIENT,
   LOADED,
+  PENDING,
 }
 
 export enum Field {

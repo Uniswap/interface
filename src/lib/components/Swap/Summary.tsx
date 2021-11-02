@@ -21,7 +21,18 @@ const TokenImg = styled.img`
   width: 1em;
 `
 
-function InputSummary({ token, value, usdc, change }: Required<Input> & { change?: number }) {
+interface SwapSummaryProps {
+  input: Required<Pick<Input, 'token' | 'value'>> & Input
+  output: Required<Pick<Input, 'token' | 'value'>> & Input
+}
+
+export function SwapSummary({ input, output }: SwapSummaryProps) {
+  const change = useMemo(() => {
+    if (input.usdc && output.usdc) {
+      return output.usdc / input.usdc - 1
+    }
+    return undefined
+  }, [input.usdc, output.usdc])
   const percent = useMemo(() => {
     if (change === undefined) {
       return undefined
@@ -29,41 +40,56 @@ function InputSummary({ token, value, usdc, change }: Required<Input> & { change
     const percent = (change * 100).toPrecision(3)
     return change > 0 ? ` (+${percent}%)` : `(${percent}%)`
   }, [change])
+
   return (
-    <Column gap={0.5}>
-      <Row gap={0.5} justify="flex-start">
-        <TokenImg src={token.logoURI} />
-        {value} {token.symbol}
+    <TYPE.body2>
+      <Row gap={1}>
+        <Column gap={0.5}>
+          <Row gap={0.5} justify="flex-start">
+            <TokenImg src={input.token.logoURI} />
+            {input.value} {input.token.symbol}
+          </Row>
+          {input.usdc && (
+            <Row justify="flex-start">
+              <TYPE.caption color="secondary">~ {input.usdc && `$${input.usdc.toLocaleString('en')}`}</TYPE.caption>
+            </Row>
+          )}
+        </Column>
+        <ArrowIcon />
+        <Column gap={0.5}>
+          <Row gap={0.5} justify="flex-start">
+            <TokenImg src={output.token.logoURI} />
+            {output.value} {output.token.symbol}
+          </Row>
+          {output.usdc && (
+            <Row justify="flex-start">
+              <TYPE.caption color="secondary">~ {output.usdc && `$${output.usdc.toLocaleString('en')}`}</TYPE.caption>
+              {change && <TYPE.caption color={change < 0 ? 'error' : 'success'}>&emsp;{percent}</TYPE.caption>}
+            </Row>
+          )}
+        </Column>
       </Row>
-      <Row justify="flex-start">
-        <TYPE.caption color="secondary">~ {usdc && `$${usdc.toLocaleString('en')}`}</TYPE.caption>
-        {change && <TYPE.caption color={change < 0 ? 'error' : 'success'}>&emsp;{percent}</TYPE.caption>}
-      </Row>
-    </Column>
+    </TYPE.body2>
   )
+}
+
+function asInput(input: Input): (Required<Pick<Input, 'token' | 'value'>> & Input) | undefined {
+  return input.token && input.value ? (input as Required<Pick<Input, 'token' | 'value'>>) : undefined
 }
 
 export function SummaryDialog() {
   const { swap } = useAtomValue(swapAtom)
-  const input = useAtomValue(inputAtom)
-  const output = useAtomValue(outputAtom)
+  const partialInput = useAtomValue(inputAtom)
+  const partialOutput = useAtomValue(outputAtom)
+  const input = asInput(partialInput)
+  const output = asInput(partialOutput)
 
   const price = useMemo(() => {
-    if (!(input.value && output.value)) {
-      return 0
-    }
-    return output.value / input.value
-  }, [output.value, input.value])
+    return input && output ? output.value / input.value : undefined
+  }, [input, output])
   const [confirmedPrice, confirmPrice] = useState(price)
 
-  const change = useMemo(() => {
-    if (input.usdc && output.usdc) {
-      return output.usdc / input.usdc - 1
-    }
-    return undefined
-  }, [input.usdc, output.usdc])
-
-  if (!(input.token && input.value && input.usdc && output.token && output.value && output.usdc && swap)) {
+  if (!(input && output)) {
     return null
   }
 
@@ -72,13 +98,7 @@ export function SummaryDialog() {
       <Header title="Swap summary" ruled />
       <Column gap={1} padded scrollable>
         <Column gap={1} flex>
-          <TYPE.body2>
-            <Row gap={1}>
-              <InputSummary token={input.token} value={input.value} usdc={input.usdc} />
-              <ArrowIcon />
-              <InputSummary token={output.token} value={output.value} usdc={output.usdc} change={change} />
-            </Row>
-          </TYPE.body2>
+          <SwapSummary input={input} output={output} />
           <TYPE.caption>
             1 {input.token.symbol} = {price} {output.token.symbol}
           </TYPE.caption>
@@ -94,10 +114,10 @@ export function SummaryDialog() {
         <Rule />
         <TYPE.caption color="secondary">
           Output is estimated.
-          {swap.minimumReceived &&
+          {swap?.minimumReceived &&
             `You will receive at least ${swap.minimumReceived} ${output.token.symbol} or the transaction
           will revert.`}
-          {swap.maximumSent &&
+          {swap?.maximumSent &&
             `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
         <Footer>
