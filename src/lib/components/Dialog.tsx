@@ -73,10 +73,10 @@ export const Modal = styled.div<{ color: Color; theme: Theme }>`
 interface DialogProps {
   color: Color
   children: ReactNode
-  onClose: () => void
+  onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose }: DialogProps) {
+export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
   const onKeydown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
