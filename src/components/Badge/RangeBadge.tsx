@@ -36,7 +36,7 @@ export default function RangeBadge({
   return (
     <BadgeWrapper>
       {closed ? (
-        <MouseoverTooltip text={<Trans>Your limit order has been closed. Please claim the amounts.</Trans>}>
+        <MouseoverTooltip text={<Trans>Your limit order has been closed. Please collect the amount.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;

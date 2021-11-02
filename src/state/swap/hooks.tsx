@@ -312,7 +312,7 @@ export function useDerivedSwapInfo(): {
     bestTrade?.route &&
     (price?.lessThan(bestTrade?.route.midPrice) || price?.equalTo(bestTrade?.route.midPrice))
   ) {
-    inputError = inputError ?? <Trans>Invalid Target Price</Trans>
+    inputError = inputError ?? <Trans>Please place limit orders above the market price</Trans>
   }
 
   // compare input balance to max input based on version
