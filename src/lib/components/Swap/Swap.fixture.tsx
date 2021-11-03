@@ -14,7 +14,7 @@ function Fixture() {
   const setSwap = useUpdateAtom(swapAtom)
 
   const [state] = useSelect('state', {
-    options: ['EMPTY', 'LOADING', 'TOKEN APPROVAL', 'BALANCE INSUFFICIENT', 'LOADED', 'PENDING'],
+    options: ['EMPTY', 'LOADING', 'TOKEN APPROVAL', 'BALANCE INSUFFICIENT', 'LOADED'],
   })
   useEffect(() => {
     switch (state) {
@@ -48,19 +48,6 @@ function Fixture() {
           },
         })
         break
-      case 'PENDING':
-        setSwap({
-          state: State.PENDING,
-          activeInput: Field.INPUT,
-          input: { token: ETH, value: 1, usdc: 4195 },
-          output: { token: DAI, value: 4200, usdc: 4200 },
-          swap: {
-            lpFee: 0.0005,
-            priceImpact: 0.01,
-            slippageTolerance: 0.5,
-            minimumReceived: 4190,
-          },
-        })
     }
   }, [setInput, setOutput, setState, setSwap, state])
   return <Swap />
