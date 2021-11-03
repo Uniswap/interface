@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
-import Widget from '../Widget'
 import { transactionAtom } from './state'
 import { TransactionStatusDialog } from './TransactionStatus'
 
@@ -55,9 +54,7 @@ function Fixture() {
 }
 
 export default (
-  <Widget>
-    <Modal color="dialog">
-      <Fixture />
-    </Modal>
-  </Widget>
+  <Modal color="dialog">
+    <Fixture />
+  </Modal>
 )

@@ -10,7 +10,7 @@ const WidgetWrapper = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  height: 352px; // 22em
+  height: 350px; // 21.875em
   min-width: 272px; // 17em
   padding: 0.25em;
   position: relative;

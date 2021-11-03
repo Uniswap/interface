@@ -100,7 +100,7 @@ export function getDynamicTheme(color: string, theme: Theme): Theme {
   }
 }
 
-function getDefaultTheme(): Omit<Theme, Color> {
+export function getDefaultTheme(): Omit<Theme, Color> {
   return {
     darkMode: true,
     fontFamily: '"Inter var", sans-serif',

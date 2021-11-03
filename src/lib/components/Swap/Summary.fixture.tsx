@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useValue } from 'react-cosmos/fixture'
 
 import { Modal } from '../Dialog'
-import Widget from '../Widget'
 import { Field, outputAtom, State, swapAtom } from './state'
 import { SummaryDialog } from './Summary'
 
@@ -38,8 +37,4 @@ function Fixture() {
   )
 }
 
-export default (
-  <Widget>
-    <Fixture />
-  </Widget>
-)
+export default <Fixture />
