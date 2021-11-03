@@ -4,7 +4,7 @@ import { curveBasis, line } from 'd3-shape'
 import { useMemo } from 'react'
 import { parse } from 'react-native-redash'
 import { GraphData, GraphMetadatas, PriceList } from 'src/components/PriceChart/types'
-import { useHistoricalPrices } from 'src/features/historicalChainData/hooks'
+import { useDailyTokenPrices, useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
 
@@ -18,11 +18,13 @@ const HOURS_IN_WEEK = 24 * 7
 const HOURS_IN_MONTH = HOURS_IN_WEEK * 4
 const DAYS_IN_YEAR = 365
 
+// TODO(#89): use date manipulation util
+const d = new Date()
+const ONE_MONTH_AGO = d.setMonth(d.getMonth() - 1)
+
 export function useGraphs(token: Token): GraphMetadatas | null {
-  const { dailyTokenPrices: dailyTokenData, hourlyTokenPrices: hourlyTokenData } =
-    useHistoricalPrices({
-      token,
-    })
+  const hourlyTokenData = useHourlyTokenPrices({ token, timestamp: ONE_MONTH_AGO })
+  const dailyTokenData = useDailyTokenPrices({ token })
 
   const isError = dailyTokenData.isError || hourlyTokenData.isError
 

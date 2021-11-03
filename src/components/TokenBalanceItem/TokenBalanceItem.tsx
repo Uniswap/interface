@@ -1,16 +1,34 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { useHourlyTokenPrices } from 'src/features/historicalChainData/hooks'
+
+// TODO(#89): use date manipulation util
+const d = new Date()
+const YESTERDAY = Math.round(d.setDate(d.getDate() - 1))
 
 interface TokenBalanceItemProps {
   balance: CurrencyAmount<Currency> | null
 }
 
-// TODO: balance maybe don't make null?
 export function TokenBalanceItem({ balance }: TokenBalanceItemProps) {
-  // TODO get actual price and return
+  const { data } = useHourlyTokenPrices({
+    token: balance?.currency.wrapped,
+    timestamp: YESTERDAY,
+  })
+
+  const percentChange = useMemo(() => {
+    if (!data || data.tokenHourDatas?.length === 0) return '-'
+
+    const { tokenHourDatas: prices } = data
+
+    // TODO: get current price from chain
+    const startingPrice = prices[prices.length - 1].close
+
+    return `${(((prices[0].close - startingPrice) / startingPrice) * 100).toFixed(1)}%`
+  }, [data])
 
   return (
     <Button
@@ -35,7 +53,7 @@ export function TokenBalanceItem({ balance }: TokenBalanceItemProps) {
           $9000.32
         </Text>
         <Text fontSize={14} color={'green'}>
-          +9.55%
+          {percentChange}
         </Text>
       </Box>
     </Button>

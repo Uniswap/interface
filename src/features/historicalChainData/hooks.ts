@@ -6,31 +6,42 @@ import {
   useHourlyTokenPricesQuery,
 } from 'src/features/historicalChainData/generated'
 
-const d = new Date()
-const ONE_MONTH_AGO = d.setMonth(d.getMonth() - 1)
+interface TokenPricesProps {
+  token?: Token
+}
 
-export function useHistoricalPrices({ token: { chainId, address } }: { token: Token }) {
-  const endpoint = useMemo(() => CHAIN_INFO[chainId].subgraphUrl ?? '', [chainId])
-  const enabled = Boolean(endpoint)
+interface HourlyTokenPricesProps extends TokenPricesProps {
+  timestamp: number
+}
 
-  const hourlyTokenPrices = useHourlyTokenPricesQuery(
-    { endpoint },
+function useEndpoint(chainId?: number) {
+  return useMemo(() => (chainId ? CHAIN_INFO[chainId].subgraphUrl : null), [chainId])
+}
+
+export function useHourlyTokenPrices({ token, timestamp }: HourlyTokenPricesProps) {
+  const endpoint = useEndpoint(token?.chainId)
+
+  // `enabled` param ensures type-safety, hence non-null-assertions
+  return useHourlyTokenPricesQuery(
+    { endpoint: endpoint! },
     {
-      address: address.toLowerCase(),
-      chainId, // enforces key by chain
-      periodStartUnix: Math.round(ONE_MONTH_AGO / 1000),
+      address: token!.address.toLowerCase(),
+      chainId: token!.chainId, // enforces key by chain
+      periodStartUnix: Math.round(timestamp / 1000),
     },
-    { enabled }
+    { enabled: Boolean(endpoint) && Boolean(token) }
   )
+}
 
-  const dailyTokenPrices = useDailyTokenPricesQuery(
-    { endpoint },
+export function useDailyTokenPrices({ token }: TokenPricesProps) {
+  const endpoint = useEndpoint(token?.chainId)
+
+  return useDailyTokenPricesQuery(
+    { endpoint: endpoint! },
     {
-      address: address.toLowerCase(),
-      chainId, // enforces key by chain
+      address: token!.address.toLowerCase(),
+      chainId: token!.chainId, // enforces key by chain
     },
-    { enabled }
+    { enabled: Boolean(endpoint) && Boolean(token) }
   )
-
-  return { dailyTokenPrices, hourlyTokenPrices }
 }
