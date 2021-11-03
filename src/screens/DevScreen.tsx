@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
@@ -25,7 +25,8 @@ export function DevScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const activeAccount = useActiveAccount()
-  const ethBalance = useActiveAccountEthBalance(ChainId.GOERLI)
+  const [currentChain] = useState(ChainId.RINKEBY)
+  const ethBalance = useActiveAccountEthBalance(ChainId.RINKEBY)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -54,12 +55,12 @@ export function DevScreen({ navigation }: Props) {
   }
 
   const activeChains = useActiveChainIds()
-  const onPressToggleChain = () => {
-    const isGoerliActive = activeChains.includes(ChainId.GOERLI)
-    dispatch(setChainActiveStatus({ chainId: ChainId.GOERLI, isActive: !isGoerliActive }))
+  const onPressToggleRinkeby = () => {
+    const isRinkebyActive = activeChains.includes(ChainId.RINKEBY)
+    dispatch(setChainActiveStatus({ chainId: ChainId.RINKEBY, isActive: !isRinkebyActive }))
   }
 
-  const blockTimestamp = useCurrentBlockTimestamp(ChainId.GOERLI)
+  const blockTimestamp = useCurrentBlockTimestamp(currentChain)
 
   const { t } = useTranslation()
 
@@ -75,11 +76,17 @@ export function DevScreen({ navigation }: Props) {
         <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
-        <Button label={t('Toggle Goerli')} onPress={onPressToggleChain} mt="md" />
+        <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="md" />
         <Text textAlign="center" mt="xl">
+          {`Active Chains: ${activeChains}`}
+        </Text>
+        <Text textAlign="center" mt="sm">
+          {`Current Chain: ${currentChain}`}
+        </Text>
+        <Text textAlign="center" mt="sm">
           {`Block Timestamp: ${blockTimestamp}`}
         </Text>
-        <Text textAlign="center" mt="xl">
+        <Text textAlign="center" mt="sm">
           {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
         </Text>
       </Box>
