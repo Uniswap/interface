@@ -3,7 +3,6 @@ import { DAI, ETH } from 'lib/mocks'
 import { useEffect } from 'react'
 import { useSelect } from 'react-cosmos/fixture'
 
-import Widget from '../Widget'
 import Swap from '.'
 import { Field, inputAtom, outputAtom, State, stateAtom, swapAtom } from './state'
 
@@ -53,8 +52,4 @@ function Fixture() {
   return <Swap />
 }
 
-export default (
-  <Widget>
-    <Fixture />
-  </Widget>
-)
+export default <Fixture />

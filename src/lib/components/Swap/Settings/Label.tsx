@@ -8,7 +8,7 @@ import Tooltip from '../../Tooltip'
 export function value(Value: AnyStyledComponent) {
   return styled(Value)<{ selected?: boolean; cursor?: string; theme: Theme }>`
     border: 1px solid ${({ selected, theme }) => (selected ? theme.active : theme.outline)};
-    border-radius: 0.5em;
+    border-radius: ${({ theme }) => theme.borderRadius * 0.5}em;
     cursor: ${({ cursor }) => cursor ?? 'pointer'};
     display: grid;
     grid-gap: 0.25em;

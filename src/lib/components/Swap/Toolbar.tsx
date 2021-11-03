@@ -15,6 +15,7 @@ import { inputAtom, outputAtom, swapAtom } from './state'
 const InfoIcon = icon(Info, { color: 'primary' })
 
 const Ratio = styled(TextButton)`
+  color: inherit;
   text-align: start;
 
   :hover {
@@ -59,16 +60,18 @@ export default function Toolbar() {
   return (
     <>
       <Rule />
-      <Row justify="flex-start" gap={0.5}>
-        {swap && <DetailsTooltip />}
-        {loaded ? (
-          <Ratio onClick={() => setFlip(!flip)}>
-            <TYPE.caption>{ratio}</TYPE.caption>
-          </Ratio>
-        ) : (
-          <TYPE.caption>Uniswap V3</TYPE.caption>
-        )}
-      </Row>
+      <TYPE.caption>
+        <Row justify="flex-start" gap={0.5}>
+          {swap && <DetailsTooltip />}
+          {loaded ? (
+            <Ratio color="secondary" onClick={() => setFlip(!flip)}>
+              {ratio}
+            </Ratio>
+          ) : (
+            'Uniswap V3'
+          )}
+        </Row>
+      </TYPE.caption>
     </>
   )
 }

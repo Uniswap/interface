@@ -8,6 +8,7 @@ const Button = styled.button`
   cursor: pointer;
   font-size: inherit;
   font-weight: inherit;
+  line-height: inherit;
   margin: 0;
   padding: 0;
 
