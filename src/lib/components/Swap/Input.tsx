@@ -27,7 +27,7 @@ export default function Input({ children }: { children: ReactNode }) {
   const balance = 123.45
 
   return (
-    <InputColumn gap={0.75}>
+    <InputColumn gap={0.5}>
       <Row>
         <TYPE.subhead2 color="secondary">Trading</TYPE.subhead2>
       </Row>

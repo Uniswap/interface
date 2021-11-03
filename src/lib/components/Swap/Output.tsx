@@ -63,7 +63,7 @@ export default function Output({ children }: { children: ReactNode }) {
 
   return (
     <DynamicThemeProvider color={color}>
-      <OutputColumn hasColor={hasColor} gap={0.75}>
+      <OutputColumn hasColor={hasColor} gap={0.5}>
         <Row>
           <TYPE.subhead2>For</TYPE.subhead2>
         </Row>

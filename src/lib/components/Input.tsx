@@ -9,7 +9,6 @@ const Input = styled.input`
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
-  height: 1em;
   margin: 0;
   outline: none;
   overflow: hidden;

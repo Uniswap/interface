@@ -63,14 +63,14 @@ const RowTokenButton = styled(TokenButton)`
 `
 
 const TokenButtonRow = styled(Row)`
-  height: 1.25em;
+  height: 1.2em;
 `
 
 const TokenImg = styled.img<{ disabled?: boolean }>`
   border-radius: 100%;
   filter: ${({ disabled }) => disabled && 'saturate(0) opacity(0.6)'};
-  height: 1.25em;
-  width: 1.25em;
+  height: 1.2em;
+  width: 1.2em;
 `
 
 const ChevronDownIcon = styled(icon(ChevronDown, { color: 'contrast' }))`

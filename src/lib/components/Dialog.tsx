@@ -68,12 +68,13 @@ export const Footer = styled(Column)`
 
 export const Modal = styled.div<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: calc(100% - 0.5em);
