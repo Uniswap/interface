@@ -4,8 +4,8 @@ import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
 export const DMY = new Token(
-  SupportedChainId.MAINNET,
-  '0xA1a5D56126e1410a2C8E78384b7384F28E3f6971',
+  SupportedChainId.UZH,
+  '0xfb4A1DeE8894fd44Ee3233aAB41C95d61C90c86d',
   18,
   'DMY',
   'DummyToken'
@@ -144,6 +144,13 @@ export const ETH2X_FLI = new Token(
   'ETH 2x Flexible Leverage Index'
 )
 export const UNI: { [chainId: number]: Token } = {
+  [SupportedChainId.UZH]: new Token(
+    SupportedChainId.UZH,
+    '0x3ad438090d6ca3c26f2e4c4c2e7833066b87e709',
+    18,
+    'UNI',
+    'Uniswap'
+  ),
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
@@ -153,6 +160,13 @@ export const UNI: { [chainId: number]: Token } = {
 
 export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
+  [SupportedChainId.UZH]: new Token(
+    SupportedChainId.UZH,
+    '0x2ED2B01D27446c9924A092f79BB0eD3Bf7E80698',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [SupportedChainId.OPTIMISM]: new Token(
     SupportedChainId.OPTIMISM,
     '0x4200000000000000000000000000000000000006',

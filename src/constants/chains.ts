@@ -9,6 +9,7 @@ export enum SupportedChainId {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  UZH = 702,
 
   ARBITRUM_ONE = 42161,
   ARBITRUM_RINKEBY = 421611,
@@ -22,6 +23,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.UZH,
 
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
@@ -35,6 +37,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.UZH,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
@@ -103,6 +106,13 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Ethereum',
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  },
+  [SupportedChainId.UZH]: {
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'http://130.60.24.79:1234/',
+    infoLink: 'https://uzh.ch',
+    label: 'UZH',
+    nativeCurrency: { name: 'UZH ETH', symbol: 'UZHETH', decimals: 18 },
   },
   [SupportedChainId.RINKEBY]: {
     docs: 'https://docs.uniswap.org/',
