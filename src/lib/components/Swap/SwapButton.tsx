@@ -1,6 +1,7 @@
 import assert from 'assert'
+import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import ActionButton, { ApprovalButton, DisabledButton, LoadingButton } from '../ActionButton'
 import Dialog from '../Dialog'
@@ -9,7 +10,7 @@ import { SummaryDialog } from './Summary'
 import { TransactionStatusDialog } from './TransactionStatus'
 
 export default function SwapButton() {
-  const state = useAtomValue(stateAtom)
+  const [state, setState] = useAtom(stateAtom)
   const { token } = useAtomValue(inputAtom)
   const [open, setOpen] = useState(false)
   const action = useMemo(() => {
@@ -30,6 +31,11 @@ export default function SwapButton() {
         return <DisabledButton>🦄</DisabledButton>
     }
   }, [state, token])
+  useEffect(() => {
+    if (state === State.PENDING) {
+      setOpen(false)
+    }
+  }, [state])
   return (
     <>
       {action}
@@ -40,7 +46,7 @@ export default function SwapButton() {
       )}
       {state === State.PENDING && (
         <Dialog color="dialog">
-          <TransactionStatusDialog />
+          <TransactionStatusDialog onClose={() => setState(State.LOADED)} />
         </Dialog>
       )}
     </>

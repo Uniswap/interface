@@ -2,11 +2,11 @@ import { Text, TextProps as TextPropsWithCss } from 'rebass'
 
 import styled, { Color, Theme } from '.'
 
-type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color }
+type TextProps = Omit<TextPropsWithCss, 'css' | 'color'> & { userSelect?: 'none'; color?: Color; lineHeight?: number }
 
-const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color; theme: Theme }>`
+const TextWrapper = styled(Text)<{ userSelect?: 'none'; color?: Color; lineHeight?: number; theme: Theme }>`
   color: ${({ color = 'primary' as Color, theme }) => theme[color]};
-  line-height: 1;
+  line-height: ${({ lineHeight = 1 }) => lineHeight};
   user-select: ${({ userSelect }) => userSelect};
 `
 
@@ -40,6 +40,9 @@ const TYPE = {
   },
   buttonLarge(props: TextProps) {
     return <TextWrapper fontSize={20} fontWeight={500} {...props} />
+  },
+  code(props: TextProps) {
+    return <TextWrapper fontSize={12} fontWeight={400} fontFamily="Input Mono" lineHeight={1.25} {...props} />
   },
 }
 

@@ -96,3 +96,14 @@ export const outputAtom = atom(
     })
   }
 )
+
+export interface Transaction {
+  input: Required<Pick<Input, 'token' | 'value'>>
+  output: Required<Pick<Input, 'token' | 'value'>>
+  receipt: string
+  timestamp: number
+  elapsedMs?: number
+  status?: true | Error
+}
+
+export const transactionAtom = atomWithImmer<Transaction | null>(null)
