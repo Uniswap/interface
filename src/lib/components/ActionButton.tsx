@@ -113,7 +113,7 @@ export interface ActionButtonProps {
 const AlertIcon = icon(AlertTriangle, { color: 'primary' })
 
 const ApprovalRow = styled(Row)`
-  background-color: currentColor;
+  background-color: inherit;
   border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 3.5em;
   outline: 1px solid ${({ theme }) => theme.outline};

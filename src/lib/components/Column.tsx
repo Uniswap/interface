@@ -11,6 +11,7 @@ const Column = styled.div<{
   theme: Theme
 }>`
   align-items: ${({ align }) => align ?? 'center'};
+  background-color: inherit;
   color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-direction: column;

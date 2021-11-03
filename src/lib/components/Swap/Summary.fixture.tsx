@@ -17,6 +17,7 @@ function Fixture() {
       output: { token: DAI, value: 4200, usdc: 4200 },
       swap: {
         lpFee: 0.0005,
+        integratorFee: 0.00025,
         priceImpact: 0.01,
         slippageTolerance: 0.5,
         minimumReceived: 4190,

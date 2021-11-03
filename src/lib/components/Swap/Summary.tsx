@@ -38,13 +38,13 @@ export function SwapSummary({ input, output }: SwapSummaryProps) {
       return undefined
     }
     const percent = (change * 100).toPrecision(3)
-    return change > 0 ? ` (+${percent}%)` : `(${percent}%)`
+    return change > 0 ? `(+${percent}%)` : `(${percent}%)`
   }, [change])
 
   return (
     <TYPE.body2>
       <Row gap={1}>
-        <Column gap={0.5}>
+        <Column gap={0.25}>
           <Row gap={0.5} justify="flex-start">
             <TokenImg src={input.token.logoURI} />
             {input.value} {input.token.symbol}
@@ -56,7 +56,7 @@ export function SwapSummary({ input, output }: SwapSummaryProps) {
           )}
         </Column>
         <ArrowIcon />
-        <Column gap={0.5}>
+        <Column gap={0.25}>
           <Row gap={0.5} justify="flex-start">
             <TokenImg src={output.token.logoURI} />
             {output.value} {output.token.symbol}
@@ -96,8 +96,8 @@ export function SummaryDialog() {
   return (
     <>
       <Header title="Swap summary" ruled />
-      <Column gap={1} padded scrollable>
-        <Column gap={1} flex>
+      <Column gap={0.75} padded scrollable>
+        <Column gap={0.75} flex>
           <SwapSummary input={input} output={output} />
           <TYPE.caption>
             1 {input.token.symbol} = {price} {output.token.symbol}

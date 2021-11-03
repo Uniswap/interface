@@ -1,5 +1,5 @@
 import { useResetAtom } from 'jotai/utils'
-import { icon } from 'lib/theme'
+import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'
@@ -25,7 +25,7 @@ export function SettingsDialog() {
           <TextButton onClick={resetSettings}>Reset</TextButton>
         </TYPE.subhead2>
       </Header>
-      <Column gap={1} ref={setBoundary} padded scrollable>
+      <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable>
         <BoundaryProvider value={boundary}>
           <MaxSlippageSelect />
           <TransactionTtlInput />

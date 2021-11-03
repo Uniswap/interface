@@ -27,6 +27,10 @@ export default function Details() {
         {swap.lpFee}&emsp;{input.token.symbol}
       </Detail>
       <Detail>
+        <span>Integrator fee</span>
+        {swap.integratorFee}&emsp;{input.token.symbol}
+      </Detail>
+      <Detail>
         <span>Price impact</span>
         {swap.priceImpact}%
       </Detail>

@@ -7,7 +7,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   appearance: none;
   background: ${({ theme }) => theme.interactive};
   border: none;
-  border-radius: 1.25em;
+  border-radius: ${({ theme }) => theme.borderRadius * 1.25}em;
   cursor: pointer;
   display: flex;
   font-size: inherit;
@@ -23,7 +23,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
 
   :before {
     background-color: ${({ theme }) => theme.secondary};
-    border-radius: 1.5em;
+    border-radius: ${({ theme }) => theme.borderRadius * 50}%;
     content: '';
     display: inline-block;
     height: 1.5em;
