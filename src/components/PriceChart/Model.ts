@@ -2,8 +2,8 @@ import { Token } from '@uniswap/sdk-core'
 import { scaleLinear } from 'd3-scale'
 import { curveBasis, line } from 'd3-shape'
 import { useMemo } from 'react'
-import { parse, Path } from 'react-native-redash'
-import { GraphMetadatas, PriceList } from 'src/components/PriceChart/types'
+import { parse } from 'react-native-redash'
+import { GraphData, GraphMetadatas, PriceList } from 'src/components/PriceChart/types'
 import { useHistoricalPrices } from 'src/features/historicalChainData/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
@@ -19,77 +19,90 @@ const HOURS_IN_MONTH = HOURS_IN_WEEK * 4
 const DAYS_IN_YEAR = 365
 
 export function useGraphs(token: Token): GraphMetadatas | null {
-  const { isLoading, data, isError, error } = useHistoricalPrices({
-    token,
-  })
+  const { dailyTokenPrices: dailyTokenData, hourlyTokenPrices: hourlyTokenData } =
+    useHistoricalPrices({
+      token,
+    })
 
-  if (isError) {
-    logger.error('PriceChart/Model', 'useGraphs', 'Historical prices error', error)
-  }
+  const isError = dailyTokenData.isError || hourlyTokenData.isError
 
-  const dataByRange = useMemo(
-    () =>
-      data && data.tokenHourDatas.length > 0 && data.tokenDayDatas.length > 0
-        ? {
-            // TODO(judo): interpolation requires same data length
-            // TODO(#80): use block-level data and add 1h chart
-            oneDay: data.tokenHourDatas.slice(0, HOURS_IN_DAY),
-            oneWeek: data.tokenHourDatas.slice(0, HOURS_IN_WEEK),
-            oneMonth: data.tokenHourDatas.slice(0, HOURS_IN_MONTH),
-            oneYear: data.tokenDayDatas.slice(0, DAYS_IN_YEAR),
-            all: data.tokenDayDatas.slice(),
-          }
-        : undefined,
-    [data]
+  const hourlyTokenPrices = useMemo(
+    () => ({
+      // TODO(judo): interpolation requires same data length
+      // TODO(#80): use block-level data and add 1h chart
+      oneDay: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_DAY),
+      oneWeek: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_WEEK),
+      oneMonth: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_MONTH),
+    }),
+    [hourlyTokenData]
+  )
+
+  const dailyTokenPrices = useMemo(
+    () => ({
+      oneYear: dailyTokenData.data?.tokenDayDatas.slice(0, DAYS_IN_YEAR),
+      all: dailyTokenData.data?.tokenDayDatas,
+    }),
+    [dailyTokenData]
   )
 
   return useMemo(() => {
-    if (isLoading || isError || !dataByRange) return null
-
-    const { oneDay, oneWeek, oneMonth, oneYear, all } = dataByRange
+    if (isError) {
+      logger.error(
+        'PriceChart/Model',
+        'useGraphs',
+        'Historical prices error',
+        dailyTokenData.error ?? hourlyTokenData.error
+      )
+      return null
+    }
 
     const graphs = [
       {
         label: '1D',
         index: 0,
-        data: buildGraph(oneDay),
+        data: buildGraph(hourlyTokenPrices.oneDay),
       },
       {
         label: '1W',
         index: 1,
-        data: buildGraph(oneWeek),
+        data: buildGraph(hourlyTokenPrices.oneWeek),
       },
       {
         label: '1M',
         index: 2,
-        data: buildGraph(oneMonth),
+        data: buildGraph(hourlyTokenPrices.oneMonth),
       },
       {
         label: '1Y',
         index: 3,
-        data: buildGraph(oneYear),
+        data: buildGraph(dailyTokenPrices.oneYear),
       },
       {
         label: 'all',
         index: 4,
-        data: buildGraph(all),
+        data: buildGraph(dailyTokenPrices.all),
       },
     ] as const
 
-    return graphs
-  }, [isLoading, isError, dataByRange])
+    return graphs as GraphMetadatas
+  }, [
+    isError,
+    hourlyTokenPrices.oneDay,
+    hourlyTokenPrices.oneWeek,
+    hourlyTokenPrices.oneMonth,
+    dailyTokenPrices.oneYear,
+    dailyTokenPrices.all,
+    dailyTokenData.error,
+    hourlyTokenData.error,
+  ])
 }
 
-// TODO(judo): handle no datapoints
 /**
  * Constructs a drawable Path from a PriceList
  */
-export function buildGraph(datapoints: PriceList): {
-  minPrice: number
-  maxPrice: number
-  startingPrice: number
-  path: Path
-} {
+export function buildGraph(datapoints: PriceList | undefined): GraphData | null {
+  if (!datapoints || datapoints.length === 0) return null
+
   const priceList = datapoints.slice(0, 24).reverse()
 
   const formattedValues = priceList.map(

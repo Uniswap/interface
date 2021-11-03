@@ -11,14 +11,12 @@ const graphDatapoints = buildGraph([
   {
     timestamp: 0,
     close: 100,
-    open: 200,
   },
   {
     timestamp: 1,
     close: 200,
-    open: 300,
   },
-])
+])!
 
 const buildGraphMetadata = (index: number) =>
   ({

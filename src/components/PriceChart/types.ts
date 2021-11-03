@@ -1,15 +1,21 @@
 import Animated from 'react-native-reanimated'
-import { Vector } from 'react-native-redash'
-import { buildGraph } from 'src/components/PriceChart/Model'
-import { PricesQuery } from 'src/features/historicalChainData/generated'
-export type AnimatedIndex = Animated.SharedValue<number>
+import { Path, Vector } from 'react-native-redash'
+import { DailyTokenPricesQuery } from 'src/features/historicalChainData/generated'
 
+export type AnimatedIndex = Animated.SharedValue<number>
 export type AnimatedTranslation = Vector<Animated.SharedValue<number>>
+
+export type GraphData = {
+  minPrice: number
+  maxPrice: number
+  startingPrice: number
+  path: Path
+}
 
 type GraphMetadata = Readonly<{
   label: string
   index: number
-  data: ReturnType<typeof buildGraph>
+  data: GraphData
 }>
 
 // use tuple for type-safety (assumes there is always five graphs)
@@ -21,5 +27,5 @@ export type GraphMetadatas = readonly [
   GraphMetadata
 ]
 
-type Price = Pick<PricesQuery['tokenDayDatas'][0], 'timestamp' | 'close' | 'open'>
+type Price = Pick<DailyTokenPricesQuery['tokenDayDatas'][0], 'timestamp' | 'close'>
 export type PriceList = Price[]

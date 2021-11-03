@@ -1,6 +1,14 @@
-query prices($address: String!, $hourlyPeriodStartUnix: Int!,$chainId: Int!) {
+# Set of queries to fetch historical prices for various time ranges.
+#
+# While GraphQL would support executing all data fetches in a single query,
+# some tables have considerably more data which prevents the client from
+# transforming data until all queries are done.
+#
+# Note. `chainId` is only used to guarantee unique keys across chains.
+
+query hourlyTokenPrices($address: String!, $periodStartUnix: Int!, $chainId: Int!) {
   tokenHourDatas(
-    where: { token: $address, periodStartUnix_gt: $hourlyPeriodStartUnix }
+    where: { token: $address, periodStartUnix_gt: $periodStartUnix }
     orderBy: periodStartUnix
     orderDirection: desc
   ) {
@@ -10,12 +18,10 @@ query prices($address: String!, $hourlyPeriodStartUnix: Int!,$chainId: Int!) {
     open
     close
   }
+}
 
-  tokenDayDatas(
-    where: { token: $address }
-    orderBy: date
-    orderDirection: desc
-  ) {
+query dailyTokenPrices($address: String!, $chainId: Int!) {
+  tokenDayDatas(where: { token: $address }, orderBy: date, orderDirection: desc) {
     timestamp: date
     high
     low

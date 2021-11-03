@@ -4315,20 +4315,28 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type PricesQueryVariables = Exact<{
+export type HourlyTokenPricesQueryVariables = Exact<{
   address: Scalars['String'];
-  hourlyPeriodStartUnix: Scalars['Int'];
+  periodStartUnix: Scalars['Int'];
   chainId: Scalars['Int'];
 }>;
 
 
-export type PricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __typename?: 'TokenHourData', high: any, low: any, open: any, close: any, timestamp: number }>, tokenDayDatas: Array<{ __typename?: 'TokenDayData', high: any, low: any, open: any, close: any, timestamp: number }> };
+export type HourlyTokenPricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __typename?: 'TokenHourData', high: any, low: any, open: any, close: any, timestamp: number }> };
+
+export type DailyTokenPricesQueryVariables = Exact<{
+  address: Scalars['String'];
+  chainId: Scalars['Int'];
+}>;
 
 
-export const PricesDocument = `
-    query prices($address: String!, $hourlyPeriodStartUnix: Int!, $chainId: Int!) {
+export type DailyTokenPricesQuery = { __typename?: 'Query', tokenDayDatas: Array<{ __typename?: 'TokenDayData', high: any, low: any, open: any, close: any, timestamp: number }> };
+
+
+export const HourlyTokenPricesDocument = `
+    query hourlyTokenPrices($address: String!, $periodStartUnix: Int!, $chainId: Int!) {
   tokenHourDatas(
-    where: {token: $address, periodStartUnix_gt: $hourlyPeriodStartUnix}
+    where: {token: $address, periodStartUnix_gt: $periodStartUnix}
     orderBy: periodStartUnix
     orderDirection: desc
   ) {
@@ -4338,6 +4346,23 @@ export const PricesDocument = `
     open
     close
   }
+}
+    `;
+export const useHourlyTokenPricesQuery = <
+      TData = HourlyTokenPricesQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: HourlyTokenPricesQueryVariables,
+      options?: UseQueryOptions<HourlyTokenPricesQuery, TError, TData>
+    ) =>
+    useQuery<HourlyTokenPricesQuery, TError, TData>(
+      ['hourlyTokenPrices', variables],
+      fetcher<HourlyTokenPricesQuery, HourlyTokenPricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, HourlyTokenPricesDocument, variables),
+      options
+    );
+export const DailyTokenPricesDocument = `
+    query dailyTokenPrices($address: String!, $chainId: Int!) {
   tokenDayDatas(where: {token: $address}, orderBy: date, orderDirection: desc) {
     timestamp: date
     high
@@ -4347,16 +4372,16 @@ export const PricesDocument = `
   }
 }
     `;
-export const usePricesQuery = <
-      TData = PricesQuery,
+export const useDailyTokenPricesQuery = <
+      TData = DailyTokenPricesQuery,
       TError = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables: PricesQueryVariables,
-      options?: UseQueryOptions<PricesQuery, TError, TData>
+      variables: DailyTokenPricesQueryVariables,
+      options?: UseQueryOptions<DailyTokenPricesQuery, TError, TData>
     ) =>
-    useQuery<PricesQuery, TError, TData>(
-      ['prices', variables],
-      fetcher<PricesQuery, PricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, PricesDocument, variables),
+    useQuery<DailyTokenPricesQuery, TError, TData>(
+      ['dailyTokenPrices', variables],
+      fetcher<DailyTokenPricesQuery, DailyTokenPricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DailyTokenPricesDocument, variables),
       options
     );
