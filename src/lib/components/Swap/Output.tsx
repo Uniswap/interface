@@ -65,7 +65,7 @@ export default function Output({ children }: { children: ReactNode }) {
     <DynamicThemeProvider color={color}>
       <OutputColumn hasColor={hasColor} gap={0.75}>
         <Row>
-          <TYPE.subhead3>For</TYPE.subhead3>
+          <TYPE.subhead2>For</TYPE.subhead2>
         </Row>
         <TokenInput input={output} onChangeInput={setValue} onChangeToken={setToken}>
           <TYPE.body2 color="secondary">

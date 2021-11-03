@@ -38,7 +38,7 @@ const TransactionStatusColumn = styled(Column)`
 `
 
 const EtherscanA = styled.a`
-  color: ${({ theme }) => theme.active};
+  color: ${({ theme }) => theme.accent};
   text-decoration: none;
 `
 
@@ -95,9 +95,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
             </EtherscanA>
           </Row>
         </TYPE.subhead2>
-        <ActionButton color="active" onClick={onClose}>
-          Close
-        </ActionButton>
+        <ActionButton onClick={onClose}>Close</ActionButton>
       </Column>
     </>
   )

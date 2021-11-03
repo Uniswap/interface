@@ -128,14 +128,14 @@ const StyledApprovalButton = styled(Button)<{ color: Color; theme: Theme }>`
   padding: 0 1em;
 `
 
-export function ApprovalButton({ color, onClick, children }: ActionButtonProps) {
+export function ApprovalButton({ color = 'accent', onClick, children }: ActionButtonProps) {
   return (
     <ApprovalRow>
       <Row gap={0.5}>
         <AlertIcon />
         <TYPE.subhead2>{children}</TYPE.subhead2>
       </Row>
-      <StyledApprovalButton color={color || 'interactive'} onClick={onClick}>
+      <StyledApprovalButton color={color} onClick={onClick}>
         Approve
       </StyledApprovalButton>
     </ApprovalRow>
@@ -147,9 +147,9 @@ const StyledActionButton = styled(BaseButton)<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
 `
 
-export default function ActionButton({ color, onClick, children }: ActionButtonProps) {
+export default function ActionButton({ color = 'accent', onClick, children }: ActionButtonProps) {
   return (
-    <StyledActionButton color={color || 'interactive'} onClick={onClick}>
+    <StyledActionButton color={color} onClick={onClick}>
       <TYPE.buttonLarge color="contrast">{children}</TYPE.buttonLarge>
     </StyledActionButton>
   )

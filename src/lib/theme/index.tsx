@@ -38,17 +38,17 @@ export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
 const light: Colors = {
   // surface
   accent: '#FF007A',
-  container: '#191B1F',
-  module: '#2C2F36',
-  interactive: '#40444F',
-  outline: '#565A59',
-  dialog: '#000000',
+  container: '#F7F8FA',
+  module: '#E2E3E9',
+  interactive: '#CED0D9',
+  outline: '#C3C5CB',
+  dialog: '#FFFFFF',
 
   // text
   primary: '#000000',
-  secondary: '#888D9B',
-  hint: '#6C7284',
-  contrast: '#FFFFFF',
+  secondary: '#565A69',
+  hint: '#888D9B',
+  contrast: '#000000',
 
   // state
   active: '#2172E5',
@@ -63,7 +63,7 @@ const dark: Colors = {
   container: '#191B1F',
   module: '#2C2F36',
   interactive: '#40444F',
-  outline: '#565A59',
+  outline: '#565A69',
   dialog: '#000000',
 
   // text

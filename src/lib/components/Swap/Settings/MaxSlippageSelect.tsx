@@ -15,7 +15,7 @@ const tooltip = 'Your transaction will revert if the price changes unfavorably b
 
 const Value = value(Button)
 
-const SelectedIcon = icon(CheckCircle, { color: 'active' })
+const SelectedIcon = icon(CheckCircle, { color: 'accent' })
 
 interface OptionProps<T> {
   value: T

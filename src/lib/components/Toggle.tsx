@@ -37,14 +37,14 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :checked:before {
-    background-color: ${({ theme }) => theme.active};
+    background-color: ${({ theme }) => theme.accent};
 
     // use margin because it can transition
     margin-left: 2.75em;
   }
 
   :hover:checked:before {
-    background-color: ${({ theme }) => transparentize(0.3, theme.active)};
+    background-color: ${({ theme }) => transparentize(0.3, theme.accent)};
   }
 
   :after {

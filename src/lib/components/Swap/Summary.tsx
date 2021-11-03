@@ -122,13 +122,9 @@ export function SummaryDialog() {
         </TYPE.caption>
         <Footer>
           {price === confirmedPrice ? (
-            <ActionButton color="active" onClick={() => void 0}>
-              Confirm
-            </ActionButton>
+            <ActionButton onClick={() => void 0}>Confirm</ActionButton>
           ) : (
-            <ApprovalButton color="active" onClick={() => confirmPrice(price)}>
-              Price updated
-            </ApprovalButton>
+            <ApprovalButton onClick={() => confirmPrice(price)}>Price updated</ApprovalButton>
           )}
         </Footer>
       </Column>

@@ -29,7 +29,7 @@ export default function Input({ children }: { children: ReactNode }) {
   return (
     <InputColumn gap={0.75}>
       <Row>
-        <TYPE.subhead3 color="secondary">Trading</TYPE.subhead3>
+        <TYPE.subhead2 color="secondary">Trading</TYPE.subhead2>
       </Row>
       <TokenInput
         input={input}

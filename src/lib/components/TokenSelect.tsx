@@ -39,11 +39,11 @@ const TokenButton = styled(Button)`
 `
 
 const OptionTokenButton = styled(TokenButton)<{ empty?: boolean; theme: Theme }>`
-  background-color: ${({ empty, theme }) => (empty ? theme.active : theme.interactive)};
+  background-color: ${({ empty, theme }) => (empty ? theme.accent : theme.interactive)};
   padding-left: ${({ empty }) => (empty ? 0.75 : 0.25)}em;
 
   :hover {
-    background-color: ${({ empty, theme }) => transparentize(0.3, empty ? theme.active : theme.interactive)};
+    background-color: ${({ empty, theme }) => transparentize(0.3, empty ? theme.accent : theme.interactive)};
     opacity: 1;
   }
 `
