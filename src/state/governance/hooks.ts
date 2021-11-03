@@ -21,7 +21,7 @@ import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { SupportedChainId } from '../../constants/chains'
-import { BRAVO_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
+import { BRAVO_START_BLOCK, ONE_BIP_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -104,6 +104,8 @@ function useFormattedProposalCreatedLogs(
       ?.filter((parsed) => indices.flat().some((i) => i === parsed.id.toNumber()))
       ?.map((parsed) => {
         let description!: string
+
+        const startBlock = parseInt(parsed.startBlock?.toString())
         try {
           description = parsed.description
         } catch (error) {
@@ -111,7 +113,6 @@ function useFormattedProposalCreatedLogs(
           let onError = Utf8ErrorFuncs.replace
 
           // Bravo proposal reverses the codepoints for U+2018 (‘) and U+2026 (…)
-          const startBlock = parseInt(parsed.startBlock?.toString())
           if (startBlock === BRAVO_START_BLOCK) {
             const U2018 = [0xe2, 0x80, 0x98].toString()
             const U2026 = [0xe2, 0x80, 0xa6].toString()
@@ -131,12 +132,13 @@ function useFormattedProposalCreatedLogs(
           }
 
           description = JSON.parse(toUtf8String(error.error.value, onError)) || ''
-
-          // Bravo proposal omits newlines
-          if (startBlock === BRAVO_START_BLOCK) {
-            description = description.replace(/  /g, '\n').replace(/\d\. /g, '\n$&')
-          }
         }
+
+        // Bravo and one bip proposals omit newlines
+        if (startBlock === BRAVO_START_BLOCK || startBlock === ONE_BIP_START_BLOCK) {
+          description = description.replace(/  /g, '\n').replace(/\d\. /g, '\n$&')
+        }
+
         return {
           description,
           details: parsed.targets.map((target: string, i: number) => {
