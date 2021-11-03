@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-26 22:06\n"
+"PO-Revision-Date: 2021-11-03 18:11\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -2040,6 +2040,10 @@ msgstr "Hlasování skončilo {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "Hlasování končí přibližně v {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Hlasování začíná přibližně od {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"

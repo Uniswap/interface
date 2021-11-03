@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-26 22:06\n"
+"PO-Revision-Date: 2021-11-03 18:11\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -2040,6 +2040,10 @@ msgstr "Röstningen avslutades {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "Röstningen slutar ungefär {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Omröstningen börjar cirka {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
