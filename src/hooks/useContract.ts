@@ -10,6 +10,7 @@ import DUAL_REWARDS_ABI from '../constants/abis/moola/MoolaStakingRewards.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
+import VOTABLE_STAKING_REWARDS_ABI from '../constants/abis/VotableStakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { Erc20, MoolaStakingRewards, PoolManager, StakingRewards } from '../generated'
 import { getContract } from '../utils'
@@ -60,6 +61,13 @@ export function useMulticallContract(): Contract | null {
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards | null
+}
+
+export function useVotableStakingContract(
+  stakingAddress?: string,
+  withSignerIfPossible?: boolean
+): StakingRewards | null {
+  return useContract(stakingAddress, VOTABLE_STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards | null
 }
 
 export function usePoolManagerContract(

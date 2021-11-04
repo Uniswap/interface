@@ -1,4 +1,6 @@
 {
+  "stake": "Stake",
+  "unstake": "Unstake",
   "unsupportedNetwork": "Unsupported network",
   "unsupportedNetworkDesc": "Please switch your network to Celo on your wallet to use this feature.",
   "approve": "Approve",
