@@ -199,8 +199,8 @@ export const Stake: React.FC = () => {
           ) : (
             <h3>
               Weekly rewards:{' '}
-              {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(2, { groupSeparator: ',' }) : '--'} UBE
-              / week ({apy?.toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
+              {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(0, { groupSeparator: ',' }) : '--'} UBE
+              / week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
             </h3>
           )}
           {stakeBalance.greaterThan('0') && (
