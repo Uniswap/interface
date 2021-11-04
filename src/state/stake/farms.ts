@@ -170,6 +170,14 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // SOL-CELO
+  {
+    address: '0x83470506ba97dB33Df0EBe01E876C6718C762Df6',
+    underlyingPool: '0x33cD870547DD6F30db86e7EE7707DC78e7825289',
+    basePool: '0x33cD870547DD6F30db86e7EE7707DC78e7825289',
+    numRewards: 2,
+    active: true,
+  },
 
   // ** Inactive ** //
   // CELO-MOBI
