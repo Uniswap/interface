@@ -10,17 +10,17 @@ import { withImmer } from 'jotai/immer'
 export function pickAtom<Value, Key extends keyof Value, Update>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void
+  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]>
 ): WritableAtom<Value[Key], Update>
 export function pickAtom<Value, Key extends keyof Value, Update extends Value[Key]>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter?: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void
+  setter?: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]>
 ): WritableAtom<Value[Key], Update>
 export function pickAtom<Value, Key extends keyof Value, Update extends Value[Key]>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void = (draft, update) =>
+  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> = (draft, update) =>
     // default value implies Update extends Value[Key], as specified by the overloads
     update as unknown as Value[Key] as Draft<Value[Key]>
 ): WritableAtom<Value[Key], Update> {
@@ -30,9 +30,7 @@ export function pickAtom<Value, Key extends keyof Value, Update extends Value[Ke
     (get, set, update: Update) =>
       set(withImmer(anAtom), (value) => {
         const derived = setter(getter(value as Value) as Draft<Value[Key]>, update, get)
-        if (derived !== undefined) {
-          value[key as keyof Draft<Value>] = derived as Draft<Value>[keyof Draft<Value>]
-        }
+        value[key as keyof Draft<Value>] = derived as Draft<Value>[keyof Draft<Value>]
       })
   )
 }
