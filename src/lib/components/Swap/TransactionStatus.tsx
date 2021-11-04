@@ -56,6 +56,7 @@ const EtherscanA = styled.a`
 
 const ErrorColumn = styled(Column)<{ maximized?: boolean }>`
   height: ${({ maximized }) => (maximized ? 'calc(3.5em + 40px)' : '3.5em')};
+  overflow-y: ${({ maximized }) => (maximized ? 'scroll' : 'hidden')};
   transition: height 0.2s linear;
 `
 
@@ -128,13 +129,9 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
           </Row>
           <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
         </Row>
-        <ErrorColumn maximized={open} scrollable>
-          {open && (
-            <>
-              <TYPE.code>{error.message}</TYPE.code>
-              <Break />
-            </>
-          )}
+        <ErrorColumn maximized={open}>
+          <TYPE.code>{error.message}</TYPE.code>
+          <Break />
           <ActionButton color="error" onClick={onClose}>
             Dismiss
           </ActionButton>
