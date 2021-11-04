@@ -130,6 +130,38 @@ export const multiRewardPools: MultiRewardPool[] = [
     numRewards: 2,
     active: true,
   },
+  // FTM-mcUSD
+  {
+    address: '0x3C29593674c5c760172d354acE88Da4D9d3EB64f',
+    underlyingPool: '0x5704F21cF5C7e6556cBD1ceEbbD23752B68e4845',
+    basePool: '0x5704F21cF5C7e6556cBD1ceEbbD23752B68e4845',
+    numRewards: 2,
+    active: true,
+  },
+  // AVAX-mcUSD
+  {
+    address: '0x750bB68Fa18F06d9696af85Ecc312f178E75fCfD',
+    underlyingPool: '0x9584870281DD0d764748a2a234e2218AE544C614',
+    basePool: '0x9584870281DD0d764748a2a234e2218AE544C614',
+    numRewards: 2,
+    active: true,
+  },
+  // BNB-mcUSD
+  {
+    address: '0xCD2d4024A42109593301fF11967c16eA180DD381',
+    underlyingPool: '0x522be12487d0640337abCfC7201066eC8F787AC5',
+    basePool: '0x522be12487d0640337abCfC7201066eC8F787AC5',
+    numRewards: 2,
+    active: true,
+  },
+  // WMATIC-mcUSD
+  {
+    address: '0x00C4aCee9eB84B1a6Cdc741AeEd19BF84CbE7bF5',
+    underlyingPool: '0x80ED8Da2d3cd269B0ccbc6ddF8DA2807BF583307',
+    basePool: '0x80ED8Da2d3cd269B0ccbc6ddF8DA2807BF583307',
+    numRewards: 2,
+    active: true,
+  },
 
   // ** Inactive ** //
   // CELO-MOBI
