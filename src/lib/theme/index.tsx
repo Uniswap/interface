@@ -6,6 +6,7 @@ import { readableColor } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { Icon } from 'react-feather'
 import styled, {
+  css as styledCss,
   keyframes as styledKeyframes,
   ThemedBaseStyledInterface,
   ThemeProvider as StyledProvider,
@@ -19,6 +20,7 @@ export type { Colors, Theme } from './theme'
 export type Color = keyof Colors
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
+export const css = styledCss
 export const keyframes = styledKeyframes
 export const useTheme = useStyled as unknown as () => Theme
 

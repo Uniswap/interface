@@ -21,25 +21,24 @@ const InfoIcon = icon(Info)
 const SuccessIcon = icon(CheckCircle, { color: 'success' })
 const UpIcon = icon(ChevronUp)
 
-const Header = styled.div<{ size: number }>`
+const Header = styled.div<{ maximized?: boolean }>`
   display: flex;
-  font-size: ${({ size }) => size}px;
+  height: 100%;
   justify-content: center;
-  padding-top: 0.25em;
-  transition: font-size 0.2s linear;
+  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
+  padding-top: ${({ maximized }) => (maximized ? 8 : 32)}px;
+  transition: font-size 0.2s linear, padding-top 0.2s linear;
 
-  * {
-    stroke-width: 1;
+    * {
+      stroke-width: 1;
+    }
   }
 `
 
-const TransactionStatusColumn = styled(Column)`
+const Body = styled(Column)`
   height: 100%;
-`
-
-const EtherscanA = styled.a`
-  color: ${({ theme }) => theme.accent};
-  text-decoration: none;
+  text-align: center;
+  width: 100%;
 `
 
 const FlexRule = styled(Rule)`
@@ -50,8 +49,13 @@ const Break = styled.br`
   line-height: 1em;
 `
 
-const ErrorDetails = styled.div<{ open: boolean }>`
-  height: ${({ open }) => (open ? '3em' : 0)};
+const EtherscanA = styled.a`
+  color: ${({ theme }) => theme.accent};
+  text-decoration: none;
+`
+
+const ErrorColumn = styled(Column)<{ maximized?: boolean }>`
+  height: ${({ maximized }) => (maximized ? 'calc(3.5em + 40px)' : '3.5em')};
   transition: height 0.2s linear;
 `
 
@@ -76,10 +80,10 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
   )
 
   return (
-    <>
-      <Header size={64}>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
-      <Column gap={1} padded>
-        <Column align="center" gap={0.75} flex>
+    <Body align="stretch" flex padded>
+      <Header>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
+      <Column gap={1}>
+        <Column gap={0.75} flex>
           <TYPE.subhead1>Transaction {transaction.status ? 'submitted' : 'pending'}</TYPE.subhead1>
           <SwapSummary input={transaction.input} output={transaction.output} />
           <FlexRule />
@@ -97,59 +101,57 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
         </TYPE.subhead2>
         <ActionButton onClick={onClose}>Close</ActionButton>
       </Column>
-    </>
+    </Body>
   )
 }
 
 function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
   const [open, setOpen] = useState(false)
   return (
-    <>
-      <Header size={open ? 48 : 64}>
+    <Body align="stretch" flex padded>
+      <Header maximized={open}>
         <ErrorIcon />
       </Header>
-      <Column padded>
-        <Column align="center" gap={0.75}>
-          <TYPE.subhead1 textAlign="center">Something went wrong.</TYPE.subhead1>
-          <Column gap={0.5}>
-            <TYPE.body2 textAlign="center">Try increasing your slippage tolerance</TYPE.body2>
-            <TYPE.body2 textAlign="center" fontWeight="200" lineHeight={1.25}>
-              Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
-            </TYPE.body2>
-          </Column>
+      <Column gap={1}>
+        <Column gap={0.75}>
+          <TYPE.subhead1>Something went wrong.</TYPE.subhead1>
+          <TYPE.body2>Try increasing your slippage tolerance</TYPE.body2>
+          <TYPE.body2 fontWeight="200" lineHeight={1.25}>
+            Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
+          </TYPE.body2>
           <Rule />
-          <Row>
-            <Row gap={0.5}>
-              <InfoIcon />
-              <TYPE.subhead2 color="secondary">Error details</TYPE.subhead2>
-            </Row>
-            <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
+        </Column>
+        <Row>
+          <Row gap={0.5}>
+            <InfoIcon />
+            <TYPE.subhead2 color="secondary">Error details</TYPE.subhead2>
           </Row>
-          <Column scrollable>
-            <ErrorDetails open={open}>
+          <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
+        </Row>
+        <ErrorColumn maximized={open} scrollable>
+          {open && (
+            <>
               <TYPE.code>{error.message}</TYPE.code>
               <Break />
-            </ErrorDetails>
-          </Column>
-        </Column>
-        <ActionButton color="error" onClick={onClose}>
-          Dismiss
-        </ActionButton>
+            </>
+          )}
+          <ActionButton color="error" onClick={onClose}>
+            Dismiss
+          </ActionButton>
+        </ErrorColumn>
       </Column>
-    </>
+    </Body>
   )
 }
 
 export function TransactionStatusDialog({ onClose }: { onClose: () => void }) {
   const transaction = useAtomValue(transactionAtom)
   return (
-    <TransactionStatusColumn align="end">
-      {transaction &&
-        (transaction.status instanceof Error ? (
-          <ErrorBody error={transaction.status} onClose={onClose} />
-        ) : (
-          <StatusBody transaction={transaction} onClose={onClose} />
-        ))}
-    </TransactionStatusColumn>
+    transaction &&
+    (transaction.status instanceof Error ? (
+      <ErrorBody error={transaction.status} onClose={onClose} />
+    ) : (
+      <StatusBody transaction={transaction} onClose={onClose} />
+    ))
   )
 }

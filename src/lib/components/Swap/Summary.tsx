@@ -6,7 +6,7 @@ import { ArrowRight, Info } from 'react-feather'
 
 import ActionButton, { ApprovalButton } from '../ActionButton'
 import Column from '../Column'
-import { Footer, Header } from '../Dialog'
+import { Header } from '../Dialog'
 import Row from '../Row'
 import Rule from '../Rule'
 import Details from './Details'
@@ -19,6 +19,11 @@ const TokenImg = styled.img`
   border-radius: 100%;
   height: 1em;
   width: 1em;
+`
+
+const SummaryColumn = styled(Column)`
+  margin-bottom: 0.75em;
+  padding-bottom: 0;
 `
 
 interface SwapSummaryProps {
@@ -96,7 +101,7 @@ export function SummaryDialog() {
   return (
     <>
       <Header title="Swap summary" ruled />
-      <Column gap={0.75} padded scrollable>
+      <SummaryColumn gap={0.75} padded scrollable>
         <Column gap={0.75} flex>
           <SwapSummary input={input} output={output} />
           <TYPE.caption>
@@ -120,14 +125,12 @@ export function SummaryDialog() {
           {swap?.maximumSent &&
             `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
-        <Footer>
-          {price === confirmedPrice ? (
-            <ActionButton onClick={() => void 0}>Confirm</ActionButton>
-          ) : (
-            <ApprovalButton onClick={() => confirmPrice(price)}>Price updated</ApprovalButton>
-          )}
-        </Footer>
-      </Column>
+        {price === confirmedPrice ? (
+          <ActionButton onClick={() => void 0}>Confirm</ActionButton>
+        ) : (
+          <ApprovalButton onClick={() => confirmPrice(price)}>Price updated</ApprovalButton>
+        )}
+      </SummaryColumn>
     </>
   )
 }

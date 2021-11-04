@@ -1,5 +1,5 @@
 import { useResetAtom } from 'jotai/utils'
-import styled, { icon } from 'lib/theme'
+import { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { useState } from 'react'
 import { Settings as SettingsSvg } from 'react-feather'

@@ -38,34 +38,6 @@ export function Header({ title, children, ruled }: HeaderProps) {
   )
 }
 
-export const Footer = styled(Column)`
-  background-color: inherit;
-  border-radius: ${({ theme }) => theme.borderRadius}em;
-  bottom: 0;
-  position: sticky;
-  z-index: ${Layer.OVERLAY};
-
-  :before {
-    background-color: inherit;
-    border-radius: ${({ theme }) => theme.borderRadius}em;
-    content: '';
-    height: 100%;
-    position: absolute;
-    width: 100%;
-    z-index: -1;
-  }
-
-  :after {
-    background-color: inherit;
-    bottom: -0.75em;
-    content: '';
-    height: 2em;
-    position: absolute;
-    width: 100%;
-    z-index: -1;
-  }
-`
-
 export const Modal = styled.div<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
   border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
