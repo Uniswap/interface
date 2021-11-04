@@ -75,7 +75,7 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'BNB',
       decimals: 18
     },
-    rpcUrls: ['https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
+    rpcUrls: ['https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface'],
     blockExplorerUrls: ['https://bscscan.com/']
   },
   [ChainId.AVAXMAINNET]: {
