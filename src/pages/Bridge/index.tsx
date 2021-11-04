@@ -186,6 +186,7 @@ export default function Bridge() {
               parentRef={fromPanelRef}
               show={SHOW_TESTNETS ? showFromList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
+              placement="bottom"
             />
           </div>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
@@ -204,6 +205,7 @@ export default function Bridge() {
               parentRef={toPanelRef}
               show={SHOW_TESTNETS ? showToList : false}
               onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
+              placement="bottom"
             />
           </div>
         </Row>
