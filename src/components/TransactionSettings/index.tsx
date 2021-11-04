@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react'
+import React, { useState, useRef, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Text } from 'rebass'
@@ -19,6 +19,7 @@ import { ButtonError } from 'components/Button'
 import { ApplicationModal } from 'state/application/actions'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
+import Tooltip from 'components/Tooltip'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -147,12 +148,6 @@ const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
-`
-const EmojiWrapper = styled.div`
-  position: absolute;
-  bottom: -6px;
-  right: 0px;
-  font-size: 14px;
 `
 
 const StyledMenu = styled.div`
@@ -364,6 +359,10 @@ export default function TransactionSettings() {
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const [isShowTooltip, setIsShowTooltip] = useState<boolean>(false)
+  const showTooltip = useCallback(() => setIsShowTooltip(true), [setIsShowTooltip])
+  const hideTooltip = useCallback(() => setIsShowTooltip(false), [setIsShowTooltip])
+
   return (
     <>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
@@ -408,16 +407,13 @@ export default function TransactionSettings() {
 
       {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
       <StyledMenu ref={node as any}>
-        <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Transaction Settings">
-          <TransactionSettingsIcon fill={theme.text} />
-          {expertMode ? (
-            <EmojiWrapper>
-              <span role="img" aria-label="wizard-icon">
-                🧙
-              </span>
-            </EmojiWrapper>
-          ) : null}
-        </StyledMenuButton>
+        <Tooltip text={t`Advanced mode is on!`} show={expertMode && isShowTooltip}>
+          <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
+            <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label="Transaction Settings">
+              <TransactionSettingsIcon fill={expertMode ? theme.warning : theme.text} />
+            </StyledMenuButton>
+          </div>
+        </Tooltip>
 
         {open && (
           <MenuFlyout>

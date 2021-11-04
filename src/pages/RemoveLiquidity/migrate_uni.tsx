@@ -30,7 +30,7 @@ import { calculateGasMargin, calculateSlippageAmount, getMigratorContract, short
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { MaxButton, Wrapper } from '../Pool/styleds'
+import { Wrapper } from '../Pool/styleds'
 import { useApproveCallback as useApproveCallbackUNI, ApprovalState } from '../../hooks/useApproveCallbackUNI'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
@@ -44,6 +44,7 @@ import { Redirect } from 'react-router-dom'
 import { useDerivedMintInfoMigration } from 'state/mint/hooks_for_migration'
 import isZero from 'utils/isZero'
 import { useUnAmplifiedPairsFull } from 'data/Reserves'
+import { MaxButton } from './styled'
 
 const DashedLine = styled.div`
   width: 100%;

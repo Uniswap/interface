@@ -7,6 +7,16 @@ export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, signifi
   )
 }
 
+export const formatJSBIValue = (balance?: JSBI, decimals = 18, significant = 6): string => {
+  if (!balance) {
+    return '0'
+  }
+
+  return new Fraction(balance.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(
+    significant
+  )
+}
+
 /**
  * Format big number of money into easy to read format
  * e.x: 299792458 => 299.8M

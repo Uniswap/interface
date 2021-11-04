@@ -63,6 +63,7 @@ export function computeSlippageAdjustedAmounts(
 }
 
 export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3 | 4 {
+  if (!priceImpact) return 0
   if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return 4
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
@@ -82,4 +83,18 @@ export function formatExecutionPrice(trade?: Trade | Aggregator, inverted?: bool
   return inverted
     ? `${trade.executionPrice.invert().toSignificant(6)} ${nativeInput?.symbol} / ${nativeOutput?.symbol}`
     : `${trade.executionPrice.toSignificant(6)} ${nativeOutput?.symbol} / ${nativeInput.symbol}`
+}
+
+export function computePriceImpactWithoutFee(pairs: Pair[], priceImpact?: Percent): Percent | undefined {
+  const realizedLPFee: Fraction = computeFee(pairs)
+
+  // remove lp fees from price impact
+  const priceImpactWithoutFeeFraction = priceImpact ? priceImpact.subtract(realizedLPFee) : undefined
+
+  // the x*y=k impact
+  const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction
+    ? new Percent(priceImpactWithoutFeeFraction?.numerator, priceImpactWithoutFeeFraction?.denominator)
+    : undefined
+
+  return priceImpactWithoutFeePercent
 }

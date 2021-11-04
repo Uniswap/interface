@@ -11,6 +11,7 @@ import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import {
   ROUTER_ADDRESSES,
   ROUTER_ADDRESSES_V2,
+  ZAP_ADDRESSES,
   FACTORY_ADDRESSES,
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
@@ -25,6 +26,7 @@ import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
+import ZAP_ABI from '../constants/abis/zap.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from '@dynamic-amm/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
@@ -198,6 +200,11 @@ export function getRouterContract(chainId: ChainId, library: Web3Provider, accou
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESSES_V2[chainId] || '', ROUTER_ABI_V2, library, account)
+}
+
+// account is optional
+export function getZapContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(ZAP_ADDRESSES[chainId] || '', ZAP_ABI, library, account)
 }
 
 export function getAggregationExecutorAddress(chainId: ChainId): string {

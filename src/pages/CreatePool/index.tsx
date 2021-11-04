@@ -381,7 +381,7 @@ export default function CreatePool({
                 />
               ) : (
                 <ConfirmationModalContent
-                  title={'Unamplified Pool existed'}
+                  title={t`Unamplified Pool existed`}
                   onDismiss={handleDismissConfirmation}
                   topContent={() => {
                     return null

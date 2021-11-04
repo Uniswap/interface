@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@dynamic-amm/sdk": "^3.0.16",
+    "@dynamic-amm/sdk": "^3.0.17",
     "@ethersproject/experimental": "^5.0.1",
     "@lingui/cli": "^3.10.2",
     "@lingui/loader": "^3.10.2",
@@ -91,7 +91,7 @@
     "trezor-connect": "8.1.15"
   },
   "scripts": {
-    "i18n:extract": "lingui extract",
+    "i18n:extract": "lingui extract --clean",
     "i18n:compile": "lingui compile",
     "i18n": "yarn i18n:extract && yarn i18n:compile",
     "start": "yarn i18n && react-app-rewired start",
