@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 import { darken, lighten, transparentize } from 'polished'
 
@@ -6,14 +6,17 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import arrowIcon from './../../assets/svg/double-angle.svg'
 import { Text } from 'rebass'
 
-const Base = styled(RebassButton)<{
+interface BaseProps {
   padding?: string
   width?: string
   borderRadius?: string
   altDisabledStyle?: boolean
-}>`
+}
+
+const Base = styled(RebassButton)<BaseProps>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 600;
@@ -86,9 +89,8 @@ export const ButtonSecondary = styled(Base)`
 `
 
 export const ButtonGrey = styled(Base)`
-  border: 1px solid #252237;
-  background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
-  background-blend-mode: overlay, normal;
+  border: 1px solid #2a2f42;
+  background-color: ${props => props.theme.bg1And2};
   color: ${({ theme }) => theme.text5};
   font-size: 16px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
@@ -245,12 +247,12 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export function ButtonWithLink({ link, text, marginTop }: { link: string; text: string; marginTop?: string }) {
+export function ButtonWithLink({ link, text, style }: { link: string; text: string; style?: any }) {
   return (
     <ButtonSecondary
       id="join-pool-button"
       as="a"
-      style={{ marginTop: marginTop ? marginTop : '0', padding: '10px 0px', borderRadius: '8px' }}
+      style={{ padding: '10px 20px', borderRadius: '8px', ...style }}
       href={link}
       rel="noopener noreferrer"
       target="_blank"
@@ -287,3 +289,53 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
     </ButtonOutlined>
   )
 }
+
+export const AddSWPRToMetamaskButton = styled(Base)<{ active?: boolean }>`
+  max-width: 190px;
+  padding: 6px 8px;
+  font-size: 10px;
+  line-height: 10px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${props => (props.active ? props.theme.white : '#c0baf7')};
+  background: ${props =>
+    props.active ? `linear-gradient(90deg, ${props.theme.primary1} -24.77%, #fb52a1 186.93%)` : '#191a24'};
+  border-radius: 8px;
+  border: none;
+  box-shadow: ${props => (props.active ? '0px 0px 42px rgba(165, 58, 196, 0.35)' : 'none')};
+`
+
+const MoreButton = styled.button`
+  position: relative;
+  display: block;
+  padding: 6px 8px;
+  margin: 12px auto 0;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text5};
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  img {
+    margin-left: 10px;
+  }
+`
+
+interface ShowMoreButtonProps {
+  children: ReactNode
+  onClick: () => void
+  isOpen: boolean
+}
+
+export const ShowMoreButton = ({ children, onClick, isOpen }: ShowMoreButtonProps) => (
+  <MoreButton onClick={onClick}>
+    {children}
+    <img src={arrowIcon} alt="arrow down" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
+  </MoreButton>
+)

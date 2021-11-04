@@ -103,12 +103,12 @@ const StyledLink = styled.a<{ color?: keyof Colors; underlined?: boolean }>`
   font-weight: 500;
 
   :hover {
-    text-decoration: underline;
+    text-decoration: ${props => (props.underlined ? 'underline' : 'none')};
   }
 
   :focus {
     outline: none;
-    text-decoration: underline;
+    text-decoration: ${props => (props.underlined ? 'underline' : 'none')};
   }
 
   :active {

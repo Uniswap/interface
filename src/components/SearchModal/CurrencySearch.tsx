@@ -166,6 +166,10 @@ export function CurrencySearch({
     return []
   }, [filteredInactiveTokens, filteredTokens.length, searchToken])
 
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [inputRef])
+
   return (
     <ContentWrapper>
       <AutoColumn style={{ padding: '22px 18.5px 20px 18.5px' }} gap="15px">

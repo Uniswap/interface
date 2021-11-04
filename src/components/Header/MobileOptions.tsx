@@ -117,6 +117,8 @@ export default function MobileOptions() {
     switch (location.pathname) {
       case '/swap':
         return t('swap')
+      case '/bridge':
+        return t('bridge')
       case '/pools':
       case '/add':
       case '/remove':
@@ -138,6 +140,11 @@ export default function MobileOptions() {
               <ListItem>
                 <StyledNavLink id="swap-nav-link" to="/swap" onClick={closeModals} activeClassName="active">
                   {t('swap')}
+                </StyledNavLink>
+              </ListItem>
+              <ListItem>
+                <StyledNavLink id="bridge-nav-link" to="/bridge" onClick={closeModals} activeClassName="active">
+                  {t('bridge')}
                 </StyledNavLink>
               </ListItem>
               <ListItem>

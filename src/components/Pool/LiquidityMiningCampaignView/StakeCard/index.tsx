@@ -338,11 +338,11 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                     <AutoColumn gap="4px">
                       {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
                         <>
-                          <Row justifyContent="flex-end">
+                          <Row>
                             <Skeleton width="40px" height="14px" />
                             <CurrencyLogo marginLeft={4} loading size="14px" />
                           </Row>
-                          <Row justifyContent="flex-end">
+                          <Row>
                             <Skeleton width="40px" height="14px" />
                             <CurrencyLogo marginLeft={4} loading size="14px" />
                           </Row>

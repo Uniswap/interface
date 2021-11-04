@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { AutoRow } from '../Row'
 import Badge from '../Badge'
+import { NetworkOptionProps } from './NetworkSwitcher.types'
 
 const InfoCard = styled.button<{ active?: boolean }>`
   background-color: transparent;
@@ -45,8 +46,7 @@ const HeaderText = styled.div`
 `
 
 const Icon = styled.img`
-  width: 24px;
-  border-radius: 50%;
+  width: 20px;
 `
 
 const BadgeWrapper = styled.div`
@@ -54,7 +54,6 @@ const BadgeWrapper = styled.div`
   border-radius: 10%;
   margin-left: 8px;
 `
-
 export default function Option({
   onClick,
   header,
@@ -62,14 +61,7 @@ export default function Option({
   comingSoon,
   active = false,
   disabled = false
-}: {
-  onClick?: any
-  header: React.ReactNode
-  logoSrc?: string
-  active?: boolean
-  disabled?: boolean
-  comingSoon?: boolean
-}) {
+}: NetworkOptionProps) {
   return (
     <OptionCardClickable onClick={onClick} disabled={disabled || comingSoon} active={active}>
       <OptionCardLeft>

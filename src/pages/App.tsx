@@ -23,6 +23,7 @@ import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
 import { Slide, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Bridge from './Bridge'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -98,6 +99,7 @@ export default function App() {
                   <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
                   <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                   <Route exact strict path="/liquidity-mining/create" component={CreateLiquidityMining} />
+                  <Route exact strict path="/bridge" component={Bridge} />
                   <Route component={RedirectPathToSwapOnly} />
                 </Switch>
               </Web3ReactManager>

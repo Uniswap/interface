@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["node_modules/**/*", "scripts/*.js"],
+  "ignorePatterns": ["node_modules/**/*", "scripts/*.js", "config-overrides.js"],
   "settings": {
     "react": {
       "version": "detect"

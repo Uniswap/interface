@@ -1,4 +1,5 @@
 import { Pair, Percent, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
+import { commify } from 'ethers/lib/utils'
 import { DateTime } from 'luxon'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -211,7 +212,7 @@ function Information({
               !staked || loadingNativeCurrencyUSDPrice || !nativeCurrencyUSDPrice ? (
                 <Skeleton width="60px" height="14px" />
               ) : (
-                `$${staked.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(2)}`
+                `$${commify(staked.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(2))}`
               )
             }
           />
@@ -248,7 +249,7 @@ function Information({
         </Flex>
         <Box>
           <DataDisplayer
-            title="APY"
+            title="APR"
             data={!apy ? <Skeleton width="80px" height="22px" /> : `${apy.toFixed(2)}%`}
             dataTextSize={22}
             fontWeight={600}

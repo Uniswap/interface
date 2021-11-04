@@ -17,7 +17,7 @@ export default function RewardSummary({ reward, apy }: RewardSummaryProps) {
         <TYPE.small fontWeight="600" color="text4" letterSpacing="0.08em">
           REWARD SUMMARY
         </TYPE.small>
-        <DataRow name="INITIAL APY" value={`${apy.toSignificant(2)}%`} />
+        <DataRow name="INITIAL APR" value={`${apy.toSignificant(2)}%`} />
         <DataRow
           name="TOTAL REWARD"
           value={reward && reward.token && reward.token.symbol ? `${reward.toExact()} ${reward.token.symbol}` : '-'}

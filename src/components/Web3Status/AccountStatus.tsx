@@ -8,13 +8,15 @@ import { shortenAddress } from '../../utils'
 import Loader from '../Loader'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 import { RowBetween } from '../Row'
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import XDAILogo from '../../assets/images/xdai-stake-logo.png'
-import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
+import EthereumLogo from '../../assets/svg/ethereum-logo.svg'
+import XDAILogo from '../../assets/svg/xdai-logo.svg'
+import ArbitrumLogo from '../../assets/svg/arbitrum-one-logo.svg'
 import { TriangleIcon } from '../Icons'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { ApplicationModal } from '../../state/application/actions'
+import { ChainLabel } from '../../constants'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -22,14 +24,6 @@ const ChainLogo: any = {
   [ChainId.ARBITRUM_ONE]: ArbitrumLogo,
   [ChainId.ARBITRUM_RINKEBY]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
-}
-
-const ChainLabel: any = {
-  [ChainId.MAINNET]: 'Ethereum',
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_ONE]: 'Arbitrum One',
-  [ChainId.ARBITRUM_RINKEBY]: 'Arbitrum Rinkeby',
-  [ChainId.XDAI]: 'xDai'
 }
 
 const View = styled.div`
@@ -161,7 +155,7 @@ export function AccountStatus({
           )}
         </Web3StatusConnected>
       )}
-      <NetworkSwitcherPopover>
+      <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusNetwork
           clickable={networkSwitchingActive}
           onClick={networkSwitchingActive ? toggleNetworkSwitcherPopover : undefined}
