@@ -68,7 +68,7 @@ export default function Earn() {
     return partition(allPools, (pool) => pool.stakedAmount && JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
   }, [allPools])
 
-  const [activePools, inactivePools] = partition(unstakedPools, (pool) => pool.active)
+  const [activePools] = partition(unstakedPools, (pool) => pool.active)
 
   const isGenesisOver = COUNTDOWN_END < new Date().getTime()
 
@@ -211,49 +211,42 @@ export default function Earn() {
         </PoolSection>
       </AutoColumn>
 
-      {inactivePools.length > 0 && (
-        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-          <DataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('inactivePools')}</TYPE.mediumHeader>
-            <div>{/* TODO(igm): show TVL here */}</div>
-          </DataRow>
+      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+        <DataRow style={{ alignItems: 'baseline' }}>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('inactivePools')}</TYPE.mediumHeader>
+          <div>{/* TODO(igm): show TVL here */}</div>
+        </DataRow>
 
-          <PoolSection>
-            {inactivePools.map((pool) => (
-              <ErrorBoundary key={pool.stakingRewardAddress}>
-                <PoolCard stakingInfo={pool} />
-              </ErrorBoundary>
-            ))}
-            {inactiveTripleRewards.map((x, i) => {
-              return (
-                x[1] && (
-                  <PoolSection key={i}>
-                    <ErrorBoundary>
-                      <TriplePoolCard
-                        poolAddress={x[0].address}
-                        dualPoolAddress={x[0].underlyingPool}
-                        underlyingPool={x[1]}
-                        active={x[0].active}
-                      />
-                    </ErrorBoundary>
-                  </PoolSection>
-                )
+        <PoolSection>
+          {inactiveTripleRewards.map((x, i) => {
+            return (
+              x[1] && (
+                <PoolSection key={i}>
+                  <ErrorBoundary>
+                    <TriplePoolCard
+                      poolAddress={x[0].address}
+                      dualPoolAddress={x[0].underlyingPool}
+                      underlyingPool={x[1]}
+                      active={x[0].active}
+                    />
+                  </ErrorBoundary>
+                </PoolSection>
               )
-            })}
-            {inactiveDualRewards.map((x, i) => {
-              return (
-                x[1] && (
-                  <PoolSection key={i}>
-                    <ErrorBoundary>
-                      <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
-                    </ErrorBoundary>
-                  </PoolSection>
-                )
+            )
+          })}
+          {inactiveDualRewards.map((x, i) => {
+            return (
+              x[1] && (
+                <PoolSection key={i}>
+                  <ErrorBoundary>
+                    <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
+                  </ErrorBoundary>
+                </PoolSection>
               )
-            })}
-          </PoolSection>
-        </AutoColumn>
-      )}
+            )
+          })}
+        </PoolSection>
+      </AutoColumn>
     </PageWrapper>
   )
 }
