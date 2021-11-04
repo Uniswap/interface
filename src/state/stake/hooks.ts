@@ -267,6 +267,14 @@ const EXTERNAL_POOLS: IRawPool[] = [
     rewardTokenSymbol: 'LAPIS',
     weight: 0,
   },
+  {
+    index: -1,
+    poolAddress: '0x478b8D37eE976228d17704d95B5430Cd93a31b87',
+    stakingToken: '0x12E42ccf14B283Ef0a36A791892D18BF75Da5c80',
+    rewardToken: '0x94140c2eA9D208D8476cA4E3045254169791C59e',
+    rewardTokenSymbol: 'PREMIO',
+    weight: 0,
+  },
 ]
 
 export function useStakingPoolsInfo(
