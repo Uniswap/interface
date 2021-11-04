@@ -1,6 +1,7 @@
 import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
 import TYPE from 'lib/theme/type'
+import { transparentize } from 'polished'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 
@@ -27,7 +28,18 @@ export const Overlay = styled(Column)`
   }
 `
 
-const BaseButton = styled(Button)`
+const BaseButton = styled(Button)<{ color?: Color; theme: Theme }>`
+  :enabled {
+    background-color: ${({ color = 'accent', theme }) => theme[color]};
+  }
+
+  :enabled:hover {
+    background-color: ${({ color = 'accent', theme }) => transparentize(0.3, theme[color])};
+    opacity: 1;
+  }
+`
+
+const StyledActionButton = styled(BaseButton)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 3.5em;
 
@@ -36,7 +48,7 @@ const BaseButton = styled(Button)`
   }
 `
 
-const StyledDisabledButton = styled(BaseButton)`
+const StyledDisabledButton = styled(StyledActionButton)`
   border: 1px solid ${({ theme }) => theme.outline};
 `
 
@@ -86,7 +98,7 @@ const rotate = ({ width, height }: { width?: number; height?: number }) => {
 `
 }
 
-const StyledLoadingButton = styled(BaseButton)<{ width?: number; height?: number; theme: Theme }>`
+const StyledLoadingButton = styled(StyledActionButton)<{ width?: number; height?: number; theme: Theme }>`
   background: inherit;
   overflow: hidden;
   position: relative;
@@ -145,15 +157,14 @@ const ApprovalRow = styled(Row)`
   padding: 0.5em;
 `
 
-const StyledApprovalButton = styled(Button)<{ color: Color; theme: Theme }>`
-  background-color: ${({ color, theme }) => theme[color]};
+const StyledApprovalButton = styled(BaseButton)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   color: ${({ theme }) => theme.contrast};
   height: 100%;
   padding: 0 1em;
 `
 
-export function ApprovalButton({ color = 'accent', onClick, children }: ActionButtonProps) {
+export function ApprovalButton({ color, onClick, children }: ActionButtonProps) {
   return (
     <Overlay>
       <ApprovalRow>
@@ -169,11 +180,7 @@ export function ApprovalButton({ color = 'accent', onClick, children }: ActionBu
   )
 }
 
-const StyledActionButton = styled(BaseButton)<{ color: Color; theme: Theme }>`
-  background-color: ${({ color, theme }) => theme[color]};
-`
-
-export default function ActionButton({ color = 'accent', onClick, children }: ActionButtonProps) {
+export default function ActionButton({ color, onClick, children }: ActionButtonProps) {
   return (
     <Overlay>
       <StyledActionButton color={color} onClick={onClick}>
