@@ -316,7 +316,7 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
   },
   [ChainId.ARBITRUM_RINKEBY]: {
     chainId: `0x${ChainId.ARBITRUM_RINKEBY.toString(16)}`,
-    chainName: 'Arbitrum Rinkeby',
+    chainName: 'A. Rinkeby',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',

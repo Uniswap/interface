@@ -38,7 +38,7 @@ const IconWrapper = styled(RowBetween)`
   max-width: 33px;
 
   img {
-    max-width: 100%;
+    height: 33px;
   }
 `
 
