@@ -74,13 +74,7 @@ export default function Bridge() {
   const bridgeSummaries = useBridgeTransactionsSummary()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
-  const {
-    onUserInput,
-    onToNetworkChange,
-    onFromNetworkChange,
-    onSwapBridgeNetworks,
-    onCurrencySelection
-  } = useBridgeActionHandlers()
+  const { onUserInput, onToNetworkChange, onFromNetworkChange, onSwapBridgeNetworks } = useBridgeActionHandlers()
 
   const toPanelRef = useRef(null)
   const fromPanelRef = useRef(null)
@@ -222,8 +216,8 @@ export default function Bridge() {
           onUserInput={onUserInput}
           onMax={!isCollecting ? handleMaxInput : undefined}
           disabled={isCollecting}
-          onCurrencySelect={SHOW_TESTNETS ? onCurrencySelection : () => null}
-          disableCurrencySelect={SHOW_TESTNETS ? isCollecting : true}
+          onCurrencySelect={() => null}
+          disableCurrencySelect={true}
           id="bridge-currency-input"
         />
         <BridgeActionPanel
