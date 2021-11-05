@@ -289,6 +289,10 @@ msgstr "모두 클레임하기"
 msgid "Claimed Rewards"
 msgstr "클레임된 보상"
 
+#: src/components/Header/index.tsx
+msgid "Classic Swap"
+msgstr ""
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "초기화"
@@ -1416,7 +1420,9 @@ msgid "Starting In"
 msgstr ""
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -1449,6 +1455,14 @@ msgstr ""
 
 #: src/components/swapv2/Routing.tsx
 msgid "Swap any token across different exchanges for the best price"
+msgstr ""
+
+#: src/components/Header/index.tsx
+msgid "Swap directly through our DMM Pools"
+msgstr ""
+
+#: src/components/Header/index.tsx
+msgid "Swap using our new DEX aggregator"
 msgstr ""
 
 #: src/components/Vesting/index.tsx

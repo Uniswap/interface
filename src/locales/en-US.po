@@ -289,6 +289,10 @@ msgstr "Claim All"
 msgid "Claimed Rewards"
 msgstr "Claimed Rewards"
 
+#: src/components/Header/index.tsx
+msgid "Classic Swap"
+msgstr "Classic Swap"
+
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "Clear all"
@@ -1416,7 +1420,9 @@ msgid "Starting In"
 msgstr "Starting In"
 
 #: src/components/Header/index.tsx
+#: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -1450,6 +1456,14 @@ msgstr "Swap Legacy"
 #: src/components/swapv2/Routing.tsx
 msgid "Swap any token across different exchanges for the best price"
 msgstr "Swap any token across different exchanges for the best price"
+
+#: src/components/Header/index.tsx
+msgid "Swap directly through our DMM Pools"
+msgstr "Swap directly through our DMM Pools"
+
+#: src/components/Header/index.tsx
+msgid "Swap using our new DEX aggregator"
+msgstr "Swap using our new DEX aggregator"
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"

@@ -399,7 +399,7 @@ export default function Header() {
                       <Trans>Swap</Trans>
                     </Text>
                     <Text fontSize={12} marginTop="6px">
-                      <Trans>Swap using new our DEX aggregator</Trans>
+                      <Trans>Swap using our new DEX aggregator</Trans>
                     </Text>
                   </StyledNavLink>
 
