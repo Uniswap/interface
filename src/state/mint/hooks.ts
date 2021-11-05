@@ -123,7 +123,7 @@ export function useDerivedMintInfo(
       return undefined
     } else {
       const wrappedCurrencyA = wrappedCurrency(currencyA, chainId)
-      return pair && wrappedCurrencyA ? pair.priceOfReal(wrappedCurrencyA) : undefined
+      return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
     }
   }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
 
