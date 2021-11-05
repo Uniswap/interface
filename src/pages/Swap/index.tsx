@@ -2,7 +2,7 @@ import { CurrencyAmount, JSBI, Token, Trade } from '@dynamic-amm/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps } from 'react-router-dom'
 import { t, Trans } from '@lingui/macro'
 
@@ -39,10 +39,15 @@ import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import AppBody from '../AppBody'
+import AppBodyRaw from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import SwapIcon from '../../assets/svg/swap.svg'
+import TransactionSettings from 'components/TransactionSettings'
+
+const AppBody = styled(AppBodyRaw)`
+  padding-top: 24px;
+`
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -256,6 +261,11 @@ export default function Swap({ history }: RouteComponentProps) {
       />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
+        <RowBetween mb={'16px'}>
+          <TYPE.black color={theme.text1} fontSize={20} fontWeight={500}>{t`Swap`}</TYPE.black>
+          <TransactionSettings />
+        </RowBetween>
+
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}

@@ -38,7 +38,7 @@ import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useDerivedSwapInfoV2 } from '../../state/swap/useAggregator'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE, StyledInternalLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -68,6 +68,16 @@ import { MouseoverTooltip } from 'components/Tooltip'
 const AppBodyWrapped = styled(AppBody)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   z-index: 1;
+`
+
+const LegacySwapWarning = styled.div`
+  border-radius: 4px;
+  padding: 1rem;
+  background: ${({ theme }) => `${theme.primary1}33`};
+  margin-bottom: 1rem;
+  font-size: 14px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.text};
 `
 
 export default function Swap({ history }: RouteComponentProps) {
@@ -292,6 +302,8 @@ export default function Swap({ history }: RouteComponentProps) {
       ? '< 0.00001'
       : tradeComparer?.outputAmount?.toSignificant(6)
 
+  const isPegaxy = currencies[Field.INPUT]?.symbol === 'PGX' || currencies[Field.OUTPUT]?.symbol === 'PGX'
+
   return (
     <>
       <TokenWarningModal
@@ -333,6 +345,17 @@ export default function Swap({ history }: RouteComponentProps) {
                   <TransactionSettings />
                 </SwapFormActions>
               </RowBetween>
+
+              {isPegaxy && (
+                <LegacySwapWarning>
+                  Note: You can also swap PGX in our 'Classic Swap' mode{' '}
+                  <StyledInternalLink to="/swap-legacy">
+                    <Text fontWeight="600" as="span">
+                      here.
+                    </Text>
+                  </StyledInternalLink>
+                </LegacySwapWarning>
+              )}
 
               <Wrapper id="swap-page">
                 <ConfirmSwapModal
