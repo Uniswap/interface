@@ -8,7 +8,8 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { ImportAccountForm } from 'src/features/import/importAccountForm'
+import { ImportAccountForm } from 'src/features/import/ImportAccountForm'
+import { ImportReadonlyAccountForm } from 'src/features/import/ImportReadonlyAccountForm'
 import { unlockWallet } from 'src/features/wallet/walletSlice'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.ImportAccount>
@@ -17,6 +18,7 @@ export function ImportAccountScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const onImportSuccess = () => {
     dispatch(unlockWallet())
+    navigation.navigate(Screens.Accounts)
   }
   const onPressScan = () => {
     navigation.navigate(Screens.Camera)
@@ -26,6 +28,12 @@ export function ImportAccountScreen({ navigation }: Props) {
 
   return (
     <Screen>
+      <Box alignItems="center" mb="lg">
+        <Text variant="h1" textAlign="center">
+          {t`Track any wallet`}
+        </Text>
+        <ImportReadonlyAccountForm onImportSuccess={onImportSuccess} />
+      </Box>
       <Box alignItems="center">
         <Text variant="h1" textAlign="center">
           {t('Import Your Account')}

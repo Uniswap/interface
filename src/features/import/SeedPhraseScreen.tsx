@@ -9,7 +9,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { importAccountActions } from 'src/features/import/importAccount'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.SeedPhrase>
 

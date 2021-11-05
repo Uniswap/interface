@@ -1,50 +1,18 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { Button } from 'src/components/buttons/Button'
+import { RootStackParamList } from 'src/app/navTypes'
+import { Screens } from 'src/app/Screens'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceItem/TokenBalanceItem'
 import { ChainId } from 'src/constants/chains'
 import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
-import { AccountStub } from 'src/features/wallet/accounts/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { shortenAddress } from 'src/utils/addresses'
+import { AccountHeader } from '../components/AccountHeader'
 
-interface AddressHeaderProps {
-  activeAccount: AccountStub
-}
+type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
 
-function AddressHeader({ activeAccount }: AddressHeaderProps) {
-  // TODO: get ENS Name
-
-  return (
-    <Box
-      flexDirection="row"
-      alignItems="center"
-      height={50}
-      paddingHorizontal="md"
-      marginVertical="md">
-      <Button flex={1} flexDirection="row" alignItems="center">
-        <Button
-          marginRight="sm"
-          width={40}
-          height={40}
-          borderRadius="full"
-          backgroundColor="gray100"
-        />
-        <Text variant="h3" textAlign="left">
-          {shortenAddress(activeAccount!.address)}
-        </Text>
-      </Button>
-      <Box flexDirection="row" />
-    </Box>
-  )
-}
-
-export function HomeScreen() {
-  const activeAccount = useActiveAccount()
-
+export function HomeScreen({ navigation }: Props) {
   const ethBalance = useActiveAccountEthBalance(ChainId.RINKEBY)
 
   // TODO: Handle no activeAccount
@@ -54,7 +22,7 @@ export function HomeScreen() {
     <Screen backgroundColor="mainBackground">
       <ScrollView contentContainerStyle={style.scrollView}>
         <Box flex={1}>
-          <AddressHeader activeAccount={activeAccount!} />
+          <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
           <Box flex={1} backgroundColor="gray50" />
         </Box>
         <Box flex={1} backgroundColor="mainBackground" padding="md">

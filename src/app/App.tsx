@@ -24,6 +24,7 @@ import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
+import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { darkTheme, theme } from 'src/styles/theme'
@@ -103,6 +104,26 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
               name={Screens.Home}
               component={HomeScreen}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name={Screens.Accounts}
+              component={AccountsScreen}
+              options={{ title: 'Uniswap | Accounts' }}
+            />
+            <Stack.Screen
+              name={Screens.Camera}
+              component={CameraScreen}
+              options={{ title: 'Uniswap | Camera' }}
+            />
+            <Stack.Screen
+              name={Screens.SeedPhrase}
+              component={SeedPhraseScreen}
+              options={{ title: 'Uniswap | Seed Phrase' }}
+            />
+            <Stack.Screen
+              name={Screens.ImportAccount}
+              component={ImportAccountScreen}
+              options={{ title: 'Uniswap | Import' }}
             />
           </>
         ) : (

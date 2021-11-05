@@ -41,4 +41,4 @@ export interface ReadOnlyAccount extends AccountBase {
   signer: VoidSigner
 }
 
-export type Account = LocalAccount | NativeAccount | WalletConnectAccount
+export type Account = LocalAccount | NativeAccount | WalletConnectAccount | ReadOnlyAccount

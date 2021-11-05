@@ -1,4 +1,5 @@
 export enum Screens {
+  Accounts = 'Accounts',
   Balances = 'Balances',
   Camera = 'Camera',
   Dev = 'Dev',

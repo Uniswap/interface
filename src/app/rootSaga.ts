@@ -11,7 +11,7 @@ import {
   importAccountReducer,
   importAccountSaga,
   importAccountSagaName,
-} from 'src/features/import/importAccount'
+} from 'src/features/import/importAccountSaga'
 import { initProviders } from 'src/features/providers/providerSaga'
 import {
   transferTokenActions,

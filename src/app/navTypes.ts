@@ -3,6 +3,7 @@ import { ChainId } from 'src/constants/chains'
 
 // Route nav props go here
 export type RootStackParamList = {
+  [Screens.Accounts]: undefined
   [Screens.Balances]: undefined
   [Screens.Camera]: undefined
   [Screens.Dev]: undefined
