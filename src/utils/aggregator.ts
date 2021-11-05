@@ -114,7 +114,7 @@ export function encodeSwapExecutor(swaps: any[][], chainId: ChainId) {
       // dexOption: 16 bit (first 8 bit for dextype + last 8 bit is dexIds in uni swap type)
       const dexOption = dec2bin(dex.type, 8) + dec2bin(dex.id, 8)
       let data: string
-      if (dex.type === 1) {
+      if (dex.type === 1 || dex.type === 4) {
         data = encodeStableSwap(sequence)
       } else if (dex.type === 2) {
         data = encodeCurveSwap(sequence)
