@@ -25,8 +25,11 @@ import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 
 const Wrapper = styled.div`
+  width: 100%;
   max-width: 432px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 const Title = styled.p`
@@ -39,16 +42,14 @@ const Title = styled.p`
 `
 
 const Row = styled(RowBetween)`
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
   align-items: stretch;
+  justify-content: space-between;
 
-  & > div {
-    min-width: 141px;
-    width: 100%;
-  }
-
-  & > div,
-  & > div button {
-    min-height: 100%;
+  @media (max-width: 374px) {
+    flex-direction: column;
   }
 `
 
@@ -59,8 +60,12 @@ const SwapButton = styled.button<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 
   @media only screen and (max-width: 600px) {
-    padding: 0 8px;
+    padding: 8px;
   }
+`
+
+const AssetWrapper = styled.div`
+  flex: 1 0 35%;
 `
 
 export default function Bridge() {
@@ -173,7 +178,7 @@ export default function Bridge() {
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>
         <Row mb="12px">
-          <div ref={fromPanelRef}>
+          <AssetWrapper ref={fromPanelRef}>
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
@@ -188,11 +193,11 @@ export default function Bridge() {
               onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
               placement="bottom"
             />
-          </div>
+          </AssetWrapper>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
-          <div ref={toPanelRef}>
+          <AssetWrapper ref={toPanelRef}>
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
@@ -207,7 +212,7 @@ export default function Bridge() {
               onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
               placement="bottom"
             />
-          </div>
+          </AssetWrapper>
         </Row>
         <CurrencyInputPanel
           label="Amount"
