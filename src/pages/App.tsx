@@ -93,13 +93,14 @@ export default function App() {
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     const fetchGas = (chain: string) => {
-      fetch(process.env.REACT_APP_KRYSTAL_API + `/${chain}/v2/swap/gasPrice`)
+      fetch(process.env.REACT_APP_KRYSTAL_API + `/${chain}/v1/swap/gasPrice`)
         .then(res => res.json())
         .then(json => {
           dispatch(setGasPrice(!!json.error ? undefined : json.gasPrice))
         })
         .catch(e => {
           dispatch(setGasPrice(undefined))
+          console.error(e)
         })
     }
 

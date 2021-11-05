@@ -42,26 +42,11 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
 
 // TODO-swapv2: change aggregation executor contract
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
-      : '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.MATIC]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
-      : '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.AVAXMAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
-      : '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.MAINNET]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
-      : '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.FANTOM]:
-    process.env.REACT_APP_MAINNET_ENV === 'staging'
-      ? '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
-      : '0x276e31882AD6C784858CdE5770B21eE09d79b744'
+  [ChainId.BSCMAINNET]: '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba',
+  [ChainId.MATIC]: '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba',
+  [ChainId.AVAXMAINNET]: '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba',
+  [ChainId.MAINNET]: '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba',
+  [ChainId.FANTOM]: '0x8627CAea81719a829f89e8A417545ebA72A2d8Ba'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
