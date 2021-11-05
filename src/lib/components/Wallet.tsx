@@ -4,7 +4,7 @@ import { Clock } from 'react-feather'
 
 import Button from './Button'
 import Dialog from './Dialog'
-import RecentTransactionsDialog, { mockTxs, TransactionStatus } from './RecentTransactions'
+import RecentTransactionsDialog, { mockTxs, TransactionStatus } from './RecentTransactionsDialog'
 import SpinnerIcon from './SpinnerIcon'
 
 const TransactionsIcon = icon(Clock)

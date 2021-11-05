@@ -28,7 +28,7 @@ export const Overlay = styled(Column)`
   }
 `
 
-const BaseButton = styled(Button)<{ color?: Color; theme: Theme }>`
+const StyledButton = styled(Button)<{ color?: Color; theme: Theme }>`
   :enabled {
     background-color: ${({ color = 'accent', theme }) => theme[color]};
   }
@@ -39,7 +39,7 @@ const BaseButton = styled(Button)<{ color?: Color; theme: Theme }>`
   }
 `
 
-const StyledActionButton = styled(BaseButton)`
+const StyledActionButton = styled(StyledButton)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   height: 3.5em;
 
@@ -157,7 +157,7 @@ const ApprovalRow = styled(Row)`
   padding: 0.5em;
 `
 
-const StyledApprovalButton = styled(BaseButton)`
+const StyledApprovalButton = styled(StyledButton)`
   border-radius: ${({ theme }) => theme.borderRadius}em;
   color: ${({ theme }) => theme.contrast};
   height: 100%;

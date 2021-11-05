@@ -1,5 +1,5 @@
 import { Modal } from './Dialog'
-import RecentTransactionsDialog from './RecentTransactions'
+import RecentTransactionsDialog from './RecentTransactionsDialog'
 
 export default (
   <Modal color="module">

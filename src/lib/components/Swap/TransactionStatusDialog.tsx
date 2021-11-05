@@ -12,7 +12,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import SpinnerIcon from '../SpinnerIcon'
 import { Transaction, transactionAtom } from './state'
-import { SwapSummary } from './Summary'
+import Summary from './Summary'
 
 const DownIcon = icon(ChevronDown)
 const ElapsedIcon = icon(Clock)
@@ -86,7 +86,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
       <Column gap={1}>
         <Column gap={0.75} flex>
           <TYPE.subhead1>Transaction {transaction.status ? 'submitted' : 'pending'}</TYPE.subhead1>
-          <SwapSummary input={transaction.input} output={transaction.output} />
+          <Summary input={transaction.input} output={transaction.output} />
           <FlexRule />
         </Column>
         <TYPE.subhead2 color="secondary">
@@ -141,7 +141,7 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
   )
 }
 
-export function TransactionStatusDialog({ onClose }: { onClose: () => void }) {
+export default function TransactionStatusDialog({ onClose }: { onClose: () => void }) {
   const transaction = useAtomValue(transactionAtom)
   return (
     transaction &&

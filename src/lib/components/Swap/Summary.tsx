@@ -26,12 +26,12 @@ const SummaryColumn = styled(Column)`
   padding-bottom: 0;
 `
 
-interface SwapSummaryProps {
+interface SummaryProps {
   input: Required<Pick<Input, 'token' | 'value'>> & Input
   output: Required<Pick<Input, 'token' | 'value'>> & Input
 }
 
-export function SwapSummary({ input, output }: SwapSummaryProps) {
+export default function Summary({ input, output }: SummaryProps) {
   const change = useMemo(() => {
     if (input.usdc && output.usdc) {
       return output.usdc / input.usdc - 1
@@ -103,7 +103,7 @@ export function SummaryDialog() {
       <Header title="Swap summary" ruled />
       <SummaryColumn gap={0.75} padded scrollable>
         <Column gap={0.75} flex>
-          <SwapSummary input={input} output={output} />
+          <Summary input={input} output={output} />
           <TYPE.caption>
             1 {input.token.symbol} = {price} {output.token.symbol}
           </TYPE.caption>

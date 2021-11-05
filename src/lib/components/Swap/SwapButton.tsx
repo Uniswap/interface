@@ -7,7 +7,7 @@ import ActionButton, { ApprovalButton, DisabledButton, LoadingButton } from '../
 import Dialog from '../Dialog'
 import { inputAtom, State, stateAtom } from './state'
 import { SummaryDialog } from './Summary'
-import { TransactionStatusDialog } from './TransactionStatus'
+import TransactionStatusDialog from './TransactionStatusDialog'
 
 export default function SwapButton() {
   const [state, setState] = useAtom(stateAtom)
