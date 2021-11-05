@@ -6,7 +6,7 @@
 #
 # Note. `chainId` is only used to guarantee unique keys across chains.
 
-query hourlyTokenPrices($address: String!, $periodStartUnix: Int!, $chainId: Int!) {
+query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
   tokenHourDatas(
     where: { token: $address, periodStartUnix_gt: $periodStartUnix }
     orderBy: periodStartUnix
@@ -20,7 +20,7 @@ query hourlyTokenPrices($address: String!, $periodStartUnix: Int!, $chainId: Int
   }
 }
 
-query dailyTokenPrices($address: String!, $chainId: Int!) {
+query dailyTokenPrices($address: String, $chainId: Int) {
   tokenDayDatas(where: { token: $address }, orderBy: date, orderDirection: desc) {
     timestamp: date
     high

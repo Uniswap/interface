@@ -4316,17 +4316,17 @@ export enum _SubgraphErrorPolicy_ {
 }
 
 export type HourlyTokenPricesQueryVariables = Exact<{
-  address: Scalars['String'];
-  periodStartUnix: Scalars['Int'];
-  chainId: Scalars['Int'];
+  address?: Maybe<Scalars['String']>;
+  periodStartUnix?: Maybe<Scalars['Int']>;
+  chainId?: Maybe<Scalars['Int']>;
 }>;
 
 
 export type HourlyTokenPricesQuery = { __typename?: 'Query', tokenHourDatas: Array<{ __typename?: 'TokenHourData', high: any, low: any, open: any, close: any, timestamp: number }> };
 
 export type DailyTokenPricesQueryVariables = Exact<{
-  address: Scalars['String'];
-  chainId: Scalars['Int'];
+  address?: Maybe<Scalars['String']>;
+  chainId?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -4334,7 +4334,7 @@ export type DailyTokenPricesQuery = { __typename?: 'Query', tokenDayDatas: Array
 
 
 export const HourlyTokenPricesDocument = `
-    query hourlyTokenPrices($address: String!, $periodStartUnix: Int!, $chainId: Int!) {
+    query hourlyTokenPrices($address: String, $periodStartUnix: Int, $chainId: Int) {
   tokenHourDatas(
     where: {token: $address, periodStartUnix_gt: $periodStartUnix}
     orderBy: periodStartUnix
@@ -4353,16 +4353,16 @@ export const useHourlyTokenPricesQuery = <
       TError = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables: HourlyTokenPricesQueryVariables,
+      variables?: HourlyTokenPricesQueryVariables,
       options?: UseQueryOptions<HourlyTokenPricesQuery, TError, TData>
     ) =>
     useQuery<HourlyTokenPricesQuery, TError, TData>(
-      ['hourlyTokenPrices', variables],
+      variables === undefined ? ['hourlyTokenPrices'] : ['hourlyTokenPrices', variables],
       fetcher<HourlyTokenPricesQuery, HourlyTokenPricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, HourlyTokenPricesDocument, variables),
       options
     );
 export const DailyTokenPricesDocument = `
-    query dailyTokenPrices($address: String!, $chainId: Int!) {
+    query dailyTokenPrices($address: String, $chainId: Int) {
   tokenDayDatas(where: {token: $address}, orderBy: date, orderDirection: desc) {
     timestamp: date
     high
@@ -4377,11 +4377,11 @@ export const useDailyTokenPricesQuery = <
       TError = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables: DailyTokenPricesQueryVariables,
+      variables?: DailyTokenPricesQueryVariables,
       options?: UseQueryOptions<DailyTokenPricesQuery, TError, TData>
     ) =>
     useQuery<DailyTokenPricesQuery, TError, TData>(
-      ['dailyTokenPrices', variables],
+      variables === undefined ? ['dailyTokenPrices'] : ['dailyTokenPrices', variables],
       fetcher<DailyTokenPricesQuery, DailyTokenPricesQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DailyTokenPricesDocument, variables),
       options
     );

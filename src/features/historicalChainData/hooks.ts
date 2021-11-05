@@ -15,18 +15,17 @@ interface HourlyTokenPricesProps extends TokenPricesProps {
 }
 
 function useEndpoint(chainId?: number) {
-  return useMemo(() => (chainId ? CHAIN_INFO[chainId].subgraphUrl : null), [chainId])
+  return useMemo(() => (chainId ? CHAIN_INFO[chainId].subgraphUrl : null) ?? '', [chainId])
 }
 
 export function useHourlyTokenPrices({ token, timestamp }: HourlyTokenPricesProps) {
   const endpoint = useEndpoint(token?.chainId)
 
-  // `enabled` param ensures type-safety, hence non-null-assertions
   return useHourlyTokenPricesQuery(
-    { endpoint: endpoint! },
+    { endpoint },
     {
-      address: token!.address.toLowerCase(),
-      chainId: token!.chainId, // enforces key by chain
+      address: token?.address.toLowerCase(),
+      chainId: token?.chainId, // enforces key by chain
       periodStartUnix: Math.round(timestamp / 1000),
     },
     { enabled: Boolean(endpoint) && Boolean(token) }
@@ -37,10 +36,10 @@ export function useDailyTokenPrices({ token }: TokenPricesProps) {
   const endpoint = useEndpoint(token?.chainId)
 
   return useDailyTokenPricesQuery(
-    { endpoint: endpoint! },
+    { endpoint },
     {
-      address: token!.address.toLowerCase(),
-      chainId: token!.chainId, // enforces key by chain
+      address: token?.address.toLowerCase(),
+      chainId: token?.chainId, // enforces key by chain
     },
     { enabled: Boolean(endpoint) && Boolean(token) }
   )
