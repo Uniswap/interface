@@ -32,17 +32,17 @@ export function useGraphs(token: Token): GraphMetadatas | null {
     () => ({
       // TODO(judo): interpolation requires same data length
       // TODO(#80): use block-level data and add 1h chart
-      oneDay: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_DAY),
-      oneWeek: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_WEEK),
-      oneMonth: hourlyTokenData.data?.tokenHourDatas.slice(0, HOURS_IN_MONTH),
+      oneDay: hourlyTokenData.prices?.slice(0, HOURS_IN_DAY),
+      oneWeek: hourlyTokenData.prices?.slice(0, HOURS_IN_WEEK),
+      oneMonth: hourlyTokenData.prices?.slice(0, HOURS_IN_MONTH),
     }),
     [hourlyTokenData]
   )
 
   const dailyTokenPrices = useMemo(
     () => ({
-      oneYear: dailyTokenData.data?.tokenDayDatas.slice(0, DAYS_IN_YEAR),
-      all: dailyTokenData.data?.tokenDayDatas,
+      oneYear: dailyTokenData.prices?.slice(0, DAYS_IN_YEAR),
+      all: dailyTokenData.prices,
     }),
     [dailyTokenData]
   )

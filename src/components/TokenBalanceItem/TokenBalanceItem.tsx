@@ -14,21 +14,19 @@ interface TokenBalanceItemProps {
 }
 
 export function TokenBalanceItem({ balance }: TokenBalanceItemProps) {
-  const { data } = useHourlyTokenPrices({
+  const { prices } = useHourlyTokenPrices({
     token: balance?.currency.wrapped,
     timestamp: YESTERDAY,
   })
 
   const percentChange = useMemo(() => {
-    if (!data || data.tokenHourDatas?.length === 0) return '-'
-
-    const { tokenHourDatas: prices } = data
+    if (!prices || prices?.length === 0) return '-'
 
     // TODO: get current price from chain
     const startingPrice = prices[prices.length - 1].close
 
     return `${(((prices[0].close - startingPrice) / startingPrice) * 100).toFixed(1)}%`
-  }, [data])
+  }, [prices])
 
   return (
     <Button
