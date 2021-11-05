@@ -1,22 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 export interface PositionDetails {
-  nonce: BigNumber
+  owner: string
   tokenId: BigNumber
-  operator: string
   token0: string
   token1: string
   fee: number
   tickLower: number
   tickUpper: number
   liquidity: BigNumber
-  feeGrowthInside0LastX128: BigNumber
-  feeGrowthInside1LastX128: BigNumber
+  opened: BigNumber
+  processed: BigNumber
+  targetGasPrice: BigNumber
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
-  batchId: BigNumber
-  closed: BigNumber
-  gasDeposit: BigNumber
-  opened: BigNumber
-  owner: string
 }

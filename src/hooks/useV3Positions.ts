@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { PositionDetails } from 'types/position'
 
-import { useLimitOrderManager, useV3NFTPositionManagerContract } from './useContract'
+import { useLimitOrderManager } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -11,11 +11,9 @@ interface UseV3PositionsResults {
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
-  const positionManager = useV3NFTPositionManagerContract()
   const limitOrderManager = useLimitOrderManager()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
-  const results = useSingleContractMultipleData(positionManager, 'positions', inputs)
-  const deposits = useSingleContractMultipleData(limitOrderManager, 'deposits', inputs)
+  const results = useSingleContractMultipleData(limitOrderManager, 'orders', inputs)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
@@ -24,32 +22,26 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
     if (!loading && !error && tokenIds) {
       return results.map((call, i) => {
         const tokenId = tokenIds[i]
-        const depositResult = deposits[i].result as Result
         const result = call.result as Result
         return {
+          owner: result.owner,
           tokenId,
-          fee: result.fee,
-          feeGrowthInside0LastX128: result.feeGrowthInside0LastX128,
-          feeGrowthInside1LastX128: result.feeGrowthInside1LastX128,
-          liquidity: result.liquidity,
-          nonce: result.nonce,
-          operator: result.operator,
-          tickLower: result.tickLower,
-          tickUpper: result.tickUpper,
           token0: result.token0,
           token1: result.token1,
+          fee: result.fee,
+          tickLower: result.tickLower,
+          tickUpper: result.tickUpper,
+          liquidity: result.liquidity,
+          opened: result.opened,
+          processed: result.processed,
+          targetGasPrice: result.targetGasPrice,
           tokensOwed0: result.tokensOwed0,
           tokensOwed1: result.tokensOwed1,
-          batchId: depositResult.batchId,
-          closed: depositResult.closed,
-          gasDeposit: depositResult.gasDeposit,
-          opened: depositResult.opened,
-          owner: depositResult.owner,
         }
       })
     }
     return undefined
-  }, [loading, error, tokenIds, results, deposits])
+  }, [loading, error, tokenIds, results])
 
   return {
     loading,
@@ -73,11 +65,9 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const limitOrderManager = useLimitOrderManager()
 
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(
-    limitOrderManager,
-    'tokenIdsPerAddressLength',
-    [account ?? undefined]
-  )
+  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(limitOrderManager, 'balanceOf', [
+    account ?? undefined,
+  ])
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
@@ -93,7 +83,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return []
   }, [account, accountBalance])
 
-  const tokenIdResults = useSingleContractMultipleData(limitOrderManager, 'tokenIdsPerAddress', tokenIdsArgs)
+  const tokenIdResults = useSingleContractMultipleData(limitOrderManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
   const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
   const tokenIds = useMemo(() => {

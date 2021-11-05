@@ -154,16 +154,19 @@ function useSwapCallArguments(
     }
 
     if (targetPrice && sortedTokens) {
-      const openOrderData = [
-        sortedTokens[0].address,
-        sortedTokens[1].address,
-        trade.route.pools[0].fee.toString(),
-        encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
-        toHex(amount0?.quotient),
-        toHex(amount1?.quotient),
-        toHex(gasAmount?.quotient),
-      ]
-      calldatas.push(limitOrderManager.interface.encodeFunctionData('openOrder', openOrderData))
+      calldatas.push(
+        limitOrderManager.interface.encodeFunctionData('placeLimitOrder', [
+          {
+            _token0: sortedTokens[0].address,
+            _token1: sortedTokens[1].address,
+            _fee: trade.route.pools[0].fee.toString(),
+            _sqrtPriceX96: encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
+            _amount0: toHex(amount0?.quotient),
+            _amount1: toHex(amount1?.quotient),
+            _targetGasPrice: toHex(gasAmount?.quotient),
+          },
+        ])
+      )
     }
 
     const calldata =

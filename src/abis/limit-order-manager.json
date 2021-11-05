@@ -10,12 +10,18 @@
       },
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      },
+      {
+        "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "name": "DepositCancelled",
+    "name": "Approval",
     "type": "event"
   },
   {
@@ -29,68 +35,18 @@
       },
       {
         "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokensOwed0",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokensOwed1",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "payment",
-        "type": "uint256"
-      }
-    ],
-    "name": "DepositClaimed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
         "internalType": "address",
-        "name": "owner",
+        "name": "operator",
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "indexed": false,
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
       }
     ],
-    "name": "DepositClosed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "DepositCreated",
+    "name": "ApprovalForAll",
     "type": "event"
   },
   {
@@ -137,6 +93,100 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "LimitOrderCancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokensOwed0",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokensOwed1",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "payment",
+        "type": "uint256"
+      }
+    ],
+    "name": "LimitOrderCollected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "LimitOrderCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "LimitOrderProcessed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -148,6 +198,31 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
     "type": "event"
   },
   {
@@ -171,12 +246,26 @@
   },
   {
     "inputs": [],
-    "name": "LINK",
+    "name": "POOL_FEE",
     "outputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "uint24",
         "name": "",
-        "type": "address"
+        "type": "uint24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "TWAP_PERIOD",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
@@ -200,181 +289,34 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "addFunding",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
-        "name": "_poolAddress",
+        "name": "to",
         "type": "address"
       },
-      {
-        "internalType": "uint256",
-        "name": "_amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount1",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint160",
-        "name": "_sqrtPriceX96",
-        "type": "uint160"
-      }
-    ],
-    "name": "calculateLimitTicks",
-    "outputs": [
-      {
-        "internalType": "int24",
-        "name": "_lowerTick",
-        "type": "int24"
-      },
-      {
-        "internalType": "int24",
-        "name": "_upperTick",
-        "type": "int24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "cancelOrder",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount1",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "claimOrderFunds",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_batchId",
-        "type": "uint256"
-      }
-    ],
-    "name": "closeOrder",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount1",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "deposits",
-    "outputs": [
       {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "opened",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "token0",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "token1",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "closed",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "batchId",
-        "type": "uint256"
-      },
+      }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
         "name": "owner",
         "type": "address"
-      },
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "ownerIndex",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IOrderMonitor",
-        "name": "monitor",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "serviceFee",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -383,19 +325,13 @@
     "constant": true
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_targetGasPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "estimateServiceFeeWei",
+    "inputs": [],
+    "name": "baseURI",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "string",
         "name": "",
-        "type": "uint256"
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -439,22 +375,17 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
-    "name": "isUnderfunded",
+    "name": "getApproved",
     "outputs": [
       {
-        "internalType": "bool",
-        "name": "underfunded",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -465,16 +396,21 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
         "type": "address"
       }
     ],
-    "name": "keeperIdPerMonitor",
+    "name": "isApprovedForAll",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -537,6 +473,20 @@
   },
   {
     "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
     "name": "nextMonitor",
     "outputs": [
       {
@@ -548,104 +498,6 @@
     "stateMutability": "view",
     "type": "function",
     "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "nonfungiblePositionManager",
-    "outputs": [
-      {
-        "internalType": "contract INonfungiblePositionManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_operator",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
-      }
-    ],
-    "name": "onERC721Received",
-    "outputs": [
-      {
-        "internalType": "bytes4",
-        "name": "",
-        "type": "bytes4"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_token0",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_token1",
-        "type": "address"
-      },
-      {
-        "internalType": "uint24",
-        "name": "_fee",
-        "type": "uint24"
-      },
-      {
-        "internalType": "uint160",
-        "name": "_sqrtPriceX96",
-        "type": "uint160"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount0",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount1",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_targetGasPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "openOrder",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function",
-    "payable": true
   },
   {
     "inputs": [],
@@ -662,33 +514,19 @@
     "constant": true
   },
   {
-    "inputs": [],
-    "name": "poolFee",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_weiAmount",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "name": "quoteKROM",
+    "name": "ownerOf",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "quote",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -725,12 +563,50 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "_tokenId",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "name": "retrieveToken",
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -894,12 +770,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_monitorGasUsage",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
       }
     ],
-    "name": "setMonitorGasUsage",
+    "name": "setApprovalForAll",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -907,24 +788,51 @@
   {
     "inputs": [
       {
-        "internalType": "contract IOrderMonitor[]",
-        "name": "_newMonitors",
-        "type": "address[]"
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
       }
     ],
-    "name": "setMonitors",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
-    "name": "swapRouter",
+    "name": "symbol",
     "outputs": [
       {
-        "internalType": "contract ISwapRouter",
+        "internalType": "string",
         "name": "",
-        "type": "address"
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -935,16 +843,50 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "owner",
         "type": "address"
       },
       {
         "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "name": "tokenIdsPerAddress",
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
     "outputs": [
       {
         "internalType": "uint256",
@@ -960,21 +902,24 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "user",
+        "name": "from",
         "type": "address"
-      }
-    ],
-    "name": "tokenIdsPerAddressLength",
-    "outputs": [
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -985,6 +930,180 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IUniswapV3Factory",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IWETH9",
+        "name": "_WETH",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IERC20",
+        "name": "_KROM",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_monitorGasUsage",
+        "type": "uint256"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "_token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "_token1",
+            "type": "address"
+          },
+          {
+            "internalType": "uint24",
+            "name": "_fee",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint160",
+            "name": "_sqrtPriceX96",
+            "type": "uint160"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_amount0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_amount1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_targetGasPrice",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IOrderManager.LimitOrderParams",
+        "name": "params",
+        "type": "tuple"
+      }
+    ],
+    "name": "placeLimitOrder",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function",
+    "payable": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_batchId",
+        "type": "uint256"
+      }
+    ],
+    "name": "processLimitOrder",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_serviceFeePaid",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelLimitOrder",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount1",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "collect",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addFunding",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1003,49 +1122,24 @@
     "type": "function"
   },
   {
-    "stateMutability": "payable",
-    "type": "receive",
-    "payable": true
-  },
-  {
     "inputs": [
       {
-        "internalType": "contract INonfungiblePositionManager",
-        "name": "_nonfungiblePositionManager",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IUniswapV3Factory",
-        "name": "_factory",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IWETH9",
-        "name": "_WETH",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IERC20",
-        "name": "_KROM",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
-        "name": "_monitorGasUsage",
+        "name": "amount0Owed",
         "type": "uint256"
       },
       {
-        "internalType": "contract ISwapRouter",
-        "name": "_swapRouter",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "amount1Owed",
+        "type": "uint256"
       },
       {
-        "internalType": "contract IERC20",
-        "name": "_LINK",
-        "type": "address"
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
       }
     ],
-    "name": "initialize",
+    "name": "uniswapV3MintCallback",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1053,52 +1147,187 @@
   {
     "inputs": [
       {
-        "internalType": "contract INonfungiblePositionManager",
-        "name": "_nonfungiblePositionManager",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IUniswapV3Factory",
-        "name": "_factory",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IWETH9",
-        "name": "_WETH",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IERC20",
-        "name": "_KROM",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
-        "name": "_monitorGasUsage",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "orders",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token0",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token1",
+        "type": "address"
+      },
+      {
+        "internalType": "uint24",
+        "name": "fee",
+        "type": "uint24"
+      },
+      {
+        "internalType": "int24",
+        "name": "tickLower",
+        "type": "int24"
+      },
+      {
+        "internalType": "int24",
+        "name": "tickUpper",
+        "type": "int24"
+      },
+      {
+        "internalType": "uint128",
+        "name": "liquidity",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint256",
+        "name": "processed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetGasPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokensOwed0",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokensOwed1",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gasPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "canProcess",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_monitor",
+        "name": "_owner",
         "type": "address"
+      }
+    ],
+    "name": "isUnderfunded",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "underfunded",
+        "type": "bool"
       },
       {
         "internalType": "uint256",
-        "name": "_keeperId",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "setKeeperIdPerMonitor",
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IOrderMonitor[]",
+        "name": "_newMonitors",
+        "type": "address[]"
+      }
+    ],
+    "name": "setMonitors",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_monitorGasUsage",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMonitorGasUsage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_weiAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "quoteKROM",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "quote",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_targetGasPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "estimateServiceFeeWei",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   }
 ]

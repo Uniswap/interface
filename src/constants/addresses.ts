@@ -81,11 +81,11 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0xE592
 ])
 export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xbB7d749d5661a80919D3b64Fc3EceC83357f8ef3',
-  [SupportedChainId.KOVAN]: '0xCE735c2af13Dc3e30B3358e9D7ACFb37336913B1',
+  [SupportedChainId.KOVAN]: '0xf861f8288F39f3354b54E3C9EaffcB9b875E7d0e',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xB8885c791e8b60F4AA1C836B1d54389C2A5Bd2cE',
-  [SupportedChainId.KOVAN]: '0x7A3d0061Ca9340692fc9cf3E26BF5aE66057b194',
+  [SupportedChainId.KOVAN]: '0x9be3d0bCb08311146E8845E8d1c09697927eAB9a',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
   SupportedChainId.ARBITRUM_ONE,

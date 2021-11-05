@@ -332,8 +332,7 @@ export function PositionPage({
     tickLower,
     tickUpper,
     tokenId,
-    closed,
-    gasDeposit,
+    processed,
     owner,
   } = positionDetails || {}
 
@@ -360,7 +359,7 @@ export function PositionPage({
   }, [liquidity, pool, tickLower, tickUpper])
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-  const isClosed = closed?.isZero ? false : true
+  const isClosed = processed?.isZero ? false : true
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
@@ -476,7 +475,7 @@ export function PositionPage({
       })
   }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
-  const ownsNFT = owner === account || positionDetails?.operator === account
+  const ownsNFT = owner === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0

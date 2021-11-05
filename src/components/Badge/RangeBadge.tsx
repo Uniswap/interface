@@ -56,11 +56,7 @@ export default function RangeBadge({
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={
-            <Trans>
-              The limit order is pending, waiting for the price of the pool to move into the target price range.
-            </Trans>
-          }
+          text={<Trans>The limit order is pending, waiting for the market price to reach the target price.</Trans>}
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
