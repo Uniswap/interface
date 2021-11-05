@@ -117,7 +117,16 @@ const StyledLoadingButton = styled(StyledActionButton)<{ width?: number; height?
 
   :before {
     animation: 2s ${rotate} ease infinite;
-    background: conic-gradient(from var(--start), transparent, ${({ theme }) => theme.outline} 45deg);
+    background: ${({ theme }) => theme.outline}; // fallback
+
+    @supports (--foo: 0) {
+      background: conic-gradient(
+        from var(--start, 75deg),
+        transparent,
+        ${({ theme }) => theme.outline} 45deg 315deg,
+        transparent
+      );
+    }
   }
 
   :after {
