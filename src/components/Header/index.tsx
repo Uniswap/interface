@@ -399,7 +399,7 @@ export default function Header() {
                       <Trans>Swap</Trans>
                     </Text>
                     <Text fontSize={12} marginTop="6px">
-                      <Trans>Swap using new our DEX aggregator</Trans>
+                      <Trans>Swap using our new DEX aggregator</Trans>
                     </Text>
                   </StyledNavLink>
 
@@ -497,12 +497,12 @@ export default function Header() {
                 {chainId && [1, 3, 4, 5, 42].includes(chainId)
                   ? `ETH`
                   : chainId && [137, 80001].includes(chainId)
-                  ? `MATIC`
-                  : chainId && [43113, 43114].includes(chainId)
-                  ? `AVAX`
-                  : chainId && [250].includes(chainId)
-                  ? `FTM`
-                  : `BNB`}
+                    ? `MATIC`
+                    : chainId && [43113, 43114].includes(chainId)
+                      ? `AVAX`
+                      : chainId && [250].includes(chainId)
+                        ? `FTM`
+                        : `BNB`}
               </BalanceText>
             ) : null}
             <Web3Status />
