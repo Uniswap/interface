@@ -33,8 +33,8 @@ const TokenButton = styled(Button)`
   padding: 0.25em;
 
   :hover {
+    background-color: ${({ theme }) => transparentize(0.3, theme.interactive)};
     opacity: 1;
-    background-color: ${({ theme }) => theme.interactive}B2; // 0.7 alpha
   }
 `
 
@@ -55,10 +55,19 @@ const BaseTokenButton = styled(TokenButton)`
 
 const RowTokenButton = styled(TokenButton)`
   border-radius: 0;
+  outline: none;
   padding: 0.5em 1em 0.5em 1.25em;
 
   :first-of-type {
     padding-top: 1em;
+  }
+
+  :hover {
+    background-color: inherit;
+  }
+
+  :focus {
+    background-color: ${({ theme }) => transparentize(0.3, theme.interactive)};
   }
 `
 
@@ -122,8 +131,28 @@ function BaseToken({ value, onClick }: TokenButtonProps) {
 }
 
 function RowToken({ value, onClick }: TokenButtonProps) {
+  const ref = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    const current = ref.current
+    const focus = () => current?.focus({ preventScroll: true })
+    const tab = (e: KeyboardEvent) => {
+      const prev = current?.previousElementSibling as HTMLElement | null
+      const next = current?.nextElementSibling as HTMLElement | null
+      if (e.key === 'ArrowUp') {
+        prev?.focus()
+      } else if (e.key === 'ArrowDown') {
+        next?.focus()
+      }
+    }
+    current?.addEventListener('mousemove', focus)
+    current?.addEventListener('keydown', tab)
+    return () => {
+      current?.removeEventListener('mouseover', focus)
+      current?.removeEventListener('keydown', tab)
+    }
+  })
   return (
-    <RowTokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)}>
+    <RowTokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)} ref={ref}>
       <TYPE.body1>
         <Row justify="flex-start" gap={0.5} style={{ gridTemplateColumns: '1.25em 1fr' }}>
           <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} />

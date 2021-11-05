@@ -1,6 +1,6 @@
 import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
+import { createContext, ReactNode, useContext, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
@@ -60,20 +60,11 @@ interface DialogProps {
 }
 
 export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
-  const onKeydown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose?.()
-      }
-    },
-    [onClose]
-  )
-  useEffect(
-    () => (
-      document.addEventListener('keydown', onKeydown, true),
-      () => document.removeEventListener('keydown', onKeydown, true)
-    )
-  )
+  useEffect(() => {
+    const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
+    document.addEventListener('keydown', close, true)
+    return () => document.removeEventListener('keydown', close, true)
+  }, [onClose])
   const modal = useContext(Context)
   return (
     modal &&
