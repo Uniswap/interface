@@ -248,21 +248,20 @@ export default function Earn() {
             {t('triple')} {t('rewardPools')}
           </TYPE.mediumHeader>
         </DataRow>
-        {tripleRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
         {tripleRewards.map((x, i) => {
-          return (
-            x[1] && (
-              <PoolSection key={i}>
-                <ErrorBoundary>
-                  <TriplePoolCard
-                    poolAddress={x[0].address}
-                    dualPoolAddress={x[0].underlyingPool}
-                    underlyingPool={x[1]}
-                    active={x[0].active}
-                  />
-                </ErrorBoundary>
-              </PoolSection>
-            )
+          return x[1] ? (
+            <PoolSection key={i}>
+              <ErrorBoundary>
+                <TriplePoolCard
+                  poolAddress={x[0].address}
+                  dualPoolAddress={x[0].underlyingPool}
+                  underlyingPool={x[1]}
+                  active={x[0].active}
+                />
+              </ErrorBoundary>
+            </PoolSection>
+          ) : (
+            <Loader key={i} />
           )
         })}
       </AutoColumn>
@@ -274,16 +273,15 @@ export default function Earn() {
               {t('double')} {t('rewardPools')}
             </TYPE.mediumHeader>
           </DataRow>
-          {dualRewards.map((x) => x[1]).some((x) => !x) && <Loader />}
           {dualRewards.map((x, i) => {
-            return (
-              x[1] && (
-                <PoolSection key={i}>
-                  <ErrorBoundary>
-                    <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
-                  </ErrorBoundary>
-                </PoolSection>
-              )
+            return x[1] ? (
+              <PoolSection key={i}>
+                <ErrorBoundary>
+                  <DualPoolCard poolAddress={x[0].address} underlyingPool={x[1]} active={x[0].active} />
+                </ErrorBoundary>
+              </PoolSection>
+            ) : (
+              <Loader key={i} />
             )
           })}
         </AutoColumn>
