@@ -10,14 +10,13 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
-  Code,
   FileText,
   Globe,
   HelpCircle,
   Info,
   MessageCircle,
   Moon,
-  PieChart,
+  Send,
   Sun,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -259,17 +258,11 @@ export default function Menu() {
                       </div>
                       <HelpCircle opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://docs.uniswap.org/">
+                    <MenuItem href="https://uniswap.canny.io/feature-requests">
                       <div>
-                        <Trans>Docs</Trans>
+                        <Trans>Request Features</Trans>
                       </div>
-                      <BookOpen opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href={CODE_LINK}>
-                      <div>
-                        <Trans>Code</Trans>
-                      </div>
-                      <Code opacity={0.6} size={16} />
+                      <Send opacity={0.6} size={16} />
                     </MenuItem>
                     <MenuItem href="https://discord.gg/FCfyBSbCU5">
                       <div>
@@ -287,6 +280,12 @@ export default function Menu() {
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                       {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
+                    <MenuItem href="https://docs.uniswap.org/">
+                      <div>
+                        <Trans>Docs</Trans>
+                      </div>
+                      <BookOpen opacity={0.6} size={16} />
+                    </MenuItem>
                     <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
                       <div>
                         <Trans>Legal & Privacy</Trans>
