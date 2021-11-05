@@ -31,7 +31,7 @@ export const networkOptionsPreset = [
   },
   {
     chainId: ChainId.ARBITRUM_RINKEBY,
-    name: 'Arbitrum Rinkeby',
+    name: 'A. Rinkeby',
     logoSrc: ArbitrumLogo,
     color: '#b1a5e6'
   }
