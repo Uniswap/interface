@@ -23,7 +23,8 @@ const SearchInput = styled(StringInput)`
   padding: 0.75em;
 
   :focus-within {
-    outline: 1px solid ${({ theme }) => theme.active};
+    border: 1px solid ${({ theme }) => theme.active};
+    padding: calc(0.75em - 1px);
   }
 `
 
