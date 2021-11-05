@@ -2,6 +2,7 @@ import { useContractKit } from '@celo-tools/use-contractkit'
 import { CELO, ChainId as UbeswapChainId, currencyEquals, cUSD, Price, Token } from '@ubeswap/sdk'
 import { useMemo } from 'react'
 
+import { UBE } from '../constants'
 import { usePairs } from '../data/Reserves'
 
 type TokenPair = [Token | undefined, Token | undefined]
@@ -16,6 +17,7 @@ export function useCUSDPrices(tokens?: Token[]): (Price | undefined)[] | undefin
   } = useContractKit()
   const CUSD = cUSD[chainId as unknown as UbeswapChainId]
   const celo = CELO[chainId as unknown as UbeswapChainId]
+  const ube = UBE[chainId as unknown as UbeswapChainId]
   const tokenPairs: TokenPair[] = useMemo(
     () =>
       tokens
@@ -23,9 +25,11 @@ export function useCUSDPrices(tokens?: Token[]): (Price | undefined)[] | undefin
           [token && currencyEquals(token, CUSD) ? undefined : token, CUSD],
           [token && currencyEquals(token, celo) ? undefined : token, celo],
           [celo, CUSD],
+          [ube, celo],
+          [token && currencyEquals(token, ube) ? undefined : token, ube],
         ])
         .flat() as TokenPair[],
-    [CUSD, celo, tokens]
+    [CUSD, celo, tokens, ube]
   )
   const pairs = usePairs(tokenPairs).map((x) => x[1])
 
@@ -36,7 +40,13 @@ export function useCUSDPrices(tokens?: Token[]): (Price | undefined)[] | undefin
 
     return tokens.map((token, idx) => {
       const start = idx * 3
-      const [cUSDPair, celoPair, celoCUSDPair] = [pairs[start], pairs[start + 1], pairs[start + 2]]
+      const [cUSDPair, celoPair, celoCUSDPair, ubeCELOPair, ubePair] = [
+        pairs[start],
+        pairs[start + 1],
+        pairs[start + 2],
+        pairs[start + 3],
+        pairs[start + 4],
+      ]
 
       // handle cUSD
       if (token.equals(CUSD)) {
@@ -51,9 +61,13 @@ export function useCUSDPrices(tokens?: Token[]): (Price | undefined)[] | undefin
         return celoPair.priceOf(token).multiply(celoCUSDPair.priceOf(celo))
       }
 
+      if (ubePair && ubeCELOPair && celoCUSDPair) {
+        return ubePair.priceOf(token).multiply(ubeCELOPair.priceOf(ube)).multiply(celoCUSDPair.priceOf(celo))
+      }
+
       return undefined
     })
-  }, [chainId, tokens, CUSD, celo, pairs])
+  }, [tokens, chainId, pairs, CUSD, celo, ube])
 }
 
 /**
