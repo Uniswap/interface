@@ -1,6 +1,7 @@
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { transparentize } from 'polished'
+import { useCallback, useEffect, useRef } from 'react'
 
 const Input = styled.input<{ text: string; theme: Theme }>`
   align-items: center;
@@ -68,18 +69,28 @@ const Input = styled.input<{ text: string; theme: Theme }>`
 
 interface ToggleProps {
   checked: boolean
-  onToggle: (value: boolean) => void
+  onToggle: () => void
 }
 
 export default function Toggle({ checked, onToggle }: ToggleProps) {
+  const input = useRef<HTMLInputElement>(null)
+  const onKeydown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        onToggle()
+      }
+    },
+    [onToggle]
+  )
+  useEffect(() => {
+    console.log(input.current)
+    const current = input.current
+    current?.addEventListener('keydown', onKeydown, true)
+    return () => current?.removeEventListener('keydown', onKeydown, true)
+  }, [input, onKeydown])
   return (
     <TYPE.buttonMedium>
-      <Input
-        type="checkbox"
-        checked={checked}
-        text={checked ? 'ON' : 'OFF'}
-        onChange={({ target: { checked } }) => onToggle(checked)}
-      />
+      <Input type="checkbox" checked={checked} text={checked ? 'ON' : 'OFF'} onChange={() => onToggle()} ref={input} />
     </TYPE.buttonMedium>
   )
 }
