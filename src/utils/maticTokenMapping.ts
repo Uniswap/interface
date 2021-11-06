@@ -190,7 +190,7 @@ export const getMaticTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a'.toLowerCase()) {
     address = '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2'
   } else if (address?.toLowerCase() === '0x3Dc7B06dD0B1f08ef9AcBbD2564f8605b4868EEA'.toLowerCase()) {
-    uri = 'https://xdollar.fi/wp-content/uploads/2021/06/xdollar-logo.svg'
+    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/13532.png'
   } else if (address?.toLowerCase() === '0x3A3e7650f8B9f667dA98F236010fBf44Ee4B2975'.toLowerCase()) {
     uri = 'https://xdollar.mcn.ventures/xusd-icon.png'
   } else if (address?.toLowerCase() === '0xfAdE2934b8E7685070149034384fB7863860D86e'.toLowerCase()) {
