@@ -101,6 +101,13 @@ export const MATIC_TOKEN_LIST = {
       name: 'Aureus',
       decimals: 18,
       logoURI: 'https://i.imgur.com/PyipL43.png'
+    },
+    {
+      chainId: 137,
+      address: '0xc1c93D475dc82Fe72DBC7074d55f5a734F8cEEAE',
+      symbol: 'PGX',
+      name: 'Pegaxy Stone',
+      decimals: 18
     }
   ],
   version: {

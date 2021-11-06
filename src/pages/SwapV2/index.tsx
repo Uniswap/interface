@@ -302,7 +302,7 @@ export default function Swap({ history }: RouteComponentProps) {
       ? '< 0.00001'
       : tradeComparer?.outputAmount?.toSignificant(6)
 
-  const isPegaxy = currencies[Field.INPUT]?.symbol === 'PGX' || currencies[Field.OUTPUT]?.symbol === 'PGX'
+  // const isPegaxy = currencies[Field.INPUT]?.symbol === 'PGX' || currencies[Field.OUTPUT]?.symbol === 'PGX'
 
   return (
     <>
@@ -346,7 +346,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 </SwapFormActions>
               </RowBetween>
 
-              {isPegaxy && (
+              {/* isPegaxy && (
                 <LegacySwapWarning>
                   Note: You can also swap PGX in our 'Classic Swap' mode{' '}
                   <StyledInternalLink to="/swap-legacy">
@@ -355,7 +355,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     </Text>
                   </StyledInternalLink>
                 </LegacySwapWarning>
-              )}
+                ) */}
 
               <Wrapper id="swap-page">
                 <ConfirmSwapModal
