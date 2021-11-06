@@ -8,7 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useMedia } from 'react-use'
 
 import { ChainId, Fraction, JSBI, Token, TokenAmount, ZERO } from '@dynamic-amm/sdk'
-import { DMM_ANALYTICS_URL } from '../../constants'
+import { DMM_ANALYTICS_URL, MAX_ALLOW_APY } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Dots } from 'components/swap/styleds'
@@ -142,7 +142,9 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
 
-  const apr = farmAPR + tradingFeeAPR
+  let apr = farmAPR
+  if (tradingFeeAPR < MAX_ALLOW_APY) apr += tradingFeeAPR
+
   const amp = farm.amp / 10000
 
   const pairSymbol = `${farm.token0.symbol}-${farm.token1.symbol} LP`
@@ -272,7 +274,15 @@ const ListItem = ({ farm }: ListItemProps) => {
         </DataText>
         <APY grid-area="apy" align="right">
           {apr.toFixed(2)}%
-          {apr !== 0 && <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />}
+          {apr !== 0 && (
+            <InfoHelper
+              text={
+                tradingFeeAPR < MAX_ALLOW_APY
+                  ? t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`
+                  : `${farmAPR.toFixed(2)}% Rewards`
+              }
+            />
+          )}
         </APY>
         <DataText
           grid-area="reward"

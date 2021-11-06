@@ -24,6 +24,7 @@ import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
 import InfoHelper from 'components/InfoHelper'
 import { useActiveWeb3React } from 'hooks'
+import { MAX_ALLOW_APY } from 'constants/index'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -284,7 +285,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <DataTitle>
             <Trans>APY</Trans>
           </DataTitle>
-          <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
+          <APY>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APY>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -407,7 +408,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
       <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
       {/* <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText> */}
-      <APY>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</APY>
+      <APY>{!subgraphPoolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}</APY>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
