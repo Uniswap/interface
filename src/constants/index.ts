@@ -883,3 +883,5 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
   ],
   [ChainId.FANTOM]: []
 }
+
+export const MAX_ALLOW_APY = 2000
