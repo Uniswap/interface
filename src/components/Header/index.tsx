@@ -378,7 +378,16 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <SwapMenuWrapper active={showSwapMenu || window.location.href.includes('swap')} role="button">
+          <StyledNavLink
+            id={`swapv2-nav-link`}
+            to={'/swap'}
+            isActive={match => Boolean(match)}
+            style={{ flexDirection: 'column' }}
+          >
+            <Trans>Swap</Trans>
+          </StyledNavLink>
+
+          {/*         <SwapMenuWrapper active={showSwapMenu || window.location.href.includes('swap')} role="button">
             <Flex
               alignItems="center"
               sx={{ position: 'relative' }}
@@ -417,9 +426,11 @@ export default function Header() {
                     </Text>
                   </StyledNavLink>
                 </SwapPopover>
+
               )}
             </Flex>
           </SwapMenuWrapper>
+          */}
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
             <Trans>Pools</Trans>
           </StyledNavLink>
