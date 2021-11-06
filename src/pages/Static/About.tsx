@@ -13,7 +13,13 @@ import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId, ETHER, Fraction, JSBI } from '@dynamic-amm/sdk'
-import { DMM_ANALYTICS_URL, KNC, KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
+import {
+  DMM_ANALYTICS_URL,
+  KNC,
+  KYBER_NETWORK_DISCORD_URL,
+  KYBER_NETWORK_TWITTER_URL,
+  MAX_ALLOW_APY
+} from 'constants/index'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
@@ -623,7 +629,7 @@ function Apr({ farm, onAprUpdate }: { farm: Farm; onAprUpdate: any }) {
   const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
 
   const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
-  const apr = farmAPR + tradingFeeAPR
+  const apr = farmAPR + (tradingFeeAPR < MAX_ALLOW_APY ? tradingFeeAPR : 0)
 
   useEffect(() => {
     if (farmAPR > 0) onAprUpdate(apr)
