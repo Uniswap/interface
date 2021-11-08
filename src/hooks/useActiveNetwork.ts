@@ -65,7 +65,7 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18
     },
     rpcUrls: ['https://polygon.dmm.exchange/v1/mainnet/geth?appId=prod-dmm'],
-    blockExplorerUrls: ['https://polygonscan.com/']
+    blockExplorerUrls: ['https://polygonscan.com']
   },
   [ChainId.BSCMAINNET]: {
     chainId: '0x38',
@@ -76,7 +76,7 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18
     },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    blockExplorerUrls: ['https://bscscan.com/']
+    blockExplorerUrls: ['https://bscscan.com']
   },
   [ChainId.AVAXMAINNET]: {
     chainId: '0xA86A',
@@ -87,7 +87,7 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18
     },
     rpcUrls: ['https://avalanche.knstats.com/v1/mainnet/geth?appId=dev-dmm'],
-    blockExplorerUrls: ['https://cchain.explorer.avax.network/']
+    blockExplorerUrls: ['https://snowtrace.io']
   },
   [ChainId.FANTOM]: {
     chainId: '0xFA',
@@ -98,7 +98,7 @@ export const ADD_NETWORK_PARAMS: {
       decimals: 18
     },
     rpcUrls: ['https://rpcapi.fantom.network'],
-    blockExplorerUrls: ['https://ftmscan.com/']
+    blockExplorerUrls: ['https://ftmscan.com']
   }
 }
 
