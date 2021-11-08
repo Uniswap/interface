@@ -119,7 +119,13 @@ export default function Updater(): null {
   }, [dispatch, debouncedState.chainId])
 
   useEffect(() => {
-    if (!account || !library?.provider?.request || !library?.provider?.isMetaMask) {
+    // @ts-ignore
+    const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
+    // @ts-ignore
+    const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
+    const isCbWallet = isCbWalletDappBrowser || isWalletlink
+    const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
+    if (!account || !library?.provider?.request || !isMetamaskOrCbWallet) {
       return
     }
     switchToNetwork({ library })
