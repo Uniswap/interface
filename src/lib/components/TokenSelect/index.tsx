@@ -2,7 +2,7 @@ import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -37,6 +37,9 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
 
+  const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
+  const onKeyDown = useCallback((e) => options?.onKeyDown(e), [options])
+
   return (
     <>
       <Column gap={0.75}>
@@ -47,6 +50,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
               value={search}
               onChange={setSearch}
               placeholder="Search by token name or address"
+              onKeyDown={onKeyDown}
               ref={input}
             />
           </TYPE.body1>
@@ -62,7 +66,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
           </>
         )}
       </Column>
-      <TokenOptions tokens={tokens} onSelect={onSelect} />
+      <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
     </>
   )
 }

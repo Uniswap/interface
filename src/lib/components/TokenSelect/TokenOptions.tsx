@@ -1,14 +1,25 @@
 import { prefetchColor } from 'lib/hooks/useColor'
-import styled from 'lib/theme'
+import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { Component, useEffect, useRef } from 'react'
+import {
+  ElementRef,
+  ForwardedRef,
+  forwardRef,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 
-const TokenButton = styled(Button)`
+const TokenButton = styled(Button)<{ focus: boolean; theme: Theme }>`
+  background-color: ${({ focus, theme }) => focus && theme.interactive};
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
@@ -20,10 +31,6 @@ const TokenButton = styled(Button)`
   :hover {
     opacity: 1;
   }
-
-  :focus {
-    background-color: ${({ theme }) => theme.interactive};
-  }
 `
 
 const TokenImg = styled.img`
@@ -34,34 +41,26 @@ const TokenImg = styled.img`
 
 interface TokenOptionProps {
   value: Token
+  focus: boolean
   onClick: (value: Token) => void
+  onKeyDown: (e: KeyboardEvent) => void
+  onFocus: (value: Token) => void
 }
 
-function TokenOption({ value, onClick }: TokenOptionProps) {
-  const ref = useRef<HTMLButtonElement>(null)
-  // TODO: Use React's events, not native events, throughout
-  useEffect(() => {
-    const current = ref.current
-    // preventScroll does not work in Safari
-    const focus = () => current?.focus({ preventScroll: true })
-    const tab = (e: KeyboardEvent) => {
-      const prev = current?.previousElementSibling as HTMLElement | null
-      const next = current?.nextElementSibling as HTMLElement | null
-      if (e.key === 'ArrowUp') {
-        prev?.focus()
-      } else if (e.key === 'ArrowDown') {
-        next?.focus()
-      }
-    }
-    current?.addEventListener('mousemove', focus)
-    current?.addEventListener('keydown', tab)
-    return () => {
-      current?.removeEventListener('mouseover', focus)
-      current?.removeEventListener('keydown', tab)
-    }
-  })
+const TokenOption = forwardRef(function TokenOption(
+  { value, focus, onClick, onKeyDown, onFocus }: TokenOptionProps,
+  ref: ForwardedRef<HTMLButtonElement>
+) {
   return (
-    <TokenButton onClick={() => onClick(value)} onMouseDown={() => prefetchColor(value)} ref={ref}>
+    <TokenButton
+      focus={focus}
+      onClick={() => onClick(value)}
+      onFocus={() => onFocus(value)}
+      onKeyDown={onKeyDown}
+      onMouseMove={() => onFocus(value)}
+      onMouseDown={() => prefetchColor(value)}
+      ref={ref}
+    >
       <TYPE.body1>
         <Row>
           <Row gap={0.5}>
@@ -76,6 +75,10 @@ function TokenOption({ value, onClick }: TokenOptionProps) {
       </TYPE.body1>
     </TokenButton>
   )
+})
+
+interface TokenOptionsHandle {
+  onKeyDown: (e: KeyboardEvent) => void
 }
 
 interface TokenOptionsProps {
@@ -83,15 +86,59 @@ interface TokenOptionsProps {
   onSelect: (token: Token) => void
 }
 
-export default class TokenOptions extends Component<TokenOptionsProps> {
-  render() {
-    return (
-      <Column scrollable>
-        {this.props.tokens &&
-          this.props.tokens.map((token) => (
-            <TokenOption value={token} onClick={this.props.onSelect} key={token.address} />
-          ))}
-      </Column>
-    )
-  }
-}
+const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function TokenOptions(
+  { tokens, onSelect }: TokenOptionsProps,
+  ref
+) {
+  const options = useRef<Array<ElementRef<typeof TokenOption> | null>>([])
+  const [focus, setFocus] = useState(-1)
+  useEffect(() => setFocus(-1), [tokens])
+
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        if (e.key === 'ArrowDown' && focus < tokens.length - 1) {
+          scrollTo(focus + 1)
+        } else if (e.key === 'ArrowUp' && focus > 0) {
+          scrollTo(focus - 1)
+        } else if (e.key === 'ArrowUp' && focus === -1) {
+          scrollTo(tokens.length - 1)
+        }
+        e.preventDefault()
+      }
+      if (e.key === 'Enter' && focus) {
+        onSelect(tokens[focus])
+      }
+
+      function scrollTo(i: number) {
+        setFocus(i)
+        options.current[i]?.scrollIntoView({ block: 'nearest' })
+        if (e.target === options.current[focus]) {
+          options.current[i]?.focus()
+        }
+      }
+    },
+    [focus, onSelect, tokens, options]
+  )
+  useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
+
+  options.current = []
+  return (
+    <Column scrollable>
+      {tokens &&
+        tokens.map((token, i) => (
+          <TokenOption
+            focus={i === focus}
+            value={token}
+            onClick={onSelect}
+            onFocus={() => setFocus(i)}
+            onKeyDown={onKeyDown}
+            key={token.address}
+            ref={(ref) => (options.current[i] = ref)}
+          />
+        ))}
+    </Column>
+  )
+})
+
+export default TokenOptions
