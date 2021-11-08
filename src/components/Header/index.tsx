@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
 import { SWPR } from '@swapr/sdk'
@@ -14,7 +14,6 @@ import Settings from '../Settings'
 import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
-import { transparentize } from 'polished'
 import { ExternalLink } from '../../theme'
 import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
@@ -141,19 +140,6 @@ const StyledActiveNavLinkWithBadge = styled(StyledNavLink)`
   position: relative;
 `
 
-const StyledDisabledNavLinkWithBadge = styled.a`
-  position: relative;
-  margin: 0px 12px;
-  cursor: not-allowed;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19.5px;
-  color: ${({ theme }) => transparentize(0.6, theme.text5)};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
 const AbsoluteBadgeFlex = styled(Flex)`
   position: absolute;
   top: 20px;
@@ -232,10 +218,6 @@ function Header() {
   const oldSwprBalance = useTokenBalance(accountOrUndefined, oldSwpr)
   const isMobileByMedia = useIsMobileByMedia()
 
-  const handleDisabledAnchorClick = useCallback(event => {
-    event.preventDefault()
-  }, [])
-
   return (
     <HeaderFrame>
       <ClaimModal onDismiss={toggleClaimPopup} oldSwprBalance={oldSwprBalance} newSwprBalance={newSwprBalance} />
@@ -258,16 +240,11 @@ function Header() {
           <StyledNavLink id="pool-nav-link" to="/pools" activeClassName="active">
             {t('pool')}
           </StyledNavLink>
-          <StyledDisabledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
-            <span>{t('governance')}</span>
-            <AbsoluteBadgeFlex justifyContent="center" width="100%">
-              <Box>
-                <Badge label="COMING SOON" />
-              </Box>
-            </AbsoluteBadgeFlex>
-          </StyledDisabledNavLinkWithBadge>
+          <StyledExternalLink id="vote-nav-link" href={`https://snapshot.org/#/swpr.eth`}>
+            {t('vote')}
+          </StyledExternalLink>
           <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
-            Charts{' '}
+            {t('charts')}
             <Text ml="4px" fontSize="11px">
               ↗
             </Text>
