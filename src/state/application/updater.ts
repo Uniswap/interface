@@ -119,9 +119,7 @@ export default function Updater(): null {
   }, [dispatch, debouncedState.chainId])
 
   useEffect(() => {
-    // @ts-ignore
     const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
-    // @ts-ignore
     const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
     const isCbWallet = isCbWalletDappBrowser || isWalletlink
     const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
