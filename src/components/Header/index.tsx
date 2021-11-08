@@ -79,7 +79,7 @@ const MoreLinksIcon = styled(HeaderElement)`
   `};
 `
 
-const HeaderRow = styled(RowFixed) <{ isDark: boolean }>`
+const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
@@ -137,7 +137,11 @@ export const StyledNavLink = styled(NavLink)`
   `};
 `
 
-const StyledNavLinkWithBadge = styled.a`
+const StyledActiveNavLinkWithBadge = styled(StyledNavLink)`
+  position: relative;
+`
+
+const StyledDisabledNavLinkWithBadge = styled.a`
   position: relative;
   margin: 0px 12px;
   cursor: not-allowed;
@@ -150,7 +154,7 @@ const StyledNavLinkWithBadge = styled.a`
   `};
 `
 
-const AbsoluteComingSoonBadgeFlex = styled(Flex)`
+const AbsoluteBadgeFlex = styled(Flex)`
   position: absolute;
   top: 20px;
 `
@@ -243,20 +247,25 @@ function Header() {
           <StyledNavLink id="swap-nav-link" to="/swap" activeClassName="active">
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink id="bridge-nav-link" to="/bridge" activeClassName="active">
+          <StyledActiveNavLinkWithBadge id="bridge-nav-link" to="/bridge" activeClassName="active">
             {t('bridge')}
-          </StyledNavLink>
+            <AbsoluteBadgeFlex justifyContent="center" width="100%">
+              <Box>
+                <Badge label="BETA" />
+              </Box>
+            </AbsoluteBadgeFlex>
+          </StyledActiveNavLinkWithBadge>
           <StyledNavLink id="pool-nav-link" to="/pools" activeClassName="active">
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
+          <StyledDisabledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
             <span>{t('governance')}</span>
-            <AbsoluteComingSoonBadgeFlex justifyContent="center" width="100%">
+            <AbsoluteBadgeFlex justifyContent="center" width="100%">
               <Box>
                 <Badge label="COMING SOON" />
               </Box>
-            </AbsoluteComingSoonBadgeFlex>
-          </StyledNavLinkWithBadge>
+            </AbsoluteBadgeFlex>
+          </StyledDisabledNavLinkWithBadge>
           <StyledExternalLink id="stake-nav-link" href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
