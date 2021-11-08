@@ -75,9 +75,9 @@ function getEtherscanDomain(chainId: ChainId): string {
     case ChainId.BSCMAINNET:
       return 'https://bscscan.com'
     case ChainId.AVAXTESTNET:
-      return 'https://cchain.explorer.avax-test.network'
+      return 'https://testnet.snowtrace.io'
     case ChainId.AVAXMAINNET:
-      return 'https://cchain.explorer.avax.network'
+      return 'https://snowtrace.io'
     case ChainId.FANTOM:
       return 'https://ftmscan.com'
   }
