@@ -9,7 +9,7 @@ export interface ImportLocalAccountParams extends BaseImportAccountParams {
 }
 
 export interface ImportReadonlyAccountParams extends BaseImportAccountParams {
-  address: string
+  address: Address
 }
 
 export function isImportLocalAccountParams(params: unknown): params is ImportLocalAccountParams {
