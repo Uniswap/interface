@@ -16,14 +16,13 @@ import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTim
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/hooks'
 import { createAccountActions } from 'src/features/wallet/createAccount'
-import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
 export function DevScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
-  const accounts = useAccounts()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.RINKEBY)
   const ethBalance = useActiveAccountEthBalance(ChainId.RINKEBY)
@@ -32,8 +31,12 @@ export function DevScreen({ navigation }: Props) {
     dispatch(createAccountActions.trigger())
   }
 
+  const onPressImportAccount = () => {
+    navigation.navigate(Screens.ImportAccount)
+  }
+
   const onPressList = () => {
-    logger.debug('HomeScreen', '', 'accounts', Object.values(accounts))
+    navigation.navigate(Screens.Accounts)
   }
 
   const onPressSend = () => {
@@ -74,6 +77,7 @@ export function DevScreen({ navigation }: Props) {
         </Text>
         <Button label={'Home'} onPress={onPressHome} mt="md" />
         <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
+        <Button label={t('Import Account')} onPress={onPressImportAccount} mt="md" />
         <Button label={t('List Accounts')} onPress={onPressList} mt="md" />
         <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />

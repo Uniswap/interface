@@ -27,7 +27,12 @@ export function AccountsScreen({ navigation }: Props) {
         <Box flex={1}>
           <AccountHeader>
             <Button label={t`Manage`} p="sm" />
-            <Button label="+" onPress={() => navigation.navigate(Screens.ImportAccount)} p="sm" />
+            <Button
+              label="+"
+              onPress={() => navigation.navigate(Screens.ImportAccount)}
+              p="sm"
+              testID="accounts/add/button"
+            />
           </AccountHeader>
           <Box flex={1} p="md">
             {Object.values(accounts).map((account) => (
@@ -46,7 +51,14 @@ interface AccountItemProps {
 
 function AccountItem({ account: { address, name } }: AccountItemProps) {
   return (
-    <Box flexDirection="row" p="md" borderColor="gray200" borderRadius="lg" borderWidth={2} mb="sm">
+    <Box
+      flexDirection="row"
+      p="md"
+      borderColor="gray200"
+      borderRadius="lg"
+      borderWidth={2}
+      mb="sm"
+      testID={`account_item/${address}`}>
       <Box bg="gray400" borderRadius="full" width={50} height={50} marginRight="sm" />
       <Box>
         <Text variant="h3">$2,243.22</Text>

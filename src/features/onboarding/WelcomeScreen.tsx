@@ -33,7 +33,12 @@ export function WelcomeScreen({ navigation }: Props) {
           {t('Uniswap Wallet')}
         </Text>
         <PrimaryButton label={t('Create New Account')} onPress={onClickCreate} mt="lg" />
-        <PrimaryButton label={t('Import Account')} onPress={onClickImport} mt="lg" />
+        <PrimaryButton
+          label={t('Import Account')}
+          onPress={onClickImport}
+          mt="lg"
+          testID="import-account-button"
+        />
       </Box>
     </Screen>
   )

@@ -58,6 +58,7 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
               value={values.addressOrENS}
               mt="lg"
               placeholder="ENS name or address Address"
+              testID="import_account_form/address/field"
             />
             {touched.addressOrENS && errors.addressOrENS && (
               <Text variant="bodySm" color="error">
@@ -67,7 +68,7 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
 
             <PrimaryButton
               onPress={handleSubmit}
-              label={t('Submit')}
+              label={t('Track')}
               mt="lg"
               disabled={!values.resolvedAddress || isSubmitting}
             />

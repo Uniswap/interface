@@ -1,4 +1,5 @@
 {
+  "Connect Wallet": "Connect Wallet",
   "Tokens": "Tokens",
   "ChainId {{chainId}}": "ChainId {{chainId}}",
   "Accounts": "Accounts",
@@ -8,6 +9,7 @@
   "Required": "Required",
   "Invalid Mnemonic": "Invalid Mnemonic",
   "Add a wallet by typing or pasting an ENS name, Ethereum Account or Polygon Account.": "Add a wallet by typing or pasting an ENS name, Ethereum Account or Polygon Account.",
+  "Track": "Track",
   "Extra words detected - tap to remove them": "Extra words detected - tap to remove them",
   "Confirm phrase": "Confirm phrase",
   "Track any wallet": "Track any wallet",

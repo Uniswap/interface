@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
-import { useAppSelector } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
 import { persistor, store } from 'src/app/store'
@@ -20,8 +19,6 @@ import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
-import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
-import { SwapScreen } from 'src/features/swap/SwapScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
@@ -75,87 +72,50 @@ function DataUpdaters() {
 }
 
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
-  const isUnlocked = useAppSelector((state) => state.wallet.isUnlocked)
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {isUnlocked ? (
-          <>
-            <Stack.Screen
-              name={Screens.Dev}
-              component={DevScreen}
-              options={{ title: 'Uniswap | Home' }}
-            />
-            <Stack.Screen
-              name={Screens.Balances}
-              component={BalancesScreen}
-              options={{ title: 'Uniswap | Balances' }}
-            />
-            <Stack.Screen
-              name={Screens.TokenDetails}
-              component={TokenDetailsScreen}
-              options={{ title: 'Uniswap | Token' }}
-            />
-            <Stack.Screen
-              name={Screens.Transfer}
-              component={TransferTokenScreen}
-              options={{ title: 'Uniswap | Send' }}
-            />
-            <Stack.Screen
-              name={Screens.Swap}
-              component={SwapScreen}
-              options={{ title: 'Uniswap | Swap' }}
-            />
-            <Stack.Screen
-              name={Screens.Home}
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name={Screens.Accounts}
-              component={AccountsScreen}
-              options={{ title: 'Uniswap | Accounts' }}
-            />
-            <Stack.Screen
-              name={Screens.Camera}
-              component={CameraScreen}
-              options={{ title: 'Uniswap | Camera' }}
-            />
-            <Stack.Screen
-              name={Screens.SeedPhrase}
-              component={SeedPhraseScreen}
-              options={{ title: 'Uniswap | Seed Phrase' }}
-            />
-            <Stack.Screen
-              name={Screens.ImportAccount}
-              component={ImportAccountScreen}
-              options={{ title: 'Uniswap | Import' }}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              name={Screens.Welcome}
-              component={WelcomeScreen}
-              options={{ title: 'Uniswap | Welcome' }}
-            />
-            <Stack.Screen
-              name={Screens.ImportAccount}
-              component={ImportAccountScreen}
-              options={{ title: 'Uniswap | Import' }}
-            />
-            <Stack.Screen
-              name={Screens.Camera}
-              component={CameraScreen}
-              options={{ title: 'Uniswap | Camera' }}
-            />
-            <Stack.Screen
-              name={Screens.SeedPhrase}
-              component={SeedPhraseScreen}
-              options={{ title: 'Uniswap | Seed Phrase' }}
-            />
-          </>
-        )}
+        <Stack.Screen
+          name={Screens.Dev}
+          component={DevScreen}
+          options={{ title: 'Uniswap | Home' }}
+        />
+        <Stack.Screen
+          name={Screens.Balances}
+          component={BalancesScreen}
+          options={{ title: 'Uniswap | Balances' }}
+        />
+        <Stack.Screen
+          name={Screens.TokenDetails}
+          component={TokenDetailsScreen}
+          options={{ title: 'Uniswap | Token' }}
+        />
+        <Stack.Screen
+          name={Screens.Transfer}
+          component={TransferTokenScreen}
+          options={{ title: 'Uniswap | Send' }}
+        />
+        <Stack.Screen name={Screens.Home} component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name={Screens.Accounts}
+          component={AccountsScreen}
+          options={{ title: 'Uniswap | Accounts' }}
+        />
+        <Stack.Screen
+          name={Screens.Camera}
+          component={CameraScreen}
+          options={{ title: 'Uniswap | Camera' }}
+        />
+        <Stack.Screen
+          name={Screens.SeedPhrase}
+          component={SeedPhraseScreen}
+          options={{ title: 'Uniswap | Seed Phrase' }}
+        />
+        <Stack.Screen
+          name={Screens.ImportAccount}
+          component={ImportAccountScreen}
+          options={{ title: 'Uniswap | Import' }}
+        />
       </Stack.Navigator>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </NavigationContainer>
