@@ -10,7 +10,7 @@ interface Window {
   WalletLinkProvider?: any
   walletLinkExtension?: any
   ethereum?: {
-    isCoinbaseWallet?: false
+    isCoinbaseWallet?: boolean
     isMetaMask?: true
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
