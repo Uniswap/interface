@@ -50,6 +50,8 @@ export function DevScreen({ navigation }: Props) {
     logger.debug('HomeScreen', '', 'balances', ethBalance)
   }
 
+  const onPressSwap = () => navigation.navigate(Screens.Swap)
+
   const onPressHome = async () => {
     navigation.navigate(Screens.Home)
   }
@@ -76,6 +78,7 @@ export function DevScreen({ navigation }: Props) {
         <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
         <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
+        <Button label={t('Swap')} onPress={onPressSwap} mt="md" />
         <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="md" />
         <Text textAlign="center" mt="xl">
           {`Active Chains: ${activeChains}`}

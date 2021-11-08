@@ -23,10 +23,8 @@ type RestyleProps = SpacingProps<Theme> &
   ColorProps<Theme>
 
 export type TextInputProps = RestyleProps &
-  BaseTextInputProps & {
-    // Make onChangeText a required prop
-    onChangeText: (text: string) => void
-  }
+  BaseTextInputProps &
+  Required<Pick<BaseTextInputProps, 'onChangeText'>>
 
 export function TextInput(props: TextInputProps) {
   const { onChangeText, ...rest } = props

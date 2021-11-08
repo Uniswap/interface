@@ -21,6 +21,7 @@ import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
 import { WelcomeScreen } from 'src/features/onboarding/WelcomeScreen'
+import { SwapScreen } from 'src/features/swap/SwapScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
 import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
@@ -99,6 +100,11 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
               name={Screens.Transfer}
               component={TransferTokenScreen}
               options={{ title: 'Uniswap | Send' }}
+            />
+            <Stack.Screen
+              name={Screens.Swap}
+              component={SwapScreen}
+              options={{ title: 'Uniswap | Swap' }}
             />
             <Stack.Screen
               name={Screens.Home}

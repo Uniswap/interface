@@ -10,6 +10,7 @@ export type RootStackParamList = {
   [Screens.Home]: undefined
   [Screens.ImportAccount]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
+  [Screens.Swap]: undefined
   [Screens.TokenDetails]: { tokenAddress: Address; chainId: ChainId }
   [Screens.Transfer]: undefined
   [Screens.Welcome]: undefined
