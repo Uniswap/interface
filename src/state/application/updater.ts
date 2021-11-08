@@ -1,3 +1,4 @@
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { CHAIN_INFO } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
@@ -63,7 +64,7 @@ function useBlockWarningTimer() {
 }
 
 export default function Updater(): null {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, library, connector } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
@@ -120,7 +121,8 @@ export default function Updater(): null {
 
   useEffect(() => {
     const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
-    const isWalletlink = !!window?.WalletLinkProvider || !!window?.walletLinkExtension
+    const isWalletlink =
+      !!window?.WalletLinkProvider || (!!window?.walletLinkExtension && connector instanceof WalletLinkConnector)
     const isCbWallet = isCbWalletDappBrowser || isWalletlink
     const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
     if (!account || !library?.provider?.request || !isMetamaskOrCbWallet) {
