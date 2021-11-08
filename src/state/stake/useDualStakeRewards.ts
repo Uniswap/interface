@@ -5,75 +5,37 @@ import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import { useToken } from 'hooks/Tokens'
 import { useMultiStakingContract } from 'hooks/useContract'
 import { zip } from 'lodash'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useBlockNumber } from 'state/application/hooks'
+import { useMemo } from 'react'
+import { useSingleCallResult } from 'state/multicall/hooks'
 
 import { StakingInfo } from './hooks'
-
-interface RawPoolData {
-  totalSupply: BigNumber
-  rewardRate: BigNumber
-  rewardsToken: string
-  myBalance?: BigNumber
-  earned?: BigNumber[]
-}
 
 export const useMultiStakeRewards = (
   address: Address,
   underlyingPool: StakingInfo | undefined | null,
-  numRewards: number,
   active: boolean
 ): StakingInfo | null => {
   const { address: owner } = useContractKit()
   const stakeRewards = useMultiStakingContract(address)
 
-  const [data, setData] = useState<RawPoolData | null>(null)
+  const totalSupply = useSingleCallResult(stakeRewards, 'totalSupply', [])?.result?.[0]
+  const rewardRate = useSingleCallResult(stakeRewards, 'rewardRate', [])?.result?.[0]
+  const rewardsToken = useToken(useSingleCallResult(stakeRewards, 'rewardsToken', [])?.result?.[0])
 
-  const blockNumber = useBlockNumber()
+  const stakeBalance = useSingleCallResult(stakeRewards, 'balanceOf', [owner || undefined])?.result?.[0]
+  const earned = useSingleCallResult(stakeRewards, 'earned', [owner || undefined])?.result?.[0]
+  const earnedExternal = useSingleCallResult(stakeRewards, 'earnedExternal', [owner || undefined])?.result?.[0]
 
-  const load = useCallback(async (): Promise<RawPoolData | null> => {
-    if (!stakeRewards) {
-      return null
-    }
-
-    try {
-      const totalSupply = await stakeRewards.callStatic.totalSupply()
-      const rewardRate = await stakeRewards.callStatic.rewardRate()
-      const rewardsToken = await stakeRewards.callStatic.rewardsToken()
-
-      const amts = { totalSupply, rewardRate, rewardsToken } as const
-
-      if (!owner) {
-        return amts
-      }
-
-      const result = await Promise.all([
-        stakeRewards.callStatic.balanceOf(owner),
-        stakeRewards.callStatic.earned(owner),
-        Promise.all(
-          new Array(numRewards - 1)
-            .fill(0)
-            .map((_, idx) => stakeRewards.callStatic.earnedExternal(owner).then((v) => v[idx]))
-        ),
-      ])
-      return {
-        ...amts,
-        myBalance: result[0],
-        earned: [result[1], ...result[2]],
-      }
-    } catch (e) {
-      console.error(e, blockNumber) // Force usage of blockNumber so that we are refreshing
-      return null
-    }
-  }, [owner, stakeRewards, numRewards, blockNumber])
-
-  useEffect(() => {
-    void (async () => {
-      setData(await load())
-    })()
-  }, [load])
-
-  const rewardsToken = useToken(data?.rewardsToken)
+  const data = useMemo(
+    () => ({
+      totalSupply,
+      rewardRate,
+      rewardsToken,
+      myBalance: stakeBalance,
+      earned: [earned, ...(earnedExternal ? earnedExternal : [])],
+    }),
+    [earned, earnedExternal, rewardRate, rewardsToken, stakeBalance, totalSupply]
+  )
 
   return useMemo((): StakingInfo | null => {
     if (!data || !rewardsToken || !underlyingPool) {

@@ -68,7 +68,7 @@ export const usePairDualStakingInfo = (
   const multiRewardPool = multiRewardPools
     .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
     .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
-  return useMultiStakeRewards(multiRewardPool?.address ?? '', stakingInfo, 2, multiRewardPool?.active || false)
+  return useMultiStakeRewards(multiRewardPool?.address ?? '', stakingInfo, multiRewardPool?.active || false)
 }
 
 export const usePairTripleStakingInfo = (
@@ -78,8 +78,8 @@ export const usePairTripleStakingInfo = (
   const multiRewardPool = multiRewardPools
     .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
     .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
-  const dualPool = useMultiStakeRewards(multiRewardPool?.underlyingPool ?? '', stakingInfo, 2, true)
-  const triplePool = useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, 3, multiRewardPool?.active || false)
+  const dualPool = useMultiStakeRewards(multiRewardPool?.underlyingPool ?? '', stakingInfo, true)
+  const triplePool = useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, multiRewardPool?.active || false)
   if (multiRewardPool?.numRewards === 2) {
     return null
   }

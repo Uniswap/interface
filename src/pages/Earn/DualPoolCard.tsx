@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const DualPoolCard: React.FC<Props> = ({ poolAddress, underlyingPool, active }: Props) => {
-  const mooPool = useMultiStakeRewards(poolAddress, underlyingPool, 2, active)
+  const mooPool = useMultiStakeRewards(poolAddress, underlyingPool, active)
 
   if (!mooPool) {
     return <Loader />
