@@ -2,7 +2,7 @@ import { prefetchColor } from 'lib/hooks/useColor'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { useEffect, useRef } from 'react'
+import { Component, useEffect, useRef } from 'react'
 
 import Button from '../Button'
 import Column from '../Column'
@@ -18,7 +18,6 @@ const TokenButton = styled(Button)`
   }
 
   :hover {
-    background-color: inherit;
     opacity: 1;
   }
 
@@ -38,10 +37,12 @@ interface TokenOptionProps {
   onClick: (value: Token) => void
 }
 
-export default function TokenOption({ value, onClick }: TokenOptionProps) {
+function TokenOption({ value, onClick }: TokenOptionProps) {
   const ref = useRef<HTMLButtonElement>(null)
+  // TODO: Use React's events, not native events, throughout
   useEffect(() => {
     const current = ref.current
+    // preventScroll does not work in Safari
     const focus = () => current?.focus({ preventScroll: true })
     const tab = (e: KeyboardEvent) => {
       const prev = current?.previousElementSibling as HTMLElement | null
@@ -75,4 +76,22 @@ export default function TokenOption({ value, onClick }: TokenOptionProps) {
       </TYPE.body1>
     </TokenButton>
   )
+}
+
+interface TokenOptionsProps {
+  tokens: Token[]
+  onSelect: (token: Token) => void
+}
+
+export default class TokenOptions extends Component<TokenOptionsProps> {
+  render() {
+    return (
+      <Column scrollable>
+        {this.props.tokens &&
+          this.props.tokens.map((token) => (
+            <TokenOption value={token} onClick={this.props.onSelect} key={token.address} />
+          ))}
+      </Column>
+    )
+  }
 }

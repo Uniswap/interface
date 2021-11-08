@@ -11,7 +11,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
-import TokenOption from './TokenOption'
+import TokenOptions from './TokenOptions'
 
 // TODO: integrate with web3-react context
 const mockTokens = [DAI, ETH, UNI, USDC]
@@ -22,13 +22,13 @@ const SearchInput = styled(StringInput)`
   height: unset;
   padding: 0.75em;
 
-  :focus-within {
+  :focus {
     border: 1px solid ${({ theme }) => theme.active};
     padding: calc(0.75em - 1px);
   }
 `
 
-export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => void }) {
+export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
   const baseTokens = mockTokens
   const tokens = mockTokens
 
@@ -55,16 +55,14 @@ export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => vo
           <>
             <Row gap={0.25} justify="flex-start" flex padded>
               {baseTokens.map((token) => (
-                <TokenBase value={token} onClick={onChange} key={token.address} />
+                <TokenBase value={token} onClick={onSelect} key={token.address} />
               ))}
             </Row>
             <Rule padded />
           </>
         )}
       </Column>
-      <Column scrollable>
-        {tokens && tokens.map((token) => <TokenOption value={token} onClick={onChange} key={token.address} />)}
-      </Column>
+      <TokenOptions tokens={tokens} onSelect={onSelect} />
     </>
   )
 }
@@ -72,24 +70,24 @@ export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => vo
 interface TokenSelectProps {
   value?: Token
   disabled?: boolean
-  onChange: (value: Token) => void
+  onSelect: (value: Token) => void
 }
 
-export default function TokenSelect({ value, disabled, onChange }: TokenSelectProps) {
+export default function TokenSelect({ value, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
-  const onSelect = useCallback(
+  const selectAndClose = useCallback(
     (value: Token) => {
-      onChange(value)
+      onSelect(value)
       setOpen(false)
     },
-    [onChange, setOpen]
+    [onSelect, setOpen]
   )
   return (
     <>
       <TokenButton value={value} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog onChange={onSelect} />
+          <TokenSelectDialog onSelect={selectAndClose} />
         </Dialog>
       )}
     </>
