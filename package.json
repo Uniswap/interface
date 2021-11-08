@@ -179,6 +179,7 @@
     "react-popper": "^2.2.3",
     "rebass": "^4.0.7",
     "styled-components": "^5.3.0",
-    "wcag-contrast": "^3.0.0"
+    "wcag-contrast": "^3.0.0",
+    "wicg-inert": "^3.1.1"
   }
 }
