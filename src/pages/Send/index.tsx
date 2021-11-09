@@ -36,7 +36,8 @@ export default function Send() {
 
   const maxAmountInput: TokenAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
 
-  const notEnoughFunds = parsedAmount && maxAmountInput && !parsedAmount.lessThan(maxAmountInput)
+  const notEnoughFunds = parsedAmount && maxAmountInput && parsedAmount.greaterThan(maxAmountInput)
+
   const isValid = recipientAddress && parsedAmount && account && !notEnoughFunds
   const doTransaction = useDoTransaction()
   const handleSend = useCallback(async () => {
