@@ -1,3 +1,4 @@
+import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { CHAIN_INFO } from 'constants/chains'
 import useDebounce from 'hooks/useDebounce'
@@ -121,8 +122,10 @@ export default function Updater(): null {
 
   useEffect(() => {
     const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
+    const isWalletlinkOrInjectedConnector =
+      connector instanceof WalletLinkConnector || connector instanceof InjectedConnector
     const isWalletlink =
-      !!window?.WalletLinkProvider || (!!window?.walletLinkExtension && connector instanceof WalletLinkConnector)
+      !!window?.WalletLinkProvider || (!!window?.walletLinkExtension && isWalletlinkOrInjectedConnector)
     const isCbWallet = isCbWalletDappBrowser || isWalletlink
     const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
     if (!account || !library?.provider?.request || !isMetamaskOrCbWallet) {
