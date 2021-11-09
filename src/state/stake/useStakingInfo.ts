@@ -4,7 +4,7 @@ import { STAKING_REWARDS_INTERFACE } from 'constants/abis/staking-rewards'
 import { UBE } from 'constants/tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useMemo } from 'react'
-import { NEVER_RELOAD, useMultipleContractSingleData } from 'state/multicall/hooks'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
 
 import { StakingInfo, useStakingPools } from './hooks'
 
@@ -30,21 +30,9 @@ export default function useStakingInfo(pairToFilterBy?: Pair | null, stakingAddr
   const totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'totalSupply')
 
   // tokens per second, constants
-  const rewardRates = useMultipleContractSingleData(
-    rewardsAddresses,
-    STAKING_REWARDS_INTERFACE,
-    'rewardRate',
-    undefined,
-    NEVER_RELOAD
-  )
+  const rewardRates = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'rewardRate')
 
-  const periodFinishes = useMultipleContractSingleData(
-    rewardsAddresses,
-    STAKING_REWARDS_INTERFACE,
-    'periodFinish',
-    undefined,
-    NEVER_RELOAD
-  )
+  const periodFinishes = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'periodFinish')
 
   return useMemo(() => {
     if (!chainId || !ube) return []
