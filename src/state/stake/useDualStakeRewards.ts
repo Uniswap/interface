@@ -70,14 +70,15 @@ export const useMultiStakeRewards = (
       ? getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRates)
       : totalRewardRates.map((totalRewardRate) => new TokenAmount(totalRewardRate.token, '0'))
 
-    const rewardTokens = [rewardsToken, ...underlyingPool.rewardTokens].sort((a, b) =>
-      a?.symbol && b?.symbol ? a.symbol.localeCompare(b.symbol) : 0
-    )
-    const earnedAmounts = earned
-      ? zip<BigNumber, Token>(earned, rewardTokens)
-          .map(([amount, token]) => new TokenAmount(token as Token, amount?.toString() ?? '0'))
-          .sort((a, b) => (a?.token?.symbol && b?.token?.symbol ? a.token.symbol.localeCompare(b.token.symbol) : 0))
-      : undefined
+    const rewardTokens = (
+      rewardsToken ? [rewardsToken, ...underlyingPool.rewardTokens] : [...underlyingPool.rewardTokens]
+    ).sort((a, b) => (a?.symbol && b?.symbol ? a.symbol.localeCompare(b.symbol) : 0))
+    const earnedAmounts =
+      earned && earned.length === rewardTokens.length
+        ? zip<BigNumber, Token>(earned, rewardTokens)
+            .map(([amount, token]) => new TokenAmount(token as Token, amount?.toString() ?? '0'))
+            .sort((a, b) => (a?.token?.symbol && b?.token?.symbol ? a.token.symbol.localeCompare(b.token.symbol) : 0))
+        : undefined
 
     return {
       stakingRewardAddress: address,
