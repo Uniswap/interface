@@ -7,7 +7,7 @@ import { useMultiStakeRewards } from 'state/stake/useDualStakeRewards'
 interface Props {
   poolAddress: string
   dualPoolAddress: string
-  underlyingPool: StakingInfo
+  underlyingPool?: StakingInfo
   active: boolean
 }
 
@@ -15,7 +15,7 @@ export const TriplePoolCard: React.FC<Props> = ({ poolAddress, dualPoolAddress, 
   const dualPool = useMultiStakeRewards(dualPoolAddress, underlyingPool, 2, true)
   const mooPool = useMultiStakeRewards(poolAddress, dualPool, 3, active)
 
-  if (!mooPool) {
+  if (!underlyingPool || !mooPool) {
     return <Loader />
   }
 

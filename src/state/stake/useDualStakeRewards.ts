@@ -6,7 +6,7 @@ import { useToken } from 'hooks/Tokens'
 import { useMultiStakingContract } from 'hooks/useContract'
 import { zip } from 'lodash'
 import { useMemo } from 'react'
-import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
 import { StakingInfo } from './hooks'
 
@@ -17,15 +17,12 @@ export const useMultiStakeRewards = (
   active: boolean
 ): StakingInfo | null => {
   const { address: owner } = useContractKit()
+  const accountArg = useMemo(() => [owner ?? undefined], [owner])
   const stakeRewards = useMultiStakingContract(address)
 
   const totalSupply = useSingleCallResult(stakeRewards, 'totalSupply', [])?.result?.[0]
   const rewardRate = useSingleCallResult(stakeRewards, 'rewardRate', [])?.result?.[0]
-  const rewardsToken = useToken(useSingleCallResult(stakeRewards, 'rewardsToken', [])?.result?.[0])
-
-  const stakeBalance = useSingleCallResult(stakeRewards, 'balanceOf', [owner || undefined])?.result?.[0]
-  const earned = useSingleCallResult(stakeRewards, 'earned', [owner || undefined])?.result?.[0]
-  const earnedExternal = useSingleCallResult(stakeRewards, 'earnedExternal', [owner || undefined])?.result?.[0]
+  const rewardsToken = useToken(useSingleCallResult(stakeRewards, 'rewardsToken', [], NEVER_RELOAD)?.result?.[0])
   const externalRewardsTokens: Record<string, number> = useSingleContractMultipleData(
     stakeRewards,
     'externalRewardsTokens',
@@ -33,6 +30,10 @@ export const useMultiStakeRewards = (
   )
     ?.map((cr) => cr?.result as unknown as string)
     .reduce((acc, curr, idx) => ({ ...acc, [curr]: idx }), {})
+
+  const stakeBalance = useSingleCallResult(stakeRewards, 'balanceOf', accountArg)?.result?.[0]
+  const earned = useSingleCallResult(stakeRewards, 'earned', accountArg)?.result?.[0]
+  const earnedExternal = useSingleCallResult(stakeRewards, 'earnedExternal', accountArg)?.result?.[0]
 
   const data = useMemo(
     () => ({

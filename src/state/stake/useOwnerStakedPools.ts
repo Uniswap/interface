@@ -21,7 +21,10 @@ export const useOwnerStakedPools = (allPools: StakingInfo[]) => {
   const multiRewards = useMemo(
     () =>
       multiRewardPools.map((multiPool) => {
-        return [multiPool, allPools.find((pool) => pool.poolInfo.poolAddress === multiPool.basePool)]
+        return [
+          multiPool,
+          allPools.find((pool) => pool.poolInfo.poolAddress.toLowerCase() === multiPool.basePool.toLowerCase()),
+        ]
       }) as [MultiRewardPool, StakingInfo | undefined][],
     [allPools]
   )

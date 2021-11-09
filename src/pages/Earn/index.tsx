@@ -4,10 +4,10 @@ import ChangeNetworkModal from 'components/ChangeNetworkModal'
 import { useIsSupportedNetwork } from 'hooks/useIsSupportedNetwork'
 import useWindowDimensions from 'hooks/useWindowDimensions'
 import { partition } from 'lodash'
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
-import { VariableSizeList as List } from 'react-window'
+import { areEqual, VariableSizeList as List } from 'react-window'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import useStakingInfo from 'state/stake/useStakingInfo'
 import styled from 'styled-components'
@@ -111,17 +111,16 @@ export default function Earn() {
     listRef?.current?.resetAfterIndex(rows.length - 1)
     stakedTripleRewards.forEach((x) => {
       const [multiRewardPoolData, poolData] = x
-      if (!poolData) {
-        return
-      }
       rows.push({
         element: (
-          <TriplePoolCard
-            poolAddress={multiRewardPoolData.address}
-            dualPoolAddress={multiRewardPoolData.underlyingPool}
-            underlyingPool={poolData}
-            active={multiRewardPoolData.active}
-          />
+          <ErrorBoundary>
+            <TriplePoolCard
+              poolAddress={multiRewardPoolData.address}
+              dualPoolAddress={multiRewardPoolData.underlyingPool}
+              underlyingPool={poolData}
+              active={multiRewardPoolData.active}
+            />
+          </ErrorBoundary>
         ),
         size: STAKED_TRIPLE_POOL_CARD_HEIGHT,
       })
@@ -140,14 +139,15 @@ export default function Earn() {
     listRef?.current?.resetAfterIndex(rows.length - 1)
     stakedDualRewards.forEach((x) => {
       const [multiRewardPoolData, poolData] = x
-      if (!poolData) return
       rows.push({
         element: (
-          <DualPoolCard
-            poolAddress={multiRewardPoolData.address}
-            underlyingPool={poolData}
-            active={multiRewardPoolData.active}
-          />
+          <ErrorBoundary>
+            <DualPoolCard
+              poolAddress={multiRewardPoolData.address}
+              underlyingPool={poolData}
+              active={multiRewardPoolData.active}
+            />
+          </ErrorBoundary>
         ),
         size: STAKED_DUAL_POOL_CARD_HEIGHT,
       })
@@ -167,7 +167,11 @@ export default function Earn() {
     listRef?.current?.resetAfterIndex(rows.length - 1)
     activeStakedPools.forEach((x) => {
       rows.push({
-        element: <PoolCard stakingInfo={x} />,
+        element: (
+          <ErrorBoundary>
+            <PoolCard stakingInfo={x} />
+          </ErrorBoundary>
+        ),
         size: STAKED_SINGLE_POOL_CARD_HEIGHT,
       })
       listRef?.current?.resetAfterIndex(rows.length - 1)
@@ -187,7 +191,6 @@ export default function Earn() {
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
     inactiveStakedTripleRewards.forEach((x) => {
-      if (!x[1]) return
       rows.push({
         element: (
           <ErrorBoundary>
@@ -204,7 +207,6 @@ export default function Earn() {
       listRef?.current?.resetAfterIndex(rows.length - 1)
     })
     inactiveStakedDualRewards.forEach((x) => {
-      if (!x[1]) return
       rows.push({
         element: (
           <ErrorBoundary>
@@ -240,7 +242,6 @@ export default function Earn() {
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
     tripleRewards.forEach((x) => {
-      if (!x[1]) return
       rows.push({
         element: (
           <ErrorBoundary>
@@ -270,7 +271,6 @@ export default function Earn() {
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
     dualRewards.forEach((x) => {
-      if (!x[1]) return
       rows.push({
         element: (
           <ErrorBoundary>
@@ -308,9 +308,11 @@ export default function Earn() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getItemSize = React.useCallback((index: number) => rows[index].size, [rows.length])
 
-  const Row: React.FC<{ index: number; style: React.CSSProperties }> = ({ index, style }) => {
+  // eslint-disable-next-line react/prop-types
+  const Row = memo<{ index: number; style: React.CSSProperties }>(({ index, style }) => {
     return <div style={style}>{rows[index].element}</div>
-  }
+  }, areEqual)
+  Row.displayName = 'PoolCardRow'
 
   if (!isSupportedNetwork) {
     return <ChangeNetworkModal />
