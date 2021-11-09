@@ -6,5 +6,10 @@ import Widget from './Widget'
 
 export default function WidgetDecorator({ children }: { children: ReactNode }) {
   const [theme] = useValue('theme', { defaultValue: getDefaultTheme() })
-  return <Widget theme={theme}>{children}</Widget>
+  const [locale] = useValue('locale', { defaultValue: 'pseudo' })
+  return (
+    <Widget theme={theme} locale={locale}>
+      {children}
+    </Widget>
+  )
 }
