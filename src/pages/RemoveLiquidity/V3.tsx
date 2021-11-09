@@ -139,7 +139,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(chainId, estimate),
+          gasLimit: calculateGasMargin(estimate),
         }
 
         return library

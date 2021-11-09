@@ -267,7 +267,7 @@ export default function AddLiquidity({
         .then((estimate) => {
           const newTxn = {
             ...txn,
-            gasLimit: calculateGasMargin(chainId, estimate),
+            gasLimit: calculateGasMargin(estimate),
           }
 
           return library
