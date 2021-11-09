@@ -22,7 +22,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { useColor } from '../../hooks/useColor'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { usePairDualStakingInfo, usePairTripleStakingInfo } from '../../state/stake/hooks'
+import { usePairMultiStakingInfo } from '../../state/stake/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLinkIcon, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -102,12 +102,11 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const singleStakingInfo = usePairStakingInfo(stakingTokenPair)
-  const dualStakingInfo = usePairDualStakingInfo(singleStakingInfo, stakingAddress)
-  const tripleStakingInfo = usePairTripleStakingInfo(singleStakingInfo, stakingAddress)
+  const multiStakingInfo = usePairMultiStakingInfo(singleStakingInfo, stakingAddress)
   const externalSingleStakingInfo = usePairStakingInfo(stakingTokenPair, stakingAddress)
 
   // Check external before we check single staking
-  const stakingInfo = tripleStakingInfo || dualStakingInfo || externalSingleStakingInfo || singleStakingInfo
+  const stakingInfo = multiStakingInfo || externalSingleStakingInfo || singleStakingInfo
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)

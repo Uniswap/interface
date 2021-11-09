@@ -61,29 +61,29 @@ export interface StakingInfo {
   readonly rewardTokens: Token[]
 }
 
-export const usePairDualStakingInfo = (
+export const usePairMultiStakingInfo = (
   stakingInfo: StakingInfo | undefined,
   stakingAddress: string
 ): StakingInfo | null => {
   const multiRewardPool = multiRewardPools
     .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
     .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
-  return useMultiStakeRewards(multiRewardPool?.address ?? '', stakingInfo, 2, multiRewardPool?.active || false)
-}
 
-export const usePairTripleStakingInfo = (
-  stakingInfo: StakingInfo | undefined,
-  stakingAddress: string
-): StakingInfo | null => {
-  const multiRewardPool = multiRewardPools
-    .filter((x) => x.address.toLowerCase() === stakingAddress.toLowerCase())
-    .find((x) => x.basePool === stakingInfo?.poolInfo.poolAddress)
-  const dualPool = useMultiStakeRewards(multiRewardPool?.underlyingPool ?? '', stakingInfo, 2, true)
-  const triplePool = useMultiStakeRewards(multiRewardPool?.address ?? '', dualPool, 3, multiRewardPool?.active || false)
-  if (multiRewardPool?.numRewards === 2) {
-    return null
-  }
-  return triplePool
+  const isTriple = multiRewardPool?.numRewards === 3
+
+  const dualPool = useMultiStakeRewards(
+    isTriple ? multiRewardPool?.underlyingPool : multiRewardPool?.address,
+    stakingInfo,
+    2,
+    isTriple ? true : multiRewardPool?.active ?? false
+  )
+  const triplePool = useMultiStakeRewards(
+    isTriple ? multiRewardPool?.address : undefined,
+    dualPool,
+    3,
+    multiRewardPool?.active ?? false
+  )
+  return triplePool || dualPool
 }
 
 interface UnclaimedInfo {

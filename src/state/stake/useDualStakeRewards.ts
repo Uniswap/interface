@@ -6,12 +6,12 @@ import { useToken } from 'hooks/Tokens'
 import { useMultiStakingContract } from 'hooks/useContract'
 import { zip } from 'lodash'
 import { useMemo } from 'react'
-import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
 import { StakingInfo } from './hooks'
 
 export const useMultiStakeRewards = (
-  address: Address,
+  address: Address | undefined,
   underlyingPool: StakingInfo | undefined | null,
   numRewards: number,
   active: boolean
@@ -22,7 +22,7 @@ export const useMultiStakeRewards = (
 
   const totalSupply = useSingleCallResult(stakeRewards, 'totalSupply', [])?.result?.[0]
   const rewardRate = useSingleCallResult(stakeRewards, 'rewardRate', [])?.result?.[0]
-  const rewardsToken = useToken(useSingleCallResult(stakeRewards, 'rewardsToken', [], NEVER_RELOAD)?.result?.[0])
+  const rewardsToken = useToken(useSingleCallResult(stakeRewards, 'rewardsToken', [])?.result?.[0])
   const externalRewardsTokens: Record<string, number> = useSingleContractMultipleData(
     stakeRewards,
     'externalRewardsTokens',
@@ -68,10 +68,10 @@ export const useMultiStakeRewards = (
       })
     }
 
-    const stakedAmount = myBalance ? new TokenAmount(stakingToken, myBalance.toString()) : undefined
-    const totalStakedAmount = new TokenAmount(stakingToken, totalSupplyRaw.toString())
+    const stakedAmount = myBalance ? new TokenAmount(stakingToken, myBalance?.toString() ?? '0') : undefined
+    const totalStakedAmount = new TokenAmount(stakingToken, totalSupplyRaw?.toString() ?? '0')
     const totalRewardRates = [
-      new TokenAmount(rewardsToken, totalRewardRateRaw.toString()),
+      new TokenAmount(rewardsToken, totalRewardRateRaw?.toString() ?? '0'),
       ...underlyingPool.totalRewardRates,
     ].sort((a, b) => (a.token?.symbol && b?.token?.symbol ? a.token.symbol.localeCompare(b.token.symbol) : 0))
 
