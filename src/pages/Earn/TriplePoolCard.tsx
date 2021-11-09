@@ -12,8 +12,8 @@ interface Props {
 }
 
 export const TriplePoolCard: React.FC<Props> = ({ poolAddress, dualPoolAddress, underlyingPool, active }: Props) => {
-  const dualPool = useMultiStakeRewards(dualPoolAddress, underlyingPool, true)
-  const mooPool = useMultiStakeRewards(poolAddress, dualPool, active)
+  const dualPool = useMultiStakeRewards(dualPoolAddress, underlyingPool, 2, true)
+  const mooPool = useMultiStakeRewards(poolAddress, dualPool, 3, active)
 
   if (!mooPool) {
     return <Loader />

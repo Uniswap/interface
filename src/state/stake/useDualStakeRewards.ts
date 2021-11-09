@@ -6,13 +6,14 @@ import { useToken } from 'hooks/Tokens'
 import { useMultiStakingContract } from 'hooks/useContract'
 import { zip } from 'lodash'
 import { useMemo } from 'react'
-import { useSingleCallResult } from 'state/multicall/hooks'
+import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
 import { StakingInfo } from './hooks'
 
 export const useMultiStakeRewards = (
   address: Address,
   underlyingPool: StakingInfo | undefined | null,
+  numRewards: number,
   active: boolean
 ): StakingInfo | null => {
   const { address: owner } = useContractKit()
@@ -25,6 +26,13 @@ export const useMultiStakeRewards = (
   const stakeBalance = useSingleCallResult(stakeRewards, 'balanceOf', [owner || undefined])?.result?.[0]
   const earned = useSingleCallResult(stakeRewards, 'earned', [owner || undefined])?.result?.[0]
   const earnedExternal = useSingleCallResult(stakeRewards, 'earnedExternal', [owner || undefined])?.result?.[0]
+  const externalRewardsTokens: Record<string, number> = useSingleContractMultipleData(
+    stakeRewards,
+    'externalRewardsTokens',
+    [...[...Array(numRewards - 1).keys()].map((i) => [i])]
+  )
+    ?.map((cr) => cr?.result as unknown as string)
+    .reduce((acc, curr, idx) => ({ ...acc, [curr]: idx }), {})
 
   const data = useMemo(
     () => ({
@@ -70,9 +78,10 @@ export const useMultiStakeRewards = (
       ? getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRates)
       : totalRewardRates.map((totalRewardRate) => new TokenAmount(totalRewardRate.token, '0'))
 
-    const rewardTokens = (
-      rewardsToken ? [rewardsToken, ...underlyingPool.rewardTokens] : [...underlyingPool.rewardTokens]
-    ).sort((a, b) => (a?.symbol && b?.symbol ? a.symbol.localeCompare(b.symbol) : 0))
+    const underlyingRewardTokens = underlyingPool.rewardTokens.sort(
+      (a, b) => externalRewardsTokens[a?.address] - externalRewardsTokens[b?.address]
+    )
+    const rewardTokens = rewardsToken ? [rewardsToken, ...underlyingRewardTokens] : [...underlyingRewardTokens]
     const earnedAmounts =
       earned && earned.length === rewardTokens.length
         ? zip<BigNumber, Token>(earned, rewardTokens)
@@ -96,5 +105,5 @@ export const useMultiStakeRewards = (
       poolInfo: underlyingPool.poolInfo,
       rewardTokens,
     }
-  }, [address, data, rewardsToken, underlyingPool, active])
+  }, [data, rewardsToken, underlyingPool, address, active, externalRewardsTokens])
 }

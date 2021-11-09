@@ -11,7 +11,7 @@ import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'multicall']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 const store = configureStore({
   reducer: {
