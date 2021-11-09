@@ -29,7 +29,7 @@ export const useMultiStakeRewards = (
   const externalRewardsTokens: Record<string, number> = useSingleContractMultipleData(
     stakeRewards,
     'externalRewardsTokens',
-    [...[...Array(numRewards - 1).keys()].map((i) => [i])]
+    [...[...Array(numRewards - 2).keys()].map((i) => [i])]
   )
     ?.map((cr) => cr?.result as unknown as string)
     .reduce((acc, curr, idx) => ({ ...acc, [curr]: idx }), {})
