@@ -233,19 +233,6 @@ export default function Pool() {
                       </Trans>
                     </RowBetween>
                   </ButtonSecondary>
-                  {v2PairsWithoutStakedAmount.map((v2Pair) => (
-                    <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                  ))}
-                  {stakingPairs.map(
-                    (stakingPair, i) =>
-                      stakingPair[1] && ( // skip pairs that arent loaded
-                        <FullPositionCard
-                          key={stakingInfosWithBalance[i].stakingRewardAddress}
-                          pair={stakingPair[1]}
-                          stakedBalance={stakingInfosWithBalance[i].stakedAmount}
-                        />
-                      )
-                  )}
                   <RowFixed justify="center" style={{ width: '100%' }}>
                     <ButtonOutlined
                       as={Link}

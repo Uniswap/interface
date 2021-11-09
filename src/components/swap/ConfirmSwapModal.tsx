@@ -87,7 +87,7 @@ export default function ConfirmSwapModal({
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [trade, serviceFee, priceAmount, recipient, showAcceptChanges, onAcceptChanges])
+  }, [trade, serviceFee, priceAmount, inputAmount, outputAmount, recipient, showAcceptChanges, onAcceptChanges])
 
   const modalBottom = useCallback(() => {
     return trade ? (

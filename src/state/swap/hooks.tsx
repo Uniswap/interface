@@ -12,7 +12,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { V3TradeState } from 'state/routing/types'
-import { useUserGasPrice } from 'state/user/hooks'
+import { useNetworkGasPrice, useUserGasPrice } from 'state/user/hooks'
 
 import { useCurrency } from '../../hooks/Tokens'
 import { useLimitOrderManager } from '../../hooks/useContract'
@@ -206,7 +206,9 @@ export function useDerivedSwapInfo(): {
     ? tryParseAmount(desiredRateApplied, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
     : tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const gasAmount = useUserGasPrice()
+  const userGasAmount = useUserGasPrice()
+  const networkGasAmount = useNetworkGasPrice()
+  const gasAmount = userGasAmount?.greaterThan('0') ? userGasAmount : networkGasAmount
 
   // get quotes
   const v3Trade = useBestV3Trade(
@@ -284,19 +286,20 @@ export function useDerivedSwapInfo(): {
 
   const limitOrderManager = useLimitOrderManager()
 
-  const { result: estimatedServiceFeeResult } = useSingleCallResult(limitOrderManager, 'estimateServiceFeeWei', [
+  const { result: estimatedServiceFeeResult } = useSingleCallResult(limitOrderManager, 'estimateServiceFee', [
     gasAmount?.quotient.toString() ?? undefined,
+    '1',
   ])
 
-  const { result: estimatedKROMServiceFeeResult } = useSingleCallResult(limitOrderManager, 'quoteKROM', [
-    estimatedServiceFeeResult?.[0] ?? undefined,
-  ])
+  console.log(gasAmount?.quotient.toString())
+  console.log(estimatedServiceFeeResult?.toString())
+  console.log(chainId)
 
   const serviceFee = useMemo(() => {
-    if (!chainId || !estimatedKROMServiceFeeResult) return undefined
+    if (!chainId || !estimatedServiceFeeResult) return undefined
 
-    return CurrencyAmount.fromRawAmount(KROM[chainId], estimatedKROMServiceFeeResult?.[0])
-  }, [chainId, estimatedKROMServiceFeeResult])
+    return CurrencyAmount.fromRawAmount(KROM[chainId], estimatedServiceFeeResult?.[0])
+  }, [chainId, estimatedServiceFeeResult])
 
   const price = useMemo(() => {
     if (!parsedAmounts.input || !parsedAmounts.output) return undefined
@@ -312,7 +315,7 @@ export function useDerivedSwapInfo(): {
     bestTrade?.route &&
     (price?.lessThan(bestTrade?.route.midPrice) || price?.equalTo(bestTrade?.route.midPrice))
   ) {
-    inputError = inputError ?? <Trans>Please place limit orders above the market price</Trans>
+    inputError = inputError ?? <Trans>Please place limit orders above the current market price</Trans>
   }
 
   // compare input balance to max input based on version

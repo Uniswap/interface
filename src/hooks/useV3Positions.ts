@@ -1,13 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Currency, CurrencyAmount, Ether, Token, WETH9 } from '@uniswap/sdk-core'
+import { KROM } from 'constants/tokens'
 import { useMemo } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { PositionDetails } from 'types/position'
 
 import { useLimitOrderManager } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 interface UseV3PositionsResults {
   loading: boolean
   positions: PositionDetails[] | undefined
+  fundingBalance: CurrencyAmount<Token> | undefined
+  minBalance: CurrencyAmount<Token> | undefined
+  gasPrice: CurrencyAmount<Currency> | undefined
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
@@ -34,7 +40,6 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
           liquidity: result.liquidity,
           opened: result.opened,
           processed: result.processed,
-          targetGasPrice: result.targetGasPrice,
           tokensOwed0: result.tokensOwed0,
           tokensOwed1: result.tokensOwed1,
         }
@@ -46,6 +51,9 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
   return {
     loading,
     positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
+    fundingBalance: undefined,
+    minBalance: undefined,
+    gasPrice: undefined,
   }
 }
 
@@ -64,6 +72,8 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const limitOrderManager = useLimitOrderManager()
+
+  const { chainId } = useActiveWeb3React()
 
   const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(limitOrderManager, 'balanceOf', [
     account ?? undefined,
@@ -98,8 +108,51 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
 
   const { positions, loading: positionsLoading } = useV3PositionsFromTokenIds(tokenIds)
 
+  const { loading: fundingLoading, result: fundingResult } = useSingleCallResult(limitOrderManager, 'funding', [
+    account ?? undefined,
+  ])
+
+  const fundingBalance = useMemo(() => {
+    if (!chainId || !fundingResult) return undefined
+
+    return CurrencyAmount.fromRawAmount(KROM[chainId], fundingResult?.[0])
+  }, [chainId, fundingResult])
+
+  const { loading: minBalanceLoading, result: minBalanceResult } = useSingleCallResult(
+    limitOrderManager,
+    'serviceFee',
+    [account ?? undefined]
+  )
+
+  const minBalance = useMemo(() => {
+    if (!chainId || !minBalanceResult) return undefined
+
+    return CurrencyAmount.fromRawAmount(KROM[chainId], minBalanceResult?.[0])
+  }, [chainId, minBalanceResult])
+
+  const { loading: gasPriceLoading, result: gasPriceResult } = useSingleCallResult(
+    limitOrderManager,
+    'targetGasPrice',
+    [account ?? undefined]
+  )
+
+  const gasPrice = useMemo(() => {
+    if (!chainId || !gasPriceResult) return undefined
+
+    return CurrencyAmount.fromRawAmount(Ether.onChain(chainId), gasPriceResult?.[0])
+  }, [chainId, gasPriceResult])
+
   return {
-    loading: someTokenIdsLoading || balanceLoading || positionsLoading,
+    loading:
+      someTokenIdsLoading ||
+      balanceLoading ||
+      positionsLoading ||
+      fundingLoading ||
+      minBalanceLoading ||
+      gasPriceLoading,
     positions,
+    fundingBalance,
+    minBalance,
+    gasPrice,
   }
 }

@@ -1,10 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { KROM } from 'constants/tokens'
+import { formatUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { AlertCircle, ChevronDown, ChevronUp, HelpCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -30,6 +34,11 @@ export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
 `
 
+const BadgeText = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+`
+
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
   background: ${({ theme, bgColor }) =>
@@ -43,6 +52,12 @@ interface PositionCardProps {
   showUnwrapped?: boolean
   border?: string
   stakedBalance?: CurrencyAmount<Token> // optional balance to indicate that liquidity is deposited in mining pool
+}
+
+interface FundingCardProps {
+  fundingBalance?: CurrencyAmount<Token>
+  minBalance?: CurrencyAmount<Token>
+  gasPrice?: CurrencyAmount<Currency>
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -157,198 +172,104 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+export default function FullPositionCard({ fundingBalance, minBalance, gasPrice }: FundingCardProps) {
+  const showMore = true
+  const backgroundColor = useColor(fundingBalance?.currency)
 
-  const currency0 = unwrappedToken(pair.token0)
-  const currency1 = unwrappedToken(pair.token1)
+  const { chainId } = useActiveWeb3React()
+  const kromToken = chainId ? KROM[chainId] : undefined
 
-  const [showMore, setShowMore] = useState(false)
-
-  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
-
-  // if staked balance balance provided, add to standard liquidity amount
-  const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
-
-  const poolTokenPercentage =
-    !!userPoolBalance &&
-    !!totalPoolTokens &&
-    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
-      ? new Percent(userPoolBalance.quotient, totalPoolTokens.quotient)
-      : undefined
-
-  const [token0Deposited, token1Deposited] =
-    !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
-      ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
-        ]
-      : [undefined, undefined]
-
-  const backgroundColor = useColor(pair?.token0)
+  const isUnderfunded = fundingBalance ? minBalance?.greaterThan(fundingBalance?.quotient) : true
 
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard bgColor={backgroundColor}>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px" style={{ marginLeft: '8px' }}>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
-              {!currency0 || !currency1 ? (
-                <Dots>
-                  <Trans>Loading</Trans>
-                </Dots>
-              ) : (
-                `${currency0.symbol}/${currency1.symbol}`
-              )}
-            </Text>
-          </AutoRow>
-          <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-            <ButtonEmpty padding="6px 8px" $borderRadius="12px" width="100%" onClick={() => setShowMore(!showMore)}>
-              {showMore ? (
-                <>
-                  <Trans>Manage</Trans>
-                  <ChevronUp size="20" style={{ marginLeft: '8px', height: '20px', minWidth: '20px' }} />
-                </>
-              ) : (
-                <>
-                  <Trans>Manage</Trans>
-                  <ChevronDown size="20" style={{ marginLeft: '8px', height: '20px', minWidth: '20px' }} />
-                </>
-              )}
-            </ButtonEmpty>
-          </RowFixed>
+          <RowFixed gap="2px" style={{ marginRight: '10px' }}></RowFixed>
         </FixedHeightRow>
 
         {showMore && (
           <AutoColumn gap="8px">
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                <Trans>Your total pool tokens:</Trans>
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-              </Text>
+              <RowFixed>
+                <Text fontSize={16} fontWeight={500}>
+                  <Trans>Status:</Trans>
+                </Text>
+              </RowFixed>
+
+              {isUnderfunded ? (
+                <MouseoverTooltip
+                  text={<Trans>Your account is underfunded. Please fund it up to the minimum balance.</Trans>}
+                >
+                  <Badge variant={BadgeVariant.NEGATIVE}>
+                    <AlertCircle width={14} height={14} />
+                    &nbsp;
+                    <BadgeText>
+                      <Trans>Underfunded</Trans>
+                    </BadgeText>
+                  </Badge>
+                </MouseoverTooltip>
+              ) : (
+                <MouseoverTooltip
+                  text={<Trans>Your account is activelly monitoring and processing limit orders.</Trans>}
+                >
+                  <Badge variant={BadgeVariant.POSITIVE}>
+                    <AlertCircle width={14} height={14} />
+                    &nbsp;
+                    <BadgeText>
+                      <Trans>Active</Trans>
+                    </BadgeText>
+                  </Badge>
+                </MouseoverTooltip>
+              )}
             </FixedHeightRow>
-            {stakedBalance && (
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
-                  <Trans>Pool tokens in rewards pool:</Trans>
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
-                  {stakedBalance.toSignificant(4)}
-                </Text>
-              </FixedHeightRow>
-            )}
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans>Pooled {currency0.symbol}:</Trans>
+                  <Trans>Balance:</Trans>
                 </Text>
               </RowFixed>
-              {token0Deposited ? (
+              {fundingBalance ? (
                 <RowFixed>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token0Deposited?.toSignificant(6)}
+                    {fundingBalance?.toSignificant(6)} {fundingBalance?.currency.symbol}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
                 '-'
               )}
             </FixedHeightRow>
-
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans>Pooled {currency1.symbol}:</Trans>
+                  <Trans>Minimum Balance:</Trans>
                 </Text>
               </RowFixed>
-              {token1Deposited ? (
+              {minBalance ? (
                 <RowFixed>
+                  <MouseoverTooltip text={<Trans>Bla bla bla</Trans>}>
+                    <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                  </MouseoverTooltip>
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token1Deposited?.toSignificant(6)}
+                    {minBalance?.toSignificant(6)} {minBalance?.currency.symbol}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
-
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                <Trans>Your pool share:</Trans>
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
-                {poolTokenPercentage ? (
-                  <Trans>
-                    {poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)} %
-                  </Trans>
-                ) : (
-                  '-'
-                )}
-              </Text>
             </FixedHeightRow>
 
             <ButtonSecondary padding="8px" $borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://v2.info.uniswap.org/account/${account}`}
+                href={`https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${kromToken?.address}`}
               >
                 <Trans>
-                  View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
+                  Get more KROM tokens here<span style={{ fontSize: '11px' }}>↗</span>
                 </Trans>
               </ExternalLink>
             </ButtonSecondary>
-            {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  width="32%"
-                >
-                  <Trans>Migrate</Trans>
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="32%"
-                >
-                  <Trans>Add</Trans>
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  $borderRadius="8px"
-                  as={Link}
-                  width="32%"
-                  to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
-                >
-                  <Trans>Remove</Trans>
-                </ButtonPrimary>
-              </RowBetween>
-            )}
-            {stakedBalance && JSBI.greaterThan(stakedBalance.quotient, BIG_INT_ZERO) && (
-              <ButtonPrimary
-                padding="8px"
-                $borderRadius="8px"
-                as={Link}
-                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="100%"
-              >
-                <Trans>Manage Liquidity in Rewards Pool</Trans>
-              </ButtonPrimary>
-            )}
           </AutoColumn>
         )}
       </AutoColumn>

@@ -6,6 +6,7 @@ import { useCurrency, useToken } from '../../hooks/Tokens'
 import useENSName from '../../hooks/useENSName'
 import { VoteOption } from '../../state/governance/types'
 import {
+  AddFundingTransactionInfo,
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
@@ -227,6 +228,12 @@ function AddLiquidityV3PoolSummary({
   )
 }
 
+function AddFundingSummary({ info: { baseCurrencyId } }: { info: AddFundingTransactionInfo }) {
+  const baseCurrency = useCurrency(baseCurrencyId)
+
+  return <Trans>Add {baseCurrency?.symbol} funds</Trans>
+}
+
 function AddLiquidityV2PoolSummary({
   info: { quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw, baseCurrencyId },
 }: {
@@ -283,6 +290,9 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
       return <AddLiquidityV3PoolSummary info={info} />
+
+    case TransactionType.ADD_FUNDING:
+      return <AddFundingSummary info={info} />
 
     case TransactionType.ADD_LIQUIDITY_V2_POOL:
       return <AddLiquidityV2PoolSummary info={info} />

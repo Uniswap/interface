@@ -11,7 +11,6 @@ export interface PositionDetails {
   liquidity: BigNumber
   opened: BigNumber
   processed: BigNumber
-  targetGasPrice: BigNumber
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
 }

@@ -5,10 +5,12 @@ import DowntimeWarning from 'components/DowntimeWarning'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import FullPositionCard from 'components/PositionCard'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { L2_CHAIN_IDS } from 'constants/chains'
+import { KROM } from 'constants/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
@@ -135,7 +137,9 @@ export default function Pool() {
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  const { positions, loading: positionsLoading } = useV3Positions(account)
+  const { positions, loading: positionsLoading, fundingBalance, minBalance, gasPrice } = useV3Positions(account)
+
+  const kromToken = chainId ? KROM[chainId] : undefined
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
@@ -152,7 +156,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Trans>Migrate Position</Trans>
+          <Trans>Withdraw Funds</Trans>
           <ChevronsRight size={16} />
         </MenuItem>
       ),
@@ -184,7 +188,7 @@ export default function Pool() {
                     </MoreOptionsButton>
                   )}
                 />
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/funds">
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to={`/add/${kromToken?.address}`}>
                   + <Trans>Add Funds</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -193,6 +197,7 @@ export default function Pool() {
             <HideSmall>
               <NetworkAlert thin />
               <DowntimeWarning />
+              <FullPositionCard fundingBalance={fundingBalance} minBalance={minBalance} gasPrice={gasPrice} />
             </HideSmall>
 
             <MainContentWrapper>
@@ -235,7 +240,7 @@ export default function Pool() {
                 <ShowInactiveToggle>
                   <label>
                     <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show closed limit orders</Trans>
+                      <Trans>Show processed limit orders</Trans>
                     </TYPE.body>
                   </label>
                   <input

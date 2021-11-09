@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 import { BigintIsh, Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { encodeSqrtRatioX96, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { toHex } from '@uniswap/v3-sdk'
 import { useTokenComparator } from 'components/SearchModal/sorting'
 import { WETH9_EXTENDED } from 'constants/tokens'
 import JSBI from 'jsbi'
@@ -163,7 +164,6 @@ function useSwapCallArguments(
             _sqrtPriceX96: encodeSqrtRatioX96(targetPrice.numerator, targetPrice.denominator)?.toString(),
             _amount0: toHex(amount0?.quotient),
             _amount1: toHex(amount1?.quotient),
-            _targetGasPrice: toHex(gasAmount?.quotient),
           },
         ])
       )
@@ -289,15 +289,6 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
         </Trans>
       )
   }
-}
-
-export function toHex(bigintIsh: BigintIsh) {
-  const bigInt = JSBI.BigInt(bigintIsh)
-  let hex = bigInt.toString(16)
-  if (hex.length % 2 !== 0) {
-    hex = `0${hex}`
-  }
-  return `0x${hex}`
 }
 
 // returns a function that will execute a swap, if the parameters are all valid

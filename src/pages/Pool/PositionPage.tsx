@@ -581,18 +581,6 @@ export function PositionPage({
               </RowFixed>
               {ownsNFT && (
                 <RowFixed>
-                  {currency0 && currency1 && feeAmount && tokenId ? (
-                    <ButtonGray
-                      as={Link}
-                      to={`/retrieve/${tokenId}`}
-                      width="fit-content"
-                      padding="6px 8px"
-                      $borderRadius="12px"
-                      style={{ marginRight: '8px' }}
-                    >
-                      <Trans>Retrieve NFT Position</Trans>
-                    </ButtonGray>
-                  ) : null}
                   {tokenId && !isClosed ? (
                     <ResponsiveButtonPrimary
                       as={Link}

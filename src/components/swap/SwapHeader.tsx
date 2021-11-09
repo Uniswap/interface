@@ -21,9 +21,6 @@ export default function SwapHeader() {
             <Trans>Limit Order</Trans>
           </TYPE.black>
         </RowFixed>
-        <RowFixed>
-          <SettingsTab />
-        </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
   )

@@ -4,10 +4,12 @@ import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_USER_GAS_PRICE, L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { useLimitOrderManager } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
@@ -221,7 +223,7 @@ export function useUserTransactionGas(): [string, (gasPrice: string) => void] {
   return [userGasPrice, setUserGasPrice]
 }
 
-export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
+export function useNetworkGasPrice(): CurrencyAmount<Currency> | undefined {
   const { chainId, library } = useActiveWeb3React()
   const [userGasPrice, setUserGasPrice] = useUserTransactionGas()
 
@@ -234,9 +236,7 @@ export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
       .catch((error) => console.error(`Failed to get gas price for chainId: ${chainId}`, error))
   }, [chainId, library, setUserGasPrice])
 
-  if (!userGasPrice) {
-    gasPriceCallback()
-  }
+  gasPriceCallback()
 
   return useMemo(
     () =>
@@ -244,6 +244,19 @@ export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
         ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(parseUnits(userGasPrice, 'gwei').toString()))
         : undefined,
     [chainId, userGasPrice]
+  )
+}
+
+export function useUserGasPrice(): CurrencyAmount<Currency> | undefined {
+  const { chainId, account } = useActiveWeb3React()
+  const limitOrderManager = useLimitOrderManager()
+
+  const { result: gasPriceResult } = useSingleCallResult(limitOrderManager, 'targetGasPrice', [account ?? undefined])
+
+  return useMemo(
+    () =>
+      chainId && gasPriceResult ? CurrencyAmount.fromRawAmount(Ether.onChain(chainId), gasPriceResult?.[0]) : undefined,
+    [chainId, gasPriceResult]
   )
 }
 

@@ -36,12 +36,12 @@ export default function RangeBadge({
   return (
     <BadgeWrapper>
       {closed ? (
-        <MouseoverTooltip text={<Trans>Your limit order has been closed. Please collect the amount.</Trans>}>
+        <MouseoverTooltip text={<Trans>The limit order has been processed. Please collect the amount.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans>Closed</Trans>
+              <Trans>Processed</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
@@ -56,7 +56,11 @@ export default function RangeBadge({
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={<Trans>The limit order is pending, waiting for the market price to reach the target price.</Trans>}
+          text={
+            <Trans>
+              The limit order is pending, waiting for the current market price to reach the specified target price.
+            </Trans>
+          }
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />

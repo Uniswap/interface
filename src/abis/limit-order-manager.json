@@ -101,6 +101,18 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
       }
     ],
     "name": "LimitOrderCancelled",
@@ -157,6 +169,30 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "orderType",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint160",
+        "name": "sqrtPriceX96",
+        "type": "uint160"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
       }
     ],
     "name": "LimitOrderCreated",
@@ -168,13 +204,25 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "owner",
+        "name": "monitor",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "uint256",
         "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "batchId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "serviceFeePaid",
         "type": "uint256"
       }
     ],
@@ -198,6 +246,25 @@
       }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "gasPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "TargetGasPriceSet",
     "type": "event"
   },
   {
@@ -246,40 +313,32 @@
   },
   {
     "inputs": [],
-    "name": "POOL_FEE",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "TWAP_PERIOD",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "",
-        "type": "uint32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
     "name": "WETH",
     "outputs": [
       {
         "internalType": "contract IWETH9",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "activeOrders",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -544,26 +603,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "reservedWeiFunds",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -822,6 +861,26 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "targetGasPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "index",
         "type": "uint256"
@@ -1000,11 +1059,6 @@
             "internalType": "uint256",
             "name": "_amount1",
             "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_targetGasPrice",
-            "type": "uint256"
           }
         ],
         "internalType": "struct IOrderManager.LimitOrderParams",
@@ -1112,6 +1166,19 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_targetGasPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTargetGasPrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
@@ -1191,12 +1258,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "processed",
+        "name": "opened",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "targetGasPrice",
+        "name": "processed",
         "type": "uint256"
       },
       {
@@ -1313,12 +1380,37 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "serviceFee",
+    "outputs": [
+      {
         "internalType": "uint256",
-        "name": "_targetGasPrice",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "estimateServiceFeeWei",
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_targetGasPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_noOrders",
+        "type": "uint256"
+      }
+    ],
+    "name": "estimateServiceFee",
     "outputs": [
       {
         "internalType": "uint256",
