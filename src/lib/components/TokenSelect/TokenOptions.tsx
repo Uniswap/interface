@@ -3,7 +3,7 @@ import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
 import {
-  ElementRef,
+  CSSProperties,
   ForwardedRef,
   forwardRef,
   KeyboardEvent,
@@ -13,13 +13,15 @@ import {
   useRef,
   useState,
 } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
 
 import Button from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 
-const TokenButton = styled(Button)<{ focus: boolean; theme: Theme }>`
-  background-color: ${({ focus, theme }) => focus && theme.interactive};
+const TokenButton = styled(Button)<{ hovered: boolean; theme: Theme }>`
+  background-color: ${({ hovered, theme }) => hovered && theme.interactive};
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
@@ -41,23 +43,26 @@ const TokenImg = styled.img`
 
 interface TokenOptionProps {
   value: Token
-  focus: boolean
-  onClick: (value: Token) => void
+  hovered: boolean
+  style: CSSProperties
+  onHover: () => void
+  onFocus: () => void
+  onClick: () => void
   onKeyDown: (e: KeyboardEvent) => void
-  onFocus: (value: Token) => void
 }
 
 const TokenOption = forwardRef(function TokenOption(
-  { value, focus, onClick, onKeyDown, onFocus }: TokenOptionProps,
+  { value, hovered, style, onHover, onClick, onFocus, onKeyDown }: TokenOptionProps,
   ref: ForwardedRef<HTMLButtonElement>
 ) {
   return (
     <TokenButton
-      focus={focus}
-      onClick={() => onClick(value)}
-      onFocus={() => onFocus(value)}
+      hovered={hovered}
+      style={style}
+      onClick={onClick}
+      onFocus={onFocus}
       onKeyDown={onKeyDown}
-      onMouseMove={() => onFocus(value)}
+      onMouseMove={onHover}
       onMouseDown={() => prefetchColor(value)}
       ref={ref}
     >
@@ -90,54 +95,77 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   { tokens, onSelect }: TokenOptionsProps,
   ref
 ) {
-  const options = useRef<Array<ElementRef<typeof TokenOption> | null>>([])
-  const [focus, setFocus] = useState(-1)
-  useEffect(() => setFocus(-1), [tokens])
+  const [focused, setFocused] = useState(false)
+  const [hover, setHover] = useState(-1)
+  useEffect(() => setHover(-1), [tokens])
 
+  const list = useRef<FixedSizeList>(null)
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        if (e.key === 'ArrowDown' && focus < tokens.length - 1) {
-          scrollTo(focus + 1)
-        } else if (e.key === 'ArrowUp' && focus > 0) {
-          scrollTo(focus - 1)
-        } else if (e.key === 'ArrowUp' && focus === -1) {
+        if (e.key === 'ArrowDown' && hover < tokens.length - 1) {
+          scrollTo(hover + 1)
+        } else if (e.key === 'ArrowUp' && hover > 0) {
+          scrollTo(hover - 1)
+        } else if (e.key === 'ArrowUp' && hover === -1) {
           scrollTo(tokens.length - 1)
         }
         e.preventDefault()
       }
-      if (e.key === 'Enter' && focus) {
-        onSelect(tokens[focus])
+      if (e.key === 'Enter' && hover) {
+        onSelect(tokens[hover])
       }
 
-      function scrollTo(i: number) {
-        setFocus(i)
-        options.current[i]?.scrollIntoView({ block: 'nearest' })
-        if (e.target === options.current[focus]) {
-          options.current[i]?.focus()
-        }
+      function scrollTo(index: number) {
+        list.current?.scrollToItem(index)
+        setHover(index)
       }
     },
-    [focus, onSelect, tokens, options]
+    [hover, tokens, onSelect]
   )
   useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
 
-  options.current = []
+  const itemKey = useCallback(({ index }) => tokens[index]?.address, [tokens])
+  const div = useRef<HTMLDivElement>(null)
+
   return (
-    <Column scrollable>
-      {tokens &&
-        tokens.map((token, i) => (
-          <TokenOption
-            focus={i === focus}
-            value={token}
-            onClick={onSelect}
-            onFocus={() => setFocus(i)}
-            onKeyDown={onKeyDown}
-            key={token.address}
-            ref={(ref) => (options.current[i] = ref)}
-          />
-        ))}
-    </Column>
+    <div
+      style={{ height: '100%' }}
+      onFocus={() => setFocused(true)}
+      onBlur={(e) =>
+        setFocused((e.relatedTarget instanceof HTMLElement && div.current?.contains(e.relatedTarget)) ?? false)
+      }
+      ref={div}
+    >
+      <AutoSizer disableWidth>
+        {({ height }) => (
+          <FixedSizeList
+            height={height}
+            width="100%"
+            itemCount={tokens.length}
+            itemKey={itemKey}
+            itemSize={56}
+            ref={list}
+          >
+            {({ index, style }) => (
+              <TokenOption
+                value={tokens[index]}
+                hovered={index === hover}
+                onHover={() => setHover(index)}
+                onFocus={() => {
+                  list.current?.scrollToItem(index)
+                  setHover(index)
+                }}
+                onClick={() => onSelect(tokens[index])}
+                onKeyDown={(e) => onKeyDown(e)}
+                style={style}
+                ref={index === hover && focused ? (ref) => ref?.focus() : undefined}
+              />
+            )}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </div>
   )
 })
 
