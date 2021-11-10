@@ -7,6 +7,7 @@ import { partition } from 'lodash'
 import React, { memo, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { areEqual, VariableSizeList as List } from 'react-window'
 import { useOwnerStakedPools } from 'state/stake/useOwnerStakedPools'
 import useStakingInfo from 'state/stake/useStakingInfo'
@@ -21,8 +22,8 @@ import { ExternalLink, TYPE } from '../../theme'
 import { DualPoolCard } from './DualPoolCard'
 import { TriplePoolCard } from './TriplePoolCard'
 
-const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+const PageWrapper = styled.div`
+  height: 400px;
   width: 100%;
 `
 
@@ -38,13 +39,13 @@ flex-direction: column;
 `
 
 const POOL_SECTION_HEADER_HEIGHT = 48
-const STAKED_TRIPLE_POOL_CARD_HEIGHT = isMobile ? 210 : 380
-const STAKED_DUAL_POOL_CARD_HEIGHT = isMobile ? 200 : 350
-const STAKED_SINGLE_POOL_CARD_HEIGHT = isMobile ? 180 : 320
-const INACTIVE_POOL_CARD_HEIGHT = isMobile ? 180 : 210
-const TRIPLE_POOL_CARD_HEIGHT = isMobile ? 90 : 300
-const DUAL_POOL_CARD_HEIGHT = isMobile ? 90 : 270
-const SINGLE_POOL_CARD_HEIGHT = isMobile ? 90 : 236
+const STAKED_TRIPLE_POOL_CARD_HEIGHT = isMobile ? 130 : 200
+const STAKED_DUAL_POOL_CARD_HEIGHT = isMobile ? 130 : 200
+const STAKED_SINGLE_POOL_CARD_HEIGHT = isMobile ? 130 : 200
+const INACTIVE_POOL_CARD_HEIGHT = isMobile ? 130 : 200
+const TRIPLE_POOL_CARD_HEIGHT = isMobile ? 90 : 150
+const DUAL_POOL_CARD_HEIGHT = isMobile ? 90 : 150
+const SINGLE_POOL_CARD_HEIGHT = isMobile ? 90 : 150
 
 const Header: React.FC = ({ children }) => {
   return (
@@ -59,7 +60,7 @@ export default function Earn() {
   const isSupportedNetwork = useIsSupportedNetwork()
   // staking info for connected account
   const stakingInfos = useStakingInfo()
-  const { height, width } = useWindowDimensions()
+  const { height } = useWindowDimensions()
 
   const allPools = useMemo(
     () =>
@@ -323,7 +324,11 @@ export default function Earn() {
 
   // eslint-disable-next-line react/prop-types
   const Row = memo<{ index: number; style: React.CSSProperties }>(({ index, style }) => {
-    return <div style={style}>{rows[index].element}</div>
+    return (
+      <div style={{ ...style, maxWidth: '640px', marginLeft: isMobile ? 0 : 'calc(50% - 320px)' }}>
+        {rows[index].element}
+      </div>
+    )
   }, areEqual)
   Row.displayName = 'PoolCardRow'
 
@@ -332,17 +337,22 @@ export default function Earn() {
   }
 
   return (
-    <PageWrapper gap="sm" justify="center">
-      <List
-        className="no-scrollbars"
-        height={height / 1.3}
-        itemCount={rows.length}
-        itemSize={getItemSize}
-        width={Math.min(width - 40, 640)}
-        ref={listRef}
-      >
-        {Row}
-      </List>
+    <PageWrapper>
+      <AutoSizer>
+        {({ width }) => (
+          <List
+            className="no-scrollbars"
+            height={height - 200}
+            overscanCount={20}
+            itemCount={rows.length}
+            itemSize={getItemSize}
+            width={width}
+            ref={listRef}
+          >
+            {Row}
+          </List>
+        )}
+      </AutoSizer>
     </PageWrapper>
   )
 }

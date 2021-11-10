@@ -9,11 +9,9 @@ import { useDispatch } from 'react-redux'
 import { useAnnualRewardDollars } from 'state/stake/useAnnualRewardDollars'
 import { updateUserAprMode } from 'state/user/actions'
 import { useIsAprMode } from 'state/user/hooks'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { toWei } from 'web3-utils'
 
-import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
-import { useColor } from '../../hooks/useColor'
 import { StakingInfo } from '../../state/stake/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -97,12 +95,9 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   const { data, loading, error } = useQuery(pairDataGql, {
     variables: { id: stakingInfo.stakingToken.address.toLowerCase() },
   })
+  const theme = useTheme()
 
   const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
-
-  // get the color of the token
-  const token = token0.symbol?.startsWith('m') ? token1 : token0
-  const backgroundColor = useColor(token)
 
   // get the USD value of staked WETH
   const {
@@ -124,7 +119,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
       toWei(Math.floor(yearlyVolumeUsd * 0.0025).toString())
     )
   }
-  const apyFraction =
+  const rewardApyFraction =
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
       ? annualFarmRewards?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
@@ -132,12 +127,19 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
     stakingInfo.active && valueOfTotalStakedAmountInCUSD && !valueOfTotalStakedAmountInCUSD.equalTo('0')
       ? annualSwapFees?.divide(valueOfTotalStakedAmountInCUSD)
       : undefined
-  const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
-  const swapApy = swapApyFraction ? new Percent(swapApyFraction.numerator, swapApyFraction.denominator) : undefined
 
-  const dpy = apy
-    ? new Percent(Math.floor(parseFloat(apy.divide('365').toFixed(10)) * 1_000_000).toFixed(0), '1000000')
+  const rewardApy = rewardApyFraction
+    ? new Percent(rewardApyFraction.numerator, rewardApyFraction.denominator)
     : undefined
+  const swapApy = swapApyFraction ? new Percent(swapApyFraction.numerator, swapApyFraction.denominator) : undefined
+  const apy =
+    rewardApyFraction && swapApyFraction
+      ? new Percent(
+          swapApyFraction.add(rewardApyFraction).numerator,
+          swapApyFraction.add(rewardApyFraction).denominator
+        )
+      : undefined
+
   // let weeklyAPY: React.ReactNode | undefined = <>🤯</>
   let quarterlyAPY: React.ReactNode | undefined = <>🤯</>
   try {
@@ -173,7 +175,7 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
   //   (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0'))
 
   return (
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
+    <Wrapper showBackground={isStaking} bgColor={theme.primary1}>
       <CardNoise />
 
       <TopSection>
@@ -218,44 +220,16 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
               : '-'
           }
         />
-        {stakingInfo.active &&
-          stakingInfo.totalRewardRates.map((totalRewardRate, idx) => {
-            return (
-              <React.Fragment key={idx}>
-                <PoolStatRow
-                  statName={totalRewardRate.token.symbol + ` ${t('rate')}`}
-                  statValue={
-                    stakingInfo.active
-                      ? `${totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })} ${
-                          totalRewardRate.token.symbol
-                        } / week`
-                      : `0 ${totalRewardRate.token.symbol} / week`
-                  }
-                />
-              </React.Fragment>
-            )
-          })}
-        {swapApy && (
-          <PoolStatRow
-            helperText={'Projected APR from last 24 hour trading fees'}
-            statName={'Swap APR'}
-            statValue={swapApy.denominator.toString() !== '0' ? `${swapApy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
-          />
-        )}
         {apy && apy.greaterThan('0') && (
           <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
-                userAprMode ? (
-                  <>
-                    Yield/day: {dpy?.toSignificant(4)}%<br />
-                    APY (semi-annually compounded): {quarterlyAPY}%
-                  </>
-                ) : (
-                  <>Compounded semi-annually</>
-                )
+                <>
+                  Reward APR: {rewardApy?.toSignificant(4)}%<br />
+                  Swap APR: {swapApy?.toSignificant(4)}%<br />
+                </>
               }
-              statName={`${stakingInfo.rewardTokens.length > 1 ? 'Combined ' : ''}${userAprMode ? 'APR' : 'APY'}`}
+              statName={`${userAprMode ? 'APR' : 'APY'}`}
               statValue={
                 apy.denominator.toString() !== '0'
                   ? `${userAprMode ? apy.toFixed(0, { groupSeparator: ',' }) : quarterlyAPY}%`
@@ -286,27 +260,6 @@ export const PoolCard: React.FC<Props> = ({ stakingInfo }: Props) => {
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <RowBetween>
-              <TYPE.black color={'white'} fontWeight={500}>
-                <span>Your rate</span>
-              </TYPE.black>
-
-              <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                  ⚡
-                </span>
-                {(stakingInfo.rewardRates
-                  ? stakingInfo.rewardRates
-                      .map(
-                        (rewardRate) =>
-                          `${rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toSignificant(4, { groupSeparator: ',' })} ${
-                            rewardRate.token.symbol
-                          }`
-                      )
-                      .join(' + ')
-                  : '-') + ' / week'}
-              </TYPE.black>
-            </RowBetween>
             {userValueCUSD && (
               <RowBetween>
                 <TYPE.black color={'white'} fontWeight={500}>
