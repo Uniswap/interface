@@ -1,4 +1,4 @@
-import { dynamicMovingAverage, exponentialMovingAverage } from 'src/utils/math'
+import { dynamicMovingAverage, exponentialMovingAverage } from 'src/utils/statistics'
 
 describe('Moving averages', () => {
   const simpleData = [1, 2, 3, 4, 5]

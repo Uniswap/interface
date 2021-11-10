@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -15,6 +16,7 @@ import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/hooks'
+import { useGasFee } from 'src/features/gas/useGasFee'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
@@ -67,6 +69,21 @@ export function DevScreen({ navigation }: Props) {
 
   const blockTimestamp = useCurrentBlockTimestamp(currentChain)
 
+  const [fakeTx, setFakeTx] = useState<any>(undefined)
+  const {
+    isLoading: gasIsLoading,
+    isError: gasIsError,
+    data: gasInfo,
+  } = useGasFee(ChainId.RINKEBY, fakeTx)
+  const gasInfoReady = !gasIsLoading && !gasIsError && gasInfo
+  const onPressComputeFee = () => {
+    setFakeTx({
+      to: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // Wrapped ETH address
+      data: '0xd0e30db0', // `function deposit() payable`
+      value: utils.parseEther('1.0'), // 1 ether
+    })
+  }
+
   const { t } = useTranslation()
 
   return (
@@ -84,6 +101,7 @@ export function DevScreen({ navigation }: Props) {
         <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
         <Button label={t('Swap')} onPress={onPressSwap} mt="md" />
         <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="md" />
+        <Button label={t('Compute fee')} onPress={onPressComputeFee} mt="md" />
         <Text textAlign="center" mt="xl">
           {`Active Chains: ${activeChains}`}
         </Text>
@@ -93,6 +111,11 @@ export function DevScreen({ navigation }: Props) {
         <Text textAlign="center" mt="sm">
           {`Block Timestamp: ${blockTimestamp}`}
         </Text>
+        {gasInfoReady && (
+          <Text textAlign="center" mt="sm">
+            {`Normal fee: ${gasInfo.fee.normal}`}
+          </Text>
+        )}
         <Text textAlign="center" mt="sm">
           {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
         </Text>

@@ -38,5 +38,6 @@
   "View Balances": "View Balances",
   "Send Token": "Send Token",
   "Get Balance": "Get Balance",
-  "Toggle Rinkeby": "Toggle Rinkeby"
+  "Toggle Rinkeby": "Toggle Rinkeby",
+  "Compute fee": "Compute fee"
 }
