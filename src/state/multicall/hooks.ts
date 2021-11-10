@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */ // TODO fix typing for multicall param
 import { useActiveWeb3React } from '../../hooks/web3'
 import { SkipFirst } from '../../types/tuple'
 import { useBlockNumber } from '../application/hooks'
@@ -19,22 +18,22 @@ type SkipFirstTwoParams<T extends (...args: any) => any> = SkipFirst<Parameters<
 
 export function useMultipleContractSingleData(...args: SkipFirstTwoParams<typeof _useMultipleContractSingleData>) {
   const { chainId, latestBlock } = useCallContext()
-  return _useMultipleContractSingleData(chainId!, latestBlock!, ...args)
+  return _useMultipleContractSingleData(chainId, latestBlock, ...args)
 }
 
 export function useSingleCallResult(...args: SkipFirstTwoParams<typeof _useSingleCallResult>) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleCallResult(chainId!, latestBlock!, ...args)
+  return _useSingleCallResult(chainId, latestBlock, ...args)
 }
 
 export function useSingleContractMultipleData(...args: SkipFirstTwoParams<typeof _useSingleContractMultipleData>) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleContractMultipleData(chainId!, latestBlock!, ...args)
+  return _useSingleContractMultipleData(chainId, latestBlock, ...args)
 }
 
 export function useSingleContractWithCallData(...args: SkipFirstTwoParams<typeof _useSingleContractWithCallData>) {
   const { chainId, latestBlock } = useCallContext()
-  return _useSingleContractWithCallData(chainId!, latestBlock!, ...args)
+  return _useSingleContractWithCallData(chainId, latestBlock, ...args)
 }
 
 function useCallContext() {

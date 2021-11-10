@@ -14655,10 +14655,10 @@ multibase@^4.0.1:
   dependencies:
     "@multiformats/base-x" "^4.0.1"
 
-multicall-query@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.1.tgz#e70ac40c27e80d33e0915767b0eea48942e5f2ef"
-  integrity sha512-wr7Vz6zmFOC/2CXoSPun2kTr7CabzWhvSL7t/N7yHKlsaqxtnh/h5VbfIZYFU2GeJzTFcv5pqDg9uaOnWa75xg==
+multicall-query@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.5.tgz#7b080693c7d9170ac07888c83080679ca8782efc"
+  integrity sha512-2VHqxl7CyU53J+GP7KV5IkhfQrxSTPK7dXiu9k265F9/11MC1k5i3A+oNdWRYBZ4My8jBRhb2Igt4YQ8PU+K9w==
   dependencies:
     "@uniswap/v3-periphery" "^1.2.1"
 
