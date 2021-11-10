@@ -16,7 +16,7 @@ import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { SupportedChainId } from 'constants/chains'
 import { useToken } from 'hooks/Tokens'
-import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useLimitOrderManager, useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useUSDCPrice from 'hooks/useUSDCPrice'
@@ -117,16 +117,6 @@ const ResponsiveRow = styled(RowBetween)`
   `};
 `
 
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  border-radius: 12px;
-  padding: 6px 8px;
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex: 1 1 auto;
-    width: 49%;
-  `};
-`
-
 const NFTGrid = styled.div`
   display: grid;
   grid-template: 'overlap';
@@ -143,40 +133,6 @@ const NFTImage = styled.img`
   /* Ensures SVG appears on top of canvas. */
   z-index: 1;
 `
-
-function CurrentPriceCard({
-  inverted,
-  pool,
-  currencyQuote,
-  currencyBase,
-}: {
-  inverted?: boolean
-  pool?: Pool | null
-  currencyQuote?: Currency
-  currencyBase?: Currency
-}) {
-  if (!pool || !currencyQuote || !currencyBase) {
-    return null
-  }
-
-  return (
-    <LightCard padding="12px ">
-      <AutoColumn gap="8px" justify="center">
-        <ExtentsText>
-          <Trans>Current price</Trans>
-        </ExtentsText>
-        <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
-        </TYPE.mediumHeader>
-        <ExtentsText>
-          <Trans>
-            {currencyQuote?.symbol} per {currencyBase?.symbol}
-          </Trans>
-        </ExtentsText>
-      </AutoColumn>
-    </LightCard>
-  )
-}
 
 function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
   const address = (currency as Token)?.address
@@ -252,41 +208,6 @@ function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHei
   }
 }
 
-function NFT({ image, height: targetHeight }: { image: string; height: number }) {
-  const [animate, setAnimate] = useState(false)
-
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
-
-  return (
-    <NFTGrid
-      onMouseEnter={() => {
-        setAnimate(true)
-      }}
-      onMouseLeave={() => {
-        // snapshot the current frame so the transition to the canvas is smooth
-        if (imageRef.current && canvasRef.current) {
-          getSnapshot(imageRef.current, canvasRef.current, targetHeight)
-        }
-        setAnimate(false)
-      }}
-    >
-      <NFTCanvas ref={canvasRef} />
-      <NFTImage
-        ref={imageRef}
-        src={image}
-        hidden={!animate}
-        onLoad={() => {
-          // snapshot for the canvas
-          if (imageRef.current && canvasRef.current) {
-            getSnapshot(imageRef.current, canvasRef.current, targetHeight)
-          }
-        }}
-      />
-    </NFTGrid>
-  )
-}
-
 const useInverter = ({
   priceLower,
   priceUpper,
@@ -317,6 +238,7 @@ export function PositionPage({
   match: {
     params: { tokenId: tokenIdFromUrl },
   },
+  history,
 }: RouteComponentProps<{ tokenId?: string }>) {
   const { chainId, account, library } = useActiveWeb3React()
   const theme = useTheme()
@@ -333,6 +255,8 @@ export function PositionPage({
     tickUpper,
     tokenId,
     processed,
+    tokensOwed0,
+    tokensOwed1,
     owner,
   } = positionDetails || {}
 
@@ -346,9 +270,6 @@ export function PositionPage({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  // flag for receiving WETH
-  const [receiveWETH, setReceiveWETH] = useState(false)
-
   // construct Position from details returned
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, feeAmount)
   const position = useMemo(() => {
@@ -359,7 +280,7 @@ export function PositionPage({
   }, [liquidity, pool, tickLower, tickUpper])
 
   const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
-  const isClosed = processed?.isZero ? false : true
+  const isClosed: boolean = processed?.isZero() ? false : true
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
@@ -387,57 +308,60 @@ export function PositionPage({
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
 
-  // fees
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId, receiveWETH)
-
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+    // if there was a tx hash, we want to clear the input
+    if (collectMigrationHash) {
+      // dont jump to pool page if creating
+      history.push('/pool')
+    }
+    //setCollectMigrationHash('')
+  }, [history, collectMigrationHash])
+
   // usdc prices always in terms of tokens
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
+  const feeValue0: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!tokensOwed0) return undefined
+    return CurrencyAmount.fromRawAmount(currency0 as Token, tokensOwed0?.toString())
+  }, [currency0, tokensOwed0])
+
+  const feeValue1: CurrencyAmount<Token> | undefined = useMemo(() => {
+    if (!tokensOwed1) return undefined
+    return CurrencyAmount.fromRawAmount(currency1 as Token, tokensOwed1?.toString())
+  }, [currency1, tokensOwed1])
+
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
-
-    // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
-
-    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
-
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
+    const amount0 = price0.quote(feeValue0)
+    const amount1 = price1.quote(feeValue1)
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
-    if (!price0 || !price1 || !position) return null
-    const amount0 = price0.quote(position.amount0)
-    const amount1 = price1.quote(position.amount1)
-    return amount0.add(amount1)
-  }, [price0, price1, position])
+  const currencyAmount = feeValue0?.greaterThan(0) ? feeValue0 : feeValue1
+
+  // TODO (pai) fix the target price ; upper or lower ; buy or sell
+  const targetPrice = priceUpper
 
   const addTransaction = useTransactionAdder()
-  const positionManager = useV3NFTPositionManagerContract()
+  const limitManager = useLimitOrderManager()
   const collect = useCallback(() => {
-    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId || !library) return
+    if (!chainId || !feeValue0 || !feeValue1 || !limitManager || !account || !tokenId || !library) return
 
     setCollecting(true)
 
-    const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
-      tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0,
-      expectedCurrencyOwed1: feeValue1,
-      recipient: account,
-    })
+    const calldata = limitManager.interface.encodeFunctionData('collect', [tokenId])
 
     const txn = {
-      to: positionManager.address,
+      to: limitManager.address,
       data: calldata,
-      value,
+      value: '0x0',
     }
 
     library
@@ -458,7 +382,7 @@ export function PositionPage({
 
             ReactGA.event({
               category: 'Liquidity',
-              action: 'CollectV3',
+              action: 'Collect',
               label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
             })
 
@@ -473,7 +397,55 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
+  }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
+
+  const cancel = useCallback(() => {
+    if (!chainId || !feeValue0 || !feeValue1 || !limitManager || !account || !tokenId || !library) return
+
+    setCollecting(true)
+
+    const calldata = limitManager.interface.encodeFunctionData('cancelLimitOrder', [tokenId])
+
+    const txn = {
+      to: limitManager.address,
+      data: calldata,
+      value: '0x0',
+    }
+
+    library
+      .getSigner()
+      .estimateGas(txn)
+      .then((estimate) => {
+        const newTxn = {
+          ...txn,
+          gasLimit: calculateGasMargin(chainId, estimate),
+        }
+
+        return library
+          .getSigner()
+          .sendTransaction(newTxn)
+          .then((response: TransactionResponse) => {
+            setCollectMigrationHash(response.hash)
+            setCollecting(false)
+
+            ReactGA.event({
+              category: 'Liquidity',
+              action: 'Cancel',
+              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
+            })
+
+            addTransaction(response, {
+              type: TransactionType.COLLECT_FEES,
+              currencyId0: currencyId(feeValue0.currency),
+              currencyId1: currencyId(feeValue1.currency),
+            })
+          })
+      })
+      .catch((error) => {
+        setCollecting(false)
+        console.error(error)
+      })
+  }, [chainId, feeValue0, feeValue1, limitManager, account, tokenId, addTransaction, library])
 
   const ownsNFT = owner === account
 
@@ -507,25 +479,20 @@ export function PositionPage({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
+          {isClosed ? (
+            <Trans>Collecting amounts will withdraw currently available amounts for you.</Trans>
+          ) : (
+            <Trans>Canceling the limit order will withdraw available amounts for you.</Trans>
+          )}
         </TYPE.italic>
-        <ButtonPrimary onClick={collect}>
-          <Trans>Collect</Trans>
+        <ButtonPrimary onClick={isClosed ? collect : cancel}>
+          {isClosed ? <Trans>Collect</Trans> : <Trans>Cancel Limit Order</Trans>}
         </ButtonPrimary>
       </AutoColumn>
     )
   }
 
   const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-  const showCollectAsWeth = Boolean(
-    ownsNFT &&
-      (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
-      currency0 &&
-      currency1 &&
-      (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash &&
-      !onOptimisticChain
-  )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
@@ -552,12 +519,12 @@ export function PositionPage({
           hash={collectMigrationHash ?? ''}
           content={() => (
             <ConfirmationModalContent
-              title={<Trans>Collect</Trans>}
-              onDismiss={() => setShowConfirm(false)}
+              title={isClosed ? <Trans>Collect</Trans> : <Trans>Cancel</Trans>}
+              onDismiss={() => handleDismissConfirmation}
               topContent={modalHeader}
             />
           )}
-          pendingText={<Trans>Collecting tokens</Trans>}
+          pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling limit order</Trans>}
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
@@ -574,69 +541,85 @@ export function PositionPage({
                 </TYPE.label>
                 <Badge style={{ marginRight: '8px' }}>
                   <BadgeText>
-                    <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
+                    <Trans>
+                      Trade {currencyAmount?.toSignificant(6)} {currencyAmount?.currency?.symbol} for{' '}
+                      {targetPrice?.toSignificant(6)} {currencyQuote?.symbol}
+                    </Trans>
                   </BadgeText>
                 </Badge>
-                <RangeBadge removed={removed} inRange={inRange} closed={false} />
+                <RangeBadge removed={removed} inRange={inRange} closed={isClosed} />
               </RowFixed>
-              {ownsNFT && (
+              {ownsNFT && tokenId && (
                 <RowFixed>
-                  {tokenId && !isClosed ? (
-                    <ResponsiveButtonPrimary
-                      as={Link}
-                      to={`/remove/${tokenId}`}
+                  {!isClosed ? (
+                    <ButtonConfirmed
+                      disabled={collecting || !!collectMigrationHash}
+                      confirmed={!!collectMigrationHash && !isCollectPending}
                       width="fit-content"
-                      padding="6px 8px"
-                      $borderRadius="12px"
+                      style={{ borderRadius: '12px' }}
+                      padding="4px 8px"
+                      onClick={() => setShowConfirm(true)}
                     >
-                      <Trans>Cancel Limit Order</Trans>
-                    </ResponsiveButtonPrimary>
-                  ) : null}
+                      {!!collectMigrationHash && !isCollectPending ? (
+                        <TYPE.main color={theme.text1}>
+                          <Trans> Canceled</Trans>
+                        </TYPE.main>
+                      ) : isCollectPending || collecting ? (
+                        <TYPE.main color={theme.text1}>
+                          {' '}
+                          <Dots>
+                            <Trans>Cancelling</Trans>
+                          </Dots>
+                        </TYPE.main>
+                      ) : (
+                        <>
+                          <TYPE.main color={theme.white}>
+                            <Trans>Cancel Limit Order</Trans>
+                          </TYPE.main>
+                        </>
+                      )}
+                    </ButtonConfirmed>
+                  ) : (
+                    <ButtonConfirmed
+                      disabled={collecting || !!collectMigrationHash}
+                      confirmed={!!collectMigrationHash && !isCollectPending}
+                      width="fit-content"
+                      style={{ borderRadius: '12px' }}
+                      padding="4px 8px"
+                      onClick={() => setShowConfirm(true)}
+                    >
+                      {!!collectMigrationHash && !isCollectPending ? (
+                        <TYPE.main color={theme.text1}>
+                          <Trans> Collected</Trans>
+                        </TYPE.main>
+                      ) : isCollectPending || collecting ? (
+                        <TYPE.main color={theme.text1}>
+                          {' '}
+                          <Dots>
+                            <Trans>Collecting</Trans>
+                          </Dots>
+                        </TYPE.main>
+                      ) : (
+                        <>
+                          <TYPE.main color={theme.white}>
+                            <Trans>Collect amount</Trans>
+                          </TYPE.main>
+                        </>
+                      )}
+                    </ButtonConfirmed>
+                  )}
                 </RowFixed>
               )}
             </ResponsiveRow>
             <RowBetween></RowBetween>
           </AutoColumn>
-          <ResponsiveRow align="flex-start">
-            {'result' in metadata ? (
-              <DarkCard
-                width="100%"
-                height="100%"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  marginRight: '12px',
-                }}
-              >
-                <div style={{ marginRight: 12 }}>
-                  <NFT image={metadata.result.image} height={400} />
-                </div>
-                {typeof chainId === 'number' && owner && !ownsNFT ? (
-                  <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
-                    <Trans>Owner</Trans>
-                  </ExternalLink>
-                ) : null}
-              </DarkCard>
-            ) : (
-              <DarkCard
-                width="100%"
-                height="100%"
-                style={{
-                  marginRight: '12px',
-                  minWidth: '340px',
-                }}
-              >
-                <Loader />
-              </DarkCard>
-            )}
-            <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
+          <DarkCard>
+            <AutoColumn gap="md">
               <DarkCard>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
-                      <Trans>Liquidity</Trans>
+                      <Trans>Amounts</Trans>
                     </Label>
                     {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                       <TYPE.largeHeader fontSize="36px" fontWeight={500}>
@@ -653,9 +636,7 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                         <RowFixed>
-                          <TYPE.main>
-                            {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-                          </TYPE.main>
+                          <TYPE.main>{inverted ? feeValue0?.toSignificant(4) : feeValue0?.toSignificant(4)}</TYPE.main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main fontSize={11}>
@@ -668,9 +649,7 @@ export function PositionPage({
                       <RowBetween>
                         <LinkedCurrency chainId={chainId} currency={currencyBase} />
                         <RowFixed>
-                          <TYPE.main>
-                            {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-                          </TYPE.main>
+                          <TYPE.main>{inverted ? feeValue1?.toSignificant(4) : feeValue1?.toSignificant(4)}</TYPE.main>
                           {typeof ratio === 'number' && !removed ? (
                             <Badge style={{ marginLeft: '10px' }}>
                               <TYPE.main color={theme.text2} fontSize={11}>
@@ -684,116 +663,11 @@ export function PositionPage({
                   </LightCard>
                 </AutoColumn>
               </DarkCard>
-              <DarkCard>
-                <AutoColumn gap="md" style={{ width: '100%' }}>
-                  <AutoColumn gap="md">
-                    <RowBetween style={{ alignItems: 'flex-start' }}>
-                      <AutoColumn gap="md">
-                        <Label>
-                          <Trans>Unclaimed fees</Trans>
-                        </Label>
-                        {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                          <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
-                            <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
-                          </TYPE.largeHeader>
-                        ) : (
-                          <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
-                            <Trans>$-</Trans>
-                          </TYPE.largeHeader>
-                        )}
-                      </AutoColumn>
-                      {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
-                        <ButtonConfirmed
-                          disabled={collecting || !!collectMigrationHash}
-                          confirmed={!!collectMigrationHash && !isCollectPending}
-                          width="fit-content"
-                          style={{ borderRadius: '12px' }}
-                          padding="4px 8px"
-                          onClick={() => setShowConfirm(true)}
-                        >
-                          {!!collectMigrationHash && !isCollectPending ? (
-                            <TYPE.main color={theme.text1}>
-                              <Trans> Collected</Trans>
-                            </TYPE.main>
-                          ) : isCollectPending || collecting ? (
-                            <TYPE.main color={theme.text1}>
-                              {' '}
-                              <Dots>
-                                <Trans>Collecting</Trans>
-                              </Dots>
-                            </TYPE.main>
-                          ) : (
-                            <>
-                              <TYPE.main color={theme.white}>
-                                <Trans>Collect amount</Trans>
-                              </TYPE.main>
-                            </>
-                          )}
-                        </ButtonConfirmed>
-                      ) : null}
-                    </RowBetween>
-                  </AutoColumn>
-                  <LightCard padding="12px 16px">
-                    <AutoColumn gap="md">
-                      <RowBetween>
-                        <RowFixed>
-                          <CurrencyLogo
-                            currency={feeValueUpper?.currency}
-                            size={'20px'}
-                            style={{ marginRight: '0.5rem' }}
-                          />
-                          <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
-                        </RowFixed>
-                        <RowFixed>
-                          <TYPE.main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</TYPE.main>
-                        </RowFixed>
-                      </RowBetween>
-                      <RowBetween>
-                        <RowFixed>
-                          <CurrencyLogo
-                            currency={feeValueLower?.currency}
-                            size={'20px'}
-                            style={{ marginRight: '0.5rem' }}
-                          />
-                          <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
-                        </RowFixed>
-                        <RowFixed>
-                          <TYPE.main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</TYPE.main>
-                        </RowFixed>
-                      </RowBetween>
-                    </AutoColumn>
-                  </LightCard>
-                  {showCollectAsWeth && (
-                    <AutoColumn gap="md">
-                      <RowBetween>
-                        <TYPE.main>
-                          <Trans>Collect as WETH</Trans>
-                        </TYPE.main>
-                        <Toggle
-                          id="receive-as-weth"
-                          isActive={receiveWETH}
-                          toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                        />
-                      </RowBetween>
-                    </AutoColumn>
-                  )}
-                </AutoColumn>
-              </DarkCard>
-            </AutoColumn>
-          </ResponsiveRow>
-          <DarkCard>
-            <AutoColumn gap="md">
               <RowBetween>
                 <RowFixed>
                   <Label display="flex" style={{ marginRight: '12px' }}>
-                    <Trans>Price range</Trans>
+                    <Trans>Price Details</Trans>
                   </Label>
-                  <HideExtraSmall>
-                    <>
-                      <RangeBadge removed={removed} inRange={inRange} closed={false} />
-                      <span style={{ width: '8px' }} />
-                    </>
-                  </HideExtraSmall>
                 </RowFixed>
                 <RowFixed>
                   {currencyBase && currencyQuote && (
@@ -810,10 +684,10 @@ export function PositionPage({
                 <LightCard padding="12px" width="100%">
                   <AutoColumn gap="8px" justify="center">
                     <ExtentsText>
-                      <Trans>Min price</Trans>
+                      <Trans>Current price</Trans>
                     </ExtentsText>
                     <TYPE.mediumHeader textAlign="center">
-                      {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
+                      {(inverted ? pool?.token1Price : pool?.token0Price)?.toSignificant(6)}{' '}
                     </TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
@@ -821,12 +695,6 @@ export function PositionPage({
                         {currencyQuote?.symbol} per {currencyBase?.symbol}
                       </Trans>
                     </ExtentsText>
-
-                    {inRange && (
-                      <TYPE.small color={theme.text3}>
-                        <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
-                      </TYPE.small>
-                    )}
                   </AutoColumn>
                 </LightCard>
 
@@ -834,32 +702,18 @@ export function PositionPage({
                 <LightCard padding="12px" width="100%">
                   <AutoColumn gap="8px" justify="center">
                     <ExtentsText>
-                      <Trans>Max price</Trans>
+                      <Trans>Target price</Trans>
                     </ExtentsText>
-                    <TYPE.mediumHeader textAlign="center">
-                      {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
-                    </TYPE.mediumHeader>
+                    <TYPE.mediumHeader textAlign="center">{targetPrice?.toSignificant(6)}</TYPE.mediumHeader>
                     <ExtentsText>
                       {' '}
                       <Trans>
                         {currencyQuote?.symbol} per {currencyBase?.symbol}
                       </Trans>
                     </ExtentsText>
-
-                    {inRange && (
-                      <TYPE.small color={theme.text3}>
-                        <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
-                      </TYPE.small>
-                    )}
                   </AutoColumn>
                 </LightCard>
               </RowBetween>
-              <CurrentPriceCard
-                inverted={inverted}
-                pool={pool}
-                currencyQuote={currencyQuote}
-                currencyBase={currencyBase}
-              />
             </AutoColumn>
           </DarkCard>
         </AutoColumn>

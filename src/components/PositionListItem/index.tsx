@@ -285,8 +285,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
               <Trans>Target Price:</Trans>
             </ExtentsText>
             <Trans>
-              {formatTickPrice(targetPrice, tickAtLimit, Bound.UPPER)} <HoverInlineText text={currencyQuote?.symbol} />{' '}
-              per <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+              {targetPrice.toSignificant(6)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
+              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>
           </RangeText>
         </RangeLineItem>

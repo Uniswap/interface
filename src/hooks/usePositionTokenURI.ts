@@ -3,7 +3,7 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useV3NFTPositionManagerContract } from './useContract'
+import { useLimitOrderManager, useV3NFTPositionManagerContract } from './useContract'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -29,7 +29,7 @@ type UsePositionTokenURIResult =
     }
 
 export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTokenURIResult {
-  const contract = useV3NFTPositionManagerContract()
+  const contract = useLimitOrderManager()
   const inputs = useMemo(
     () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
     [tokenId]

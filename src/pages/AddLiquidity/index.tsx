@@ -120,14 +120,12 @@ export default function AddLiquidity({
 
     if (account && amount0) {
       if (!userGasPrice?.greaterThan('0') && networkGasPrice?.quotient) {
+        console.log(toHex(networkGasPrice?.quotient))
         calldatas.push(
           limitManager.interface.encodeFunctionData('setTargetGasPrice', [toHex(networkGasPrice?.quotient)])
         )
       }
       calldatas.push(limitManager.interface.encodeFunctionData('addFunding', [toHex(amount0)]))
-
-      console.log(calldatas)
-
       const calldata =
         calldatas.length === 1 ? calldatas[0] : limitManager.interface.encodeFunctionData('multicall', [calldatas])
 
