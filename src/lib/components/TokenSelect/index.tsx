@@ -14,7 +14,7 @@ import TokenButton from './TokenButton'
 import TokenOptions from './TokenOptions'
 
 // TODO: integrate with web3-react context
-const mockTokens = [DAI, ETH, UNI, USDC, DAI, ETH, UNI, USDC, DAI, ETH, UNI, USDC]
+const mockTokens = [DAI, ETH, UNI, USDC]
 
 const SearchInput = styled(StringInput)`
   background-color: ${({ theme }) => theme.container};

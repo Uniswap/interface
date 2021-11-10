@@ -4,9 +4,10 @@ import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
 import {
   CSSProperties,
-  ForwardedRef,
   forwardRef,
   KeyboardEvent,
+  memo,
+  SyntheticEvent,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -14,14 +15,13 @@ import {
   useState,
 } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { FixedSizeList } from 'react-window'
+import { areEqual, FixedSizeList } from 'react-window'
 
 import Button from '../Button'
 import Column from '../Column'
 import Row from '../Row'
 
-const TokenButton = styled(Button)<{ hovered: boolean; theme: Theme }>`
-  background-color: ${({ hovered, theme }) => hovered && theme.interactive};
+const TokenButton = styled(Button)`
   border-radius: 0;
   outline: none;
   padding: 0.5em 0.75em;
@@ -42,28 +42,36 @@ const TokenImg = styled.img`
 `
 
 interface TokenOptionProps {
+  index: number
   value: Token
-  hovered: boolean
   style: CSSProperties
-  onHover: () => void
-  onFocus: () => void
-  onClick: () => void
-  onKeyDown: (e: KeyboardEvent) => void
 }
 
-const TokenOption = forwardRef(function TokenOption(
-  { value, hovered, style, onHover, onClick, onFocus, onKeyDown }: TokenOptionProps,
-  ref: ForwardedRef<HTMLButtonElement>
-) {
+interface BubbledEvent extends SyntheticEvent {
+  index?: number
+  token?: Token
+  ref?: HTMLButtonElement
+}
+
+function TokenOption({ index, value, style }: TokenOptionProps) {
+  const ref = useRef<HTMLButtonElement>(null)
+  // Annotate the event to be handled later instead of passing in handlers to avoid rerenders.
+  // This prevents token logos from reloading and flashing on the screen.
+  const onEvent = (e: BubbledEvent) => {
+    e.index = index
+    e.token = value
+    e.ref = ref.current ?? undefined
+  }
   return (
     <TokenButton
-      hovered={hovered}
+      data-index={index}
       style={style}
-      onClick={onClick}
-      onFocus={onFocus}
-      onKeyDown={onKeyDown}
-      onMouseMove={onHover}
       onMouseDown={() => prefetchColor(value)}
+      onClick={onEvent}
+      onBlur={onEvent}
+      onFocus={onEvent}
+      onMouseMove={onEvent}
+      onKeyDown={onEvent}
       ref={ref}
     >
       <TYPE.body1>
@@ -80,7 +88,28 @@ const TokenOption = forwardRef(function TokenOption(
       </TYPE.body1>
     </TokenButton>
   )
-})
+}
+
+type ItemData = Token[]
+const itemKey = (index: number, tokens: ItemData) => tokens[index]?.address
+const ItemRow = memo(function ItemRow({
+  data: tokens,
+  index,
+  style,
+}: {
+  data: ItemData
+  index: number
+  style: CSSProperties
+}) {
+  return <TokenOption index={index} value={tokens[index]} style={style} />
+},
+areEqual)
+
+const TokenOptionsColumn = styled(Column)<{ hover: number; theme: Theme }>`
+  [data-index='${({ hover }) => hover}'] {
+    background-color: ${({ theme }) => theme.interactive};
+  }
+`
 
 interface TokenOptionsHandle {
   onKeyDown: (e: KeyboardEvent) => void
@@ -125,17 +154,35 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
   )
   useImperativeHandle(ref, () => ({ onKeyDown }), [onKeyDown])
 
-  const itemKey = useCallback(({ index }) => tokens[index]?.address, [tokens])
-  const div = useRef<HTMLDivElement>(null)
+  const onClick = useCallback(({ token }: BubbledEvent) => token && onSelect(token), [onSelect])
+  const onFocus = useCallback(({ index }: BubbledEvent) => {
+    if (index !== undefined) {
+      setHover(index)
+      setFocused(true)
+    }
+  }, [])
+  const onMouseMove = useCallback(
+    ({ index, ref }: BubbledEvent) => {
+      if (index !== undefined) {
+        setHover(index)
+        if (focused) {
+          ref?.focus()
+        }
+      }
+    },
+    [focused]
+  )
 
   return (
-    <div
-      style={{ height: '100%' }}
-      onFocus={() => setFocused(true)}
-      onBlur={(e) =>
-        setFocused((e.relatedTarget instanceof HTMLElement && div.current?.contains(e.relatedTarget)) ?? false)
-      }
-      ref={div}
+    <TokenOptionsColumn
+      hover={hover}
+      align="unset"
+      grow
+      onKeyDown={onKeyDown}
+      onClick={onClick}
+      onBlur={() => setFocused(false)}
+      onFocus={onFocus}
+      onMouseMove={onMouseMove}
     >
       <AutoSizer disableWidth>
         {({ height }) => (
@@ -143,29 +190,16 @@ const TokenOptions = forwardRef<TokenOptionsHandle, TokenOptionsProps>(function 
             height={height}
             width="100%"
             itemCount={tokens.length}
+            itemData={tokens}
             itemKey={itemKey}
             itemSize={56}
             ref={list}
           >
-            {({ index, style }) => (
-              <TokenOption
-                value={tokens[index]}
-                hovered={index === hover}
-                onHover={() => setHover(index)}
-                onFocus={() => {
-                  list.current?.scrollToItem(index)
-                  setHover(index)
-                }}
-                onClick={() => onSelect(tokens[index])}
-                onKeyDown={(e) => onKeyDown(e)}
-                style={style}
-                ref={index === hover && focused ? (ref) => ref?.focus() : undefined}
-              />
-            )}
+            {ItemRow}
           </FixedSizeList>
         )}
       </AutoSizer>
-    </div>
+    </TokenOptionsColumn>
   )
 })
 
