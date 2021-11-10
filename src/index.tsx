@@ -29,7 +29,7 @@ if (window.celo) {
 }
 
 const client = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap-backup',
+  uri: 'https://api.thegraph.com/subgraphs/name/ubeswap/ubeswap',
   cache: new InMemoryCache(),
 })
 
