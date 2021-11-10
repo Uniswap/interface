@@ -7,7 +7,7 @@ export const FEE_AMOUNT_DETAIL: Record<
   FeeAmount,
   { label: string; description: ReactNode; supportedChains: SupportedChainId[] | 'all' }
 > = {
-  [FeeAmount.VERY_LOW]: {
+  [FeeAmount.LOWEST]: {
     label: '0.01',
     description: <Trans>Best for very stable pairs.</Trans>,
     supportedChains: [SupportedChainId.MAINNET],

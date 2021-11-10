@@ -20,7 +20,7 @@ import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
-  [FeeAmount.VERY_LOW]: {
+  [FeeAmount.LOWEST]: {
     initialMin: 0.999,
     initialMax: 1.001,
     min: 0.00001,

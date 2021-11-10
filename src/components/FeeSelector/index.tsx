@@ -59,7 +59,7 @@ export default function FeeSelector({
 
   // get pool data on-chain for latest states
   const pools = usePools([
-    [currencyA, currencyB, FeeAmount.VERY_LOW],
+    [currencyA, currencyB, FeeAmount.LOWEST],
     [currencyA, currencyB, FeeAmount.LOW],
     [currencyA, currencyB, FeeAmount.MEDIUM],
     [currencyA, currencyB, FeeAmount.HIGH],
@@ -77,7 +77,7 @@ export default function FeeSelector({
         },
         {
           // default all states to NOT_EXISTS
-          [FeeAmount.VERY_LOW]: PoolState.NOT_EXISTS,
+          [FeeAmount.LOWEST]: PoolState.NOT_EXISTS,
           [FeeAmount.LOW]: PoolState.NOT_EXISTS,
           [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
           [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
@@ -176,7 +176,7 @@ export default function FeeSelector({
 
         {chainId && showOptions && (
           <RowBetween alignItems="flex-start">
-            {[FeeAmount.VERY_LOW, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
+            {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
               const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
               if (supportedChains === 'all' || supportedChains.includes(chainId)) {
                 return (

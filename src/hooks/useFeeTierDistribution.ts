@@ -32,7 +32,7 @@ export function useFeeTierDistribution(
   )
 
   // fetch all pool states to determine pool state
-  const [poolStateVeryLow] = usePool(currencyA, currencyB, FeeAmount.VERY_LOW)
+  const [poolStateVeryLow] = usePool(currencyA, currencyB, FeeAmount.LOWEST)
   const [poolStateLow] = usePool(currencyA, currencyB, FeeAmount.LOW)
   const [poolStateMedium] = usePool(currencyA, currencyB, FeeAmount.MEDIUM)
   const [poolStateHigh] = usePool(currencyA, currencyB, FeeAmount.HIGH)
@@ -60,8 +60,8 @@ export function useFeeTierDistribution(
       poolStateMedium !== PoolState.LOADING &&
       poolStateHigh !== PoolState.LOADING
         ? {
-            [FeeAmount.VERY_LOW]:
-              poolStateVeryLow === PoolState.EXISTS ? (distributions[FeeAmount.VERY_LOW] ?? 0) * 100 : undefined,
+            [FeeAmount.LOWEST]:
+              poolStateVeryLow === PoolState.EXISTS ? (distributions[FeeAmount.LOWEST] ?? 0) * 100 : undefined,
             [FeeAmount.LOW]: poolStateLow === PoolState.EXISTS ? (distributions[FeeAmount.LOW] ?? 0) * 100 : undefined,
             [FeeAmount.MEDIUM]:
               poolStateMedium === PoolState.EXISTS ? (distributions[FeeAmount.MEDIUM] ?? 0) * 100 : undefined,
@@ -134,7 +134,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         return acc
       },
       {
-        [FeeAmount.VERY_LOW]: [undefined, undefined],
+        [FeeAmount.LOWEST]: [undefined, undefined],
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
@@ -156,10 +156,10 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
       tvl0 === undefined && tvl1 === undefined ? undefined : ((tvl0 ?? 0) + (tvl1 ?? 0)) / (sumTvl0 + sumTvl1) || 0
 
     const distributions: Record<FeeAmount, number | undefined> = {
-      [FeeAmount.VERY_LOW]: mean(
-        tvlByFeeTier[FeeAmount.VERY_LOW][0],
+      [FeeAmount.LOWEST]: mean(
+        tvlByFeeTier[FeeAmount.LOWEST][0],
         sumToken0Tvl,
-        tvlByFeeTier[FeeAmount.VERY_LOW][1],
+        tvlByFeeTier[FeeAmount.LOWEST][1],
         sumToken1Tvl
       ),
       [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
