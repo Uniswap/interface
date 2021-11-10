@@ -1,231 +1,215 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
-import { Web3ReactHooks } from '@web3-react/core'
-import { Frame } from '@web3-react/frame'
-import { Magic } from '@web3-react/magic'
-import { MetaMask } from '@web3-react/metamask'
-import { Network } from '@web3-react/network'
-import { Connector } from '@web3-react/types'
-import { WalletConnect } from '@web3-react/walletconnect'
-import { WalletLink } from '@web3-react/walletlink'
+import { Web3Provider } from '@ethersproject/providers'
+import { UnsupportedChainIdError, useWeb3React, Web3ReactProvider } from '@web3-react/core'
+import {
+  InjectedConnector,
+  NoEthereumProviderError,
+  UserRejectedRequestError as UserRejectedRequestErrorInjected,
+} from '@web3-react/injected-connector'
+import { NetworkConnector } from '@web3-react/network-connector'
 import { useEffect, useState } from 'react'
 
-import { connectors } from '../connectors'
-
-function getName(connector: Connector) {
-  if (connector instanceof Frame) {
-    return 'Frame (Experimental)'
-  } else if (connector instanceof Magic) {
-    return 'Magic (Experimental)'
-  } else if (connector instanceof MetaMask) {
-    return 'MetaMask'
-  } else if (connector instanceof Network) {
-    return 'Network'
-  } else if (connector instanceof WalletConnect) {
-    return 'WalletConnect'
-  } else if (connector instanceof WalletLink) {
-    return 'WalletLink'
-  } else {
-    return 'Unknown'
-  }
+const RPC_URLS: { [chainId: number]: string } = {
+  1: `https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`,
+  4: `https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`,
 }
 
-function Status({
-  connector,
-  hooks: { useChainId, useAccounts, useError },
-}: {
-  connector: Connector
-  hooks: Web3ReactHooks
-}) {
-  const chainId = useChainId()
-  const accounts = useAccounts()
-  const error = useError()
+export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] })
 
-  const connected = Boolean(chainId && accounts)
+export const network = new NetworkConnector({
+  urls: { 1: RPC_URLS[1], 4: RPC_URLS[4] },
+  defaultChainId: 1,
+})
 
-  return (
-    <div>
-      <b>{getName(connector)}</b>
-      <br />
-      {error ? (
-        <>
-          🛑 {error.name ?? 'Error'}: {error.message}
-        </>
-      ) : connected ? (
-        <>✅ Connected</>
-      ) : (
-        <>⚠️ Disconnected</>
-      )}
-    </div>
-  )
-}
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React()
 
-function ChainId({ hooks: { useChainId } }: { hooks: Web3ReactHooks }) {
-  const chainId = useChainId()
-
-  return <div>Chain Id: {chainId ? <b>{chainId}</b> : '-'}</div>
-}
-
-function useBalances(
-  provider?: ReturnType<Web3ReactHooks['useProvider']>,
-  accounts?: string[]
-): BigNumber[] | undefined {
-  const [balances, setBalances] = useState<BigNumber[] | undefined>()
+  const [tried, setTried] = useState(false)
 
   useEffect(() => {
-    if (provider && accounts?.length) {
-      let stale = false
+    injected.isAuthorized().then((isAuthorized: boolean) => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(() => {
+          setTried(true)
+        })
+      } else {
+        setTried(true)
+      }
+    })
+  }, []) // intentionally only running on mount (make sure it's only mounted once :))
 
-      Promise.all(accounts.map((account) => provider.getBalance(account))).then((balances) => {
-        if (!stale) {
-          setBalances(balances)
+  // if the connection worked, wait until we get confirmation of that to flip the flag
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
+}
+
+export function useInactiveListener(suppress = false) {
+  const { active, error, activate } = useWeb3React()
+
+  useEffect((): any => {
+    const { ethereum } = window as any
+    if (ethereum && ethereum.on && !active && !error && !suppress) {
+      const handleConnect = () => {
+        console.log("Handling 'connect' event")
+        activate(injected)
+      }
+      const handleChainChanged = (chainId: string | number) => {
+        console.log("Handling 'chainChanged' event with payload", chainId)
+        activate(injected)
+      }
+      const handleAccountsChanged = (accounts: string[]) => {
+        console.log("Handling 'accountsChanged' event with payload", accounts)
+        if (accounts.length > 0) {
+          activate(injected)
         }
-      })
+      }
+      const handleNetworkChanged = (networkId: string | number) => {
+        console.log("Handling 'networkChanged' event with payload", networkId)
+        activate(injected)
+      }
+
+      ethereum.on('connect', handleConnect)
+      ethereum.on('chainChanged', handleChainChanged)
+      ethereum.on('accountsChanged', handleAccountsChanged)
+      ethereum.on('networkChanged', handleNetworkChanged)
 
       return () => {
-        stale = true
-        setBalances(undefined)
+        if (ethereum.removeListener) {
+          ethereum.removeListener('connect', handleConnect)
+          ethereum.removeListener('chainChanged', handleChainChanged)
+          ethereum.removeListener('accountsChanged', handleAccountsChanged)
+          ethereum.removeListener('networkChanged', handleNetworkChanged)
+        }
       }
     }
-    return () => {
-      // no op
-    }
-  }, [provider, accounts])
-
-  return balances
+  }, [active, error, suppress, activate])
 }
 
-function Accounts({
-  useAnyNetwork,
-  hooks: { useAccounts, useProvider, useENSNames },
-}: {
-  useAnyNetwork: boolean
-  hooks: Web3ReactHooks
-}) {
-  const provider = useProvider(useAnyNetwork ? 'any' : undefined)
-  const accounts = useAccounts()
-  const ENSNames = useENSNames(provider)
-
-  const balances = useBalances(provider, accounts)
-
-  return (
-    <div>
-      Accounts:
-      {accounts === undefined
-        ? ' -'
-        : accounts.length === 0
-        ? ' None'
-        : accounts?.map((account, i) => (
-            <ul key={account} style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              <b>{ENSNames?.[i] ?? account}</b>
-              {balances?.[i] ? ` (Ξ${formatEther(balances[i])})` : null}
-            </ul>
-          ))}
-    </div>
-  )
+enum ConnectorNames {
+  Injected = 'Injected',
+  Network = 'Network',
 }
 
-function Connect({
-  connector,
-  hooks: { useChainId, useIsActivating, useError, useIsActive },
-}: {
-  connector: Connector
-  hooks: Web3ReactHooks
-}) {
-  const chainId = useChainId()
-  const isActivating = useIsActivating()
-  const error = useError()
+const connectorsByName: { [connectorName in ConnectorNames]: any } = {
+  [ConnectorNames.Injected]: injected,
+  [ConnectorNames.Network]: network,
+}
 
-  const active = useIsActive()
-
-  const [activateArgs, setActivateArgs] = useState<any[]>([])
-
-  if (error) {
-    return (
-      <button
-        onClick={() => {
-          connector.activate()
-        }}
-      >
-        Try Again?
-      </button>
-    )
-  } else if (active) {
-    return (
-      <>
-        {connector instanceof Network ? (
-          <label>
-            Network:
-            <select value={`${chainId}`} onChange={(event) => connector.activate(Number(event.target.value))}>
-              <option value="1">Mainnet</option>
-              <option value="3">Ropsten</option>
-              <option value="4">Rinkeby</option>
-              <option value="5">Görli</option>
-              <option value="42">Kovan</option>
-              <option value="10">Optimism</option>
-              <option value="42161">Arbitrum</option>
-            </select>
-          </label>
-        ) : null}
-        <button
-          onClick={() => {
-            if (connector.deactivate) {
-              connector.deactivate()
-            }
-          }}
-          disabled={connector.deactivate ? false : true}
-        >
-          {connector.deactivate ? 'Disconnect' : 'Connected'}
-        </button>
-      </>
-    )
+function getErrorMessage(error: Error) {
+  if (error instanceof NoEthereumProviderError) {
+    return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.'
+  } else if (error instanceof UnsupportedChainIdError) {
+    return "You're connected to an unsupported network."
+  } else if (error instanceof UserRejectedRequestErrorInjected) {
+    return 'Please authorize this website to access your Ethereum account.'
   } else {
-    return (
-      <>
-        {connector instanceof Magic ? (
-          <label>
-            Email:{' '}
-            <input type="email" name="email" onChange={(event) => setActivateArgs([{ email: event.target.value }])} />
-          </label>
-        ) : null}
-        <button
-          onClick={() => {
-            if (!isActivating) {
-              connector.activate(...activateArgs)
-            }
-          }}
-          disabled={isActivating ? true : false}
-        >
-          {isActivating ? 'Connecting...' : 'Activate'}
-        </button>
-      </>
-    )
+    console.error(error)
+    return 'An unknown error occurred. Check the console for more details.'
   }
 }
 
-export function Connectors() {
+function getLibrary(provider: any): Web3Provider {
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
+}
+
+export default function DecoratorWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        width: '20rem',
-        padding: '1rem',
-        margin: '1rem',
-        overflow: 'auto',
-        border: '1px solid',
-        borderRadius: '1rem',
-      }}
-    >
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Decorator>{children}</Decorator>
+    </Web3ReactProvider>
+  )
+}
+
+function ChainId() {
+  const { chainId } = useWeb3React()
+
+  return (
+    <span>
+      Chain Id
+      {chainId ? `: ${chainId}` : ''}
+    </span>
+  )
+}
+
+function Account() {
+  const { account } = useWeb3React()
+
+  return (
+    <span>
+      Account
+      {account === null
+        ? '-'
+        : account
+        ? `: ${account.substring(0, 6)}...${account.substring(account.length - 4)}`
+        : ''}
+    </span>
+  )
+}
+
+function Decorator({ children }: { children: React.ReactNode }) {
+  const context = useWeb3React<Web3Provider>()
+  const { connector, activate, deactivate, active, error } = context
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = useState<any>()
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector])
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
+  return (
+    <>
+      <h3>
+        <span>status: {active ? '🟢' : error ? '🔴' : '🟠'}</span>
+        <br />
+        <ChainId />
+        <br />
+        <Account />
+      </h3>{' '}
       <div>
-        <Status connector={connector} hooks={hooks} />
-        <br />
-        <ChainId hooks={hooks} />
-        <Accounts useAnyNetwork={connector instanceof WalletConnect} hooks={hooks} />
-        <br />
+        {Object.keys(connectorsByName).map((name) => {
+          const currentConnector = connectorsByName[name]
+          const activating = currentConnector === activatingConnector
+          const connected = currentConnector === connector
+          const disabled = !triedEager || !!activatingConnector || connected || !!error
+
+          return (
+            <button
+              disabled={disabled}
+              key={name}
+              onClick={() => {
+                setActivatingConnector(currentConnector)
+                activate(connectorsByName[name])
+              }}
+            >
+              {activating && '...activating'}
+              {connected && (
+                <span role="img" aria-label="check">
+                  ✅
+                </span>
+              )}
+              {name}
+            </button>
+          )
+        })}
+        {(active || error) && <button onClick={deactivate}>Deactivate</button>}
+        {!!error && <h4>{getErrorMessage(error)}</h4>}
       </div>
-      <Connect connector={connector} hooks={hooks} />
-    </div>
+      <br />
+      {children}
+    </>
   )
 }

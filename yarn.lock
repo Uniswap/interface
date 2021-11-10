@@ -4568,6 +4568,15 @@
     "@web3-react/types" "^6.0.7"
     tiny-warning "^1.0.3"
 
+"@web3-react/network-connector@^6.1.9":
+  version "6.1.9"
+  resolved "https://registry.yarnpkg.com/@web3-react/network-connector/-/network-connector-6.1.9.tgz#7af0a74e4b84cdd6acab92b4d4e2834c69032daf"
+  integrity sha512-m2e1286DCl++15Qvt4Rv9TwU7YqkPZEEBSkVZFeKckNACw5ufTLwUsHpQ1K45LAsG1E5NKr0mc19wgNKrWziaA==
+  dependencies:
+    "@web3-react/abstract-connector" "^6.0.7"
+    "@web3-react/types" "^6.0.7"
+    tiny-invariant "^1.0.6"
+
 "@web3-react/portis-connector@^6.0.9":
   version "6.1.9"
   resolved "https://registry.npmjs.org/@web3-react/portis-connector/-/portis-connector-6.1.9.tgz"
