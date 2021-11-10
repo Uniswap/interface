@@ -142,7 +142,6 @@ export const CHAIN_INFO: ChainInfo = {
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
-    statusPage: 'https://optimism.io/status',
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     blockWaitMsBeforeWarning: ms`10m`,
@@ -154,7 +153,6 @@ export const CHAIN_INFO: ChainInfo = {
     rpcUrls: ['https://kovan.optimism.io'],
     logoUrl: optimismLogoUrl,
     nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
-    statusPage: 'https://optimism.io/status',
   },
 }
 
