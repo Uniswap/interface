@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -44,7 +44,7 @@ export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => vo
   return (
     <>
       <Column gap={0.75}>
-        <Header title={t`Select a token`} />
+        <Header title={<Trans>Select a token</Trans>} />
         <Row padded grow>
           <TYPE.body1 color={search ? 'primary' : 'secondary'}>
             <SearchInput

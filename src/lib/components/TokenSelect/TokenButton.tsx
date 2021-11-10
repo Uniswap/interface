@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import styled, { icon, Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
@@ -52,7 +52,7 @@ export default function TokenButton({ value, disabled, onClick }: TokenOptionPro
               {value.symbol}
             </>
           ) : (
-            t`Select a token`
+            <Trans>Select a token</Trans>
           )}
           <ChevronDownIcon />
         </TokenButtonRow>

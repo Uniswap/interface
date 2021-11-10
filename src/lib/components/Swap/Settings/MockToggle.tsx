@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 
 import Row from '../../Row'
@@ -10,7 +10,7 @@ export default function MockToggle() {
   const [mockTogglable, toggleMockTogglable] = useAtom(mockTogglableAtom)
   return (
     <Row>
-      <Label name={t`Mock Toggle`} />
+      <Label name={<Trans>Mock Toggle</Trans>} />
       <Toggle checked={mockTogglable} onToggle={toggleMockTogglable} />
     </Row>
   )

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import styled, { icon, OriginalProvider } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -29,7 +29,9 @@ function DetailsTooltip() {
     <Tooltip icon={InfoIcon} placement="bottom">
       <OriginalProvider>
         <Column gap={0.75}>
-          <TYPE.subhead2>{t`Transaction details`}</TYPE.subhead2>
+          <TYPE.subhead2>
+            <Trans>Transaction details</Trans>
+          </TYPE.subhead2>
           <Rule />
           <Details />
         </Column>

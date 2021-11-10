@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useResetAtom } from 'jotai/utils'
 import { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -21,9 +21,11 @@ export function SettingsDialog() {
   const resetSettings = useResetAtom(settingsAtom)
   return (
     <>
-      <Header title={t`Settings`} ruled>
+      <Header title={<Trans>Settings</Trans>} ruled>
         <TYPE.subhead2>
-          <TextButton onClick={resetSettings}>{t`Reset`}</TextButton>
+          <TextButton onClick={resetSettings}>
+            <Trans>Reset</Trans>
+          </TextButton>
         </TYPE.subhead2>
       </Header>
       <Column gap={1} style={{ paddingTop: '1em' }} ref={setBoundary} padded scrollable>

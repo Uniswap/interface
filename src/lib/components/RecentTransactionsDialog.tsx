@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -108,7 +108,7 @@ export default function RecentTransactionsDialog() {
 
   return (
     <>
-      <Header title={t`Recent transactions`} ruled>
+      <Header title={<Trans>Recent transactions</Trans>} ruled>
         <Button>
           <TrashIcon onClick={() => setTxs([])} />
         </Button>
