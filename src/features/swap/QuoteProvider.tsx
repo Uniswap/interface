@@ -15,7 +15,7 @@ export function QuoteProvider({
   params: { amountIn, inAddress, outAddress },
   setQuoteResult,
 }: QuoteProviderProps) {
-  // TODO(judo): support arbitrary chain
+  // TODO(judo): support arbitrary chain, `Token` param, take chainId
   const chainId = ChainId.RINKEBY
 
   const { isLoading, isError, error, data } = useQuote({

@@ -7,7 +7,7 @@ import { AddressInput } from 'src/components/input/AddressInput'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { QuoteProvider } from 'src/features/swap/QuoterProvider'
+import { QuoteProvider } from 'src/features/swap/QuoteProvider'
 import { swapActions } from 'src/features/swap/SwapSaga'
 import { QuoteParams, QuoteResult } from 'src/features/swap/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -115,6 +115,7 @@ export function SwapForm() {
             <QuoteProvider
               params={values}
               setQuoteResult={(_quoteResult: QuoteResult) => {
+                if (quoteResult === _quoteResult) return
                 setFieldValue('amountOut', _quoteResult.quote)
                 setQuoteResult(_quoteResult)
               }}

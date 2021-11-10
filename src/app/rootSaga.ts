@@ -13,6 +13,7 @@ import {
   importAccountSagaName,
 } from 'src/features/import/importAccountSaga'
 import { initProviders } from 'src/features/providers/providerSaga'
+import { swapActions, swapReducer, swapSaga, swapSagaName } from 'src/features/swap/SwapSaga'
 import {
   transferTokenActions,
   transferTokenReducer,
@@ -64,6 +65,12 @@ export const monitoredSagas: {
     wrappedSaga: transferTokenSaga,
     reducer: transferTokenReducer,
     actions: transferTokenActions,
+  },
+  [swapSagaName]: {
+    name: swapSagaName,
+    wrappedSaga: swapSaga,
+    reducer: swapReducer,
+    actions: swapActions,
   },
 }
 
