@@ -23,7 +23,7 @@ export function* swap(params: SwapParams) {
   yield* call(_swap, account, methodParameters, accountManager, providerManager)
 }
 
-async function _swap(
+export async function _swap(
   account: AccountStub,
   { value, calldata }: MethodParameters,
   accountManager: AccountManager,

@@ -98,6 +98,7 @@
     "react-devtools": "^4.18.0",
     "react-native-dotenv": "^3.2.0",
     "react-test-renderer": "17.0.2",
+    "redux-saga-test-plan": "^4.0.4",
     "typechain": "^5.2.0",
     "typescript": "^4.4.3"
   },
