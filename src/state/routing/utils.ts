@@ -68,8 +68,6 @@ const parsePool = ({
   new Pool(
     parseToken(tokenIn),
     parseToken(tokenOut),
-    // TODO: remove once sdk support very low
-    // FeeAmount.LOWEST,
     parseInt(fee) as FeeAmount,
     sqrtRatioX96,
     liquidity,

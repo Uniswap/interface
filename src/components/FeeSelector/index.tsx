@@ -5,7 +5,6 @@ import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
-import { SupportedChainId } from 'constants/chains'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
@@ -38,6 +37,13 @@ const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
   border: 1px solid ${({ theme }) => theme.bg2};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.6s linear;
   align-self: center;
+`
+
+const Select = styled.div`
+  align-items: flex-start;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 8px;
 `
 
 export default function FeeSelector({
@@ -175,7 +181,7 @@ export default function FeeSelector({
         </FocusedOutlineCard>
 
         {chainId && showOptions && (
-          <RowBetween alignItems="flex-start">
+          <Select>
             {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
               const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
               if (supportedChains === 'all' || supportedChains.includes(chainId)) {
@@ -192,7 +198,7 @@ export default function FeeSelector({
               }
               return null
             })}
-          </RowBetween>
+          </Select>
         )}
       </DynamicSection>
     </AutoColumn>

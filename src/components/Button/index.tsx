@@ -329,7 +329,7 @@ const CheckboxWrapper = styled.div`
   padding: 0 10px;
   position: absolute;
   top: 11px;
-  right: 10px;
+  right: 15px;
 `
 
 const ResponsiveCheck = styled(Check)`
