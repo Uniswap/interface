@@ -157,7 +157,7 @@ jobs:
 
       - name: Detox Test
         timeout-minutes: 30
-        run: yarn test:e2e:run
+        run: npm run test:e2e:run
           
       - name: Upload Detox Artifacts
         uses: actions/upload-artifact@v2
