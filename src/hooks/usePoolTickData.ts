@@ -44,7 +44,8 @@ export function useAllV3Ticks(
     isUninitialized,
     isError,
     error,
-    ticks: data?.ticksg    as AllV3TicksQuery['ticks'],
+    ticks: data?.ticks as AllV3TicksQuery['ticks'],
+  }
 }
 
 export function usePoolActiveLiquidity(

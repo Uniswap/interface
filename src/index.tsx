@@ -3,7 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { createWeb3ReactRoot, Web3ReactProvider } from 'legacy-web3-react/core'
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
