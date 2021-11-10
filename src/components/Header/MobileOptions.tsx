@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../state/application/actions'
 import { useCloseModals, useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-import { darken, transparentize } from 'polished'
+import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -44,11 +44,6 @@ const StyledNavLink = styled(NavLink)`
     font-weight: 600;
     color: ${({ theme }) => theme.white};
   }
-`
-
-const DisabledNavLink = styled(StyledNavLink)<{ isActive?: boolean }>`
-  color: ${({ theme }) => transparentize(0.6, theme.text5)} !important;
-  font-weight: 400 !important;
 `
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -108,15 +103,13 @@ export default function MobileOptions() {
   const { t } = useTranslation()
   useOnClickOutside(popoverRef, open ? toggle : undefined)
 
-  const handleDisabledAnchorClick = useCallback(event => {
-    event.preventDefault()
-  }, [])
-
   const location = useLocation()
   const getActiveLInk = () => {
     switch (location.pathname) {
       case '/swap':
         return t('swap')
+      case '/bridge':
+        return t('bridge')
       case '/pools':
       case '/add':
       case '/remove':
@@ -141,18 +134,24 @@ export default function MobileOptions() {
                 </StyledNavLink>
               </ListItem>
               <ListItem>
+                <StyledNavLink id="bridge-nav-link" to="/bridge" onClick={closeModals} activeClassName="active">
+                  {t('bridge')}
+                </StyledNavLink>
+              </ListItem>
+              <ListItem>
                 <StyledNavLink id="pool-nav-link" to="/pools" onClick={closeModals} activeClassName="active">
                   {t('pool')}
                 </StyledNavLink>
               </ListItem>
               <ListItem>
-                <DisabledNavLink to="/#" onClick={handleDisabledAnchorClick}>
-                  {t('governance')}
-                </DisabledNavLink>
+                <StyledExternalLink id="stake-nav-link" href="https://snapshot.org/#/swpr.eth">
+                  {t('vote')}
+                </StyledExternalLink>
               </ListItem>
               <ListItem>
                 <StyledExternalLink id="stake-nav-link" href="https://dxstats.eth.link/">
-                  Charts <span>↗</span>
+                  {t('charts')}
+                  <span>↗</span>
                 </StyledExternalLink>
               </ListItem>
             </List>

@@ -17,6 +17,7 @@ import { TriangleIcon } from '../Icons'
 import { useTranslation } from 'react-i18next'
 import Row from '../Row'
 import { useIsMobileByMedia } from '../../hooks/useIsMobileByMedia'
+import { ApplicationModal } from '../../state/application/actions'
 
 const Web3StatusError = styled.div`
   display: flex;
@@ -134,7 +135,7 @@ export default function Web3Status() {
 
   if (error) {
     return (
-      <NetworkSwitcherPopover>
+      <NetworkSwitcherPopover modal={ApplicationModal.NETWORK_SWITCHER}>
         <Web3StatusError>
           {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
           <SwitchNetworkButton onClick={toggleNetworkSwitcherPopover}>

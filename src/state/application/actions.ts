@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
+import { ApplicationState } from './reducer'
 
 export type PopupContent =
   | {
@@ -28,7 +29,9 @@ export enum ApplicationModal {
   MOBILE,
   WALLET_SWITCHER,
   NETWORK_SWITCHER,
-  ETHEREUM_OPTION
+  ETHEREUM_OPTION,
+  NETWORK_SWITCHER_FROM,
+  NETWORK_SWITCHER_TO
 }
 
 export enum MainnetGasPrice {
@@ -42,3 +45,6 @@ export const updateMainnetGasPrices = createAction<{ [variant in MainnetGasPrice
   'application/updateMainnetGasPrices'
 )
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
+export const setConnectorInfo = createAction<Pick<ApplicationState, 'account' | 'chainId'>>(
+  'application/setConnectorInfo'
+)

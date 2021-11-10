@@ -71,5 +71,6 @@
   "tokenAddress": "代幣地址",
   "label": "代幣符號",
   "decimals": "小數位數",
-  "enterTokenCont": "輸入代幣地址"
+  "enterTokenCont": "輸入代幣地址",
+  "bridge": "Bridge"
 }

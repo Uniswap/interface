@@ -13,8 +13,10 @@ import multicall from './multicall/reducer'
 import multiChainLinks from './multi-chain-links/reducer'
 import claim from './claim/reducer'
 import lists from './lists/reducer'
+import bridge from './bridge/reducer'
+import bridgeTransactions from './bridgeTransactions/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'claim']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'claim', 'bridgeTransactions']
 
 const persistenceNamespace = 'swapr'
 const store = configureStore({
@@ -29,7 +31,9 @@ const store = configureStore({
     multicall,
     multiChainLinks,
     lists,
-    claim
+    claim,
+    bridge,
+    bridgeTransactions
   },
   middleware: [save({ states: PERSISTED_KEYS, namespace: persistenceNamespace })],
   preloadedState: load({ states: PERSISTED_KEYS, namespace: persistenceNamespace })

@@ -51,18 +51,28 @@ const Checkmark = styled.span<{ checked?: boolean }>`
 `
 
 interface RadioProps {
-  checked?: boolean
+  checked: boolean
   label: string
   disabled?: boolean
-  value: string
+  value?: string
   icon?: ReactNode
+  name?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  className?: string
 }
 
-export default function Radio({ checked, label, icon, value, disabled, onChange }: RadioProps) {
+export default function Radio({ checked, label, icon, value, disabled, onChange, name, className }: RadioProps) {
   return (
-    <Container disabled={disabled}>
-      <input type="radio" value={value} checked={checked} onChange={onChange} hidden disabled={disabled} />
+    <Container disabled={disabled} className={className}>
+      <input
+        type="radio"
+        value={value}
+        checked={checked}
+        onChange={onChange}
+        hidden
+        disabled={disabled}
+        name={name}
+      />
       {icon && <Icon>{icon}</Icon>}
       <Label>{label}</Label>
       <OuterCheckmark>

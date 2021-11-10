@@ -25,10 +25,6 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   font-size: 12px;
 `
 
-const ReferenceElement = styled.div`
-  display: flex;
-`
-
 export interface PopoverProps {
   content: React.ReactNode
   show: boolean
@@ -66,7 +62,7 @@ export default function Popover({
 
   return (
     <>
-      <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
+      <div ref={setReferenceElement as any}>{children}</div>
       <Portal>
         <div ref={innerRef}>
           <PopoverContainer

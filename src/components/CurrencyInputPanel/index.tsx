@@ -18,7 +18,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   align-items: center;
 `
 
-const CurrencySelect = styled.button<{ selected: boolean }>`
+const CurrencySelect = styled.button<{ selected: boolean; disableCurrencySelect?: boolean }>`
   align-items: center;
   font-size: ${({ selected }) => (selected ? '26px' : '12px')};
   font-weight: ${({ selected }) => (selected ? 600 : 700)};
@@ -29,7 +29,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   color: ${({ theme }) => theme.white};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
-  cursor: pointer;
+  cursor: ${({ disableCurrencySelect }) => (disableCurrencySelect ? 'auto' : 'pointer')};
   user-select: none;
   border: none;
   text-transform: uppercase;
@@ -114,6 +114,7 @@ interface CurrencyInputPanelProps {
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
+  disabled?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
@@ -133,6 +134,7 @@ export default function CurrencyInputPanel({
   onCurrencySelect,
   currency,
   disableCurrencySelect = false,
+  disabled,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -147,6 +149,7 @@ export default function CurrencyInputPanel({
   const [modalOpen, setModalOpen] = useState(false)
   const [focused, setFocused] = useState(false)
   const { account } = useActiveWeb3React()
+
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
 
   const handleDismissSearch = useCallback(() => {
@@ -178,7 +181,13 @@ export default function CurrencyInputPanel({
                     fontSize="11px"
                     lineHeight="13px"
                     letterSpacing="0.08em"
-                    style={{ display: 'inline', cursor: 'pointer' }}
+                    style={{
+                      display: 'inline',
+                      cursor:
+                        !hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
+                          ? 'pointer'
+                          : 'auto'
+                    }}
                   >
                     <UppercaseHelper>
                       {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
@@ -201,6 +210,7 @@ export default function CurrencyInputPanel({
                   onUserInput={val => {
                     onUserInput(val)
                   }}
+                  disabled={disabled}
                 />
                 {account && (currency || pair) && showMaxButton && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
@@ -210,6 +220,7 @@ export default function CurrencyInputPanel({
             <CurrencySelect
               selected={!!(currency || pair)}
               className="open-currency-select-button"
+              disableCurrencySelect={disableCurrencySelect}
               onClick={() => {
                 if (!disableCurrencySelect) {
                   setModalOpen(true)
@@ -232,7 +243,7 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || t('selectToken')}
+                      : currency?.symbol) || t('select Token')}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && (pair || currency) && <StyledDropDown selected={!!currency} />}

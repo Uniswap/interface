@@ -71,5 +71,6 @@
   "tokenAddress": "Adresă Token",
   "label": "Denumire",
   "decimals": "Zecimale",
-  "enterTokenCont": "Setează o adresă de token pentru a continua"
+  "enterTokenCont": "Setează o adresă de token pentru a continua",
+  "bridge": "Bridge"
 }

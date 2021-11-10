@@ -1,6 +1,6 @@
 {
   "name": "@swapr/frontend",
-  "version": "1.0.0-beta.6.2",
+  "version": "1.0.0-beta.7",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
@@ -101,7 +101,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
-    "serve": "serve -s ./build"
+    "serve": "serve -s ./build",
+    "lint": "eslint --fix ./src/**/*.ts"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -123,6 +124,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "arb-ts": "^0.0.42",
     "query-string": "^6.13.8",
     "react-use": "^15.3.3"
   }
