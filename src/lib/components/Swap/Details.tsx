@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import TYPE from 'lib/theme/type'
 import { ReactNode } from 'react'
@@ -23,31 +24,31 @@ export default function Details() {
   return (
     <Column gap={0.75}>
       <Detail>
-        <span>Liquidity provider fee</span>
+        <span>{t`Liquidity provider fee`}</span>
         {swap.lpFee}&emsp;{input.token.symbol}
       </Detail>
       <Detail>
-        <span>Integrator fee</span>
+        <span>{t`Integrator fee`}</span>
         {swap.integratorFee}&emsp;{input.token.symbol}
       </Detail>
       <Detail>
-        <span>Price impact</span>
+        <span>{t`Price impact`}</span>
         {swap.priceImpact}%
       </Detail>
       {swap.maximumSent && (
         <Detail>
-          <span>Maximum sent</span>
+          <span>{t`Maximum sent`}</span>
           {swap.maximumSent}&emsp;{input.token.symbol}
         </Detail>
       )}
       {swap.minimumReceived && (
         <Detail>
-          <span>Minimum received</span>
+          <span>{t`Minimum received`}</span>
           {swap.minimumReceived}&emsp;{output.token.symbol}
         </Detail>
       )}
       <Detail>
-        <span>Slippage tolerance</span>
+        <span>{t`Slippage tolerance`}</span>
         {swap.slippageTolerance}%
       </Detail>
     </Column>

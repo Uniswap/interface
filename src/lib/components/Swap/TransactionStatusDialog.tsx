@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
 import styled, { icon } from 'lib/theme'
@@ -23,15 +24,14 @@ const UpIcon = icon(ChevronUp)
 
 const Header = styled.div<{ maximized?: boolean }>`
   display: flex;
+  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
   height: 100%;
   justify-content: center;
-  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
   padding-top: ${({ maximized }) => (maximized ? 8 : 32)}px;
   transition: font-size 0.2s linear, padding-top 0.2s linear;
 
-    * {
-      stroke-width: 1;
-    }
+  * {
+    stroke-width: 1;
   }
 `
 
@@ -65,9 +65,9 @@ function toElapsedTime(ms: number): string {
   const min = Math.floor(sec / 60)
   sec = sec % 60
   if (min) {
-    return `${min}m${sec}s`
+    return t`${min}m${sec}s`
   } else {
-    return `${sec}s`
+    return t`${sec}s`
   }
 }
 
@@ -85,7 +85,7 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
       <Header>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
       <Column gap={1}>
         <Column gap={0.75} flex>
-          <TYPE.subhead1>Transaction {transaction.status ? 'submitted' : 'pending'}</TYPE.subhead1>
+          <TYPE.subhead1>{transaction.status ? t`Transaction submitted` : t`Transaction pending`}</TYPE.subhead1>
           <Summary input={transaction.input} output={transaction.output} />
           <FlexRule />
         </Column>
@@ -96,11 +96,11 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
               {toElapsedTime(transaction.elapsedMs || Date.now() - transaction.timestamp)}
             </Row>
             <EtherscanA href="//etherscan.io" target="_blank">
-              View on Etherscan
+              {t`View on Etherscan`}
             </EtherscanA>
           </Row>
         </TYPE.subhead2>
-        <ActionButton onClick={onClose}>Close</ActionButton>
+        <ActionButton onClick={onClose}>{t`Close`}</ActionButton>
       </Column>
     </Body>
   )
@@ -115,17 +115,17 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
       </Header>
       <Column gap={1}>
         <Column gap={0.75}>
-          <TYPE.subhead1>Something went wrong.</TYPE.subhead1>
-          <TYPE.body2>Try increasing your slippage tolerance</TYPE.body2>
+          <TYPE.subhead1>{t`Something went wrong.`}</TYPE.subhead1>
+          <TYPE.body2>{t`Try increasing your slippage tolerance`}</TYPE.body2>
           <TYPE.body2 fontWeight="200" lineHeight={1.25}>
-            Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
+            {t`Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.`}
           </TYPE.body2>
           <Rule />
         </Column>
         <Row>
           <Row gap={0.5}>
             <InfoIcon />
-            <TYPE.subhead2 color="secondary">Error details</TYPE.subhead2>
+            <TYPE.subhead2 color="secondary">{t`Error details`}</TYPE.subhead2>
           </Row>
           <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
         </Row>
@@ -133,7 +133,7 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
           <TYPE.code>{error.message}</TYPE.code>
           <Break />
           <ActionButton color="error" onClick={onClose}>
-            Dismiss
+            {t`Dismiss`}
           </ActionButton>
         </ErrorColumn>
       </Column>

@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
 import TYPE from 'lib/theme/type'
@@ -144,7 +145,7 @@ export function LoadingButton() {
   return (
     <Overlay>
       <StyledLoadingButton ref={setRef} {...rect} disabled>
-        <TYPE.buttonLarge>Loading…</TYPE.buttonLarge>
+        <TYPE.buttonLarge>{t`Loading…`}</TYPE.buttonLarge>
       </StyledLoadingButton>
     </Overlay>
   )
@@ -182,7 +183,7 @@ export function ApprovalButton({ color, onClick, children }: ActionButtonProps) 
           <TYPE.subhead2>{children}</TYPE.subhead2>
         </Row>
         <StyledApprovalButton color={color} onClick={onClick}>
-          Approve
+          {t`Approve`}
         </StyledApprovalButton>
       </ApprovalRow>
     </Overlay>

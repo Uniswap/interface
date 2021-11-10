@@ -53,7 +53,7 @@ const OnCloseContext = createContext<() => void>(() => void 0)
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
-  title?: string
+  title?: ReactNode
   ruled?: boolean
   children?: ReactNode
 }

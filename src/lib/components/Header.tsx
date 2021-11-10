@@ -25,7 +25,7 @@ const StyledLogo = styled(Logo)`
 `
 
 export interface HeaderProps {
-  title?: string
+  title?: ReactNode
   logo?: boolean
   children: ReactNode
 }

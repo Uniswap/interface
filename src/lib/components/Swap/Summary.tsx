@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -100,7 +101,7 @@ export function SummaryDialog() {
 
   return (
     <>
-      <Header title="Swap summary" ruled />
+      <Header title={t`Swap summary`} ruled />
       <SummaryColumn gap={0.75} padded scrollable>
         <Column gap={0.75} flex>
           <Summary input={input} output={output} />
@@ -112,23 +113,22 @@ export function SummaryDialog() {
         <Column gap={0.75}>
           <Row justify="flex-start" gap={0.5}>
             <InfoIcon />
-            <TYPE.subhead2 color="secondary">Transaction details</TYPE.subhead2>
+            <TYPE.subhead2 color="secondary">{t`Transaction details`}</TYPE.subhead2>
           </Row>
           <Details />
         </Column>
         <Rule />
         <TYPE.caption color="secondary">
-          Output is estimated.
+          {t`Output is estimated.`}
           {swap?.minimumReceived &&
-            `You will receive at least ${swap.minimumReceived} ${output.token.symbol} or the transaction
-          will revert.`}
+            t`You will receive at least ${swap.minimumReceived} ${output.token.symbol} or the transaction will revert.`}
           {swap?.maximumSent &&
-            `You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
+            t`You will send at most ${swap.maximumSent} ${input.token.symbol} or the transaction will revert.`}
         </TYPE.caption>
         {price === confirmedPrice ? (
-          <ActionButton onClick={() => void 0}>Confirm</ActionButton>
+          <ActionButton onClick={() => void 0}>{t`Confirm`}</ActionButton>
         ) : (
-          <ApprovalButton onClick={() => confirmPrice(price)}>Price updated</ApprovalButton>
+          <ApprovalButton onClick={() => confirmPrice(price)}>{t`Price updated`}</ApprovalButton>
         )}
       </SummaryColumn>
     </>

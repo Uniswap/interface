@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { icon } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -11,7 +12,7 @@ import Row from '../../Row'
 import { MaxSlippage, maxSlippageAtom } from '../state'
 import Label, { value } from './Label'
 
-const tooltip = 'Your transaction will revert if the price changes unfavorably by more than this percentage.'
+const tooltip = t`Your transaction will revert if the price changes unfavorably by more than this percentage.`
 
 const Value = value(Button)
 
@@ -56,7 +57,7 @@ export default function MaxSlippageSelect() {
 
   return (
     <Column gap={0.75}>
-      <Label name="Max Slippage" tooltip={tooltip} />
+      <Label name={t`Max Slippage`} tooltip={tooltip} />
       <Row gap={0.5} grow>
         <Option value={P01} onSelect={setMaxSlippage} selected={maxSlippage === P01} />
         <Option value={P05} onSelect={setMaxSlippage} selected={maxSlippage === P05} />
@@ -66,7 +67,7 @@ export default function MaxSlippageSelect() {
               size={custom === undefined ? undefined : 5}
               value={custom}
               onChange={(custom) => setMaxSlippage({ value: CUSTOM, custom })}
-              placeholder="Custom"
+              placeholder={t`Custom`}
               ref={input}
             />
             {custom !== undefined && <span>%</span>}

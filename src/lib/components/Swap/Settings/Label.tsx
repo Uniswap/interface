@@ -1,5 +1,6 @@
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
+import { ReactNode } from 'react'
 import { AnyStyledComponent } from 'styled-components'
 
 import Row from '../../Row'
@@ -23,8 +24,8 @@ export function value(Value: AnyStyledComponent) {
 }
 
 interface LabelProps {
-  name: string
-  tooltip?: string
+  name: ReactNode
+  tooltip?: ReactNode
 }
 
 export default function Label({ name, tooltip }: LabelProps) {

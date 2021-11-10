@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import assert from 'assert'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -16,17 +17,17 @@ export default function SwapButton() {
   const action = useMemo(() => {
     switch (state) {
       case State.EMPTY:
-        return <DisabledButton>Enter amount</DisabledButton>
+        return <DisabledButton>{t`Enter amount`}</DisabledButton>
       case State.LOADING:
         return <LoadingButton />
       case State.TOKEN_APPROVAL:
         assert(token)
-        return <ApprovalButton onClick={() => void 0}>Approve {token.symbol} first</ApprovalButton>
+        return <ApprovalButton onClick={() => void 0}>{t`Approve ${token.symbol} first`}</ApprovalButton>
       case State.BALANCE_INSUFFICIENT:
         assert(token)
-        return <DisabledButton>Insufficient {token.symbol} balance</DisabledButton>
+        return <DisabledButton>{t`Insufficient ${token.symbol} balance`}</DisabledButton>
       case State.LOADED:
-        return <ActionButton onClick={() => setOpen(true)}>Swap</ActionButton>
+        return <ActionButton onClick={() => setOpen(true)}>{t`Swap`}</ActionButton>
       default:
         return <DisabledButton>🦄</DisabledButton>
     }

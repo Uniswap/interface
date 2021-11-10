@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import { useUpdateAtom } from 'jotai/utils'
 import styled, { icon } from 'lib/theme'
@@ -29,7 +30,7 @@ export default function Input({ children }: { children: ReactNode }) {
   return (
     <InputColumn gap={0.5}>
       <Row>
-        <TYPE.subhead2 color="secondary">Trading</TYPE.subhead2>
+        <TYPE.subhead2 color="secondary">{t`Trading`}</TYPE.subhead2>
       </Row>
       <TokenInput
         input={input}
@@ -47,7 +48,7 @@ export default function Input({ children }: { children: ReactNode }) {
                   {balance}
                 </Row>
                 <TextButton onClick={() => setValue(balance)} disabled={!balance}>
-                  Max
+                  {t`Max`}
                 </TextButton>
               </Row>
             )}

@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { prefetchColor } from 'lib/hooks/useColor'
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
@@ -69,7 +70,7 @@ const TokenOption = forwardRef(function TokenOption(
       <TYPE.body1>
         <Row>
           <Row gap={0.5}>
-            <TokenImg src={value.logoURI} alt={`${value.name || value.symbol} logo`} />
+            <TokenImg src={value.logoURI} alt={t`${value.name || value.symbol} logo`} />
             <Column flex align="flex-start">
               <TYPE.subhead1>{value.symbol}</TYPE.subhead1>
               <TYPE.caption color="secondary">{value.name}</TYPE.caption>
