@@ -73,7 +73,7 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
   return (
     <StrictMode>
       <SEO
-        title="KyberDMM - Powering decentralized token exchange and liquidity"
+        title="KyberDMM - Swap tokens at the best rates"
         description="KyberDMM is DeFi‚Äôs first Dynamic Market Maker; a decentralized exchange protocol that provides frictionless crypto liquidity with extremely high flexibility and capital efficiency. KyberDMM is the first major protocol in Kyber‚Äôs liquidity hub."
       />
       <FixedGlobalStyle />
