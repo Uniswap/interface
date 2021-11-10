@@ -5,9 +5,11 @@ import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
+import { SupportedChainId } from 'constants/chains'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
+import { useActiveWeb3React } from 'hooks/web3'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
@@ -17,7 +19,7 @@ import { TYPE } from 'theme'
 
 import { FeeOption } from './FeeOption'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
-import { FeeAmountLabel } from './shared'
+import { FEE_AMOUNT_DETAIL } from './shared'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -51,6 +53,8 @@ export default function FeeSelector({
   currencyA?: Currency | undefined
   currencyB?: Currency | undefined
 }) {
+  const { chainId } = useActiveWeb3React()
+
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
   // get pool data on-chain for latest states
@@ -149,7 +153,7 @@ export default function FeeSelector({
               ) : (
                 <>
                   <TYPE.label className="selected-fee-label">
-                    <Trans>{FeeAmountLabel[feeAmount].label}% fee tier</Trans>
+                    <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}% fee tier</Trans>
                   </TYPE.label>
                   <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                     {distributions && (
@@ -170,18 +174,24 @@ export default function FeeSelector({
           </RowBetween>
         </FocusedOutlineCard>
 
-        {showOptions && (
+        {chainId && showOptions && (
           <RowBetween alignItems="flex-start">
-            {[FeeAmount.VERY_LOW, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => (
-              <FeeOption
-                feeAmount={_feeAmount}
-                active={feeAmount === _feeAmount}
-                onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
-                distributions={distributions}
-                poolState={poolsByFeeTier[_feeAmount]}
-                key={i}
-              />
-            ))}
+            {[FeeAmount.VERY_LOW, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
+              const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
+              if (supportedChains === 'all' || supportedChains.includes(chainId)) {
+                return (
+                  <FeeOption
+                    feeAmount={_feeAmount}
+                    active={feeAmount === _feeAmount}
+                    onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
+                    distributions={distributions}
+                    poolState={poolsByFeeTier[_feeAmount]}
+                    key={i}
+                  />
+                )
+              }
+              return null
+            })}
           </RowBetween>
         )}
       </DynamicSection>

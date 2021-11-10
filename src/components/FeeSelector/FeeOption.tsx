@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
-import { FeeAmountLabel } from './shared'
+import { FEE_AMOUNT_DETAIL } from './shared'
 
 const ResponsiveText = styled(TYPE.label)`
   line-height: 16px;
@@ -35,10 +35,10 @@ export function FeeOption({ feeAmount, active, poolState, distributions, onClick
       <AutoColumn gap="sm" justify="flex-start">
         <AutoColumn justify="flex-start" gap="6px">
           <ResponsiveText>
-            <Trans>{FeeAmountLabel[feeAmount].label}%</Trans>
+            <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}%</Trans>
           </ResponsiveText>
           <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-            {FeeAmountLabel[feeAmount].description}
+            {FEE_AMOUNT_DETAIL[feeAmount].description}
           </TYPE.main>
         </AutoColumn>
 
