@@ -27,8 +27,8 @@ export const BridgeTransactionsSummary = ({
   const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
   const toggleFilter = useCallback(() => {
-    if (txsFilter !== BridgeTxsFilter.RECENT) setTxsFilter(BridgeTxsFilter.RECENT)
-    else setTxsFilter(BridgeTxsFilter.NONE)
+    if (txsFilter !== BridgeTxsFilter.NONE) setTxsFilter(BridgeTxsFilter.NONE)
+    else setTxsFilter(BridgeTxsFilter.RECENT)
   }, [setTxsFilter, txsFilter])
 
   return (

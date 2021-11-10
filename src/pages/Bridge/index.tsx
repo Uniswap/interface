@@ -17,11 +17,12 @@ import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/Netw
 import { useActiveWeb3React } from '../../hooks'
 import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
-import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
+import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFilter } from '../../state/bridge/hooks'
 
 import { NETWORK_DETAIL } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
 
@@ -87,8 +88,11 @@ export default function Bridge() {
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
+  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
+  const collectableTxAmount = bridgeSummaries.filter(tx => tx.status === 'redeem').length
   const isCollecting = step === BridgeStep.Collect
+  const isCollectableFilter = txsFilter === BridgeTxsFilter.COLLECTABLE
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
@@ -103,6 +107,7 @@ export default function Bridge() {
     onUserInput('')
     onCurrencySelection('')
     setStep(BridgeStep.Initial)
+    setTxsFilter(BridgeTxsFilter.RECENT)
     setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
       symbol: '',
@@ -110,7 +115,11 @@ export default function Bridge() {
       fromChainId: 1,
       toChainId: 42161
     })
-  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus])
+  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus, setTxsFilter])
+
+  const handleCollectTab = useCallback(() => {
+    setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+  }, [setTxsFilter])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -174,8 +183,14 @@ export default function Bridge() {
 
   return (
     <Wrapper>
-      <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
       <AppBody>
+        <Tabs
+          collectableTxAmount={collectableTxAmount}
+          isCollecting={isCollecting}
+          isCollectableFilter={isCollectableFilter}
+          handleResetBridge={handleResetBridge}
+          handleCollectTab={handleCollectTab}
+        />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>

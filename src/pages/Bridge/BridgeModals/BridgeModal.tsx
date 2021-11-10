@@ -115,6 +115,5 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
         return null
     }
   }
-
   return selectModal()
 }
