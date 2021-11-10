@@ -30,7 +30,7 @@ export const STAKING_GENESIS = 1619100000
 
 export interface StakingInfo {
   // the address of the reward contract
-  readonly stakingRewardAddress: string
+  readonly stakingRewardAddress: string | undefined
   // the token of the liquidity pool
   readonly stakingToken: Token
   // the tokens involved in this pair

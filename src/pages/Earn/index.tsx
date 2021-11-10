@@ -46,6 +46,14 @@ const TRIPLE_POOL_CARD_HEIGHT = isMobile ? 90 : 300
 const DUAL_POOL_CARD_HEIGHT = isMobile ? 90 : 270
 const SINGLE_POOL_CARD_HEIGHT = isMobile ? 90 : 236
 
+const Header: React.FC = ({ children }) => {
+  return (
+    <DataRow style={{ alignItems: 'baseline' }}>
+      <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{children}</TYPE.mediumHeader>
+    </DataRow>
+  )
+}
+
 export default function Earn() {
   const { t } = useTranslation()
   const isSupportedNetwork = useIsSupportedNetwork()
@@ -98,14 +106,39 @@ export default function Earn() {
   )
 
   const listRef = React.useRef<any>()
-  const rows: { element: React.ReactNode; size: number }[] = []
+  const rows: { element: React.ReactNode; size: number }[] = [
+    {
+      element: (
+        <TopSection gap="md">
+          <DataCard>
+            <CardNoise />
+            <CardSection>
+              <AutoColumn gap="md">
+                <RowBetween>
+                  <TYPE.white fontWeight={600}>Ubeswap {t('liquidityMining')}</TYPE.white>
+                </RowBetween>
+                <RowBetween>
+                  <TYPE.white fontSize={14}>{t('liquidityMiningDesc')}</TYPE.white>
+                </RowBetween>{' '}
+                <ExternalLink
+                  style={{ color: 'white', textDecoration: 'underline' }}
+                  href="https://docs.ubeswap.org/faq"
+                  target="_blank"
+                >
+                  <TYPE.white fontSize={14}>{t('liquidityMiningReadMore')}</TYPE.white>
+                </ExternalLink>
+              </AutoColumn>
+            </CardSection>
+            <CardNoise />
+          </DataCard>
+        </TopSection>
+      ),
+      size: 150,
+    },
+  ]
   if (stakedTripleRewards.length > 0) {
     rows.push({
-      element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('yourTriplePools')}</TYPE.mediumHeader>
-        </DataRow>
-      ),
+      element: <Header>{t('yourTriplePools')}</Header>,
       size: POOL_SECTION_HEADER_HEIGHT,
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
@@ -129,11 +162,7 @@ export default function Earn() {
   }
   if (stakedDualRewards.length > 0) {
     rows.push({
-      element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('yourDoublePools')}</TYPE.mediumHeader>
-        </DataRow>
-      ),
+      element: <Header>{t('yourDoublePools')}</Header>,
       size: POOL_SECTION_HEADER_HEIGHT,
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
@@ -156,12 +185,7 @@ export default function Earn() {
   }
   if (activeStakedPools.length > 0) {
     rows.push({
-      element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('yourPools')}</TYPE.mediumHeader>
-          <div>{/* TODO(igm): show TVL here */}</div>
-        </DataRow>
-      ),
+      element: <Header>{t('yourPools')}</Header>,
       size: POOL_SECTION_HEADER_HEIGHT,
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
@@ -180,12 +204,9 @@ export default function Earn() {
   if (inactiveStakedTripleRewards.length + inactiveStakedDualRewards.length + inactiveStakedPools.length > 0) {
     rows.push({
       element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
-            {t('Your')} {t('inactivePools')}
-          </TYPE.mediumHeader>
-          <div>{/* TODO(igm): show TVL here */}</div>
-        </DataRow>
+        <Header>
+          {t('Your')} {t('inactivePools')}
+        </Header>
       ),
       size: POOL_SECTION_HEADER_HEIGHT,
     })
@@ -232,11 +253,9 @@ export default function Earn() {
   if (tripleRewards.length > 0) {
     rows.push({
       element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
-            {t('triple')} {t('rewardPools')}
-          </TYPE.mediumHeader>
-        </DataRow>
+        <Header>
+          {t('triple')} {t('rewardPools')}
+        </Header>
       ),
       size: POOL_SECTION_HEADER_HEIGHT,
     })
@@ -261,11 +280,9 @@ export default function Earn() {
   if (dualRewards.length > 0) {
     rows.push({
       element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
-            {t('double')} {t('rewardPools')}
-          </TYPE.mediumHeader>
-        </DataRow>
+        <Header>
+          {t('double')} {t('rewardPools')}
+        </Header>
       ),
       size: POOL_SECTION_HEADER_HEIGHT,
     })
@@ -284,11 +301,7 @@ export default function Earn() {
   }
   if (activePools.length > 0) {
     rows.push({
-      element: (
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('availablePools')}</TYPE.mediumHeader>
-        </DataRow>
-      ),
+      element: <Header>{t('availablePools')}</Header>,
       size: POOL_SECTION_HEADER_HEIGHT,
     })
     listRef?.current?.resetAfterIndex(rows.length - 1)
@@ -319,34 +332,10 @@ export default function Earn() {
   }
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <DataCard>
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Ubeswap {t('liquidityMining')}</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>{t('liquidityMiningDesc')}</TYPE.white>
-              </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://docs.ubeswap.org/faq"
-                target="_blank"
-              >
-                <TYPE.white fontSize={14}>{t('liquidityMiningReadMore')}</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardNoise />
-        </DataCard>
-      </TopSection>
-
+    <PageWrapper gap="sm" justify="center">
       <List
         className="no-scrollbars"
-        height={height / 1.6}
+        height={height / 1.3}
         itemCount={rows.length}
         itemSize={getItemSize}
         width={Math.min(width - 40, 640)}
