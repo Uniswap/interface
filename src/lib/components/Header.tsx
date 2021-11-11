@@ -1,7 +1,7 @@
 import Logo from 'lib/assets/Logo'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
 
@@ -25,7 +25,7 @@ const StyledLogo = styled(Logo)`
 `
 
 export interface HeaderProps {
-  title?: string
+  title?: ReactElement
   logo?: boolean
   children: ReactNode
 }

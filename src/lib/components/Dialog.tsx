@@ -2,7 +2,7 @@ import 'wicg-inert'
 
 import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
@@ -53,7 +53,7 @@ const OnCloseContext = createContext<() => void>(() => void 0)
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
-  title?: string
+  title?: ReactElement
   ruled?: boolean
   children?: ReactNode
 }

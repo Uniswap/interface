@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { transparentize } from 'polished'
@@ -86,7 +87,7 @@ export default function Toggle({ checked, onToggle }: ToggleProps) {
       <Input
         type="checkbox"
         checked={checked}
-        text={checked ? 'ON' : 'OFF'}
+        text={checked ? t`ON` : t`OFF`}
         onChange={() => onToggle()}
         onKeyDown={onKeyDown}
       />

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useAtomValue } from 'jotai/utils'
 import useInterval from 'lib/hooks/useInterval'
 import styled, { icon } from 'lib/theme'
@@ -23,15 +24,14 @@ const UpIcon = icon(ChevronUp)
 
 const Header = styled.div<{ maximized?: boolean }>`
   display: flex;
+  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
   height: 100%;
   justify-content: center;
-  font-size: ${({ maximized }) => (maximized ? 48 : 64)}px;
   padding-top: ${({ maximized }) => (maximized ? 8 : 32)}px;
   transition: font-size 0.2s linear, padding-top 0.2s linear;
 
-    * {
-      stroke-width: 1;
-    }
+  * {
+    stroke-width: 1;
   }
 `
 
@@ -60,14 +60,18 @@ const ErrorColumn = styled(Column)<{ maximized?: boolean }>`
   transition: height 0.2s linear;
 `
 
-function toElapsedTime(ms: number): string {
+function toElapsedTime(ms: number) {
   let sec = Math.floor(ms / 1000)
   const min = Math.floor(sec / 60)
   sec = sec % 60
   if (min) {
-    return `${min}m${sec}s`
+    return (
+      <Trans>
+        {min}m{sec}s
+      </Trans>
+    )
   } else {
-    return `${sec}s`
+    return <Trans>{sec}s</Trans>
   }
 }
 
@@ -85,7 +89,9 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
       <Header>{transaction.status ? <SuccessIcon /> : <SpinnerIcon />}</Header>
       <Column gap={1}>
         <Column gap={0.75} flex>
-          <TYPE.subhead1>Transaction {transaction.status ? 'submitted' : 'pending'}</TYPE.subhead1>
+          <TYPE.subhead1>
+            {transaction.status ? <Trans>Transaction submitted</Trans> : <Trans>Transaction pending</Trans>}
+          </TYPE.subhead1>
           <Summary input={transaction.input} output={transaction.output} />
           <FlexRule />
         </Column>
@@ -96,11 +102,13 @@ function StatusBody({ transaction, onClose }: { transaction: Transaction; onClos
               {toElapsedTime(transaction.elapsedMs || Date.now() - transaction.timestamp)}
             </Row>
             <EtherscanA href="//etherscan.io" target="_blank">
-              View on Etherscan
+              <Trans>View on Etherscan</Trans>
             </EtherscanA>
           </Row>
         </TYPE.subhead2>
-        <ActionButton onClick={onClose}>Close</ActionButton>
+        <ActionButton onClick={onClose}>
+          <Trans>Close</Trans>
+        </ActionButton>
       </Column>
     </Body>
   )
@@ -115,17 +123,23 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
       </Header>
       <Column gap={1}>
         <Column gap={0.75}>
-          <TYPE.subhead1>Something went wrong.</TYPE.subhead1>
-          <TYPE.body2>Try increasing your slippage tolerance</TYPE.body2>
+          <TYPE.subhead1>
+            <Trans>Something went wrong.</Trans>
+          </TYPE.subhead1>
+          <TYPE.body2>
+            <Trans>Try increasing your slippage tolerance</Trans>
+          </TYPE.body2>
           <TYPE.body2 fontWeight="200" lineHeight={1.25}>
-            Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.
+            <Trans>Note: Fee on transfer and rebase tokens are incompatible with Uniswap V3.</Trans>
           </TYPE.body2>
           <Rule />
         </Column>
         <Row>
           <Row gap={0.5}>
             <InfoIcon />
-            <TYPE.subhead2 color="secondary">Error details</TYPE.subhead2>
+            <TYPE.subhead2 color="secondary">
+              <Trans>Error details</Trans>
+            </TYPE.subhead2>
           </Row>
           <Button onClick={() => setOpen(!open)}>{open ? <DownIcon /> : <UpIcon />}</Button>
         </Row>
@@ -133,7 +147,7 @@ function ErrorBody({ error, onClose }: { error: Error; onClose: () => void }) {
           <TYPE.code>{error.message}</TYPE.code>
           <Break />
           <ActionButton color="error" onClick={onClose}>
-            Dismiss
+            <Trans>Dismiss</Trans>
           </ActionButton>
         </ErrorColumn>
       </Column>
