@@ -1,4 +1,4 @@
-import { createMulticall } from 'multicall-query'
+import { createMulticall } from '@uniswap/redux-multicall'
 import React from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useLatestBlock } from 'src/features/blocks/hooks'

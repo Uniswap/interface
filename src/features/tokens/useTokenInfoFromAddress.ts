@@ -1,9 +1,9 @@
 // Mostly copied from https://github.com/Uniswap/interface/blob/main/src/hooks/Tokens.ts#L129
 // But renamed useToken to useTokenInfoFromAddress for clarity
 
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { Token } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
-import { NEVER_RELOAD } from 'multicall-query'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'src/features/contracts/useContract'
