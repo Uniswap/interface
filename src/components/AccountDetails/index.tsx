@@ -257,7 +257,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {walletType !== WalletTypes.Injected && walletType !== WalletTypes.MetaMask && (
+                  {address && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={destroy}
