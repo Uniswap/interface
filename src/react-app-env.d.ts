@@ -7,8 +7,6 @@ declare module '@metamask/jazzicon' {
 declare module 'fortmatic'
 
 interface Window {
-  // WalletLinkProvider is injected by walletlink protocol when paired with mobile client
-  WalletLinkProvider?: any
   // walletLinkExtension is injected by the Coinbase Wallet extension
   walletLinkExtension?: any
   ethereum?: {

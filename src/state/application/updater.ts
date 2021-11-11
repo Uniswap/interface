@@ -122,10 +122,8 @@ export default function Updater(): null {
 
   useEffect(() => {
     const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
-    const isWalletlinkOrInjectedConnector =
-      connector instanceof WalletLinkConnector || connector instanceof InjectedConnector
     const isWalletlink =
-      !!window?.WalletLinkProvider || (!!window?.walletLinkExtension && isWalletlinkOrInjectedConnector)
+      connector instanceof WalletLinkConnector || (connector instanceof InjectedConnector && window.walletLinkExtension)
     const isCbWallet = isCbWalletDappBrowser || isWalletlink
     const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
     if (!account || !library?.provider?.request || !isMetamaskOrCbWallet) {
