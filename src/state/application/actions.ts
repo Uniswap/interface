@@ -55,3 +55,4 @@ export const updateChainIdWhenNotConnected = createAction<ChainId>('application/
 export const setExchangeSubgraphClient = createAction<{ [key: string]: ApolloClient<NormalizedCacheObject> }>(
   'application/setExchangeSubgraphClient'
 )
+export const setGasPrice = createAction<{ [key: string]: string } | undefined>('application/setGasPrice')

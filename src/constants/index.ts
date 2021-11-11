@@ -3,6 +3,24 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 
+export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
+  [ChainId.ROPSTEN]: '0xc33D1124c43cE3d020d1153fa0593eB9Ebc75Fb0',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xF79B1ea5566Ab2120f58bA8174055e9Eb8526975'
+      : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
+  [ChainId.MUMBAI]: '',
+  [ChainId.BSCTESTNET]: '0x0ff512d940F390Cd76D95304fC4493170e0B42DE',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.AVAXMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
+  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870'
+}
+
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]:
     process.env.REACT_APP_MAINNET_ENV === 'staging'
@@ -42,11 +60,11 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
 
 // TODO-swapv2: change aggregation executor contract
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.MATIC]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.AVAXMAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.MAINNET]: '0x276e31882AD6C784858CdE5770B21eE09d79b744',
-  [ChainId.FANTOM]: '0x276e31882AD6C784858CdE5770B21eE09d79b744'
+  [ChainId.BSCMAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
+  [ChainId.MATIC]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
+  [ChainId.AVAXMAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
+  [ChainId.MAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
+  [ChainId.FANTOM]: '0x276e31882ad6c784858cde5770b21ee09d79b744'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {

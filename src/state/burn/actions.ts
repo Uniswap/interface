@@ -8,3 +8,4 @@ export enum Field {
 }
 
 export const typeInput = createAction<{ field: Field; typedValue: string }>('burn/typeInputBurn')
+export const switchTokenField = createAction<{ field: Field }>('burn/switchTokenField')

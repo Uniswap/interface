@@ -128,6 +128,11 @@ msgstr "Add liquidity"
 msgid "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 msgstr "Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity."
 
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Add liquidity for single token {0} with amount of {1}"
+msgstr "Add liquidity for single token {0} with amount of {1}"
+
 #: src/pages/Pools/index.tsx
 msgid "Add liquidity:"
 msgstr "Add liquidity:"
@@ -144,6 +149,10 @@ msgstr "Advanced Mode"
 msgid "Advanced Settings"
 msgstr "Advanced Settings"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Advanced mode is on!"
+msgstr "Advanced mode is on!"
+
 #: src/pages/Yield/index.tsx
 msgid "All Farms"
 msgstr "All Farms"
@@ -156,10 +165,16 @@ msgstr "All the documentation and tools necessary for developers to connect thei
 msgid "Always make sure the URL is<0>dmm.exchange</0> - bookmark it to be safe."
 msgstr "Always make sure the URL is<0>dmm.exchange</0> - bookmark it to be safe."
 
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Amount"
+msgstr "Amount"
+
 #: src/components/PoolList/ListItem.tsx
 #: src/components/PoolList/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
 msgstr "Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs."
@@ -184,7 +199,8 @@ msgstr "Anyone can provide liquidity by depositing token inventory into various 
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Approve"
@@ -195,7 +211,8 @@ msgstr "Approve"
 msgid "Approve {0}"
 msgstr "Approve {0}"
 
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
@@ -205,7 +222,8 @@ msgstr "Approved"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
@@ -220,6 +238,11 @@ msgstr "Available for yield farming"
 #: src/components/WalletModal/index.tsx
 msgid "Back"
 msgstr "Back"
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Balance"
+msgstr "Balance"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
@@ -289,10 +312,6 @@ msgstr "Claim All"
 msgid "Claimed Rewards"
 msgstr "Claimed Rewards"
 
-#: 
-#~ msgid "Classic Swap"
-#~ msgstr "Classic Swap"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
 msgstr "Clear all"
@@ -317,11 +336,8 @@ msgstr "Committed to Security"
 msgid "Common bases"
 msgstr "Common bases"
 
-#: 
-#~ msgid "Compared to {0}"
-#~ msgstr "Compared to {0}"
-
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Confirm"
@@ -340,9 +356,11 @@ msgid "Confirm this transaction in your wallet"
 msgstr "Confirm this transaction in your wallet"
 
 #: src/components/Web3Status/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 #: src/pages/Swap/index.tsx
@@ -361,8 +379,10 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Connect to a wallet to view your liquidity."
 
 #: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/stake/hooks.ts
@@ -405,7 +425,14 @@ msgstr "Create a new pool"
 msgid "Create a new pool or select another pair of tokens to view the available pools."
 msgstr "Create a new pool or select another pair of tokens to view the available pools."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+msgid "Current Price"
+msgstr "Current Price"
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
 msgid "Current Price:"
 msgstr "Current Price:"
 
@@ -446,10 +473,6 @@ msgstr "Dark Mode"
 #: src/components/Menu/index.tsx
 msgid "Dashboard"
 msgstr "Dashboard"
-
-#: 
-#~ msgid "DeFi's First"
-#~ msgstr "DeFi's First"
 
 #: src/pages/Static/About.tsx
 msgid "DeFi's First Multi-Chain"
@@ -494,15 +517,12 @@ msgstr "Don't see a pool you joined?"
 msgid "Duration: {duration}"
 msgstr "Duration: {duration}"
 
-#: 
-#~ msgid "Duration: ~{lockedTime} days"
-#~ msgstr "Duration: ~{lockedTime} days"
-
 #: src/pages/Static/About.tsx
 msgid "Dynamic"
 msgstr "Dynamic"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Dynamic Fee Range"
 msgstr "Dynamic Fee Range"
@@ -518,18 +538,6 @@ msgstr "Dynamic Trade Routing"
 #: src/components/Vesting/index.tsx
 msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
 msgstr "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
-
-#: 
-#~ msgid "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-#~ msgstr "Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-
-#: 
-#~ msgid "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-#~ msgstr "Each time you harvest rewards, a new vesting period of ~{lockedTime} days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline)."
-
-#: 
-#~ msgid "Eligible Pools"
-#~ msgstr "Eligible Pools"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enables high slippage trades. Use at your own risk."
@@ -553,6 +561,8 @@ msgstr "Enter a recipient"
 msgid "Enter a valid slippage percentage"
 msgstr "Enter a valid slippage percentage"
 
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Enter amp (>=1)"
 msgstr "Enter amp (>=1)"
@@ -560,8 +570,10 @@ msgstr "Enter amp (>=1)"
 #: src/hooks/useWrapCallback.ts
 #: src/hooks/useWrapCallback.ts
 #: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
 #: src/state/burn/hooks_sushi.ts
 #: src/state/burn/hooks_uni.ts
+#: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks_for_migration.ts
 #: src/state/stake/hooks.ts
@@ -630,7 +642,8 @@ msgstr "Fee (24h)"
 msgid "Fee Range"
 msgstr "Fee Range"
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
 msgstr "Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers."
@@ -643,10 +656,6 @@ msgstr "Find a token by searching for its name or symbol or by pasting its addre
 #: src/pages/Static/About.tsx
 msgid "Forum"
 msgstr "Forum"
-
-#: 
-#~ msgid "Forums"
-#~ msgstr "Forums"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -693,10 +702,6 @@ msgstr "Harvest"
 #: src/components/YieldPools/HarvestAll.tsx
 msgid "Harvest All"
 msgstr "Harvest All"
-
-#: 
-#~ msgid "Harvest your rewards by clicking your eligible pool/s in the list below."
-#~ msgstr "Harvest your rewards by clicking your eligible pool/s in the list below."
 
 #: src/pages/Pool/index.tsx
 msgid "Here you can view all your liquidity positions and remove/add more liquidity."
@@ -768,10 +773,6 @@ msgstr "Increase LP Profit"
 msgid "Information"
 msgstr "Information"
 
-#: 
-#~ msgid "Initial ratio"
-#~ msgstr "Initial ratio"
-
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
 msgstr "Initializing..."
@@ -781,9 +782,37 @@ msgstr "Initializing..."
 msgid "Input is estimated. You will sell at most"
 msgstr "Input is estimated. You will sell at most"
 
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient Liquidity in the Liquidity Pool to Swap"
+msgstr "Insufficient Liquidity in the Liquidity Pool to Swap"
+
 #: src/hooks/useWrapCallback.ts
 msgid "Insufficient W{0} balance"
 msgstr "Insufficient W{0} balance"
+
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+#: src/state/burn/hooks.ts
+msgid "Insufficient balance"
+msgstr "Insufficient balance"
+
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient liquidity available. Please reload page and try again"
+msgstr "Insufficient liquidity available. Please reload page and try again"
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Insufficient liquidity available. Please reload page and try again!"
+msgstr "Insufficient liquidity available. Please reload page and try again!"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -791,6 +820,7 @@ msgid "Insufficient liquidity for this trade."
 msgstr "Insufficient liquidity for this trade."
 
 #: src/hooks/useWrapCallback.ts
+#: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks_for_migration.ts
@@ -804,6 +834,8 @@ msgstr "Insufficient {0} balance"
 msgid "Insured by"
 msgstr "Insured by"
 
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/swap/hooks.ts
 #: src/state/swap/useAggregator.ts
@@ -823,10 +855,6 @@ msgstr "Invalid pair."
 msgid "Invalid recipient"
 msgstr "Invalid recipient"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Inventory ratio:"
-msgstr "Inventory ratio:"
-
 #: src/pages/Static/About.tsx
 msgid "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
 msgstr "KyberDMM trading fees are <0>adjusted dynamically</0> according to on-chain market conditions. In a volatile market (higher than usual volume), fees automatically increase to an optimal level, reducing the impact of impermanent loss. In periods of low volatility, fees decrease to encourage more trading."
@@ -838,6 +866,11 @@ msgstr "KyberDMM’s Programmable Pricing Curve enables liquidity pool creators 
 #: src/components/Vesting/Schedule.tsx
 msgid "LOCKED"
 msgstr "LOCKED"
+
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "LP Tokens Removed"
+msgstr "LP Tokens Removed"
 
 #: src/components/Settings/index.tsx
 msgid "Language"
@@ -890,10 +923,6 @@ msgstr "Locked Rewards"
 msgid "Lowest Gas"
 msgstr "Lowest Gas"
 
-#: 
-#~ msgid "Lowest Gas Cost"
-#~ msgstr "Lowest Gas Cost"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
@@ -933,7 +962,8 @@ msgstr "Manage your pools."
 msgid "Market"
 msgstr "Market"
 
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "Max"
@@ -968,20 +998,16 @@ msgstr "Migrate"
 msgid "Migrate Liquidity"
 msgstr "Migrate Liquidity"
 
-#: 
-#~ msgid "Migrate     Liquidity"
-#~ msgstr "Migrate     Liquidity"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
 #: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/components/swapv2/SwapModalFooter.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Minimum received"
 msgstr "Minimum received"
-
-#: 
-#~ msgid "My Dashboard"
-#~ msgstr "My Dashboard"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/index.tsx
@@ -1089,11 +1115,8 @@ msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from 
 msgid "Open Access to <0/> Liquidity"
 msgstr "Open Access to <0/> Liquidity"
 
-#: 
-#~ msgid "Order Routing"
-#~ msgstr "Order Routing"
-
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 msgstr "Output is estimated. If the price changes by more than {0}% your transaction will revert."
 
@@ -1109,14 +1132,6 @@ msgstr "Permissionless and Frictionless Liquidity for DeFi"
 #: src/components/TransactionSettings/index.tsx
 msgid "Please Confirm"
 msgstr "Please Confirm"
-
-#: 
-#~ msgid "Please connect to the appropriate Ethereum network."
-#~ msgstr "Please connect to the appropriate Ethereum network."
-
-#: 
-#~ msgid "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
-#~ msgstr "Please connect to the appropriate Ethereum/Polygon/BSC/Avalanche network."
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate network."
@@ -1139,6 +1154,16 @@ msgstr "Pool Address"
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
 msgstr "Pool Found!"
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Pool Information"
+msgstr "Pool Information"
+
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Pool Ratio"
+msgstr "Pool Ratio"
 
 #: src/pages/RemoveLiquidity/migrate_sushi.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
@@ -1196,11 +1221,14 @@ msgid "Preferences"
 msgstr "Preferences"
 
 #: src/components/swapv2/AdvancedSwapDetails.tsx
-#: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Price"
 
+#: src/components/ConfirmAddModalBottom/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Price Impact"
 msgstr "Price Impact"
 
@@ -1216,6 +1244,16 @@ msgstr "Price Impact Too High"
 msgid "Price Range"
 msgstr "Price Range"
 
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Price impact is high"
+msgstr "Price impact is high"
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Price impact is too high"
+msgstr "Price impact is too high"
+
 #: src/components/PositionCard/index.tsx
 msgid "Price range {0}/{1}"
 msgstr "Price range {0}/{1}"
@@ -1224,11 +1262,6 @@ msgstr "Price range {0}/{1}"
 msgid "Price:"
 msgstr "Price:"
 
-#: 
-#~ msgid "Prices"
-#~ msgstr "Prices"
-
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "Prices and Pool share"
 msgstr "Prices and Pool share"
@@ -1258,14 +1291,6 @@ msgstr "Ratio"
 msgid "Ratio:"
 msgstr "Ratio:"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Receive Native Token"
-msgstr "Receive Native Token"
-
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Receive Wrapped Token"
-msgstr "Receive Wrapped Token"
-
 #: src/pages/Pools/index.tsx
 msgid "Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees are automatically claimed when you withdraw your liquidity."
 msgstr "Receive liquidity pool tokens representing your position and earn fees proportional to your pool share. Fees are automatically claimed when you withdraw your liquidity."
@@ -1284,9 +1309,15 @@ msgstr "Reduce the impact of IL"
 
 #: src/components/PositionCard/V1.tsx
 #: src/components/PositionCard/index.tsx
-#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Remove"
 msgstr "Remove"
+
+#: src/pages/RemoveLiquidity/ZapOut.tsx
+msgid "Remove Anyway"
+msgstr "Remove Anyway"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Remove Liquidity"
@@ -1326,10 +1357,6 @@ msgstr "Route"
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Routing through these tokens resulted in the best price for your trade."
 msgstr "Routing through these tokens resulted in the best price for your trade."
-
-#: 
-#~ msgid "START IN"
-#~ msgstr "START IN"
 
 #: src/pages/SwapV2/index.tsx
 msgid "Save {0}"
@@ -1382,6 +1409,10 @@ msgstr "Show More Pools"
 msgid "Show Portis"
 msgstr "Show Portis"
 
+#: src/components/LiquidityProviderMode/index.tsx
+msgid "Single Token"
+msgstr "Single Token"
+
 #: src/pages/Static/About.tsx
 #: src/pages/Static/About.tsx
 #: src/pages/Static/About.tsx
@@ -1396,6 +1427,11 @@ msgstr "Slippage Tolerance:"
 #: src/components/TransactionSettings/index.tsx
 msgid "Slippage tolerance"
 msgstr "Slippage tolerance"
+
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+msgid "Something went wrong"
+msgstr "Something went wrong"
 
 #: src/components/YieldPools/index.tsx
 msgid "Stake your DMM Liquidity Provider tokens to earn token rewards."
@@ -1419,6 +1455,16 @@ msgstr "Start preparing liquidity for our upcoming farms!"
 msgid "Starting In"
 msgstr "Starting In"
 
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Supply"
+msgstr "Supply"
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Supply Anyway"
+msgstr "Supply Anyway"
+
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1440,29 +1486,9 @@ msgstr "Swap Anyway"
 msgid "Swap Legacy"
 msgstr "Swap Legacy"
 
-#: 
-#~ msgid "Swap Token"
-#~ msgstr "Swap Token"
-
-#: 
-#~ msgid "Swap V2"
-#~ msgstr "Swap V2"
-
-#: 
-#~ msgid "Swap any token accross different exchange for the best price"
-#~ msgstr "Swap any token accross different exchange for the best price"
-
 #: src/components/swapv2/Routing.tsx
 msgid "Swap any token across different exchanges for the best price"
 msgstr "Swap any token across different exchanges for the best price"
-
-#: 
-#~ msgid "Swap directly through our DMM Pools"
-#~ msgstr "Swap directly through our DMM Pools"
-
-#: 
-#~ msgid "Swap using our new DEX aggregator"
-#~ msgstr "Swap using our new DEX aggregator"
 
 #: src/components/Vesting/index.tsx
 msgid "TOTAL HARVESTED REWARDS"
@@ -1482,7 +1508,8 @@ msgstr "Terms of Use"
 msgid "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 msgstr "The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 msgid "The price is deviating quite a lot from that market price, please be careful!"
 msgstr "The price is deviating quite a lot from that market price, please be careful!"
@@ -1527,6 +1554,10 @@ msgstr "Token Amount"
 msgid "Token Name"
 msgstr "Token Name"
 
+#: src/components/LiquidityProviderMode/index.tsx
+msgid "Token Pair"
+msgstr "Token Pair"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Token pool analytics →"
 msgstr "Token pool analytics →"
@@ -1569,20 +1600,14 @@ msgstr "Total Value Locked:"
 msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over a short period (duration depends on the pool)."
 
-#: 
-#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-#~ msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days."
-
-#: 
-#~ msgid "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
-#~ msgstr "Total rewards that can be harvested. Harvested rewards are locked and vested over ~{lockedTime} days."
-
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive."
 
 #: src/components/PoolPriceBar/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 msgid "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 msgstr "Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
 
@@ -1631,6 +1656,12 @@ msgstr "UNKNOWN"
 msgid "UNLOCKED"
 msgstr "UNLOCKED"
 
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
+#: src/pages/CreatePool/index.tsx
+msgid "Unamplified Pool existed"
+msgstr "Unamplified Pool existed"
+
 #: src/components/FarmHistoryModal/index.tsx
 msgid "Unknown"
 msgstr "Unknown"
@@ -1655,25 +1686,29 @@ msgstr "Unlocked: {0} {1}"
 msgid "Upcoming Farms"
 msgstr "Upcoming Farms"
 
-#: 
-#~ msgid "Upcoming Pools"
-#~ msgstr "Upcoming Pools"
-
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
 msgstr "Update list"
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/CreatePool/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Use Native Token"
 msgstr "Use Native Token"
 
-#: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/CreatePool/index.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/TokenPair.tsx
+#: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Use Wrapped Token"
 msgstr "Use Wrapped Token"
 
@@ -1730,6 +1765,14 @@ msgstr "Waiting For Confirmation"
 msgid "Wallet Address or ENS name"
 msgstr "Wallet Address or ENS name"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "We will automatically convert your single token deposit (either token from the token pair) and add your liquidity, all in a single transaction."
+msgstr "We will automatically convert your single token deposit (either token from the token pair) and add your liquidity, all in a single transaction."
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
+msgstr "We will automatically remove your liquidity and convert it into your desired token (either token from the token pair), all in a single transaction."
+
 #: src/components/Vesting/index.tsx
 #: src/components/Vesting/index.tsx
 msgid "What can KNC be used for?"
@@ -1738,14 +1781,6 @@ msgstr "What can KNC be used for?"
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Wrong Network"
-
-#: 
-#~ msgid "Yield"
-#~ msgstr "Yield"
-
-#: 
-#~ msgid "You Save"
-#~ msgstr "You Save"
 
 #: src/pages/CreatePool/index.tsx
 msgid "You are creating a new pool and will be the first liquidity provider. The ratio of tokens you supply below will set the initial price of this pool. Once you are satisfied with the rate, proceed to supply liquidity."
@@ -1759,33 +1794,41 @@ msgstr "You are creating a pool"
 msgid "You don’t have liquidity in this {type} pool yet."
 msgstr "You don’t have liquidity in this {type} pool yet."
 
-#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/TokenPair.tsx
+#: src/pages/AddLiquidity/ZapIn.tsx
 #: src/pages/RemoveLiquidity/migrate_uni.tsx
 msgid "You will receive"
 msgstr "You will receive"
+
+#: src/components/PositionCard/index.tsx
+msgid "Your Current Position"
+msgstr "Your Current Position"
+
+#: src/pages/AddLiquidity/ZapIn.tsx
+msgid "Your Pool Allocation"
+msgstr "Your Pool Allocation"
+
+#: src/components/ConfirmAddModalBottom/index.tsx
+#: src/components/PoolPriceBar/index.tsx
+msgid "Your Share of Pool"
+msgstr "Your Share of Pool"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
 msgstr "Your pool share:"
 
 #: src/components/PositionCard/PositionCardSUSHI.tsx
 #: src/components/PositionCard/PositionCardUNI.tsx
-#: src/components/PositionCard/index.tsx
 msgid "Your position"
 msgstr "Your position"
 
-#: 
-#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-#~ msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-
-#: 
-#~ msgid "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
-#~ msgstr "Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~{lockedTime} days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline)."
+#: src/components/PositionCard/index.tsx
+msgid "Your share of pool"
+msgstr "Your share of pool"
 
 #: src/components/Vesting/index.tsx
 msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
@@ -1820,10 +1863,6 @@ msgstr "Your transactions will appear here..."
 #: src/pages/Static/About.tsx
 msgid "and"
 msgstr "and"
-
-#: 
-#~ msgid "and Pool share"
-#~ msgstr "and Pool share"
 
 #: src/pages/Static/About.tsx
 msgid "better slippage"
@@ -1867,6 +1906,11 @@ msgstr "or the transaction will revert."
 msgid "per"
 msgstr "per"
 
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "pool"
+msgstr "pool"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "via {0}"
@@ -1882,10 +1926,6 @@ msgstr "{0} Pending"
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} added"
 msgstr "{0} added"
-
-#: 
-#~ msgid "{0} blocks"
-#~ msgstr "{0} blocks"
 
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} removed"
@@ -1908,10 +1948,6 @@ msgstr "{0}-{1}"
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{numTokensChanged} tokens updated"
 msgstr "{numTokensChanged} tokens updated"
-
-#: 
-#~ msgid "{remainingBlocks} blocks"
-#~ msgstr "{remainingBlocks} blocks"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "• Added by user"

@@ -15,8 +15,9 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract, getContractForReading } from '../utils'
 import { providers, useActiveWeb3React } from './index'
-import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES } from '../constants'
+import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, ZAP_ADDRESSES } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
+import ZAP_ABI from 'constants/abis/zap.json'
 import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
 import { useRewardLockerAddresses } from 'state/vesting/hooks'
@@ -158,6 +159,12 @@ export function useFactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
 
   return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
+}
+
+export function useZapContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+
+  return useContract(chainId && ZAP_ADDRESSES[chainId], ZAP_ABI)
 }
 
 export function useFairLaunchContracts(

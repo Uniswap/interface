@@ -13,6 +13,10 @@ const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: str
 `
 export default Card
 
+export const BlackCard = styled(Card)`
+  background-color: ${({ theme }) => theme.buttonBlack};
+`
+
 export const LightCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg1};

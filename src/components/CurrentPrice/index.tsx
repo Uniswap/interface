@@ -1,19 +1,19 @@
-import React from 'react'
-import { Currency, Price } from '@dynamic-amm/sdk'
-import { useContext } from 'react'
-import { Repeat } from 'react-feather'
+import React, { useContext, useState } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+
+import { Currency, Price } from '@dynamic-amm/sdk'
+import { ButtonEmpty } from 'components/Button'
+import SwitchIcon from 'components/Icons/SwitchIcon'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 interface CurrentPriceProps {
   price?: Price
-  showInverted: boolean
-  setShowInverted: (showInverted: boolean) => void
 }
 
-export default function CurrentPrice({ price, showInverted, setShowInverted }: CurrentPriceProps) {
+export default function CurrentPrice({ price }: CurrentPriceProps) {
   const theme = useContext(ThemeContext)
+  const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const formattedPrice = showInverted ? price?.toSignificant(4) : price?.invert()?.toSignificant(4)
 
@@ -25,14 +25,18 @@ export default function CurrentPrice({ price, showInverted, setShowInverted }: C
     : `1 ${nativeQuote?.symbol} = ${formattedPrice ?? '-'} ${nativeBase?.symbol}`
 
   return (
-    <Text fontWeight={500} fontSize={14} style={{ alignItems: 'center', display: 'flex' }}>
+    <Text fontWeight={400} fontSize={14}>
       {show ? (
-        <>
-          <div style={{ marginRight: '8px' }}>{label}</div>
-          <div onClick={() => setShowInverted(!showInverted)}>
-            <Repeat size={14} color={theme.text1} />
-          </div>
-        </>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ marginRight: '4px' }}>{label}</div>
+          <ButtonEmpty
+            padding="0"
+            width="fit-content"
+            onClick={() => setShowInverted && setShowInverted(!showInverted)}
+          >
+            <SwitchIcon color={theme.text} />
+          </ButtonEmpty>
+        </div>
       ) : (
         '-'
       )}

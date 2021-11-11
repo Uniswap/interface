@@ -118,14 +118,16 @@ export function colors(darkMode: boolean): Colors {
     evenRow: darkMode ? '#303e46' : '#ffffff',
 
     // other
+    red: darkMode ? '#FF537B' : '#FF6871',
     red1: '#FF6871',
     red2: '#F82D3A',
     red3: '#D60000',
+    green: '#31CB9E',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#08a1e7',
-    warning: '#eeab2e',
+    warning: '#FFAF01',
     lightBlue: '#78d5ff',
     darkBlue: '#1183b7',
     blue: darkMode ? '#78d5ff' : '#08a1e7'

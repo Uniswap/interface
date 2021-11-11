@@ -1,6 +1,6 @@
 import { ChainId, ETHER } from '@dynamic-amm/sdk'
-import React, { useState, useRef } from 'react'
-import { Text, Flex } from 'rebass'
+import React from 'react'
+import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
@@ -16,7 +16,6 @@ import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
 import { convertToNativeTokenFromETH } from 'utils/dmm'
 import Web3Network from 'components/Web3Network'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -276,53 +275,6 @@ const NewText = styled.div`
   color: #ff537b;
 `
 
-const TriangleDown = styled.div<{ active?: boolean }>`
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid ${({ theme, active }) => (active ? theme.text : theme.text2)};
-  margin-left: 8px;
-  margin-top: 2px;
-
-  :hover {
-    border-top: 6px solid ${({ theme }) => theme.text};
-  }
-`
-
-const SwapPopover = styled.div`
-  border-radius: 8px;
-  padding: 1rem 0;
-  background: ${({ theme }) => theme.tableHeader};
-  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.32));
-  position: absolute;
-  top: 30px;
-  width: 250px;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    width: 225px;
-  `}
-`
-
-const SwapMenuWrapper = styled.div<{ active: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme, active }) => (active ? theme.text : theme.text2)};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-`
-
 const getPoolsMenuLink = (chainId?: ChainId) => {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -363,10 +315,6 @@ export default function Header() {
     return ''
   }
 
-  const [showSwapMenu, setShowSwapMenu] = useState(false)
-  const node = useRef<HTMLDivElement>()
-  useOnClickOutside(node, () => showSwapMenu && setShowSwapMenu(false))
-
   const bridgeLink = getBridgeLink()
 
   return (
@@ -387,50 +335,6 @@ export default function Header() {
             <Trans>Swap</Trans>
           </StyledNavLink>
 
-          {/*         <SwapMenuWrapper active={showSwapMenu || window.location.href.includes('swap')} role="button">
-            <Flex
-              alignItems="center"
-              sx={{ position: 'relative' }}
-              onMouseEnter={() => setShowSwapMenu(true)}
-              onClick={() => setShowSwapMenu(true)}
-            >
-              <Trans>Swap</Trans>
-              <TriangleDown active={showSwapMenu || window.location.href.includes('swap')} />
-              {showSwapMenu && (
-                <SwapPopover onMouseLeave={() => setShowSwapMenu(false)} ref={node as any}>
-                  <StyledNavLink
-                    id={`swapv2-nav-link`}
-                    to={'/swap'}
-                    isActive={match => Boolean(match)}
-                    style={{ flexDirection: 'column' }}
-                  >
-                    <Text>
-                      <Trans>Swap</Trans>
-                    </Text>
-                    <Text fontSize={12} marginTop="6px">
-                      <Trans>Swap using our new DEX aggregator</Trans>
-                    </Text>
-                  </StyledNavLink>
-
-                  <StyledNavLink
-                    id={`swapv2-nav-link`}
-                    to={'/swap-legacy'}
-                    isActive={match => Boolean(match)}
-                    style={{ marginTop: '1rem', flexDirection: 'column' }}
-                  >
-                    <Text>
-                      <Trans>Classic Swap</Trans>
-                    </Text>
-                    <Text fontSize={12} marginTop="6px">
-                      <Trans>Swap directly through our DMM Pools</Trans>
-                    </Text>
-                  </StyledNavLink>
-                </SwapPopover>
-
-              )}
-            </Flex>
-          </SwapMenuWrapper>
-          */}
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
             <Trans>Pools</Trans>
           </StyledNavLink>

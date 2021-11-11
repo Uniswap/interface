@@ -10,7 +10,7 @@ import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
+import { NarrowPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
@@ -83,7 +83,7 @@ export default function PoolFinder() {
       }
       return pairState === PairState.EXISTS && hasPosition && pair
     })
-    .map(([_, pair], index) => !!pair && <MinimalPositionCard key={index} pair={pair} border="1px solid #CED0D9" />)
+    .map(([_, pair], index) => !!pair && <NarrowPositionCard key={index} pair={pair} border="1px solid #CED0D9" />)
 
   const handleSearchDismiss = useCallback(() => {
     setShowSearch(false)

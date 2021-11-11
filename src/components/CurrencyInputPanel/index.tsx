@@ -10,6 +10,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { ReactComponent as SwitchIcon } from '../../assets/svg/switch.svg'
 import { useActiveWeb3React } from '../../hooks'
 import Card from '../Card'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
@@ -21,6 +22,15 @@ const InputRow = styled.div`
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+  height: 35%;
+
+  path {
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.primary1)};
+    stroke-width: 1.5px;
+  }
+`
+
+const StyledSwitchIcon = styled(SwitchIcon)<{ selected: boolean }>`
   height: 35%;
 
   path {
@@ -120,6 +130,7 @@ interface CurrencyInputPanelProps {
   positionMax?: 'inline' | 'top'
   label?: string
   onCurrencySelect?: (currency: Currency) => void
+  onSwitchCurrency?: () => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
   hideBalance?: boolean
@@ -135,6 +146,7 @@ interface CurrencyInputPanelProps {
   fontSize?: string
   customNode?: ReactNode
   estimatedUsd?: string
+  isSwitchMode?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -145,6 +157,7 @@ export default function CurrencyInputPanel({
   positionMax = 'inline',
   label = '',
   onCurrencySelect,
+  onSwitchCurrency,
   currency,
   disableCurrencySelect = false,
   hideBalance = false,
@@ -159,7 +172,8 @@ export default function CurrencyInputPanel({
   hideLogo = false,
   fontSize,
   customNode,
-  estimatedUsd
+  estimatedUsd,
+  isSwitchMode = false
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
@@ -220,7 +234,7 @@ export default function CurrencyInputPanel({
                 />
                 {estimatedUsd ? (
                   <Text fontSize="0.875rem" fontWeight="500" color={theme.subText}>
-                    {estimatedUsd}
+                    ~{estimatedUsd}
                   </Text>
                 ) : (
                   account &&
@@ -238,8 +252,10 @@ export default function CurrencyInputPanel({
               selected={!!currency}
               className="open-currency-select-button"
               onClick={() => {
-                if (!disableCurrencySelect) {
+                if (!disableCurrencySelect && !isSwitchMode) {
                   setModalOpen(true)
+                } else if (!disableCurrencySelect && isSwitchMode && onSwitchCurrency) {
+                  onSwitchCurrency()
                 }
               }}
             >
@@ -266,13 +282,14 @@ export default function CurrencyInputPanel({
                       : nativeCurrency?.symbol) || <Trans>Select a token</Trans>}
                   </StyledTokenName>
                 )}
-                {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                {!disableCurrencySelect && !isSwitchMode && <StyledDropDown selected={!!currency} />}
+                {!disableCurrencySelect && isSwitchMode && <StyledSwitchIcon selected={!!currency} />}
               </Aligner>
             </CurrencySelect>
           </InputRow>
           {customNode}
         </Container>
-        {!disableCurrencySelect && onCurrencySelect && (
+        {!disableCurrencySelect && !isSwitchMode && onCurrencySelect && (
           <CurrencySearchModal
             isOpen={modalOpen}
             onDismiss={handleDismissSearch}

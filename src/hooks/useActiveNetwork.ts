@@ -75,7 +75,7 @@ export const ADD_NETWORK_PARAMS: {
       symbol: 'BNB',
       decimals: 18
     },
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    rpcUrls: ['https://bsc.dmm.exchange/v1/mainnet/geth?appId=prod-dmm-interface'],
     blockExplorerUrls: ['https://bscscan.com']
   },
   [ChainId.AVAXMAINNET]: {
@@ -134,17 +134,43 @@ export function useActiveNetwork() {
         return
       }
 
+      const switchNetworkParams = SWITCH_NETWORK_PARAMS[chainId]
+      const addNetworkParams = ADD_NETWORK_PARAMS[chainId]
+
       const isNotConnected = !(library && library.provider && library.provider.isMetaMask)
       if (isNotConnected) {
         dispatch(updateChainIdWhenNotConnected(chainId))
+
+        if (window.ethereum?.isMetaMask) {
+          try {
+            await (window.ethereum as any).request({
+              method: 'wallet_switchEthereumChain',
+              params: [switchNetworkParams]
+            })
+          } catch (switchError) {
+            // This error code indicates that the chain has not been added to MetaMask.
+            if (switchError.code === 4902 || switchError.code === -32603) {
+              try {
+                await (window.ethereum as any).request({
+                  method: 'wallet_addEthereumChain',
+                  params: [addNetworkParams]
+                })
+                history.push(target)
+              } catch (addError) {
+                console.error(addError)
+              }
+            } else {
+              // handle other "switch" errors
+              console.error(switchError)
+            }
+          }
+        }
+
         setTimeout(() => {
           history.push(target)
         }, 3000)
         return
       }
-
-      const switchNetworkParams = SWITCH_NETWORK_PARAMS[chainId]
-      const addNetworkParams = ADD_NETWORK_PARAMS[chainId]
 
       try {
         await library?.send('wallet_switchEthereumChain', [switchNetworkParams, account])

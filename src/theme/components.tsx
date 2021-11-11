@@ -277,3 +277,7 @@ export const ExtraSmallOnly = styled.span`
     display: block;
   `};
 `
+
+export const UppercaseText = styled.span`
+  text-transform: uppercase;
+`

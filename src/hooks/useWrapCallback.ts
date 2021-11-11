@@ -39,6 +39,8 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
+    const nativeTokenSymbol = convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol
+
     if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
@@ -54,9 +56,7 @@ export default function useWrapCallback(
                     gasLimit: calculateGasMargin(estimateGas)
                   })
                   addTransaction(txReceipt, {
-                    summary: `Wrap ${inputAmount.toSignificant(6)} ${
-                      convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol
-                    } to W${convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol}`
+                    summary: `Wrap ${inputAmount.toSignificant(6)} ${nativeTokenSymbol} to W${nativeTokenSymbol}`
                   })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -80,7 +80,9 @@ export default function useWrapCallback(
                   const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`, {
                     gasLimit: calculateGasMargin(estimateGas)
                   })
-                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+                  addTransaction(txReceipt, {
+                    summary: `Unwrap ${inputAmount.toSignificant(6)} W${nativeTokenSymbol} to ${nativeTokenSymbol}`
+                  })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }
