@@ -27,7 +27,7 @@ const sagaMiddleware = createSagaMiddleware({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['wallet', 'balances', 'chains'],
+  whitelist: ['wallet', 'balances', 'chains', 'tokenLists', 'tokens'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

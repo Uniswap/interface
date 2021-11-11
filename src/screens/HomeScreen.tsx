@@ -1,38 +1,48 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import React, { useState } from 'react'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
-import { Box } from 'src/components/layout/Box'
+import { AccountHeader } from 'src/components/AccountHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { TokenBalanceItem } from 'src/components/TokenBalanceItem/TokenBalanceItem'
+import { TokenBalanceList } from 'src/components/TokenBalanceList'
 import { ChainId } from 'src/constants/chains'
-import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
-import { AccountHeader } from '../components/AccountHeader'
+import { useEthBalance, useTokenBalances } from 'src/features/balances/hooks'
+import { useAllTokens } from 'src/features/tokens/useTokens'
+import { useActiveAccount } from 'src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
 
 export function HomeScreen({ navigation }: Props) {
-  const ethBalance = useActiveAccountEthBalance(ChainId.RINKEBY)
+  const [currentChain] = useState(ChainId.MAINNET)
+  const activeAccount = useActiveAccount()
+  const chainIdToTokens = useAllTokens()
+  const [tokenBalances, tokenBalancesLoading] = useTokenBalances(
+    currentChain,
+    chainIdToTokens,
+    activeAccount?.address
+  )
+  const ethBalance = useEthBalance(currentChain, activeAccount?.address)
 
-  // TODO: Handle no activeAccount
-  // TODO: Fetch balances against a token list across chains, combine with TokenLists and TokenInfo to get image
+  if (!activeAccount)
+    return (
+      <Screen backgroundColor="mainBackground">
+        <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
+      </Screen>
+    )
+
+  const filteredTokenBalances = tokenBalances
+    ? (Object.values(tokenBalances).filter(
+        (balance) => balance && balance.greaterThan(0)
+      ) as CurrencyAmount<Currency>[])
+    : []
+
+  const balances = ethBalance ? [ethBalance, ...filteredTokenBalances] : filteredTokenBalances
 
   return (
     <Screen backgroundColor="mainBackground">
-      <ScrollView contentContainerStyle={style.scrollView}>
-        <Box flex={1}>
-          <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
-          <Box flex={1} backgroundColor="gray50" />
-        </Box>
-        <Box flex={1} backgroundColor="mainBackground" padding="md">
-          <TokenBalanceItem balance={ethBalance} />
-        </Box>
-      </ScrollView>
+      <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
+      <TokenBalanceList loading={tokenBalancesLoading} balances={balances} />
     </Screen>
   )
 }
-
-const style = StyleSheet.create({
-  scrollView: { flex: 1 },
-})

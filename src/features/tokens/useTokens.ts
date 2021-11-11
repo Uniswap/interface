@@ -2,14 +2,13 @@
 
 import { Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { useCombinedActiveList, useUnsupportedTokenList } from 'src/features/tokenLists/hooks'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
+import { ChainIdToAddressToToken } from 'src/features/tokens/types'
 import { useUserAddedTokens } from 'src/features/tokens/userAddedTokens'
 import { toSupportedChain } from 'src/utils/chainId'
 import { getKeys } from 'src/utils/objects'
-
-type ChainIdToAddressToToken = ChainIdTo<Record<Address, Token>>
 
 export function useAllTokens(): ChainIdToAddressToToken {
   const allTokens = useCombinedActiveList()

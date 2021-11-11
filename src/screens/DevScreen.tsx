@@ -12,14 +12,12 @@ import { Text } from 'src/components/Text'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { fetchBalancesActions } from 'src/features/balances/fetchBalances'
-import { useActiveAccountEthBalance } from 'src/features/balances/hooks'
 import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTimestamp'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useGasFee } from 'src/features/gas/useGasFee'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
@@ -27,7 +25,6 @@ export function DevScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [currentChain] = useState(ChainId.RINKEBY)
-  const ethBalance = useActiveAccountEthBalance(ChainId.RINKEBY)
 
   const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
@@ -52,7 +49,6 @@ export function DevScreen({ navigation }: Props) {
   const onPressGetBalance = async () => {
     if (!activeAccount) return
     dispatch(fetchBalancesActions.trigger(activeAccount.address))
-    logger.debug('HomeScreen', '', 'balances', ethBalance)
   }
 
   const onPressSwap = () => navigation.navigate(Screens.Swap)
