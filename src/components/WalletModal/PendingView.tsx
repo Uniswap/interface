@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractConnector } from 'legacy-web3-react/abstract-connector'
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
 
