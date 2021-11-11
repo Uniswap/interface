@@ -7,9 +7,4 @@ describe('#calculateGasMargin', () => {
     expect(calculateGasMargin(BigNumber.from(1000)).toString()).toEqual('1200')
     expect(calculateGasMargin(BigNumber.from(50)).toString()).toEqual('60')
   })
-
-  it('optimism - adds 20%', () => {
-    expect(calculateGasMargin(BigNumber.from(1000)).toString()).toEqual('1200')
-    expect(calculateGasMargin(BigNumber.from(50)).toString()).toEqual('60')
-  })
 })
