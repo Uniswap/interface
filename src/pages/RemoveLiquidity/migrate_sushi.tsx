@@ -30,7 +30,7 @@ import { calculateGasMargin, calculateSlippageAmount, getMigratorContract, short
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { MaxButton, Wrapper } from '../Pool/styleds'
+import { Wrapper } from '../Pool/styleds'
 import { useApproveCallback as useApproveCallbackSUSHI, ApprovalState } from '../../hooks/useApproveCallbackSUSHI'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
@@ -45,6 +45,7 @@ import { useDerivedMintInfoMigration } from 'state/mint/hooks_for_migration'
 import isZero from 'utils/isZero'
 import { tokenAmountDmmToSushi } from 'utils/dmm'
 import { useUnAmplifiedPair, useUnAmplifiedPairsFull } from 'data/Reserves'
+import { MaxButton } from './styled'
 
 const DashedLine = styled.div`
   width: 100%;

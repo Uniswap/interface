@@ -7,10 +7,11 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
+import { BIG_INT_ZERO, DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, UppercaseText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonOutlined } from '../Button'
@@ -22,9 +23,12 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import WarningRightIcon from 'components/Icons/WarningRightIcon'
 import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO, DMM_ANALYTICS_URL } from '../../constants'
 import { priceRangeCalcByPair, getMyLiquidity, useCurrencyConvertedToNative } from 'utils/dmm'
 import { UserLiquidityPosition } from 'state/pools/hooks'
+import useTheme from 'hooks/useTheme'
+import { TokenWrapper } from 'pages/AddLiquidity/styled'
+import { useTokensPrice } from 'state/application/hooks'
+import { formattedNum } from 'utils'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -42,6 +46,37 @@ const StyledPositionCard = styled(LightCard)`
   position: relative;
   overflow: hidden;
   border-radius: 8px;
+`
+
+const StyledMinimalPositionCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: ${({ theme }) => theme.background};
+  border-radius: 4px;
+  padding: 1rem;
+  align-items: flex-start;
+  gap: 1rem;
+
+  @media only screen and (min-width: 1000px) {
+    flex-direction: row;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 1rem;
+  }
+`
+
+const MinimalPositionItem = styled(AutoColumn)<{ noBorder?: boolean; noPadding?: boolean }>`
+  width: 100%;
+  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border4}`)};
+  padding-bottom: ${({ noPadding }) => (noPadding ? '0' : '1rem')};
+
+  @media only screen and (min-width: 1000px) {
+    width: fit-content;
+    border-bottom: none;
+    border-right: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border4}`)};
+    padding-right: ${({ noPadding }) => (noPadding ? '0' : '1rem')};
+    padding-bottom: 0;
+  }
 `
 
 const ButtonSecondary2 = styled(ButtonSecondary)`
@@ -85,6 +120,13 @@ const WarningMessage = styled(Text)`
 const ButtonOutlined2 = styled(ButtonOutlined)`
   font-size: inherit;
 `
+
+const formattedUSDPrice = (tokenAmount: TokenAmount, price: number) => {
+  const usdValue = parseFloat(tokenAmount.toSignificant(6)) * price
+
+  return <span>{`(~${formattedNum(usdValue.toString(), true)})`}</span>
+}
+
 interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
@@ -93,13 +135,12 @@ interface PositionCardProps {
   myLiquidity?: UserLiquidityPosition
 }
 
-export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
+export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCardProps) {
   const { account } = useActiveWeb3React()
+  const theme = useTheme()
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
   const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
-
-  const [showMore, setShowMore] = useState(false)
 
   const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
@@ -123,70 +164,91 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
   const native0 = useCurrencyConvertedToNative(currency0 || undefined)
   const native1 = useCurrencyConvertedToNative(currency1 || undefined)
+
+  const usdPrices = useTokensPrice([pair.token0, pair.token1])
+
   return (
     <>
-      <StyledPositionCard border={border}>
-        <AutoColumn gap="12px">
-          <FixedHeightRow>
-            <RowFixed>
-              <Text fontWeight={500} fontSize={16}>
-                <Trans>Your position</Trans>
+      <StyledMinimalPositionCard>
+        <MinimalPositionItem style={{ height: '100%', alignItems: 'center' }}>
+          <Text fontWeight={500} fontSize={16}>
+            <Trans>Your Current Position</Trans>
+          </Text>
+        </MinimalPositionItem>
+
+        <MinimalPositionItem gap="4px">
+          <RowFixed>
+            <DoubleCurrencyLogo currency0={native0} currency1={native1} size={16} />
+            <UppercaseText style={{ marginLeft: '4px' }}>
+              <Text fontWeight={500} fontSize={12} color={theme.subText}>
+                {native0?.symbol}/{native1?.symbol} LP Tokens
               </Text>
-            </RowFixed>
-          </FixedHeightRow>
-          <FixedHeightRow onClick={() => setShowMore(!showMore)}>
-            <RowFixed>
-              <DoubleCurrencyLogo currency0={native0} currency1={native1} margin={true} size={20} />
-              <Text fontWeight={500} fontSize={20}>
-                {native0?.symbol}/{native1?.symbol}
-              </Text>
-            </RowFixed>
-            <RowFixed>
-              <Text fontWeight={500} fontSize={20}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}{' '}
-              </Text>
-            </RowFixed>
-          </FixedHeightRow>
-          <AutoColumn gap="4px">
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                <Trans>Your pool share:</Trans>
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
-                {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
-              </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                {native0?.symbol}:
-              </Text>
+            </UppercaseText>
+          </RowFixed>
+          <RowFixed>
+            <Text fontWeight={400} fontSize={14}>
+              {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}{' '}
+            </Text>
+          </RowFixed>
+        </MinimalPositionItem>
+
+        <MinimalPositionItem>
+          <AutoRow justify="space-evenly" style={{ gap: '1rem' }}>
+            <MinimalPositionItem>
+              <TokenWrapper>
+                <CurrencyLogo currency={native0} size="16px" />
+                <Text fontSize={12} fontWeight={500}>
+                  {native0?.symbol}
+                </Text>
+              </TokenWrapper>
+
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token0Deposited?.toSignificant(6)}
+                  <Text fontSize={14} fontWeight={400}>
+                    {token0Deposited?.toSignificant(6)} {formattedUSDPrice(token0Deposited, usdPrices[0])}
                   </Text>
                 </RowFixed>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                {native1?.symbol}:
-              </Text>
+            </MinimalPositionItem>
+
+            <MinimalPositionItem noBorder={true} noPadding={true}>
+              <TokenWrapper>
+                <CurrencyLogo currency={native1} size="16px" />
+                <Text fontSize={12} fontWeight={500}>
+                  {native1?.symbol}
+                </Text>
+              </TokenWrapper>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                    {token1Deposited?.toSignificant(6)}
+                  <Text fontSize={14} fontWeight={400}>
+                    {token1Deposited?.toSignificant(6)} {formattedUSDPrice(token1Deposited, usdPrices[1])}
                   </Text>
                 </RowFixed>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
-          </AutoColumn>
-        </AutoColumn>
-      </StyledPositionCard>
+            </MinimalPositionItem>
+          </AutoRow>
+        </MinimalPositionItem>
+
+        <MinimalPositionItem gap="4px" noBorder={true} noPadding={true}>
+          <Text fontSize={12} fontWeight={500} color={theme.subText}>
+            <UppercaseText>
+              <Trans>Your share of pool</Trans>
+            </UppercaseText>
+          </Text>
+          <Text fontSize={14} fontWeight={400}>
+            {poolTokenPercentage && poolTokenPercentage.greaterThan('0')
+              ? poolTokenPercentage?.lessThan(ONE_BIPS)
+                ? '<0.01'
+                : poolTokenPercentage?.toFixed(2)
+              : '0'}
+            %
+          </Text>
+        </MinimalPositionItem>
+      </StyledMinimalPositionCard>
     </>
   )
 }

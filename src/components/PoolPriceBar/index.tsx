@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { ButtonEmpty } from 'components/Button'
 import Card from 'components/Card'
-import { FixedHeightRow } from 'components/PositionCard'
 import QuestionHelper from 'components/QuestionHelper'
 import { Currency, Fraction, JSBI, Pair, Percent, Price } from '@dynamic-amm/sdk'
 import React, { ReactNode, useContext } from 'react'
@@ -11,7 +10,7 @@ import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { useCurrencyConvertedToNative, priceRangeCalc, priceRangeCalcByPair } from 'utils/dmm'
 import { AutoColumn } from '../../components/Column'
-import { AutoRow, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
@@ -55,6 +54,7 @@ const PoolPriceBarWrapper = styled.div<{ isAdd?: boolean }>`
 const PoolPriceBarItem = styled.div<{ isAdd?: boolean }>`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   @media only screen and (min-width: 1000px) {
     flex-direction: ${({ isAdd }) => (isAdd ? 'row' : 'column-reverse')};
@@ -64,8 +64,8 @@ const PoolPriceBarItem = styled.div<{ isAdd?: boolean }>`
 export const DefaultPriceRange = () => {
   return (
     <>
-      <TYPE.black>Max: {DEFAULT_MAX_PRICE}</TYPE.black>
-      <TYPE.black>Min: {DEFAULT_MIN_PRICE}</TYPE.black>
+      <TYPE.black fontWeight={400}>Max: {DEFAULT_MAX_PRICE}</TYPE.black>
+      <TYPE.black fontWeight={400}>Min: {DEFAULT_MIN_PRICE}</TYPE.black>
     </>
   )
 }
@@ -100,19 +100,19 @@ export function PoolPriceBar({
       {noLiquidity && (
         <>
           <PoolPriceBarItem>
-            <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
+            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1}>
               {nativeB?.symbol} <Trans>per</Trans> {nativeA?.symbol}
             </Text>
-            <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
+            <TYPE.black fontWeight={400} fontSize={14} color={theme.text}>
               {price?.toSignificant(6) ?? '-'}
             </TYPE.black>
           </PoolPriceBarItem>
 
           <PoolPriceBarItem>
-            <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
+            <Text fontWeight={400} fontSize={14} color={theme.subText} pt={1}>
               {nativeA?.symbol} <Trans>per</Trans> {nativeB?.symbol}
             </Text>
-            <TYPE.black fontWeight={500} fontSize={14} color={theme.text}>
+            <TYPE.black fontWeight={400} fontSize={14} color={theme.text}>
               {price?.invert()?.toSignificant(6) ?? '-'}
             </TYPE.black>
           </PoolPriceBarItem>
@@ -120,13 +120,17 @@ export function PoolPriceBar({
       )}
 
       <PoolPriceBarItem isAdd={!noLiquidity}>
-        <Text fontWeight={500} fontSize={14} color={theme.subText} pt={1}>
-          <Trans>Share of Pool</Trans>
+        <Text fontWeight={400} fontSize={14} color={theme.subText} pt={noLiquidity ? 1 : 0} style={{ flex: 1 }}>
+          {noLiquidity ? <Trans>Share of Pool</Trans> : <Trans>Your Share of Pool</Trans>}
         </Text>
-        <TYPE.black fontWeight={500} color={theme.text} fontSize={14}>
+        <TYPE.black fontWeight={400} color={theme.text} fontSize={14} style={{ flex: noLiquidity ? 'none' : 1 }}>
           {noLiquidity && price
             ? '100'
-            : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
+            : poolTokenPercentage && poolTokenPercentage.greaterThan('0')
+            ? poolTokenPercentage?.lessThan(ONE_BIPS)
+              ? '<0.01'
+              : poolTokenPercentage?.toFixed(2)
+            : '0'}
           %
         </TYPE.black>
       </PoolPriceBarItem>
@@ -141,18 +145,18 @@ export function ToggleComponent({
 }: {
   children: ReactNode
   title: string
-  question: string
+  question?: string
 }) {
   const theme = useContext(ThemeContext)
   const [showDetails, setShowDetails] = useState(true)
   return (
     <>
-      <FixedHeightRow style={{ marginBottom: '16px' }}>
+      <RowBetween style={{ paddingBottom: '14px', borderBottom: `1px solid ${theme.border4}` }}>
         <AutoRow>
-          <Text fontWeight={500} fontSize={14} color={theme.text2}>
+          <Text fontWeight={500} fontSize={16} color={theme.text}>
             {title}
           </Text>
-          <QuestionHelper text={question} />
+          {question && <QuestionHelper text={question} />}
         </AutoRow>
         <RowFixed gap="8px">
           <ButtonEmpty
@@ -168,7 +172,7 @@ export function ToggleComponent({
             )}
           </ButtonEmpty>
         </RowFixed>
-      </FixedHeightRow>
+      </RowBetween>
       {showDetails && <>{children}</>}
     </>
   )
@@ -218,7 +222,7 @@ export function PoolPriceRangeBar({
     return (
       <AutoColumn gap="md">
         <AutoRow justify="space-between" gap="4px">
-          <AutoColumn gap="sm">
+          <AutoColumn gap="4px">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeA?.symbol}/{nativeB?.symbol}
             </Text>
@@ -226,13 +230,13 @@ export function PoolPriceRangeBar({
               <InvalidAMPPriceRange />
             ) : show && !!pair ? (
               <>
-                <TYPE.black color={theme.text}>
+                <TYPE.black color={theme.text} fontWeight={400}>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
-                <TYPE.black color={theme.text}>
+                <TYPE.black color={theme.text} fontWeight={400}>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 0 : 1
@@ -243,7 +247,7 @@ export function PoolPriceRangeBar({
               <DefaultPriceRange />
             )}
           </AutoColumn>
-          <AutoColumn gap="sm" justify="end">
+          <AutoColumn gap="4px" justify="end">
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {nativeB?.symbol}/{nativeA?.symbol}
             </Text>
@@ -251,13 +255,13 @@ export function PoolPriceRangeBar({
               <InvalidAMPPriceRange />
             ) : show && !!pair ? (
               <>
-                <TYPE.black color={theme.text}>
+                <TYPE.black color={theme.text} fontWeight={400}>
                   Max:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0
                   ][1]?.toSignificant(6) ?? '-'}
                 </TYPE.black>
-                <TYPE.black color={theme.text}>
+                <TYPE.black color={theme.text} fontWeight={400}>
                   Min:{' '}
                   {priceRangeCalcByPair(pair)[
                     currencies[Field.CURRENCY_A]?.symbol === pair.token0.symbol ? 1 : 0

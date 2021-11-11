@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken, lighten } from 'polished'
+import { darken, lighten, rgba } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronUp, ChevronDown } from 'react-feather'
@@ -247,37 +247,35 @@ export const ButtonWhite = styled(Base)`
 `
 
 const ButtonConfirmedStyle = styled(Base)`
-  background-color: ${({ theme }) => lighten(0.5, theme.green1)};
-  color: ${({ theme }) => theme.green1};
-  border: 1px solid ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => rgba(theme.green, 0.2)};
+  color: ${({ theme }) => theme.green};
 
   &:disabled {
-    opacity: 50%;
     cursor: auto;
   }
 `
 
 const ButtonErrorStyle = styled(Base)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
+  background-color: ${({ theme }) => theme.red};
+  border: 1px solid ${({ theme }) => theme.red};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
-    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red)};
+    background-color: ${({ theme }) => darken(0.05, theme.red)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+    background-color: ${({ theme }) => darken(0.05, theme.red)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red1)};
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red)};
+    background-color: ${({ theme }) => darken(0.1, theme.red)};
   }
   &:disabled {
     opacity: 50%;
     cursor: auto;
     box-shadow: none;
-    background-color: ${({ theme }) => theme.red1};
-    border: 1px solid ${({ theme }) => theme.red1};
+    background-color: ${({ theme }) => theme.red};
+    border: 1px solid ${({ theme }) => theme.red};
   }
 `
 

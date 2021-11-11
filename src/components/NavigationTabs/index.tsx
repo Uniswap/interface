@@ -17,6 +17,14 @@ const Tabs = styled.div`
   justify-content: space-evenly;
 `
 
+const Wrapper = styled(RowBetween)`
+  padding: 1rem 0 4px;
+
+  @media only screen and (min-width: 768px) {
+    padding: 1rem 0;
+  }
+`
+
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
@@ -107,7 +115,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 0' }}>
+      <Wrapper>
         <ButtonBack width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonBack>
@@ -122,7 +130,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
           />
         </div>
         <TransactionSettings />
-      </RowBetween>
+      </Wrapper>
     </Tabs>
   )
 }
