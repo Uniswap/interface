@@ -169,6 +169,7 @@ export const Warning = styled.div`
   background: ${({ theme }) => `${theme.warning}20`};
   border-radius: 0.625rem;
   padding: 0.75rem 1rem;
+  margin-bottom: 28px;
 `
 
 export const DetailWrapper = styled(AutoColumn)`
