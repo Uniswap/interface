@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 16:07\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -231,10 +231,6 @@ msgstr "Importo"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Si è verificato un errore durante il tentativo di eseguire questo scambio. Potrebbe essere necessario aumentare la tolleranza allo slittamento. Se ciò non funziona, potrebbe esserci un'incompatibilità con il token che stai scambiando. Nota: la commissione sui token di trasferimento e rebase non è compatibile con Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analisi"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -445,10 +441,6 @@ msgstr "Chiudi"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "Chiuso"
-
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Codice"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
@@ -835,6 +827,7 @@ msgid "Get support on Discord"
 msgstr "Ottieni supporto su Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Centro assistenza"
 
@@ -1429,6 +1422,10 @@ msgstr "Rimozione di {0} {1} e {2} {3}"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Rimozione {0} {1} e{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Funzionalità di richiesta"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx

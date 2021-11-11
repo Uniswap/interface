@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 16:07\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -231,10 +231,6 @@ msgstr "จำนวน"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "การวิเคราะห์"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -445,10 +441,6 @@ msgstr "ปิด I"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
 msgstr "ปิด"
-
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "รหัส"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
@@ -835,6 +827,7 @@ msgid "Get support on Discord"
 msgstr "รับการสนับสนุนบน Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "ศูนย์ช่วยเหลือ"
 
@@ -1429,6 +1422,10 @@ msgstr "กำลังลบ {0} {1} และ {2} {3}"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "กำลังลบ {0} {1} และ{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "ขอคุณสมบัติ"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
