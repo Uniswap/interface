@@ -4,15 +4,21 @@ import { injected, ledger, walletconnect, walletlink } from '../connectors'
 import { PopularPair } from 'state/pair/types'
 
 export const ZAP_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
   [ChainId.ROPSTEN]: '0xc33D1124c43cE3d020d1153fa0593eB9Ebc75Fb0',
-  [ChainId.MATIC]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '0xF79B1ea5566Ab2120f58bA8174055e9Eb8526975' : '',
+  [ChainId.MATIC]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging'
+      ? '0xF79B1ea5566Ab2120f58bA8174055e9Eb8526975'
+      : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
   [ChainId.MUMBAI]: '',
   [ChainId.BSCTESTNET]: '0x0ff512d940F390Cd76D95304fC4493170e0B42DE',
-  [ChainId.BSCMAINNET]: '',
+  [ChainId.BSCMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
   [ChainId.AVAXTESTNET]: '',
-  [ChainId.AVAXMAINNET]: '',
-  [ChainId.FANTOM]: ''
+  [ChainId.AVAXMAINNET]:
+    process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870',
+  [ChainId.FANTOM]: process.env.REACT_APP_MAINNET_ENV === 'staging' ? '' : '0x61a6cb01C70Db83b74dB3c02BBFDa9f025ba4870'
 }
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
