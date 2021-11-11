@@ -4642,6 +4642,18 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
+"@uniswap/v3-periphery@^1.0.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.2.1.tgz#7775630bea774a2cf989ab87ce3c328ac52e0d50"
+  integrity sha512-45W8hT8X1j9ZcXa+y3NSVao90hMZtgtoJyDlMOg91wmUGi2idXAiGivOQYdB7+7Lq8Gc6Upv/ggFZknixZrv7g==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/lib" "^4.0.1-alpha"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0"
+    base64-sol "1.0.1"
+    hardhat-watcher "^2.1.1"
+
 "@uniswap/v3-periphery@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.1.1.tgz#be6dfca7b29318ea0d76a7baf15d3b33c3c5e90a"
@@ -4654,17 +4666,27 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.4.1.tgz#2cf9b5f4dd826d6600245254e7bc7d2d4a4282ee"
-  integrity sha512-P0zcgOgpSqEbI/2DVESm8kf8OydagMEAzZR7qqLOe4JsUyhK1A4u1dy8tYDgWUBW0WeruEXSPNGiEL0pYPy3HQ==
+"@uniswap/v3-sdk@3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.6.3.tgz#f2fca86cfde1450976581028195fc0ee4b11036d"
+  integrity sha512-nepNTZMpM1uwLJAlQaUUEDMFrSujS1sOqyVD739zoPWsVHAUPvqVAKQN0GlgZcLXOqeCMKjO3lteaNHEXef1XA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-periphery" "^1.1.1"
+    "@uniswap/v3-staker" "1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
+
+"@uniswap/v3-staker@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-staker/-/v3-staker-1.0.0.tgz#9a6915ec980852479dfc903f50baf822ff8fa66e"
+  integrity sha512-JV0Qc46Px5alvg6YWd+UIaGH9lDuYG/Js7ngxPit1SPaIP30AlVer1UYB7BRYeUVVxE+byUyIeN5jeQ7LLDjIw==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/v3-core" "1.0.0"
+    "@uniswap/v3-periphery" "^1.0.1"
 
 "@vibrant/color@^3.2.1-alpha.1":
   version "3.2.1-alpha.1"
