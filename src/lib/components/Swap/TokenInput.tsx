@@ -34,7 +34,7 @@ export default function TokenInput({
         <TYPE.h2>
           <DecimalInput value={value} onChange={onChangeInput} placeholder="0.0"></DecimalInput>
         </TYPE.h2>
-        <TokenSelect value={token} disabled={disabled} onChange={onChangeToken} />
+        <TokenSelect value={token} disabled={disabled} onSelect={onChangeToken} />
       </TokenInputRow>
       {children}
     </Column>

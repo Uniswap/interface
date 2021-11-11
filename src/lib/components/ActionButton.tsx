@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import styled, { Color, icon, keyframes, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
 import TYPE from 'lib/theme/type'
@@ -117,7 +118,16 @@ const StyledLoadingButton = styled(StyledActionButton)<{ width?: number; height?
 
   :before {
     animation: 2s ${rotate} ease infinite;
-    background: conic-gradient(from var(--start), transparent, ${({ theme }) => theme.outline} 45deg);
+    background: ${({ theme }) => theme.outline}; // fallback
+
+    @supports (--foo: 0) {
+      background: conic-gradient(
+        from var(--start, 75deg),
+        transparent,
+        ${({ theme }) => theme.outline} 45deg 315deg,
+        transparent
+      );
+    }
   }
 
   :after {
@@ -135,7 +145,9 @@ export function LoadingButton() {
   return (
     <Overlay>
       <StyledLoadingButton ref={setRef} {...rect} disabled>
-        <TYPE.buttonLarge>Loading…</TYPE.buttonLarge>
+        <TYPE.buttonLarge>
+          <Trans>Loading…</Trans>
+        </TYPE.buttonLarge>
       </StyledLoadingButton>
     </Overlay>
   )
@@ -173,7 +185,7 @@ export function ApprovalButton({ color, onClick, children }: ActionButtonProps) 
           <TYPE.subhead2>{children}</TYPE.subhead2>
         </Row>
         <StyledApprovalButton color={color} onClick={onClick}>
-          Approve
+          <Trans>Approve</Trans>
         </StyledApprovalButton>
       </ApprovalRow>
     </Overlay>

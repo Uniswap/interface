@@ -1,8 +1,9 @@
+import { t, Trans } from '@lingui/macro'
 import { DAI, ETH, UNI, USDC } from 'lib/mocks'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { ElementRef, useCallback, useEffect, useRef, useState } from 'react'
 
 import Column from '../Column'
 import Dialog, { Header } from '../Dialog'
@@ -11,7 +12,7 @@ import Row from '../Row'
 import Rule from '../Rule'
 import TokenBase from './TokenBase'
 import TokenButton from './TokenButton'
-import TokenOption from './TokenOption'
+import TokenOptions from './TokenOptions'
 
 // TODO: integrate with web3-react context
 const mockTokens = [DAI, ETH, UNI, USDC]
@@ -22,13 +23,14 @@ const SearchInput = styled(StringInput)`
   height: unset;
   padding: 0.75em;
 
-  :focus-within {
-    outline: 1px solid ${({ theme }) => theme.active};
+  :focus {
+    border: 1px solid ${({ theme }) => theme.active};
+    padding: calc(0.75em - 1px);
   }
 `
 
-export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => void }) {
-  const baseTokens = mockTokens
+export function TokenSelectDialog({ onSelect }: { onSelect: (token: Token) => void }) {
+  const baseTokens = [DAI, ETH, UNI, USDC]
   const tokens = mockTokens
 
   const [search, setSearch] = useState('')
@@ -36,16 +38,20 @@ export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => vo
   const input = useRef<HTMLInputElement>(null)
   useEffect(() => input.current?.focus(), [input])
 
+  const [options, setOptions] = useState<ElementRef<typeof TokenOptions> | null>(null)
+  const onKeyDown = useCallback((e) => options?.onKeyDown(e), [options])
+
   return (
     <>
       <Column gap={0.75}>
-        <Header title="Select a token" />
+        <Header title={<Trans>Select a token</Trans>} />
         <Row padded grow>
           <TYPE.body1 color={search ? 'primary' : 'secondary'}>
             <SearchInput
               value={search}
               onChange={setSearch}
-              placeholder="Search by token name or address"
+              placeholder={t`Search by token name or address`}
+              onKeyDown={onKeyDown}
               ref={input}
             />
           </TYPE.body1>
@@ -54,16 +60,14 @@ export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => vo
           <>
             <Row gap={0.25} justify="flex-start" flex padded>
               {baseTokens.map((token) => (
-                <TokenBase value={token} onClick={onChange} key={token.address} />
+                <TokenBase value={token} onClick={onSelect} key={token.address} />
               ))}
             </Row>
             <Rule padded />
           </>
         )}
       </Column>
-      <Column scrollable>
-        {tokens && tokens.map((token) => <TokenOption value={token} onClick={onChange} key={token.address} />)}
-      </Column>
+      <TokenOptions tokens={tokens} onSelect={onSelect} ref={setOptions} />
     </>
   )
 }
@@ -71,24 +75,24 @@ export function TokenSelectDialog({ onChange }: { onChange: (token: Token) => vo
 interface TokenSelectProps {
   value?: Token
   disabled?: boolean
-  onChange: (value: Token) => void
+  onSelect: (value: Token) => void
 }
 
-export default function TokenSelect({ value, disabled, onChange }: TokenSelectProps) {
+export default function TokenSelect({ value, disabled, onSelect }: TokenSelectProps) {
   const [open, setOpen] = useState(false)
-  const onSelect = useCallback(
+  const selectAndClose = useCallback(
     (value: Token) => {
-      onChange(value)
+      onSelect(value)
       setOpen(false)
     },
-    [onChange, setOpen]
+    [onSelect, setOpen]
   )
   return (
     <>
       <TokenButton value={value} disabled={disabled} onClick={() => setOpen(true)} />
       {open && (
         <Dialog color="module" onClose={() => setOpen(false)}>
-          <TokenSelectDialog onChange={onSelect} />
+          <TokenSelectDialog onSelect={selectAndClose} />
         </Dialog>
       )}
     </>

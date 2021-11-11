@@ -8,6 +8,7 @@ const Column = styled.div<{
   padded?: true
   scrollable?: true
   flex?: true
+  grow?: true
   theme: Theme
 }>`
   align-items: ${({ align }) => align ?? 'center'};
@@ -15,6 +16,7 @@ const Column = styled.div<{
   color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-direction: column;
+  flex-grow: ${({ grow }) => grow && 1};
   gap: ${({ gap }) => gap && `${gap}em`};
   grid-auto-flow: row;
   grid-template-columns: 1fr;

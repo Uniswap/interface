@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 
 import Header from '../Header'
@@ -14,7 +15,7 @@ export default function Swap() {
   const [boundary, setBoundary] = useState<HTMLDivElement | null>(null)
   return (
     <>
-      <Header logo title="Swap">
+      <Header logo title={<Trans>Swap</Trans>}>
         <Wallet />
         <Settings />
       </Header>

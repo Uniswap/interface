@@ -46,9 +46,11 @@ export default {
     'vi-VN',
     'zh-CN',
     'zh-TW',
+    'pseudo',
   ],
   orderBy: 'messageId',
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en-US',
+  pseudoLocale: 'pseudo',
 }

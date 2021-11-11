@@ -1,4 +1,6 @@
+import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider } from 'jotai'
+import { Provider as I18nProvider } from 'lib/i18n'
 import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
 import { ReactNode, useState } from 'react'
 
@@ -24,17 +26,20 @@ const WidgetWrapper = styled.div`
 export interface WidgetProps {
   children: ReactNode
   theme?: Partial<Theme>
+  locale?: SupportedLocale
 }
 
-export default function Widget({ children, theme }: WidgetProps) {
+export default function Widget({ children, theme, locale = DEFAULT_LOCALE }: WidgetProps) {
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <AtomProvider>
       <ThemeProvider theme={theme}>
-        <WidgetWrapper>
-          <div ref={setDialog} />
-          <DialogProvider value={dialog}>{children}</DialogProvider>
-        </WidgetWrapper>
+        <I18nProvider locale={locale}>
+          <WidgetWrapper>
+            <div ref={setDialog} />
+            <DialogProvider value={dialog}>{children}</DialogProvider>
+          </WidgetWrapper>
+        </I18nProvider>
       </ThemeProvider>
     </AtomProvider>
   )

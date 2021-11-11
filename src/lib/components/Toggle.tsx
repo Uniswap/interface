@@ -1,7 +1,8 @@
+import { t } from '@lingui/macro'
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { transparentize } from 'polished'
-import { useEffect, useRef } from 'react'
+import { KeyboardEvent, useCallback } from 'react'
 
 const Input = styled.input<{ text: string; theme: Theme }>`
   align-items: center;
@@ -73,16 +74,23 @@ interface ToggleProps {
 }
 
 export default function Toggle({ checked, onToggle }: ToggleProps) {
-  const input = useRef<HTMLInputElement>(null)
-  useEffect(() => {
-    const current = input.current
-    const toggle = (e: KeyboardEvent) => e.key === 'Enter' && onToggle?.()
-    current?.addEventListener('keydown', toggle)
-    return () => current?.removeEventListener('keydown', toggle)
-  }, [input, onToggle])
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        onToggle()
+      }
+    },
+    [onToggle]
+  )
   return (
     <TYPE.buttonMedium>
-      <Input type="checkbox" checked={checked} text={checked ? 'ON' : 'OFF'} onChange={() => onToggle()} ref={input} />
+      <Input
+        type="checkbox"
+        checked={checked}
+        text={checked ? t`ON` : t`OFF`}
+        onChange={() => onToggle()}
+        onKeyDown={onKeyDown}
+      />
     </TYPE.buttonMedium>
   )
 }

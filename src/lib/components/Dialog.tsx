@@ -1,6 +1,8 @@
+import 'wicg-inert'
+
 import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useContext, useEffect } from 'react'
+import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
@@ -9,15 +11,49 @@ import Column from './Column'
 import { default as BaseHeader } from './Header'
 import Rule from './Rule'
 
+// Include inert from wicg-inert
+declare global {
+  interface HTMLElement {
+    inert?: boolean
+  }
+}
+
 const Context = createContext<HTMLDivElement | null>(null)
-export const Provider = Context.Provider
+
+interface ProviderProps {
+  value: HTMLDivElement | null
+  children: ReactNode
+}
+
+export function Provider({ value, children }: ProviderProps) {
+  // When the Dialog is in use, mark the main content inert
+  const ref = useRef<HTMLDivElement>(null)
+  const onMutation = useCallback(() => {
+    if (ref.current) {
+      ref.current.inert = value?.hasChildNodes()
+    }
+  }, [value])
+  const observer = useMemo(() => new MutationObserver(onMutation), [onMutation])
+  useEffect(() => {
+    if (value) {
+      observer.observe(value, { childList: true })
+    }
+    return () => observer.disconnect()
+  }, [observer, value])
+
+  return (
+    <div ref={ref}>
+      <Context.Provider value={value}>{children}</Context.Provider>
+    </div>
+  )
+}
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
-  title?: string
+  title?: ReactElement
   ruled?: boolean
   children?: ReactNode
 }
