@@ -8,6 +8,7 @@ import {
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
   DMY,
+  DMY2,
   ETH2X_FLI,
   ExtendedEther,
   FEI,
@@ -114,7 +115,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_OPTIMISM,
   ],
   [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
-  [SupportedChainId.UZH]: [ExtendedEther.onChain(SupportedChainId.UZH), DMY],
+  [SupportedChainId.UZH]: [ExtendedEther.onChain(SupportedChainId.UZH), DMY, DMY2],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

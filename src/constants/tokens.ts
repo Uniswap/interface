@@ -10,6 +10,13 @@ export const DMY = new Token(
   'DMY',
   'DummyToken'
 )
+export const DMY2 = new Token(
+  SupportedChainId.UZH,
+  '0xE82339B635BbD4C64e67C1f8993E515653351C45',
+  18,
+  'DMY2',
+  'DummyToken2'
+)
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',

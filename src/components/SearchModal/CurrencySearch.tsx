@@ -90,7 +90,9 @@ export function CurrencySearch({
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
-  useEffect(() => {
+  console.log({ allTokens, searchToken })
+
+  /*  useEffect(() => {
     if (isAddressSearch) {
       ReactGA.event({
         category: 'Currency Select',
@@ -98,7 +100,7 @@ export function CurrencySearch({
         label: isAddressSearch,
       })
     }
-  }, [isAddressSearch])
+  }, [isAddressSearch])*/
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 

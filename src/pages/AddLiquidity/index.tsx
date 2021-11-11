@@ -468,6 +468,19 @@ export default function AddLiquidity({
         !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
       }`
 
+  // TODO: Approval is unknown
+  console.log('BUTTON DISABLED', {
+    mustCreateSeparately,
+    isValid,
+    cond1: !argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled,
+    cond2: !argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled,
+    argentWalletContract,
+    approvalA,
+    depositADisabled,
+    approvalB,
+    depositBDisabled,
+  })
+
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} $borderRadius="12px" padding={'12px'}>
