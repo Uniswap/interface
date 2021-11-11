@@ -4642,19 +4642,7 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
-"@uniswap/v3-periphery@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.1.1.tgz#be6dfca7b29318ea0d76a7baf15d3b33c3c5e90a"
-  integrity sha512-orqD2Xy4lxVPF6pxd7ECSJY0gzEuqyeVSDHjzM86uWxOXlA4Nlh5pvI959KaS32pSOFBOVVA4XbbZywbJj+CZg==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
-    "@uniswap/lib" "^4.0.1-alpha"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    base64-sol "1.0.1"
-    hardhat-watcher "^2.1.1"
-
-"@uniswap/v3-periphery@^1.2.1":
+"@uniswap/v3-periphery@1.3.0", "@uniswap/v3-periphery@^1.1.1", "@uniswap/v3-periphery@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.3.0.tgz#37f0a1ef6025221722e50e9f3f2009c2d5d6e4ec"
   integrity sha512-HjHdI5RkjBl8zz3bqHShrbULFoZSrjbbrRHoO2vbzn+WRzTa6xY4PWphZv2Tlcb38YEKfKHp6NPl5hVedac8uw==
@@ -14655,12 +14643,12 @@ multibase@^4.0.1:
   dependencies:
     "@multiformats/base-x" "^4.0.1"
 
-multicall-query@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.5.tgz#7b080693c7d9170ac07888c83080679ca8782efc"
-  integrity sha512-2VHqxl7CyU53J+GP7KV5IkhfQrxSTPK7dXiu9k265F9/11MC1k5i3A+oNdWRYBZ4My8jBRhb2Igt4YQ8PU+K9w==
+multicall-query@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.6.tgz#a329e176a258b4fe755f7ae8fa7b9f1e026e9c20"
+  integrity sha512-2FOA+T2p6Ti0h2fJlqubzCk4y3aqYRMTgjcpPfRVFAk07pd9VsWPE9U6/vJJRhVhCfK+Qb/L4TJRMOqV/jodew==
   dependencies:
-    "@uniswap/v3-periphery" "^1.2.1"
+    "@uniswap/v3-periphery" "^1.3.0"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"

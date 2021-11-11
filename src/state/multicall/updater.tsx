@@ -5,9 +5,8 @@ import { multicall } from './instance'
 
 // Create Updater wrappers that pull needed info from store
 export default function Updater() {
-  const Updater = multicall.Updater
   const latestBlockNumber = useBlockNumber()
   const { chainId } = useActiveWeb3React()
   const multicall2Contract = useMulticall2Contract()
-  return <Updater chainId={chainId} latestBlockNumber={latestBlockNumber} contract={multicall2Contract} />
+  return <multicall.Updater chainId={chainId} latestBlockNumber={latestBlockNumber} contract={multicall2Contract} />
 }
