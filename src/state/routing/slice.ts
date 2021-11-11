@@ -21,7 +21,7 @@ export const routingApi = createApi({
         type: 'exactIn' | 'exactOut'
       }
     >({
-      query: (args) => `quote?${qs.stringify({...args, protocols: 'v3'})}`,
+      query: (args) => `quote?${qs.stringify({ ...args, protocols: 'v3' })}`,
     }),
   }),
 })
