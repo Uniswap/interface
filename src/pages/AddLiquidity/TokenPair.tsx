@@ -627,9 +627,9 @@ const TokenPair = ({
                           width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                            <Dots>Approving {nativeA?.symbol}</Dots>
                           ) : (
-                            'Approve ' + currencies[Field.CURRENCY_A]?.symbol
+                            'Approve ' + nativeB?.symbol
                           )}
                         </ButtonPrimary>
                       )}
@@ -640,9 +640,9 @@ const TokenPair = ({
                           width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                            <Dots>Approving {nativeB?.symbol}</Dots>
                           ) : (
-                            'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                            'Approve ' + nativeB?.symbol
                           )}
                         </ButtonPrimary>
                       )}

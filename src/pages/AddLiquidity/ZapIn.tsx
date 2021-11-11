@@ -53,7 +53,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
 import { Dots, Wrapper } from '../Pool/styleds'
 import {
@@ -110,6 +110,9 @@ const ZapIn = ({
 
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A])
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B])
+
+  const independentToken = nativeA && nativeB ? (independentField === Field.CURRENCY_A ? nativeA : nativeB) : undefined
+  const dependentToken = nativeA && nativeB ? (independentField === Field.CURRENCY_A ? nativeB : nativeA) : undefined
 
   const selectedCurrencyIsETHER = !!(
     chainId &&
@@ -253,7 +256,7 @@ const ZapIn = ({
             setAttemptingTxn(false)
             addTransaction(tx, {
               summary: t`Add liquidity for single token ${
-                independentField === Field.CURRENCY_A ? nativeA?.symbol : nativeB?.symbol
+                independentToken?.symbol
               } with amount of ${userInCurrencyAmount?.toSignificant(4)}`
             })
 
@@ -276,7 +279,7 @@ const ZapIn = ({
       })
   }
 
-  const pendingText = `Supplying ${userInCurrencyAmount?.toSignificant(6)} ${currencies[independentField]?.symbol}`
+  const pendingText = `Supplying ${userInCurrencyAmount?.toSignificant(6)} ${independentToken?.symbol}`
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
@@ -453,7 +456,7 @@ const ZapIn = ({
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
                 <USDPrice>
                   {usdPrices[0] ? (
-                    `1 ${currencies[independentField]?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}`
+                    `1 ${independentToken?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}`
                   ) : (
                     <Loader />
                   )}
@@ -499,7 +502,7 @@ const ZapIn = ({
                   <TokenWrapper>
                     <CurrencyLogo currency={currencies[independentField] || undefined} size={'16px'} />
                     <TYPE.subHeader fontWeight={400} fontSize={14} color={theme.subText}>
-                      {currencies[independentField]?.symbol}
+                      {independentToken?.symbol}
                     </TYPE.subHeader>
                   </TokenWrapper>
                   <TYPE.black fontWeight={400} fontSize={14}>
@@ -512,7 +515,7 @@ const ZapIn = ({
                   <TokenWrapper>
                     <CurrencyLogo currency={currencies[dependentField] || undefined} size={'16px'} />
                     <TYPE.subHeader fontWeight={400} fontSize={14} color={theme.subText}>
-                      {currencies[dependentField]?.symbol}
+                      {dependentToken?.symbol}
                     </TYPE.subHeader>
                   </TokenWrapper>
                   <TYPE.black fontWeight={400} fontSize={14}>
@@ -682,9 +685,9 @@ const ZapIn = ({
                         width={'100%'}
                       >
                         {approval === ApprovalState.PENDING ? (
-                          <Dots>Approving {currencies[independentField]?.symbol}</Dots>
+                          <Dots>Approving {independentToken?.symbol}</Dots>
                         ) : (
-                          'Approve ' + currencies[independentField]?.symbol
+                          'Approve ' + independentToken?.symbol
                         )}
                       </ButtonPrimary>
                     </RowBetween>

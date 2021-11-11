@@ -281,7 +281,7 @@ export function useTokensPrice(tokens: (Token | undefined)[]): number[] {
         const tokenPriceByETH = await getTokenPriceByETH(token?.address, apolloClient)
         const tokenPrice = tokenPriceByETH * parseFloat(ethPrice.currentPrice)
 
-        return tokenPrice
+        return tokenPrice || 0
       })
 
       const result = await Promise.all(tokensPrice)
