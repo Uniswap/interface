@@ -5,12 +5,16 @@ import { useDispatch } from 'react-redux'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { updateBlockNumber } from './actions'
+import { useBlockNumber } from './hooks'
+
+const BLOCK_NUMBER_MINIMUM_DIFF = 5
 
 export default function Updater(): null {
   const library = useProvider()
   const { network } = useContractKit()
   const chainId = network.chainId
   const dispatch = useDispatch()
+  const blockNumber = useBlockNumber()
 
   const windowVisible = useIsWindowVisible()
 
@@ -53,8 +57,9 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (!debouncedState.chainId || !debouncedState.blockNumber || !windowVisible) return
+    if (debouncedState.blockNumber - (blockNumber || 0) < BLOCK_NUMBER_MINIMUM_DIFF) return
     dispatch(updateBlockNumber({ chainId: debouncedState.chainId, blockNumber: debouncedState.blockNumber }))
-  }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId])
+  }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId, blockNumber])
 
   return null
 }
