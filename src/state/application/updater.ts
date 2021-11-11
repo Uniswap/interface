@@ -1,4 +1,5 @@
 import { CHAIN_INFO } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -9,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
-import { useBlockNumber } from './hooks'
 import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './reducer'
 
 function useQueryCacheInvalidator() {
@@ -35,11 +35,27 @@ function useBlockWarningTimer() {
   const timeout = useRef<NodeJS.Timeout>()
   const isWindowVisible = useIsWindowVisible()
   const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
-  const currentBlock = useBlockNumber()
+  const blockTimestamp = useCurrentBlockTimestamp()
 
   useEffect(() => {
-    setMsSinceLastBlock(0)
-  }, [currentBlock])
+    if (blockTimestamp && chainId) {
+      const waitMsBeforeWarning =
+        (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ??
+        DEFAULT_MS_BEFORE_WARNING
+      const now = Date.now()
+      setMsSinceLastBlock(Math.floor(now - blockTimestamp.mul(1000).toNumber()))
+      if (msSinceLastBlock > waitMsBeforeWarning) {
+        if (!chainConnectivityWarningActive) {
+          dispatch(setChainConnectivityWarning({ warn: true }))
+        }
+      } else {
+        if (chainConnectivityWarningActive) {
+          dispatch(setChainConnectivityWarning({ warn: false }))
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockTimestamp, chainId, chainConnectivityWarningActive, dispatch])
 
   useEffect(() => {
     const waitMsBeforeWarning =
