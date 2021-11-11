@@ -10,13 +10,13 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
+  Coffee,
   FileText,
   Globe,
   HelpCircle,
   Info,
   MessageCircle,
   Moon,
-  Send,
   Sun,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -262,7 +262,7 @@ export default function Menu() {
                       <div>
                         <Trans>Request Features</Trans>
                       </div>
-                      <Send opacity={0.6} size={16} />
+                      <Coffee opacity={0.6} size={16} />
                     </MenuItem>
                     <MenuItem href="https://discord.gg/FCfyBSbCU5">
                       <div>
