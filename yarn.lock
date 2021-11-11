@@ -4591,6 +4591,11 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
+"@uniswap/redux-multicall@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.0.0.tgz#0cee4448909a788ea4700e5ede75ffeba05b5d75"
+  integrity sha512-zR6tNC3XF6JuI6PjGlZW2Hz7tTzRzzVaPJfZ01BBWBJVt/2ixJY0SH514uffD03NHYiXZA//hlPQLfw3TkIxQg==
+
 "@uniswap/sdk-core@^3.0.0-alpha.3", "@uniswap/sdk-core@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.1.tgz#d08dd68257983af64b9a5f4d6b9cf26124b4138f"
@@ -4642,10 +4647,10 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
-"@uniswap/v3-periphery@1.3.0", "@uniswap/v3-periphery@^1.1.1", "@uniswap/v3-periphery@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.3.0.tgz#37f0a1ef6025221722e50e9f3f2009c2d5d6e4ec"
-  integrity sha512-HjHdI5RkjBl8zz3bqHShrbULFoZSrjbbrRHoO2vbzn+WRzTa6xY4PWphZv2Tlcb38YEKfKHp6NPl5hVedac8uw==
+"@uniswap/v3-periphery@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.1.1.tgz#be6dfca7b29318ea0d76a7baf15d3b33c3c5e90a"
+  integrity sha512-orqD2Xy4lxVPF6pxd7ECSJY0gzEuqyeVSDHjzM86uWxOXlA4Nlh5pvI959KaS32pSOFBOVVA4XbbZywbJj+CZg==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/lib" "^4.0.1-alpha"
@@ -14642,13 +14647,6 @@ multibase@^4.0.1:
   integrity sha512-8/JmrdSGzlw6KTgAJCOqUBSGd1V6186i/X8dDCGy/lbCKrQ+1QB6f3HE+wPr7Tpdj4U3gutaj9jG2rNX6UpiJg==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
-
-multicall-query@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/multicall-query/-/multicall-query-0.1.6.tgz#a329e176a258b4fe755f7ae8fa7b9f1e026e9c20"
-  integrity sha512-2FOA+T2p6Ti0h2fJlqubzCk4y3aqYRMTgjcpPfRVFAk07pd9VsWPE9U6/vJJRhVhCfK+Qb/L4TJRMOqV/jodew==
-  dependencies:
-    "@uniswap/v3-periphery" "^1.3.0"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
