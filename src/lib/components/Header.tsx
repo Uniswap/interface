@@ -1,21 +1,22 @@
 import Logo from 'lib/assets/Logo'
 import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
-import { ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 
 import Row from './Row'
 
 const HeaderRow = styled(Row)`
-  margin: 0 1em;
-  padding-top: 1em;
+  margin: 0 0.75em;
+  padding-top: 0.75em;
 `
 
 const StyledLogo = styled(Logo)`
   cursor: pointer;
   fill: ${({ theme }) => theme.secondary};
+  height: 1em;
   mix-blend-mode: lighten;
-  padding: 0 1px 3px 1px;
   transition: transform 0.3s ease;
+  width: 1em;
 
   :hover {
     opacity: 0.7;
@@ -24,7 +25,7 @@ const StyledLogo = styled(Logo)`
 `
 
 export interface HeaderProps {
-  title?: string
+  title?: ReactElement
   logo?: boolean
   children: ReactNode
 }

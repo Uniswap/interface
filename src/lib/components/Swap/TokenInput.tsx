@@ -1,48 +1,42 @@
-import styled, { icon } from 'lib/theme'
+import styled from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { Token } from 'lib/types'
-import { Book } from 'react-feather'
+import { ReactNode } from 'react'
 
-import { TextButton } from '../Button'
 import Column from '../Column'
 import { DecimalInput } from '../Input'
 import Row from '../Row'
 import TokenSelect from '../TokenSelect'
+import { Input } from './state'
 
 const TokenInputRow = styled(Row)`
   grid-template-columns: 1fr;
 `
 
-const BookIcon = icon(Book)
-
-export interface TokenInputProps {
-  value?: number
-  token?: Token
-  onChangeValue: (value: number | undefined) => void
+interface TokenInputProps {
+  input: Input
+  disabled?: boolean
+  onChangeInput: (input: number | undefined) => void
   onChangeToken: (token: Token) => void
-  showMax?: true
+  children: ReactNode
 }
 
-export default function TokenInput({ value, token, onChangeValue, onChangeToken, showMax }: TokenInputProps) {
+export default function TokenInput({
+  input: { value, token },
+  disabled,
+  onChangeInput,
+  onChangeToken,
+  children,
+}: TokenInputProps) {
   return (
-    <Column gap={0.25}>
+    <Column gap={0.375}>
       <TokenInputRow>
         <TYPE.h2>
-          <DecimalInput value={value} onChange={onChangeValue} placeholder="0.0"></DecimalInput>
+          <DecimalInput value={value} onChange={onChangeInput} placeholder="0.0"></DecimalInput>
         </TYPE.h2>
-        <TokenSelect value={token} onChange={onChangeToken} />
+        <TokenSelect value={token} disabled={disabled} onSelect={onChangeToken} />
       </TokenInputRow>
-      <TYPE.body2 color="secondary">
-        <Row>
-          -
-          <Row gap={0.5}>
-            <Row>
-              <BookIcon />
-            </Row>
-            {showMax && <TextButton disabled>Max</TextButton>}
-          </Row>
-        </Row>
-      </TYPE.body2>
+      {children}
     </Column>
   )
 }

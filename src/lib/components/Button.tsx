@@ -6,9 +6,9 @@ const Button = styled.button`
   border-radius: 0.5em;
   color: currentColor;
   cursor: pointer;
-  font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
+  line-height: inherit;
   margin: 0;
   padding: 0;
 

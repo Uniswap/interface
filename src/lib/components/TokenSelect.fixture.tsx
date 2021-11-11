@@ -1,11 +1,8 @@
 import { Modal } from './Dialog'
 import { TokenSelectDialog } from './TokenSelect'
-import Widget from './Widget'
 
 export default (
-  <Widget>
-    <Modal color="module">
-      <TokenSelectDialog onChange={() => void 0} />
-    </Modal>
-  </Widget>
+  <Modal color="module">
+    <TokenSelectDialog onSelect={() => void 0} />
+  </Modal>
 )

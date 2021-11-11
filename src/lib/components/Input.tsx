@@ -12,7 +12,7 @@ const Input = styled.input`
   margin: 0;
   outline: none;
   overflow: hidden;
-  padding: 0px;
+  padding: 0;
   text-align: left;
   text-overflow: ellipsis;
   width: 100%;

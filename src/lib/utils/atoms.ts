@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Draft } from 'immer'
-import { atom, Getter, WritableAtom } from 'jotai'
+import { atom, WritableAtom } from 'jotai'
 import { withImmer } from 'jotai/immer'
 
 /**
@@ -7,32 +8,28 @@ import { withImmer } from 'jotai/immer'
  * By default, the setter acts as a primitive atom's, changing the original atom.
  * A custom setter may also be passed, which uses an Immer Draft so that it may be mutated directly.
  */
-export function pickAtom<Value, Key extends keyof Value, Update>(
+export function pickAtom<Value, Key extends keyof Value & keyof Draft<Value>, Update>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void
+  setter: (draft: Draft<Value>[Key], update: Update) => Draft<Value>[Key]
 ): WritableAtom<Value[Key], Update>
-export function pickAtom<Value, Key extends keyof Value, Update extends Value[Key]>(
+export function pickAtom<Value, Key extends keyof Value & keyof Draft<Value>, Update extends Value[Key]>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter?: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void
+  setter?: (draft: Draft<Value>[Key], update: Update) => Draft<Value>[Key]
 ): WritableAtom<Value[Key], Update>
-export function pickAtom<Value, Key extends keyof Value, Update extends Value[Key]>(
+export function pickAtom<Value, Key extends keyof Value & keyof Draft<Value>, Update extends Value[Key]>(
   anAtom: WritableAtom<Value, Value>,
   key: Key,
-  setter: (draft: Draft<Value[Key]>, update: Update, get: Getter) => Draft<Value[Key]> | void = (draft, update) =>
-    // default value implies Update extends Value[Key], as specified by the overloads
-    update as unknown as Value[Key] as Draft<Value[Key]>
+  setter: (draft: Draft<Value>[Key], update: Update) => Draft<Value>[Key] = (draft, update) =>
+    update as Draft<Value>[Key]
 ): WritableAtom<Value[Key], Update> {
-  const getter = (value: Value) => value[key]
   return atom(
-    (get) => getter(get(anAtom)),
+    (get) => get(anAtom)[key],
     (get, set, update: Update) =>
       set(withImmer(anAtom), (value) => {
-        const derived = setter(getter(value as Value) as Draft<Value[Key]>, update, get)
-        if (derived !== undefined) {
-          value[key as keyof Draft<Value>] = derived as Draft<Value>[keyof Draft<Value>]
-        }
+        const derived = setter(value[key], update)
+        value[key] = derived
       })
   )
 }
@@ -54,7 +51,7 @@ export type Customizable<T> = { value: T; custom?: number }
 
 /** Sets a customizable enum, validating the tuple and falling back to the default. */
 export function setCustomizable<T extends number, Enum extends CustomizableEnum<T>>(customizable: Enum) {
-  return (draft: Customizable<T>, update: T | Customizable<T>): void => {
+  return (draft: Customizable<T>, update: T | Customizable<T>) => {
     // normalize the update
     if (typeof update === 'number') {
       update = { value: update }
@@ -69,6 +66,8 @@ export function setCustomizable<T extends number, Enum extends CustomizableEnum<
         draft.value = customizable.DEFAULT
       }
     }
+
+    return draft
   }
 }
 

@@ -1,16 +1,17 @@
+import { t } from '@lingui/macro'
 import styled, { Theme } from 'lib/theme'
 import TYPE from 'lib/theme/type'
 import { transparentize } from 'polished'
+import { KeyboardEvent, useCallback } from 'react'
 
 const Input = styled.input<{ text: string; theme: Theme }>`
   align-items: center;
   appearance: none;
   background: ${({ theme }) => theme.interactive};
   border: none;
-  border-radius: 1.25em;
+  border-radius: ${({ theme }) => theme.borderRadius * 1.25}em;
   cursor: pointer;
   display: flex;
-  font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
   height: 2em;
@@ -24,7 +25,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
 
   :before {
     background-color: ${({ theme }) => theme.secondary};
-    border-radius: 1.5em;
+    border-radius: ${({ theme }) => theme.borderRadius * 50}%;
     content: '';
     display: inline-block;
     height: 1.5em;
@@ -38,14 +39,14 @@ const Input = styled.input<{ text: string; theme: Theme }>`
   }
 
   :checked:before {
-    background-color: ${({ theme }) => theme.active};
+    background-color: ${({ theme }) => theme.accent};
 
     // use margin because it can transition
     margin-left: 2.75em;
   }
 
   :hover:checked:before {
-    background-color: ${({ theme }) => transparentize(0.3, theme.active)};
+    background-color: ${({ theme }) => transparentize(0.3, theme.accent)};
   }
 
   :after {
@@ -55,7 +56,7 @@ const Input = styled.input<{ text: string; theme: Theme }>`
     width: 2.75em;
 
     // use margin because it can transition
-    margin-left: 28px;
+    margin-left: 1.75em;
   }
 
   :checked:after {
@@ -69,17 +70,26 @@ const Input = styled.input<{ text: string; theme: Theme }>`
 
 interface ToggleProps {
   checked: boolean
-  onToggle: (value: boolean) => void
+  onToggle: () => void
 }
 
 export default function Toggle({ checked, onToggle }: ToggleProps) {
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        onToggle()
+      }
+    },
+    [onToggle]
+  )
   return (
     <TYPE.buttonMedium>
       <Input
         type="checkbox"
         checked={checked}
-        text={checked ? 'ON' : 'OFF'}
-        onChange={({ target: { checked } }) => onToggle(checked)}
+        text={checked ? t`ON` : t`OFF`}
+        onChange={() => onToggle()}
+        onKeyDown={onKeyDown}
       />
     </TYPE.buttonMedium>
   )

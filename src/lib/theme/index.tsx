@@ -6,6 +6,7 @@ import { readableColor } from 'polished'
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { Icon } from 'react-feather'
 import styled, {
+  css as styledCss,
   keyframes as styledKeyframes,
   ThemedBaseStyledInterface,
   ThemeProvider as StyledProvider,
@@ -19,18 +20,19 @@ export type { Colors, Theme } from './theme'
 export type Color = keyof Colors
 
 export default styled as unknown as ThemedBaseStyledInterface<Theme>
+export const css = styledCss
 export const keyframes = styledKeyframes
 export const useTheme = useStyled as unknown as () => Theme
 
 interface IconOptions {
-  color?: Color
+  color?: Color | 'currentColor'
 }
 
 export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
   return styled(Icon)<{ theme: Theme }>`
     clip-path: stroke-box;
     height: 1em;
-    stroke: ${({ theme }) => theme[color]};
+    stroke: ${({ theme }) => (color === 'currentColor' ? 'currentColor' : theme[color])};
     width: 1em;
   `
 }
@@ -38,17 +40,17 @@ export function icon(Icon: Icon, { color = 'secondary' }: IconOptions = {}) {
 const light: Colors = {
   // surface
   accent: '#FF007A',
-  container: '#191B1F',
-  module: '#2C2F36',
-  interactive: '#40444F',
-  outline: '#565A59',
-  dialog: '#000000',
+  container: '#F7F8FA',
+  module: '#E2E3E9',
+  interactive: '#CED0D9',
+  outline: '#C3C5CB',
+  dialog: '#FFFFFF',
 
   // text
   primary: '#000000',
-  secondary: '#888D9B',
-  hint: '#6C7284',
-  contrast: '#FFFFFF',
+  secondary: '#565A69',
+  hint: '#888D9B',
+  contrast: '#000000',
 
   // state
   active: '#2172E5',
@@ -63,7 +65,7 @@ const dark: Colors = {
   container: '#191B1F',
   module: '#2C2F36',
   interactive: '#40444F',
-  outline: '#565A59',
+  outline: '#565A69',
   dialog: '#000000',
 
   // text
@@ -100,7 +102,7 @@ export function getDynamicTheme(color: string, theme: Theme): Theme {
   }
 }
 
-function getDefaultTheme(): Omit<Theme, Color> {
+export function getDefaultTheme(): Omit<Theme, Color> {
   return {
     darkMode: true,
     fontFamily: '"Inter var", sans-serif',

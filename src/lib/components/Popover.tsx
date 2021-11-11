@@ -12,7 +12,7 @@ const BoundaryContext = createContext<HTMLDivElement | null>(null)
 export const BoundaryProvider = BoundaryContext.Provider
 
 const PopoverContainer = styled.div<{ show: boolean }>`
-  background-color: ${({ theme }) => theme.interactive};
+  background-color: ${({ theme }) => theme.dialog};
   border: 1px solid ${({ theme }) => theme.outline};
   border-radius: 0.5em;
   opacity: ${(props) => (props.show ? 1 : 0)};
@@ -32,7 +32,7 @@ const Arrow = styled.div`
   z-index: ${Layer.TOOLTIP};
 
   ::before {
-    background: ${({ theme }) => theme.interactive};
+    background: ${({ theme }) => theme.dialog};
     border: 1px solid ${({ theme }) => theme.outline};
     content: '';
 

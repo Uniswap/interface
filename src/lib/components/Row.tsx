@@ -1,16 +1,19 @@
-import styled from 'lib/theme'
+import styled, { Color, Theme } from 'lib/theme'
 import { Children, ReactNode } from 'react'
 
 const Row = styled.div<{
   align?: string
+  color?: Color
   justify?: string
   gap?: number
   grow?: true
   children?: ReactNode
   padded?: true
   flex?: true
+  theme: Theme
 }>`
   align-items: ${({ align }) => align ?? 'center'};
+  color: ${({ color, theme }) => color && theme[color]};
   display: ${({ flex }) => (flex ? 'flex' : 'grid')};
   flex-flow: wrap;
   gap: ${({ gap }) => gap && `${gap}em`};

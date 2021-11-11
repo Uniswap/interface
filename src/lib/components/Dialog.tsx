@@ -1,22 +1,59 @@
+import 'wicg-inert'
+
 import styled, { Color, icon, OriginalProvider as OriginalThemeProvider, Theme } from 'lib/theme'
 import Layer from 'lib/theme/layer'
-import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
+import { createContext, ReactElement, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'react-feather'
 
 import Button from './Button'
+import Column from './Column'
 import { default as BaseHeader } from './Header'
 import Rule from './Rule'
 
+// Include inert from wicg-inert
+declare global {
+  interface HTMLElement {
+    inert?: boolean
+  }
+}
+
 const Context = createContext<HTMLDivElement | null>(null)
-export const Provider = Context.Provider
+
+interface ProviderProps {
+  value: HTMLDivElement | null
+  children: ReactNode
+}
+
+export function Provider({ value, children }: ProviderProps) {
+  // When the Dialog is in use, mark the main content inert
+  const ref = useRef<HTMLDivElement>(null)
+  const onMutation = useCallback(() => {
+    if (ref.current) {
+      ref.current.inert = value?.hasChildNodes()
+    }
+  }, [value])
+  const observer = useMemo(() => new MutationObserver(onMutation), [onMutation])
+  useEffect(() => {
+    if (value) {
+      observer.observe(value, { childList: true })
+    }
+    return () => observer.disconnect()
+  }, [observer, value])
+
+  return (
+    <div ref={ref}>
+      <Context.Provider value={value}>{children}</Context.Provider>
+    </div>
+  )
+}
 
 const OnCloseContext = createContext<() => void>(() => void 0)
 
 const XIcon = icon(X, { color: 'primary' })
 
 interface HeaderProps {
-  title?: string
+  title?: ReactElement
   ruled?: boolean
   children?: ReactNode
 }
@@ -24,25 +61,28 @@ interface HeaderProps {
 export function Header({ title, children, ruled }: HeaderProps) {
   return (
     <>
-      <BaseHeader title={title}>
-        {children}
-        <Button onClick={useContext(OnCloseContext)}>
-          <XIcon />
-        </Button>
-      </BaseHeader>
-      {ruled && <Rule padded style={{ marginTop: 'calc(1em - 1px)' }} />}
+      <Column gap={0.75}>
+        <BaseHeader title={title}>
+          {children}
+          <Button onClick={useContext(OnCloseContext)}>
+            <XIcon />
+          </Button>
+        </BaseHeader>
+        {ruled && <Rule padded />}
+      </Column>
     </>
   )
 }
 
 export const Modal = styled.div<{ color: Color; theme: Theme }>`
   background-color: ${({ color, theme }) => theme[color]};
-  border-radius: ${({ theme }) => theme.borderRadius - 0.25}em;
+  border-radius: ${({ theme }) => theme.borderRadius * 0.75}em;
   display: flex;
   flex-direction: column;
   height: calc(100% - 0.5em);
   left: 0;
   margin: 0.25em;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: calc(100% - 0.5em);
@@ -52,24 +92,15 @@ export const Modal = styled.div<{ color: Color; theme: Theme }>`
 interface DialogProps {
   color: Color
   children: ReactNode
-  onClose: () => void
+  onClose?: () => void
 }
 
-export default function Dialog({ color, children, onClose }: DialogProps) {
-  const onKeydown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose?.()
-      }
-    },
-    [onClose]
-  )
-  useEffect(
-    () => (
-      document.addEventListener('keydown', onKeydown, true),
-      () => document.removeEventListener('keydown', onKeydown, true)
-    )
-  )
+export default function Dialog({ color, children, onClose = () => void 0 }: DialogProps) {
+  useEffect(() => {
+    const close = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.()
+    document.addEventListener('keydown', close, true)
+    return () => document.removeEventListener('keydown', close, true)
+  }, [onClose])
   const modal = useContext(Context)
   return (
     modal &&
