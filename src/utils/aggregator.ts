@@ -68,18 +68,8 @@ function encodeUniSwap(data: any) {
 
 function encodeStableSwap(sequence: any) {
   return encodeParameters(
-    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'uint256', 'address'],
-    [
-      sequence.pool,
-      sequence.tokenIn,
-      sequence.tokenOut,
-      sequence.extra?.tokenInIndex,
-      sequence.extra?.tokenOutIndex,
-      sequence.swapAmount,
-      '1',
-      sequence.poolLength,
-      sequence.pool
-    ]
+    ['address', 'address', 'address', 'uint256', 'uint256'],
+    [sequence.pool, sequence.tokenIn, sequence.tokenOut, sequence.swapAmount, '1']
   )
 }
 
@@ -87,22 +77,11 @@ function encodeCurveSwap(data: any) {
   const poolType = data.poolType?.toLowerCase()
   // curve-base: exchange
   // curve-meta: exchange_underlying
-  const usePoolUnderlying = data.extra?.underlying
-  const isTriCrypto = poolType === 'curve-tricrypto'
-
+  const usePoolUnderlying = poolType !== 'curve-base'
+  // [pool, tokenFrom, tokenTo, dx, minDy, poolLength, usePoolUnderlying]
   return encodeParameters(
-    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'bool', 'bool'],
-    [
-      data.pool,
-      data.tokenIn,
-      data.tokenOut,
-      data.extra?.tokenInIndex,
-      data.extra?.tokenOutIndex,
-      data.swapAmount,
-      '0',
-      usePoolUnderlying,
-      isTriCrypto
-    ]
+    ['address', 'address', 'address', 'uint256', 'uint256', 'uint256', 'bool'],
+    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, '1', data.poolLength, usePoolUnderlying]
   )
 }
 
@@ -114,7 +93,7 @@ export function encodeSwapExecutor(swaps: any[][], chainId: ChainId) {
       // dexOption: 16 bit (first 8 bit for dextype + last 8 bit is dexIds in uni swap type)
       const dexOption = dec2bin(dex.type, 8) + dec2bin(dex.id, 8)
       let data: string
-      if (dex.type === 1 || dex.type === 4) {
+      if (dex.type === 1) {
         data = encodeStableSwap(sequence)
       } else if (dex.type === 2) {
         data = encodeCurveSwap(sequence)
