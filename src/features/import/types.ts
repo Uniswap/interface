@@ -4,7 +4,9 @@ interface BaseImportAccountParams {
 }
 
 export interface ImportLocalAccountParams extends BaseImportAccountParams {
-  mnemonic: string
+  privateKey?: string
+
+  mnemonic?: string
   derivationPath?: string
 }
 
@@ -13,7 +15,10 @@ export interface ImportReadonlyAccountParams extends BaseImportAccountParams {
 }
 
 export function isImportLocalAccountParams(params: unknown): params is ImportLocalAccountParams {
-  return Object.prototype.hasOwnProperty.call(params, 'mnemonic')
+  return (
+    Object.prototype.hasOwnProperty.call(params, 'mnemonic') ||
+    Object.prototype.hasOwnProperty.call(params, 'privateKey')
+  )
 }
 
 export type ImportAccountParams = ImportLocalAccountParams | ImportReadonlyAccountParams

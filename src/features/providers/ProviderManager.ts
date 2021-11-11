@@ -2,6 +2,8 @@ import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { config } from 'src/config'
 import { ChainId, CHAIN_INFO, L1ChainInfo } from 'src/constants/chains'
+import { getEthersProvider } from 'src/features/providers/getEthersProvider'
+import { getInfuraChainName } from 'src/features/providers/utils'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timing'
@@ -109,13 +111,12 @@ export class ProviderManager {
 
   private async initProvider(chainId: ChainId, chainDetails: L1ChainInfo) {
     try {
-      const chainName = this.getInfuraChainName(chainId)
       logger.info(
         'ProviderManager',
         'initProvider',
-        `Connecting to infura rpc provider for ${chainName}`
+        `Connecting to infura rpc provider for ${getInfuraChainName(chainId)}`
       )
-      const provider = new ethersProviders.InfuraProvider(chainName, config.infuraProjectId)
+      const provider = getEthersProvider(chainId, config)
       for (let i = 0; i < 3; i++) {
         const blockAndNetworkP = Promise.all([provider.getBlock('latest'), provider.getNetwork()])
         const blockAndNetwork = await promiseTimeout(blockAndNetworkP, 1000)
@@ -148,30 +149,17 @@ export class ProviderManager {
     network?: ethersProviders.Network
   ) {
     const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600000
-    return (
-      block &&
-      block.number &&
-      block.timestamp &&
-      !isStale(block.timestamp * 1000, staleTime) &&
-      network &&
-      network.chainId === chainId
-    )
-  }
-
-  private getInfuraChainName(chainId: ChainId) {
-    switch (chainId) {
-      case ChainId.MAINNET:
-        return 'homestead'
-      case ChainId.RINKEBY:
-        return 'rinkeby'
-      case ChainId.ROPSTEN:
-        return 'ropsten'
-      case ChainId.GOERLI:
-        return 'goerli'
-      case ChainId.KOVAN:
-        return 'kovan'
-      default:
-        throw new Error(`Unsupported eth infura chainId for ${chainId}`)
+    if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
+      return false
     }
+    if (isStale(block.timestamp * 1000, staleTime)) {
+      logger.debug(
+        'ProviderManager',
+        'isProviderSynced',
+        `Provider ${getInfuraChainName(chainId)} is stale`
+      )
+      return false
+    }
+    return true
   }
 }

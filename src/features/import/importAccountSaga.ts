@@ -20,14 +20,26 @@ export function* importAccount(params: ImportAccountParams) {
   let account: Account
 
   if (isImportLocalAccountParams(params)) {
-    let { name, mnemonic, derivationPath } = params
-    const formattedMnemonic = normalizeMnemonic(mnemonic)
-    derivationPath ??= ETHEREUM_DERIVATION_PATH + '/0'
+    let { name, privateKey, mnemonic, derivationPath } = params
+
     name ??= 'Imported Account'
-    const signer = Wallet.fromMnemonic(formattedMnemonic, derivationPath)
-    const address = signer.address
     const type = AccountType.local
-    account = { type, address, name, signer }
+
+    // TODO: refactor to small functions (importFromPrivateKey, importFromMnemonic, importFromAddress)
+    if (privateKey) {
+      const signer = new Wallet(privateKey)
+      const address = signer.address
+      logger.debug('importAccountSaga', 'importAccount', address, name, type)
+      account = { type, address, name, signer }
+    } else if (mnemonic) {
+      const formattedMnemonic = normalizeMnemonic(mnemonic)
+      derivationPath ??= ETHEREUM_DERIVATION_PATH + '/0'
+      const signer = Wallet.fromMnemonic(formattedMnemonic, derivationPath)
+      const address = signer.address
+      account = { type, address, name, signer }
+    } else {
+      throw new Error('Expected either privateKey or mnemonic to be provided.')
+    }
   } else {
     let { name, address } = params as ImportReadonlyAccountParams
     name ??= 'Watched Account'

@@ -48,7 +48,7 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
       {({ handleChange, handleBlur, handleSubmit, values, touched, errors, isSubmitting }) => {
         return (
           <Box alignItems="center" justifyContent="center">
-            <Text variant="body" mt="lg">
+            <Text variant="body">
               {t`Add a wallet by typing or pasting an ENS name, Ethereum Account or Polygon Account.`}
             </Text>
 
@@ -56,7 +56,6 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
               onChangeText={handleChange('addressOrENS')}
               onBlur={handleBlur('addressOrENS')}
               value={values.addressOrENS}
-              mt="lg"
               placeholder="ENS name or address Address"
               testID="import_account_form/address/field"
             />
@@ -69,7 +68,6 @@ export function ImportReadonlyAccountForm({ onImportSuccess }: Props) {
             <PrimaryButton
               onPress={handleSubmit}
               label={t('Track')}
-              mt="lg"
               disabled={!values.resolvedAddress || isSubmitting}
             />
             {status === SagaStatus.Started && <ActivityIndicator />}

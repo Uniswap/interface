@@ -10,7 +10,7 @@ import {
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
-interface Config {
+export interface Config {
   activeChains: ChainIdTo<ChainState>
   apiUrl: string
   debug: boolean

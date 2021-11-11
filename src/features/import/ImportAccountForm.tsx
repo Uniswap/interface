@@ -25,8 +25,13 @@ interface Props {
 export function ImportAccountForm(props: Props) {
   const { onImportSuccess } = props
   const dispatch = useAppDispatch()
-  const onSubmit = (values: FormValues) => {
-    dispatch(importAccountActions.trigger(values))
+  const onSubmit = ({ mnemonic }: FormValues) => {
+    if (isValidMnemonic(mnemonic)) {
+      dispatch(importAccountActions.trigger({ mnemonic }))
+    } else {
+      // TODO: rename `mnemonic` to `mnemonicOrPrivateKey`/`secret`
+      dispatch(importAccountActions.trigger({ privateKey: mnemonic }))
+    }
   }
 
   const { status } = useSagaStatus(importAccountSagaName, onImportSuccess)
@@ -36,21 +41,25 @@ export function ImportAccountForm(props: Props) {
     <Formik initialValues={initialValues} onSubmit={onSubmit} validate={validateForm(t)}>
       {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
         <Box alignItems="center" justifyContent="center">
-          <Text variant="body" mt="lg">
-            {t('Enter your seed phrase (mnemonic):')}
-          </Text>
+          <Text variant="body">{t('Enter your seed phrase (mnemonic):')}</Text>
+          <PrimaryButton
+            onPress={handleSubmit}
+            label={t('Submit')}
+            mt="lg"
+            testID="import_account_form/mnemonic/submit"
+          />
           <MnemonicInput
             onChangeText={handleChange('mnemonic')}
             onBlur={handleBlur('mnemonic')}
             value={values.mnemonic}
-            mt="lg"
+            testID="import_account_form/mnemonic/field"
           />
           {touched.mnemonic && errors.mnemonic && (
             <Text variant="bodySm" color="error">
               {errors.mnemonic}
             </Text>
           )}
-          <PrimaryButton onPress={handleSubmit} label={t('Submit')} mt="lg" />
+
           {status === SagaStatus.Started && <ActivityIndicator />}
         </Box>
       )}
@@ -63,9 +72,11 @@ function validateForm(t: TFunction) {
     let errors: FormikErrors<FormValues> = {}
     if (!values.mnemonic) {
       errors.mnemonic = t('Required')
-    } else if (!isValidMnemonic(values.mnemonic)) {
-      errors.mnemonic = t('Invalid Mnemonic')
     }
+    // TODO: add validation for mnemonic or private key
+    // else if (!isValidMnemonic(values.mnemonic)) {
+    //   errors.mnemonic = t('Invalid Mnemonic')
+    // }
     return errors
   }
 }

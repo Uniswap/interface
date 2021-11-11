@@ -6,7 +6,7 @@
     "ios": {
       "type": "ios.app",
       "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Uniswap.app",
-      "build": "xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
+      "build": "RN_SRC_EXT=e2e.js,e2e.ts xcodebuild -workspace ios/Uniswap.xcworkspace -scheme Uniswap -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=YES -arch x86_64"
     },
     "android": {
       "type": "android.apk",

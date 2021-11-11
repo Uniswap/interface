@@ -70,3 +70,6 @@ src/abis/uniswapV3
 
 # ccache
 .ccache
+
+# hardhat network fork
+/cache/

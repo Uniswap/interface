@@ -10,6 +10,7 @@
     "debug": "react-devtools",
     "deploy:ios:alpha": "fastlane ios buildAndShip",
     "graphql:generate": "graphql-codegen --config codegen.yml",
+    "hardhat": "hardhat node",
     "i18n:extract": "i18next",
     "ios": "SKIP_BUNDLING=1 react-native run-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -18,7 +19,7 @@
     "tsc:compile": "tsc --project .",
     "test": "jest",
     "test:e2e:build": "detox build --configuration ios",
-    "test:e2e:run": "detox test --configuration ios",
+    "test:e2e:run": "detox test --configuration ios --record-videos failing",
     "test:e2e:packager": "cross-env REACT_DEBUGGER=\"echo nope\" node_modules/.bin/react-native start --no-interactive"
   },
   "dependencies": {
@@ -91,6 +92,7 @@
     "detox": "^18.23.1",
     "eslint": "^7.14.0",
     "eslint-plugin-detox": "^1.0.0",
+    "hardhat": "^2.6.8",
     "i18next-parser": "^4.7.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.2.3",

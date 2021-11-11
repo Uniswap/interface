@@ -148,17 +148,20 @@ jobs:
           echo "Packager is online! Preparing bundle..."
           curl --output /dev/null --silent --head --fail "http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&inlineSourceMap=true"
           echo "...javascript bundle ready"
-          
+
       - name: Create Simulator Log
         # With a little delay so the detox test below has time to spawn it, missing the first part of boot is fine
         # If you boot the simulator separately from detox, some other race fails and detox testee never sends ready to proxy
         continue-on-error: true
         run: nohup sh -c "sleep 30 && xcrun simctl spawn booted log stream --level debug --style compact > simulator.log 2>&1 &"
 
+      - name: Hardhat Fork Mainnet
+        run: yarn hardhat &
+
       - name: Detox Test
         timeout-minutes: 30
-        run: npm run test:e2e:run
-          
+        run: yarn test:e2e:run
+
       - name: Upload Detox Artifacts
         uses: actions/upload-artifact@v2
         if: failure()
@@ -166,7 +169,7 @@ jobs:
           name: artifacts
           path: artifacts
           if-no-files-found: ignore
-          
+
       - name: Compress Simulator Log
         if: always()
         run: gzip -9 simulator.log

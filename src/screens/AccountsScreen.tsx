@@ -58,7 +58,7 @@ function AccountItem({ account: { address, name } }: AccountItemProps) {
       borderRadius="lg"
       borderWidth={2}
       mb="sm"
-      testID={`account_item/${address}`}>
+      testID={`account_item/${address.toLowerCase()}`}>
       <Box bg="gray400" borderRadius="full" width={50} height={50} marginRight="sm" />
       <Box>
         <Text variant="h3">$2,243.22</Text>
