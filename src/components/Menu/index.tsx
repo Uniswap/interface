@@ -10,13 +10,13 @@ import {
   BookOpen,
   Check,
   ChevronLeft,
-  Code,
+  Coffee,
   FileText,
   Globe,
+  HelpCircle,
   Info,
   MessageCircle,
   Moon,
-  PieChart,
   Sun,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -252,29 +252,23 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://docs.uniswap.org/">
+                    <MenuItem href="https://help.uniswap.org/">
                       <div>
-                        <Trans>Docs</Trans>
+                        <Trans>Help Center</Trans>
                       </div>
-                      <BookOpen opacity={0.6} size={16} />
+                      <HelpCircle opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href={CODE_LINK}>
+                    <MenuItem href="https://uniswap.canny.io/feature-requests">
                       <div>
-                        <Trans>Code</Trans>
+                        <Trans>Request Features</Trans>
                       </div>
-                      <Code opacity={0.6} size={16} />
+                      <Coffee opacity={0.6} size={16} />
                     </MenuItem>
                     <MenuItem href="https://discord.gg/FCfyBSbCU5">
                       <div>
                         <Trans>Discord</Trans>
                       </div>
                       <MessageCircle opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href={infoLink}>
-                      <div>
-                        <Trans>Analytics</Trans>
-                      </div>
-                      <PieChart opacity={0.6} size={16} />
                     </MenuItem>
                     <ToggleMenuItem onClick={() => setMenu('lang')}>
                       <div>
@@ -286,6 +280,12 @@ export default function Menu() {
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                       {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
+                    <MenuItem href="https://docs.uniswap.org/">
+                      <div>
+                        <Trans>Docs</Trans>
+                      </div>
+                      <BookOpen opacity={0.6} size={16} />
+                    </MenuItem>
                     <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
                       <div>
                         <Trans>Legal & Privacy</Trans>
