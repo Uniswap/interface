@@ -40,8 +40,8 @@ export const HoverCard = styled(Card)`
     border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
-const StyledPositionCard = styled(LightCard)`
-  border: none;
+const StyledPositionCard = styled(LightCard)<{ border?: string }>`
+  border: ${({ border }) => border || 'none'};
   background: ${({ theme }) => theme.bg6};
   position: relative;
   overflow: hidden;
@@ -133,6 +133,104 @@ interface PositionCardProps {
   border?: string
   stakedBalance?: TokenAmount // optional balance to indicate that liquidity is deposited in mining pool
   myLiquidity?: UserLiquidityPosition
+}
+
+export function NarrowPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
+  const { account } = useActiveWeb3React()
+
+  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
+  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
+
+  const [showMore, setShowMore] = useState(false)
+
+  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+
+  const poolTokenPercentage =
+    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+      : undefined
+
+  const [token0Deposited, token1Deposited] =
+    !!pair &&
+    !!totalPoolTokens &&
+    !!userPoolBalance &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? [
+          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance),
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance)
+        ]
+      : [undefined, undefined]
+
+  const native0 = useCurrencyConvertedToNative(currency0 || undefined)
+  const native1 = useCurrencyConvertedToNative(currency1 || undefined)
+  return (
+    <>
+      <StyledPositionCard border={border}>
+        <AutoColumn gap="12px">
+          <FixedHeightRow>
+            <RowFixed>
+              <Text fontWeight={500} fontSize={16}>
+                <Trans>Your position</Trans>
+              </Text>
+            </RowFixed>
+          </FixedHeightRow>
+          <FixedHeightRow onClick={() => setShowMore(!showMore)}>
+            <RowFixed>
+              <DoubleCurrencyLogo currency0={native0} currency1={native1} margin={true} size={20} />
+              <Text fontWeight={500} fontSize={20}>
+                {native0?.symbol}/{native1?.symbol}
+              </Text>
+            </RowFixed>
+            <RowFixed>
+              <Text fontWeight={500} fontSize={20}>
+                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}{' '}
+              </Text>
+            </RowFixed>
+          </FixedHeightRow>
+          <AutoColumn gap="4px">
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                <Trans>Your pool share:</Trans>
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                {native0?.symbol}:
+              </Text>
+              {token0Deposited ? (
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    {token0Deposited?.toSignificant(6)}
+                  </Text>
+                </RowFixed>
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                {native1?.symbol}:
+              </Text>
+              {token1Deposited ? (
+                <RowFixed>
+                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    {token1Deposited?.toSignificant(6)}
+                  </Text>
+                </RowFixed>
+              ) : (
+                '-'
+              )}
+            </FixedHeightRow>
+          </AutoColumn>
+        </AutoColumn>
+      </StyledPositionCard>
+    </>
+  )
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCardProps) {
