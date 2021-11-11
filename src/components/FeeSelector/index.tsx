@@ -184,7 +184,7 @@ export default function FeeSelector({
           <Select>
             {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
               const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
-              if (supportedChains === 'all' || supportedChains.includes(chainId)) {
+              if (supportedChains.includes(chainId)) {
                 return (
                   <FeeOption
                     feeAmount={_feeAmount}
