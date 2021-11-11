@@ -445,7 +445,7 @@ export default function TokenPair({
                     <TokenWrapper>
                       <CurrencyLogo currency={currencyA} size="16px" />
                       <TYPE.black fontWeight={400} fontSize={14}>
-                        {formatJSBIValue(amountsMin[Field.CURRENCY_A], currencyA?.decimals)} {currencyA?.symbol}
+                        {formatJSBIValue(amountsMin[Field.CURRENCY_A], currencyA?.decimals)} {nativeA?.symbol}
                       </TYPE.black>
                     </TokenWrapper>
                   </RowBetween>
@@ -456,7 +456,7 @@ export default function TokenPair({
                     <TokenWrapper>
                       <CurrencyLogo currency={currencyB} size="16px" />
                       <TYPE.black fontWeight={400} fontSize={14}>
-                        {formatJSBIValue(amountsMin[Field.CURRENCY_B], currencyB?.decimals)} {currencyB?.symbol}
+                        {formatJSBIValue(amountsMin[Field.CURRENCY_B], currencyB?.decimals)} {nativeB?.symbol}
                       </TYPE.black>
                     </TokenWrapper>
                   </RowBetween>
@@ -667,14 +667,14 @@ export default function TokenPair({
                       <TokenWrapper>
                         <CurrencyLogo currency={currencyA} size="16px" />
                         <TYPE.black fontWeight={400} fontSize={14}>
-                          {formatJSBIValue(amountsMin[Field.CURRENCY_A], currencyA?.decimals)} {currencyA?.symbol}
+                          {formatJSBIValue(amountsMin[Field.CURRENCY_A], currencyA?.decimals)} {nativeA?.symbol}
                         </TYPE.black>
                       </TokenWrapper>
 
                       <TokenWrapper>
                         <CurrencyLogo currency={currencyB} size="16px" />
                         <TYPE.black fontWeight={400} fontSize={14}>
-                          {formatJSBIValue(amountsMin[Field.CURRENCY_B], currencyB?.decimals)} {currencyB?.symbol}
+                          {formatJSBIValue(amountsMin[Field.CURRENCY_B], currencyB?.decimals)} {nativeB?.symbol}
                         </TYPE.black>
                       </TokenWrapper>
                     </DetailBox>

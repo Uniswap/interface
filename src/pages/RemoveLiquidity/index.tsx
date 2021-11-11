@@ -8,6 +8,7 @@ import { MinimalPositionCard } from 'components/PositionCard'
 import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import ZapOut from './ZapOut'
 import TokenPair from './TokenPair'
 import { useDerivedBurnInfo } from 'state/burn/hooks'
@@ -20,6 +21,9 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { chainId } = useActiveWeb3React()
+
+  const nativeA = useCurrencyConvertedToNative(currencyA)
+  const nativeB = useCurrencyConvertedToNative(currencyB)
 
   const { pair } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
 
@@ -46,7 +50,7 @@ export default function RemoveLiquidity({
               />
             </LiquidityProviderModeWrapper>
             <PoolName>
-              {currencyA?.symbol} - {currencyB?.symbol} <Trans>pool</Trans>
+              {nativeA?.symbol} - {nativeB?.symbol} <Trans>pool</Trans>
             </PoolName>
           </TopBar>
 

@@ -122,7 +122,8 @@ export default function ZapOut({
     currencyEquals(currencies[independentTokenField] as Currency, WETH[chainId])
   )
 
-  const independentToken = independentTokenField === Field.CURRENCY_A ? currencyA : currencyB
+  const independentToken =
+    nativeA && nativeB ? (independentTokenField === Field.CURRENCY_A ? nativeA : nativeB) : undefined
 
   const isValid = !error && !insufficientLiquidity
 
@@ -379,14 +380,7 @@ export default function ZapOut({
 
             addTransaction(response, {
               summary:
-                'Remove ' +
-                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-                ' ' +
-                convertToNativeTokenFromETH(currencyA, chainId).symbol +
-                ' and ' +
-                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-                ' ' +
-                convertToNativeTokenFromETH(currencyB, chainId).symbol
+                'Remove ' + parsedAmounts[independentTokenField]?.toSignificant(3) + ' ' + independentToken?.symbol
             })
 
             setTxHash(response.hash)
@@ -408,9 +402,7 @@ export default function ZapOut({
     }
   }
 
-  const pendingText = `Removing ${parsedAmounts[independentTokenField]?.toSignificant(6)} ${
-    independentTokenField === Field.CURRENCY_A ? nativeA?.symbol : nativeB?.symbol
-  }`
+  const pendingText = `Removing ${parsedAmounts[independentTokenField]?.toSignificant(6)} ${independentToken?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -477,7 +469,7 @@ export default function ZapOut({
             {parsedAmounts[independentTokenField]?.toSignificant(6)}
           </Text>
           <Text fontSize={24} fontWeight={500}>
-            {currencies[independentTokenField]?.symbol}
+            {independentToken?.symbol}
           </Text>
         </AutoRow>
 

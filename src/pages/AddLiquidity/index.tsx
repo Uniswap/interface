@@ -10,6 +10,7 @@ import { PairState } from 'data/Reserves'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useDerivedMintInfo } from 'state/mint/hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import ZapIn from './ZapIn'
 import TokenPair from './TokenPair'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
@@ -22,6 +23,9 @@ export default function AddLiquidity({
   const { chainId } = useActiveWeb3React()
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+
+  const nativeA = useCurrencyConvertedToNative(currencyA || undefined)
+  const nativeB = useCurrencyConvertedToNative(currencyB || undefined)
 
   const currencyAIsWETH = !!(chainId && currencyA && currencyEquals(currencyA, WETH[chainId]))
   const currencyBIsWETH = !!(chainId && currencyB && currencyEquals(currencyB, WETH[chainId]))
@@ -51,7 +55,7 @@ export default function AddLiquidity({
               />
             </LiquidityProviderModeWrapper>
             <PoolName>
-              {currencyA?.symbol} - {currencyB?.symbol} <Trans>pool</Trans>
+              {nativeA?.symbol} - {nativeB?.symbol} <Trans>pool</Trans>
             </PoolName>
           </TopBar>
 
