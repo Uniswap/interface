@@ -16,6 +16,7 @@ import { useCurrentBlockTimestamp } from 'src/features/blocks/useCurrentBlockTim
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/hooks'
 import { useGasFee } from 'src/features/gas/useGasFee'
+import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
@@ -79,6 +80,9 @@ export function DevScreen({ navigation }: Props) {
       value: utils.parseEther('1.0'), // 1 ether
     })
   }
+
+  // imports test account for easy development/testing
+  useTestAccount()
 
   const { t } = useTranslation()
 
