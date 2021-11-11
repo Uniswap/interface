@@ -41,3 +41,8 @@ export const immediateSubgraphClients: { [chainId in ChainId]: GraphQLClient } =
     'https://api.thegraph.com/subgraphs/name/luzzif/swapr-arbitrum-rinkeby-v2'
   )
 }
+
+export const immediateCarrotSubgraphClients: { [chainId: number]: GraphQLClient } = {
+  [ChainId.RINKEBY]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/carrot-rinkeby'),
+  [ChainId.XDAI]: new GraphQLClient('https://api.thegraph.com/subgraphs/name/luzzif/carrot-xdai')
+}
