@@ -202,6 +202,14 @@ export const MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI:
         'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg'
+    },
+    {
+      chainId: 1,
+      address: '0x60EF10EDfF6D600cD91caeCA04caED2a2e605Fe5',
+      symbol: 'MOCHI',
+      name: 'Mochi Inu',
+      decimals: 18,
+      logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14315.png'
     }
   ],
   version: {
