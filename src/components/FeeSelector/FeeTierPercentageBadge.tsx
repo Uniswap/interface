@@ -17,7 +17,7 @@ export function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <TYPE.label fontSize={11}>
+      <TYPE.label fontSize={10}>
         {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
           <Trans>Not created</Trans>
         ) : distributions[feeAmount] !== undefined ? (
