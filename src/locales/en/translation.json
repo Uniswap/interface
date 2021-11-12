@@ -39,5 +39,7 @@
   "Send Token": "Send Token",
   "Get Balance": "Get Balance",
   "Toggle Rinkeby": "Toggle Rinkeby",
-  "Compute fee": "Compute fee"
+  "Compute fee": "Compute fee",
+  "About this token": "About this token",
+  "Unknown name":"Unknown name"
 }

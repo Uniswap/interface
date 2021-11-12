@@ -7,13 +7,14 @@ import { NULL_ADDRESS } from 'src/constants/accounts'
 interface TokenBalanceListProps {
   loading: boolean
   balances: CurrencyAmount<Currency>[]
+  onPressToken: (currencyAmount: CurrencyAmount<Currency>) => void
 }
 
-export function TokenBalanceList({ loading, balances }: TokenBalanceListProps) {
+export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalanceListProps) {
   if (loading) return <ActivityIndicator color="grey" animating={loading} />
 
   const renderItem = ({ item }: ListRenderItemInfo<CurrencyAmount<Currency>>) => (
-    <TokenBalanceItem currencyAmount={item} />
+    <TokenBalanceItem currencyAmount={item} onPressToken={onPressToken} />
   )
   const key = (balance: CurrencyAmount<Currency>) =>
     balance.currency.isNative ? NULL_ADDRESS : balance.currency.address

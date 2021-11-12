@@ -12,9 +12,10 @@ const YESTERDAY = Math.round(d.setDate(d.getDate() - 1))
 
 interface TokenBalanceItemProps {
   currencyAmount: CurrencyAmount<Currency>
+  onPressToken: (currencyAmount: CurrencyAmount<Currency>) => void
 }
 
-export function TokenBalanceItem({ currencyAmount }: TokenBalanceItemProps) {
+export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceItemProps) {
   const { currency } = currencyAmount
 
   const { prices } = useHourlyTokenPrices({
@@ -39,6 +40,7 @@ export function TokenBalanceItem({ currencyAmount }: TokenBalanceItemProps) {
 
   return (
     <Button
+      onPress={() => onPressToken(currencyAmount)}
       backgroundColor="white"
       flexDirection="row"
       width="100%"

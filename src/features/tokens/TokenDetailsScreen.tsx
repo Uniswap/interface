@@ -1,43 +1,62 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
+import ArrowLeft from 'src/assets/arrow-left.svg'
+import { Button } from 'src/components/buttons/Button'
+import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
-import { useAllTokens } from 'src/features/tokens/useTokens'
-
 type Props = NativeStackScreenProps<RootStackParamList, Screens.TokenDetails>
 
-export function TokenDetailsScreen({ route }: Props) {
-  const { tokenAddress, chainId } = route.params
+interface TokenDetailsHeaderProps {
+  currency: Currency
+  onPressBack: () => void
+}
 
-  const chainIdToTokens = useAllTokens()
-  const token = chainIdToTokens[chainId]?.[tokenAddress]
+function TokenDetailsHeader({ currency, onPressBack }: TokenDetailsHeaderProps) {
+  return (
+    <Box my="md" alignItems="center" justifyContent="space-between" flexDirection="row">
+      <Button ml="lg" onPress={onPressBack}>
+        <ArrowLeft width={30} height={30} />
+      </Button>
+      <Box alignItems="center" flexDirection="row">
+        <CurrencyLogo currency={currency} size={30} />
+        <Text variant="h2" ml="sm">
+          {currency.symbol ?? 'Unknown symbol'}
+        </Text>
+      </Box>
+      <Box width={40} height={40} mr="lg" />
+    </Box>
+  )
+}
 
-  if (!token) {
-    // TODO show some UI instead of throwing here
-    throw new Error(`Unknown token ${tokenAddress}`)
-  }
+export function TokenDetailsScreen({ route, navigation }: Props) {
+  const { currencyAmount } = route.params
+  const { currency } = currencyAmount
 
   const { t } = useTranslation()
+  const onPressBack = () => {
+    navigation.goBack()
+  }
 
   return (
     <Screen>
-      <Box alignItems="center">
-        <Text variant="h3" textAlign="center">
-          {t('Token {{addr}}', { addr: tokenAddress })}
-        </Text>
-        <Text variant="h3" mt="lg">
-          {t('Name: {{name}}', { name: token.name ?? 'Unknown name' })}
-        </Text>
-        <Text variant="h3" mt="lg">
-          {t('Symbol: {{symbol}}', { symbol: token.symbol ?? 'Unknown symbol' })}
-        </Text>
-      </Box>
-      <PriceChart token={token} />
+      <TokenDetailsHeader currency={currency} onPressBack={onPressBack} />
+      <ScrollView>
+        <PriceChart token={currency.wrapped} />
+        <Box mx="lg" mt="xl">
+          <Text variant="h3" mb="sm">
+            {t`About this token`}
+          </Text>
+          <Text variant="body">{currency.name ?? t`Unknown name`}</Text>
+        </Box>
+      </ScrollView>
     </Screen>
   )
 }

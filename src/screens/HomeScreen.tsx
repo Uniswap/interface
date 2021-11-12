@@ -24,6 +24,11 @@ export function HomeScreen({ navigation }: Props) {
   )
   const ethBalance = useEthBalance(currentChain, activeAccount?.address)
 
+  const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
+    // TODO: specify chain when navigating to detail
+    navigation.navigate(Screens.TokenDetails, { currencyAmount })
+  }
+
   if (!activeAccount)
     return (
       <Screen backgroundColor="mainBackground">
@@ -42,7 +47,11 @@ export function HomeScreen({ navigation }: Props) {
   return (
     <Screen backgroundColor="mainBackground">
       <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
-      <TokenBalanceList loading={tokenBalancesLoading} balances={balances} />
+      <TokenBalanceList
+        loading={tokenBalancesLoading}
+        balances={balances}
+        onPressToken={onPressToken}
+      />
     </Screen>
   )
 }

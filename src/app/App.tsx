@@ -81,6 +81,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
           component={DevScreen}
           options={{ title: 'Uniswap | Home' }}
         />
+        <Stack.Screen name={Screens.Home} component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name={Screens.Balances}
           component={BalancesScreen}
@@ -89,14 +90,13 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         <Stack.Screen
           name={Screens.TokenDetails}
           component={TokenDetailsScreen}
-          options={{ title: 'Uniswap | Token' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name={Screens.Transfer}
           component={TransferTokenScreen}
           options={{ title: 'Uniswap | Send' }}
         />
-        <Stack.Screen name={Screens.Home} component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name={Screens.Accounts}
           component={AccountsScreen}

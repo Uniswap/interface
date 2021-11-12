@@ -99,6 +99,7 @@
     "metro-react-native-babel-preset": "^0.66.2",
     "react-devtools": "^4.18.0",
     "react-native-dotenv": "^3.2.0",
+    "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "17.0.2",
     "redux-saga-test-plan": "^4.0.4",
     "typechain": "^5.2.0",

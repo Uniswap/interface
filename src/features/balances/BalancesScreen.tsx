@@ -1,22 +1,16 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { RootStackParamList } from 'src/app/navTypes'
-import { Screens } from 'src/app/Screens'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { ALL_ACCOUNTS, fetchBalancesActions } from 'src/features/balances/fetchBalances'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { getKeys } from 'src/utils/objects'
 
-type Props = NativeStackScreenProps<RootStackParamList, Screens.Balances>
-
-export function BalancesScreen({ navigation }: Props) {
+export function BalancesScreen() {
   const dispatch = useAppDispatch()
   const accounts = useAppSelector((state) => state.wallet.accounts)
 
@@ -26,10 +20,6 @@ export function BalancesScreen({ navigation }: Props) {
 
   const onPressRefresh = () => {
     dispatch(fetchBalancesActions.trigger(ALL_ACCOUNTS))
-  }
-
-  const onPressTokenDetails = (tokenAddress: string) => () => {
-    navigation.navigate(Screens.TokenDetails, { tokenAddress, chainId: ChainId.MAINNET })
   }
 
   const { t } = useTranslation()
@@ -44,9 +34,7 @@ export function BalancesScreen({ navigation }: Props) {
               <Text variant="h3">{t('ChainId {{chainId}}', { chainId })}</Text>
               {Object.values(chainIdToTokens[chainId]!).map((token) => (
                 <Box key={token.address}>
-                  <Button onPress={onPressTokenDetails(token.address)}>
-                    <Text>{token.symbol || token.address}</Text>
-                  </Button>
+                  <Text>{token.symbol || token.address}</Text>
                 </Box>
               ))}
             </View>

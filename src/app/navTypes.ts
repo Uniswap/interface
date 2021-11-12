@@ -1,5 +1,5 @@
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Screens } from 'src/app/Screens'
-import { ChainId } from 'src/constants/chains'
 
 // Route nav props go here
 export type RootStackParamList = {
@@ -11,7 +11,7 @@ export type RootStackParamList = {
   [Screens.ImportAccount]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
   [Screens.Swap]: undefined
-  [Screens.TokenDetails]: { tokenAddress: Address; chainId: ChainId }
+  [Screens.TokenDetails]: { currencyAmount: CurrencyAmount<Currency> }
   [Screens.Transfer]: undefined
   [Screens.Welcome]: undefined
 }
