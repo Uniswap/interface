@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -61,18 +61,6 @@ msgstr "- Αφαίρεση παραλήπτη"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / εβδομάδα"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05% χρέωση"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3% χρέωση"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% χρέωση"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "Υπόλοιπο:"
 msgid "Balance: {0} {1}"
 msgstr "Υπόλοιπο: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Καλύτερο για εξωτικά ζεύγη."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Καλύτερο για τα περισσότερα ζεύγη."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Καλύτερο για σταθερά ζεύγη."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Καλύτερο για πολύ σταθερά ζευγάρια."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1121,7 +1110,7 @@ msgstr "Δεν βρέθηκε ρευστότητα V2."
 msgid "No active pools"
 msgstr "Δεν υπάρχει ενεργή δεξαμενή"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Χωρίς δεδομένα"
 
@@ -1145,7 +1134,7 @@ msgstr "Δεν βρέθηκαν προτάσεις."
 msgid "No results found."
 msgstr "Δεν βρέθηκαν αποτελέσματα."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Δεν δημιουργήθηκε"
 
@@ -2378,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Προστέθηκε από τον χρήστη"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2392,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}χρέωσης 0%"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% επιλέξτε"
 

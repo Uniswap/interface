@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -61,18 +61,6 @@ msgstr "- Ontvanger verwijderen"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / week"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05% vergoeding"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3% vergoeding"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% vergoeding"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "Saldo:"
 msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Het beste voor exotische paren."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Het beste voor de meeste paren."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Het beste voor stabiele paren."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Het beste voor zeer stabiele paren."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1121,7 +1110,7 @@ msgstr "Geen V2-liquiditeit gevonden."
 msgid "No active pools"
 msgstr "Geen actieve pools"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Geen informatie"
 
@@ -1145,7 +1134,7 @@ msgstr "Geen voorstellen gevonden."
 msgid "No results found."
 msgstr "Geen resultaten gevonden."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Niet gemaakt"
 
@@ -2378,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Toegevoegd door gebruiker"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2392,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% vergoedingsniveau"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% selecteren"
 

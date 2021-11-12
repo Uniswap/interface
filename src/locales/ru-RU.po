@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -61,18 +61,6 @@ msgstr "- Удалить получателя"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI в неделю"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "Комиссия 0,05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "Комиссия 0,3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "Комиссия 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "Баланс:"
 msgid "Balance: {0} {1}"
 msgstr "Баланс: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Подходит для экзотических пар."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Подходит для большинства пар."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Подходит для пар стейблкоинов."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Лучше всего подходит для очень стабильных пар."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1121,7 +1110,7 @@ msgstr "Ликвидность в V2 не обнаружена."
 msgid "No active pools"
 msgstr "Нет активных пулов"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Нет данных"
 
@@ -1145,7 +1134,7 @@ msgstr "Предложений не найдено."
 msgid "No results found."
 msgstr "Ничего не найдено."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Не создано"
 
@@ -2378,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Пользовательский"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2392,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Уровень комиссии {0}%"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "Выбирают {0}%"
 

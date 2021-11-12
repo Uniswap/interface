@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 09:06\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -61,18 +61,6 @@ msgstr "- 删除接收人"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI 代币 / 每周"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0.05%手续费"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0.3%手续费"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1%手续费"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "余额："
 msgid "Balance: {0} {1}"
 msgstr "余额：{0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "适合低交易量的币对。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "适合大多数币对。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "适合稳定币币对。"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "最适合非常稳定的配对。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1121,7 +1110,7 @@ msgstr "找不到V2流动资金。"
 msgid "No active pools"
 msgstr "无运行中的流动池"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "没有数据"
 
@@ -1145,7 +1134,7 @@ msgstr "没有提案。"
 msgid "No results found."
 msgstr "未找到结果。"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未创建"
 
@@ -2378,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • 由用户添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2392,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 手续费级别"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "选择 {0}%"
 

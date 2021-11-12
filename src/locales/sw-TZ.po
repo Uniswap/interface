@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -61,18 +61,6 @@ msgstr "- Ondoa mpokeaji"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / wiki"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "makato 0.05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "makato 0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "makato 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "Kiasi:"
 msgid "Balance: {0} {1}"
 msgstr "Kiasi: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Bora kwa pair maalum."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Bora kwa pair nyingi."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Bora kwa pair thabiti."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Bora kwa jozi imara sana."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1121,7 +1110,7 @@ msgstr "Hakuna V2 Liquidity iliyopatikana."
 msgid "No active pools"
 msgstr "Hakuna mabwawa ya kazi"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Hakuna data"
 
@@ -1145,7 +1134,7 @@ msgstr "Hakuna mapendekezo yaliyopatikana."
 msgid "No results found."
 msgstr "Hakuna matokeo yaliyopatikana."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Haijaundwa"
 
@@ -2378,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Imeongezwa na mtumiaji"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2392,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Kiwango cha ada ya {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "Chagua {0}"
 

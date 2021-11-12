@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 15:06\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -61,18 +61,6 @@ msgstr "- Távolítsa el a címzettet"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / hét"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05% díj"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3% díj"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% díj"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -307,20 +295,21 @@ msgstr "Egyenleg:"
 msgid "Balance: {0} {1}"
 msgstr "Egyenleg: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Legjobb egzotikus párok számára."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Legjobb a legtöbb pár számára."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Legjobb stabil párokhoz."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "A legjobb nagyon stabil párok számára."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1122,7 +1111,7 @@ msgstr "V2 likviditás nem található."
 msgid "No active pools"
 msgstr "Nincs aktív pool"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Nincs adat"
 
@@ -1146,7 +1135,7 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nincs létrehozva"
 
@@ -2380,6 +2369,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • felhasználó hozzáadta"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2394,7 +2384,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% -os díjszint"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% választ"
 
