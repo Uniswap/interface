@@ -44,6 +44,7 @@ function PairRow({ pair, onSelect, isSelected, style }: PairRowProps) {
       alignItems="center"
       px="20px"
     >
+
       <Box mr="8px">
         <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={20} />
       </Box>

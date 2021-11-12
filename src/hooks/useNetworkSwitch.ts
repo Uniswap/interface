@@ -29,7 +29,7 @@ export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchPr
 
   const toggleEthereumOptionPopover = useEthereumOptionPopoverToggle()
 
-  const selectEthereum = () => {
+  const selectEthereum = useCallback(() => {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     if (isMobile && isMetamask) {
       if (onSelectNetworkCallback) onSelectNetworkCallback()
@@ -37,7 +37,7 @@ export const useNetworkSwitch = ({ onSelectNetworkCallback }: UseNetworkSwitchPr
     } else {
       selectNetwork(ChainId.MAINNET)
     }
-  }
+  }, [onSelectNetworkCallback, selectNetwork, toggleEthereumOptionPopover])
 
   return {
     selectNetwork,

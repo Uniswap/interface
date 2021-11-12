@@ -17,17 +17,21 @@ import { NetworkSwitcher as NetworkSwitcherPopover } from '../../components/Netw
 import { useActiveWeb3React } from '../../hooks'
 import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
-import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal } from '../../state/bridge/hooks'
+import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFilter } from '../../state/bridge/hooks'
 
-import { NETWORK_DETAIL } from '../../constants'
+import { NETWORK_DETAIL, SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
+import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
 
 const Wrapper = styled.div`
+  width: 100%;
   max-width: 432px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 const Title = styled.p`
@@ -40,16 +44,14 @@ const Title = styled.p`
 `
 
 const Row = styled(RowBetween)`
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
   align-items: stretch;
+  justify-content: space-between;
 
-  & > div {
-    min-width: 141px;
-    width: 100%;
-  }
-
-  & > div,
-  & > div button {
-    min-height: 100%;
+  @media (max-width: 374px) {
+    flex-direction: column;
   }
 `
 
@@ -60,8 +62,12 @@ const SwapButton = styled.button<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
 
   @media only screen and (max-width: 600px) {
-    padding: 0 8px;
+    padding: 8px;
   }
+`
+
+const AssetWrapper = styled.div`
+  flex: 1 0 35%;
 `
 
 export default function Bridge() {
@@ -87,8 +93,11 @@ export default function Bridge() {
   const [collectableTx, setCollectableTx] = useState(
     () => bridgeSummaries.filter(tx => tx.status === 'redeem')[0] || undefined
   )
+  const [txsFilter, setTxsFilter] = useBridgeTxsFilter()
 
+  const collectableTxAmount = bridgeSummaries.filter(tx => tx.status === 'redeem').length
   const isCollecting = step === BridgeStep.Collect
+  const isCollectableFilter = txsFilter === BridgeTxsFilter.COLLECTABLE
   const isNetworkConnected = fromNetwork.chainId === chainId
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalance, chainId)
   const atMaxAmountInput = Boolean((maxAmountInput && parsedAmount?.equalTo(maxAmountInput)) || !isNetworkConnected)
@@ -103,6 +112,7 @@ export default function Bridge() {
     onUserInput('')
     onCurrencySelection('')
     setStep(BridgeStep.Initial)
+    setTxsFilter(BridgeTxsFilter.RECENT)
     setModalStatus(BridgeModalStatus.CLOSED)
     setModalData({
       symbol: '',
@@ -110,7 +120,11 @@ export default function Bridge() {
       fromChainId: 1,
       toChainId: 42161
     })
-  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus])
+  }, [onCurrencySelection, onUserInput, setModalData, setModalStatus, setTxsFilter])
+
+  const handleCollectTab = useCallback(() => {
+    setTxsFilter(BridgeTxsFilter.COLLECTABLE)
+  }, [setTxsFilter])
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && onUserInput(isNetworkConnected ? maxAmountInput.toExact() : '')
@@ -174,45 +188,53 @@ export default function Bridge() {
 
   return (
     <Wrapper>
-      <Tabs step={step} setStep={setStep} handleResetBridge={handleResetBridge} />
       <AppBody>
+        <Tabs
+          collectableTxAmount={collectableTxAmount}
+          isCollecting={isCollecting}
+          isCollectableFilter={isCollectableFilter}
+          handleResetBridge={handleResetBridge}
+          handleCollectTab={handleCollectTab}
+        />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>
         <Row mb="12px">
-          <div ref={fromPanelRef}>
+          <AssetWrapper ref={fromPanelRef}>
             <AssetSelector
               label="from"
               selectedNetwork={getNetworkOptionById(fromNetwork.chainId, fromOptions)}
-              onClick={() => setShowFromList(val => !val)}
-              disabled={isCollecting}
+              onClick={SHOW_TESTNETS ? () => setShowFromList(val => !val) : () => null}
+              disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              show={showFromList}
-              onOuterClick={() => setShowFromList(false)}
               options={fromOptions}
               showWalletConnector={false}
               parentRef={fromPanelRef}
+              show={SHOW_TESTNETS ? showFromList : false}
+              onOuterClick={SHOW_TESTNETS ? () => setShowFromList(false) : () => null}
+              placement="bottom"
             />
-          </div>
+          </AssetWrapper>
           <SwapButton onClick={onSwapBridgeNetworks} disabled={isCollecting}>
             <img src={ArrowIcon} alt="arrow" />
           </SwapButton>
-          <div ref={toPanelRef}>
+          <AssetWrapper ref={toPanelRef}>
             <AssetSelector
               label="to"
               selectedNetwork={getNetworkOptionById(toNetwork.chainId, toOptions)}
-              onClick={() => setShowToList(val => !val)}
-              disabled={isCollecting}
+              onClick={SHOW_TESTNETS ? () => setShowToList(val => !val) : () => null}
+              disabled={SHOW_TESTNETS ? isCollecting : true}
             />
             <NetworkSwitcherPopover
-              show={showToList}
-              onOuterClick={() => setShowToList(false)}
               options={toOptions}
               showWalletConnector={false}
               parentRef={toPanelRef}
+              show={SHOW_TESTNETS ? showToList : false}
+              onOuterClick={SHOW_TESTNETS ? () => setShowToList(false) : () => null}
+              placement="bottom"
             />
-          </div>
+          </AssetWrapper>
         </Row>
         <CurrencyInputPanel
           label="Amount"

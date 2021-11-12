@@ -15,12 +15,12 @@ import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { TokenAddressMap, useCombinedActiveList } from '../../state/lists/hooks'
 import { isTokenOnList } from '../../utils'
-import { AutoColumn } from '../Column'
+
 import { TYPE } from '../../theme'
 import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
 import ImportRow from './ImportRow'
 import { DarkCard } from '../Card'
-import { RowBetween, RowFixed } from '../Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from '../QuestionHelper'
 
@@ -47,6 +47,21 @@ const FixedContentRow = styled.div`
 
 const TokenListLogoWrapper = styled.img`
   height: 20px;
+`
+
+const StyledFixedSizeList = styled(FixedSizeList)`
+  &&::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &&::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.bg3};
+    border-radius: 8px;
+    border: 2px solid ${({ theme }) => theme.bg2};
+  }
+  //firefox support
+  scrollbar-color: ${({ theme }) => theme.bg3 + ' ' + theme.bg2};
+  scrollbar-width: thin;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
@@ -86,17 +101,20 @@ function CurrencyRow({
       alignItems="center"
       style={style}
     >
-      <Box mr="12px">
-        <CurrencyLogo currency={currency} size={'20px'} />
-      </Box>
       <Box>
-        <AutoColumn gap="2px">
-          <Text fontWeight={500}>{currency.symbol}</Text>
-          <TYPE.body fontSize="11px" color="text4" fontWeight={400}>
-            {currency.name}
+        <AutoRow>
+          <CurrencyLogo currency={currency} size={'20px'} />
+          <Text marginLeft={'6px'} fontWeight={500}>
+            {currency.symbol}
+          </Text>
+        </AutoRow>
+        <AutoRow>
+          <TYPE.body marginTop={'4px'} fontSize="9px" color="text4" fontWeight={600}>
+            {currency.name?.toUpperCase()}
           </TYPE.body>
-        </AutoColumn>
+        </AutoRow>
       </Box>
+
       <Flex flex="1" px="20px">
         {!isOnSelectedList && (
           <Box>
@@ -241,7 +259,7 @@ export default function CurrencyList({
     <Flex overflowY="auto" flex="1">
       <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
-          <FixedSizeList
+          <StyledFixedSizeList
             ref={fixedListRef as any}
             width={width}
             height={height}
@@ -251,7 +269,7 @@ export default function CurrencyList({
             itemKey={currencyKey}
           >
             {Row}
-          </FixedSizeList>
+          </StyledFixedSizeList>
         )}
       </AutoSizer>
     </Flex>
