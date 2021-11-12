@@ -27,10 +27,6 @@ const TokenButton = styled(Button)`
   outline: none;
   padding: 0.5em 0.75em;
 
-  :first-of-type {
-    padding-top: 1em;
-  }
-
   :hover {
     opacity: 1;
   }
