@@ -1,6 +1,6 @@
+import { Placement } from '@popperjs/core'
 import styled, { icon } from 'lib/theme'
-import TYPE from 'lib/theme/type'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { HelpCircle, Icon } from 'react-feather'
 
 import Popover from './Popover'
@@ -16,18 +16,20 @@ const IconWrapper = styled.div`
 
 interface TooltipInterface {
   icon?: Icon
-  children: string | ReactNode
-  placement: 'top' | 'bottom'
+  children: ReactNode
+  placement: Placement
+  contained?: true
 }
 
-export default function Tooltip({ icon: Icon = HelpCircleIcon, children, placement }: TooltipInterface) {
+export default function Tooltip({
+  icon: Icon = HelpCircleIcon,
+  children,
+  placement = 'auto',
+  contained,
+}: TooltipInterface) {
   const [show, setShow] = useState(false)
-  const content = useMemo(
-    () => (typeof children === 'string' ? <TYPE.body2>{children}</TYPE.body2> : children),
-    [children]
-  )
   return (
-    <Popover content={content} show={show} placement={placement}>
+    <Popover content={children} show={show} placement={placement} contained={contained}>
       <IconWrapper>
         <Icon onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} />
       </IconWrapper>

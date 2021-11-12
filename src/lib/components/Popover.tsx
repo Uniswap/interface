@@ -1,9 +1,8 @@
 import { Options, Placement } from '@popperjs/core'
-import useInterval from 'lib/hooks/useInterval'
 import styled from 'lib/theme'
 import Layer from 'lib/theme/layer'
 import maxSize from 'popper-max-size-modifier'
-import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import React, { createContext, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 
@@ -80,26 +79,28 @@ export interface PopoverProps {
   content: React.ReactNode
   show: boolean
   children: React.ReactNode
-  placement?: Placement
+  placement: Placement
+  contained?: true
 }
 
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
+export default function Popover({ content, show, children, placement, contained }: PopoverProps) {
   const boundary = useContext(BoundaryContext)
   const reference = useRef<HTMLDivElement>(null)
 
   // Use callback refs to be notified when instantiated
-  const [popper, setPopper] = useState<HTMLDivElement | null>(null)
+  const [popover, setPopover] = useState<HTMLDivElement | null>(null)
   const [arrow, setArrow] = useState<HTMLDivElement | null>(null)
 
-  const options = useMemo(
-    (): Options => ({
-      placement,
-      strategy: 'absolute',
-      modifiers: [
-        { name: 'offset', options: { offset: [5, 5] } },
-        { name: 'arrow', options: { element: arrow, padding: 6 } },
+  const options = useMemo((): Options => {
+    const modifiers: Options['modifiers'] = [
+      { name: 'offset', options: { offset: [5, 5] } },
+      { name: 'arrow', options: { element: arrow, padding: 6 } },
+    ]
+    if (contained) {
+      modifiers.push(
         { name: 'preventOverflow', options: { boundary, padding: 8 } },
-        { ...maxSize, options: { boundary, padding: 28 } },
+        { name: 'flip', options: { boundary, padding: 8 } },
+        { ...maxSize, options: { boundary, padding: 8 } },
         {
           name: 'applyMaxSize',
           enabled: true,
@@ -112,25 +113,24 @@ export default function Popover({ content, show, children, placement = 'auto' }:
               maxWidth: `${width}px`,
             }
           },
-        },
-      ],
-    }),
-    [arrow, boundary, placement]
-  )
+        }
+      )
+    }
+    return {
+      placement,
+      strategy: 'absolute',
+      modifiers,
+    }
+  }, [arrow, boundary, placement, contained])
 
-  const { styles, update, attributes } = usePopper(reference.current, popper, options)
-
-  const updateCallback = useCallback(() => {
-    update && update()
-  }, [update])
-  useInterval(updateCallback, show ? 100 : null)
+  const { styles, attributes } = usePopper(reference.current, popover, options)
 
   return (
     <>
       <Reference ref={reference}>{children}</Reference>
       {boundary &&
         createPortal(
-          <PopoverContainer show={show} ref={setPopper} style={styles.popper} {...attributes.popper}>
+          <PopoverContainer show={show} ref={setPopover} style={styles.popper} {...attributes.popper}>
             {content}
             <Arrow
               className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
