@@ -16,6 +16,9 @@ export const getEthereumMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0x0C0F2b41F758d66bB8e694693B0f9e6FaE726499'.toLowerCase()) {
     // UND
     uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/7848.png'
+  } else if (address?.toLowerCase() === '0x60ef10edff6d600cd91caeca04caed2a2e605fe5') {
+    // MOCHI INU
+    uri = 'https://s2.coinmarketcap.com/static/img/coins/64x64/14315.png'
   }
 
   if (!uri) {
