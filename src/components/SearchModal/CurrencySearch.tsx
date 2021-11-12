@@ -2,31 +2,31 @@ import { Currency, Token } from '@swapr/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { useAllTokens, useToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
 import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
-import Column from '../Column'
+import Column, { AutoColumn } from '../Column'
 import Row, { RowBetween } from '../Row'
-import CommonBases from './CommonBases'
+import CommonTokens from './CommonTokens'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { SearchInput, Separator } from './styleds'
 import styled, { ThemeContext } from 'styled-components/macro'
 import useToggle from '../../hooks/useToggle'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useDebounce from '../../hooks/useDebounce'
 import { useActiveWeb3React } from '../../hooks'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
-import { ButtonPrimary } from '../Button'
+import { ButtonDark2 } from '../Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
+  border-radius: 12px;
   flex: 1;
   overflow: hidden;
   position: relative;
-  background-color: ${({ theme }) => theme.bg1And2};
+  background-color: ${({ theme }) => theme.dark2};
 `
 
 const Footer = styled.div`
@@ -37,6 +37,10 @@ const Footer = styled.div`
   border-top-right-radius: 0;
   background-color: ${({ theme }) => theme.bg1And2};
   border-top: 1px solid ${({ theme }) => theme.bg1And2};
+`
+const CloseIconStyled = styled(CloseIcon)`
+  display: flex;
+  padding: 0;
 `
 
 interface CurrencySearchProps {
@@ -168,29 +172,28 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="16px">
+      <AutoColumn style={{ padding: '22px 18.5px 20px 18.5px' }} gap="15px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
-          </Text>
-          <CloseIcon onClick={onDismiss} />
+          <TYPE.body fontWeight={500}>Select a token</TYPE.body>
+          <CloseIconStyled onClick={onDismiss} />
         </RowBetween>
         <Row>
           <SearchInput
             type="text"
             id="token-search-input"
-            placeholder={t('tokenSearchPlaceholder')}
+            placeholder={t('Search a name or paste address')}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
             onChange={handleInput}
             onKeyDown={handleEnter}
+            fontWeight={500}
           />
         </Row>
         {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
+          <CommonTokens chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
-      </PaddedColumn>
+      </AutoColumn>
       <Separator />
       {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
@@ -212,7 +215,7 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonPrimary onClick={showManageView}>Manage token lists</ButtonPrimary>
+          <ButtonDark2 onClick={showManageView}>Manage token lists</ButtonDark2>
         </Row>
       </Footer>
     </ContentWrapper>

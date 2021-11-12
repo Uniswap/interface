@@ -95,5 +95,7 @@
   "liquidityMining.action.create": "CREATE LIQ. MINING",
   "liquidityMining.create.title": "Create a liquidity mining pool",
   "liquidityMining.create.subtitle": "Follow these simple steps to preview and create a liquidity mining pool on swapr",
-  "bridge": "Bridge"
+  "bridge": "Bridge",
+  "vote": "Vote",
+  "charts": "Charts"
 }

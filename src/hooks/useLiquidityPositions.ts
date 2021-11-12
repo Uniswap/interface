@@ -42,15 +42,17 @@ const QUERY = gql`
           endsAt
           locked
           stakingCap
-          rewardTokens {
-            address: id
-            name
-            symbol
-            decimals
-            derivedNativeCurrency
+          rewards {
+            token {
+              address: id
+              name
+              symbol
+              decimals
+              derivedNativeCurrency
+            }
+            amount
           }
           stakedAmount
-          rewardAmounts
           liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $account }) {
             id
           }
@@ -84,15 +86,17 @@ const QUERY = gql`
           endsAt
           locked
           stakingCap
-          rewardTokens {
-            address: id
-            name
-            symbol
-            decimals
-            derivedNativeCurrency
+          rewards {
+            token {
+              address: id
+              name
+              symbol
+              decimals
+              derivedNativeCurrency
+            }
+            amount
           }
           stakedAmount
-          rewardAmounts
           liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $account }) {
             id
           }
@@ -130,7 +134,9 @@ interface QueryResult {
   liquidityMiningPositions: { pair: SubgraphPair }[]
 }
 
-interface useLPPairsParams {
+export function useLPPairs(
+  account?: string
+): {
   loading: boolean
   data: {
     pair: Pair
@@ -138,9 +144,7 @@ interface useLPPairsParams {
     maximumApy: Percent
     staked: boolean
   }[]
-}
-
-export function useLPPairs(account?: string): useLPPairsParams {
+} {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
   const memoizedLowerTimeLimit = useMemo(

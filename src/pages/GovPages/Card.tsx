@@ -91,7 +91,7 @@ export const GovCard = ({ currency, currency1, apy, proposals }: CardProps) => {
         <AutoRow align="center" justify="center">
           <TextCard>
             <Text color={theme.text2} fontWeight={600} fontSize="9px" lineHeight="9px" textAlign="center">
-              {apy + '% APY'}
+              {apy + '% APR'}
             </Text>
           </TextCard>
         </AutoRow>

@@ -1,6 +1,6 @@
 {
   "name": "@swapr/frontend",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.7",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.4.7",
@@ -13,7 +13,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@swapr/core": "^0.3.18",
     "@swapr/periphery": "^0.3.20",
-    "@swapr/sdk": "^0.10.7",
+    "@swapr/sdk": "^0.10.8",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",
@@ -53,6 +53,7 @@
     "ethers": "^5.4.4",
     "git-revision-webpack-plugin": "^3.0.6",
     "graphql": "^15.5.1",
+    "graphql-request": "^3.6.0",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",

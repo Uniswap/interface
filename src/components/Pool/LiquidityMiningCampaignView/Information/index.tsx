@@ -249,7 +249,7 @@ function Information({
         </Flex>
         <Box>
           <DataDisplayer
-            title="APY"
+            title="APR"
             data={!apy ? <Skeleton width="80px" height="22px" /> : `${apy.toFixed(2)}%`}
             dataTextSize={22}
             fontWeight={600}

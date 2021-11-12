@@ -62,6 +62,7 @@ export default function ImportRow({
   return (
     <TokenSection style={style}>
       <CurrencyLogo currency={token} size={'24px'} style={{ opacity: dim ? '0.6' : '1' }} />
+
       <AutoColumn gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
         <AutoRow>
           <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
