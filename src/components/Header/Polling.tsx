@@ -1,14 +1,14 @@
 import { CHAIN_INFO } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import useMachineTimeMs from 'hooks/useMachineTime'
+import { useActiveWeb3React } from 'hooks/web3'
 import ms from 'ms.macro'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useBlockNumber } from 'state/application/hooks'
 import styled, { keyframes } from 'styled-components/macro'
+import { ExternalLink, TYPE } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useBlockNumber } from '../../state/application/hooks'
-import { ExternalLink, TYPE } from '../../theme'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div<{ warning: boolean }>`
@@ -70,53 +70,22 @@ const Spinner = styled.div<{ warning: boolean }>`
   left: -3px;
   top: -3px;
 `
-const NETWORK_HEALTH_CHECK_MS = ms`15s`
+
 const DEFAULT_MS_BEFORE_WARNING = ms`10m`
+const NETWORK_HEALTH_CHECK_MS = ms`10s`
 
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
-  const [warning, setWarning] = useState(false)
-  const blockTimestamp = useCurrentBlockTimestamp()
-  const isWindowVisible = useIsWindowVisible()
-  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
-  const timeout = useRef<NodeJS.Timeout>()
+  const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
+  const blockTime = useCurrentBlockTimestamp()
 
   const waitMsBeforeWarning =
     (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
-  useEffect(() => {
-    if (blockTimestamp && chainId) {
-      if (Math.floor(Date.now() - blockTimestamp.mul(1000).toNumber()) > waitMsBeforeWarning) {
-        if (!warning) {
-          setWarning(true)
-        }
-      } else {
-        if (warning) {
-          setWarning(false)
-        }
-      }
-    }
-  }, [blockTimestamp, chainId, warning, waitMsBeforeWarning])
-
-  useEffect(() => {
-    timeout.current = setTimeout(() => {
-      setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
-      if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
-        setWarning(true)
-      } else if (warning) {
-        setWarning(false)
-      }
-    }, NETWORK_HEALTH_CHECK_MS)
-
-    return function cleanup() {
-      if (timeout.current) {
-        clearTimeout(timeout.current)
-      }
-    }
-  }, [chainId, warning, isWindowVisible, msSinceLastBlock, setMsSinceLastBlock, waitMsBeforeWarning])
+  const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
   useEffect(
     () => {
