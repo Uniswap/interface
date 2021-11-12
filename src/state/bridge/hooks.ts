@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChainId, Currency } from '@swapr/sdk'
 
@@ -113,37 +113,30 @@ export function useBridgeActionHandlers(): {
   }
 }
 
-export function useBridgeInfo() {
+export const useBridgeInfo = () => {
   const { account, chainId } = useActiveWeb3React()
   const { typedValue, currencyId, fromNetwork, toNetwork } = useBridgeState()
 
   const bridgeCurrency = useCurrency(currencyId)
-  const parsedAmount = tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId)
+  const parsedAmount = useMemo(() => tryParseAmount(typedValue, bridgeCurrency ?? undefined, chainId), [
+    bridgeCurrency,
+    chainId,
+    typedValue
+  ])
 
   const [currencyBalance] = useCurrencyBalances(account ?? undefined, [bridgeCurrency ?? undefined])
 
-  let inputError: string | undefined
-  if (!account) {
-    inputError = 'Connect Wallet'
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? 'Enter amount'
-  }
-
-  if (!bridgeCurrency) {
-    inputError = inputError ?? 'Select a token'
-  }
-
-  if (currencyBalance && parsedAmount && currencyBalance.lessThan(parsedAmount)) {
-    inputError = 'Insufficient ' + parsedAmount.currency.symbol + ' balance'
-  }
+  const isBalanceSufficient = useMemo(
+    () => currencyBalance && parsedAmount && currencyBalance.greaterThan(parsedAmount),
+    [currencyBalance, parsedAmount]
+  )
 
   return {
+    isBalanceSufficient,
+    currencyId,
     bridgeCurrency,
     currencyBalance,
     parsedAmount,
-    inputError,
     typedValue,
     fromNetwork,
     toNetwork
