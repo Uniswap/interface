@@ -91,11 +91,13 @@ function Transaction({ tx }: { tx: Transaction }) {
   }, [tx.status])
   return (
     <TransactionRow grow>
-      <Row>
-        <Row gap={0.5}>
+      <Row gap={0.75}>
+        <Row flex gap={0.5}>
           <TokenAmount value={tx.input} />
-          <ArrowIcon />
-          <TokenAmount value={tx.output} />
+          <Row flex justify="flex-end" gap={0.5} grow>
+            <ArrowIcon />
+            <TokenAmount value={tx.output} />
+          </Row>
         </Row>
         <Status />
       </Row>
