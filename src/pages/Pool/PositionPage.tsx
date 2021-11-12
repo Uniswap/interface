@@ -14,7 +14,6 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { SupportedChainId } from 'constants/chains'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -443,7 +442,7 @@ export function PositionPage({
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(chainId, estimate),
+          gasLimit: calculateGasMargin(estimate),
         }
 
         return library
@@ -514,15 +513,13 @@ export function PositionPage({
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
     ownsNFT &&
       (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash &&
-      !onOptimisticChain
+      !collectMigrationHash
   )
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
