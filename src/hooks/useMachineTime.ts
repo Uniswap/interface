@@ -1,16 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
+import useInterval from './useInterval'
 
 const useMachineTimeMs = (updateInterval: number): number => {
   const [now, setNow] = useState(Date.now())
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(Date.now())
-    }, updateInterval)
-    return () => {
-      clearInterval(timer)
-    }
-  }, [updateInterval])
+  useInterval(() => {
+    setNow(Date.now())
+  }, updateInterval)
   return now
 }
 
