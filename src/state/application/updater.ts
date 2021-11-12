@@ -1,4 +1,5 @@
 import { CHAIN_INFO } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -9,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { supportedChainId } from 'utils/supportedChainId'
 import { switchToNetwork } from 'utils/switchToNetwork'
 
-import { useBlockNumber } from './hooks'
 import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, updateChainId } from './reducer'
 
 function useQueryCacheInvalidator() {
@@ -35,16 +35,26 @@ function useBlockWarningTimer() {
   const timeout = useRef<NodeJS.Timeout>()
   const isWindowVisible = useIsWindowVisible()
   const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
-  const currentBlock = useBlockNumber()
+  const blockTimestamp = useCurrentBlockTimestamp()
+
+  const waitMsBeforeWarning =
+    (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
   useEffect(() => {
-    setMsSinceLastBlock(0)
-  }, [currentBlock])
+    if (blockTimestamp && chainId) {
+      if (Math.floor(Date.now() - blockTimestamp.mul(1000).toNumber()) > waitMsBeforeWarning) {
+        if (!chainConnectivityWarningActive) {
+          dispatch(setChainConnectivityWarning({ warn: true }))
+        }
+      } else {
+        if (chainConnectivityWarningActive) {
+          dispatch(setChainConnectivityWarning({ warn: false }))
+        }
+      }
+    }
+  }, [blockTimestamp, chainId, chainConnectivityWarningActive, dispatch, waitMsBeforeWarning])
 
   useEffect(() => {
-    const waitMsBeforeWarning =
-      (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
-
     timeout.current = setTimeout(() => {
       setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
       if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
@@ -59,7 +69,15 @@ function useBlockWarningTimer() {
         clearTimeout(timeout.current)
       }
     }
-  }, [chainId, chainConnectivityWarningActive, dispatch, isWindowVisible, msSinceLastBlock, setMsSinceLastBlock])
+  }, [
+    chainId,
+    chainConnectivityWarningActive,
+    dispatch,
+    isWindowVisible,
+    msSinceLastBlock,
+    setMsSinceLastBlock,
+    waitMsBeforeWarning,
+  ])
 }
 
 export default function Updater(): null {
