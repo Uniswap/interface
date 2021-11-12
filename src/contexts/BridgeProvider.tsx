@@ -6,27 +6,12 @@ import { useDispatch } from 'react-redux'
 import { useActiveWeb3React } from '../hooks'
 import { useChains } from '../hooks/useChains'
 import { NETWORK_DETAIL } from '../constants'
-import { ChainIdPair } from '../utils/arbitrum'
 import { INFURA_PROJECT_ID } from '../connectors'
 import { POOLING_INTERVAL } from '../utils/getLibrary'
 
-type BridgeContextType = {
-  bridge: Bridge | null
-  chainIdPair: ChainIdPair
-}
+type BridgeContextType = Bridge | null
 
-const defaultValue: BridgeContextType = {
-  bridge: null,
-  chainIdPair: {
-    l1ChainId: undefined,
-    l2ChainId: undefined,
-    chainId: undefined,
-    partnerChainId: undefined,
-    isArbitrum: undefined
-  }
-}
-
-export const BridgeContext = React.createContext<BridgeContextType>(defaultValue)
+export const BridgeContext = React.createContext<BridgeContextType>(null)
 
 const addInfuraKey = (rpcUrl: string) => {
   if (rpcUrl.includes('infura')) {
@@ -43,9 +28,9 @@ const addInfuraKey = (rpcUrl: string) => {
 }
 
 export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => {
-  const { library, chainId, account } = useActiveWeb3React()
+  const { library, account } = useActiveWeb3React()
   const [bridge, setBridge] = useState<Bridge | null>(null)
-  const chains = useChains()
+  const { chainId, isArbitrum, partnerChainId } = useChains()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -72,7 +57,6 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
     setBridge(null)
 
     if (library && account && chainId) {
-      const { partnerChainId, isArbitrum } = NETWORK_DETAIL[chainId]
       let l1Signer: providers.JsonRpcSigner, l2Signer: providers.JsonRpcSigner
 
       if (partnerChainId) {
@@ -98,9 +82,9 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
     return () => {
       abortController.abort()
     }
-  }, [chainId, library, account, dispatch])
+  }, [chainId, library, account, dispatch, partnerChainId, isArbitrum])
 
-  return <BridgeContext.Provider value={{ bridge: bridge, chainIdPair: chains }}>{children}</BridgeContext.Provider>
+  return <BridgeContext.Provider value={bridge}>{children}</BridgeContext.Provider>
 }
 
 export const useBridge = () => {

@@ -7,6 +7,7 @@ import { useBridgeInfo } from '../../../state/bridge/hooks'
 import { useBridgeService } from '../../../contexts/BridgeServiceProvider'
 import { useHasPendingApproval } from '../../../state/transactions/hooks'
 import { ApprovalState } from '../../../hooks/useApproveCallback'
+import { useChains } from '../../../hooks/useChains'
 
 const defaultAddresses = {
   walletAddress: undefined,
@@ -14,10 +15,8 @@ const defaultAddresses = {
 }
 
 export const useBridgeActionPanel = () => {
-  const {
-    bridge,
-    chainIdPair: { isArbitrum }
-  } = useBridge()
+  const bridge = useBridge()
+  const { isArbitrum } = useChains()
   const bridgeService = useBridgeService()
   const { currencyId, isBalanceSufficient, parsedAmount, bridgeCurrency } = useBridgeInfo()
   const [{ walletAddress, gatewayAddress }, setAddresses] = useState<{
