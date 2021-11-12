@@ -99,7 +99,7 @@ function TransactionSubmittedContent({
   const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
   return (
-    <Wrapper>
+    <Wrapper style={{background:'radial-gradient(#f5b642, rgba(129,3,3,.95))'}}>
       <Section inline={inline}>
         {!inline && (
           <RowBetween>
@@ -160,7 +160,7 @@ export function ConfirmationModalContent({
   bottomContent?: () => ReactNode | undefined
 }) {
   return (
-    <Wrapper>
+    <Wrapper style={{background:'radial-gradient(#f5b642, rgba(129,3,3,.95))'}}>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
@@ -178,7 +178,7 @@ export function ConfirmationModalContent({
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
   const theme = useContext(ThemeContext)
   return (
-    <Wrapper>
+    <Wrapper style={{background:'radial-gradient(#f5b642, rgba(129,3,3,.95))'}}>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
@@ -235,7 +235,7 @@ function L2Content({
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
 
   return (
-    <Wrapper>
+    <Wrapper style={{background:'radial-gradient(#f5b642, rgba(129,3,3,.95))'}}>
       <Section inline={inline}>
         {!inline && (
           <RowBetween mb="16px">

@@ -7,7 +7,7 @@ export enum SupportedChainId {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
-
+  BINANCE = 56,
   ARBITRUM_ONE = 42161,
   ARBITRUM_RINKEBY = 421611,
   OPTIMISM = 10,
@@ -20,7 +20,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
-
+  SupportedChainId.BINANCE,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
@@ -78,6 +78,14 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Rinkeby',
     logoUrl: arbitrumLogoUrl,
+  },
+  [SupportedChainId.BINANCE]: {
+    bridge: 'https://www.binance.org/en/bridge',
+    docs: 'https://binance.org',
+    infoLink: 'https://binance.org',
+    explorer: 'https://bscscan.io',
+    label: 'Binance',
+    logoUrl: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png'
   },
   [SupportedChainId.MAINNET]: {
     docs: 'https://docs.uniswap.org/',

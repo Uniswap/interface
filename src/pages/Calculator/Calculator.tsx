@@ -12,7 +12,6 @@ export const Calculator = () => {
     const { account } = useWeb3React();
     const [marketCap, setMarketCap] = React.useState('')
     const balance = useKiba(account)
-    const value = useUSDCValue(balance)
     const renderConnectMessage = () => (
         <React.Fragment>
             <Badge>Connect your wallet to use the gains calculator</Badge>
@@ -38,7 +37,7 @@ export const Calculator = () => {
 
                 <div>
                     
-                    {value && <Badge>{value.toFixed(2)}</Badge>}
+                    {balance && <Badge>{balance.toFixed(2)}</Badge>}
                 </div>
             </CardSection>
         </GreyCard>

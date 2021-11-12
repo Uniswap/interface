@@ -29,6 +29,9 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  background: radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
+  padding:9px 14px;
+  border-radius:30px;
 `
 
 const VoteCard = styled(DataCard)`
@@ -77,6 +80,7 @@ const EmptyProposals = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background:radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
 `
 
 const Layer2Prompt = styled(EmptyProposals)`

@@ -14,6 +14,7 @@ import {
   Twitter,
   Lock,
   Star,
+  Tool,
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
@@ -31,6 +32,7 @@ import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
 import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { LockModal } from 'components/swap/LockModal'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -231,11 +233,11 @@ export default function Menu() {
   useEffect(() => {
     setMenu('main')
   }, [open])
-
+  const[ showLockModal, setShowLM] = React.useState(false)
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton style={{background:"#222"}} onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -247,7 +249,7 @@ export default function Menu() {
             case 'main':
             default:
               return (
-            
+            <>
                 <MenuFlyout>
                 <InternalLinkMenuItem to="/fomo">
                   <div>
@@ -259,7 +261,13 @@ export default function Menu() {
                 <div>
                   <Trans>Honeypot Checker</Trans>
                 </div>
-                <Lock opacity={0.6} size={16} />
+                <Code opacity={0.6} size={16} />
+              </InternalLinkMenuItem>
+              <InternalLinkMenuItem to="/suite">
+              <div>
+                      <Trans>KibaTools</Trans>
+                    </div>
+                    <Tool size={16} opacity={0.6} />
               </InternalLinkMenuItem>
                   <MenuItem href="https://kibainu.space/">
                     <div>
@@ -292,9 +300,12 @@ export default function Menu() {
                     <ChevronRight size={16} opacity={0.6} />
                   </ToggleMenuItem>
                 </MenuFlyout>
+                </>
               )
           }
         })()}
+                <LockModal isOpen={showLockModal} setIsOpen={setShowLM} />
+
     </StyledMenu>
   )
 }

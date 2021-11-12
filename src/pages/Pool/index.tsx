@@ -23,6 +23,9 @@ import { LoadingRows } from './styleds'
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
+  background: radial-gradient(#f5b642, rgba(129,3,3,.95));
+  padding:9px 14px;
+  border-radius:12px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 800px;

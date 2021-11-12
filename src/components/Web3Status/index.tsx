@@ -18,12 +18,13 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
-
+import React from 'react' 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import Badge from 'components/Badge'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -58,7 +59,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
+const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.primary4};
   border: none;
 
@@ -86,9 +87,19 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg0)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
+  border: 3px solid transparent;
+  :before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
+    margin: -$border; /* !importanté */
+    border-radius: inherit; /* !importanté */
+
+    background: linear-gradient(to right, red, orange);
+  }
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 500;
   :hover,
@@ -234,14 +245,48 @@ export default function Web3Status() {
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
+  const { library, chainId } = useWeb3React()
 
+  const [isSwitching, setIsSwitching] = React.useState(false)
   if (!contextNetwork.active && !active) {
     return null
+  }
+  const switchNetwork = async () => {
+    if (library && library.provider && !isSwitching) {
+      setIsSwitching(true)
+      try {
+        library.provider
+          .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{
+              //@ts-ignore // need this for incorrect ethers provider type
+              chainId: chainId === 56 ? '0x1' : `0x38`
+            }],
+          }).finally(() => setIsSwitching(false))
+      } catch (switchError: any) {
+        if (switchError.code === 4902) {
+          try {
+            await library.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [{ chainId: chainId === 56 ? '0x1' : `0x38`, rpcUrl: 'https://bsc-dataseed1.ninicoin.io' }],
+            }).finally(() => setIsSwitching(false));
+          } catch (addError) {
+            // handle "add" error
+            setIsSwitching(false)
+          }
+        }
+        setIsSwitching(false)
+      }
+    } else {
+      alert("No provider");
+      setIsSwitching(false)
+    }
   }
 
   return (
     <>
       <Web3StatusInner />
+      <Badge style={{background:"#222"}} onClick={async () => await switchNetwork()}>{chainId === 1 ? 'ETH' : 'BSC'}</Badge>
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

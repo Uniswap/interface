@@ -5,7 +5,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-import squeezeLogo from '../../assets/images/squeeze.png'
+import squeezeLogo from '../../assets/images/logo.png'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
@@ -55,7 +55,7 @@ export default function CurrencyLogo({
 
 
   if (currency?.address?.toLowerCase() === '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase())
-  return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/10/photo_2021-10-30-06.48.25-204x300.jpeg']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
+  return <StyledLogo size={size} srcs={['https://i.gyazo.com/27d5b738ac3276e87c1daafe803e2af8.png']} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
   
   
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />

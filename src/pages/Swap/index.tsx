@@ -62,6 +62,7 @@ import AppBody from '../AppBody'
 import { useTokenData } from 'state/logs/utils'
 import Modal from 'components/Modal'
 import { useKiba } from 'pages/Vote/VotePage'
+import { ChartModal } from 'components/swap/ChartModal'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -74,7 +75,8 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const isBinance = React.useMemo(() => chainId === 56, [chainId]);
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -134,20 +136,18 @@ export default function Swap({ history }: RouteComponentProps) {
     () =>
       showWrap
         ? {
-            [Field.INPUT]: parsedAmount,
-            [Field.OUTPUT]: parsedAmount,
-          }
+          [Field.INPUT]: parsedAmount,
+          [Field.OUTPUT]: parsedAmount,
+        }
         : {
-            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-          },
+          [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+          [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+        },
     [independentField, parsedAmount, showWrap, trade]
   )
-
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
-  console.log(fiatValueInput, fiatValueOutput, priceImpact)
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -262,8 +262,8 @@ export default function Swap({ history }: RouteComponentProps) {
             recipient === null
               ? 'Swap w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
+                ? 'Swap w/o Send + recipient'
+                : 'Swap w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -342,7 +342,7 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const [showChart, setShowChart] = React.useState(false)
   const tokenData = useTokenData((currencies[Field.OUTPUT] as any)?.address ?? '')
-  
+
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
@@ -359,17 +359,16 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const [view, setView] = React.useState<'bridge' | 'swap' | 
-  'honey'
+  const [view, setView] = React.useState<'bridge' | 'swap' |
+    'honey'
   >('swap')
-
   const StyledDiv = styled.div`
   font-family: 'Bangers', cursive;
   font-size:25px;
   `
   const cannotUseFeature = !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0)
-  const filterKeys = (key:string)=> ['name', 'symbol', 'derivedETH', '__typename', 'totalLiquidityUSD', 'priceUSD', 'volumeChangeUT', 'liquidityChangeUSD', 'txnChange', 'oneDayData', 'twoDayData'].includes(key) === false;
- return (
+  const filterKeys = (key: string) => ['name', 'id', 'symbol', 'derivedETH', '__typename', 'totalLiquidityUSD', 'priceUSD', 'volumeChangeUT', 'liquidityChangeUSD', 'txnChange', 'oneDayData', 'twoDayData'].includes(key) === false;
+  return (
     <>
       <TokenWarningModal
         isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
@@ -378,8 +377,11 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <NetworkAlert />
-      <AppBody>
-        <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
+      <AppBody style={{maxWidth: view === 'bridge' ? 690 : 480}}>
+      <SwapHeader view={view} onViewChange={(view) => setView(view)} allowedSlippage={allowedSlippage} />
+
+        {!isBinance && (
+          <>
         {view === 'swap' && <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -395,7 +397,7 @@ export default function Swap({ history }: RouteComponentProps) {
             onDismiss={handleConfirmDismiss}
           />
 
-          <AutoColumn gap={'md'}>
+          <AutoColumn gap={'xs'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
                 label={
@@ -456,7 +458,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
             {showWrap ? null : (
               <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
-                <RowFixed>
+                <RowFixed style={{padding:'5px 0px'}}>
                   {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                     (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
                       <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
@@ -524,45 +526,32 @@ export default function Swap({ history }: RouteComponentProps) {
                 ) : null}
               </Row>
             )}
-            <div style={{display:'flex',justifyContent:'space-between'}}>
-            {tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'  && window.location.href.includes('swap') && <p style={{cursor:'pointer',display:'flex', alignItems:'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
-                <Modal  onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol &&  currencies[Field.OUTPUT]  && currencies[Field.OUTPUT]?.name === 'Kiba Inu' }> 
-              {!cannotUseFeature && <div style={{padding:15, display: 'grid', gridTemplateColumns: '575px 250px', gridColumnGap: 20, width: '100%' }}>
-                  <iframe src={`https://www.chartex.pro/?symbol=UNISWAP%3A${tokenData?.symbol}&interval=240&theme=dark`} style={{ display: 'block', border: '1px solid rgb(34, 34, 34)', width: '575px', height: 670, position: 'relative', top: 0 }}></iframe>
-                  <div style={{padding:'9px 14px',background:'#222', color:'#fff', borderRadius:6,display:'flex', flexFlow:'column wrap', gridColumnGap:50}}>
-                  <StyledDiv style={{width:'100%', display:'block', paddingTop:15, paddingBottom:5}}>{tokenData?.name} ({tokenData?.symbol})</StyledDiv>
-
-                    {Object.keys(tokenData).filter(filterKeys).map(key => (<StyledDiv key={key}>
-                      <small style={{fontSize:14,width:'100%', paddingBottom:5}}>{key}</small>
-                      <p style={{fontSize:12}}>{!isNaN(tokenData[key]) && +tokenData[key] >0   && Number(tokenData[key]).toLocaleString()}</p>
-                    </StyledDiv>))}
-                  </div>
-              </div>
-
-                  }
-
-                  {cannotUseFeature && <div style={{display:'flex', flexFlow:'row wrap'}}>
-                    <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
-                    </div>}
-             </Modal>
-            {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-            <ShowSellTaxComponent />
-            </div>}
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              {tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu' && window.location.href.includes('swap') && <p style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setShowChart(!showChart)}>{showChart ? 'Hide' : 'Show'} Chart <ChevronRight /></p>}
+              <Modal onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'}>
+                {!cannotUseFeature && <ChartModal onDismiss={() => setShowChart(false)} isOpen={showChart && tokenData && tokenData?.symbol && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.name === 'Kiba Inu'} />}
+                {cannotUseFeature && <div style={{ padding: '3rem 6rem', display: 'flex', flexFlow: 'row wrap' }}>
+                  <AlertOctagon /> You must hold Kiba Inu tokens to use this feature.
+                </div>}
+              </Modal>
+              {[currencies[Field.OUTPUT], currencies[Field.INPUT]].some(curr => curr?.name === 'Kiba Inu') && <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <ShowSellTaxComponent />
+              </div>}
             </div>
 
             <div>
               {swapIsUnsupported ? (
-                <ButtonPrimary disabled={true}>
+                <ButtonPrimary style={{ marginTop: 15 }} disabled={true}>
                   <TYPE.main mb="4px">
                     <Trans>Unsupported Asset</Trans>
                   </TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
-                <ButtonLight onClick={toggleWalletModal}>
+                <ButtonLight style={{ marginTop: 15 }} onClick={toggleWalletModal}>
                   <Trans>Connect Wallet</Trans>
                 </ButtonLight>
               ) : showWrap ? (
-                <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                <ButtonPrimary style={{ marginTop: 15 }} disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
                     (wrapType === WrapType.WRAP ? (
                       <Trans>Wrap</Trans>
@@ -588,6 +577,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                   <AutoColumn style={{ width: '100%' }} gap="12px">
                     <ButtonConfirmed
+                      style={{ marginTop: 15 }}
                       onClick={handleApprove}
                       disabled={
                         approvalState !== ApprovalState.NOT_APPROVED ||
@@ -633,7 +623,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         )}
                       </AutoRow>
                     </ButtonConfirmed>
-                    <ButtonError
+                    <ButtonError style={{ marginTop: 15 }}
                       onClick={() => {
                         if (isExpertMode) {
                           handleSwap()
@@ -669,7 +659,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   </AutoColumn>
                 </AutoRow>
               ) : (
-                <ButtonError
+                <ButtonError style={{ marginTop: 15 }}
                   onClick={() => {
                     if (isExpertMode) {
                       handleSwap()
@@ -701,18 +691,23 @@ export default function Swap({ history }: RouteComponentProps) {
                 </ButtonError>
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            
+
             </div>
           </AutoColumn>
         </Wrapper>}
 
+      
+        </>
+        )
+      }
         {view === 'bridge' && (
           <Wrapper id="bridgepage">
-            <AutoColumn style={{padding:15}} gap={'md'}>
-              <StyledDiv>COMING SOON</StyledDiv>
+            <AutoColumn>
+              <iframe style={{ maxWidth: 750, width: '100%', height: 520, border: '1px solid #7b3744', borderRadius: 30 }} src="https://kiba-inu-bridge.netlify.app/"></iframe>
             </AutoColumn>
           </Wrapper>
         )}
+      {!!isBinance && view === 'swap' && <iframe style={{display:'flex', justifyContent:'center',border:'1px solid transparent', borderRadius:30, height:500, width:475}} src="https://pancakeswap.finance/swap?outputCurrency=0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341" />}
       </AppBody>
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (

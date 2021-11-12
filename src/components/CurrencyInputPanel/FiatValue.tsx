@@ -18,7 +18,7 @@ export function FiatValue({
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return theme.green1
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.text3
+    if (severity < 1) return theme.white
     if (severity < 3) return theme.yellow1
     return theme.red1
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
@@ -35,7 +35,7 @@ export function FiatValue({
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
-          (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          (<Trans >{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
         </span>
       ) : null}
     </TYPE.body>

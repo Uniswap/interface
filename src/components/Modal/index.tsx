@@ -56,6 +56,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
         min-height: ${minHeight}vh;
       `}
     display: flex;
+    background:radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
     border-radius: 20px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 600px;
@@ -118,6 +119,7 @@ export default function Modal({
         ({ item, key, props }) =>
           item && (
             <StyledDialogOverlay
+
               key={key}
               style={props}
               onDismiss={onDismiss}

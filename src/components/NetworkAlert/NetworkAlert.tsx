@@ -61,7 +61,7 @@ const RootWrapper = styled.div<{ chainId: SupportedChainId; darkMode: boolean; l
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  max-width: 480px;
+  max-width:480px;
   min-height: 174px;
   overflow: hidden;
   position: relative;

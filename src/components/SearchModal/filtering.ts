@@ -46,7 +46,7 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     if (!tokens) {
       return []
     }
-
+  
     const symbolMatch = searchQuery
       .toLowerCase()
       .split(/\s+/)
@@ -59,8 +59,14 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
     const exactMatches: Token[] = []
     const symbolSubtrings: Token[] = []
     const rest: Token[] = []
-
-    // sort tokens by exact match -> subtring on symbol match -> rest
+    const kibaCoin = new Token(
+      1,
+      "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+      9,
+      "Kiba",
+      "Kiba Inu"
+    );
+  // sort tokens by exact match -> subtring on symbol match -> rest
     tokens.map((token) => {
       if (token.symbol?.toLowerCase() === symbolMatch[0]) {
         return exactMatches.push(token)
@@ -71,27 +77,6 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       }
     })
 
-    const allowedContracts = [
-      '0x4b2c54b80b77580dc02a0f6734d3bad733f50900'.toLowerCase(),
-
-      WETH9[1].address,
-      USDC.address,
-      USDT.address,
-    ]
-    const kiba = new Token(
-      1,
-      "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
-      9,
-      "Kiba",
-      "Kiba Inu"
-    );
-
-  const squeezeListedCoins = [kiba];
-
-    return _.uniqBy( [...exactMatches, ...symbolSubtrings, ...rest, ...squeezeListedCoins], item => item.address.toLowerCase()).filter((item: any) => {
-      if (!showOnlyTrumpCoins) return !!item;
-      const isApproved = allowedContracts.includes(item.address.toLowerCase())
-      return isApproved
-    })
+    return [kibaCoin, ...exactMatches, ...symbolSubtrings, ...rest]
   }, [tokens, searchQuery, showOnlyTrumpCoins])
 }
