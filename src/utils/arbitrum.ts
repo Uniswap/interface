@@ -7,6 +7,7 @@ export type ChainIdPair = {
   l2ChainId: ChainId | undefined
   chainId: ChainId | undefined
   partnerChainId: ChainId | undefined
+  isArbitrum: boolean | undefined
 }
 
 export const getChainPair = (chainId?: ChainId): ChainIdPair => {
@@ -15,7 +16,8 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
       l1ChainId: chainId,
       l2ChainId: undefined,
       chainId,
-      partnerChainId: undefined
+      partnerChainId: undefined,
+      isArbitrum: undefined
     }
   }
 
@@ -28,7 +30,8 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
       l1ChainId: Number(l1) as ChainId,
       l2ChainId: Number(l2) as ChainId,
       chainId,
-      partnerChainId: NETWORK_DETAIL[chainId].partnerChainId
+      partnerChainId: networkDetails.partnerChainId,
+      isArbitrum: networkDetails.isArbitrum
     }
   }
 
@@ -36,7 +39,8 @@ export const getChainPair = (chainId?: ChainId): ChainIdPair => {
     l1ChainId: chainId,
     l2ChainId: undefined,
     chainId,
-    partnerChainId: undefined
+    partnerChainId: undefined,
+    isArbitrum: false
   }
 }
 

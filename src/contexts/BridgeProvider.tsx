@@ -21,7 +21,8 @@ const defaultValue: BridgeContextType = {
     l1ChainId: undefined,
     l2ChainId: undefined,
     chainId: undefined,
-    partnerChainId: undefined
+    partnerChainId: undefined,
+    isArbitrum: undefined
   }
 }
 
@@ -48,13 +49,8 @@ export const BridgeProvider = ({ children }: { children?: React.ReactNode }) => 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const initBridge = async (
-      ethSigner: Signer,
-      arbSigner: Signer,
-      l1GatewayRouterAddress?: string | undefined,
-      l2GatewayRouterAddress?: string | undefined
-    ) => {
-      const bridge = await Bridge.init(ethSigner, arbSigner, l1GatewayRouterAddress, l2GatewayRouterAddress)
+    const initBridge = async (ethSigner: Signer, arbSigner: Signer) => {
+      const bridge = await Bridge.init(ethSigner, arbSigner)
       setBridge(bridge)
     }
 
