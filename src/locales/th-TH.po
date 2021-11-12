@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -150,7 +150,6 @@ msgstr "คล่องแคล่ว"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "เพิ่ม"
 
@@ -230,10 +229,6 @@ msgstr "จำนวน"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "การวิเคราะห์"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "ปิด I"
 msgid "Closed"
 msgstr "ปิด"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "รหัส"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "เก็บรวบรวม"
@@ -490,10 +481,6 @@ msgstr "ฐานทั่วไป"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "ยืนยัน"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "ยืนยันการสร้าง"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "คัดลอกแล้ว"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "คัดลอกที่อยู่"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "สร้าง"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "รับการสนับสนุนบน Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "ศูนย์ช่วยเหลือ"
 
@@ -1430,6 +1414,10 @@ msgstr "กำลังลบ {0} {1} และ {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "กำลังลบ {0} {1} และ{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "ขอคุณสมบัติ"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "แอพนี้ใช้ API บุคคลที่สามต่�
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "ต้องเริ่มต้นกลุ่มนี้ก่อนจึงจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก ค่าธรรมเนียมก๊าซจะสูงกว่าปกติเนื่องจากการทำธุรกรรมเริ่มต้น"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "พูลนี้ต้องเริ่มต้นในวันที่ {0} ก่อนที่คุณจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

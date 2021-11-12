@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -150,7 +150,6 @@ msgstr "Inatumika"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Ongeza"
 
@@ -230,10 +229,6 @@ msgstr "Kiasi"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu ilitokea wakati wa kujaribu kutekeleza ubadilishaji huu. Unaweza kuhitaji kuongeza uvumilivu wako wa kuteleza. Ikiwa hiyo haifanyi kazi, kunaweza kuwa na kutokubaliana na ishara unayofanya biashara. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Takwimu"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "Funga"
 msgid "Closed"
 msgstr "Imefungwa"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Code"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Kusanya"
@@ -490,10 +481,6 @@ msgstr "Besi za kawaida"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Kubali"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Thibitisha Unda"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "Imenakiliwa"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Nakili Anwani"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Unda"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "Pata usaidizi juu ya Ugomvi"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Kituo cha Usaidizi"
 
@@ -1430,6 +1414,10 @@ msgstr "Kuondoa {0} {1} na {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Kuondoa {0} {1} na{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Omba Vipengele"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "Programu hii hutumia API za wahusika wengine zifuatazo:"
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Bwawa hili lazima lianzishwe kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana. Ada ya gesi itakuwa kubwa kuliko kawaida kwa sababu ya shughuli za uanzishaji."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Bwawa hili lazima lianzishwe kwa {0} kabla ya kuongeza ukwasi. Ili kuanzisha, chagua bei ya kuanzia ya bwawa. Kisha, ingiza anuwai ya bei ya ukwasi na kiwango cha amana."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

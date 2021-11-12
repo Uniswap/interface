@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -150,7 +150,6 @@ msgstr "활성"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "추가"
 
@@ -230,10 +229,6 @@ msgstr "금액"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "분석"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "닫기"
 msgid "Closed"
 msgstr "닫힘"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "코드"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "수집"
@@ -490,10 +481,6 @@ msgstr "공통 기준"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "확인"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "생성 확인"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "복사 됨"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "주소 복사"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "창조하다"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "Discord에서 지원 받기"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "지원 센터"
 
@@ -1430,6 +1414,10 @@ msgstr "{0} {1} 및 {2} {3} 제거 중"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "{0} {1} 및{2} {3}제거"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "기능 요청"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "이 앱은 다음 타사 API를 사용합니다."
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "유동성을 추가하려면 이 풀을 {0} 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

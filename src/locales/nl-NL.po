@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -150,7 +150,6 @@ msgstr "Actief"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Toevoegen"
 
@@ -230,10 +229,6 @@ msgstr "Bedrag"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Er is een fout opgetreden bij het uitvoeren van deze swap. Mogelijk moet u uw sliptolerantie verhogen. Als dat niet werkt, is er mogelijk een incompatibiliteit met het token dat u verhandelt. Let op: kosten voor overdracht en rebase tokens zijn niet compatibel met Uniswap V3."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analytics"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "Sluiten"
 msgid "Closed"
 msgstr "Gesloten"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Code"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Verzamel"
@@ -490,10 +481,6 @@ msgstr "Gemeenschappelijke bases"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Bevestigen"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Bevestig Aanmaken"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "Gekopieerd"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Adres kopiëren"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Aanmaken"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "Ontvang ondersteuning op Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Helpcentrum"
 
@@ -1430,6 +1414,10 @@ msgstr "Verwijderen van {0} {1} en {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Verwijderen {0} {1} en{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Functies aanvragen"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "Deze app gebruikt de volgende API's van derden:"
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Deze pool moet worden geïnitialiseerd voordat u liquiditeit kunt toevoegen. Selecteer een startprijs voor het zwembad om te initialiseren. Voer vervolgens uw liquiditeitsprijsbereik en stortingsbedrag in. Vanwege de initialisatietransactie zullen de gaskosten hoger zijn dan normaal."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Deze pool moet worden geïnitialiseerd op {0} voordat u liquiditeit kunt toevoegen. Selecteer een startprijs voor het zwembad om te initialiseren. Voer vervolgens uw liquiditeitsprijsbereik en stortingsbedrag in."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

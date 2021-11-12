@@ -184,7 +184,7 @@ export default function AddLiquidity({
       .then((estimatedGasLimit) =>
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(chainId, estimatedGasLimit),
+          gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then((response) => {
           setAttemptingTxn(false)
 

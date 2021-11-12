@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: pt_PT\n"
 "Language-Team: Portuguese\n"
@@ -150,7 +150,6 @@ msgstr "Ativo"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Adicionar"
 
@@ -230,10 +229,6 @@ msgstr "Quantia"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ocorreu um erro ao tentar executar esta troca. Pode ser necessário aumentar sua tolerância ao deslizamento. Se isso não funcionar, pode haver uma incompatibilidade com o token que você está negociando. Nota: a taxa de transferência e tokens de rebase são incompatíveis com Uniswap V3."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Análises"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "Fechar"
 msgid "Closed"
 msgstr "Fechado"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Código"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Recolher"
@@ -490,10 +481,6 @@ msgstr "Bases comuns"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Confirmar"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Confirme a criação"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "Copiado"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copiar Endereço"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Crio"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "Obtenha suporte no Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Centro de ajuda"
 
@@ -1430,6 +1414,10 @@ msgstr "A remover {0} {1} e {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Removendo {0} {1} e{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Solicitar recursos"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "Este aplicativo usa as seguintes APIs de terceiros:"
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Este pool deve ser inicializado antes que você possa adicionar liquidez. Para inicializar, selecione um preço inicial para o pool. Em seguida, insira sua faixa de preço de liquidez e o valor do depósito. As taxas de gás serão mais altas do que o normal devido à transação de inicialização."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Este pool deve ser inicializado em {0} antes que você possa adicionar liquidez. Para inicializar, selecione um preço inicial para o pool. Em seguida, insira sua faixa de preço de liquidez e o valor do depósito."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

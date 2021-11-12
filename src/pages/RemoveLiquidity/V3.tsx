@@ -16,7 +16,6 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
-import { SupportedChainId } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
@@ -140,7 +139,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       .then((estimate) => {
         const newTxn = {
           ...txn,
-          gasLimit: calculateGasMargin(chainId, estimate),
+          gasLimit: calculateGasMargin(estimate),
         }
 
         return library
@@ -262,10 +261,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     )
   }
 
-  const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
-    !onOptimisticChain &&
-      liquidityValue0?.currency &&
+    liquidityValue0?.currency &&
       liquidityValue1?.currency &&
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -150,7 +150,6 @@ msgstr "Aktív"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Hozzáadás"
 
@@ -230,10 +229,6 @@ msgstr "Összeg"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analitika"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "Bezárás"
 msgid "Closed"
 msgstr "Zárva"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Kód"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Begyűjtés"
@@ -490,10 +481,6 @@ msgstr "Közös alapok"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Megerősítés"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Erősítse meg a létrehozást"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "Másolva"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Cím másolása"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Teremt"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -836,6 +819,7 @@ msgid "Get support on Discord"
 msgstr "Kérjen támogatást a Discordon"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Segítség Központ"
 
@@ -1431,6 +1415,10 @@ msgstr "{0} {1} és {2} {3} eltávolítása"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "{0} {1} és{2} {3}eltávolítása"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Funkciók kérése"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1664,10 +1652,6 @@ msgstr "Ez az alkalmazás a következő harmadik féltől származó API-kat has
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Ezt a készletet inicializálni kell a likviditás növelése előtt. Az inicializáláshoz válassza ki a készlet kikiáltási árát. Ezután adja meg likviditási ártartományát és betéti összegét. Az inicializálási tranzakció miatt a gázdíjak a szokásosnál magasabbak lesznek."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "{0} on kell inicializálni, mielőtt hozzáadhatná a likviditást. Az inicializáláshoz válassza ki a készlet kikiáltási árát. Ezután adja meg likviditási ártartományát és betéti összegét."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."

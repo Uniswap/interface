@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-11 21:07\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -150,7 +150,6 @@ msgstr "פָּעִיל"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "הוספה"
 
@@ -230,10 +229,6 @@ msgstr "כמות"
 #: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "אירעה שגיאה בניסיון לבצע החלפה זו. יתכן שתצטרך להגביר את סובלנות ההחלקה שלך. אם זה לא עובד, ייתכן שיש אי התאמה לאסימון שאתה סוחר בו. הערה: עמלה על אסימון העברה וריבוס אינם תואמים ל- Uniswap V3."
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "ניתוח"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -446,10 +441,6 @@ msgstr "סגור"
 msgid "Closed"
 msgstr "סָגוּר"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "קוד"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "לגבות"
@@ -490,10 +481,6 @@ msgstr "מכנים משותפים"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "לְאַשֵׁר"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "אשר יצירת"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +548,6 @@ msgstr "מוּעֲתָק"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "העתק כתובת"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "לִיצוֹר"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +818,7 @@ msgid "Get support on Discord"
 msgstr "קבל תמיכה בדיסקורד"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "מרכז עזרה"
 
@@ -1430,6 +1414,10 @@ msgstr "הסרת {0} {1} ו {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "הסרת {0} {1} ו-{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "בקשת תכונות"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1663,10 +1651,6 @@ msgstr "אפליקציה זו משתמשת בממשקי ה-API של צד שלי�
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. דמי הגז יהיו גבוהים מהרגיל עקב עסקת האתחול."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "יש לאתחל את המאגר הזה ב- {0} לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
