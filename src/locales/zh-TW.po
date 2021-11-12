@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-11 21:07\n"
+"PO-Revision-Date: 2021-11-12 09:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -1416,7 +1416,7 @@ msgstr "移除 {0} {1} 和 {2} {3}"
 
 #: src/components/Menu/index.tsx
 msgid "Request Features"
-msgstr "請求功能"
+msgstr "功能建議"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2027,7 +2027,7 @@ msgstr "投票大約結束於 {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "投票開始大約 {0}"
+msgstr "投票大約於 {0} 開始"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
