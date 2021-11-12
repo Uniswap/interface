@@ -342,7 +342,7 @@ export default function Earn() {
         {({ width }) => (
           <List
             className="no-scrollbars"
-            height={height - 200}
+            height={height - 100}
             overscanCount={20}
             itemCount={rows.length}
             itemSize={getItemSize}

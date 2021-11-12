@@ -146,7 +146,7 @@ export default function Updater(): null {
 
     const chunkedCalls = chunkArray(calls, CALL_CHUNK_SIZE)
 
-    if (cancellations.current?.blockNumber !== latestBlockNumber) {
+    if (cancellations.current && latestBlockNumber - cancellations.current?.blockNumber > 2) {
       cancellations.current?.cancellations?.forEach((c) => c())
     }
 
