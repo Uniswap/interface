@@ -7,7 +7,7 @@ import AppBody from '../AppBody'
 import { AssetSelector } from './AssetsSelector'
 import { RowBetween } from '../../components/Row'
 import ArrowIcon from '../../assets/svg/arrow.svg'
-import { BridgeActionPanel } from './BridgeActionPanel'
+import { BridgeActionPanel } from './ActionPanel/BridgeActionPanel'
 import { BridgeModal } from './BridgeModals/BridgeModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
@@ -235,7 +235,6 @@ export default function Bridge() {
           isNetworkConnected={isNetworkConnected}
           step={step}
           setStep={setStep}
-          typedValue={typedValue}
         />
       </AppBody>
       {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (
