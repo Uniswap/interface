@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useAppSelector } from 'state/hooks'
+import { CHAIN_INFO } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import ms from 'ms.macro'
+import { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -67,13 +70,53 @@ const Spinner = styled.div<{ warning: boolean }>`
   left: -3px;
   top: -3px;
 `
+const NETWORK_HEALTH_CHECK_MS = ms`15s`
+const DEFAULT_MS_BEFORE_WARNING = ms`10m`
 
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
-  const chainConnectivityWarning = useAppSelector((state) => state.application.chainConnectivityWarning)
+  const [warning, setWarning] = useState(false)
+  const blockTimestamp = useCurrentBlockTimestamp()
+  const isWindowVisible = useIsWindowVisible()
+  const [msSinceLastBlock, setMsSinceLastBlock] = useState(0)
+  const timeout = useRef<NodeJS.Timeout>()
+
+  const waitMsBeforeWarning =
+    (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
+
+  useEffect(() => {
+    if (blockTimestamp && chainId) {
+      if (Math.floor(Date.now() - blockTimestamp.mul(1000).toNumber()) > waitMsBeforeWarning) {
+        if (!warning) {
+          setWarning(true)
+        }
+      } else {
+        if (warning) {
+          setWarning(false)
+        }
+      }
+    }
+  }, [blockTimestamp, chainId, warning, waitMsBeforeWarning])
+
+  useEffect(() => {
+    timeout.current = setTimeout(() => {
+      setMsSinceLastBlock(NETWORK_HEALTH_CHECK_MS + msSinceLastBlock)
+      if (msSinceLastBlock > waitMsBeforeWarning && isWindowVisible) {
+        setWarning(true)
+      } else if (warning) {
+        setWarning(false)
+      }
+    }, NETWORK_HEALTH_CHECK_MS)
+
+    return function cleanup() {
+      if (timeout.current) {
+        clearTimeout(timeout.current)
+      }
+    }
+  }, [chainId, warning, isWindowVisible, msSinceLastBlock, setMsSinceLastBlock, waitMsBeforeWarning])
 
   useEffect(
     () => {
@@ -98,20 +141,14 @@ export default function Polling() {
       <ExternalLink
         href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
       >
-        <StyledPolling
-          onMouseEnter={() => setIsHover(true)}
-          onMouseLeave={() => setIsHover(false)}
-          warning={chainConnectivityWarning}
-        >
+        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
           <StyledPollingNumber breathe={isMounting} hovering={isHover}>
             {blockNumber}&ensp;
           </StyledPollingNumber>
-          <StyledPollingDot warning={chainConnectivityWarning}>
-            {isMounting && <Spinner warning={chainConnectivityWarning} />}
-          </StyledPollingDot>{' '}
+          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
         </StyledPolling>
       </ExternalLink>
-      {chainConnectivityWarning && <ChainConnectivityWarning />}
+      {warning && <ChainConnectivityWarning />}
     </>
   )
 }
