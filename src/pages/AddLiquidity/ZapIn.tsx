@@ -312,7 +312,8 @@ const ZapIn = ({
   const usdPrices = useTokensPrice(tokens)
   const marketPrices = useTokensMarketPrice(tokens)
 
-  const poolPrice = Number(price?.toSignificant(6))
+  const poolPrice =
+    independentField === Field.CURRENCY_A ? Number(price?.toSignificant(6)) : Number(price?.invert().toSignificant(6))
   const marketPrice = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolPrice && marketPrice && Math.abs(poolPrice - marketPrice) / marketPrice > 0.05)

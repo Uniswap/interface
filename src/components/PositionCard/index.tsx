@@ -303,7 +303,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
               {token0Deposited ? (
                 <RowFixed>
                   <Text fontSize={14} fontWeight={400}>
-                    {token0Deposited.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(100)))
+                    {token0Deposited.equalTo('0')
+                      ? '0'
+                      : token0Deposited.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(100)))
                       ? '<0.01'
                       : token0Deposited?.toSignificant(6)}{' '}
                     {formattedUSDPrice(token0Deposited, usdPrices[0])}
@@ -324,7 +326,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
               {token1Deposited ? (
                 <RowFixed>
                   <Text fontSize={14} fontWeight={400}>
-                    {token1Deposited.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(100)))
+                    {token1Deposited.equalTo('0')
+                      ? '0'
+                      : token1Deposited.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(100)))
                       ? '<0.01'
                       : token1Deposited?.toSignificant(6)}{' '}
                     {formattedUSDPrice(token1Deposited, usdPrices[1])}

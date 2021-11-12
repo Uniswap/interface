@@ -33,8 +33,8 @@ export default function useTokensMarketPrice(tokens: (Token | null | undefined)[
         return
       }
 
-      // Retry after 5 seconds.
-      setTimeout(() => revalidate({ retryCount }), 5000)
+      // Retry after 20 seconds.
+      setTimeout(() => revalidate({ retryCount }), 20000)
     }
   })
 
