@@ -66,7 +66,7 @@
     "@uniswap/v2-sdk": "^3.0.0-alpha.2",
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
-    "@uniswap/v3-sdk": "3.6.3",
+    "@uniswap/v3-sdk": "^3.7.1",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
