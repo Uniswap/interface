@@ -90,7 +90,6 @@ export function CurrencySearch({
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
-  console.log({ allTokens, searchToken })
 
   /*  useEffect(() => {
     if (isAddressSearch) {
