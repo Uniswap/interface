@@ -2907,9 +2907,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "14.14.31"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.31.tgz#72286bd33d137aa0d152d47ec7c1762563d34055"
-  integrity sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==
+  version "16.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.7.tgz#36820945061326978c42a01e56b61cd223dfdc42"
+  integrity sha512-QB5D2sqfSjCmTuWcBWyJ+/44bcjO7VbjSbOE0ucoVbAsSNQc4Lt6QkgkVXkTDwkL4z/beecZNDvVX15D4P8Jbw==
 
 "@types/node@12.12.50":
   version "12.12.50"
@@ -3834,10 +3834,10 @@ aproba@^1.1.1:
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.2.0.tgz#6802e6264efd18c790a1b0d517f0f2627bf2c94a"
   integrity sha512-Y9J6ZjXtoYh8RnXVCMOU/ttDmk1aBjunq9vO0ta5x85WDQiQfUF9sIPBITdbiiIVcBo03Hi3jMxigBtsddlXRw==
 
-arb-ts@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/arb-ts/-/arb-ts-1.0.1.tgz#82fb8498fb1759c53be380c96338b010b15b5615"
-  integrity sha512-itefdSaKXVkJ1hS4qLreqITdrEB+nFx0U0rUtajR9wW3S8cIL8YPQlmgBSWLcUe2m8ureBVSc3QIPLrK6UFp1Q==
+arb-ts@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/arb-ts/-/arb-ts-1.0.2.tgz#148b2364e9368bd158cf8c04e2fd64939e8d0e4d"
+  integrity sha512-FHdoIPDQ5a9kM6vodRvrBTXM+j8CE1lb6uDI2mLk8j/xu6vSSJ0mOUxICSc6V1HWORV5PaGJLaE/9VsfOJuLSg==
   dependencies:
     "@ethersproject/address" "^5.0.8"
     "@ethersproject/bignumber" "^5.1.1"
