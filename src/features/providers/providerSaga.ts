@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { REHYDRATE } from 'redux-persist'
-import { appSelect } from 'src/app/hooks'
+import type { RootState } from 'src/app/rootReducer'
 import { getWalletProviders } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { blockChannelWatcher, createBlockChannel } from 'src/features/blocks/blockListeners'
@@ -13,11 +13,11 @@ import { call, cancel, fork, take, takeEvery } from 'typed-redux-saga'
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
   // Wait for rehydration so we know which networks are enabled
-  yield* take(REHYDRATE)
+  const persisted = yield* take<PayloadAction<RootState>>(REHYDRATE)
+  const chains = persisted.payload.chains.byChainId
 
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getWalletProviders)
-  const chains = yield* appSelect((s) => s.chains.byChainId)
   const activeChains = getActiveChainIds(chains)
   for (const chainId of activeChains) {
     yield* fork(initProvider, chainId, manager)
