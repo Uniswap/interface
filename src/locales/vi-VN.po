@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 15:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -1681,7 +1681,7 @@ msgid "To (at least)"
 msgstr "Đến (Ít nhất)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Để bắt đầu giao dịch trên {0}, trước tiên hãy kết nối tài sản của bạn từ L1 đến L2. Vui lòng coi đây là bản phát hành beta và tìm hiểu về các rủi ro trước khi sử dụng {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx

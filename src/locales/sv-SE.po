@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 15:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -1681,8 +1681,8 @@ msgid "To (at least)"
 msgstr "Till (minst)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "För att börja handla med {0}, överbrygga först dina tillgångar från L1 till L2. Behandla detta som en betaversion och lär dig om riskerna innan du använder {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "För att börja handla på {0}, överbrygga först dina tillgångar från L1 till L2. Behandla detta som en betaversion och lär dig om riskerna innan du använder {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"

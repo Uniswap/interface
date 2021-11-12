@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 15:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -1681,8 +1681,8 @@ msgid "To (at least)"
 msgstr "Aan (ten minste)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "{0}te begin verhandel, moet u eers u bates van L1 na L2 oorbrug. Behandel dit as 'n beta -weergawe en leer meer oor die risiko's voordat u {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Om te begin handel dryf op {0}, oorbrug eers jou bates van L1 na L2. Behandel dit asseblief as 'n beta-vrystelling en leer oor die risiko's voordat u {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"

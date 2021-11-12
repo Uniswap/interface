@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 15:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -1681,7 +1681,7 @@ msgid "To (at least)"
 msgstr "Untuk (setidaknya)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Untuk memulai trading pada {0}, pertama-tama jembatani aset Anda dari L1 ke L2. Harap perlakukan ini sebagai rilis beta dan pelajari tentang risikonya sebelum menggunakan {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx

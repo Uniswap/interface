@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 15:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -1681,8 +1681,8 @@ msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "在 {0} 上交易，首先须将您的资产从 L1 桥接到 L2。请将此视为 Beta 版并在使用 {1} 之前了解风险。"
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "{0}上开始交易，首先将您的资产从 L1 桥接到 L2。请将此视为测试版并在使用 {1}之前了解风险。"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
