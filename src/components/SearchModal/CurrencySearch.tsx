@@ -90,7 +90,6 @@ export function CurrencySearch({
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
-
   /*  useEffect(() => {
     if (isAddressSearch) {
       ReactGA.event({

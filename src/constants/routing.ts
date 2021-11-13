@@ -115,7 +115,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_OPTIMISM,
   ],
   [SupportedChainId.OPTIMISTIC_KOVAN]: [ExtendedEther.onChain(SupportedChainId.OPTIMISTIC_KOVAN)],
-  [SupportedChainId.UZH]: [ExtendedEther.onChain(SupportedChainId.UZH), DMY, DMY2],
+  [SupportedChainId.UZH]: [ExtendedEther.onChain(SupportedChainId.UZH), WETH9_EXTENDED[SupportedChainId.UZH]],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
