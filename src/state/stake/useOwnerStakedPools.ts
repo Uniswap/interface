@@ -4,6 +4,7 @@ import { partition } from 'lodash'
 import { FarmSummary } from 'pages/Earn/useFarmRegistry'
 import { useMemo } from 'react'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { toBN } from 'web3-utils'
 
 import DUAL_REWARDS_ABI from '../../constants/abis/moola/MoolaStakingRewards.json'
 
@@ -23,9 +24,24 @@ export const useOwnerStakedPools = (farmSummaries: FarmSummary[]) => {
     return acc
   }, {})
 
-  const [stakedFarms, unstakedFarms] = useMemo(() => {
-    return partition(farmSummaries, (farmSummary) => isStaked[farmSummary.stakingAddress])
+  const [stakedFarms, uniqueUnstakedFarms] = useMemo(() => {
+    const [staked, unstaked] = partition(farmSummaries, (farmSummary) => isStaked[farmSummary.stakingAddress])
+    return [staked, unique(unstaked)]
   }, [farmSummaries, isStaked])
 
-  return { stakedFarms, unstakedFarms }
+  return { stakedFarms, unstakedFarms: uniqueUnstakedFarms }
+}
+
+function unique(farmSummaries: FarmSummary[]): FarmSummary[] {
+  const bestFarms: Record<string, FarmSummary> = {}
+  farmSummaries.forEach((fs) => {
+    if (!bestFarms[fs.lpAddress]) {
+      bestFarms[fs.lpAddress] = fs
+    }
+    const currentBest = bestFarms[fs.lpAddress]
+    if (toBN(fs.rewardsUSDPerYear).gt(toBN(currentBest.rewardsUSDPerYear))) {
+      bestFarms[fs.lpAddress] = fs
+    }
+  })
+  return Object.values(bestFarms)
 }

@@ -86,8 +86,8 @@ export default function Earn() {
       {stakedFarms.length > 0 && (
         <>
           <Header>{t('yourPools')}</Header>
-          {stakedFarms.map((farmSummary, idx) => (
-            <PoolWrapper key={idx}>
+          {stakedFarms.map((farmSummary) => (
+            <PoolWrapper key={farmSummary.stakingAddress}>
               <ErrorBoundary>
                 <PoolCard farmSummary={farmSummary} />
               </ErrorBoundary>
@@ -98,8 +98,8 @@ export default function Earn() {
       {unstakedFarms.length > 0 && (
         <>
           <Header>{t('availablePools')}</Header>
-          {unstakedFarms.map((farmSummary, idx) => (
-            <PoolWrapper key={idx}>
+          {unstakedFarms.map((farmSummary) => (
+            <PoolWrapper key={farmSummary.stakingAddress}>
               <ErrorBoundary>
                 <PoolCard farmSummary={farmSummary} />
               </ErrorBoundary>
