@@ -65,7 +65,9 @@ export const useFarmRegistry = () => {
         rewardsUSDPerYear: farmData[e.returnValues.stakingAddress].rewardsUSDPerYear,
       })
     })
-    farmSummaries.sort((a, b) => Number(fromWei(toBN(b.tvlUSD).sub(toBN(a.tvlUSD)))))
+    farmSummaries
+      .sort((a, b) => Number(fromWei(toBN(b.rewardsUSDPerYear).sub(toBN(a.rewardsUSDPerYear)))))
+      .sort((a, b) => Number(fromWei(toBN(b.tvlUSD).sub(toBN(a.tvlUSD)))))
     setFarmSummaries(farmSummaries)
   }, [kit.web3.eth])
 
