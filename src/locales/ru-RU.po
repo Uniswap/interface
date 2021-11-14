@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-14 14:06\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -309,7 +309,7 @@ msgstr "Подходит для пар стейблкоинов."
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
-msgstr "Лучше всего подходит для очень стабильных пар."
+msgstr "Подходит для пар очень стабильных стейблкоинов."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1405,7 +1405,7 @@ msgstr "Удаление {0} {1} и{2} {3}"
 
 #: src/components/Menu/index.tsx
 msgid "Request Features"
-msgstr "Запросить функции"
+msgstr "Предложить идею"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1682,7 +1682,7 @@ msgstr "На токены (минимум)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Чтобы начать торговать на {0}, сначала соедините свои активы с L1 на L2. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
+msgstr "Чтобы начать торговлю в {0}, вам нужно перенести свои активы с L1 на L2 через мост. Пожалуйста, относитесь к этому как к бета-версии и узнайте о рисках, прежде чем использовать {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2016,7 +2016,7 @@ msgstr "Голосование заканчивается примерно {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "Голосование начнется примерно с {0}"
+msgstr "Голосование начнется примерно {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"

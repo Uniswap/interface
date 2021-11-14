@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-14 14:06\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -309,7 +309,7 @@ msgstr "Primerno za stabilne pare."
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
-msgstr "Najboljše za zelo stabilne pare."
+msgstr "Primerno za zelo stabilne pare."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1405,7 +1405,7 @@ msgstr "Odstranitev {0} {1} in{2} {3}"
 
 #: src/components/Menu/index.tsx
 msgid "Request Features"
-msgstr "Zahtevajte funkcije"
+msgstr "Predlagajte funkcionalnosti"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1682,7 +1682,7 @@ msgstr "Za (vsaj)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Če želite začeti trgovati na {0}, najprej premostite svoja sredstva iz L1 v L2. Prosimo, da to obravnavate kot izdajo beta in se pred uporabo poučite o tveganjih {1}."
+msgstr "Če želite začeti trgovati na {0}, najprej prenesite svoja sredstva iz L1 v L2. Prosimo, da to smatrate za beta-verzijo in se pred uporabo {1} poučite o tveganjih."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
