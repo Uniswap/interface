@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
-import { DAI, UNI, USDC } from '../constants/tokens'
+import { DAI, KROM, UNI, USDC } from '../constants/tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -52,6 +52,7 @@ const PERMITTABLE_TOKENS: {
   },
   [42]: {
     [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [KROM[42].address]: { type: PermitType.AMOUNT, name: 'Kromatika' },
   },
 }
 

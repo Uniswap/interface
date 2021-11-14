@@ -17,16 +17,16 @@ export enum SupportedChainId {
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.ROPSTEN,
+  // SupportedChainId.RINKEBY,
+  // SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
 
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.ARBITRUM_RINKEBY,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.OPTIMISTIC_KOVAN,
 ]
 
 export const L1_CHAIN_IDS = [
