@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import { BigNumber } from 'ethers'
 import { Token } from '@swapr/sdk'
 import { isToken } from '../../../hooks/Tokens'
@@ -18,7 +18,7 @@ export const useBridgeActionPanel = () => {
   const bridge = useBridge()
   const { isArbitrum } = useChains()
   const bridgeService = useBridgeService()
-  const { currencyId, isBalanceSufficient, parsedAmount, bridgeCurrency } = useBridgeInfo()
+  const { currencyId, isBalanceSufficient, parsedAmount, bridgeCurrency, typedValue } = useBridgeInfo()
   const [{ walletAddress, gatewayAddress }, setAddresses] = useState<{
     walletAddress?: string
     gatewayAddress?: string
@@ -28,6 +28,7 @@ export const useBridgeActionPanel = () => {
   const [checkingAllowance, setCheckingAllowance] = useState(false)
   const [approvalState, setApprovalState] = useState<ApprovalState>(ApprovalState.UNKNOWN)
   const [showApprovalFlow, setShowApprovalFlow] = useState(false)
+  const hasAmount = useMemo(() => !!Number(typedValue), [typedValue])
 
   const handleApprove = useCallback(async () => {
     if (!bridgeService || !currencyId || !bridgeCurrency) return
@@ -116,9 +117,9 @@ export const useBridgeActionPanel = () => {
     handleApprove,
     approvalState,
     isBalanceSufficient,
-    parsedAmount,
     showApprovalFlow,
     bridgeCurrency,
-    isArbitrum
+    isArbitrum,
+    hasAmount
   }
 }

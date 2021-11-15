@@ -94,23 +94,6 @@ export const BridgeModal = ({ handleResetBridge, setStep, setStatus, modalData, 
             disclaimerText={disclaimerText}
           />
         )
-      case BridgeModalStatus.APPROVE:
-        return (
-          <BridgePendingModal
-            isOpen
-            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            text={`Set allowance for ${fromNetworkName} L1 router contract to bridge your ${symbol} tokens to L2 ${toNetworkName}`}
-          />
-        )
-      case BridgeModalStatus.APPROVING:
-        return (
-          <BridgingInitiatedModal
-            isOpen
-            onDismiss={() => setStatus(BridgeModalStatus.CLOSED)}
-            heading={'Approving Initiated'}
-            text={`Bridging from ${fromNetworkName} to ${toNetworkName}`}
-          />
-        )
       default:
         return null
     }

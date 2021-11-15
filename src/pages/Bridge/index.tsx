@@ -156,6 +156,7 @@ export default function Bridge() {
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
+      onCurrencySelection(tx.assetAddress || 'ETH')
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       setModalData({
@@ -165,12 +166,12 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [setModalData]
+    [onCurrencySelection, setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
     if (!bridgeService) return
-    await bridgeService.triggerOutboxEth(collectableTx)
+    await bridgeService.collect(collectableTx)
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 

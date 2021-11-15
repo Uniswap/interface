@@ -42,10 +42,10 @@ export const BridgeActionPanel = ({
     approvalState,
     handleApprove,
     isBalanceSufficient,
-    parsedAmount,
     showApprovalFlow,
     bridgeCurrency,
-    isArbitrum
+    isArbitrum,
+    hasAmount
   } = useBridgeActionPanel()
 
   const selectPanel = () => {
@@ -112,7 +112,7 @@ export const BridgeActionPanel = ({
               )}
             </ButtonConfirmed>
             <ButtonError
-              onClick={() => console.log('transfer')}
+              onClick={handleModal}
               width="48%"
               id="swap-button"
               disabled={approvalState !== ApprovalState.APPROVED}
@@ -127,11 +127,16 @@ export const BridgeActionPanel = ({
         )
       }
     }
-
-    // No Amount/Balance
+    // No Amount/Token/Balance
     return (
       <BridgeButton to={toNetworkChainId} from={fromNetworkChainId} disabled onClick={handleModal}>
-        {parsedAmount && !isBalanceSufficient ? `Insufficient ${bridgeCurrency?.symbol} balance` : 'Enter amount'}
+        {hasAmount
+          ? bridgeCurrency
+            ? isBalanceSufficient
+              ? `Loading...`
+              : `Insufficient ${bridgeCurrency?.symbol} balance`
+            : 'Select token'
+          : 'Enter amount'}
       </BridgeButton>
     )
   }

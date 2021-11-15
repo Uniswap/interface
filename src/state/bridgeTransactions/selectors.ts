@@ -131,6 +131,7 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
+          assetAddress: tx.assetAddress,
           fromChainId: from,
           toChainId: to,
           status: getBridgeTxStatus(tx.receipt?.status),
@@ -214,6 +215,7 @@ export const bridgeTxsSummarySelector = createSelector(
 
         const summary: BridgeTransactionSummary = {
           assetName: tx.assetName,
+          assetAddress: tx.assetAddress,
           value: tx.value,
           txHash: tx.txHash,
           batchNumber: tx.batchNumber,
