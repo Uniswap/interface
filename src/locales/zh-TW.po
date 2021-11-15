@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -61,18 +61,6 @@ msgstr "- 刪除接收人"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI 代幣 / 每周"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0.05% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0.3% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% 手續費"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "啟用"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "新增"
@@ -231,10 +218,6 @@ msgstr "數額"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "分析"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "余額："
 msgid "Balance: {0} {1}"
 msgstr "余額：{0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "適合低交易量的幣對。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "適合大部分幣對。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "適合穩定幣幣對。"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "最適合非常穩定的配對。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "關閉"
 msgid "Closed"
 msgstr "已關閉"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "代碼"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "收取"
@@ -490,10 +470,6 @@ msgstr "常用代幣"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "確認"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "確認創建"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +537,6 @@ msgstr "已複製"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "複製地址"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "創建"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "在 Discord 上尋求技術支持"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "幫助中心"
 
@@ -1137,7 +1110,7 @@ msgstr "找不到V2流動資金。"
 msgid "No active pools"
 msgstr "無運行中的流動池"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "沒有資料"
 
@@ -1161,7 +1134,7 @@ msgstr "沒有提案。"
 msgid "No results found."
 msgstr "未找到任何結果。"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未創建"
 
@@ -1430,6 +1403,10 @@ msgstr "正在去除 {0} {1} 和 {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "移除 {0} {1} 和 {2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "功能建議"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1664,10 +1641,6 @@ msgstr "此應用程序使用以下第三方 API："
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "需要先初始化，然後再添加流動性。初始化時，請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。因需進行初始化相關操作，Gas 費將比平時高一些。"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "在您添加流動性之前， {0} 池需要先初始化。請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。"
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "這個路由方案通過考慮拆分路由、多級路由和gas 成本等因素來優化價格。"
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "到（至少）"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "在 {0} 上交易，首先須將您的資產從 L1 橋接到 L2。請將此視為 Beta 版並在使用 {1} 之前了解風險。"
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "{0}上開始交易，首先將您的資產從 L1 橋接到 L2。請將此視為測試版並在使用 {1}之前了解風險。"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2043,7 +2016,7 @@ msgstr "投票大約結束於 {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
-msgstr "投票開始大約 {0}"
+msgstr "投票大約於 {0} 開始"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • 由用戶添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 手續費級別"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "選擇 {0}%"
 

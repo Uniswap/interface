@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -61,18 +61,6 @@ msgstr "- Rimuovi destinatario"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / settimana"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "commissione dello 0,05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "commissione dello 0,3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "commissione dell'1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Attivo"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Aggiungi"
@@ -231,10 +218,6 @@ msgstr "Importo"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Si è verificato un errore durante il tentativo di eseguire questo scambio. Potrebbe essere necessario aumentare la tolleranza allo slittamento. Se ciò non funziona, potrebbe esserci un'incompatibilità con il token che stai scambiando. Nota: la commissione sui token di trasferimento e rebase non è compatibile con Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analisi"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Saldo:"
 msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Ideale per coppie esotiche."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Ideale per la maggior parte delle coppie."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Ideale per coppie stabili."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Ideale per coppie molto stabili."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Chiudi"
 msgid "Closed"
 msgstr "Chiuso"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Codice"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Raccogli"
@@ -490,10 +470,6 @@ msgstr "Basi comuni"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Conferma"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Conferma Crea"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +537,6 @@ msgstr "Copiato"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copia Indirizzo"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Creare"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Ottieni supporto su Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Centro assistenza"
 
@@ -1137,7 +1110,7 @@ msgstr "Nessuna liquidità V2 trovata."
 msgid "No active pools"
 msgstr "Nessun pool attivo"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Nessun dato"
 
@@ -1161,7 +1134,7 @@ msgstr "Nessuna proposta trovata."
 msgid "No results found."
 msgstr "Nessun risultato trovato."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Non creato"
 
@@ -1430,6 +1403,10 @@ msgstr "Rimozione di {0} {1} e {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Rimozione {0} {1} e{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Funzionalità di richiesta"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1664,10 +1641,6 @@ msgstr "Questa app utilizza le seguenti API di terze parti:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Questo pool deve essere inizializzato prima di poter aggiungere liquidità. Per inizializzare, seleziona un prezzo di partenza per il pool. Quindi, inserisci la tua fascia di prezzo della liquidità e l'importo del deposito. Le tariffe del gas saranno più alte del solito a causa della transazione di inizializzazione."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Questo pool deve essere inizializzato su {0} prima di poter aggiungere liquidità. Per inizializzare, seleziona un prezzo di partenza per il pool. Quindi, inserisci la tua fascia di prezzo della liquidità e l'importo del deposito."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Questo percorso ottimizza il tuo prezzo considerando percorsi divisi, più luppoli e costi del gas."
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "A (almeno)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "Per iniziare a fare trading su {0}, per prima cosa collega le tue risorse da L1 a L2. Si prega di considerare questa versione come una versione beta e di informarsi sui rischi prima di utilizzarla {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "Per iniziare a fare trading su {0}, prima collega i tuoi asset da L1 a L2. Si prega di considerare questa versione come una versione beta e di informarsi sui rischi prima di utilizzarla {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Aggiunto dall'utente"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}commissione 0%"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% seleziona"
 

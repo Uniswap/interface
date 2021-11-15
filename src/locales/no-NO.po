@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-03 18:11\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -61,18 +61,6 @@ msgstr "- Fjern mottaker"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / uke"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0,05 % avgift"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0,3 % avgift"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1 % avgift"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Aktiv"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Legg til"
@@ -231,10 +218,6 @@ msgstr "Beløp"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Det oppstod en feil under forsøket på å utføre dette byttet. Det kan hende du må øke glidetoleransen. Hvis det ikke fungerer, kan det være en inkompatibilitet med symbolet du handler. Merk: gebyr ved overføring og rebase-tokens er inkompatibelt med Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "Analyse"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -312,20 +295,21 @@ msgstr "Saldo:"
 msgid "Balance: {0} {1}"
 msgstr "Saldo: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Best for eksotiske par."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Beste for de fleste par."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Beste for stabile par."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Best for veldig stabile par."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -446,10 +430,6 @@ msgstr "Lukk"
 msgid "Closed"
 msgstr "Lukket"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Kode"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Samle"
@@ -490,10 +470,6 @@ msgstr "Vanlige baser"
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Bekreft"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Bekreft Opprett"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -561,10 +537,6 @@ msgstr "Kopiert"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Kopier adresse"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Skape"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -835,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Få støtte på Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Hjelpesenter"
 
@@ -1137,7 +1110,7 @@ msgstr "Ingen V2-likviditet funnet."
 msgid "No active pools"
 msgstr "Ingen aktive potter"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "No data"
 msgstr "Ingen data"
 
@@ -1161,7 +1134,7 @@ msgstr "Ingen forslag funnet."
 msgid "No results found."
 msgstr "Ingen resultater."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ikke opprettet"
 
@@ -1430,6 +1403,10 @@ msgstr "Fjerner {0} {1} og {2} {3}"
 msgid "Removing {0} {1} and{2} {3}"
 msgstr "Fjerner {0} {1} og{2} {3}"
 
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Be om funksjoner"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1664,10 +1641,6 @@ msgstr "Denne appen bruker følgende tredjeparts APIer:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Dette bassenget må initialiseres før du kan tilføre likviditet. For å initialisere, velg en startpris for bassenget. Deretter angir du likviditetsprisklasse og innskuddsbeløp. Bensinavgifter vil være høyere enn vanlig på grunn av initialiseringstransaksjonen."
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Dette bassenget må initialiseres {0} før du kan tilføre likviditet. For å initialisere, velg en startpris for bassenget. Deretter angir du likviditetsprisklasse og innskuddsbeløp."
-
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
 msgstr "Denne ruten optimaliserer prisen ved å vurdere delte ruter, flere hopp og bensinkostnader."
@@ -1708,8 +1681,8 @@ msgid "To (at least)"
 msgstr "Til (minst)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "For å begynne å handle på {0}, må du først bygge bro mellom eiendelene dine fra L1 til L2. Behandle dette som en betaversjon og lær om risikoen før du bruker {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "For å begynne å handle på {0}, må du først bygge bro mellom dine eiendeler fra L1 til L2. Betrakt dette som en betaversjon og lær om risikoene før du bruker {1}."
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2394,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Lagt til av bruker"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2408,7 +2382,7 @@ msgstr "{0} %"
 msgid "{0}% fee tier"
 msgstr "{0}% avgiftsnivå"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% velg"
 

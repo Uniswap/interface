@@ -4559,10 +4559,10 @@
     "@typescript-eslint/types" "4.30.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/default-token-list@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/@uniswap/default-token-list/-/default-token-list-2.0.0.tgz"
-  integrity sha512-P37PqBtUjEB9DIRFfmEsgougkV0555JQKiGPISeN9UFk1UgCQM5sg6+bBaShiyaqEpdtttAaBFI1QESCzPGvXw==
+"@uniswap/default-token-list@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-2.1.0.tgz#06dc33fbdb3bc4c507d4e9ac8b8b62ef5b252c8d"
+  integrity sha512-Cd2CrtZ+rNk55txvO76EEZRWOyojX+YyY0xxVjiMN00Y9nKDCftYoUNvwy9d+VuTySYjyCAVUef4PdcongZAPg==
 
 "@uniswap/governance@^1.0.2":
   version "1.0.2"
@@ -4642,6 +4642,18 @@
   resolved "https://registry.npmjs.org/@uniswap/v3-core/-/v3-core-1.0.0.tgz"
   integrity sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==
 
+"@uniswap/v3-periphery@^1.0.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.2.1.tgz#7775630bea774a2cf989ab87ce3c328ac52e0d50"
+  integrity sha512-45W8hT8X1j9ZcXa+y3NSVao90hMZtgtoJyDlMOg91wmUGi2idXAiGivOQYdB7+7Lq8Gc6Upv/ggFZknixZrv7g==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/lib" "^4.0.1-alpha"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0"
+    base64-sol "1.0.1"
+    hardhat-watcher "^2.1.1"
+
 "@uniswap/v3-periphery@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.1.1.tgz#be6dfca7b29318ea0d76a7baf15d3b33c3c5e90a"
@@ -4654,17 +4666,27 @@
     base64-sol "1.0.1"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/v3-sdk@^3.4.1":
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.4.1.tgz#2cf9b5f4dd826d6600245254e7bc7d2d4a4282ee"
-  integrity sha512-P0zcgOgpSqEbI/2DVESm8kf8OydagMEAzZR7qqLOe4JsUyhK1A4u1dy8tYDgWUBW0WeruEXSPNGiEL0pYPy3HQ==
+"@uniswap/v3-sdk@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.7.1.tgz#8a3740ff6302d8069e7ce4a38b7588721398048b"
+  integrity sha512-/0FBsrRijfAEOVO0ejCQX36MwaKzjKCaInUA1dNqFyDNZ5dthvv6jUhMADYuNXZnhN6NcSdIj6xhlc/cpgPm9Q==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/v3-periphery" "^1.1.1"
+    "@uniswap/v3-staker" "1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
+
+"@uniswap/v3-staker@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-staker/-/v3-staker-1.0.0.tgz#9a6915ec980852479dfc903f50baf822ff8fa66e"
+  integrity sha512-JV0Qc46Px5alvg6YWd+UIaGH9lDuYG/Js7ngxPit1SPaIP30AlVer1UYB7BRYeUVVxE+byUyIeN5jeQ7LLDjIw==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/v3-core" "1.0.0"
+    "@uniswap/v3-periphery" "^1.0.1"
 
 "@vibrant/color@^3.2.1-alpha.1":
   version "3.2.1-alpha.1"
@@ -9757,6 +9779,18 @@ eslint-plugin-testing-library@^3.9.2:
   integrity sha512-WAmOCt7EbF1XM8XfbCKAEzAPnShkNSwcIsAD2jHdsMUT9mZJPjLCG7pMzbcC8kK366NOuGip8HKLDC+Xk4yIdA==
   dependencies:
     "@typescript-eslint/experimental-utils" "^3.10.1"
+
+eslint-plugin-unused-imports@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-2.0.0.tgz#d8db8c4d0cfa0637a8b51ce3fd7d1b6bc3f08520"
+  integrity sha512-3APeS/tQlTrFa167ThtP0Zm0vctjr4M44HMpeg1P4bK6wItarumq0Ma82xorMKdFsWpphQBlRPzw/pxiVELX1A==
+  dependencies:
+    eslint-rule-composer "^0.3.0"
+
+eslint-rule-composer@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-rule-composer/-/eslint-rule-composer-0.3.0.tgz#79320c927b0c5c0d3d3d2b76c8b4a488f25bbaf9"
+  integrity sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==
 
 eslint-scope@^4.0.3:
   version "4.0.3"

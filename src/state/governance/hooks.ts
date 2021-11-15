@@ -306,7 +306,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
       if (!uniContract) throw new Error('No UNI Contract!')
       return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
         return uniContract
-          .delegate(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
+          .delegate(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.DELEGATE,
@@ -335,7 +335,7 @@ export function useVoteCallback(): {
       const args = [proposalId, voteOption === VoteOption.Against ? 0 : voteOption === VoteOption.For ? 1 : 2]
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
-          .castVote(...args, { value: null, gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
+          .castVote(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.VOTE,
@@ -375,7 +375,7 @@ export function useCreateProposalCallback(): (
 
       return latestGovernanceContract.estimateGas.propose(...args).then((estimatedGasLimit) => {
         return latestGovernanceContract
-          .propose(...args, { gasLimit: calculateGasMargin(chainId, estimatedGasLimit) })
+          .propose(...args, { gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.SUBMIT_PROPOSAL,
