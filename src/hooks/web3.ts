@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from 'legacy-web3-react/core'
 import { useEffect, useState } from 'react'
 
 import { gnosisSafe, injected } from '../connectors'
