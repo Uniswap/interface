@@ -315,8 +315,8 @@ const ActiveOutlined = styled(ButtonOutlined)`
 `
 
 const Circle = styled.div`
-  height: 20px;
-  width: 20px;
+  height: 17px;
+  width: 17px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.primary1};
   display: flex;
@@ -325,11 +325,11 @@ const Circle = styled.div`
 `
 
 const CheckboxWrapper = styled.div`
-  width: 30px;
+  width: 20px;
   padding: 0 10px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 11px;
+  right: 15px;
 `
 
 const ResponsiveCheck = styled(Check)`

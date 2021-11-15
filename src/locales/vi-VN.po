@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -61,18 +61,6 @@ msgstr "- Xóa người nhận"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / tuần"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "Phí 0,05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "Phí 0,3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "Phí 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "Hoạt động"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Thêm vào"
@@ -231,10 +218,6 @@ msgstr "Số tiền"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Đã xảy ra lỗi khi cố gắng thực hiện hoán đổi này. Bạn có thể cần phải tăng khả năng chịu trượt của mình. Nếu điều đó không hiệu quả, có thể có sự không tương thích với mã thông báo bạn đang giao dịch. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "phân tích"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -304,10 +287,6 @@ msgstr "Bộ định tuyến tự động"
 msgid "Available to deposit: {0}"
 msgstr "Có sẵn để đặt cọc: {0}"
 
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "Trở lại"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Thăng bằng:"
@@ -316,20 +295,21 @@ msgstr "Thăng bằng:"
 msgid "Balance: {0} {1}"
 msgstr "Số dư: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "Tốt nhất cho các cặp kỳ lạ."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "Tốt nhất cho hầu hết các cặp."
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "Tốt nhất cho các cặp ổn định."
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "Tốt nhất cho các cặp rất ổn định."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -348,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằng dữ liệu là chính xác. Bất kỳ ai cũng có thể tạo danh sách, bao gồm cả việc tạo các phiên bản giả mạo của danh sách hiện có và danh sách yêu cầu đại diện cho các dự án không có danh sách đó."
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Bằng cách kết nối ví, bạn đồng ý với Điều khoản dịch vụ <0> của Uniswap Labs</0> và xác nhận rằng bạn đã đọc và hiểu <1> tuyên bố từ chối trách nhiệm của giao thức Uniswap</1> ."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "Bằng cách kết nối ví, bạn đồng ý với <0>Điều khoản dịch vụ</0> của Uniswap Labs và xác nhận rằng bạn đã đọc và hiểu Tuyên bố từ chối trách nhiệm</1><1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -450,10 +430,6 @@ msgstr "Đóng"
 msgid "Closed"
 msgstr "Đã đóng cửa"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "Mã"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Sưu tầm"
@@ -495,10 +471,6 @@ msgstr "Cơ sở chung"
 msgid "Confirm"
 msgstr "Xác nhận"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "Xác nhận Tạo"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Xác nhận cung cấp"
@@ -520,6 +492,7 @@ msgstr "Xác nhận giao dịch này trong ví của bạn"
 msgid "Confirm transaction in wallet"
 msgstr "Xác nhận giao dịch trong ví"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -534,15 +507,11 @@ msgstr "Xác nhận giao dịch trong ví"
 msgid "Connect Wallet"
 msgstr "Kết nối ví"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "Kết nối ví"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "Kết nối với ví"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -568,10 +537,6 @@ msgstr "Đã sao chép"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Sao chép địa chỉ"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "Tạo nên"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -842,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "Nhận hỗ trợ về Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Trung tâm trợ giúp"
 
@@ -853,6 +819,10 @@ msgstr "Ẩn giấu"
 msgid "High Price Impact"
 msgstr "Tác động giá cao"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "Cách ứng dụng này sử dụng API"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -862,6 +832,7 @@ msgstr "Tôi hiểu"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Nếu bạn mua mã token từ danh sách này, bạn có thể không bán lại được."
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -909,17 +880,17 @@ msgstr "Đầu vào được ước tính. Bạn sẽ bán nhiều nhất <0>{0}
 msgid "Install Metamask"
 msgstr "Cài đặt Metamask"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "Không đủ thanh khoản cho giao dịch này."
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "Số dư ${0} không đủ"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "Không đủ thanh khoản cho giao dịch này."
+msgid "Insufficient {0} balance"
+msgstr "Số dư {0} không đủ"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -963,6 +934,16 @@ msgstr "Tìm hiểu thêm"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Tìm hiểu về cung cấp tính thanh khoản"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "Tìm hiểu thêm"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "Pháp lý & Quyền riêng tư"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1129,6 +1110,10 @@ msgstr "Không tìm thấy Thanh khoản V2."
 msgid "No active pools"
 msgstr "Không có pool hoạt động"
 
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "Không có dữ liệu"
+
 #: src/state/governance/hooks.ts
 msgid "No description."
 msgstr "Không có mô tả."
@@ -1149,7 +1134,7 @@ msgstr "Không tìm thấy đề xuất nào."
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Chưa tạo"
 
@@ -1344,6 +1329,10 @@ msgstr "Đề xuất hành động"
 msgid "Proposer"
 msgstr "Người đề xuất"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "Tuyên bố từ chối trách nhiệm"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Đã xếp hàng"
@@ -1406,13 +1395,17 @@ msgstr "Loại bỏ thanh khoản"
 msgid "Remove list"
 msgstr "Xóa danh sách"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "Loại bỏ ${0} ${1} và ${2} ${3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Loại bỏ {0} {1} và {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "Loại bỏ {0} {1} và{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "Yêu cầu tính năng"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "Cung cấp"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "Cung cấp ${0} ${1} và ${2} ${3}"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "Cung cấp {0} {1} và{2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1580,6 +1573,26 @@ msgstr "% Bạn sẽ kiếm được từ phí."
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "Ứng dụng tìm nạp dữ liệu blockchain từ dịch vụ lưu trữ của The Graph."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "Ứng dụng tìm nạp dữ liệu trên chuỗi và tạo các lệnh gọi hợp đồng bằng API Infura."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "Ứng dụng tìm nạp lộ trình giao dịch tối ưu từ máy chủ Uniswap Labs."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "Ứng dụng ghi lại số liệu thống kê sử dụng ẩn danh để cải thiện theo thời gian."
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "Ứng dụng thu thập địa chỉ ví của bạn một cách an toàn và chia sẻ nó với TRM Labs Inc. vì lý do rủi ro và tuân thủ."
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
@@ -1620,13 +1633,13 @@ msgstr "Không có dữ liệu thanh khoản."
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Các mã token này thường được ghép nối với các mã token khác."
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "Ứng dụng này sử dụng các API của bên thứ ba sau:"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Nhóm này phải được khởi tạo trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn. Phí gas sẽ cao hơn bình thường do giao dịch khởi tạo."
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "Nhóm này phải được khởi tạo bằng {0} trước khi bạn có thể thêm thanh khoản. Để khởi tạo, hãy chọn giá khởi điểm cho nhóm. Sau đó, nhập phạm vi giá thanh khoản và số tiền ký quỹ của bạn."
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "Tuyến đường này tối ưu hóa giá của bạn bằng cách xem 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đang hoạt động. Đảm bảo rằng đây là mã token mà bạn muốn giao dịch."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Mã thông báo này không được hỗ trợ trong ứng dụng Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "Đến (Ít nhất)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "Để bắt đầu giao dịch trên {0}, trước tiên hãy kết nối tài sản của bạn từ L1 đến L2. Vui lòng coi đây là bản phát hành beta và tìm hiểu về các rủi ro trước khi sử dụng {1}."
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "Mã thông báo không được hỗ trợ"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1796,6 +1817,10 @@ msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử 
 msgid "Uniswap Governance"
 msgstr "Quản trị Uniswap"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Điều khoản dịch vụ của Uniswap Labs"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap có sẵn ở: <0>{0}</0>"
@@ -1816,13 +1841,13 @@ msgstr "Hợp đồng di chuyển Uniswap↗"
 msgid "Uniswap on {0}"
 msgstr "Hủy hoán đổi trên {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "Nguồn không rõ"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Lỗi không xác định${0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1988,6 +2013,10 @@ msgstr "Bỏ phiếu đã kết thúc {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "Bỏ phiếu kết thúc vào khoảng {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "Bỏ phiếu bắt đầu khoảng {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "phút"
 msgid "via {0}"
 msgstr "qua {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "thông qua {0} mã token"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • Người dùng thêm vào"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "Mức phí {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}% chọn"
 

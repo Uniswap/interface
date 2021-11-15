@@ -257,7 +257,7 @@ function swapErrorToUserReadableMessage(error: any): ReactNode {
       }
       return (
         <Trans>
-          Unknown error${reason ? `: "${reason}"` : ''}. Try increasing your slippage tolerance. Note: fee on transfer
+          Unknown error{reason ? `: "${reason}"` : ''}. Try increasing your slippage tolerance. Note: fee on transfer
           and rebase tokens are incompatible with Uniswap V3.
         </Trans>
       )
@@ -363,9 +363,7 @@ export function useSwapCallback(
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate) }
-              : {}),
+            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {

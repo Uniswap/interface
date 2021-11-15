@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -61,18 +61,6 @@ msgstr "- 刪除接收人"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI 代幣 / 每周"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "0.05% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "0.3% 手續費"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "1% 手續費"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "啟用"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "新增"
@@ -231,10 +218,6 @@ msgstr "數額"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "分析"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -304,10 +287,6 @@ msgstr "自動路由"
 msgid "Available to deposit: {0}"
 msgstr "可存入的數額：{0}"
 
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "返回"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "余額："
@@ -316,20 +295,21 @@ msgstr "余額："
 msgid "Balance: {0} {1}"
 msgstr "余額：{0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "適合低交易量的幣對。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "適合大部分幣對。"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "適合穩定幣幣對。"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "最適合非常穩定的配對。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -348,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都可以創建代幣列表，包括創建假冒實際列表的造假版本，以及自我聲稱代表了某項目的代幣列表。"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "通過連接錢包，您同意接受 Uniswap 實驗室的<0>服務條款</0>，並確認您已閱讀和理解<1>Uniswap協議免責聲明</1>。"
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並確認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -450,10 +430,6 @@ msgstr "關閉"
 msgid "Closed"
 msgstr "已關閉"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "代碼"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "收取"
@@ -495,10 +471,6 @@ msgstr "常用代幣"
 msgid "Confirm"
 msgstr "確認"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "確認創建"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "確認供應"
@@ -520,6 +492,7 @@ msgstr "在您的錢包中確認這筆交易"
 msgid "Confirm transaction in wallet"
 msgstr "在錢包中確認交易"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -534,14 +507,10 @@ msgstr "在錢包中確認交易"
 msgid "Connect Wallet"
 msgstr "連接錢包"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "連接錢包"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
 msgstr "連接錢包"
 
 #: src/pages/PoolFinder/index.tsx
@@ -568,10 +537,6 @@ msgstr "已複製"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "複製地址"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "創建"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -842,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "在 Discord 上尋求技術支持"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "幫助中心"
 
@@ -853,6 +819,10 @@ msgstr "隱藏"
 msgid "High Price Impact"
 msgstr "高兌換率影響"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "此應用程序如何使用 API"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -862,6 +832,7 @@ msgstr "我已知悉"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "如果您從這個代幣列表中購買代幣，您可能無法再將其售出。"
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -909,17 +880,17 @@ msgstr "輸入數額僅為估值。您最多會售出<0>{0} {1}</0> 否則將還
 msgid "Install Metamask"
 msgstr "安裝Metamask"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "現有流動量不足以支持此交易。"
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "餘額不足 ${0}"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "現有流動量不足以支持此交易。"
+msgid "Insufficient {0} balance"
+msgstr "{0} 餘額不足"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -963,6 +934,16 @@ msgstr "了解更多"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "閱讀有關提供流動資金的資訊"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "瞭解更多"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "法律與隱私"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1106,7 +1087,7 @@ msgstr "收到的最低數額"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Missing dependencies"
-msgstr "缺少依賴項"
+msgstr "缺少依賴套件"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1129,6 +1110,10 @@ msgstr "找不到V2流動資金。"
 msgid "No active pools"
 msgstr "無運行中的流動池"
 
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "沒有資料"
+
 #: src/state/governance/hooks.ts
 msgid "No description."
 msgstr "沒有說明。"
@@ -1149,7 +1134,7 @@ msgstr "沒有提案。"
 msgid "No results found."
 msgstr "未找到任何結果。"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未創建"
 
@@ -1344,6 +1329,10 @@ msgstr "提議操作"
 msgid "Proposer"
 msgstr "提案人"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "協議免責聲明"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "待執行"
@@ -1406,13 +1395,17 @@ msgstr "去除流動資金"
 msgid "Remove list"
 msgstr "去除代幣列表"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "刪除 ${0} ${1} 和 ${2} ${3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "正在去除 {0} {1} 和 {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "移除 {0} {1} 和 {2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "功能建議"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "供應"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "供應 ${0} ${1} 和 ${2} ${3}"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "供應 {0} {1} 和 {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1562,7 +1555,7 @@ msgstr "將恰好 <0/> 兌換成 <1/>"
 #: src/hooks/useSwapCallback.tsx
 #: src/hooks/useSwapCallback.tsx
 msgid "Swap failed: {0}"
-msgstr "交換失敗： {0}"
+msgstr "兑换失败： {0}"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1579,6 +1572,26 @@ msgstr "您將賺取的手續費百分比。"
 #: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "兌換交易不滿足 Uniswap 不變量 X × Y = K 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "該應用程序從 The Graph 的託管服務中獲取區塊鏈數據。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "該應用程序獲取鏈上數據並使用 Infura API 構建合約調用。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "該應用程序從 Uniswap Labs 服務器獲取最佳交易路徑。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "該應用程序會記錄匿名使用情況統計信息，以便不斷改進。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "出於風險和合規性原因，該應用程序會安全地收集您的錢包地址並與 TRM Labs Inc. 共享。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1620,13 +1633,13 @@ msgstr "沒有流動性數據。"
 msgid "These tokens are commonly paired with other tokens."
 msgstr "這些代幣通常與其他代幣配對。"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "此應用程序使用以下第三方 API："
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "需要先初始化，然後再添加流動性。初始化時，請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。因需進行初始化相關操作，Gas 費將比平時高一些。"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "在您添加流動性之前， {0} 池需要先初始化。請先選擇起始價格，然後輸入您的流動性價格範圍和存款金額。"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "這個路由方案通過考慮拆分路由、多級路由和gas 成本�
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "此代幣未出現在激活的代幣列表中。請確保這是您想要交易的代幣。"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "Uniswap Labs 應用程序不支持此代幣"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "到（至少）"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "在 {0} 上交易，首先須將您的資產從 L1 橋接到 L2。請將此視為 Beta 版並在使用 {1} 之前了解風險。"
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "{0}上開始交易，首先將您的資產從 L1 橋接到 L2。請將此視為測試版並在使用 {1}之前了解風險。"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "不支持此代幣"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1786,15 +1807,19 @@ msgstr "未定"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected error. Could not estimate gas for the swap."
-msgstr "意外的錯誤。無法估計交換的gas。"
+msgstr "錯誤。無法估計兑换所需的 gas。"
 
 #: src/hooks/useSwapCallback.tsx
 msgid "Unexpected issue with estimating the gas. Please try again."
-msgstr "估計氣體的意外問題。請再試一次。"
+msgstr "估計 gas 時遇到問題。請再試一次。"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "Uniswap Labs 的服務條款"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1816,13 +1841,13 @@ msgstr "Uniswap 遷移合約↗"
 msgid "Uniswap on {0}"
 msgstr "在 {0} 上的 Uniswap"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "未知來源"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "未知錯誤${0}。嘗試增加您的滑點容忍度。注意：轉賬和 rebase 代幣的費用與 Uniswap V3 不兼容。"
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "未知錯誤{0}。請嘗試增加滑點容差。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不相容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1988,6 +2013,10 @@ msgstr "投票結束 {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "投票大約結束於 {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "投票大約於 {0} 開始"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "分鐘"
 msgid "via {0}"
 msgstr "通過 {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "從 {0} 代幣列表"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • 由用戶添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}% 手續費級別"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "選擇 {0}%"
 

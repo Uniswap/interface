@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-11 14:06\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -61,18 +61,6 @@ msgstr "- ลบผู้รับ"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / สัปดาห์"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "ค่าธรรมเนียม 0.05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "ค่าธรรมเนียม 0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "ค่าธรรมเนียม 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -149,7 +137,6 @@ msgid "Active"
 msgstr "คล่องแคล่ว"
 
 #: src/components/PositionCard/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "เพิ่ม"
@@ -231,10 +218,6 @@ msgstr "จำนวน"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "เกิดข้อผิดพลาดขณะพยายามดำเนินการสลับนี้ คุณอาจต้องเพิ่มความทนทานต่อการเลื่อนหลุด หากไม่ได้ผล อาจมีความไม่เข้ากันกับโทเค็นที่คุณกำลังซื้อขาย หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "การวิเคราะห์"
-
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -304,10 +287,6 @@ msgstr "เราเตอร์อัตโนมัติ"
 msgid "Available to deposit: {0}"
 msgstr "สามารถฝากได้: {0}"
 
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "กลับ"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "สมดุล:"
@@ -316,20 +295,21 @@ msgstr "สมดุล:"
 msgid "Balance: {0} {1}"
 msgstr "ยอดคงเหลือ: {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "ดีที่สุดสำหรับคู่ที่แปลกใหม่"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "ดีที่สุดสำหรับคู่ส่วนใหญ่"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "ดีที่สุดสำหรับคู่ที่มั่นคง"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "ดีที่สุดสำหรับคู่ที่มีเสถียรภาพมาก"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -348,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "การเพิ่มรายการนี้แสดงว่าคุณเชื่อมั่นโดยปริยายว่าข้อมูลถูกต้อง ใครๆ ก็สร้างรายการได้ ซึ่งรวมถึงการสร้างเวอร์ชันปลอมของรายการที่มีอยู่และรายการที่อ้างว่าเป็นตัวแทนของโครงการที่ไม่มีอยู่"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "การเชื่อมต่อกระเป๋าเงินหมายความว่าคุณยอมรับ <0>ข้อกำหนดในการให้บริการของ Uniswap Labs</0> และรับทราบว่าคุณได้อ่านและทำความเข้าใจ <1>ข้อจำกัดความรับผิดชอบของโปรโตคอล Uniswap</1> ."
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "การเชื่อมต่อกระเป๋าเงินหมายความว่าคุณยอมรับข้อกำหนดในการให้บริการ <0></0> และรับทราบว่าคุณได้อ่านและทำความเข้าใจ Uniswap <1>Protocol Disclaimer</1>แล้ว"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -450,10 +430,6 @@ msgstr "ปิด I"
 msgid "Closed"
 msgstr "ปิด"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "รหัส"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "เก็บรวบรวม"
@@ -495,10 +471,6 @@ msgstr "ฐานทั่วไป"
 msgid "Confirm"
 msgstr "ยืนยัน"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "ยืนยันการสร้าง"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "ยืนยันการจัดหา"
@@ -520,6 +492,7 @@ msgstr "ยืนยันการทำธุรกรรมนี้ในก
 msgid "Confirm transaction in wallet"
 msgstr "ยืนยันการทำธุรกรรมในกระเป๋าเงิน"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -534,15 +507,11 @@ msgstr "ยืนยันการทำธุรกรรมในกระเ
 msgid "Connect Wallet"
 msgstr "เชื่อมต่อกระเป๋าเงิน"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
 msgstr "เชื่อมต่อกระเป๋าสตางค์"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
-msgstr "เชื่อมต่อกับกระเป๋าสตางค์"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
@@ -568,10 +537,6 @@ msgstr "คัดลอกแล้ว"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "คัดลอกที่อยู่"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "สร้าง"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -842,6 +807,7 @@ msgid "Get support on Discord"
 msgstr "รับการสนับสนุนบน Discord"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "ศูนย์ช่วยเหลือ"
 
@@ -853,6 +819,10 @@ msgstr "ซ่อน"
 msgid "High Price Impact"
 msgstr "ผลกระทบราคาสูง"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "แอปนี้ใช้ API อย่างไร"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -862,6 +832,7 @@ msgstr "ฉันเข้าใจ"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "หากคุณซื้อโทเค็นจากรายการนี้ คุณอาจไม่สามารถขายคืนได้"
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -909,17 +880,17 @@ msgstr "ข้อมูลเข้าเป็นค่าประมาณ �
 msgid "Install Metamask"
 msgstr "ติดตั้ง Metamask"
 
+#: src/pages/Swap/index.tsx
+msgid "Insufficient liquidity for this trade."
+msgstr "สภาพคล่องไม่เพียงพอสำหรับการค้านี้"
+
 #: src/state/mint/hooks.tsx
 #: src/state/mint/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/mint/v3/hooks.tsx
 #: src/state/swap/hooks.tsx
-msgid "Insufficient ${0} balance"
-msgstr "ไม่เพียงพอ ${0} ยอดคงเหลือ"
-
-#: src/pages/Swap/index.tsx
-msgid "Insufficient liquidity for this trade."
-msgstr "สภาพคล่องไม่เพียงพอสำหรับการค้านี้"
+msgid "Insufficient {0} balance"
+msgstr "ไม่เพียงพอ {0} ยอดคงเหลือ"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -963,6 +934,16 @@ msgstr "เรียนรู้เพิ่มเติม"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "เรียนรู้เกี่ยวกับการจัดหาสภาพคล่อง"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "เรียนรู้เพิ่มเติม"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "กฎหมาย & ความเป็นส่วนตัว"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1129,6 +1110,10 @@ msgstr "ไม่พบสภาพคล่อง V2"
 msgid "No active pools"
 msgstr "ไม่มีสระว่ายน้ำที่ใช้งาน"
 
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "ไม่มีข้อมูล"
+
 #: src/state/governance/hooks.ts
 msgid "No description."
 msgstr "ไม่มีคำอธิบาย."
@@ -1149,7 +1134,7 @@ msgstr "ไม่พบข้อเสนอ"
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์."
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "ไม่ได้สร้าง"
 
@@ -1344,6 +1329,10 @@ msgstr "การดำเนินการที่เสนอ"
 msgid "Proposer"
 msgstr "ผู้เสนอ"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "ข้อจำกัดความรับผิดชอบของโปรโตคอล"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "เข้าคิว"
@@ -1406,13 +1395,17 @@ msgstr "ลบสภาพคล่อง"
 msgid "Remove list"
 msgstr "ลบรายการ"
 
-#: src/pages/RemoveLiquidity/index.tsx
-msgid "Removing ${0} ${1} and ${2} ${3}"
-msgstr "กำลังลบ ${0} ${1} และ ${2} ${3}"
-
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "กำลังลบ {0} {1} และ {2} {3}"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "กำลังลบ {0} {1} และ{2} {3}"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "ขอคุณสมบัติ"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1535,8 +1528,8 @@ msgid "Supply"
 msgstr "จัดหา"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying ${0} ${1} and ${2} ${3}"
-msgstr "จัดหา ${0} ${1} และ ${2} ${3}"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "จัดหา {0} {1} และ{2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1580,6 +1573,26 @@ msgstr "% ที่คุณจะได้รับเป็นค่าธร�
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "ค่าคงที่ Uniswap x*y=k ไม่พอใจโดยการแลกเปลี่ยน ซึ่งมักจะหมายถึงหนึ่งในโทเค็นที่คุณกำลังแลกเปลี่ยนรวมลักษณะการทำงานที่กำหนดเองในการโอน"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "แอพดึงข้อมูลบล็อคเชนจากบริการโฮสต์ของ The Graph"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "แอปดึงข้อมูลในสายโซ่และสร้างการเรียกสัญญาด้วย Infura API"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "แอพดึงเส้นทางการค้าที่เหมาะสมที่สุดจากเซิร์ฟเวอร์ Uniswap Labs"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "แอปจะบันทึกสถิติการใช้งานที่ไม่ระบุชื่อเพื่อปรับปรุงเมื่อเวลาผ่านไป"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "แอปจะรวบรวมที่อยู่กระเป๋าเงินของคุณอย่างปลอดภัยและแชร์กับ TRM Labs Inc. ด้วยเหตุผลด้านความเสี่ยงและการปฏิบัติตามข้อกำหนด"
+
 #: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "ไม่สามารถโอนโทเค็นอินพุตได้ อาจมีปัญหากับโทเค็นอินพุต"
@@ -1620,13 +1633,13 @@ msgstr "ไม่มีข้อมูลสภาพคล่อง"
 msgid "These tokens are commonly paired with other tokens."
 msgstr "โทเค็นเหล่านี้มักจะจับคู่กับโทเค็นอื่น"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "แอพนี้ใช้ API บุคคลที่สามต่อไปนี้:"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "ต้องเริ่มต้นกลุ่มนี้ก่อนจึงจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก ค่าธรรมเนียมก๊าซจะสูงกว่าปกติเนื่องจากการทำธุรกรรมเริ่มต้น"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "พูลนี้ต้องเริ่มต้นในวันที่ {0} ก่อนที่คุณจะสามารถเพิ่มสภาพคล่องได้ ในการเริ่มต้น เลือกราคาเริ่มต้นสำหรับพูล จากนั้นป้อนช่วงราคาสภาพคล่องและจำนวนเงินฝาก"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1635,6 +1648,10 @@ msgstr "เส้นทางนี้ปรับราคาของคุณ
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "โทเค็นนี้ไม่ปรากฏในรายการโทเค็นที่ใช้งานอยู่ ตรวจสอบให้แน่ใจว่านี่คือโทเค็นที่คุณต้องการซื้อขาย"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "ไม่รองรับโทเค็นนี้ในแอป Uniswap Labs"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1664,8 +1681,12 @@ msgid "To (at least)"
 msgstr "ถึง (อย่างน้อย)"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "ในการเริ่มต้นซื้อขายในวันที่ {0}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2 โปรดถือว่าเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {1}"
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgstr "ในการเริ่มต้นซื้อขายบน {0}แรกให้เชื่อมโยงสินทรัพย์ของคุณจาก L1 ถึง L2 โปรดถือว่าเป็นรุ่นเบต้าและเรียนรู้เกี่ยวกับความเสี่ยงก่อนใช้ {1}"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "ไม่รองรับโทเค็น"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1796,6 +1817,10 @@ msgstr "ปัญหาที่ไม่คาดคิดกับการป
 msgid "Uniswap Governance"
 msgstr "การกำกับดูแล Uniswap"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "ข้อกำหนดในการให้บริการของ Uniswap Labs"
+
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
 msgstr "Uniswap มีให้ใน: <0>{0}</0>"
@@ -1816,13 +1841,13 @@ msgstr "สัญญาการโยกย้าย Uniswap↗"
 msgid "Uniswap on {0}"
 msgstr "Uniswap บน {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "ไม่ทราบแหล่งที่มา"
 
 #: src/hooks/useSwapCallback.tsx
-msgid "Unknown error${0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "ข้อผิดพลาดที่ไม่รู้จัก${0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "ข้อผิดพลาดที่ไม่รู้จัก{0}ลองเพิ่มความทนทานต่อการเลื่อนหลุด หมายเหตุ: ค่าธรรมเนียมการโอนและโทเค็นการรีเบสเข้ากันไม่ได้กับ Uniswap V3"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1988,6 +2013,10 @@ msgstr "สิ้นสุดการโหวต {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "การลงคะแนนจะสิ้นสุดลงประมาณ {0}"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "การลงคะแนนเริ่มต้นประมาณ {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2235,7 +2264,7 @@ msgstr "นาที"
 msgid "via {0}"
 msgstr "ผ่าน {0}"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "ผ่าน {0} รายการโทเค็น"
 
@@ -2338,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • เพิ่มโดย user"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2352,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "ระดับค่าธรรมเนียม {0}"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "เลือก {0}"
 

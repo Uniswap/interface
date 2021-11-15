@@ -7,6 +7,10 @@ import { Router } from 'state/routing/smartOrderRouter'
 
 import { GetQuoteResult } from './types'
 
+const DEFAULT_QUERY_PARAMS = {
+  protocols: 'v3',
+}
+
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
 
 async function getClientSideQuote({
@@ -32,6 +36,7 @@ async function getClientSideQuote({
 }
 
 export const routingApi = createApi({
+  reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
@@ -56,6 +61,7 @@ export const routingApi = createApi({
             result = await getClientSideQuote(args)
           } else {
             const query = qs.stringify({
+              ...DEFAULT_QUERY_PARAMS,
               tokenInAddress: tokenIn.address,
               tokenInChainId: tokenIn.chainId,
               tokenOutAddress: tokenOut.address,

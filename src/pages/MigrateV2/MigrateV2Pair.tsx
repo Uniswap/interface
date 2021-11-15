@@ -334,7 +334,7 @@ function V2PairMigration({
       .multicall(data)
       .then((gasEstimate) => {
         return migrator
-          .multicall(data, { gasLimit: calculateGasMargin(chainId, gasEstimate) })
+          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
             ReactGA.event({
               category: 'Migrate',

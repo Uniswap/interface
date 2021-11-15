@@ -1,11 +1,14 @@
+import { CHAIN_INFO } from 'constants/chains'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import useMachineTimeMs from 'hooks/useMachineTime'
+import { useActiveWeb3React } from 'hooks/web3'
+import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from 'state/hooks'
+import { useBlockNumber } from 'state/application/hooks'
 import styled, { keyframes } from 'styled-components/macro'
+import { ExternalLink, TYPE } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useBlockNumber } from '../../state/application/hooks'
-import { ExternalLink, TYPE } from '../../theme'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div<{ warning: boolean }>`
@@ -68,12 +71,21 @@ const Spinner = styled.div<{ warning: boolean }>`
   top: -3px;
 `
 
+const DEFAULT_MS_BEFORE_WARNING = ms`10m`
+const NETWORK_HEALTH_CHECK_MS = ms`10s`
+
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
-  const chainConnectivityWarning = useAppSelector((state) => state.application.chainConnectivityWarning)
+  const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
+  const blockTime = useCurrentBlockTimestamp()
+
+  const waitMsBeforeWarning =
+    (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
+
+  const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
   useEffect(
     () => {
@@ -98,20 +110,14 @@ export default function Polling() {
       <ExternalLink
         href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
       >
-        <StyledPolling
-          onMouseEnter={() => setIsHover(true)}
-          onMouseLeave={() => setIsHover(false)}
-          warning={chainConnectivityWarning}
-        >
+        <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} warning={warning}>
           <StyledPollingNumber breathe={isMounting} hovering={isHover}>
             {blockNumber}&ensp;
           </StyledPollingNumber>
-          <StyledPollingDot warning={chainConnectivityWarning}>
-            {isMounting && <Spinner warning={chainConnectivityWarning} />}
-          </StyledPollingDot>{' '}
+          <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}
         </StyledPolling>
       </ExternalLink>
-      {chainConnectivityWarning && <ChainConnectivityWarning />}
+      {warning && <ChainConnectivityWarning />}
     </>
   )
 }

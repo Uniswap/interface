@@ -260,7 +260,7 @@ export function NetworkAlert(props: NetworkAlertProps) {
           </Header>
           <Body>
             <Trans>
-              To starting trading on {info.label}, first bridge your assets from L1 to L2. Please treat this as a beta
+              To start trading on {info.label}, first bridge your assets from L1 to L2. Please treat this as a beta
               release and learn about the risks before using {info.label}.
             </Trans>
           </Body>
