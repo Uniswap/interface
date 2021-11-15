@@ -42,7 +42,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -57,5 +57,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>UniswapSansBeta3-Bold.otf</string>
+		<string>UniswapSansBeta3-Medium.otf</string>
+		<string>UniswapSansBeta3-Regular.otf</string>
+		<string>UniswapSansBeta3-Semibold.otf</string>
+	</array>
 </dict>
 </plist>

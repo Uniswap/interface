@@ -16,6 +16,10 @@
 		7EF68E3733C33B6898317E18 /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-Uniswap-UniswapTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
+		D7DC5B5087F94E2A95426E61 /* UniswapSansBeta3-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */; };
+		4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */; };
+		323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */; };
+		6E486741B8034E9C896EC0E6 /* UniswapSansBeta3-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +52,10 @@
 		C0A881CF5CF3F2B244570E2A /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */ = {isa = PBXFileReference; name = "UniswapSansBeta3-Bold.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */ = {isa = PBXFileReference; name = "UniswapSansBeta3-Medium.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */ = {isa = PBXFileReference; name = "UniswapSansBeta3-Regular.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */ = {isa = PBXFileReference; name = "UniswapSansBeta3-Semibold.otf"; path = "../src/assets/fonts/UniswapSansBeta3-Semibold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +136,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E233CBF5F47BEE60B243DCF8 /* Pods */,
+				C2C18ECBEF5A4489BF3A314C /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -153,6 +162,18 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		C2C18ECBEF5A4489BF3A314C /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				8A54E514DE6E4CB1A39FDB3A /* UniswapSansBeta3-Bold.otf */,
+				776B6D77154B4BA2A3F5A8DD /* UniswapSansBeta3-Medium.otf */,
+				D28650C4E5F849429E6527CF /* UniswapSansBeta3-Regular.otf */,
+				8D411CAE164C44F184DC5771 /* UniswapSansBeta3-Semibold.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -251,6 +272,10 @@
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
+				D7DC5B5087F94E2A95426E61 /* UniswapSansBeta3-Bold.otf in Resources */,
+				4C3A060B4EC54191B2D05291 /* UniswapSansBeta3-Medium.otf in Resources */,
+				323758D670BD4239A88ED592 /* UniswapSansBeta3-Regular.otf in Resources */,
+				6E486741B8034E9C896EC0E6 /* UniswapSansBeta3-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

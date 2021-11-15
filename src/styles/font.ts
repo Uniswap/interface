@@ -1,45 +1,47 @@
 // TODO set actual fonts
 export const fontFamily = {
   serif: 'serif',
-  sansSerif: 'System',
+  sansSerif: {
+    regular: 'UniswapSansBeta3-Regular',
+    medium: 'UniswapSansBeta3-Medium',
+    semibold: 'UniswapSansBeta3-Semibold',
+    bold: 'UniswapSansBeta3-Bold',
+  },
 }
 
 export const textVariants = {
   h1: {
-    fontFamily: fontFamily.sansSerif,
-    fontWeight: 'bold',
+    fontFamily: fontFamily.sansSerif.bold,
     fontSize: 34,
     lineHeight: 42.5,
     color: 'mainForeground',
   },
   h2: {
-    fontFamily: fontFamily.sansSerif,
-    fontWeight: '600',
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 28,
     lineHeight: 36,
     color: 'mainForeground',
   },
   h3: {
-    fontFamily: fontFamily.sansSerif,
-    fontWeight: '600',
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 20,
     lineHeight: 26,
     color: 'mainForeground',
   },
   body: {
-    fontFamily: fontFamily.sansSerif,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 16,
     lineHeight: 24,
     color: 'mainForeground',
   },
   bodySm: {
-    fontFamily: fontFamily.sansSerif,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 12,
     lineHeight: 20,
     color: 'mainForeground',
   },
   buttonLabel: {
-    fontFamily: fontFamily.sansSerif,
+    fontFamily: fontFamily.sansSerif.regular,
     fontWeight: '500',
     fontSize: 16,
     lineHeight: 24,

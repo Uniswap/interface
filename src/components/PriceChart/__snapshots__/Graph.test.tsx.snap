@@ -45,9 +45,8 @@ exports[`renders correctly 1`] = `
         style={
           Object {
             "color": "#27252E",
-            "fontFamily": "System",
+            "fontFamily": "UniswapSansBeta3-Bold",
             "fontSize": 34,
-            "fontWeight": "bold",
             "lineHeight": 42.5,
           }
         }
@@ -68,9 +67,8 @@ exports[`renders correctly 1`] = `
         style={
           Object {
             "color": "#DA2D2B",
-            "fontFamily": "System",
+            "fontFamily": "UniswapSansBeta3-Medium",
             "fontSize": 20,
-            "fontWeight": "600",
             "lineHeight": 26,
           }
         }
@@ -337,7 +335,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#E8006F",
               "display": "flex",
-              "fontFamily": "System",
+              "fontFamily": "UniswapSansBeta3-Regular",
               "fontSize": 16,
               "fontWeight": "500",
               "lineHeight": 24,
@@ -379,7 +377,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#E8006F",
               "display": "flex",
-              "fontFamily": "System",
+              "fontFamily": "UniswapSansBeta3-Regular",
               "fontSize": 16,
               "fontWeight": "500",
               "lineHeight": 24,
@@ -421,7 +419,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#E8006F",
               "display": "flex",
-              "fontFamily": "System",
+              "fontFamily": "UniswapSansBeta3-Regular",
               "fontSize": 16,
               "fontWeight": "500",
               "lineHeight": 24,
@@ -463,7 +461,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#E8006F",
               "display": "flex",
-              "fontFamily": "System",
+              "fontFamily": "UniswapSansBeta3-Regular",
               "fontSize": 16,
               "fontWeight": "500",
               "lineHeight": 24,
@@ -505,7 +503,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#E8006F",
               "display": "flex",
-              "fontFamily": "System",
+              "fontFamily": "UniswapSansBeta3-Regular",
               "fontSize": 16,
               "fontWeight": "500",
               "lineHeight": 24,
