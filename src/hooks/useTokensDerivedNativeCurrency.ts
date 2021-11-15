@@ -1,22 +1,26 @@
 import { gql, useQuery } from '@apollo/client'
 import Decimal from 'decimal.js-light'
-import { Price, PricedToken, PricedTokenAmount, Token, TokenAmount } from '@swapr/sdk'
+import { Price, PricedToken, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { useNativeCurrency } from './useNativeCurrency'
+import { useKpiTokens } from './useKpiTokens'
+
+interface DerivedNativeCurrencyQueryResult {
+  tokens: [{ address: string; name: string; symbol: string; decimals: string; derivedNativeCurrency: string }]
+}
 
 export function useNativeCurrencyPricedTokenAmounts(
   tokenAmounts?: TokenAmount[] | null
 ): { loading: boolean; pricedTokenAmounts: PricedTokenAmount[] } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
-
-  interface QueryResult {
-    tokens: [{ address: string; name: string; symbol: string; decimals: string; derivedNativeCurrency: string }]
-  }
-
-  const { loading, data, error } = useQuery<QueryResult>(
+  const tokenIds = useMemo(() => {
+    return tokenAmounts ? tokenAmounts.map(tokenAmount => tokenAmount.token.address.toLowerCase()) : []
+  }, [tokenAmounts])
+  const { loading: loadingKpiTokens, kpiTokens } = useKpiTokens(tokenIds)
+  const { loading, data, error } = useQuery<DerivedNativeCurrencyQueryResult>(
     gql`
       query getTokensDerivedNativeCurrency($tokenIds: [ID!]!) {
         tokens(where: { id_in: $tokenIds }) {
@@ -25,35 +29,64 @@ export function useNativeCurrencyPricedTokenAmounts(
         }
       }
     `,
-    { variables: { tokenIds: tokenAmounts?.map(tokenAmount => tokenAmount.token.address.toLowerCase()) } }
+    { variables: { tokenIds } }
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, pricedTokenAmounts: [] }
-    if (!tokenAmounts || !data || !chainId || error) return { loading: false, pricedTokenAmounts: [] }
+    if (loading || loadingKpiTokens) return { loading: true, pricedTokenAmounts: [] }
+    if (
+      !tokenAmounts ||
+      tokenAmounts.length === 0 ||
+      !data ||
+      !chainId ||
+      error ||
+      !kpiTokens ||
+      kpiTokens.length === 0
+    )
+      return { loading: false, pricedTokenAmounts: [] }
     const pricedTokenAmounts = []
-    for (const rawTokenData of data.tokens) {
-      const relatedTokenAmount = tokenAmounts.find(
-        tokenAmount => tokenAmount.token.address.toLowerCase() === rawTokenData.address
+    for (const rewardTokenAmount of tokenAmounts) {
+      const kpiToken = kpiTokens.find(
+        kpiToken => kpiToken.address.toLowerCase() === rewardTokenAmount.token.address.toLowerCase()
       )
-      if (!relatedTokenAmount) {
-        continue
+      const priceData = data.tokens.find(
+        lpToken => lpToken.address.toLowerCase() === rewardTokenAmount.token.address.toLowerCase()
+      )
+      let price = null
+      if (priceData) {
+        price = new Price(
+          rewardTokenAmount.token,
+          nativeCurrency,
+          parseUnits('1', nativeCurrency.decimals).toString(),
+          parseUnits(
+            new Decimal(priceData.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
+            nativeCurrency.decimals
+          ).toString()
+        )
       }
-      const { address, symbol, name, decimals } = relatedTokenAmount.token
-      const properRewardToken = new Token(chainId, address, decimals, symbol, name)
-      const rewardTokenPriceNativeCurrency = new Price(
-        properRewardToken,
-        nativeCurrency,
-        parseUnits('1', nativeCurrency.decimals).toString(),
-        parseUnits(
-          new Decimal(rawTokenData.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
-          nativeCurrency.decimals
-        ).toString()
-      )
+      if (!price && !!kpiToken) {
+        // the reward token is a kpi token, we need to price it by looking at the collateral
+        const collateralTokenNativeCurrency = kpiToken.collateral.nativeCurrencyAmount
+        const kpiTokenPrice = collateralTokenNativeCurrency.divide(kpiToken.totalSupply)
+        price = new Price(
+          rewardTokenAmount.token,
+          nativeCurrency,
+          parseUnits('1', nativeCurrency.decimals).toString(),
+          parseUnits(kpiTokenPrice.toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
+        )
+      }
+      if (!price) continue
       pricedTokenAmounts.push(
         new PricedTokenAmount(
-          new PricedToken(chainId, address, decimals, rewardTokenPriceNativeCurrency, symbol, name),
-          relatedTokenAmount.raw
+          new PricedToken(
+            chainId,
+            rewardTokenAmount.token.address,
+            rewardTokenAmount.token.decimals,
+            price,
+            rewardTokenAmount.token.symbol,
+            rewardTokenAmount.token.name
+          ),
+          rewardTokenAmount.raw
         )
       )
     }
@@ -61,5 +94,5 @@ export function useNativeCurrencyPricedTokenAmounts(
       loading: false,
       pricedTokenAmounts: pricedTokenAmounts
     }
-  }, [chainId, data, error, loading, nativeCurrency, tokenAmounts])
+  }, [chainId, data, error, kpiTokens, loading, loadingKpiTokens, nativeCurrency, tokenAmounts])
 }

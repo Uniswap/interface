@@ -7,8 +7,9 @@ import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
-import { getPairMaximumApy, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
+import { getPairMaximumApy, toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
+import { useKpiTokens } from './useKpiTokens'
 
 // when a user stakes their full lp share on a certain campaign, their liquidity position
 // goes to 0, and their liquidity mining position increases. In order to avoid hiding pairs where
@@ -162,16 +163,26 @@ export function useLPPairs(
       lowerTimeLimit: memoizedLowerTimeLimit
     }
   })
+  const rewardTokenAddresses = useMemo(() => {
+    if (loadingMyPairs || !data) return []
+    return data.liquidityMiningPositions.flatMap(position =>
+      position.pair.liquidityMiningCampaigns.flatMap(campaign =>
+        campaign.rewards.map(reward => reward.token.address.toLowerCase())
+      )
+    )
+  }, [data, loadingMyPairs])
+  const { loading: loadingKpiTokens, kpiTokens } = useKpiTokens(rewardTokenAddresses)
 
   return useMemo(() => {
-    if (loadingMyPairs) return { loading: true, data: [] }
+    if (loadingMyPairs || loadingKpiTokens) return { loading: true, data: [] }
     if (
       !data ||
       !data.liquidityPositions ||
       !data.liquidityMiningPositions ||
       (data.liquidityPositions.length === 0 && data.liquidityMiningPositions.length === 0) ||
       error ||
-      !chainId
+      !chainId ||
+      !kpiTokens
     )
       return { loading: false, data: [] }
     // normalize double pairs (case in which a user has staked only part of their lp tokens)
@@ -219,14 +230,17 @@ export function useLPPairs(
           ethers.utils.parseUnits(reserve1, token1.decimals).toString()
         )
         const pair = new Pair(tokenAmountA, tokenAmountB)
-        pair.liquidityMiningCampaigns = toLiquidityMiningCampaigns(
-          chainId,
-          pair,
-          totalSupply,
-          reserveNativeCurrency,
-          liquidityMiningCampaigns,
-          nativeCurrency
-        )
+        pair.liquidityMiningCampaigns = liquidityMiningCampaigns.map(campaign => {
+          return toLiquidityMiningCampaign(
+            chainId,
+            pair,
+            totalSupply,
+            reserveNativeCurrency,
+            kpiTokens,
+            campaign,
+            nativeCurrency
+          )
+        })
         return {
           pair,
           liquidityUSD: CurrencyAmount.usd(
@@ -237,5 +251,5 @@ export function useLPPairs(
         }
       })
     }
-  }, [chainId, data, error, loadingMyPairs, nativeCurrency])
+  }, [chainId, data, error, kpiTokens, loadingKpiTokens, loadingMyPairs, nativeCurrency])
 }

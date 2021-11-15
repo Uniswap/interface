@@ -55,7 +55,7 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
 // TODO: filter stuff by creator (which would be DXdao)
 const KPI_TOKENS_QUERY = gql`
   query kpiTokens($creator: Bytes) {
-    kpiTokens {
+    kpiTokens(first: 1000) {
       address: id
       symbol
       name

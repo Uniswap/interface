@@ -7,9 +7,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { useAllTokensFromActiveListsOnCurrentChain } from '../state/lists/hooks'
-import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
+import { toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 import { immediateSubgraphClients } from '../apollo/client'
+import { useKpiTokens } from './useKpiTokens'
 
 const PAGE_SIZE = 1000
 
@@ -114,6 +115,14 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
 
   const [loadingPairs, setLoadingPairs] = useState(false)
   const [pairs, setPairs] = useState<SubgraphPair[]>([])
+  const rewardTokenAddresses = useMemo(() => {
+    return pairs.flatMap(pair =>
+      pair.liquidityMiningCampaigns.flatMap(campaign =>
+        campaign.rewards.map(reward => reward.token.address.toLowerCase())
+      )
+    )
+  }, [pairs])
+  const { loading: loadingKpiTokens, kpiTokens } = useKpiTokens(rewardTokenAddresses)
 
   useEffect(() => {
     let cancelled = false
@@ -148,7 +157,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
 
   return useMemo(() => {
     if (!chainId) return { loading: false, wrappedPairs: [] }
-    if (pairs.length === 0) return { loading: loadingPairs, wrappedPairs: [] }
+    if (loadingPairs || loadingKpiTokens || pairs.length === 0) return { loading: true, wrappedPairs: [] }
     const rawPairs = filterTokenAddress
       ? pairs.filter(
           pair =>
@@ -189,14 +198,17 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
         const tokenAmountB = new TokenAmount(tokenB, parseUnits(reserve1, token1.decimals).toString())
         const pair = new Pair(tokenAmountA, tokenAmountB)
 
-        const campaigns = toLiquidityMiningCampaigns(
-          chainId,
-          pair,
-          totalSupply,
-          reserveNativeCurrency,
-          liquidityMiningCampaigns,
-          nativeCurrency
-        )
+        const campaigns = liquidityMiningCampaigns.map(campaign => {
+          return toLiquidityMiningCampaign(
+            chainId,
+            pair,
+            totalSupply,
+            reserveNativeCurrency,
+            kpiTokens,
+            campaign,
+            nativeCurrency
+          )
+        })
         pair.liquidityMiningCampaigns = campaigns
         return {
           pair,
@@ -208,5 +220,14 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAnd
         }
       }, [])
     }
-  }, [chainId, filterTokenAddress, loadingPairs, nativeCurrency, pairs, tokensInCurrentChain])
+  }, [
+    chainId,
+    filterTokenAddress,
+    kpiTokens,
+    loadingKpiTokens,
+    loadingPairs,
+    nativeCurrency,
+    pairs,
+    tokensInCurrentChain
+  ])
 }
