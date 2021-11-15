@@ -2,9 +2,9 @@ import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'constants/tokens'
 import { V3TradeState } from 'state/routing/types'
-import { useRoutingAPIEnabled } from 'state/user/hooks'
 
 import { useRoutingAPITrade } from '../state/routing/useRoutingAPITrade'
+import useAutoRouterSupported from './useAutoRouterSupported'
 import { useBestV3Trade } from './useBestV3Trade'
 import { useClientSideV3Trade } from './useClientSideV3Trade'
 import useDebounce from './useDebounce'
@@ -13,22 +13,18 @@ import useIsWindowVisible from './useIsWindowVisible'
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC, '10000')
 const DAIAmount = CurrencyAmount.fromRawAmount(DAI, '10000')
 
-jest.mock('./useDebounce')
-const mockUseDebounce = useDebounce as jest.MockedFunction<typeof useDebounce>
-
-// mock modules containing hooks
-jest.mock('state/routing/useRoutingAPITrade')
+jest.mock('./useAutoRouterSupported')
 jest.mock('./useClientSideV3Trade')
-jest.mock('state/user/hooks')
+jest.mock('./useDebounce')
 jest.mock('./useIsWindowVisible')
+jest.mock('state/routing/useRoutingAPITrade')
+jest.mock('state/user/hooks')
 
-const mockUseRoutingAPIEnabled = useRoutingAPIEnabled as jest.MockedFunction<typeof useRoutingAPIEnabled>
+const mockUseDebounce = useDebounce as jest.MockedFunction<typeof useDebounce>
+const mockUseAutoRouterSupported = useAutoRouterSupported as jest.MockedFunction<typeof useAutoRouterSupported>
 const mockUseIsWindowVisible = useIsWindowVisible as jest.MockedFunction<typeof useIsWindowVisible>
 
-// useRouterTrade mocks
 const mockUseRoutingAPITrade = useRoutingAPITrade as jest.MockedFunction<typeof useRoutingAPITrade>
-
-// useClientSideV3Trade mocks
 const mockUseClientSideV3Trade = useClientSideV3Trade as jest.MockedFunction<typeof useClientSideV3Trade>
 
 // helpers to set mock expectations
@@ -45,12 +41,12 @@ beforeEach(() => {
   mockUseDebounce.mockImplementation((value) => value)
 
   mockUseIsWindowVisible.mockReturnValue(true)
-  mockUseRoutingAPIEnabled.mockReturnValue(true)
+  mockUseAutoRouterSupported.mockReturnValue(true)
 })
 
-describe('#useBestV3TradeExactIn', () => {
-  it('does not compute routing api trade when routing API is disabled', () => {
-    mockUseRoutingAPIEnabled.mockReturnValue(false)
+describe('#useBestV3Trade ExactIn', () => {
+  it('does not compute routing api trade when routing API is not supported', () => {
+    mockUseAutoRouterSupported.mockReturnValue(false)
     expectRouterMock(V3TradeState.INVALID)
     expectClientSideMock(V3TradeState.VALID)
 
@@ -124,9 +120,9 @@ describe('#useBestV3TradeExactIn', () => {
   })
 })
 
-describe('#useBestV3TradeExactOut', () => {
-  it('does not compute routing api trade when routing API is disabled', () => {
-    mockUseRoutingAPIEnabled.mockReturnValue(false)
+describe('#useBestV3Trade ExactOut', () => {
+  it('does not compute routing api trade when routing API is not supported', () => {
+    mockUseAutoRouterSupported.mockReturnValue(false)
     expectRouterMock(V3TradeState.INVALID)
     expectClientSideMock(V3TradeState.VALID)
 
