@@ -26,7 +26,7 @@ export const FANTOM_MAINNET_TOKEN_LIST = {
     },
     {
       chainId: 250,
-      address: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
+      address: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
       symbol: 'WFTM',
       name: 'Wrapped FTM',
       decimals: 18

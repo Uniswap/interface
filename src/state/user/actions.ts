@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
+import { TokenList } from '@uniswap/token-lists'
 
 export interface SerializedToken {
   chainId: number
@@ -8,6 +9,7 @@ export interface SerializedToken {
   symbol?: string
   name?: string
   logoURI?: string
+  list?: TokenList
 }
 
 export interface SerializedPair {

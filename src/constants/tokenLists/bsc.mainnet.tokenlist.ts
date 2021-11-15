@@ -5,7 +5,7 @@ export const BSC_MAINNET_TOKEN_LIST = {
   tokens: [
     {
       chainId: 56,
-      address: '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
+      address: '0xfe56d5892BDffC7BF58f2E84BE1b2C32D21C308b',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
       decimals: 18
@@ -19,14 +19,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
     },
     {
       chainId: 56,
-      address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+      address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
       symbol: 'USDC',
       name: 'USDC',
       decimals: 18
     },
     {
       chainId: 56,
-      address: '0x55d398326f99059ff775485246999027b3197955',
+      address: '0x55d398326f99059fF775485246999027B3197955',
       symbol: 'USDT',
       name: 'USDT',
       decimals: 18
@@ -40,14 +40,14 @@ export const BSC_MAINNET_TOKEN_LIST = {
     },
     {
       chainId: 56,
-      address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
+      address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
       symbol: 'WBNB',
       name: 'Wrapped BNB',
       decimals: 18
     },
     {
       chainId: 56,
-      address: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
       symbol: 'BUSD',
       name: 'BUSD',
       decimals: 18

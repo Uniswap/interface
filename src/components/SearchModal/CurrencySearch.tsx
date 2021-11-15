@@ -9,7 +9,13 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, ETHER, Token } from '@dynamic-amm/sdk'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList, useIsTokenActive } from 'hooks/Tokens'
+import {
+  useAllTokens,
+  useToken,
+  useIsUserAddedToken,
+  useIsTokenActive,
+  useSearchInactiveTokenLists
+} from 'hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -17,7 +23,7 @@ import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens, useSortedTokensByQuery } from './filtering'
+import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
@@ -158,8 +164,7 @@ export function CurrencySearch({
   useOnClickOutside(node, open ? toggle : undefined)
 
   // if no results on main list, show option to expand into inactive
-  const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
-  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
+  const filteredInactiveTokens: Token[] = useSearchInactiveTokenLists(debouncedQuery)
 
   return (
     <ContentWrapper>
@@ -207,9 +212,14 @@ export function CurrencySearch({
                 height={height}
                 showETH={showETH}
                 currencies={
-                  filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
+                  filteredInactiveTokens.length
+                    ? filteredSortedTokens.concat(filteredInactiveTokens)
+                    : filteredSortedTokens
                 }
-                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
+                inactiveTokens={filteredInactiveTokens}
+                breakIndex={
+                  filteredInactiveTokens.length && filteredSortedTokens ? filteredSortedTokens.length : undefined
+                }
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}

@@ -154,7 +154,7 @@ export const useFarmsData = () => {
     }
 
     checkForFarms()
-  }, [dispatch, ethPrice.currentPrice, chainId, fairLaunchContracts, account, blockNumber])
+  }, [apolloClient, dispatch, ethPrice.currentPrice, chainId, fairLaunchContracts, account, blockNumber, allTokens])
 
   return { loading, error, data: farmsData }
 }

@@ -9,6 +9,7 @@ import { ImportList } from './ImportList'
 import { ImportToken } from './ImportToken'
 import usePrevious from 'hooks/usePrevious'
 import useLast from 'hooks/useLast'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -82,6 +83,7 @@ export default function CurrencySearchModal({
         <ImportToken
           tokens={[importToken]}
           onDismiss={onDismiss}
+          list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
           onBack={() =>
             setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
           }

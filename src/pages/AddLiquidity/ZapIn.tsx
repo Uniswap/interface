@@ -53,7 +53,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
 import { Dots, Wrapper } from '../Pool/styleds'
 import {

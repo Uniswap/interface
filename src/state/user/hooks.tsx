@@ -30,7 +30,7 @@ import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
 import { useAppSelector } from 'state/hooks'
-import { WrappedTokenInfo } from 'state/lists/hooks'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo): SerializedToken {
   return {
@@ -39,12 +39,13 @@ function serializeToken(token: Token | TokenUNI | TokenSUSHI | WrappedTokenInfo)
     decimals: token.decimals,
     symbol: token.symbol,
     name: token.name,
+    list: token instanceof WrappedTokenInfo ? token.list : undefined,
     logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined
   }
 }
 
 function deserializeToken(serializedToken: SerializedToken): Token {
-  return serializedToken?.logoURI
+  return serializedToken?.logoURI && serializedToken?.list
     ? new WrappedTokenInfo(
         {
           chainId: serializedToken.chainId,
@@ -54,7 +55,7 @@ function deserializeToken(serializedToken: SerializedToken): Token {
           decimals: serializedToken.decimals,
           logoURI: serializedToken.logoURI
         },
-        []
+        serializedToken.list
       )
     : new Token(
         serializedToken.chainId,
@@ -396,7 +397,7 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
     }
 
     return []
-  }, [JSON.stringify(userLiquidityPositions)])
+  }, [allTokens, userLiquidityPositions])
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)

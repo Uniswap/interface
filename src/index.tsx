@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import { NetworkContextName } from './constants'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import store from './state'
@@ -97,3 +98,6 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
 }
 
 ReactDOM.render(<ReactApp hideLoader={hideLoader} />, document.getElementById('root'))
+if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
+  serviceWorkerRegistration.register()
+}

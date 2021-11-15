@@ -166,20 +166,20 @@ export const DAI: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.ROPSTEN]: new Token(
     ChainId.ROPSTEN,
-    '0xad6d458402f60fd3bd25163575031acdce07538d',
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
     18,
     'DAI',
     'Dai Stablecoin'
   ),
   [ChainId.RINKEBY]: new Token(
     ChainId.RINKEBY,
-    '0xad6d458402f60fd3bd25163575031acdce07538d',
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
     18,
     'DAI',
     'Dai Stablecoin'
   ),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xad6d458402f60fd3bd25163575031acdce07538d', 18, 'DAI', 'Dai Stablecoin'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xad6d458402f60fd3bd25163575031acdce07538d', 18, 'DAI', 'Dai Stablecoin'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MATIC]: new Token(ChainId.MATIC, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin'),
   [ChainId.MUMBAI]: new Token(
     ChainId.MUMBAI,
@@ -211,7 +211,7 @@ export const DAI: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
+    '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
     18,
     'DAI',
     'Dai Stablecoin'
@@ -236,7 +236,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
-    '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
+    '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
     18,
     'USDC',
     'USD Coin'
@@ -250,7 +250,7 @@ export const USDC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
+    '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
     6,
     'USDC',
     'USD Coin'
@@ -275,21 +275,21 @@ export const USDT: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
-    '0x55d398326f99059ff775485246999027b3197955',
+    '0x55d398326f99059fF775485246999027B3197955',
     18,
     'USDT',
     'Tether USD'
   ),
   [ChainId.AVAXTESTNET]: new Token(
     ChainId.AVAXTESTNET,
-    '0xbd1eeaf651aeb210106e1c1afb3bc41c388ee577',
+    '0xBD1EEAf651aEB210106E1c1aFb3BC41C388ee577',
     6,
     'USDT',
     'Tether USD'
   ),
   [ChainId.AVAXMAINNET]: new Token(
     ChainId.AVAXMAINNET,
-    '0xc7198437980c041c805a1edcba50c1ce5db95118',
+    '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
     6,
     'USDT',
     'Tether USD'
@@ -421,7 +421,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.BSCMAINNET]: new Token(
     ChainId.BSCMAINNET,
-    '0xfe56d5892bdffc7bf58f2e84be1b2c32d21c308b',
+    '0xfe56d5892BDffC7BF58f2E84BE1b2C32D21C308b',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -471,7 +471,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI[ChainId.BSCMAINNET],
     USDC[ChainId.BSCMAINNET],
     USDT[ChainId.BSCMAINNET],
-    new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+    new Token(ChainId.BSCMAINNET, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
   ],
   [ChainId.AVAXTESTNET]: [
     ...WETH_ONLY[ChainId.AVAXTESTNET],
@@ -513,7 +513,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
     DAI[ChainId.BSCMAINNET],
     USDC[ChainId.BSCMAINNET],
     USDT[ChainId.BSCMAINNET],
-    new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+    new Token(ChainId.BSCMAINNET, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
   ],
   [ChainId.AVAXMAINNET]: [
     ...WETH_ONLY[ChainId.AVAXMAINNET],
@@ -551,7 +551,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     DAI[ChainId.BSCMAINNET],
     USDC[ChainId.BSCMAINNET],
     USDT[ChainId.BSCMAINNET],
-    new Token(ChainId.BSCMAINNET, '0xe9e7cea3dedca5984780bafc599bd69add087d56', 18, 'BUSD', 'BUSD')
+    new Token(ChainId.BSCMAINNET, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
   ],
   [ChainId.AVAXMAINNET]: [
     ...WETH_ONLY[ChainId.AVAXMAINNET],
@@ -884,7 +884,7 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
         symbol: 'MIM'
       },
       token1: {
-        id: '0xc7198437980c041c805a1edcba50c1ce5db95118',
+        id: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
         symbol: 'USDT'
       }
     },
@@ -894,7 +894,7 @@ export const POPULAR_PAIRS: { [chainId in ChainId]: PopularPair[] } = {
         symbol: 'XAVA'
       },
       token1: {
-        id: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+        id: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
         symbol: 'AVAX'
       }
     }

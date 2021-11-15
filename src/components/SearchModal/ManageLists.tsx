@@ -27,7 +27,7 @@ import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
 import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { UNSUPPORTED_LIST_URLS, HIDE_LIST } from 'constants/lists'
 
 const TOKEN_LIST_FAILED_VALIDATION = 'Token list failed validation'
 
@@ -136,7 +136,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     dispatch(disableList(listUrl))
   }, [dispatch, listUrl])
 
-  if (!list) return null
+  if (!list || HIDE_LIST.includes(listUrl)) return null
 
   return (
     <RowWrapper active={isActive} bgColor={listColor} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
