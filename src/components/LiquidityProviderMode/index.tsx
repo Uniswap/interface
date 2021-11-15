@@ -18,7 +18,6 @@ const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   flex: 1;
   background-color: ${({ theme, isActive }) => (isActive ? theme.primary1 : theme.buttonBlack)};
   padding: 8px;
-  border-radius: ${({ isLeft }) => (isLeft ? '20px 0 0 20px' : '0 20px 20px 0')};
   font-size: 14px;
   font-weight: 500;
   border-radius: 20px;
@@ -46,15 +45,15 @@ const LiquidityProviderMode = ({
 }) => {
   return (
     <TabContainer>
-      <Tab isActive={activeTab === 0} isLeft padding="0" onClick={() => setActiveTab(0)}>
+      <Tab isActive={activeTab === 0} padding="0" onClick={() => setActiveTab(0)}>
         <TabText isActive={activeTab === 0}>
-          <Trans>Single Token</Trans>
-          <InfoHelper text={singleTokenInfo} size={18} isActive={activeTab === 0} />
+          <Trans>Token Pair</Trans>
         </TabText>
       </Tab>
       <Tab isActive={activeTab === 1} padding="0" onClick={() => setActiveTab(1)}>
         <TabText isActive={activeTab === 1}>
-          <Trans>Token Pair</Trans>
+          <Trans>Single Token</Trans>
+          <InfoHelper text={singleTokenInfo} size={18} isActive={activeTab === 1} />
         </TabText>
       </Tab>
     </TabContainer>
