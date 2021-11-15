@@ -160,7 +160,7 @@ const ToggleMenuItem = styled.button`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
+const CODE_LINK = 'https://github.com/Kromatika-Finance/interface'
 
 function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
   const { to, onClick } = useLocationLinkProps(locale)
@@ -241,7 +241,7 @@ export default function Menu() {
                     </div>
                     <Code opacity={0.6} size={16} />
                   </MenuItem>
-                  <MenuItem href="https://discord.gg/bCq4G9vd">
+                  <MenuItem href="https://discord.gg/Uv2Q2v26JG">
                     <div>
                       <Trans>Discord</Trans>
                     </div>

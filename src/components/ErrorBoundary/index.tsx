@@ -99,7 +99,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                   </ExternalLink>
                 </LinkWrapper>
                 <LinkWrapper>
-                  <ExternalLink id="get-support-on-discord" href="https://discord.gg/bCq4G9vd" target="_blank">
+                  <ExternalLink id="get-support-on-discord" href="https://discord.gg/Uv2Q2v26JG" target="_blank">
                     <TYPE.link fontSize={16}>
                       <Trans>Get support on Discord</Trans>
                       <span>↗</span>
