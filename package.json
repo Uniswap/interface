@@ -21,6 +21,7 @@
     "@lingui/cli": "^3.9.0",
     "@lingui/macro": "^3.9.0",
     "@lingui/react": "^3.9.0",
+    "@metamask/jazzicon": "^2.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
