@@ -154,7 +154,7 @@ export default function TransactionSettings({}: TransactionSettingsProps) {
             <QuestionHelper
               text={
                 <Trans>
-                  Your limit order will be processed if your maximum gas price is GREATER than the network gas price.
+                  Your trade will be processed if your maximum gas price is GREATER than the network gas price.
                 </Trans>
               }
             />

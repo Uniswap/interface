@@ -43,7 +43,7 @@ export default function PositionList({ positions }: PositionListProps) {
     <>
       <DesktopHeader>
         <div>
-          <Trans>Your limit orders</Trans>
+          <Trans>My trades</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
         <div>
@@ -51,7 +51,7 @@ export default function PositionList({ positions }: PositionListProps) {
         </div>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>Your limit orders</Trans>
+        <Trans>My trades</Trans>
       </MobileHeader>
       {positions.map((p) => {
         return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />

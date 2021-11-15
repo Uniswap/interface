@@ -211,9 +211,7 @@ export default function FullPositionCard({ fundingBalance, minBalance, gasPrice 
                   </Badge>
                 </MouseoverTooltip>
               ) : (
-                <MouseoverTooltip
-                  text={<Trans>Your account is activelly monitoring and processing limit orders.</Trans>}
-                >
+                <MouseoverTooltip text={<Trans>Your account is activelly processing trades.</Trans>}>
                   <Badge variant={BadgeVariant.POSITIVE}>
                     <AlertCircle width={14} height={14} />
                     &nbsp;

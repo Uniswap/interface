@@ -215,7 +215,7 @@ export default function Swap({ history }: RouteComponentProps) {
       await approveCallback()
 
       ReactGA.event({
-        category: 'Place Limit Order',
+        category: 'Trade',
         action: 'Approve',
         label: [trade?.inputAmount.currency.symbol].join('/'),
       })
@@ -255,13 +255,13 @@ export default function Swap({ history }: RouteComponentProps) {
       .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
         ReactGA.event({
-          category: 'Place Limit Order',
+          category: 'Trade',
           action:
             recipient === null
-              ? 'Place Limit Order w/o Send'
+              ? 'Trade w/o Send'
               : (recipientAddress ?? recipient) === account
-              ? 'Place Limit Order w/o Send + recipient'
-              : 'Place Limit Order w/ Send',
+              ? 'Trade w/o Send + recipient'
+              : 'Trade w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -490,7 +490,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     placement="bottom"
                     onOpen={() =>
                       ReactGA.event({
-                        category: 'Place Limit Order',
+                        category: 'Trade',
                         action: 'Transaction Details Tooltip Open',
                       })
                     }
@@ -532,7 +532,7 @@ export default function Swap({ history }: RouteComponentProps) {
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
-                    <Trans>Insufficient liquidity for this limit order.</Trans>
+                    <Trans>Insufficient liquidity for this trade.</Trans>
                   </TYPE.main>
                 </GreyCard>
               ) : showApproveFlow ? (
@@ -603,7 +603,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       error={isValid}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {<Trans>Place Limit Order</Trans>}
+                        {<Trans>Trade</Trans>}
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -624,7 +624,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {swapInputError ? swapInputError : <Trans>Place Limit Order</Trans>}
+                    {swapInputError ? swapInputError : <Trans>Trade</Trans>}
                   </Text>
                 </ButtonError>
               )}

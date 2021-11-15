@@ -103,8 +103,8 @@ export default function ConfirmSwapModal({
   // text to show while loading
   const pendingText = trade ? (
     <Trans>
-      Placing Limit Order of {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for{' '}
-      {priceAmount?.toSignificant(6)} {outputAmount?.currency?.symbol}
+      Trading {inputAmount?.toSignificant(6)} {inputAmount?.currency?.symbol} for {priceAmount?.toSignificant(6)}{' '}
+      {outputAmount?.currency?.symbol}
     </Trans>
   ) : null
 
@@ -114,7 +114,7 @@ export default function ConfirmSwapModal({
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
-          title={<Trans>Confirm Limit Order</Trans>}
+          title={<Trans>Confirm Trade</Trans>}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}

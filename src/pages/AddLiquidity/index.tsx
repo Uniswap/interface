@@ -216,7 +216,7 @@ export default function AddLiquidity({
           </AutoColumn>
         </LightCard>
         <TYPE.italic>
-          <Trans>Adding Funds will allow you to automatically process limit orders.</Trans>
+          <Trans>Adding Funds will allow you to automatically process trades.</Trans>
         </TYPE.italic>
         <ButtonPrimary onClick={onAdd}>
           <Trans>Add</Trans>

@@ -482,11 +482,11 @@ export function PositionPage({
           {isClosed ? (
             <Trans>Collecting amounts will withdraw currently available amounts for you.</Trans>
           ) : (
-            <Trans>Canceling the limit order will withdraw available amounts for you.</Trans>
+            <Trans>Canceling the trade will withdraw available amounts for you.</Trans>
           )}
         </TYPE.italic>
         <ButtonPrimary onClick={isClosed ? collect : cancel}>
-          {isClosed ? <Trans>Collect</Trans> : <Trans>Cancel Limit Order</Trans>}
+          {isClosed ? <Trans>Collect</Trans> : <Trans>Cancel Trade</Trans>}
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -524,13 +524,13 @@ export function PositionPage({
               topContent={modalHeader}
             />
           )}
-          pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling limit order</Trans>}
+          pendingText={isClosed ? <Trans>Collecting tokens</Trans> : <Trans>Cancelling trade</Trans>}
         />
         <AutoColumn gap="md">
           <AutoColumn gap="sm">
             <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
               <HoverText>
-                <Trans>← Back to Limit Orders</Trans>
+                <Trans>← Back to My Trades</Trans>
               </HoverText>
             </Link>
             <ResponsiveRow>
@@ -574,7 +574,7 @@ export function PositionPage({
                       ) : (
                         <>
                           <TYPE.main color={theme.white}>
-                            <Trans>Cancel Limit Order</Trans>
+                            <Trans>Cancel Trade</Trans>
                           </TYPE.main>
                         </>
                       )}

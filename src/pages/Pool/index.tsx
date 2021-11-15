@@ -173,7 +173,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <TYPE.body fontSize={'20px'}>
-                <Trans>Limit Orders</Trans>
+                <Trans>Trades</Trans>
               </TYPE.body>
               <ButtonRow>
                 <Menu
@@ -223,7 +223,7 @@ export default function Pool() {
                   <TYPE.body color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans>Your limit orders will appear here.</Trans>
+                      <Trans>Your trade will appear here.</Trans>
                     </div>
                   </TYPE.body>
                   {showConnectAWallet && (
@@ -240,7 +240,7 @@ export default function Pool() {
                 <ShowInactiveToggle>
                   <label>
                     <TYPE.body onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}>
-                      <Trans>Show processed limit orders</Trans>
+                      <Trans>Show processed trades</Trans>
                     </TYPE.body>
                   </label>
                   <input
