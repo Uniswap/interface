@@ -13,7 +13,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@swapr/core": "^0.3.18",
     "@swapr/periphery": "^0.3.20",
-    "@swapr/sdk": "^0.10.8",
+    "@swapr/sdk": "^0.10.9",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",
