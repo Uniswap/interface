@@ -188,14 +188,14 @@ export default function Bridge() {
 
   return (
     <Wrapper>
+      <Tabs
+        collectableTxAmount={collectableTxAmount}
+        isCollecting={isCollecting}
+        isCollectableFilter={isCollectableFilter}
+        handleResetBridge={handleResetBridge}
+        handleCollectTab={handleCollectTab}
+      />
       <AppBody>
-        <Tabs
-          collectableTxAmount={collectableTxAmount}
-          isCollecting={isCollecting}
-          isCollectableFilter={isCollectableFilter}
-          handleResetBridge={handleResetBridge}
-          handleCollectTab={handleCollectTab}
-        />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>
