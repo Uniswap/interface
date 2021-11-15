@@ -11,6 +11,7 @@ export type RootStackParamList = {
   [Screens.ImportAccount]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
   [Screens.Swap]: undefined
+  [Screens.SwapConfig]: undefined
   [Screens.TokenDetails]: { currencyAmount: CurrencyAmount<Currency> }
   [Screens.Transfer]: undefined
   [Screens.Welcome]: undefined

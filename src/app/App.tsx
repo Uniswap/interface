@@ -19,6 +19,7 @@ import { CameraScreen } from 'src/features/import/CameraScreen'
 import { SeedPhraseScreen } from 'src/features/import/SeedPhraseScreen'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { ImportAccountScreen } from 'src/features/onboarding/ImportAccountScreen'
+import { SwapConfigScreen } from 'src/features/swap/SwapConfigScreen'
 import { SwapScreen } from 'src/features/swap/SwapScreen'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TokenDetailsScreen } from 'src/features/tokens/TokenDetailsScreen'
@@ -121,6 +122,11 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
           name={Screens.Swap}
           component={SwapScreen}
           options={{ title: 'Uniswap | Swap' }}
+        />
+        <Stack.Screen
+          name={Screens.SwapConfig}
+          component={SwapConfigScreen}
+          options={{ title: 'Uniswap | Swap Config' }}
         />
       </Stack.Navigator>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

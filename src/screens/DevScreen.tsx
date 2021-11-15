@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { utils } from 'ethers'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
@@ -31,31 +32,13 @@ export function DevScreen({ navigation }: Props) {
     dispatch(createAccountActions.trigger())
   }
 
-  const onPressImportAccount = () => {
-    navigation.navigate(Screens.ImportAccount)
-  }
-
-  const onPressList = () => {
-    navigation.navigate(Screens.Accounts)
-  }
-
-  const onPressSend = () => {
-    navigation.navigate(Screens.Transfer)
-  }
-
-  const onPressViewBalances = () => {
-    navigation.navigate(Screens.Balances)
+  const activateWormhole = (s: Screens) => {
+    navigation.navigate(s)
   }
 
   const onPressGetBalance = async () => {
     if (!activeAccount) return
     dispatch(fetchBalancesActions.trigger(activeAccount.address))
-  }
-
-  const onPressSwap = () => navigation.navigate(Screens.Swap)
-
-  const onPressHome = async () => {
-    navigation.navigate(Screens.Home)
   }
 
   const activeChains = useActiveChainIds()
@@ -88,38 +71,46 @@ export function DevScreen({ navigation }: Props) {
 
   return (
     <Screen>
-      <Box alignItems="center">
-        <Text variant="h3" textAlign="center" mt="xl">
-          {t('Your Account: {{addr}}', { addr: activeAccount?.address || 'none' })}
-        </Text>
-        <Button label={'Home'} onPress={onPressHome} mt="md" />
-        <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
-        <Button label={t('Import Account')} onPress={onPressImportAccount} mt="md" />
-        <Button label={t('List Accounts')} onPress={onPressList} mt="md" />
-        <Button label={t('View Balances')} onPress={onPressViewBalances} mt="md" />
-        <Button label={t('Send Token')} onPress={onPressSend} mt="md" />
-        <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="md" />
-        <Button label={t('Swap')} onPress={onPressSwap} mt="md" />
-        <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="md" />
-        <Button label={t('Compute fee')} onPress={onPressComputeFee} mt="md" />
-        <Text textAlign="center" mt="xl">
-          {`Active Chains: ${activeChains}`}
-        </Text>
-        <Text textAlign="center" mt="sm">
-          {`Current Chain: ${currentChain}`}
-        </Text>
-        <Text textAlign="center" mt="sm">
-          {`Block Timestamp: ${blockTimestamp}`}
-        </Text>
-        {gasInfoReady && (
-          <Text textAlign="center" mt="sm">
-            {`Normal fee: ${gasInfo.fee.normal}`}
+      <ScrollView>
+        <Box alignItems="center">
+          <Text variant="h3" textAlign="center">
+            {t('Your Account: {{addr}}', { addr: activeAccount?.address || 'none' })}
           </Text>
-        )}
-        <Text textAlign="center" mt="sm">
-          {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
-        </Text>
-      </Box>
+          <Text variant="h3" mt="md" textAlign="center">
+            🌀🌀Screen Stargate🌀🌀
+          </Text>
+          <Box flexDirection="row" alignItems="center" justifyContent="center" flexWrap="wrap">
+            {Object.values(Screens).map((s) => (
+              <Button label={s} onPress={() => activateWormhole(s)} m="xs" />
+            ))}
+          </Box>
+          <Text variant="body" mt="sm" textAlign="center">
+            🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
+          </Text>
+
+          <Button label={t('Create Account')} onPress={onPressCreate} mt="md" />
+          <Button label={t('Get Balance')} onPress={onPressGetBalance} mt="sm" />
+          <Button label={t('Toggle Rinkeby')} onPress={onPressToggleRinkeby} mt="sm" />
+          <Button label={t('Compute fee')} onPress={onPressComputeFee} mt="sm" />
+          <Text textAlign="center" mt="xl">
+            {`Active Chains: ${activeChains}`}
+          </Text>
+          <Text textAlign="center" mt="sm">
+            {`Current Chain: ${currentChain}`}
+          </Text>
+          <Text textAlign="center" mt="sm">
+            {`Block Timestamp: ${blockTimestamp}`}
+          </Text>
+          {gasInfoReady && (
+            <Text textAlign="center" mt="sm">
+              {`Normal fee: ${gasInfo.fee.normal}`}
+            </Text>
+          )}
+          <Text textAlign="center" mt="sm">
+            {`Config: ${config.apiUrl} - Debug: ${config.debug}`}
+          </Text>
+        </Box>
+      </ScrollView>
     </Screen>
   )
 }

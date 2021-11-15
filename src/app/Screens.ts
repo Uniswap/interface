@@ -7,6 +7,7 @@ export enum Screens {
   ImportAccount = 'ImportAccount',
   SeedPhrase = 'SeedPhrase',
   Swap = 'Swap',
+  SwapConfig = 'SwapConfig',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
   Welcome = 'Welcome',
