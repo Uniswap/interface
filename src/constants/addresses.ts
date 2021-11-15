@@ -80,11 +80,9 @@ export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0xE592
   SupportedChainId.ARBITRUM_RINKEBY,
 ])
 export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
-  [SupportedChainId.MAINNET]: '',
   [SupportedChainId.KOVAN]: '0xf11f1615ffd563683e0ed46f8a0ad54dd4564982',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
-  [SupportedChainId.MAINNET]: '',
   [SupportedChainId.KOVAN]: '0x6ce4fc5f88447d33e065a6a6078988a50b1ab25d',
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
