@@ -55,9 +55,9 @@ export default function RemoveLiquidity({
           </TopBar>
 
           {activeTab === 0 ? (
-            <ZapOut currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
-          ) : (
             <TokenPair currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
+          ) : (
+            <ZapOut currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
           )}
         </Container>
 

@@ -60,9 +60,9 @@ export default function AddLiquidity({
           </TopBar>
 
           {activeTab === 0 ? (
-            <ZapIn currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
-          ) : (
             <TokenPair currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
+          ) : (
+            <ZapIn currencyIdA={currencyIdA} currencyIdB={currencyIdB} pairAddress={pairAddress} />
           )}
         </Container>
 
