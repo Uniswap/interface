@@ -1,15 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { injected, portis, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -17,7 +14,7 @@ import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonSecondary } from '../Button'
-import Identicon from '../Identicon'
+import StatusIcon from '../Identicon/StatusIcon'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
@@ -179,6 +176,23 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
+function WrappedStatusIcon({ connector }: { connector: AbstractConnector }) {
+  return (
+    <IconWrapper size={16}>
+      <StatusIcon connector={connector} />
+      {connector === portis && (
+        <MainWalletAction
+          onClick={() => {
+            portis.portis.showPortis()
+          }}
+        >
+          <Trans>Show Portis</Trans>
+        </MainWalletAction>
+      )}
+    </IconWrapper>
+  )
+}
+
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
@@ -244,37 +258,6 @@ export default function AccountDetails({
     )
   }
 
-  function getStatusIcon() {
-    const icon = (() => {
-      switch (connector) {
-        case injected:
-          return <Identicon />
-        case walletconnect:
-          return <img src={WalletConnectIcon} alt={'WalletConnect'} />
-        case walletlink:
-          return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet'} />
-        case fortmatic:
-          return <img src={FortmaticIcon} alt={'Fortmatic'} />
-        case portis:
-          return (
-            <>
-              <img src={PortisIcon} alt={'Portis'} />
-              <MainWalletAction
-                onClick={() => {
-                  portis.portis.showPortis()
-                }}
-              >
-                <Trans>Show Portis</Trans>
-              </MainWalletAction>
-            </>
-          )
-        default:
-          return null
-      }
-    })()
-    return icon ? <IconWrapper size={16}>{icon}</IconWrapper> : null
-  }
-
   const clearAllTransactionsCallback = useCallback(() => {
     if (chainId) dispatch(clearAllTransactions({ chainId }))
   }, [dispatch, chainId])
@@ -319,14 +302,14 @@ export default function AccountDetails({
                   {ENSName ? (
                     <>
                       <div>
-                        {getStatusIcon()}
+                        {connector && <WrappedStatusIcon connector={connector} />}
                         <p> {ENSName}</p>
                       </div>
                     </>
                   ) : (
                     <>
                       <div>
-                        {getStatusIcon()}
+                        {connector && <WrappedStatusIcon connector={connector} />}
                         <p> {account && shortenAddress(account)}</p>
                       </div>
                     </>
