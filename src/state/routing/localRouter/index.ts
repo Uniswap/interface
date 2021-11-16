@@ -1,10 +1,9 @@
-import { BigintIsh, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { processSwapRoute } from 'utils/processSwapRoute'
 
-import { DEFAULT_ROUTING_CONFIG } from './constants'
 import { buildDependencies } from './dependencies'
 
 const routerParamsByChain = buildDependencies()
@@ -31,14 +30,22 @@ export async function getQuote({
 
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
-  const amount = CurrencyAmount.fromRawAmount(currencyIn, JSBI.BigInt(amountRaw))
 
-  const method = type === 'exactIn' ? 'routeExactIn' : 'routeExactOut'
-  const swapRoute = await router[method](currencyIn, currencyOut, amount, undefined, DEFAULT_ROUTING_CONFIG)
+  const baseCurrency = type === 'exactIn' ? currencyIn : currencyOut
+  const quoteCurrency = type === 'exactIn' ? currencyOut : currencyIn
+  const amount = CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(amountRaw))
+
+  const swapRoute = await router.route(
+    amount,
+    quoteCurrency,
+    type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
+  )
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  return { data: processSwapRoute(type, amount, params.poolProvider, swapRoute) }
+  const { v3PoolProvider, v2PoolProvider } = params
+
+  return { data: processSwapRoute(type, amount, v3PoolProvider, v2PoolProvider, swapRoute) }
 }
 
 export interface Router extends Worker {

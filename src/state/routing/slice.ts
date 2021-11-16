@@ -1,13 +1,14 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Token } from '@uniswap/sdk-core'
-import SmartOrderRouterWorker from 'comlink-loader!./smartOrderRouter'
+import SmartOrderRouterWorker from 'comlink-loader!./localRouter'
 import qs from 'qs'
 import { AppState } from 'state'
-import { Router } from 'state/routing/smartOrderRouter'
+import { Router } from 'state/routing/localRouter'
 
 import { GetQuoteResult } from './types'
 
 const DEFAULT_QUERY_PARAMS = {
+  // forceCrossProtocol: 'true',
   protocols: 'v3',
 }
 

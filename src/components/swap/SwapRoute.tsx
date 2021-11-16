@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { FeeAmount, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Pair } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -12,7 +13,6 @@ import { Version } from 'hooks/useToggledVersion'
 import { memo } from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { getTradeVersion } from 'utils/getTradeVersion'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
@@ -22,13 +22,13 @@ const Separator = styled.div`
   width: 100%;
 `
 
-const V2_DEFAULT_FEE_TIER = 3000
+const V2_DEFAULT_FEE_TIER = FeeAmount.MEDIUM
 
 export default memo(function SwapRoute({
   trade,
   syncing,
 }: {
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   syncing: boolean
 }) {
   const autoRouterSupported = useAutoRouterSupported()
@@ -47,7 +47,7 @@ export default memo(function SwapRoute({
         ) : (
           <Badge>
             <TYPE.black fontSize={12}>
-              {getTradeVersion(trade) === Version.v2 ? <Trans>V2</Trans> : <Trans>V3</Trans>}
+              <Trans>Best Price</Trans>
             </TYPE.black>
           </Badge>
         )}
@@ -73,20 +73,8 @@ export default memo(function SwapRoute({
   )
 })
 
-function getTokenPath(
-  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
-): RoutingDiagramEntry[] {
-  // convert V2 path to a list of routes
-  if (trade instanceof V2Trade) {
-    const { path: tokenPath } = (trade as V2Trade<Currency, Currency, TradeType>).route
-    const path = []
-    for (let i = 1; i < tokenPath.length; i++) {
-      path.push([tokenPath[i - 1], tokenPath[i], V2_DEFAULT_FEE_TIER] as RoutingDiagramEntry['path'][0])
-    }
-    return [{ percent: new Percent(100, 100), path }]
-  }
-
-  return trade.swaps.map(({ route: { tokenPath, pools }, inputAmount, outputAmount }) => {
+function getTokenPath(trade: Trade<Currency, Currency, TradeType>): RoutingDiagramEntry[] {
+  return trade.swaps.map(({ route: { path: tokenPath, pools }, inputAmount, outputAmount }) => {
     const portion =
       trade.tradeType === TradeType.EXACT_INPUT
         ? inputAmount.divide(trade.inputAmount)
@@ -94,18 +82,27 @@ function getTokenPath(
 
     const percent = new Percent(portion.numerator, portion.denominator)
 
-    const path: [Currency, Currency, FeeAmount][] = []
+    const protocol = pools[0] instanceof Pair ? Version.v2 : Version.v3
+
+    const path: RoutingDiagramEntry['path'] = []
     for (let i = 0; i < pools.length; i++) {
       const nextPool = pools[i]
       const tokenIn = tokenPath[i]
       const tokenOut = tokenPath[i + 1]
 
-      path.push([tokenIn, tokenOut, nextPool.fee])
+      const entry: RoutingDiagramEntry['path'][0] = [
+        tokenIn,
+        tokenOut,
+        nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
+      ]
+
+      path.push(entry)
     }
 
     return {
       percent,
       path,
+      protocol,
     }
   })
 }

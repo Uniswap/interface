@@ -1,7 +1,8 @@
-import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
+import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
+import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
-import { GetQuoteResult } from './types'
+import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
 /* Transforms a Routing API quote into an array of routes that
  * can be used to create a V3 `Trade`.
@@ -9,14 +10,9 @@ import { GetQuoteResult } from './types'
 export function computeRoutes(
   currencyIn: Currency | undefined,
   currencyOut: Currency | undefined,
+  tradeType: TradeType,
   quoteResult: Pick<GetQuoteResult, 'route'> | undefined
-):
-  | {
-      route: Route<Currency, Currency>
-      inputAmount: CurrencyAmount<Currency>
-      outputAmount: CurrencyAmount<Currency>
-    }[]
-  | undefined {
+) {
   if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
 
   if (quoteResult.route.length === 0) return []
@@ -31,6 +27,9 @@ export function computeRoutes(
 
   try {
     return quoteResult.route.map((route) => {
+      if (route.length === 0) {
+        throw new Error('Expected route to have at least one pair or pool')
+      }
       const rawAmountIn = route[0].amountIn
       const rawAmountOut = route[route.length - 1].amountOut
 
@@ -39,15 +38,19 @@ export function computeRoutes(
       }
 
       return {
-        route: new Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut),
-        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
-        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        amount:
+          tradeType === TradeType.EXACT_INPUT
+            ? CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn)
+            : CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
     })
   } catch (e) {
     // `Route` constructor may throw if inputs/outputs are temporarily out of sync
     // (RTK-Query always returns the latest data which may not be the right inputs/outputs)
     // This is not fatal and will fix itself in future render cycles
+    console.error(e)
     return undefined
   }
 }
@@ -56,14 +59,7 @@ const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['rout
   return new Token(chainId, address, parseInt(decimals.toString()), symbol)
 }
 
-const parsePool = ({
-  fee,
-  sqrtRatioX96,
-  liquidity,
-  tickCurrent,
-  tokenIn,
-  tokenOut,
-}: GetQuoteResult['route'][0][0]): Pool =>
+const parsePool = ({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOut }: V3PoolInRoute): Pool =>
   new Pool(
     parseToken(tokenIn),
     parseToken(tokenOut),
@@ -72,3 +68,13 @@ const parsePool = ({
     liquidity,
     parseInt(tickCurrent)
   )
+
+const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
+  new Pair(
+    CurrencyAmount.fromRawAmount(parseToken(reserve0.token), reserve0.quotient),
+    CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
+  )
+
+function isV3Route(route: V3PoolInRoute[] | V2PoolInRoute[]): route is V3PoolInRoute[] {
+  return route[0].type === 'v3-pool'
+}

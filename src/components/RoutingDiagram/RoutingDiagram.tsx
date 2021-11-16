@@ -4,16 +4,19 @@ import Badge from 'components/Badge'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Row, { AutoRow } from 'components/Row'
+import { Version } from 'hooks/useToggledVersion'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
+import { Z_INDEX } from 'theme'
 
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 
 export interface RoutingDiagramEntry {
   percent: Percent
   path: [Currency, Currency, FeeAmount][]
+  protocol: Version
 }
 
 const Wrapper = styled(Box)`
@@ -58,7 +61,15 @@ const DotColor = styled(DotLine)`
 
 const OpaqueBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg2};
-  z-index: 2;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: row;
+  z-index: ${Z_INDEX.sticky};
+`
+
+const ProtocolBadge = styled(Badge)`
+  background-color: ${({ theme }) => theme.bg3};
+  z-index: ${Z_INDEX.sticky + 1};
 `
 
 export default function RoutingDiagram({
@@ -75,10 +86,10 @@ export default function RoutingDiagram({
 
   return (
     <Wrapper>
-      {routes.map(({ percent, path }, index) => (
+      {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
           <CurrencyLogo currency={tokenIn} />
-          <Route percent={percent} path={path} />
+          <Route entry={entry} />
           <CurrencyLogo currency={tokenOut} />
         </RouteContainerRow>
       ))}
@@ -86,7 +97,7 @@ export default function RoutingDiagram({
   )
 }
 
-function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; path: RoutingDiagramEntry['path'] }) {
+function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEntry }) {
   return (
     <RouteRow>
       <DottedLine>
@@ -96,6 +107,9 @@ function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; pat
         <TYPE.small fontSize={12} style={{ wordBreak: 'normal' }}>
           {percent.toSignificant(2)}%
         </TYPE.small>
+        <ProtocolBadge>
+          <TYPE.small fontSize={11}>{protocol.toUpperCase()}</TYPE.small>
+        </ProtocolBadge>
       </OpaqueBadge>
 
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>

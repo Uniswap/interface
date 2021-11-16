@@ -1,12 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade } from '@uniswap/v3-sdk'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 
-import { V3TradeState } from './types'
+import { TradeState } from './types'
+import { useTradeFromRoute } from './useTradeFromRoute'
 import { computeRoutes } from './utils'
 
 /** Plucks required properties of a `Token` to make it serializable */
@@ -56,7 +57,7 @@ function useRoutingAPIArguments({
 }
 
 /**
- * Returns the best v3 trade by invoking the routing api or the smart order router on the client
+ * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
@@ -65,7 +66,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
+): { state: TradeState; trade: Trade<Currency, Currency, TTradeType> | undefined } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -88,24 +89,26 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
 
-  const routes = useMemo(
-    () => computeRoutes(currencyIn, currencyOut, quoteResult),
-    [currencyIn, currencyOut, quoteResult]
+  const route = useMemo(
+    () => computeRoutes(currencyIn, currencyOut, tradeType, quoteResult),
+    [currencyIn, currencyOut, quoteResult, tradeType]
   )
+
+  const trade = useTradeFromRoute({ route, tradeType })
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return {
-        state: V3TradeState.INVALID,
-        trade: null,
+        state: TradeState.INVALID,
+        trade: undefined,
       }
     }
 
     if (isLoading && !quoteResult) {
       // only on first hook render
       return {
-        state: V3TradeState.LOADING,
-        trade: null,
+        state: TradeState.LOADING,
+        trade: undefined,
       }
     }
 
@@ -118,22 +121,17 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote)
         : undefined
 
-    if (isError || !otherAmount || !routes || routes.length === 0 || !queryArgs) {
+    if (isError || !otherAmount || !route || route.length === 0 || !queryArgs) {
       return {
-        state: V3TradeState.NO_ROUTE_FOUND,
-        trade: null,
+        state: TradeState.NO_ROUTE_FOUND,
+        trade: undefined,
       }
     }
 
-    const trade = Trade.createUncheckedTradeWithMultipleRoutes<Currency, Currency, TTradeType>({
-      routes,
-      tradeType,
-    })
-
     return {
       // always return VALID regardless of isFetching status
-      state: V3TradeState.VALID,
+      state: TradeState.VALID,
       trade,
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, isError, routes, queryArgs, tradeType])
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, trade])
 }

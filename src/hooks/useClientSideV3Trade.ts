@@ -1,9 +1,12 @@
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Route, SwapQuoter, Trade } from '@uniswap/v3-sdk'
+import { Route, SwapQuoter } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
+import { BIG_INT_ZERO } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { V3TradeState } from 'state/routing/types'
+import { TradeState } from 'state/routing/types'
+import { useTradeFromRoute } from 'state/routing/useTradeFromRoute'
 
 import { useSingleContractWithCallData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
@@ -27,7 +30,7 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
-): { state: V3TradeState; trade: Trade<Currency, Currency, TTradeType> | null } {
+): { state: TradeState; trade: Trade<Currency, Currency, TTradeType> | undefined } {
   const [currencyIn, currencyOut] = useMemo(
     () =>
       tradeType === TradeType.EXACT_INPUT
@@ -48,6 +51,83 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
       gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
     }
   )
+  const { valid, loading } = useMemo(
+    () => ({
+      valid: quotesResults?.some(({ valid }) => !valid),
+      loading: quotesResults?.some(({ loading }) => loading),
+    }),
+    [quotesResults]
+  )
+
+  const route = useMemo(
+    () =>
+      currencyIn && currencyOut && valid && !loading
+        ? quotesResults.reduce(
+            (
+              currentBest: {
+                bestRoute: Route<Currency, Currency> | null | undefined
+                amountIn: CurrencyAmount<Currency> | null | undefined
+                amountOut: CurrencyAmount<Currency> | null | undefined
+              },
+              { result },
+              i
+            ) => {
+              if (!result) return currentBest
+
+              // overwrite the current best if it's not defined or if this route is better
+              if (tradeType === TradeType.EXACT_INPUT) {
+                const amountOut = CurrencyAmount.fromRawAmount(currencyOut, result.amountOut.toString())
+                if (
+                  currentBest.amountOut === null ||
+                  JSBI.lessThan(currentBest.amountOut?.quotient ?? BIG_INT_ZERO, amountOut.quotient)
+                ) {
+                  return {
+                    bestRoute: routes[i],
+                    amountIn: amountSpecified,
+                    amountOut,
+                  }
+                }
+              } else {
+                const amountIn = CurrencyAmount.fromRawAmount(currencyIn, result.amountIn.toString())
+                if (
+                  currentBest.amountIn === null ||
+                  JSBI.greaterThan(currentBest.amountIn?.quotient ?? BIG_INT_ZERO, amountIn.quotient)
+                ) {
+                  return {
+                    bestRoute: routes[i],
+                    amountIn,
+                    amountOut: amountSpecified,
+                  }
+                }
+              }
+
+              return currentBest
+            },
+            {
+              bestRoute: null,
+              amountIn: null,
+              amountOut: null,
+            }
+          )
+        : undefined,
+    [amountSpecified, currencyIn, currencyOut, loading, quotesResults, routes, tradeType, valid]
+  )
+
+  const trade = useTradeFromRoute(
+    route?.amountIn && route.amountOut
+      ? {
+          // client-side router does not return multi-route paths
+          route: [
+            {
+              routev3: route?.bestRoute ?? null,
+              routev2: null,
+              amount: tradeType === TradeType.EXACT_INPUT ? route?.amountIn : route?.amountOut,
+            },
+          ],
+          tradeType,
+        }
+      : undefined
+  )
 
   return useMemo(() => {
     if (
@@ -61,75 +141,28 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
         : amountSpecified.currency.equals(currencyIn))
     ) {
       return {
-        state: V3TradeState.INVALID,
-        trade: null,
+        state: TradeState.INVALID,
+        trade: undefined,
       }
     }
 
     if (routesLoading || quotesResults.some(({ loading }) => loading)) {
       return {
-        state: V3TradeState.LOADING,
-        trade: null,
+        state: TradeState.LOADING,
+        trade: undefined,
       }
     }
 
-    const { bestRoute, amountIn, amountOut } = quotesResults.reduce(
-      (
-        currentBest: {
-          bestRoute: Route<Currency, Currency> | null
-          amountIn: CurrencyAmount<Currency> | null
-          amountOut: CurrencyAmount<Currency> | null
-        },
-        { result },
-        i
-      ) => {
-        if (!result) return currentBest
-
-        // overwrite the current best if it's not defined or if this route is better
-        if (tradeType === TradeType.EXACT_INPUT) {
-          const amountOut = CurrencyAmount.fromRawAmount(currencyOut, result.amountOut.toString())
-          if (currentBest.amountOut === null || JSBI.lessThan(currentBest.amountOut.quotient, amountOut.quotient)) {
-            return {
-              bestRoute: routes[i],
-              amountIn: amountSpecified,
-              amountOut,
-            }
-          }
-        } else {
-          const amountIn = CurrencyAmount.fromRawAmount(currencyIn, result.amountIn.toString())
-          if (currentBest.amountIn === null || JSBI.greaterThan(currentBest.amountIn.quotient, amountIn.quotient)) {
-            return {
-              bestRoute: routes[i],
-              amountIn,
-              amountOut: amountSpecified,
-            }
-          }
-        }
-
-        return currentBest
-      },
-      {
-        bestRoute: null,
-        amountIn: null,
-        amountOut: null,
-      }
-    )
-
-    if (!bestRoute || !amountIn || !amountOut) {
+    if (!trade) {
       return {
-        state: V3TradeState.NO_ROUTE_FOUND,
-        trade: null,
+        state: TradeState.NO_ROUTE_FOUND,
+        trade: undefined,
       }
     }
 
     return {
-      state: V3TradeState.VALID,
-      trade: Trade.createUncheckedTrade({
-        route: bestRoute,
-        tradeType,
-        inputAmount: amountIn,
-        outputAmount: amountOut,
-      }),
+      state: TradeState.VALID,
+      trade,
     }
-  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routes, routesLoading, tradeType])
+  }, [amountSpecified, currencyIn, currencyOut, quotesResults, routesLoading, trade, tradeType])
 }
