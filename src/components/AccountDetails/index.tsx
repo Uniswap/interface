@@ -250,15 +250,15 @@ export default function AccountDetails({
         case injected:
           return <Identicon />
         case walletconnect:
-          return <img src={WalletConnectIcon} alt={'WalletConnect logo'} />
+          return <img src={WalletConnectIcon} alt={'WalletConnect'} />
         case walletlink:
-          return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet logo'} />
+          return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet'} />
         case fortmatic:
-          return <img src={FortmaticIcon} alt={'Fortmatic logo'} />
+          return <img src={FortmaticIcon} alt={'Fortmatic'} />
         case portis:
           return (
             <>
-              <img src={PortisIcon} alt={'Portis logo'} />
+              <img src={PortisIcon} alt={'Portis'} />
               <MainWalletAction
                 onClick={() => {
                   portis.portis.showPortis()

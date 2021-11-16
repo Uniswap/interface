@@ -132,36 +132,24 @@ function Sock() {
   )
 }
 
-// eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
-  if (connector === injected) {
-    return <Identicon />
-  } else if (connector === walletconnect) {
-    return (
-      <IconWrapper size={16}>
-        <img src={WalletConnectIcon} alt={'WalletConnect'} />
-      </IconWrapper>
-    )
-  } else if (connector === walletlink) {
-    return (
-      <IconWrapper size={16}>
-        <img src={CoinbaseWalletIcon} alt={'CoinbaseWallet'} />
-      </IconWrapper>
-    )
-  } else if (connector === fortmatic) {
-    return (
-      <IconWrapper size={16}>
-        <img src={FortmaticIcon} alt={'Fortmatic'} />
-      </IconWrapper>
-    )
-  } else if (connector === portis) {
-    return (
-      <IconWrapper size={16}>
-        <img src={PortisIcon} alt={'Portis'} />
-      </IconWrapper>
-    )
-  }
-  return null
+  const icon = (() => {
+    switch (connector) {
+      case injected:
+        return <Identicon />
+      case walletconnect:
+        return <img src={WalletConnectIcon} alt={'WalletConnect'} />
+      case walletlink:
+        return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet'} />
+      case fortmatic:
+        return <img src={FortmaticIcon} alt={'Fortmatic'} />
+      case portis:
+        return <img src={PortisIcon} alt={'Portis'} />
+      default:
+        return null
+    }
+  })()
+  return icon ? <IconWrapper size={16}>{icon}</IconWrapper> : null
 }
 
 function Web3StatusInner() {
