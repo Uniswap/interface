@@ -129,7 +129,7 @@ export default function Option({
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
       <IconWrapper size={size}>
-        <img src={icon} alt={'Icon'} />
+        <img src={icon} alt={'Icon'} width={`${size || 24}px`} height={`${size || 24}px`} />
       </IconWrapper>
     </OptionCardClickable>
   )

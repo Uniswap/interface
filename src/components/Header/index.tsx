@@ -168,6 +168,9 @@ const UbeIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
+  @media (max-width: 385px) {
+    display: none;
+  }
 `
 
 const activeClassName = 'ACTIVE'
@@ -196,6 +199,10 @@ const StyledNavLink = styled(NavLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
+  }
+
+  @media (max-width: 320px) {
+    margin: 0 8px;
   }
 `
 
@@ -287,7 +294,12 @@ export default function Header() {
       <HeaderRow>
         <Title to="/">
           <UbeIcon>
-            <img width={isMobile ? '32px' : '140px'} src={isMobile ? Icon : darkMode ? LogoDark : Logo} alt="logo" />
+            <img
+              width={isMobile ? '32px' : '140px'}
+              height={isMobile ? '36px' : '26px'}
+              src={isMobile ? Icon : darkMode ? LogoDark : Logo}
+              alt="Ubeswap"
+            />
           </UbeIcon>
         </Title>
         <HeaderLinks>
