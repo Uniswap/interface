@@ -3,7 +3,6 @@ import {
   CurrencyAmount,
   LiquidityMiningCampaign,
   Pair,
-  Percent,
   Price,
   USD,
   ChainId,
@@ -44,15 +43,6 @@ export function getPairRemainingRewardsUSD(pair: Pair, nativeCurrencyUSDPrice: P
   return pair.liquidityMiningCampaigns.reduce((accumulator: CurrencyAmount, campaign) => {
     return accumulator.add(getRemainingRewardsUSD(campaign, nativeCurrencyUSDPrice))
   }, ZERO_USD)
-}
-
-export function getPairMaximumApy(pair: Pair): Percent {
-  // no liquidity mining campaigns check
-  if (pair.liquidityMiningCampaigns.length === 0) return new Percent('0', '100')
-  return pair.liquidityMiningCampaigns.reduce((maximumApy: Percent, liquidityMiningCampaign) => {
-    const apy = liquidityMiningCampaign.apy
-    return liquidityMiningCampaign.apy.greaterThan(maximumApy) ? apy : maximumApy
-  }, new Percent('0', '100'))
 }
 
 export function getBestApyPairCampaign(pair: Pair): LiquidityMiningCampaign | null {

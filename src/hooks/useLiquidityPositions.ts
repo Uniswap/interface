@@ -1,13 +1,13 @@
 import { gql, useQuery } from '@apollo/client'
 import Decimal from 'decimal.js-light'
-import { CurrencyAmount, Pair, Percent, Token, TokenAmount, USD } from '@swapr/sdk'
+import { CurrencyAmount, KpiToken, Pair, Percent, Token, TokenAmount, USD } from '@swapr/sdk'
 import { ethers } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
-import { getPairMaximumApy, toLiquidityMiningCampaign } from '../utils/liquidityMining'
+import { getBestApyPairCampaign, toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 import { useKpiTokens } from './useKpiTokens'
 
@@ -144,6 +144,7 @@ export function useLPPairs(
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
     staked: boolean
+    containsKpiToken: boolean
   }[]
 } {
   const { chainId } = useActiveWeb3React()
@@ -241,13 +242,15 @@ export function useLPPairs(
             nativeCurrency
           )
         })
+        const bestCampaign = getBestApyPairCampaign(pair)
         return {
           pair,
           liquidityUSD: CurrencyAmount.usd(
             parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
           ),
-          maximumApy: getPairMaximumApy(pair),
-          staked: position.pair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0)
+          staked: position.pair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0),
+          maximumApy: bestCampaign ? bestCampaign.apy : new Percent('0', '100'),
+          containsKpiToken: !!bestCampaign?.rewards.some(reward => reward.token instanceof KpiToken)
         }
       })
     }
