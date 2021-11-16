@@ -34,7 +34,7 @@ export default function Identicon() {
 
   return (
     <StyledIdenticonContainer ref={ref}>
-      {avatar && <StyledAvatar src={avatar}></StyledAvatar>}
+      {avatar && <StyledAvatar alt="avatar" src={avatar}></StyledAvatar>}
     </StyledIdenticonContainer>
   )
 }
