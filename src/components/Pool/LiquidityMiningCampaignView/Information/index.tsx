@@ -1,4 +1,4 @@
-import { Pair, Percent, PricedTokenAmount, TokenAmount } from '@swapr/sdk'
+import { Pair, Percent, PricedTokenAmount, TokenAmount, KpiToken } from '@swapr/sdk'
 import { commify } from 'ethers/lib/utils'
 import { DateTime } from 'luxon'
 import { transparentize } from 'polished'
@@ -17,6 +17,7 @@ import DoubleCurrencyLogo from '../../../DoubleLogo'
 import Row, { AutoRow, RowBetween, RowFixed } from '../../../Row'
 import DataDisplayer from '../DataDisplayer'
 import TokenAmountDisplayer from '../TokenAmountDisplayer'
+import { useActiveWeb3React } from '../../../../hooks'
 
 const KpiTokenWarningContainer = styled.div`
   width: 100%;
@@ -181,6 +182,7 @@ function Information({
   containsKpiToken,
   showUSDValue
 }: InformationProps) {
+  const { chainId } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [upcoming, setUpcoming] = useState(false)
   const [expired, setExpired] = useState(false)
@@ -411,6 +413,7 @@ function Information({
             expressed in the KPI tokens. Read more about KPI tokens and Carrot by clicking here.
           </KpiTokenWarningContainer>
           {rewards?.map(reward => {
+            if (!(reward.token instanceof KpiToken)) return null
             return (
               <RowBetween key={reward.token.address}>
                 <AutoRow>
@@ -419,7 +422,10 @@ function Information({
                     <TYPE.white>{reward.token.symbol}</TYPE.white>
                   </AutoColumn>
                 </AutoRow>
-                <CarrotButton link={`https://carrot.eth.link`} text="Go to campaign" />
+                <CarrotButton
+                  link={`https://bafybeicxahcpyp27mwbqau4xdc4ej3slv2vyaf3j5sltuo2c2mkieazrmy.ipfs.dweb.link/#/campaigns/${reward.token.kpiId}?chainId=${chainId}`}
+                  text="Go to campaign"
+                />
               </RowBetween>
             )
           })}

@@ -2,7 +2,6 @@ import { gql, useQuery } from '@apollo/client'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { PricedTokenAmount, Price, Token, PricedToken, KpiToken } from '@swapr/sdk'
-import { SubgraphKpiToken } from '../apollo'
 import { getAddress } from '@ethersproject/address'
 import { useNativeCurrency } from '../hooks/useNativeCurrency'
 import { parseUnits } from '@ethersproject/units'
@@ -16,6 +15,7 @@ const KPI_TOKENS_QUERY = gql`
       symbol
       name
       totalSupply
+      kpiId
       collateral {
         token {
           address: id
@@ -28,6 +28,23 @@ const KPI_TOKENS_QUERY = gql`
     }
   }
 `
+
+interface SubgraphKpiToken {
+  address: string
+  symbol: string
+  name: string
+  totalSupply: string
+  kpiId: string
+  collateral: {
+    token: {
+      address: string
+      symbol: string
+      name: string
+      decimals: string
+    }
+    amount: string
+  }
+}
 
 interface KpiTokensQueryResult {
   kpiTokens: SubgraphKpiToken[]
@@ -106,6 +123,7 @@ export const useKpiTokens = (addresses: string[]): { loading: boolean; kpiTokens
           getAddress(rawKpiToken.address),
           rawKpiToken.totalSupply,
           collateralTokenAmount,
+          rawKpiToken.kpiId,
           rawKpiToken.symbol,
           rawKpiToken.name
         )

@@ -21,19 +21,3 @@ export interface SubgraphLiquidityMiningCampaign {
   locked: boolean
   stakingCap: string
 }
-
-export interface SubgraphKpiToken {
-  address: string
-  symbol: string
-  name: string
-  totalSupply: string
-  collateral: {
-    token: {
-      address: string
-      symbol: string
-      name: string
-      decimals: string
-    }
-    amount: string
-  }
-}
