@@ -121,7 +121,7 @@ export function SummaryDialog() {
         </Column>
         <Rule />
         <TYPE.caption color="secondary">
-          <Trans>Output is estimated.</Trans>
+          <Trans>Output is estimated.</Trans>&emsp;
           {swap?.minimumReceived && (
             <Trans>
               You will receive at least {swap.minimumReceived} {output.token.symbol} or the transaction will revert.

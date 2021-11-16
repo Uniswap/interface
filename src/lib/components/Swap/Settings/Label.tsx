@@ -32,7 +32,11 @@ export default function Label({ name, tooltip }: LabelProps) {
   return (
     <Row gap={0.5} justify="flex-start">
       <TYPE.subhead2 userSelect="none">{name}</TYPE.subhead2>
-      {tooltip && <Tooltip placement="top">{tooltip}</Tooltip>}
+      {tooltip && (
+        <Tooltip placement="top" contained>
+          <TYPE.caption>{tooltip}</TYPE.caption>
+        </Tooltip>
+      )}
     </Row>
   )
 }

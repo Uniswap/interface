@@ -71,7 +71,7 @@ export default function Toolbar() {
               {ratio}
             </Ratio>
           ) : (
-            'Uniswap V3'
+            'Powered by Uniswap'
           )}
         </Row>
       </TYPE.caption>

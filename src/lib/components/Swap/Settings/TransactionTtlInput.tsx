@@ -9,7 +9,7 @@ import Row from '../../Row'
 import { transactionTtlAtom } from '../state'
 import Label, { value } from './Label'
 
-const tooltip = <Trans>Your transaction will revert if it has not occured by this deadline.</Trans>
+const tooltip = <Trans>Your transaction will revert if it has been pending for longer than this period of time.</Trans>
 
 const Value = value(Row)
 
