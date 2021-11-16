@@ -163,11 +163,6 @@ export default function Pair({
                   <ApyBadge upTo={containsKpiToken} apy={apy} />
                 </BadgeWrapper>
               )}
-              {staked && (
-                <PositiveBadgeRoot>
-                  <BadgeText>STAKING</BadgeText>
-                </PositiveBadgeRoot>
-              )}
               {containsKpiToken && (
                 <MouseoverTooltip content="Rewards at least a Carrot KPI token">
                   <KpiBadge>
@@ -175,6 +170,11 @@ export default function Pair({
                     CARROT
                   </KpiBadge>
                 </MouseoverTooltip>
+              )}
+              {staked && (
+                <PositiveBadgeRoot>
+                  <BadgeText>STAKING</BadgeText>
+                </PositiveBadgeRoot>
               )}
             </AutoColumn>
           </Box>
