@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import uImage from '../../assets/images/big_unicorn.png'
-import noise from '../../assets/images/noise.png'
+import noise from '../../assets/images/noise.webp'
 import xlUnicorn from '../../assets/images/xl_uni.png'
 import { AutoColumn } from '../Column'
 
