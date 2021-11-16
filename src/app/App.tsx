@@ -80,7 +80,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         <Stack.Screen
           name={Screens.Dev}
           component={DevScreen}
-          options={{ title: 'Uniswap | Home' }}
+          options={{ title: 'Uniswap | Dev Screen' }}
         />
         <Stack.Screen name={Screens.Home} component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen
@@ -126,7 +126,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         <Stack.Screen
           name={Screens.SwapConfig}
           component={SwapConfigScreen}
-          options={{ title: 'Uniswap | Swap Config' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

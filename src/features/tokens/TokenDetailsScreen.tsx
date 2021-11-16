@@ -5,30 +5,29 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { RootStackParamList } from 'src/app/navTypes'
 import { Screens } from 'src/app/Screens'
-import ArrowLeft from 'src/assets/arrow-left.svg'
-import { Button } from 'src/components/buttons/Button'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { PriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
+
 type Props = NativeStackScreenProps<RootStackParamList, Screens.TokenDetails>
 
 interface TokenDetailsHeaderProps {
   currency: Currency
-  onPressBack: () => void
 }
 
-function TokenDetailsHeader({ currency, onPressBack }: TokenDetailsHeaderProps) {
+function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
+  const { t } = useTranslation()
+
   return (
     <Box my="md" alignItems="center" justifyContent="space-between" flexDirection="row">
-      <Button ml="lg" onPress={onPressBack}>
-        <ArrowLeft width={30} height={30} />
-      </Button>
+      <BackButton ml="lg" size={30} />
       <Box alignItems="center" flexDirection="row">
         <CurrencyLogo currency={currency} size={30} />
         <Text variant="h2" ml="sm">
-          {currency.symbol ?? 'Unknown symbol'}
+          {currency.symbol ?? t('Unknown token')}
         </Text>
       </Box>
       <Box width={40} height={40} mr="lg" />
@@ -36,18 +35,15 @@ function TokenDetailsHeader({ currency, onPressBack }: TokenDetailsHeaderProps) 
   )
 }
 
-export function TokenDetailsScreen({ route, navigation }: Props) {
+export function TokenDetailsScreen({ route }: Props) {
   const { currencyAmount } = route.params
   const { currency } = currencyAmount
 
   const { t } = useTranslation()
-  const onPressBack = () => {
-    navigation.goBack()
-  }
 
   return (
     <Screen>
-      <TokenDetailsHeader currency={currency} onPressBack={onPressBack} />
+      <TokenDetailsHeader currency={currency} />
       <ScrollView>
         <PriceChart token={currency.wrapped} />
         <Box mx="lg" mt="xl">

@@ -16,12 +16,12 @@ type Props = NativeStackScreenProps<RootStackParamList, Screens.Welcome>
 export function WelcomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
 
-  const onClickCreate = () => {
+  const onPressCreate = () => {
     dispatch(createAccountActions.trigger())
     dispatch(unlockWallet())
   }
 
-  const onClickImport = () => {
+  const onPressImport = () => {
     navigation.navigate(Screens.ImportAccount)
   }
 
@@ -32,10 +32,10 @@ export function WelcomeScreen({ navigation }: Props) {
         <Text variant="h1" textAlign="center">
           {t('Uniswap Wallet')}
         </Text>
-        <PrimaryButton label={t('Create New Account')} onPress={onClickCreate} mt="lg" />
+        <PrimaryButton label={t('Create New Account')} onPress={onPressCreate} mt="lg" />
         <PrimaryButton
           label={t('Import Account')}
-          onPress={onClickImport}
+          onPress={onPressImport}
           mt="lg"
           testID="import-account-button"
         />

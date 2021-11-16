@@ -9,6 +9,7 @@ import {
 import React, { ComponentProps, PropsWithChildren } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Text } from 'src/components/Text'
+import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
 const BaseButton = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
@@ -27,8 +28,9 @@ export type ButtonProps = {
 
 export function Button(props: PropsWithChildren<ButtonProps>) {
   const { label, color, children, ...rest } = props
+  const baseProps = { hitSlop: defaultHitslopInset, ...rest }
   return (
-    <BaseButton {...rest}>
+    <BaseButton {...baseProps}>
       {label && (
         <Text variant="buttonLabel" color={color}>
           {label}
