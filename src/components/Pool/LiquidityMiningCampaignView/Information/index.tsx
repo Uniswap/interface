@@ -8,7 +8,7 @@ import Skeleton from 'react-loading-skeleton'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
-import { TYPE } from '../../../../theme'
+import { ExternalLink, TYPE } from '../../../../theme'
 import { CarrotButton } from '../../../Button'
 import { AutoColumn } from '../../../Column'
 import Countdown from '../../../Countdown'
@@ -19,14 +19,13 @@ import DataDisplayer from '../DataDisplayer'
 import TokenAmountDisplayer from '../TokenAmountDisplayer'
 import { useActiveWeb3React } from '../../../../hooks'
 
-const KpiTokenWarningContainer = styled.div`
+const KpiTokenInfoContainer = styled.div`
   width: 100%;
-  font-weight: 600;
-  background-color: ${props => transparentize(0.75, props.theme.red1)};
-  color: ${props => props.theme.red1};
+  background-color: ${props => transparentize(0.75, props.theme.blue1)};
+  color: ${props => props.theme.white};
   padding: 14px;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 16px;
   letter-spacing: 0.02em;
   border-radius: 12px;
   margin-bottom: 12px;
@@ -407,11 +406,11 @@ function Information({
           <TYPE.small fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.06em" color="text5">
             CARROT CAMPAIGNS
           </TYPE.small>
-          <KpiTokenWarningContainer>
-            This campaign contains the KPI tokens below. KPI tokens are valued depending on real world events, and are
-            tied to reaching specific goals. The APR currently shown takes into account fully reaching all of the goals
-            expressed in the KPI tokens. Read more about KPI tokens and Carrot by clicking here.
-          </KpiTokenWarningContainer>
+          <KpiTokenInfoContainer>
+            This campaign contains Carrot KPI tokens that are redeemable for collateral upon reaching the goals
+            expressed in the KPI. Learn how to use KPI tokens through Carrot by clicking{' '}
+            <ExternalLink href="https://medium.com/carrot-eth/how-to-use-carrot-374e0e1abbe2">here</ExternalLink>.
+          </KpiTokenInfoContainer>
           {rewards?.map(reward => {
             if (!(reward.token instanceof KpiToken)) return null
             return (
