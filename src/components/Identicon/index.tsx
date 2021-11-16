@@ -1,6 +1,6 @@
 import jazzicon from '@metamask/jazzicon'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -22,19 +22,25 @@ export default function Identicon() {
   const ref = useRef<HTMLDivElement>(null)
   const { account } = useActiveWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
+  const [fetchable, setFetchable] = useState(true)
 
   useEffect(() => {
-    if (!avatar && ref.current) {
-      ref.current.innerHTML = ''
-      if (account) {
-        ref.current.appendChild(jazzicon(16, parseInt(account.slice(2, 10), 16)))
+    if ((!avatar || !fetchable) && account) {
+      const icon = jazzicon(16, parseInt(account?.slice(2, 10), 16))
+      const current = ref.current
+      current?.appendChild(icon)
+      return () => {
+        current?.removeChild(icon)
       }
     }
-  }, [account, avatar])
+    return
+  }, [account, avatar, fetchable])
 
   return (
     <StyledIdenticonContainer ref={ref}>
-      {avatar && <StyledAvatar alt="avatar" src={avatar}></StyledAvatar>}
+      {avatar && fetchable && (
+        <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
+      )}
     </StyledIdenticonContainer>
   )
 }
