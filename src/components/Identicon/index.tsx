@@ -5,11 +5,12 @@ import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 
-const StyledIdenticonContainer = styled.div`
+const StyledIdenticon = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;
   background-color: ${({ theme }) => theme.bg4};
+  font-size: initial;
 `
 
 const StyledAvatar = styled.img`
@@ -37,10 +38,10 @@ export default function Identicon() {
   }, [account, avatar, fetchable])
 
   return (
-    <StyledIdenticonContainer ref={ref}>
+    <StyledIdenticon ref={ref}>
       {avatar && fetchable && (
         <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
       )}
-    </StyledIdenticonContainer>
+    </StyledIdenticon>
   )
 }
