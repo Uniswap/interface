@@ -46,7 +46,7 @@ export default function PoolFinder() {
         addPair(token0, token1)
       }
     }
-  }, [pairs, addPair])
+  }, [pairs, addPair, currency0, currency1, chainId])
 
   const positions: { [tokenAddress: string]: TokenAmount | undefined } = useTokenBalances(
     account ?? undefined,

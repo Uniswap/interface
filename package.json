@@ -85,7 +85,10 @@
     "redux-localstorage-simple": "^2.3.1",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "wcag-contrast": "^3.0.0"
+    "wcag-contrast": "^3.0.0",
+    "workbox-core": "^6.3.0",
+    "workbox-precaching": "^6.3.0",
+    "workbox-routing": "^6.3.0"
   },
   "resolutions": {
     "trezor-connect": "8.1.15"

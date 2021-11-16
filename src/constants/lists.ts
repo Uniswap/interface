@@ -18,11 +18,13 @@ const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extende
 const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
 const PANGOLIN = 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json'
 const SPOOKY = 'https://raw.githubusercontent.com/SpookySwap/spooky-info/master/src/constants/token/spookyswap.json'
+const COINGECKO = 'https://tokens.coingecko.com/uniswap/all.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 export const BYPASS_LIST = [PANGOLIN, SPOOKY]
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
+  COINGECKO,
   COMPOUND_LIST,
   AAVE_LIST,
   SYNTHETIX_LIST,
@@ -50,3 +52,5 @@ export const FANTOM_TOKEN_LISTS: string[] = [SPOOKY]
 
 // default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = []
+
+export const HIDE_LIST = [COINGECKO]

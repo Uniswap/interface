@@ -22,34 +22,34 @@ function useTokenBalance(tokenAddress: string) {
   const addressCheckSum = isAddress(tokenAddress)
   const tokenContract = useContract(addressCheckSum ? addressCheckSum : undefined, ERC20_ABI, false)
 
-  const getBalance = async (contract: Contract | null, owner: string | null | undefined): Promise<BalanceProps> => {
-    try {
-      if (account && chainId && contract?.address === WETH[chainId].address) {
-        const ethBalance = await library?.getBalance(account)
-        return { value: BigNumber.from(ethBalance), decimals: 18 }
-      }
-
-      const balance = await contract?.balanceOf(owner)
-      const decimals = await contract?.decimals()
-
-      return { value: BigNumber.from(balance), decimals: decimals }
-      //todo: return as BigNumber as opposed toString since information will
-      //return Fraction.from(BigNumber.from(balance), BigNumber.from(10).pow(decimals)).toString()
-    } catch (e) {
-      return { value: BigNumber.from(0), decimals: 18 }
-    }
-  }
-
   const fetchBalance = useCallback(async () => {
+    const getBalance = async (contract: Contract | null, owner: string | null | undefined): Promise<BalanceProps> => {
+      try {
+        if (account && chainId && contract?.address === WETH[chainId].address) {
+          const ethBalance = await library?.getBalance(account)
+          return { value: BigNumber.from(ethBalance), decimals: 18 }
+        }
+
+        const balance = await contract?.balanceOf(owner)
+        const decimals = await contract?.decimals()
+
+        return { value: BigNumber.from(balance), decimals: decimals }
+        //todo: return as BigNumber as opposed toString since information will
+        //return Fraction.from(BigNumber.from(balance), BigNumber.from(10).pow(decimals)).toString()
+      } catch (e) {
+        return { value: BigNumber.from(0), decimals: 18 }
+      }
+    }
+
     const balance = await getBalance(tokenContract, account)
     setBalance(balance)
-  }, [account, tokenContract])
+  }, [account, tokenContract, chainId, library])
 
   useEffect(() => {
     if (account && tokenContract) {
       fetchBalance()
     }
-  }, [account, setBalance, currentTransactionStatus, tokenAddress, fetchBalance, tokenContract])
+  }, [account, currentTransactionStatus, fetchBalance, tokenContract])
 
   return balance
 }

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken, lighten, rgba } from 'polished'
+import { darken, rgba } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronUp, ChevronDown } from 'react-feather'

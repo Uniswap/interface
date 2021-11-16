@@ -12,21 +12,21 @@ export const AVAX_MAINNET_TOKEN_LIST = {
     // },
     {
       chainId: 43114,
-      address: '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
+      address: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
       symbol: 'USDC',
       name: 'USDC',
       decimals: 6
     },
     {
       chainId: 43114,
-      address: '0xc7198437980c041c805a1edcba50c1ce5db95118',
+      address: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       symbol: 'USDT',
       name: 'USDT',
       decimals: 6
     },
     {
       chainId: 43114,
-      address: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70',
+      address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
       symbol: 'DAI',
       name: 'DAI',
       decimals: 18

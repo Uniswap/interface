@@ -33,7 +33,7 @@ export const ROPSTEN_TOKEN_LIST = {
     },
     {
       chainId: 3,
-      address: '0xad6d458402f60fd3bd25163575031acdce07538d',
+      address: '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
       symbol: 'DAI',
       name: 'DAI',
       decimals: 18

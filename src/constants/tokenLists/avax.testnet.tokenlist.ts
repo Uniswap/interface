@@ -19,7 +19,7 @@ export const AVAX_TESTNET_TOKEN_LIST = {
     },
     {
       chainId: 43113,
-      address: '0xbd1eeaf651aeb210106e1c1afb3bc41c388ee577',
+      address: '0xBD1EEAf651aEB210106E1c1aFb3BC41C388ee577',
       symbol: 'USDT',
       name: 'USDT',
       decimals: 6

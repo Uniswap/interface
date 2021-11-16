@@ -16,9 +16,9 @@ import { useAddUserToken } from 'state/user/hooks'
 import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ExternalLink } from '../../theme/components'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn } from './styleds'
+import { TokenList } from '@uniswap/token-lists'
 
 const Wrapper = styled.div`
   position: relative;
@@ -43,19 +43,17 @@ const AddressText = styled(TYPE.blue)`
 interface ImportProps {
   tokens: Token[]
   onBack?: () => void
+  list?: TokenList
   onDismiss?: () => void
   handleCurrencySelect?: (currency: Currency) => void
 }
 
-export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
+export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect, list }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
-
-  // use for showing import source on inactive tokens
-  const inactiveTokenList = useCombinedInactiveList()
 
   return (
     <Wrapper>
@@ -75,7 +73,6 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           </TYPE.body>
         </AutoColumn>
         {tokens.map(token => {
-          const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
           return (
             <Card
               backgroundColor={theme.bg2}

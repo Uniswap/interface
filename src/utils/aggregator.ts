@@ -236,6 +236,7 @@ export class Aggregator {
         : currencyOut instanceof Token
         ? currencyOut.chainId
         : undefined
+
     invariant(chainId !== undefined, 'CHAIN_ID')
 
     const amountIn = wrappedAmount2(currencyAmountIn, chainId)

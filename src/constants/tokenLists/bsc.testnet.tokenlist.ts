@@ -33,7 +33,7 @@ export const BSC_TESTNET_TOKEN_LIST = {
     },
     {
       chainId: 97,
-      address: '0xae13d989dac2f0debff460ac112a837c89baa7cd',
+      address: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       symbol: 'WBNB',
       name: 'Wrapped BNB',
       decimals: 18

@@ -9,9 +9,9 @@ import AvaxLogo from '../../assets/networks/avax-network.png'
 import FtmLogo from '../../assets/networks/fantom-network.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useActiveWeb3React } from 'hooks'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { getTokenLogoURL } from 'utils'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
