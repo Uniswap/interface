@@ -253,17 +253,18 @@ export default function VotePage({
             <RowBetween>
               <TYPE.main>
                 {startDate && startDate > now ? (
-                  <Trans>Voting starts approximately {startDate && startDate.toLocaleString(locale, dateFormat)}</Trans>
+                  <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
                 ) : null}
               </TYPE.main>
             </RowBetween>
             <RowBetween>
               <TYPE.main>
-                {endDate && endDate < now ? (
-                  <Trans>Voting ended {endDate && endDate.toLocaleString(locale, dateFormat)}</Trans>
-                ) : (
-                  <Trans>Voting ends approximately {endDate && endDate.toLocaleString(locale, dateFormat)}</Trans>
-                )}
+                {endDate &&
+                  (endDate < now ? (
+                    <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ) : (
+                    <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                  ))}
               </TYPE.main>
             </RowBetween>
             {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
