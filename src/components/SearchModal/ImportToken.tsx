@@ -11,6 +11,7 @@ import useTheme from 'hooks/useTheme'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
 import { AlertTriangle, ArrowLeft } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useCombinedInactiveList } from 'state/lists/hooks'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components'
@@ -55,6 +56,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
   const [confirmed, setConfirmed] = useState(false)
 
   const addToken = useAddUserToken()
+  const { t } = useTranslation()
 
   // use for showing import source on inactive tokens
   const inactiveTokenList = useCombinedInactiveList()
@@ -69,7 +71,9 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div></div>}
-          <TYPE.mediumHeader>Import {tokens.length > 1 ? 'Tokens' : 'Token'}</TYPE.mediumHeader>
+          <TYPE.mediumHeader>
+            {t('Import')} {tokens.length > 1 ? `${t('Tokens')}` : `${t('Token')}`}
+          </TYPE.mediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div></div>}
         </RowBetween>
       </PaddedColumn>
@@ -104,7 +108,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                     <RowFixed>
                       <AlertTriangle stroke={theme.red1} size="10px" />
                       <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
-                        Unknown Source
+                        {t('UnknownSource')}
                       </TYPE.body>
                     </RowFixed>
                   </WarningWrapper>
@@ -120,17 +124,16 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
             <AlertTriangle stroke={fromLists ? theme.yellow2 : theme.red1} size={32} />
             <TYPE.body fontWeight={600} fontSize={20} color={fromLists ? theme.yellow2 : theme.red1}>
-              Trade at your own risk!
+              {t('TradeAtYourOwnRisk')}
             </TYPE.body>
           </AutoColumn>
 
           <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
             <TYPE.body fontWeight={400} color={fromLists ? theme.yellow2 : theme.red1}>
-              Anyone can create a token, including creating fake versions of existing tokens that claim to represent
-              projects.
+              {t('tokenExp')}
             </TYPE.body>
             <TYPE.body fontWeight={600} color={fromLists ? theme.yellow2 : theme.red1}>
-              If you purchase this token, you may not be able to sell it back.
+              {t('tokenImportRisk')}
             </TYPE.body>
           </AutoColumn>
           <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
@@ -142,7 +145,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
               onChange={() => setConfirmed(!confirmed)}
             />
             <TYPE.body ml="10px" fontSize="16px" color={fromLists ? theme.yellow2 : theme.red1} fontWeight={500}>
-              I understand
+              {t('IUnderstand')}
             </TYPE.body>
           </AutoRow>
         </Card>
@@ -157,7 +160,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           }}
           className=".token-dismiss-button"
         >
-          Import
+          {t('Import')}
         </ButtonPrimary>
       </PaddedColumn>
     </Wrapper>

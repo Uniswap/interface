@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { useDoTransaction } from 'components/swap/routing'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { useStakingContract } from '../../hooks/useContract'
@@ -31,6 +32,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   const doTransaction = useDoTransaction()
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+  const { t } = useTranslation()
 
   function wrappedOndismiss() {
     setHash(undefined)
@@ -45,7 +47,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       setAttempting(true)
       await doTransaction(stakingContract, 'exit', {
         args: [],
-        summary: `Withdraw deposited liquidity`,
+        summary: `${t('WithdrawDepositedLiquidity')}`,
       })
         .then((response) => {
           setHash(response.hash)
@@ -58,10 +60,10 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = `${t('ConnectWallet')}`
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? `${t('EnterAnAmount')}`
   }
 
   return (
@@ -69,7 +71,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Withdraw</TYPE.mediumHeader>
+            <TYPE.mediumHeader>{t('withdraw')}</TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOndismiss} />
           </RowBetween>
           {stakingInfo?.stakedAmount && (
@@ -77,7 +79,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
               <TYPE.body fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
               </TYPE.body>
-              <TYPE.body>Deposited liquidity</TYPE.body>
+              <TYPE.body>{t('DepositedLiquidity')}</TYPE.body>
             </AutoColumn>
           )}
           <AutoColumn justify="center" gap="md">
@@ -87,16 +89,18 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
                   <TYPE.body fontWeight={600} fontSize={36}>
                     {<FormattedCurrencyAmount currencyAmount={earnedAmount} />}
                   </TYPE.body>
-                  <TYPE.body>Unclaimed {earnedAmount.token.symbol}</TYPE.body>
+                  <TYPE.body>
+                    {t('Unclaimed')} {earnedAmount.token.symbol}
+                  </TYPE.body>
                 </React.Fragment>
               )
             })}
           </AutoColumn>
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            When you withdraw, your UBE is claimed and your liquidity is removed from the mining pool.
+            {t('WhenYouWithdrawYourUbeIsClaimedAndYourLiquidityIsRemovedFromTheMiningPool')}
           </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
-            {error ?? 'Withdraw & Claim'}
+            {error ?? `${t('Withdraw&Claim')}`}
           </ButtonError>
         </ContentWrapper>
       )}

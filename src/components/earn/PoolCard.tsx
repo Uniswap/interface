@@ -123,7 +123,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
   try {
     quarterlyAPY = apy
       ? new Percent(
-          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000 - 1_000_000).toFixed(0),
+          Math.floor(parseFloat(apy.divide('2').add('1').toFixed(10)) ** 2 * 1_000_000).toFixed(0),
           '1000000'
         ).toFixed(0, { groupSeparator: ',' })
       : undefined
@@ -141,19 +141,11 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
           <TYPE.white fontWeight={600} fontSize={[18, 24]}>
             {token0?.symbol}-{token1?.symbol}
           </TYPE.white>
-          <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
-            {apy &&
-              apy.greaterThan('0') &&
-              (userAprMode ? (
-                <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-                  {apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'} APR
-                </TYPE.small>
-              ) : (
-                <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-                  {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
-                </TYPE.small>
-              ))}
-          </div>
+          {apy && apy.greaterThan('0') && (
+            <TYPE.small className="apr" fontWeight={400} fontSize={14}>
+              {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
+            </TYPE.small>
+          )}
         </PoolInfo>
 
         <StyledInternalLink
@@ -230,7 +222,6 @@ const PoolInfo = styled.div`
     display: none;
     ${({ theme }) => theme.mediaWidth.upToSmall`
   display: block;
-    color: white;
   `}
   }
 `

@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { useDoTransaction } from 'components/swap/routing'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { useStakingContract } from '../../hooks/useContract'
@@ -30,6 +31,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
   const doTransaction = useDoTransaction()
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+  const { t } = useTranslation()
 
   function wrappedOnDismiss() {
     setHash(undefined)
@@ -44,7 +46,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       setAttempting(true)
       await doTransaction(stakingContract, 'getReward', {
         args: [],
-        summary: `Claim accumulated UBE rewards`,
+        summary: `${t('ClaimAccumulatedUbeRewards')}`,
       })
         .catch(console.error)
         .finally(() => {
@@ -55,10 +57,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = `${t('ConnectWallet')}`
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? `${t('EnterAnAmount')}`
   }
 
   return (
@@ -80,10 +82,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
             <TYPE.body>Unclaimed rewards</TYPE.body>
           </AutoColumn>
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            When you claim without withdrawing your liquidity remains in the mining pool.
+            {t('WhenYouClaimWithoutWithdrawingYourLiquidityRemainsInTheMiningPool')}
           </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
-            {error ?? 'Claim'}
+            {error ?? `${t('claim')}`}
           </ButtonError>
         </ContentWrapper>
       )}
@@ -91,7 +93,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>
-              Claiming{' '}
+              {t('Claiming')}{' '}
               {stakingInfo?.earnedAmounts
                 ?.map((earnedAmount) => `${earnedAmount.toSignificant(4)} ${earnedAmount?.token.symbol}`)
                 .join(' + ')}
@@ -102,9 +104,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
+            <TYPE.largeHeader>{t('TransactionSubmitted')}</TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              Claimed {stakingInfo?.rewardTokens.map((rewardToken) => rewardToken.symbol).join(' + ')}!
+              {t('Claimed')} {stakingInfo?.rewardTokens.map((rewardToken) => rewardToken.symbol).join(' + ')}!
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>

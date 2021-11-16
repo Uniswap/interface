@@ -3,6 +3,7 @@ import { Pair, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import { useDoTransaction } from 'components/swap/routing'
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -47,6 +48,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingInfo.stakingToken, userLiquidityUnstaked)
   const parsedAmountWrapped = parsedAmount
+  const { t } = useTranslation()
 
   let hypotheticalRewardRates: TokenAmount[] | undefined = stakingInfo?.totalRewardRates?.map(
     (rewardRate) => new TokenAmount(rewardRate.token, '0')
@@ -85,7 +87,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       if (approval === ApprovalState.APPROVED) {
         const response = await doTransaction(stakingContract, 'stake', {
           args: [`0x${parsedAmount.raw.toString(16)}`],
-          summary: `Stake deposited liquidity`,
+          summary: `${t('StakeDepositedLiquidity')}`,
         })
         setHash(response.hash)
       } else {
@@ -132,7 +134,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             pair={dummyPair}
             label={''}
             disableCurrencySelect={true}
-            customBalanceText={'Available to deposit: '}
+            customBalanceText={`${t('AvailableToDeposit')}: `}
             id="stake-liquidity-token"
           />
 
@@ -167,7 +169,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
                   Approving <Loader stroke="white" />
                 </AutoRow>
               ) : (
-                'Approve'
+                `${t('approve')}`
               )}
             </ButtonConfirmed>
             <ButtonError
@@ -175,7 +177,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               error={!!error && !!parsedAmount}
               onClick={onStake}
             >
-              {error ?? 'Deposit'}
+              {error ?? `${t('deposit')}`}
             </ButtonError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED]} disabled={true} />
@@ -184,7 +186,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
+            <TYPE.largeHeader>{t('DepositingLiquidity')}</TYPE.largeHeader>
             <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} UBE LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -192,7 +194,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
+            <TYPE.largeHeader>{t('TransactionSubmitted')}</TYPE.largeHeader>
             <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} UBE LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>

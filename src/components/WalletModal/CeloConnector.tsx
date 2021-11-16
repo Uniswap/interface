@@ -1,5 +1,6 @@
 import { ChainId } from '@ubeswap/sdk'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from 'theme'
 
 import { NETWORK_CHAIN_ID } from '../../connectors'
@@ -38,6 +39,7 @@ const params: { [chain in ChainId]: typeof CELO_PARAMS } = {
 }
 
 export const CeloConnector: React.FC = () => {
+  const { t } = useTranslation()
   const chainParams = params[NETWORK_CHAIN_ID]
   return (
     <Button
@@ -48,7 +50,7 @@ export const CeloConnector: React.FC = () => {
         })
       }}
     >
-      Switch to the {chainParams.chainName} network
+      {t('SwitchToThe')} {chainParams.chainName} {t('Network')}
     </Button>
   )
 }

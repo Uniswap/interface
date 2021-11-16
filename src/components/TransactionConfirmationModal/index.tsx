@@ -2,6 +2,7 @@ import { useContractKit } from '@celo-tools/use-contractkit'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 
@@ -31,6 +32,8 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
+  const { t } = useTranslation()
+
   return (
     <Wrapper>
       <Section>
@@ -43,7 +46,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
-            Waiting For Confirmation
+            {t('WaitingForConfirmation')}
           </Text>
           <AutoColumn gap="12px" justify={'center'}>
             <Text fontWeight={600} fontSize={14} color="" textAlign="center">
@@ -51,7 +54,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
             </Text>
           </AutoColumn>
           <Text fontSize={12} color="#565A69" textAlign="center">
-            Confirm this transaction in your wallet
+            {t('ConfirmThisTransactionInYourWallet')}
           </Text>
         </AutoColumn>
       </Section>
@@ -70,6 +73,7 @@ function TransactionSubmittedContent({
 }) {
   const theme = useContext(ThemeContext)
   const { network } = useContractKit()
+  const { t } = useTranslation()
 
   return (
     <Wrapper>
@@ -83,18 +87,18 @@ function TransactionSubmittedContent({
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
-            Transaction Submitted
+            {t('TransactionSubmitted')}
           </Text>
           {chainId && hash && (
             <ExternalLink href={`${network.explorer}/tx/${hash}`}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Celo Explorer
+                {t('ViewOnCeloExplorer')}
               </Text>
             </ExternalLink>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
-              Close
+              {t('Close')}
             </Text>
           </ButtonPrimary>
         </AutoColumn>
@@ -132,12 +136,13 @@ export function ConfirmationModalContent({
 
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation()
   return (
     <Wrapper>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
-            Error
+            {t('Error')}
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>

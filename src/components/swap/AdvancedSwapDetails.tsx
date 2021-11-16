@@ -1,5 +1,6 @@
 import { Trade } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled, { ThemeContext } from 'styled-components'
 
 import { useUserSlippageTolerance } from '../../state/user/hooks'
@@ -42,6 +43,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
 
   const path = trade && trade.path
   const showRoute = Boolean(path && path.length > 2)
+  const { t } = useTranslation()
 
   return (
     <AutoColumn gap="0px">
@@ -53,9 +55,9 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               <RowBetween style={{ padding: '0 16px' }}>
                 <span style={{ display: 'flex', alignItems: 'center' }}>
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                    Route
+                    {t('Route')}
                   </TYPE.black>
-                  <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+                  <QuestionHelper text={t('RoutingThroughTheseTokensResultedInTheBestPriceForYourTrade')} />
                 </span>
                 <SwapRoute trade={trade} />
               </RowBetween>
@@ -67,7 +69,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                 href={'https://info.ubeswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
                 target="_blank"
               >
-                View pair analytics ↗
+                {t('ViewPairAnalytics')} ↗
               </InfoLink>
             </AutoColumn>
           )}

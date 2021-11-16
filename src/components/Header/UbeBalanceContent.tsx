@@ -3,6 +3,7 @@ import { ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
 import React from 'react'
 import { X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { useCUSDPrice } from 'utils/useCUSDPrice'
 
@@ -53,6 +54,8 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
   const ubePrice = useCUSDPrice(ube)
   const circulation = useCirculatingSupply()
 
+  const { t } = useTranslation()
+
   return (
     <ContentWrapper gap="lg">
       <ModalUpper>
@@ -75,16 +78,16 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
               </AutoColumn>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white color="white">Balance:</TYPE.white>
+                  <TYPE.white color="white">{t('Balance')}:</TYPE.white>
                   <TYPE.white color="white">{ubeBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white color="white">Unclaimed:</TYPE.white>
+                  <TYPE.white color="white">{t('Unclaimed')}:</TYPE.white>
                   <TYPE.white color="white">
                     {ubeToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
                     {ubeToClaim && ubeToClaim.greaterThan('0') && (
                       <StyledInternalLink onClick={() => setShowUbeBalanceModal(false)} to="/farm">
-                        (claim)
+                        ({t('claim')})
                       </StyledInternalLink>
                     )}
                   </TYPE.white>
@@ -97,19 +100,21 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
         <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.white color="white">UBE price:</TYPE.white>
+              <TYPE.white color="white">{t('UbePrice')}:</TYPE.white>
               <TYPE.white color="white">${ubePrice?.toFixed(2) ?? '-'}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">UBE in circulation:</TYPE.white>
+              <TYPE.white color="white">{t('UbeInCirculation')}:</TYPE.white>
               <TYPE.white color="white">{circulation?.toFixed(0, { groupSeparator: ',' }) ?? <Loader />}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">Total Supply</TYPE.white>
+              <TYPE.white color="white">{t('TotalSupply')}</TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' }) ?? <Loader />}</TYPE.white>
             </RowBetween>
             {ube && ube.chainId === UbeswapChainId.MAINNET ? (
-              <ExternalLink href={`https://info.ubeswap.org/token/${ube.address}`}>View UBE Analytics</ExternalLink>
+              <ExternalLink href={`https://info.ubeswap.org/token/${ube.address}`}>
+                {t('ViewUbeAnalytics')}
+              </ExternalLink>
             ) : null}
           </AutoColumn>
         </CardSection>

@@ -1,6 +1,7 @@
 import { ChainId, Token } from '@ubeswap/sdk'
 import { useAllTokens } from 'hooks/Tokens'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -36,13 +37,14 @@ export default function CommonBases({
   onSelect: (currency: Token) => void
 }) {
   const allTokens = useAllTokens()
+  const { t } = useTranslation()
   return (
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
-          Common bases
+          {t('CommonBases')}
         </Text>
-        <QuestionHelper text="These tokens are commonly paired with other tokens." />
+        <QuestionHelper text={t('TheseTokensAreCommonlyPairedWithOtherTokens')} />
       </AutoRow>
       <AutoRow gap="4px">
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {

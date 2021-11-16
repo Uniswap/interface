@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useCallback, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled, { ThemeContext } from 'styled-components'
 
 import useENS from '../../hooks/useENS'
@@ -91,6 +92,7 @@ export default function AddressInputPanel({
     },
     [onChange]
   )
+  const { t } = useTranslation()
 
   const error = Boolean(value.length > 0 && !loading && !address)
 
@@ -105,7 +107,7 @@ export default function AddressInputPanel({
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink href={`${network.explorer}/address/${address}`} style={{ fontSize: '14px' }}>
-                  (View on Celo Explorer)
+                  ({t('ViewOnCeloExplorer')})
                 </ExternalLink>
               )}
             </RowBetween>
@@ -116,7 +118,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="Wallet Address"
+              placeholder={`${t('ViewOnCeloExplorer')}`}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

@@ -2,6 +2,7 @@ import { useContractKit, WalletTypes } from '@celo-tools/use-contractkit'
 import { ChainId } from '@ubeswap/sdk'
 import React, { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useCloseModals } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
@@ -219,6 +220,7 @@ export default function AccountDetails({
   const closeModals = useCloseModals()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
+  const { t } = useTranslation()
 
   function formatConnectorName() {
     if (walletType === WalletTypes.Unauthenticated) {
@@ -226,7 +228,11 @@ export default function AccountDetails({
     }
     // TODO(igm): should be valora??
     // const name = walletType === WalletTypes.? SupportedProviders.Valora : SupportedProviders[walletType]
-    return <WalletName>Connected with {walletType}</WalletName>
+    return (
+      <WalletName>
+        {t('ConnectedWith')} {walletType}
+      </WalletName>
+    )
   }
 
   function getStatusIcon() {
@@ -262,7 +268,7 @@ export default function AccountDetails({
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={destroy}
                     >
-                      Disconnect
+                      {t('Disconnect')}
                     </WalletAction>
                   )}
                   <WalletAction
@@ -272,7 +278,7 @@ export default function AccountDetails({
                       connect()
                     }}
                   >
-                    Change
+                    {t('Change')}
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
@@ -302,13 +308,13 @@ export default function AccountDetails({
                       <div>
                         {address && (
                           <Copy toCopy={address}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                            <span style={{ marginLeft: '4px' }}>{t('CopyAddress')}</span>
                           </Copy>
                         )}
                         {chainId && address && (
                           <AddressLink hasENS={!!ENSName} isENS={true} href={`${network.explorer}/address/${address}`}>
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Celo Explorer</span>
+                            <span style={{ marginLeft: '4px' }}>{t('ViewOnCeloExplorer')}</span>
                           </AddressLink>
                         )}
                       </div>
@@ -320,13 +326,13 @@ export default function AccountDetails({
                       <div>
                         {address && (
                           <Copy toCopy={address}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                            <span style={{ marginLeft: '4px' }}>{t('CopyAddress')}</span>
                           </Copy>
                         )}
                         {chainId && address && (
                           <AddressLink hasENS={!!ENSName} isENS={false} href={`${network.explorer}/address/${address}`}>
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Celo Explorer</span>
+                            <span style={{ marginLeft: '4px' }}>{t('ViewOnCeloExplorer')}</span>
                           </AddressLink>
                         )}
                       </div>
@@ -341,15 +347,15 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body>Recent Transactions</TYPE.body>
-            <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
+            <TYPE.body>{t('RecentTransactions')}</TYPE.body>
+            <LinkStyledButton onClick={clearAllTransactionsCallback}>({t('ClearAll')})</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1}>{t('YourTransactionsWillAppearHere')}</TYPE.body>
         </LowerSection>
       )}
     </>

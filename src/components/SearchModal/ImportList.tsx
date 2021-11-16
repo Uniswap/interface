@@ -11,6 +11,7 @@ import { transparentize } from 'polished'
 import React, { useCallback, useState } from 'react'
 import { AlertTriangle, ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { enableList, removeList } from 'state/lists/actions'
@@ -44,6 +45,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
 
   const lists = useAllLists()
   const fetchList = useFetchListCallback()
+  const { t } = useTranslation()
 
   // monitor is list is loading
   const adding = Boolean(lists[listURL]?.loadingRequestId)
@@ -81,7 +83,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
-          <TYPE.mediumHeader>Import List</TYPE.mediumHeader>
+          <TYPE.mediumHeader>{t('ImportList')}</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
@@ -99,7 +101,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                     </TYPE.body>
                     <TextDot />
                     <TYPE.main fontSize={'16px'} ml="6px">
-                      {list.tokens.length} tokens
+                      {list.tokens.length} {t('Tokens')}
                     </TYPE.main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
@@ -115,18 +117,16 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
               <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
-                Import at your own risk{' '}
+                {t('ImportAtYourOwnRisk')}{' '}
               </TYPE.body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <TYPE.body fontWeight={500} color={theme.red1}>
-                By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
-                including creating fake versions of existing lists and lists that claim to represent projects that do
-                not have one.
+                {t('tokenExpExpl')}
               </TYPE.body>
               <TYPE.body fontWeight={600} color={theme.red1}>
-                If you purchase a token from this list, you may not be able to sell it back.
+                {t('tokenImportRisk')}
               </TYPE.body>
             </AutoColumn>
             <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
@@ -137,7 +137,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 onChange={() => setConfirmed(!confirmed)}
               />
               <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
-                I understand
+                {t('IUnderstand')}
               </TYPE.body>
             </AutoRow>
           </Card>
@@ -149,7 +149,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             padding="10px 1rem"
             onClick={handleAddList}
           >
-            Import
+            {t('Import')}
           </ButtonPrimary>
           {addError ? (
             <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>

@@ -1,6 +1,7 @@
 import { useContractKit } from '@celo-tools/use-contractkit'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -113,6 +114,7 @@ export default function WalletModal({
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const closeModals = useCloseModals()
+  const { t } = useTranslation()
 
   // always reset to account view
   useEffect(() => {
@@ -132,7 +134,7 @@ export default function WalletModal({
           <ContentWrapper>
             {error === 'unsupported-chain-id' ? (
               <div>
-                <h5>Please connect to the appropriate Celo network.</h5>
+                <h5>{t('PleaseConnectToTheAppropriateCeloNetwork')}</h5>
                 <br />
                 <CeloConnector />
               </div>
@@ -165,27 +167,27 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              Back
+              {t('Back')}
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
+            <HoverText>{t('ConnectToAWallet')}</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>
           {!isMobile && (
             <Blurb>
               <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
-                Learn more about Celo wallets
+                {t('LearnMoreAboutCeloWallets')}
               </ExternalLink>
             </Blurb>
           )}
           {isMobile && (
             <Blurb>
-              <span>New to Celo? &nbsp;</span>
+              <span>{t('NewToCelo')} &nbsp;</span>
               <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
-                Learn more about wallets
+                {t('LearnMoreAboutWallets')}
               </ExternalLink>
             </Blurb>
           )}
