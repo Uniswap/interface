@@ -5,7 +5,7 @@ import uriToHttp from 'utils/uriToHttp'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract, useERC721Contract } from './useContract'
+import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSName from './useENSName'
 import { useActiveWeb3React } from './web3'
@@ -60,30 +60,24 @@ function useAvatarFromNode(node = ''): { avatar?: string; loading: boolean } {
   }
 }
 
-function useAvatarFromNFT(avatar = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
-  const parts = avatar.toLowerCase().split(':')
+function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
+  const parts = nftUri.toLowerCase().split(':')
   const protocol = parts[0]
   // ignore the chain from eip155
   // TODO: when we are able, pull only from the specified chain
   const [, erc] = parts[1]?.split('/') ?? []
   const [contractAddress, id] = parts[2]?.split('/') ?? []
-  const erc721 = useAvatarFromERC721((protocol === 'eip155' && erc === 'erc721' && contractAddress) || undefined, id)
-  if (erc721.avatar && (!enforceOwnership || erc721.owned)) {
-    return erc721
-  }
-  return { loading: erc721.loading }
-}
-
-function useAvatarFromERC721(address?: string, id?: string): { avatar?: string; owned: boolean; loading: boolean } {
-  const { account } = useActiveWeb3React()
-  const contract = useERC721Contract(address)
-  const owner = useSingleCallResult(contract, 'ownerOf', [id])
-  const metadata = useSingleCallResult(contract, 'tokenURI', [id])
-  const http = metadata.result && uriToHttp(metadata.result?.[0])[0]
+  const isERC721 = protocol === 'eip155' && erc === 'erc721'
+  const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
+  const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, id, enforceOwnership)
+  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, id, enforceOwnership)
+  const uri = erc721.uri || erc1155.uri
+  const http = uri && uriToHttp(uri)[0]
 
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState(undefined)
   useEffect(() => {
+    setAvatar(undefined)
     if (http) {
       setLoading(true)
       fetch(http)
@@ -97,5 +91,36 @@ function useAvatarFromERC721(address?: string, id?: string): { avatar?: string; 
         })
     }
   }, [http])
-  return { avatar, owned: account === owner.result?.[0], loading: owner.loading || metadata.loading || loading }
+
+  return { avatar, loading: erc721.loading || erc1155.loading || loading }
+}
+
+function useERC721Uri(
+  contractAddress: string | undefined,
+  id: string | undefined,
+  enforceOwnership: boolean
+): { uri?: string; loading: boolean } {
+  const { account } = useActiveWeb3React()
+  const contract = useERC721Contract(contractAddress)
+  const owner = useSingleCallResult(contract, 'ownerOf', [id])
+  const uri = useSingleCallResult(contract, 'tokenURI', [id])
+  return {
+    uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
+    loading: owner.loading || uri.loading,
+  }
+}
+
+function useERC1155Uri(
+  contractAddress: string | undefined,
+  id: string | undefined,
+  enforceOwnership: boolean
+): { uri?: string; loading: boolean } {
+  const { account } = useActiveWeb3React()
+  const contract = useERC1155Contract(contractAddress)
+  const balance = useSingleCallResult(contract, 'balanceOf', [account || '', id])
+  const uri = useSingleCallResult(contract, 'uri', [id])
+  return {
+    uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0] : undefined,
+    loading: balance.loading || uri.loading,
+  }
 }

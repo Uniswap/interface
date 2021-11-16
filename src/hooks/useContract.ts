@@ -16,6 +16,7 @@ import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import ERC721_ABI from 'abis/erc721.json'
+import ERC1155_ABI from 'abis/erc1155.json'
 import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import WETH_ABI from 'abis/weth.json'
 import {
@@ -36,7 +37,7 @@ import { NonfungiblePositionManager, Quoter, UniswapInterfaceMulticall } from 't
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Weth } from '../abis/types'
+import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from '../abis/types'
 import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
@@ -78,6 +79,10 @@ export function useWETHContract(withSignerIfPossible?: boolean) {
 
 export function useERC721Contract(nftAddress?: string) {
   return useContract<Erc721>(nftAddress, ERC721_ABI, false)
+}
+
+export function useERC1155Contract(nftAddress?: string) {
+  return useContract<Erc1155>(nftAddress, ERC1155_ABI, false)
 }
 
 export function useArgentWalletDetectorContract() {
