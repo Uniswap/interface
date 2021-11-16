@@ -1,10 +1,12 @@
 /**
- * Given a URI that may be ipfs, ipns, http, or https protocol, return the fetch-able http(s) URLs for the same content
+ * Given a URI that may be ipfs, ipns, http, https, or data protocol, return the fetch-able http(s) URLs for the same content
  * @param uri to convert to fetch-able http url
  */
 export default function uriToHttp(uri: string): string[] {
   const protocol = uri.split(':')[0].toLowerCase()
   switch (protocol) {
+    case 'data':
+      return [uri]
     case 'https':
       return [uri]
     case 'http':
