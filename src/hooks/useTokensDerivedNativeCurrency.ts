@@ -34,27 +34,16 @@ export function useNativeCurrencyPricedTokenAmounts(
 
   return useMemo(() => {
     if (loading || loadingKpiTokens) return { loading: true, pricedTokenAmounts: [] }
-    if (
-      !tokenAmounts ||
-      tokenAmounts.length === 0 ||
-      !data ||
-      !chainId ||
-      error ||
-      !kpiTokens ||
-      kpiTokens.length === 0
-    )
+    if (!tokenAmounts || tokenAmounts.length === 0 || !data || !chainId || error)
       return { loading: false, pricedTokenAmounts: [] }
     const pricedTokenAmounts = []
     for (const rewardTokenAmount of tokenAmounts) {
-      const kpiToken = kpiTokens.find(
-        kpiToken => kpiToken.address.toLowerCase() === rewardTokenAmount.token.address.toLowerCase()
-      )
+      const kpiToken = kpiTokens.find(kpiToken => kpiToken.equals(rewardTokenAmount.token))
       const priceData = data.tokens.find(
-        lpToken => lpToken.address.toLowerCase() === rewardTokenAmount.token.address.toLowerCase()
+        token => token.address.toLowerCase() === rewardTokenAmount.token.address.toLowerCase()
       )
-      let price = null
-      if (priceData) {
-        price = new Price(
+      if (!!priceData) {
+        const price = new Price(
           rewardTokenAmount.token,
           nativeCurrency,
           parseUnits('1', nativeCurrency.decimals).toString(),
@@ -63,32 +52,23 @@ export function useNativeCurrencyPricedTokenAmounts(
             nativeCurrency.decimals
           ).toString()
         )
-      }
-      if (!price && !!kpiToken) {
+        pricedTokenAmounts.push(
+          new PricedTokenAmount(
+            new PricedToken(
+              chainId,
+              rewardTokenAmount.token.address,
+              rewardTokenAmount.token.decimals,
+              price,
+              rewardTokenAmount.token.symbol,
+              rewardTokenAmount.token.name
+            ),
+            rewardTokenAmount.raw
+          )
+        )
+      } else if (!!kpiToken) {
         // the reward token is a kpi token, we need to price it by looking at the collateral
-        const collateralTokenNativeCurrency = kpiToken.collateral.nativeCurrencyAmount
-        const kpiTokenPrice = collateralTokenNativeCurrency.divide(kpiToken.totalSupply)
-        price = new Price(
-          rewardTokenAmount.token,
-          nativeCurrency,
-          parseUnits('1', nativeCurrency.decimals).toString(),
-          parseUnits(kpiTokenPrice.toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
-        )
+        pricedTokenAmounts.push(new PricedTokenAmount(kpiToken, rewardTokenAmount.raw))
       }
-      if (!price) continue
-      pricedTokenAmounts.push(
-        new PricedTokenAmount(
-          new PricedToken(
-            chainId,
-            rewardTokenAmount.token.address,
-            rewardTokenAmount.token.decimals,
-            price,
-            rewardTokenAmount.token.symbol,
-            rewardTokenAmount.token.name
-          ),
-          rewardTokenAmount.raw
-        )
-      )
     }
     return {
       loading: false,
