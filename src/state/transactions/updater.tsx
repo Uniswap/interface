@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS, SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { retry, RetryableError, RetryOptions } from '../../utils/retry'
-import { updateBlockNumber } from '../application/actions'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { updateBlockNumber } from '../application/reducer'
 import { checkedTransaction, finalizeTransaction } from './actions'
 
 interface TxInterface {

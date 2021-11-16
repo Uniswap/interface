@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -26,8 +27,8 @@ import {
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { ApplicationModal } from '../../state/application/actions'
 import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import {
   ProposalData,
   ProposalState,
@@ -121,6 +122,24 @@ const ProposerAddressLink = styled(ExternalLink)`
   word-break: break-all;
 `
 
+function getDateFromBlock(
+  targetBlock: number | undefined,
+  currentBlock: number | undefined,
+  averageBlockTimeInSeconds: number | undefined,
+  currentTimestamp: BigNumber | undefined
+): Date | undefined {
+  if (targetBlock && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
+    const date = new Date()
+    date.setTime(
+      currentTimestamp
+        .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
+        .toNumber() * 1000
+    )
+    return date
+  }
+  return undefined
+}
+
 export default function VotePage({
   match: {
     params: { governorIndex, id },
@@ -145,23 +164,19 @@ export default function VotePage({
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
   const currentBlock = useBlockNumber()
+  const startDate = getDateFromBlock(
+    proposalData?.startBlock,
+    currentBlock,
+    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    currentTimestamp
+  )
+  const endDate = getDateFromBlock(
+    proposalData?.endBlock,
+    currentBlock,
+    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    currentTimestamp
+  )
   const now = new Date()
-  const endDate: Date | undefined =
-    proposalData && currentTimestamp && currentBlock
-      ? (() => {
-          const date = new Date()
-          date.setTime(
-            currentTimestamp
-              .add(
-                BigNumber.from(
-                  (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
-                ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
-              )
-              .toNumber() * 1000
-          )
-          return date
-        })()
-      : undefined
   const locale = useActiveLocale()
   const dateFormat: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -237,12 +252,18 @@ export default function VotePage({
             <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
             <RowBetween>
               <TYPE.main>
-                {endDate &&
-                  (endDate < now ? (
-                    <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
-                  ) : (
-                    <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
-                  ))}
+                {startDate && startDate > now ? (
+                  <Trans>Voting starts approximately {startDate && startDate.toLocaleString(locale, dateFormat)}</Trans>
+                ) : null}
+              </TYPE.main>
+            </RowBetween>
+            <RowBetween>
+              <TYPE.main>
+                {endDate && endDate < now ? (
+                  <Trans>Voting ended {endDate && endDate.toLocaleString(locale, dateFormat)}</Trans>
+                ) : (
+                  <Trans>Voting ends approximately {endDate && endDate.toLocaleString(locale, dateFormat)}</Trans>
+                )}
               </TYPE.main>
             </RowBetween>
             {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (

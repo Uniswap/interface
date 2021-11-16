@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-21 22:05\n"
+"PO-Revision-Date: 2021-11-12 17:09\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -27,6 +27,10 @@ msgstr "$-"
 msgid "${0}"
 msgstr "${0}"
 
+#: src/components/swap/TradePrice.tsx
+msgid "(${0})"
+msgstr "（${0}）"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
 msgstr "(最大)"
@@ -48,8 +52,8 @@ msgid "(edit)"
 msgstr "(編集)"
 
 #: src/pages/Swap/index.tsx
-msgid "- Remove send"
-msgstr "- 送信を削除"
+msgid "- Remove recipient"
+msgstr "-受信者を削除します"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -57,18 +61,6 @@ msgstr "- 送信を削除"
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
 msgstr "0 UNI / 週"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.05% fee"
-msgstr "手数料0.05%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "0.3% fee"
-msgstr "手数料0.3%"
-
-#: src/components/FeeSelector/index.tsx
-msgid "1% fee"
-msgstr "手数料1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -146,13 +138,12 @@ msgstr "アクティブ"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
-#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "追加"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Add <0/> and <1/> to Uniswap V2"
-msgstr "<0 />と<1 />をUniswapV2に追加します"
+msgstr "<0/>と<1/>をユニスワップV2に追加"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -223,13 +214,9 @@ msgstr "許可されたスリッページ"
 msgid "Amount"
 msgstr "数量"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "スワップ実行時にエラーが発生しました。スリッページの許容範囲を広げる必要がある可能性があります。それでも上手くいかない場合、取引しているトークンとの互換性がない可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
-
-#: src/components/Menu/index.tsx
-msgid "Analytics"
-msgstr "分析"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -266,11 +253,11 @@ msgstr "{0} を承認中"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbiscan"
-msgstr "アルビスカン"
+msgstr "Arbiscan"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Arbitrum Bridge"
-msgstr "アービトラムブリッジ"
+msgstr "Arbitrumブリッジ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -300,10 +287,6 @@ msgstr "自動ルーター"
 msgid "Available to deposit: {0}"
 msgstr "預け入れ可能： {0}"
 
-#: src/components/WalletModal/index.tsx
-msgid "Back"
-msgstr "戻る"
-
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "残高:"
@@ -312,20 +295,21 @@ msgstr "残高:"
 msgid "Balance: {0} {1}"
 msgstr "残高： {0} {1}"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for exotic pairs."
 msgstr "マイナーなペアに最適"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for most pairs."
 msgstr "ほとんどのペアに最適"
 
-#: src/components/FeeSelector/index.tsx
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/shared.tsx
 msgid "Best for stable pairs."
 msgstr "安定的なペアに最適"
+
+#: src/components/FeeSelector/shared.tsx
+msgid "Best for very stable pairs."
+msgstr "非常に安定したペアに最適です。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -333,7 +317,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
-msgstr "橋"
+msgstr "ブリッジ"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -344,8 +328,8 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 誰でもリストを作成することができます。そのため、既存リストの偽のバージョンや、実体のないプロジェクトを掲載するリストが作成されている可能性があります。"
 
 #: src/components/WalletModal/index.tsx
-msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サービス利用規約</0>に同意し、Uniswapプロトコルの<1>免責事項</1>を読み、理解したことに同意します。"
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
+msgstr "財布を接続することにより、あなたはUniswap Labsのに同意 <0>サービス規約</0> 、あなたが読んでUniswap理解していることを認める <1>プロトコル免責事項</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -361,7 +345,7 @@ msgstr "チャート"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "Check network status"
-msgstr "ネットワークステータスを確認する"
+msgstr "ネットワークの状態を確認"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -375,7 +359,7 @@ msgstr "請求"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "以下のための請求<0 /> {0}"
+msgstr "{0} の <0/> を請求する"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -391,7 +375,7 @@ msgstr "UNIトークンを請求する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim UNI reward for {0}"
-msgstr "{0}UNI報酬を請求する"
+msgstr "{0} のUNI報酬を請求する"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -412,7 +396,7 @@ msgstr "請求済みのUNI！"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "主張！"
+msgstr "請求済み"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -446,10 +430,6 @@ msgstr "閉じる"
 msgid "Closed"
 msgstr "終了済"
 
-#: src/components/Menu/index.tsx
-msgid "Code"
-msgstr "コード"
-
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "取得する"
@@ -465,7 +445,7 @@ msgstr "報酬を取得"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Collect {0}/{1} fees"
-msgstr "収集 {0}/{1} の手数料"
+msgstr "{0}/{1} の報酬を受け取る"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -491,10 +471,6 @@ msgstr "共通のベース"
 msgid "Confirm"
 msgstr "確認"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "Confirm Create"
-msgstr "作成の確認"
-
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "供給を確認"
@@ -516,28 +492,25 @@ msgstr "ウォレットで取引を確認する"
 msgid "Confirm transaction in wallet"
 msgstr "ウォレットで取引を確認する"
 
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
-#: src/state/burn/hooks.ts
-#: src/state/burn/v3/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/burn/v3/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Connect Wallet"
 msgstr "ウォレットに接続"
 
+#: src/components/WalletModal/index.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "ウォレットに接続"
-
-#: src/components/WalletModal/index.tsx
-#: src/components/Web3Status/index.tsx
-msgid "Connect to a wallet"
 msgstr "ウォレットに接続"
 
 #: src/pages/PoolFinder/index.tsx
@@ -564,10 +537,6 @@ msgstr "コピーしました"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "アドレスをコピー"
-
-#: src/pages/AddLiquidity/index.tsx
-msgid "Create"
-msgstr "作成する"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
@@ -626,7 +595,7 @@ msgstr "投票を委任する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Delegate voting power to {0}"
-msgstr "投票権を {0}"
+msgstr "{0} に投票権を委任する"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -649,7 +618,7 @@ msgstr "預け入れる数量"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "Deposit Assets"
-msgstr "預金資産"
+msgstr "預け入れ資産"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -719,11 +688,11 @@ msgstr "編集"
 msgid "Efficiency Comparison"
 msgstr "効率性の比較"
 
-#: src/state/burn/v3/hooks.ts
+#: src/state/burn/v3/hooks.tsx
 msgid "Enter a percent"
 msgstr "パーセントを入力してください"
 
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Enter a recipient"
 msgstr "受取人を入力"
 
@@ -737,11 +706,11 @@ msgstr "UNIの請求を行うためのアドレスを入力してください。
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
-#: src/state/burn/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/stake/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/burn/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/stake/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Enter an amount"
 msgstr "数量を入力してください"
 
@@ -798,7 +767,7 @@ msgstr "Uniswap分析サイトで人気のあるプールを探しましょう�
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Explorer"
-msgstr "冒険者"
+msgstr "エクスプローラー"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -831,13 +800,14 @@ msgstr "全範囲"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Full range positions may earn less fees than concentrated positions. Learn more <0>here</0>."
-msgstr "フルレンジのポジションは、集中ポジションよりも少ない手数料を稼ぐことができます。詳細はこちら<0></0> 。"
+msgstr "全範囲のポジションは、集中型ポジションよりも手数料報酬が少ない場合があります。詳細は<0>こちら</0> 。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
 msgstr "Discordでサポートを受ける"
 
 #: src/components/Header/NetworkSelector.tsx
+#: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "ヘルプセンター"
 
@@ -849,6 +819,10 @@ msgstr "非表示"
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
 
+#: src/components/WalletModal/index.tsx
+msgid "How this app uses APIs"
+msgstr "このアプリがAPIを使用する方法"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -858,6 +832,7 @@ msgstr "理解しました"
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "このリストからトークンを購入すると、トークンを売却できなくなる可能性があります。"
 
+#: src/components/SearchModal/BlockedToken.tsx
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
@@ -909,11 +884,11 @@ msgstr "メタマスクのインストール"
 msgid "Insufficient liquidity for this trade."
 msgstr "流動性が不足しているため、取引できません。"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/mint/v3/hooks.ts
-#: src/state/swap/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
+#: src/state/swap/hooks.tsx
 msgid "Insufficient {0} balance"
 msgstr "{0} の残高が足りません"
 
@@ -921,8 +896,8 @@ msgstr "{0} の残高が足りません"
 msgid "Interface Settings"
 msgstr "インターフェイスの設定"
 
-#: src/state/mint/hooks.ts
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/hooks.tsx
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid pair"
 msgstr "無効なペア"
 
@@ -930,7 +905,7 @@ msgstr "無効なペア"
 msgid "Invalid pair."
 msgstr "無効なペアです。"
 
-#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.tsx
 msgid "Invalid price input"
 msgstr "無効な価格入力"
 
@@ -939,7 +914,8 @@ msgstr "無効な価格入力"
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "設定した価格範囲が間違っています。最小価格は最大価格より低くしてください。"
 
-#: src/state/swap/hooks.ts
+#: src/hooks/useSwapCallback.tsx
+#: src/state/swap/hooks.tsx
 msgid "Invalid recipient"
 msgstr "受け取りアドレスが無効です"
 
@@ -958,6 +934,16 @@ msgstr "もっと詳しく知る"
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "流動性の提供について学ぶ"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Learn more"
+msgstr "より詳しく"
+
+#: src/components/Menu/index.tsx
+#: src/components/PrivacyPolicy/index.tsx
+#: src/components/WalletModal/index.tsx
+msgid "Legal & Privacy"
+msgstr "法律とプライバシー"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
@@ -1076,7 +1062,7 @@ msgstr "Uniswap V2からUniswap V3に流動性トークンを移行します。"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Migrate {0}/{1} liquidity to V3"
-msgstr "移行 {0}/{1} V3への流動性"
+msgstr "{0}/{1} の流動性をV3へ移行"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -1099,6 +1085,10 @@ msgstr "最小:"
 msgid "Minimum received"
 msgstr "最小購入数"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Missing dependencies"
+msgstr "依存関係がありません"
+
 #: src/pages/Pool/index.tsx
 msgid "More"
 msgstr "もっと見る"
@@ -1120,6 +1110,10 @@ msgstr "V2の流動性が見つかりません。"
 msgid "No active pools"
 msgstr "アクティブなプールがありません"
 
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
+msgid "No data"
+msgstr "データがありません"
+
 #: src/state/governance/hooks.ts
 msgid "No description."
 msgstr "説明はありません。"
@@ -1140,7 +1134,7 @@ msgstr "提案が見つかりません。"
 msgid "No results found."
 msgstr "結果が見つかりませんでした。"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未作成"
 
@@ -1178,7 +1172,7 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Gateway"
-msgstr "オプティミズムゲートウェイ"
+msgstr "Optimismゲートウェイ"
 
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimistic Ethereum is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1335,6 +1329,10 @@ msgstr "提案するアクション"
 msgid "Proposer"
 msgstr "提案者"
 
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Protocol Disclaimer"
+msgstr "プロトコルの免責事項"
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "処理待ち"
@@ -1377,7 +1375,7 @@ msgstr "削除"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "<0 />と<1 />を削除します"
+msgstr "<0/>と<1/>を削除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1398,9 +1396,16 @@ msgid "Remove list"
 msgstr "リストを削除"
 
 #: src/pages/RemoveLiquidity/V3.tsx
-#: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} と {2} {3} を解除中"
+
+#: src/pages/RemoveLiquidity/index.tsx
+msgid "Removing {0} {1} and{2} {3}"
+msgstr "{0} {1} と {2} {3} を削除"
+
+#: src/components/Menu/index.tsx
+msgid "Request Features"
+msgstr "機能のリクエスト"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1418,13 +1423,13 @@ msgstr "ペアを選択"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Select a network"
-msgstr "ネットワークを選択する"
+msgstr "ネットワークを選択"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
-#: src/state/swap/hooks.ts
+#: src/state/swap/hooks.tsx
 msgid "Select a token"
 msgstr "トークン選択"
 
@@ -1500,7 +1505,7 @@ msgstr "ステップ1. UNI-V2流動性トークンを入手"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Submit new proposal"
-msgstr "新しい提案を送信する"
+msgstr "新しい提案を出す"
 
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "Submitting Proposal"
@@ -1523,8 +1528,8 @@ msgid "Supply"
 msgstr "追加"
 
 #: src/pages/AddLiquidityV2/index.tsx
-msgid "Supplying {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を追加中"
+msgid "Supplying {0} {1} and{2} {3}"
+msgstr "{0} {1} と{2} {3} を提供"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1536,7 +1541,7 @@ msgstr "スワップ"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap <0/> for exactly <1/>"
-msgstr "<0 />を正確に<1 />に交換します"
+msgstr "<0/> を <1/>に正確にスワップする"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1545,7 +1550,12 @@ msgstr "問題発生の可能性があるが、スワップする"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
-msgstr "正確に<0 />を<1 />に交換します"
+msgstr "正確に<0/>を<1/>に交換します"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Swap failed: {0}"
+msgstr "スワップに失敗しました： {0}"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1559,11 +1569,31 @@ msgstr "Uniswapコミュニティにご参加いただきありがとうござ�
 msgid "The % you will earn in fees."
 msgstr "設定する手数料率"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap不変式 x * y = kはスワップで満たされませんでした。これは通常、スワップするトークンの1つが転送時のカスタム動作を組み込んでいることを意味します。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches blockchain data from The Graph’s hosted service."
+msgstr "アプリは、グラフのホストされたサービスからブロックチェーンデータをフェッチします。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches on-chain data and constructs contract calls with an Infura API."
+msgstr "アプリはオンチェーンデータをフェッチし、InfuraAPIを使用してコントラクト呼び出しを構築します。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app fetches the optimal trade route from a Uniswap Labs server."
+msgstr "アプリは、UniswapLabsサーバーから最適な取引ルートを取得します。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app logs anonymized usage statistics in order to improve over time."
+msgstr "アプリは、時間の経過とともに改善するために、匿名化された使用統計をログに記録します。"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons."
+msgstr "アプリはウォレットアドレスを安全に収集し、リスクとコンプライアンスの理由からTRM LabsInc。と共有します。"
+
+#: src/hooks/useSwapCallback.tsx
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "売るトークンが転送できません。売るトークンに問題がある可能性があります。"
 
@@ -1571,11 +1601,11 @@ msgstr "売るトークンが転送できません。売るトークンに問題
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市場価格が設定した価格範囲から外れています。単一トークンのみ預け入れできます。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token."
 msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "購入するトークンを転送できません。購入するトークンに問題がある可能性があります。注：転送時に手数料が発生するトークンおよびリベースするトークンは、UniswapV3と互換性がありません。"
 
@@ -1591,7 +1621,7 @@ msgstr "現在の価格は設定した価格範囲に入っています。その
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "追加するトークンの比率によって、プールの価格が決まります。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
 msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短すぎないかご確認ください。"
 
@@ -1603,13 +1633,13 @@ msgstr "流動性データはありません。"
 msgid "These tokens are commonly paired with other tokens."
 msgstr "これらのトークンは一般的に他のトークンとペアになっています。"
 
-#: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
-msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預金額を入力します。初期化取引のため、ガス料金は通常より高くなります。"
+#: src/components/PrivacyPolicy/index.tsx
+msgid "This app uses the following third-party APIs:"
+msgstr "このアプリは、次のサードパーティAPIを使用します。"
 
 #: src/pages/AddLiquidity/index.tsx
-msgid "This pool must be initialized on {0} before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount."
-msgstr "流動性を追加する前に {0} に初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預金額を入力します。"
+msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
+msgstr "流動性を追加する前に、このプールを初期化する必要があります。初期化するには、プールの開始価格を選択します。次に、流動性の価格帯と預け入れ数量を入力します。初期化取引のため、ガス料金は通常より高くなります。"
 
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your price by considering split routes, multiple hops, and gas costs."
@@ -1619,15 +1649,19 @@ msgstr "このルートは、分割ルート、複数のホップ、およびガ
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "このトークンはご利用中のトークンリストに存在しません。取引したいトークンであることを確認してください。"
 
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "This token is not supported in the Uniswap Labs app"
+msgstr "このトークンは、UniswapLabsアプリではサポートされていません"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "本ツールで {0} の流動性をV3に安全に移行します。このプロセスは以下によって特定の第三者を信用する必要が一切ないものになっています。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "価格変動により、この取引は成功しません。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
 msgstr "この取引は、価格変動または転送時に手数料が発生するため、成功しません。スリッページの許容範囲を広げてみてください。"
 
@@ -1647,8 +1681,12 @@ msgid "To (at least)"
 msgstr "買うトークン（少なくとも）"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
-msgid "To starting trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
+msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
 msgstr "{0}で取引を開始するには、最初に資産をL1からL2にブリッジします。 {1}を使用する前に、これをベータリリースとして扱い、リスクについて学習してください。"
+
+#: src/components/SearchModal/BlockedToken.tsx
+msgid "Token not supported"
+msgstr "トークンはサポートされていません"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1676,7 +1714,7 @@ msgstr "合計預入額"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
-msgstr "交易路"
+msgstr "取引ルート"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Transaction Details"
@@ -1699,11 +1737,16 @@ msgstr "取引が送信されました"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Transaction completed in"
-msgstr "で完了したトランザクション"
+msgstr "で完了した取引"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
 msgstr "取引期限"
+
+#: src/hooks/useSwapCallback.tsx
+#: src/hooks/useSwapCallback.tsx
+msgid "Transaction rejected."
+msgstr "取引が拒否されました"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
@@ -1762,9 +1805,21 @@ msgstr "未請求："
 msgid "Undetermined"
 msgstr "未定"
 
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected error. Could not estimate gas for the swap."
+msgstr "予期しないエラー。スワップのガスを見積もることができませんでした。"
+
+#: src/hooks/useSwapCallback.tsx
+msgid "Unexpected issue with estimating the gas. Please try again."
+msgstr "ガスの見積もりに関する予期しない問題。もう一度やり直してください。"
+
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswapのガバナンス"
+
+#: src/components/PrivacyPolicy/index.tsx
+msgid "Uniswap Labs' Terms of Service"
+msgstr "UniswapLabsの利用規約"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1772,7 +1827,7 @@ msgstr "利用可能言語: <0>{0}</0>"
 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals and Vote."
-msgstr "Uniswapガバナンスは、レイヤー1でのみ使用できます。ネットワークをEthereum Mainnetに切り替えて、提案と投票を表示します。"
+msgstr "Uniswapのガバナンスは、レイヤー1でのみ使用できます。提案と投票を表示するために、ネットワークをEthereumメインネットに切り替えて下さい。"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1786,11 +1841,11 @@ msgstr "Uniswap移行コントラクト↗"
 msgid "Uniswap on {0}"
 msgstr "{0}ユニスワップ"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "Unknown Source"
 msgstr "不明なソース"
 
-#: src/hooks/useSwapCallback.ts
+#: src/hooks/useSwapCallback.tsx
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "不明なエラー{0}。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
@@ -1919,11 +1974,11 @@ msgstr "提案 {proposalId} に反対票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey}"
-msgstr "{proposalKey}反対票を投じる"
+msgstr "提案 {proposalKey} に反対票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote against proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」 {proposalKey} 反対票を投じる"
+msgstr "「{0} 」という理由で提案 {proposalKey} に反対票を投じる"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1932,24 +1987,24 @@ msgstr "提案 {proposalId} に賛成票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey}"
-msgstr "{proposalKey}投票する"
+msgstr "提案{proposalKey} に賛成票を入れる"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」で提案 {proposalKey}"
+msgstr "「{0} 」という理由で提案 {proposalKey} に賛成票を入れる"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote to abstain on proposal {proposalId}"
-msgstr "{proposalId}を棄権するために投票する"
+msgstr "提案{proposalId} を棄権する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey}"
-msgstr "{proposalKey}を棄権するために投票する"
+msgstr "提案{proposalKey} を棄権する"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote to abstain on proposal {proposalKey} with reason \"{0}\""
-msgstr "理由「{0}」 {proposalKey} を棄権することに投票する"
+msgstr "「{0} 」という理由で提案 {proposalKey} で棄権する"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1958,6 +2013,10 @@ msgstr "{0} に投票は終了しました"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
 msgstr "投票は {0} 頃に終了します"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Voting starts approximately {0}"
+msgstr "投票は約 {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -2205,7 +2264,7 @@ msgstr "分"
 msgid "via {0}"
 msgstr "{0} から"
 
-#: src/components/SearchModal/ImportToken.tsx
+#: src/components/SearchModal/TokenImportCard.tsx
 msgid "via {0} token list"
 msgstr "{0} トークンリストから"
 
@@ -2308,6 +2367,7 @@ msgid "{0} • Added by user"
 msgstr "{0} • ユーザーにより追加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
+#: src/components/FeeSelector/FeeOption.tsx
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -2322,7 +2382,7 @@ msgstr "{0}%"
 msgid "{0}% fee tier"
 msgstr "{0}%の手数料レベル"
 
-#: src/components/FeeSelector/index.tsx
+#: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
 msgstr "{0}％が選択"
 

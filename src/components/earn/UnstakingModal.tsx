@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
-import { useState } from 'react'
+import { Trans } from '@lingui/macro'
+import { ReactNode, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { useStakingContract } from '../../hooks/useContract'
@@ -63,12 +63,12 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     }
   }
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect a wallet`
+    error = <Trans>Connect a wallet</Trans>
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   return (

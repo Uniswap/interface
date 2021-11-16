@@ -1,8 +1,8 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
-import { useCallback } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -28,7 +28,7 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_A]?: CurrencyAmount<Currency>
     [Field.CURRENCY_B]?: CurrencyAmount<Currency>
   }
-  error?: string
+  error?: ReactNode
 } {
   const { account } = useActiveWeb3React()
 
@@ -122,13 +122,13 @@ export function useDerivedBurnInfo(
         : undefined,
   }
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
-    error = error ?? t`Enter an amount`
+    error = error ?? <Trans>Enter an amount</Trans>
   }
 
   return { pair, parsedAmounts, error }

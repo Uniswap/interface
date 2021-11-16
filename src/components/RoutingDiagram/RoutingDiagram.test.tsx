@@ -10,7 +10,7 @@ const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[
 const singleRoute: RoutingDiagramEntry = { percent: percent`100`, path: [[USDC, DAI, FeeAmount.LOW]] }
 
 const multiRoute: RoutingDiagramEntry[] = [
-  { percent: percent`75`, path: [[USDC, DAI, FeeAmount.LOW]] },
+  { percent: percent`75`, path: [[USDC, DAI, FeeAmount.LOWEST]] },
   {
     percent: percent`25`,
     path: [

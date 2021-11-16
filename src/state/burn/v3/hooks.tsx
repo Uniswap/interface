@@ -1,11 +1,11 @@
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { PositionDetails } from 'types/position'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -28,7 +28,7 @@ export function useDerivedV3BurnInfo(
   feeValue0?: CurrencyAmount<Currency>
   feeValue1?: CurrencyAmount<Currency>
   outOfRange: boolean
-  error?: string
+  error?: ReactNode
 } {
   const { account } = useActiveWeb3React()
   const { percent } = useBurnV3State()
@@ -74,12 +74,12 @@ export function useDerivedV3BurnInfo(
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false
 
-  let error: string | undefined
+  let error: ReactNode | undefined
   if (!account) {
-    error = t`Connect Wallet`
+    error = <Trans>Connect Wallet</Trans>
   }
   if (percent === 0) {
-    error = error ?? t`Enter a percent`
+    error = error ?? <Trans>Enter a percent</Trans>
   }
   return {
     position: positionSDK,

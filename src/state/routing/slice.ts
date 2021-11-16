@@ -5,6 +5,7 @@ import qs from 'qs'
 import { GetQuoteResult } from './types'
 
 export const routingApi = createApi({
+  reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://api.uniswap.org/v1/',
   }),
@@ -20,7 +21,7 @@ export const routingApi = createApi({
         type: 'exactIn' | 'exactOut'
       }
     >({
-      query: (args) => `quote?${qs.stringify(args)}`,
+      query: (args) => `quote?${qs.stringify({ ...args, protocols: 'v3' })}`,
     }),
   }),
 })
