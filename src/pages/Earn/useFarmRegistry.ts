@@ -55,6 +55,10 @@ export const useFarmRegistry = () => {
     })
     const farmSummaries: FarmSummary[] = []
     farmInfoEvents.forEach((e) => {
+      // sometimes there is no farm data for the staking address return early to avoid crash
+      if (!farmData[e.returnValues.stakingAddress]) {
+        return
+      }
       farmSummaries.push({
         farmName: ethers.utils.parseBytes32String(e.returnValues.farmName),
         stakingAddress: e.returnValues.stakingAddress,
