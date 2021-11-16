@@ -245,47 +245,34 @@ export default function AccountDetails({
   }
 
   function getStatusIcon() {
-    if (connector === injected) {
-      return (
-        <IconWrapper size={16}>
-          <Identicon />
-        </IconWrapper>
-      )
-    } else if (connector === walletconnect) {
-      return (
-        <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={'WalletConnect logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === walletlink) {
-      return (
-        <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === fortmatic) {
-      return (
-        <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={'Fortmatic logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === portis) {
-      return (
-        <>
-          <IconWrapper size={16}>
-            <img src={PortisIcon} alt={'Portis logo'} />
-            <MainWalletAction
-              onClick={() => {
-                portis.portis.showPortis()
-              }}
-            >
-              <Trans>Show Portis</Trans>
-            </MainWalletAction>
-          </IconWrapper>
-        </>
-      )
-    }
-    return null
+    const icon = (() => {
+      switch (connector) {
+        case injected:
+          return <Identicon />
+        case walletconnect:
+          return <img src={WalletConnectIcon} alt={'WalletConnect logo'} />
+        case walletlink:
+          return <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet logo'} />
+        case fortmatic:
+          return <img src={FortmaticIcon} alt={'Fortmatic logo'} />
+        case portis:
+          return (
+            <>
+              <img src={PortisIcon} alt={'Portis logo'} />
+              <MainWalletAction
+                onClick={() => {
+                  portis.portis.showPortis()
+                }}
+              >
+                <Trans>Show Portis</Trans>
+              </MainWalletAction>
+            </>
+          )
+        default:
+          return null
+      }
+    })()
+    return icon ? <IconWrapper size={16}>{icon}</IconWrapper> : null
   }
 
   const clearAllTransactionsCallback = useCallback(() => {
