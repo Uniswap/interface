@@ -3,7 +3,6 @@ import {
   CurrencyAmount,
   LiquidityMiningCampaign,
   Pair,
-  Percent,
   Price,
   USD,
   ChainId,
@@ -11,7 +10,8 @@ import {
   Token,
   PricedToken,
   PricedTokenAmount,
-  TokenAmount
+  TokenAmount,
+  KpiToken
 } from '@swapr/sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
@@ -40,18 +40,18 @@ export function getRemainingRewardsUSD(
 export function getPairRemainingRewardsUSD(pair: Pair, nativeCurrencyUSDPrice: Price): CurrencyAmount {
   // no liquidity mining campaigns check
   if (pair.liquidityMiningCampaigns.length === 0) return ZERO_USD
-  return pair.liquidityMiningCampaigns.reduce((accumulator, campaign) => {
+  return pair.liquidityMiningCampaigns.reduce((accumulator: CurrencyAmount, campaign) => {
     return accumulator.add(getRemainingRewardsUSD(campaign, nativeCurrencyUSDPrice))
   }, ZERO_USD)
 }
 
-export function getPairMaximumApy(pair: Pair): Percent {
+export function getBestApyPairCampaign(pair: Pair): LiquidityMiningCampaign | null {
   // no liquidity mining campaigns check
-  if (pair.liquidityMiningCampaigns.length === 0) return new Percent('0', '100')
-  return pair.liquidityMiningCampaigns.reduce((maximumApy, liquidityMiningCampaign) => {
-    const apy = liquidityMiningCampaign.apy
-    return liquidityMiningCampaign.apy.greaterThan(maximumApy) ? apy : maximumApy
-  }, new Percent('0', '100'))
+  if (pair.liquidityMiningCampaigns.length === 0) return null
+  return pair.liquidityMiningCampaigns.reduce((campaign: LiquidityMiningCampaign | null, liquidityMiningCampaign) => {
+    if (!campaign || liquidityMiningCampaign.apy.greaterThan(campaign.apy)) return liquidityMiningCampaign
+    return campaign
+  }, null)
 }
 
 export function toLiquidityMiningCampaign(
@@ -59,6 +59,7 @@ export function toLiquidityMiningCampaign(
   targetedPair: Pair,
   targetedPairLpTokenTotalSupply: string,
   targetedPairReserveNativeCurrency: string,
+  kpiTokens: KpiToken[],
   campaign: SubgraphLiquidityMiningCampaign,
   nativeCurrency: Currency
 ): LiquidityMiningCampaign {
@@ -70,6 +71,12 @@ export function toLiquidityMiningCampaign(
       reward.token.symbol,
       reward.token.name
     )
+    const kpiToken = kpiTokens.find(kpiToken => kpiToken.address.toLowerCase() === reward.token.address.toLowerCase())
+    if (!!kpiToken)
+      return new PricedTokenAmount(
+        kpiToken,
+        parseUnits(new Decimal(reward.amount).toFixed(rewardToken.decimals), rewardToken.decimals).toString()
+      )
     const rewardTokenPriceNativeCurrency = new Price(
       rewardToken,
       nativeCurrency,
@@ -122,26 +129,6 @@ export function toLiquidityMiningCampaign(
       parseUnits(campaign.stakingCap, targetedPair.liquidityToken.decimals).toString()
     ),
     getAddress(campaign.address)
-  )
-}
-
-export function toLiquidityMiningCampaigns(
-  chainId: ChainId,
-  targetedPair: Pair,
-  targetedPairLpTokenTotalSupply: string,
-  targetedPairReserveNativeCurrency: string,
-  rawLiquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[],
-  nativeCurrency: Currency
-): LiquidityMiningCampaign[] {
-  return rawLiquidityMiningCampaigns.map(campaign =>
-    toLiquidityMiningCampaign(
-      chainId,
-      targetedPair,
-      targetedPairLpTokenTotalSupply,
-      targetedPairReserveNativeCurrency,
-      campaign,
-      nativeCurrency
-    )
   )
 }
 

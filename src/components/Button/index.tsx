@@ -8,6 +8,7 @@ import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import arrowIcon from './../../assets/svg/double-angle.svg'
 import { Text } from 'rebass'
+import { ReactComponent as CarrotIcon } from '../../assets/svg/carrot.svg'
 
 interface BaseProps {
   padding?: string
@@ -261,6 +262,35 @@ export function ButtonWithLink({ link, text, style }: { link: string; text: stri
         {text} <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
       </Text>
     </ButtonSecondary>
+  )
+}
+
+const CarrotIconWithMargin = styled(CarrotIcon)`
+  margin-right: 4px;
+`
+
+const CarrotButtonText = styled(Text)`
+  white-space: nowrap;
+  color: #fff;
+`
+
+const StyledButtonSecondary = styled(ButtonSecondary)`
+  padding: 0px 6px;
+  border-radius: 4px;
+  background-color: #ea6433;
+  width: auto;
+  height: 22px;
+  border: none;
+`
+
+export function CarrotButton({ link, text, style }: { link: string; text: string; style?: any }) {
+  return (
+    <StyledButtonSecondary as="a" style={style} href={link} rel="noopener noreferrer" target="_blank">
+      <CarrotIconWithMargin />
+      <CarrotButtonText fontWeight={700} fontSize={10} lineHeight="9px" letterSpacing="4%">
+        {text}
+      </CarrotButtonText>
+    </StyledButtonSecondary>
   )
 }
 

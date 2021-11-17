@@ -1,8 +1,8 @@
-import { Pair, CurrencyAmount, Percent, Token } from '@swapr/sdk'
+import { Pair, CurrencyAmount, Percent, Token, KpiToken } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
-import { getPairMaximumApy } from '../utils/liquidityMining'
+import { getBestApyPairCampaign } from '../utils/liquidityMining'
 import { useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAndStakingIndicator } from './useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAndStakingIndicator'
 
 export function useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
@@ -15,6 +15,7 @@ export function useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
     staked: boolean
+    containsKpiToken: boolean
   }[]
 } {
   const {
@@ -29,11 +30,13 @@ export function useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
     const aggregation = []
     for (let i = 0; i < allWrappedPairs.length; i++) {
       const wrappedPair = allWrappedPairs[i]
+      const bestCampaign = getBestApyPairCampaign(wrappedPair.pair)
       aggregation.push({
         pair: wrappedPair.pair,
         staked: wrappedPair.staked,
         liquidityUSD: wrappedPair.reserveUSD,
-        maximumApy: getPairMaximumApy(wrappedPair.pair)
+        maximumApy: bestCampaign ? bestCampaign.apy : new Percent('0', '100'),
+        containsKpiToken: !!bestCampaign?.rewards.some(reward => reward.token instanceof KpiToken)
       })
     }
     let filteredData = aggregation

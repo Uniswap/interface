@@ -1,15 +1,13 @@
-import { LiquidityMiningCampaign, Pair, PricedToken, PricedTokenAmount, Token, TokenAmount } from '@swapr/sdk'
+import { LiquidityMiningCampaign, Pair } from '@swapr/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
-import { useNativeCurrencyPricedTokenAmounts } from './useTokensDerivedNativeCurrency'
 import { usePairLiquidityTokenTotalSupply } from '../data/Reserves'
-import { getLpTokenPrice } from '../utils/prices'
 import { useNativeCurrency } from './useNativeCurrency'
 import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
 import { gql, useQuery } from '@apollo/client'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
-import { getAddress, parseUnits } from 'ethers/lib/utils'
-import { Decimal } from 'decimal.js-light'
+import { useKpiTokens } from './useKpiTokens'
+import { toLiquidityMiningCampaign } from '../utils/liquidityMining'
 
 const QUERY = gql`
   query($id: ID) {
@@ -43,73 +41,47 @@ interface QueryResult {
 export function useLiquidityMiningCampaign(
   targetedPair?: Pair,
   id?: string
-): { loading: boolean; campaign: LiquidityMiningCampaign | null } {
+): { loading: boolean; campaign: LiquidityMiningCampaign | null; containsKpiToken: boolean } {
   const { chainId } = useActiveWeb3React()
   const { loading, error, data } = useQuery<QueryResult>(QUERY, {
     variables: { id: id?.toLowerCase() || '' }
   })
   const nativeCurrency = useNativeCurrency()
-  const rewards = useMemo(() => {
-    if (!data || !chainId || !data.liquidityMiningCampaign) return []
-    const { rewards } = data.liquidityMiningCampaign
-    return rewards.map(reward => {
-      const token = new Token(
-        chainId,
-        getAddress(reward.token.address),
-        parseInt(reward.token.decimals),
-        reward.token.symbol,
-        reward.token.name
-      )
-      return new TokenAmount(
-        token,
-        parseUnits(new Decimal(reward.amount).toFixed(token.decimals), token.decimals).toString()
-      )
-    })
-  }, [chainId, data])
-  const { pricedTokenAmounts: pricedRewardAmounts } = useNativeCurrencyPricedTokenAmounts(rewards)
+  const rewardAddresses = useMemo(() => {
+    if (!data || !data.liquidityMiningCampaign) return []
+    return data.liquidityMiningCampaign.rewards.map(reward => reward.token.address.toLowerCase())
+  }, [data])
+  const { loading: loadingKpiTokens, kpiTokens } = useKpiTokens(rewardAddresses)
   const lpTokenTotalSupply = usePairLiquidityTokenTotalSupply(targetedPair)
   const { reserveNativeCurrency: targetedPairReserveNativeCurrency } = usePairReserveNativeCurrency(targetedPair)
 
   return useMemo(() => {
-    if (loading || !chainId || !targetedPair || !lpTokenTotalSupply) return { loading: true, campaign: null }
-    if (error || !data) return { loading: false, campaign: null }
-    const lpTokenNativeCurrencyPrice = getLpTokenPrice(
-      targetedPair,
-      nativeCurrency,
-      lpTokenTotalSupply.raw.toString(),
-      targetedPairReserveNativeCurrency.raw.toString()
-    )
-    const { address, decimals, symbol, name } = targetedPair.liquidityToken
-    const lpToken = new PricedToken(chainId, address, decimals, lpTokenNativeCurrencyPrice, symbol, name)
-    const staked = new PricedTokenAmount(
-      lpToken,
-      parseUnits(data.liquidityMiningCampaign.stakedAmount, decimals).toString()
-    )
+    if (loading || loadingKpiTokens || !chainId || !targetedPair || !lpTokenTotalSupply || loading || !kpiTokens)
+      return { loading: true, campaign: null, containsKpiToken: false }
+    if (error || !data) return { loading: false, campaign: null, containsKpiToken: false }
     return {
       loading: false,
-      campaign: new LiquidityMiningCampaign(
-        data.liquidityMiningCampaign.startsAt,
-        data.liquidityMiningCampaign.endsAt,
+      campaign: toLiquidityMiningCampaign(
+        chainId,
         targetedPair,
-        pricedRewardAmounts,
-        staked,
-        data.liquidityMiningCampaign.locked,
-        new TokenAmount(
-          targetedPair.liquidityToken,
-          parseUnits(data.liquidityMiningCampaign.stakingCap, decimals).toString()
-        ),
-        getAddress(data.liquidityMiningCampaign.address)
-      )
+        lpTokenTotalSupply.raw.toString(),
+        targetedPairReserveNativeCurrency.raw.toString(),
+        kpiTokens,
+        data.liquidityMiningCampaign,
+        nativeCurrency
+      ),
+      containsKpiToken: kpiTokens.length > 0
     }
   }, [
     chainId,
     data,
     error,
+    kpiTokens,
     loading,
+    loadingKpiTokens,
     lpTokenTotalSupply,
     nativeCurrency,
-    pricedRewardAmounts,
     targetedPair,
-    targetedPairReserveNativeCurrency.raw
+    targetedPairReserveNativeCurrency
   ])
 }
