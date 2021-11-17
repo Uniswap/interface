@@ -43,7 +43,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   CMC_STABLECOIN,
   KLEROS_LIST,
   GEMINI_LIST,
-  ARBRINKEBY_LIST,
+  ARBRINKEBY_LIST, // DEV ONLY
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 

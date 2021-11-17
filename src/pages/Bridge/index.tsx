@@ -7,7 +7,7 @@ import AppBody from '../AppBody'
 import { AssetSelector } from './AssetsSelector'
 import { RowBetween } from '../../components/Row'
 import ArrowIcon from '../../assets/svg/arrow.svg'
-import { BridgeActionPanel } from './BridgeActionPanel'
+import { BridgeActionPanel } from './ActionPanel/BridgeActionPanel'
 import { BridgeModal } from './BridgeModals/BridgeModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { BridgeTransactionsSummary } from './BridgeTransactionsSummary'
@@ -156,6 +156,7 @@ export default function Bridge() {
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
+      onCurrencySelection(tx.assetAddress || 'ETH')
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       setModalData({
@@ -165,12 +166,12 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [setModalData]
+    [onCurrencySelection, setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
     if (!bridgeService) return
-    await bridgeService.triggerOutboxEth(collectableTx)
+    await bridgeService.collect(collectableTx)
     setStep(BridgeStep.Success)
   }, [bridgeService, collectableTx])
 
@@ -188,14 +189,14 @@ export default function Bridge() {
 
   return (
     <Wrapper>
+      <Tabs
+        collectableTxAmount={collectableTxAmount}
+        isCollecting={isCollecting}
+        isCollectableFilter={isCollectableFilter}
+        handleResetBridge={handleResetBridge}
+        handleCollectTab={handleCollectTab}
+      />
       <AppBody>
-        <Tabs
-          collectableTxAmount={collectableTxAmount}
-          isCollecting={isCollecting}
-          isCollectableFilter={isCollectableFilter}
-          handleResetBridge={handleResetBridge}
-          handleCollectTab={handleCollectTab}
-        />
         <RowBetween mb="12px">
           <Title>{isCollecting ? 'Collect' : 'Swapr Bridge'}</Title>
         </RowBetween>
@@ -257,7 +258,6 @@ export default function Bridge() {
           isNetworkConnected={isNetworkConnected}
           step={step}
           setStep={setStep}
-          typedValue={typedValue}
         />
       </AppBody>
       {step !== BridgeStep.Collect && bridgeService && !!bridgeSummaries.length && (

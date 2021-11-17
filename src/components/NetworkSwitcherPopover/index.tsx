@@ -14,6 +14,8 @@ interface NetworkSwitcherPopoverProps {
   placement?: Placement
 }
 
+const TESTNETS = [4, 46211]
+
 export default function NetworkSwitcherPopover({ children, modal, placement }: NetworkSwitcherPopoverProps) {
   const closeModals = useCloseModals()
   const { connector, chainId } = useActiveWeb3React()

@@ -31,6 +31,7 @@ export type BridgeTxn = {
   sender: string
   assetName: string
   assetType: BridgeAssetType
+  assetAddress?: string
   value: string
   txHash: string
   blockNumber?: number
@@ -48,7 +49,7 @@ export type BridgeTransactionStatus = 'failed' | 'confirmed' | 'pending' | 'rede
 
 export type BridgeTransactionSummary = Pick<
   BridgeTxn,
-  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber' | 'timestampResolved'
+  'txHash' | 'assetName' | 'value' | 'batchIndex' | 'batchNumber' | 'timestampResolved' | 'assetAddress'
 > & {
   fromChainId: ChainId
   toChainId: ChainId

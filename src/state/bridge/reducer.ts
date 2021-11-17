@@ -31,9 +31,7 @@ export enum BridgeModalStatus {
   INITIATED = 'INITIATED',
   ERROR = 'ERROR',
   COLLECTING = 'COLLECTING',
-  DISCLAIMER = 'DISCLAIMER',
-  APPROVE = 'APPROVE',
-  APPROVING = 'APPROVING'
+  DISCLAIMER = 'DISCLAIMER'
 }
 
 export enum BridgeTxsFilter {
@@ -54,7 +52,7 @@ export interface BridgeState {
 
 const initialState: BridgeState = {
   typedValue: '',
-  currencyId: 'ETH',
+  currencyId: '',
   fromNetwork: {
     chainId: 1
   },
@@ -67,7 +65,7 @@ const initialState: BridgeState = {
   modal: {
     status: BridgeModalStatus.CLOSED,
     symbol: '',
-    typedValue: 'ETH',
+    typedValue: '',
     fromNetwork: {
       chainId: 1
     },
