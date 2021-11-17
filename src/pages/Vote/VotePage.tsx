@@ -100,8 +100,9 @@ import { useDarkModeManager } from "state/user/hooks";
 import { kibaAbi } from "components/ShowSellTax";
 import { useWeb3React } from "@web3-react/core";
 import { SupportedChainId } from "constants/chains";
-import useBUSDPrice, { useBinanceTokenBalance } from "utils/binance.utils";
+import { useBinanceTokenBalance, useBinanceTokenBalanceRefreshed } from "utils/binance.utils";
 import { binanceTokens } from "utils/binance.tokens";
+import { useAllTransactions } from "state/transactions/hooks";
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
 `;
@@ -188,26 +189,46 @@ const ProposerAddressLink = styled(ExternalLink)`
 export const useKiba = (account?: string | null) => {
   const { chainId } = useWeb3React()
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
-  const kibaCoin = new Token(
+  const kibaCoin = React.useMemo(() => new Token(
     1,
     isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
     9,
     "Kiba",
     "Kiba Inu"
-  );
+  ), [isBinance])
 
   const kiba: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     kibaCoin
   );
-
-  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341')
+  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', account, chainId)
   
   return React.useMemo(() => {
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
-  }, [kiba, isBinance, bKiba.balance, account, chainId]);
+  }, [kiba, account, isBinance, bKiba.balance]);;
 };
 
+export const useKibaRefreshedBinance = (account?: string | null, chainId?: number) => {
+  const  isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
+  const kibaCoin =React.useMemo(() =>  new Token(
+    1,
+    isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
+    9,
+    "Kiba",
+    "Kiba Inu"
+  ), [isBinance])
+
+  const kiba: CurrencyAmount<Token> | undefined = useTokenBalance(
+    account ?? undefined,
+    kibaCoin
+  );  
+
+  const bKiba =  useBinanceTokenBalance('0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341', account, chainId)
+  
+  return React.useMemo(() => {
+    return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
+  }, [kiba, isBinance, bKiba.balance  ]);
+};
 export const useStimulusBalance = (account?: string | null) => {
   const stimulusCoin = new Token(
     1,
@@ -227,14 +248,14 @@ export const useStimulusBalance = (account?: string | null) => {
   }, [stimulusCoin, stimulusBalance]);
 };
 
-export default function VotePage({
-  match: {
-    params: { governorIndex, id },
-  },
-}: RouteComponentProps<{ governorIndex: string; id: string }>) {
-  const web3 = useActiveWeb3React();
-  const { account, chainId } = web3;
-  const isBinance = chainId === SupportedChainId.BINANCE;
+
+const GainsText = styled(TYPE.white)`
+font-size:22px;
+font-family:'Bangers', cursive;`
+
+export default function VotePage() {
+  const {account,chainId} = useActiveWeb3React();
+  const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0x31d3778a7ac0d98c4aaa347d8b6eaf7977448341' : "0x4b2c54b80b77580dc02a0f6734d3bad733f50900",
@@ -242,19 +263,13 @@ export default function VotePage({
     "Kiba",
     "Kiba Inu"
   );
-
-  const kiba: CurrencyAmount<Token>| any | undefined = useTokenBalance(
-    account ?? undefined,
-    kibaCoin
-  );
-
-  const kibaBalance = useKiba(account)
-  const storedTrumpBalance = useMemo(() => {
+  const kibaBalance = useKibaRefreshedBinance(account, chainId)
+  const storedKibaBalance = useMemo(() => {
     return localStorage.getItem("trumpBalance") || undefined;
   }, [localStorage.getItem("trumpBalance")]);
 
   const [isTrackingGains, setIsTrackingGains] = useState<boolean>(
-    storedTrumpBalance !== undefined && +storedTrumpBalance > 0 && !!account
+    storedKibaBalance !== undefined && +storedKibaBalance > 0 && !!account
   );
 
   const date = new Date();
@@ -292,7 +307,7 @@ export default function VotePage({
     }
   };
 
-  const {routerADD, routerABI } = React.useMemo(() => {
+  const { routerADD, routerABI } = React.useMemo(() => {
     return isBinance ? {
       routerADD: pancakeAddress,
       routerABI: pancakeAbi
@@ -300,21 +315,21 @@ export default function VotePage({
   }, [isBinance])
 
   useEffect(() => {
-    if (storedTrumpBalance && kibaBalance) {
+    if (storedKibaBalance && kibaBalance) {
       if (
-        (+storedTrumpBalance - +kibaBalance.toFixed(2)).toFixed(2) ===
+        (+storedKibaBalance - +kibaBalance.toFixed(2)).toFixed(2) ===
         kibaBalance.toFixed(2)
       ) {
-      } else if (+storedTrumpBalance - +kibaBalance.toFixed(2) < 0) {
+      } else if (+storedKibaBalance - +kibaBalance.toFixed(2) < 0) {
       }
     } 
   }, []);
 
   const rawTrumpCurrency = useMemo(() => {
-    if (!storedTrumpBalance || !kibaBalance) return null;
-    const calc = +Math.round(+kibaBalance?.toFixed(2) - +storedTrumpBalance);
+    if (!storedKibaBalance || !kibaBalance) return null;
+    const calc = +Math.round(+kibaBalance?.toFixed(2) - +storedKibaBalance);
     return calc;
-  }, [storedTrumpBalance, kibaBalance, isTrackingGains]);
+  }, [storedKibaBalance, kibaBalance, isTrackingGains]);
 
   const [trumpGainsUSD, setTrumpGainsUSD] = React.useState("-");
   const [stimGainsUSD, setStimGainsUSD] = React.useState("-");
@@ -350,7 +365,7 @@ export default function VotePage({
     } catch (err) {
       console.error(err);
     }
-  }, [rawTrumpCurrency, isBinance, kibaBalance, storedTrumpBalance]);
+  }, [rawTrumpCurrency, isBinance, kibaBalance, storedKibaBalance]);
 
   const [trumpBalanceUSD, setTrumpBalanceUSD] = React.useState("");
   React.useEffect(() => {
@@ -384,12 +399,7 @@ export default function VotePage({
     }
   }, [kibaBalance,  isBinance]);
 const [darkMode] = useDarkModeManager()
- 
-  const goldBalance = useTrumpGoldBalance(account)
-  
-  const GainsText = styled(TYPE.white)`
-  font-size:22px;
-  font-family:'Bangers', cursive;`
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -397,7 +407,7 @@ const [darkMode] = useDarkModeManager()
     
 
             <div style={{display:'block', width:'100%',marginBottom:'2rem'}}><GainsText style={{fontSize:32}}>KibaGains</GainsText></div>
-              {isTrackingGains && (
+              {isTrackingGains && kibaBalance && +kibaBalance?.toFixed(0) > 0 && (
                  <GreyCard style={{flexFlow: 'row nowrap', background:'#222',opacity:'.95',display:'inline-block', justifyContent:'center',marginBottom:15}}> <TYPE.main>
                       <GainsText style={{display:'inline'}}>
                       <Clock style={{marginRight:5}} />
@@ -439,14 +449,14 @@ const [darkMode] = useDarkModeManager()
 
                       {isTrackingGains === true && (
                       <GainsText  className="d-flex">
-                        {storedTrumpBalance !== undefined &&
+                        {storedKibaBalance !== undefined &&
                           kibaBalance !== undefined &&
-                          kibaBalance?.toFixed(0) &&
+                          +kibaBalance?.toFixed(0) > 0 &&
                           account !== undefined && (
                             <React.Fragment>
                               <Trans>{`Kiba Gains`} </Trans> &nbsp;
                               <span>{Number((
-                                +kibaBalance?.toFixed(2) - +storedTrumpBalance
+                                +kibaBalance?.toFixed(2) - +storedKibaBalance
                               ).toFixed(2)).toLocaleString()} </span>
                               {isTrackingGains && trumpGainsUSD && (
                                 <Badge style={{ color:"#FFF",paddingTop: 5 }}>

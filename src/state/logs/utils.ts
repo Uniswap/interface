@@ -5,7 +5,10 @@ import { HttpLink } from 'apollo-link-http'
 import moment from 'moment'
 import React from 'react'
 import useInterval from 'hooks/useInterval'
-
+import _, { isEqual } from 'lodash'
+import { request } from 'graphql-request'
+import { INFO_CLIENT } from './bscUtils'
+import { useWeb3React  } from '@web3-react/core'
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -36,9 +39,8 @@ export const blockClient = new ApolloClient({
  * @param filter the filter to convert
  */
 export function filterToKey(filter: EventFilter): string {
-  return `${filter.address ?? ''}:${
-    filter.topics?.map((topic) => (topic ? (Array.isArray(topic) ? topic.join(';') : topic) : '\0'))?.join('-') ?? ''
-  }`
+  return `${filter.address ?? ''}:${filter.topics?.map((topic) => (topic ? (Array.isArray(topic) ? topic.join(';') : topic) : '\0'))?.join('-') ?? ''
+    }`
 }
 
 
@@ -53,13 +55,13 @@ const TokenFields = `
     untrackedVolumeUSD
     totalLiquidity
     txCount
-  }
+  } 
 `
-export const TOKEN_DATA = (tokenAddress:string, block:any) => {
+export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
   const queryString = `
-    ${TokenFields}
+    ${isBnb ? TokenFields.replace('derivedETH', 'derivedBNB').replace('txCount', 'totalTransactions') : TokenFields}
     query tokens {
-      tokens(${block ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
+      tokens(${block && block !== null && typeof(block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){
@@ -73,7 +75,7 @@ export const TOKEN_DATA = (tokenAddress:string, block:any) => {
   return gql(queryString)
 }
 
-export const get2DayPercentChange = (valueNow:any, value24HoursAgo:any, value48HoursAgo:any) => {
+export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value48HoursAgo: any) => {
   // get volume info for both 24 hour periods
   const currentChange = parseFloat(valueNow) - parseFloat(value24HoursAgo)
   const previousChange = parseFloat(value24HoursAgo) - parseFloat(value48HoursAgo)
@@ -86,7 +88,7 @@ export const get2DayPercentChange = (valueNow:any, value24HoursAgo:any, value48H
   return [currentChange, adjustedPercentChange]
 }
 
-export const getPercentChange = (valueNow:any, value24HoursAgo:any) => {
+export const getPercentChange = (valueNow: any, value24HoursAgo: any) => {
   const adjustedPercentChange =
     ((parseFloat(valueNow) - parseFloat(value24HoursAgo)) / parseFloat(value24HoursAgo)) * 100
   if (isNaN(adjustedPercentChange) || !isFinite(adjustedPercentChange)) {
@@ -94,6 +96,8 @@ export const getPercentChange = (valueNow:any, value24HoursAgo:any) => {
   }
   return adjustedPercentChange
 }
+
+
 
 export const GET_BLOCK = gql`
   query blocks($timestampFrom: Int!, $timestampTo: Int!) {
@@ -110,7 +114,7 @@ export const GET_BLOCK = gql`
   }
 `
 
-export async function getBlockFromTimestamp(timestamp:number) {
+export async function getBlockFromTimestamp(timestamp: number) {
   const result = await blockClient.query({
     query: GET_BLOCK,
     variables: {
@@ -124,13 +128,13 @@ export async function getBlockFromTimestamp(timestamp:number) {
 
 export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any) => {
   const utcCurrentTime = moment().utc()
-  const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
-  const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
+  const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
+  const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
   const address = addy?.toLowerCase()
   // initialize data arrays
-  let data: Record<string ,any> = {}
-  let oneDayData: Record<string ,any> = {}
-  let twoDayData: Record<string ,any> = {}
+  let data: Record<string, any> = {}
+  let oneDayData: Record<string, any> = {}
+  let twoDayData: Record<string, any> = {}
 
   try {
 
@@ -145,11 +149,11 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 
     // get results from 24 hours in past
     const oneDayResult = await client.query({
-      query: TOKEN_DATA(address,  dayOneBlock),
+      query: TOKEN_DATA(address, dayOneBlock),
       fetchPolicy: 'network-only',
     })
     oneDayData = oneDayResult.data.tokens[0]
-    
+
     // get results from 48 hours in past
     const twoDayResult = await client.query({
       query: TOKEN_DATA(address, dayTwoBlock),
@@ -168,21 +172,21 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 
     let oneDayHistory = oneDayData?.[addy]
     let twoDayHistory = twoDayData?.[addy]
-  // catch the case where token wasnt in top list in previous days
-  if (!oneDayHistory) {
-    const oneDayResult = await client.query({
-      query: TOKEN_DATA(addy, dayOneBlock),
-      fetchPolicy: 'cache-first',
-    })
-    oneDayHistory = oneDayResult.data.tokens[0]
-  }
-  if (!twoDayHistory) {
-    const twoDayResult = await client.query({
-      query: TOKEN_DATA(addy, dayTwoBlock),
-      fetchPolicy: 'cache-first',
-    })
-    twoDayHistory = twoDayResult.data.tokens[0]
-  }
+    // catch the case where token wasnt in top list in previous days
+    if (!oneDayHistory) {
+      const oneDayResult = await client.query({
+        query: TOKEN_DATA(addy, dayOneBlock),
+        fetchPolicy: 'cache-first',
+      })
+      oneDayHistory = oneDayResult.data.tokens[0]
+    }
+    if (!twoDayHistory) {
+      const twoDayResult = await client.query({
+        query: TOKEN_DATA(addy, dayTwoBlock),
+        fetchPolicy: 'cache-first',
+      })
+      twoDayHistory = twoDayResult.data.tokens[0]
+    }
     if (!twoDayData) {
       const twoDayResult = await client.query({
         query: TOKEN_DATA(address, {}),
@@ -198,10 +202,11 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
       +twoDayData['tradeVolumeUSD'] ?? 0
     )
 
+    console.log(data)
     // calculate percentage changes and daily changes
     const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
       +data.untrackedVolumeUSD,
-    +oneDayData?.untrackedVolumeUSD ?? 0,
+      +oneDayData?.untrackedVolumeUSD ?? 0,
       +twoDayData?.untrackedVolumeUSD ?? 0
     )
 
@@ -213,16 +218,15 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     )
 
     const priceChangeUSD = getPercentChange(
-        +data?.derivedETH * (+ethPrice),
-        oneDayData?.derivedETH ? +oneDayData?.derivedETH * +ethPriceOld : 0
-
+      +data?.derivedETH * (+ethPrice),
+      oneDayData?.derivedETH ? +oneDayData?.derivedETH * +ethPriceOld : 0
     )
 
     const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedETH
     const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
 
     // set data
-    data.priceUSD = (((+data?.derivedETH) * (+ethPrice)) ) 
+    data.priceUSD = (((+data?.derivedETH) * (+ethPrice)))
     data.totalLiquidityUSD = currentLiquidityUSD
     data.oneDayVolumeUSD = oneDayVolumeUSD
     data.volumeChangeUSD = volumeChangeUSD
@@ -249,8 +253,8 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
 }
 
 
-const getTokenTransactions = async (allPairsFormatted:any) => {
-  const transactions:{mints?:any[]; burns?:any[]; swaps?:any[];} = {}
+const getTokenTransactions = async (allPairsFormatted: any) => {
+  const transactions: { mints?: any[]; burns?: any[]; swaps?: any[]; } = {}
   try {
     const result = await client.query({
       query: FILTERED_TRANSACTIONS,
@@ -268,35 +272,46 @@ const getTokenTransactions = async (allPairsFormatted:any) => {
   return transactions
 }
 
-export function useTokenTransactions(tokenAddress:string, interval:null | number = null) {
-  const [state,updateTokenTxns] = React.useState<any>({})
-  const tokenTxns = state?.[tokenAddress]?.txns
-  async function checkForTxns() {
-    const allPairsFormatted = await getTokenPairs(tokenAddress);
-    if ((!tokenTxns && allPairsFormatted)) {
-      const transactions = await getTokenTransactions(allPairsFormatted.map((a:any) => a.id))
-      updateTokenTxns({...state, [tokenAddress]: { txns: transactions}})
-    }
-  }
-  useInterval(checkForTxns, interval)
+export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
+  const [state, updateTokenTxns] = React.useState<any>({})
+  const tokenTxns = state?.[tokenAddress]
+  const [allPairsFormatted, setAllPairsFormatted] = React.useState<any[]>()
+  const {chainId } = useWeb3React()
   React.useEffect(() => {
-    if (tokenAddress && !tokenTxns) {
-      checkForTxns()
-    }
+      getTokenPairs(tokenAddress).then(setAllPairsFormatted);
   }, [tokenAddress])
 
-  return tokenTxns || []
+  async function checkForTxns() {
+    if (allPairsFormatted?.length) {
+      const transactions = await getTokenTransactions(allPairsFormatted?.map((a: any) => a.id))
+      if (isEqual(transactions, tokenTxns?.txns) === false) {
+        console.log("Updating transaction data...")
+        console.log(transactions)
+        console.log("Time since last fetch, " + moment(new Date()).diff(moment(tokenTxns?.lastFetched), 'seconds') + " seconds");
+        updateTokenTxns({ ...state, [tokenAddress]: { txns: transactions, lastFetched: new Date() } })
+      }
+    }
+  }
+
+  React.useEffect(() => {
+    if (allPairsFormatted?.length && chainId === 1) 
+        checkForTxns();
+  }, [tokenAddress, chainId, allPairsFormatted, tokenTxns, interval])
+
+  useInterval(checkForTxns, interval, false)
+  const { txns: data, lastFetched } = React.useMemo(() => tokenTxns ? tokenTxns : { txns: [], lastFetched: undefined }, [tokenTxns, tokenAddress])
+  return { data, lastFetched };
 }
 
 
-const getTokenPairs = async (tokenAddress:any) => {
+const getTokenPairs = async (tokenAddress: any) => {
   try {
     // fetch all current and historical data
     const result = await client.query({
       query: TOKEN_DATA(tokenAddress, null),
       fetchPolicy: 'cache-first',
     })
-    console.log(result) 
+    console.log(result)
     return result.data?.['pairs0'].concat(result.data?.['pairs1'])
   } catch (e) {
     console.log(e)
@@ -305,7 +320,7 @@ const getTokenPairs = async (tokenAddress:any) => {
 
 
 
-export const ETH_PRICE = (block?:any) => {
+export const ETH_PRICE = (block?: any) => {
   const queryString = block
     ? `
     query bundles {
@@ -325,7 +340,7 @@ export const ETH_PRICE = (block?:any) => {
   return gql(queryString)
 }
 export function useEthPrice() {
-  const [state, setState] = React.useState<{ethPrice?:number | string,ethPriceOld?:number | string,ethPercentChange?:number | string}>({})
+  const [state, setState] = React.useState<{ ethPrice?: number | string, ethPriceOld?: number | string, ethPercentChange?: number | string }>({})
   const ethPrice = state?.ethPrice
   const ethPriceOld = state?.ethPriceOld;
   const ethPercentChange = state?.ethPercentChange
@@ -333,19 +348,19 @@ export function useEthPrice() {
     async function checkForEthPrice() {
       if (!ethPrice) {
         const [ethPriceFetched, ethPriceOld, ethPercentChange] = await getEthPrice()
-        setState({ethPrice: ethPriceFetched, ethPriceOld: ethPriceOld, ethPercentChange: ethPercentChange})
+        setState({ ethPrice: ethPriceFetched, ethPriceOld: ethPriceOld, ethPercentChange: ethPercentChange })
       }
     }
     checkForEthPrice()
   }, [ethPrice])
 
-  return [ethPrice,ethPriceOld,ethPercentChange]
+  return [ethPrice, ethPriceOld, ethPercentChange]
 }
 
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
- const getEthPrice = async () => {
+const getEthPrice = async () => {
   const utcCurrentTime = moment().utc()
   const timestamp = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
 
@@ -363,7 +378,7 @@ export function useEthPrice() {
       query: ETH_PRICE(oneDayBlock),
       fetchPolicy: 'network-only',
     })
-   
+
     const currentPrice = +result?.data?.bundles[0]?.ethPrice
     const oldPrice = +resultOneDay?.data?.bundles[0]?.ethPrice
     ethPrice = currentPrice
@@ -376,30 +391,38 @@ export function useEthPrice() {
   return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 export function useTokenData(tokenAddress: string, interval: null | number = null) {
-  const[tokenData, setTokenData] = React.useState<{[address: string]: any}>({
-    
+  const [tokenData, setTokenData] = React.useState<{ [address: string]: any }>({
+
   })
-
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
-
-  const intervalCallback =() =>  {
-    if (!tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {
-    getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-      setTokenData({...tokenData, [tokenAddress]: data })
-    })
-  }
-}
-   useInterval(intervalCallback, interval)
-
-  React.useEffect(() => {
-    if (!tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {
+  const intervalCallback = () => {
+    console.log(`Running interval driven data fetch..`)
+    if(tokenAddress && ethPrice && ethPriceOld) {
+      console.log(`Have necessary parameters, checking for updates..`)
       getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-        setTokenData({...tokenData, [tokenAddress]: data })
+        if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
+          console.log("updating token data, price changed.")
+          setTokenData({ ...tokenData, [tokenAddress]: data })
+        }
       })
     }
-  }, [tokenAddress, tokenData, ethPrice, ethPriceOld])
+  }
+  // React.useEffect(() => {
+  //   if (!tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {
+  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
+  //       setTokenData({ ...tokenData, [tokenAddress]: data })
+  //     })
+  //   } else if (tokenData?.[tokenAddress] && tokenAddress && ethPrice && ethPriceOld) {  
+  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
+  //       if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
+  //         console.log("updating token data, price changed.")
+  //         setTokenData({ ...tokenData, [tokenAddress]: data })
+  //       }
+  //     })
+  //   }
+  // }, [tokenAddress, tokenData, ethPrice, ethPriceOld])
+  useInterval(intervalCallback, interval, false)
   if (!tokenAddress) return {}
-
   return tokenData?.[tokenAddress] || {}
 }
 /**
@@ -421,6 +444,77 @@ export function keyToFilter(key: string): EventFilter {
   }
 }
 
+
+export const USER_TRANSACTIONS = gql`
+  query transactions($user: Bytes!) {
+    mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
+      id
+      transaction {
+        id
+        timestamp
+      }
+      pair {
+        id
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
+      }
+      to
+      liquidity
+      amount0
+      amount1
+      amountUSD
+    }
+    burns(orderBy: timestamp, orderDirection: desc, where: { sender: $user }) {
+      id
+      transaction {
+        id
+        timestamp
+      }
+      pair {
+        id
+        token0 {
+          symbol
+        }
+        token1 {
+          symbol
+        }
+      }
+      sender
+      to
+      liquidity
+      amount0
+      amount1
+      amountUSD
+    }
+    swaps(orderBy: timestamp, orderDirection: desc, where: { to: $user, from: $user}) {
+      id
+      transaction {
+        id
+        timestamp
+      }
+      pair {
+        token0 {
+          symbol
+        }
+        token1 {
+          symbol
+        }
+      }
+      amount0In
+      amount0Out
+      amount1In
+      amount1Out
+      amountUSD
+      to
+    }
+  }
+`
 
 export const FILTERED_TRANSACTIONS = gql`
   query ($allPairs: [Bytes]!) {
@@ -470,6 +564,7 @@ export const FILTERED_TRANSACTIONS = gql`
       transaction {
         id
         timestamp
+        blockNumber
       }
       id
       pair {
@@ -489,6 +584,7 @@ export const FILTERED_TRANSACTIONS = gql`
       amountUSD
       to
       from
+      sender
     }
   }
 `
