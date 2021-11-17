@@ -28,7 +28,7 @@ export default function Updater(): null {
     Object.keys(lists).forEach(url => {
       fetchList(url).catch((error: Error) => console.debug('interval list fetching error', error))
     })
-    fetchCarrotList().catch((error: Error) => console.debug('interval list fetching error', error))
+    fetchCarrotList().catch((error: Error) => console.debug('carrot interval list fetching error', error))
   }, [isWindowVisible, chainId, lists, fetchCarrotList, fetchList])
 
   // fetch all lists every 10 minutes, but only after we initialize library
@@ -38,7 +38,8 @@ export default function Updater(): null {
     if (account) {
       const carrotList = lists['CARROT']
       if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
-        fetchCarrotList().catch((error: Error) => console.debug('list added fetching error', error))
+        console.log('What')
+        fetchCarrotList().catch((error: Error) => console.debug('carrot list added fetching error', error))
       }
     }
   }, [account, fetchCarrotList, lists])
@@ -55,7 +56,8 @@ export default function Updater(): null {
       })
     const carrotList = lists['CARROT']
     if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
-      fetchCarrotList().catch((error: Error) => console.debug('list added fetching error', error))
+      console.log('What')
+      fetchCarrotList().catch((error: Error) => console.debug('carrot list added fetching error', error))
     }
   }, [dispatch, fetchCarrotList, fetchList, library, lists])
 
