@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address'
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useActiveWeb3React } from '.'
 import { immediateCarrotSubgraphClients } from '../apollo/client'
@@ -12,6 +12,7 @@ import getTokenList from '../utils/getTokenList'
 import resolveENSContentHash from '../utils/resolveENSContentHash'
 import { gql } from 'graphql-request'
 import carrotListLogoUrl from '../assets/images/token-list/carrot-token-list.png'
+import { KPI_TOKEN_CREATORS } from '../constants'
 
 export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
   const { chainId, library } = useActiveWeb3React()
@@ -52,10 +53,9 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
   )
 }
 
-// TODO: filter stuff by creator (which would be DXdao)
 const KPI_TOKENS_QUERY = gql`
-  query kpiTokens($creator: Bytes) {
-    kpiTokens(first: 1000) {
+  query kpiTokens($creators: [Bytes!]) {
+    kpiTokens(first: 1000, where: { creator_in: $creators }) {
       address: id
       symbol
       name
@@ -74,22 +74,23 @@ interface KpiTokensQueryResult {
 export function useFetchCarrotListCallback(): (sendDispatch?: boolean) => Promise<TokenList> {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
-  /* const creator = useMemo(
-    () => (chainId && DXDAO_AVATAR_ADDRESS[chainId] ? DXDAO_AVATAR_ADDRESS[chainId].toLowerCase() : ''),
+  const validCreators = useMemo(
+    () =>
+      chainId && KPI_TOKEN_CREATORS[chainId] ? KPI_TOKEN_CREATORS[chainId].map(creator => creator.toLowerCase()) : [],
     [chainId]
-  ) */
+  )
 
   // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
     async (sendDispatch = true) => {
-      // TODO: if creator is not DXdao or creator is undefined, return
-      if (!chainId) throw new Error(`no chain id available`)
+      if (!chainId || !validCreators || validCreators.length === 0)
+        throw new Error(`no chain id or valid creators available`)
       const client = immediateCarrotSubgraphClients[chainId]
       if (!client) throw new Error(`no carrot subgraph client available`)
       const requestId = nanoid()
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: 'CARROT' }))
       try {
-        const response = await client.request<KpiTokensQueryResult>(KPI_TOKENS_QUERY)
+        const response = await client.request<KpiTokensQueryResult>(KPI_TOKENS_QUERY, { creators: validCreators })
         const listAndTokensUrl = `${window.location.origin}${carrotListLogoUrl}`
         const tokenList = {
           name: 'DXdao Carrot KPI tokens',
@@ -129,6 +130,6 @@ export function useFetchCarrotListCallback(): (sendDispatch?: boolean) => Promis
         throw error
       }
     },
-    [chainId, dispatch]
+    [chainId, validCreators, dispatch]
   )
 }
