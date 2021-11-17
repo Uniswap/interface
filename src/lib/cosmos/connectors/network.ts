@@ -3,14 +3,14 @@ import { Network } from '@web3-react/network'
 import { SupportedChainId } from 'constants/chains'
 
 export const URLS = {
-  [SupportedChainId.MAINNET]: [`https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.ROPSTEN]: [`https://ropsten.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.RINKEBY]: [`https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.GOERLI]: [`https://goerli.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.KOVAN]: [`https://kovan.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.OPTIMISM]: [`https://optimism-mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  // [SupportedChainId.]: [`https://polygon-mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
-  [SupportedChainId.ARBITRUM_ONE]: [`https://arbitrum-mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847`],
+  [SupportedChainId.MAINNET]: [`https://eth-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.ROPSTEN]: [`https://eth-ropsten.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.RINKEBY]: [`https://eth-rinkeby.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.GOERLI]: [`https://eth-goerli.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.KOVAN]: [`https://eth-kovan.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.OPTIMISM]: [`https://optimism-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  // [SupportedChainId.POLYGON]: [`https://polygon-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.ARBITRUM_ONE]: [`https://arbitrum-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
 }
 
 export const [network, hooks] = initializeConnector<Network>(

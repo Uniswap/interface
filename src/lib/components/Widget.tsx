@@ -1,8 +1,10 @@
+import { Provider as EthProvider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
-import { Provider as AtomProvider } from 'jotai'
+import { Provider as AtomProvider, useAtom } from 'jotai'
 import { Provider as I18nProvider } from 'lib/i18n'
+import storeAtom from 'lib/state'
 import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 import { Provider as DialogProvider } from './Dialog'
 
@@ -27,9 +29,15 @@ export interface WidgetProps {
   children: ReactNode
   theme?: Partial<Theme>
   locale?: SupportedLocale
+  provider?: EthProvider
 }
 
-export default function Widget({ children, theme, locale = DEFAULT_LOCALE }: WidgetProps) {
+export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider }: WidgetProps) {
+  const [, setState] = useAtom(storeAtom)
+  useEffect(() => {
+    setState((prev) => ({ ...prev, provider }))
+  }, [provider, setState])
+
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <AtomProvider>

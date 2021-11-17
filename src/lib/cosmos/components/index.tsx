@@ -5,10 +5,14 @@ import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
 import { Connector } from '@web3-react/types'
 import { SupportedChainId } from 'constants/chains'
+import { useAtom } from 'jotai'
+import { providerAtom } from 'lib/cosmos.decorator'
+import styled from 'lib/theme'
 import { useEffect, useState } from 'react'
 
 import { connectors } from '../connectors'
-
+import { hooks as metaMaskHooks, metaMask } from '../connectors/metaMask'
+import { hooks as networkHooks, network } from '../connectors/network'
 function getName(connector: Connector) {
   if (connector instanceof MetaMask) {
     return 'MetaMask'
@@ -173,11 +177,36 @@ function Connect({
   }
 }
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+const ConnectorWrapper = styled.div`
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  margin: 14px;
+  padding: 14px;
+`
 export function Connectors() {
+  const [, setProvider] = useAtom(providerAtom)
+  const isMetaMaskActive = metaMaskHooks.useIsActive()
+  const isNetworkActive = networkHooks.useIsActive()
+  useEffect(() => {
+    if (isMetaMaskActive) {
+      setProvider(metaMask.provider as any)
+    } else if (isNetworkActive) {
+      setProvider(network.provider as any)
+    } else {
+      setProvider(undefined)
+    }
+  }, [isMetaMaskActive, isNetworkActive, setProvider])
   return (
-    <div>
+    <Wrapper>
       {connectors.map(([connector, hooks], i) => (
-        <div key={i}>
+        <ConnectorWrapper key={i}>
           <div>
             <Status connector={connector} hooks={hooks} />
             <br />
@@ -186,8 +215,8 @@ export function Connectors() {
             <br />
           </div>
           <Connect connector={connector} hooks={hooks} />
-        </div>
+        </ConnectorWrapper>
       ))}
-    </div>
+    </Wrapper>
   )
 }
