@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
@@ -48,7 +48,8 @@ export default function LiquidityMiningCampaign({
   const token0 = useToken(currencyIdA)
   const token1 = useToken(currencyIdB)
   const wrappedPair = usePair(token0 || undefined, token1 || undefined)
-  const { campaign } = useLiquidityMiningCampaign(wrappedPair[1] || undefined, liquidityMiningCampaignId)
+  const pairOrUndefined = useMemo(() => wrappedPair[1] || undefined, [wrappedPair])
+  const { campaign, containsKpiToken } = useLiquidityMiningCampaign(pairOrUndefined, liquidityMiningCampaignId)
   const lpTokenBalance = useTokenBalance(account || undefined, wrappedPair[1]?.liquidityToken)
 
   if (token0 && token1 && (wrappedPair[0] === PairState.NOT_EXISTS || wrappedPair[0] === PairState.INVALID))
@@ -101,7 +102,7 @@ export default function LiquidityMiningCampaign({
               </AddLiquidityButtonComponent>
             </ButtonRow>
           </TitleRow>
-          <LiquidityMiningCampaignView campaign={campaign} />
+          <LiquidityMiningCampaignView campaign={campaign} containsKpiToken={containsKpiToken} />
         </AutoColumn>
       </AutoColumn>
     </PageWrapper>

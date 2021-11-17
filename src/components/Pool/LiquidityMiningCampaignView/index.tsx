@@ -53,9 +53,10 @@ const StyledCard = styled(DarkCard)`
 
 interface PairViewProps {
   campaign?: LiquidityMiningCampaign | null
+  containsKpiToken?: boolean
 }
 
-function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
+function LiquidityMiningCampaignView({ campaign, containsKpiToken }: PairViewProps) {
   const history = useHistory()
   const { account, chainId } = useActiveWeb3React()
   const previousChainId = usePrevious(chainId)
@@ -99,6 +100,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
             endsAt={campaign ? parseInt(campaign.endsAt.toString()) : undefined}
             apy={campaign?.apy}
             staked={campaign?.staked}
+            containsKpiToken={containsKpiToken}
             showUSDValue={showUSDValue}
           />
           {account && <StakeCard campaign={campaign || undefined} showUSDValue={showUSDValue} />}

@@ -2,7 +2,7 @@ import { useAllLists } from './hooks'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useFetchListCallback } from '../../hooks/useFetchListCallback'
+import { useFetchCarrotListCallback, useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { AppDispatch } from '../index'
@@ -21,25 +21,34 @@ export default function Updater(): null {
   const activeListUrls = useActiveListUrls()
 
   const fetchList = useFetchListCallback()
+  const fetchCarrotList = useFetchCarrotListCallback()
+
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible || !chainId) return
     Object.keys(lists).forEach(url => {
       fetchList(url).catch((error: Error) => console.debug('interval list fetching error', error))
     })
-  }, [isWindowVisible, chainId, lists, fetchList])
+    fetchCarrotList().catch((error: Error) => console.debug('interval list fetching error', error))
+  }, [isWindowVisible, chainId, lists, fetchCarrotList, fetchList])
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => {
-      const list = lists[listUrl]
-      if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error: Error) => console.debug('list added fetching error', error))
-      }
-    })
-  }, [dispatch, fetchList, library, lists])
+    Object.keys(lists)
+      .filter(listUrl => listUrl !== 'CARROT')
+      .forEach(listUrl => {
+        const list = lists[listUrl]
+        if (!list.current && !list.loadingRequestId && !list.error) {
+          fetchList(listUrl).catch((error: Error) => console.debug('list added fetching error', error))
+        }
+      })
+    const carrotList = lists['CARROT']
+    if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
+      fetchCarrotList().catch((error: Error) => console.debug('list added fetching error', error))
+    }
+  }, [dispatch, fetchCarrotList, fetchList, library, lists])
 
   // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
   useEffect(() => {

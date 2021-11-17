@@ -25,7 +25,7 @@ const ListLayout = styled.div`
 
 interface LiquidityMiningCampaignsListProps {
   stakablePair?: Pair
-  items?: { campaign: LiquidityMiningCampaign; staked: boolean }[]
+  items?: { campaign: LiquidityMiningCampaign; staked: boolean; containsKpiToken: boolean }[]
   loading?: boolean
 }
 
@@ -69,6 +69,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
                       usdLiquidity={getStakedAmountUSD(item.campaign, nativeCurrencyUSDPrice)}
                       apy={item.campaign.apy}
                       staked={item.staked}
+                      containsKpiToken={item.containsKpiToken}
                       usdLiquidityText="STAKED"
                     />
                   </UndecoratedLink>

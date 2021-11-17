@@ -8,6 +8,7 @@ import { usePairLiquidityTokenTotalSupply } from '../data/Reserves'
 import { toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
+import { useKpiTokens } from './useKpiTokens'
 
 const QUERY = gql`
   query($pairId: ID!, $timestamp: BigInt!, $userId: ID) {
@@ -73,9 +74,9 @@ export function useLiquidityMiningCampaignsForPair(
     .toJSDate()
 ): {
   loading: boolean
-  wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[]
+  wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean; containsKpiToken: boolean }[]
   expiredLoading: boolean
-  expiredWrappedCampagins: { campaign: LiquidityMiningCampaign; staked: boolean }[]
+  expiredWrappedCampagins: { campaign: LiquidityMiningCampaign; staked: boolean; containsKpiToken: boolean }[]
 } {
   const { chainId, account } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
@@ -83,11 +84,12 @@ export function useLiquidityMiningCampaignsForPair(
   const { loading: loadingReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(pair)
   const timestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const memoizedLowerTimeLimit = useMemo(() => Math.floor(lowerTimeLimit.getTime() / 1000), [lowerTimeLimit])
+  const pairId = useMemo(() => (pair ? pair.liquidityToken.address.toLowerCase() : ''), [pair])
   const { data, loading: loadingActiveCampaigns, error } = useQuery<{
     liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
-      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
+      pairId,
       timestamp,
       userId: account ? account.toLowerCase() : ''
     }
@@ -96,46 +98,64 @@ export function useLiquidityMiningCampaignsForPair(
     liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(EXPIRED_QUERY, {
     variables: {
-      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
+      pairId,
       timestamp,
       lowerTimeLimit: memoizedLowerTimeLimit,
       userId: account ? account.toLowerCase() : ''
     }
   })
 
+  const kpiTokenAddresses = useMemo(() => {
+    if (!data) return []
+    return data.liquidityMiningCampaigns.flatMap(campaign =>
+      campaign.rewards.map(reward => reward.token.address.toLowerCase())
+    )
+  }, [data])
+  const { loading: loadingKpiTokens, kpiTokens } = useKpiTokens(kpiTokenAddresses)
+
   return useMemo(() => {
-    if (loadingActiveCampaigns || loadingReserveNativeCurrency || loadingExpiredCampaigns)
+    if (loadingActiveCampaigns || loadingReserveNativeCurrency || loadingExpiredCampaigns || loadingKpiTokens)
       return { loading: true, wrappedCampaigns: [], expiredLoading: true, expiredWrappedCampagins: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply || !pair || expiredError || !expiredData)
+    if (error || !data || !chainId || !lpTokenTotalSupply || !pair || expiredError || !expiredData || !kpiTokens)
       return { loading: false, wrappedCampaigns: [], expiredLoading: false, expiredWrappedCampagins: [] }
     const wrappedCampaigns = []
     for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
       const campaign = data.liquidityMiningCampaigns[i]
+      const containsKpiToken = !!campaign.rewards.find(
+        reward => !!kpiTokens.find(kpiToken => kpiToken.address.toLowerCase() === reward.token.address.toLowerCase())
+      )
       wrappedCampaigns.push({
         campaign: toLiquidityMiningCampaign(
           chainId,
           pair,
           lpTokenTotalSupply?.raw.toString(),
           reserveNativeCurrency.raw.toString(),
+          kpiTokens,
           campaign,
           nativeCurrency
         ),
-        staked: campaign.liquidityMiningPositions.length > 0
+        staked: campaign.liquidityMiningPositions.length > 0,
+        containsKpiToken
       })
     }
     const expiredWrappedCampaigns = []
     for (let i = 0; i < expiredData.liquidityMiningCampaigns.length; i++) {
       const campaign = expiredData.liquidityMiningCampaigns[i]
+      const containsKpiToken = !!campaign.rewards.find(
+        reward => !!kpiTokens.find(kpiToken => kpiToken.address.toLowerCase() === reward.token.address.toLowerCase())
+      )
       const campaignObject = {
         campaign: toLiquidityMiningCampaign(
           chainId,
           pair,
           lpTokenTotalSupply?.raw.toString(),
           reserveNativeCurrency.raw.toString(),
+          kpiTokens,
           campaign,
           nativeCurrency
         ),
-        staked: campaign.liquidityMiningPositions.length > 0
+        staked: campaign.liquidityMiningPositions.length > 0,
+        containsKpiToken
       }
       expiredWrappedCampaigns.push(campaignObject)
       if (campaign.liquidityMiningPositions.length > 0) wrappedCampaigns.push(campaignObject)
@@ -144,15 +164,17 @@ export function useLiquidityMiningCampaignsForPair(
   }, [
     chainId,
     data,
-    expiredData,
-    loadingExpiredCampaigns,
-    expiredError,
     error,
+    expiredData,
+    expiredError,
+    kpiTokens,
     loadingActiveCampaigns,
+    loadingExpiredCampaigns,
+    loadingKpiTokens,
     loadingReserveNativeCurrency,
     lpTokenTotalSupply,
     nativeCurrency,
     pair,
-    reserveNativeCurrency
+    reserveNativeCurrency.raw
   ])
 }
