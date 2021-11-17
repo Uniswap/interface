@@ -91,8 +91,9 @@ export function useFetchCarrotListCallback(): (sendDispatch?: boolean) => Promis
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: 'CARROT' }))
       try {
         const response = await client.request<KpiTokensQueryResult>(KPI_TOKENS_QUERY, { creators: validCreators })
-        const listAndTokensUrl = `${window.location.origin}${carrotListLogoUrl}`
-        console.log(listAndTokensUrl)
+        const listAndTokensUrl = `${window.location.origin}${
+          carrotListLogoUrl.startsWith('.') ? carrotListLogoUrl.substring(1) : carrotListLogoUrl
+        }`
         const tokenList = {
           name: 'DXdao Carrot KPI tokens',
           timestamp: Math.floor(Date.now() / 1000).toString(),

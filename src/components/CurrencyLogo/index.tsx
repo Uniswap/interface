@@ -7,7 +7,7 @@ import EtherLogo from '../../assets/images/ether-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
 import SWPRLogo from '../../assets/images/swpr-logo.png'
-import KpiTokenLogo from '../../assets/images/carrot.png'
+import carrotListLogoUrl from '../../assets/images/carrot.png'
 import { useActiveWeb3React } from '../../hooks'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useTokenInfoFromActiveListOnCurrentChain } from '../../state/lists/hooks'
@@ -90,7 +90,12 @@ export default function CurrencyLogo({
       if (chainId && SWPR[chainId] && SWPR[chainId].address === currency.address) return [SWPRLogo]
       return [getTokenLogoURL(currency.address), ...uriLocations]
     }
-    if (currency instanceof Token) return [KpiTokenLogo]
+    if (currency instanceof Token)
+      return [
+        `${window.location.origin}${
+          carrotListLogoUrl.startsWith('.') ? carrotListLogoUrl.substring(1) : carrotListLogoUrl
+        }`
+      ]
     return []
   }, [chainId, currency, nativeCurrencyLogo, uriLocations])
 

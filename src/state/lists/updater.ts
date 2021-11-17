@@ -38,7 +38,6 @@ export default function Updater(): null {
     if (account) {
       const carrotList = lists['CARROT']
       if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
-        console.log('What')
         fetchCarrotList().catch((error: Error) => console.debug('carrot list added fetching error', error))
       }
     }
@@ -56,7 +55,6 @@ export default function Updater(): null {
       })
     const carrotList = lists['CARROT']
     if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
-      console.log('What')
       fetchCarrotList().catch((error: Error) => console.debug('carrot list added fetching error', error))
     }
   }, [dispatch, fetchCarrotList, fetchList, library, lists])
