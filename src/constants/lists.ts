@@ -20,7 +20,6 @@ const HONEYSWAP_LIST = 'https://tokens.honeyswap.org'
 const LEVINSWAP_LIST =
   'https://ipfs.io/ipfs/QmUWxthidUYXUJ2kiZLLPxkMKYDAinnpA591R3SRN6wufs?filename=levinswap-default.tokenlist.json'
 const BAOSWAP_LIST = 'https://raw.githubusercontent.com/baofinance/tokenlists/main/xdai.json'
-const ARBRINKEBY_LIST = 'http://localhost:3000/arbRinkeby.json' // DEV ONLY
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
@@ -43,7 +42,6 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   CMC_STABLECOIN,
   KLEROS_LIST,
   GEMINI_LIST,
-  ARBRINKEBY_LIST, // DEV ONLY
   ...UNSUPPORTED_LIST_URLS // need to load unsupported tokens as well
 ]
 
