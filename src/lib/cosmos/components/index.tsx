@@ -80,6 +80,9 @@ function useBalances(
         setBalances(undefined)
       }
     }
+    return () => {
+      setBalances(undefined)
+    }
   }, [provider, accounts])
 
   return balances

@@ -2,7 +2,7 @@ import { Provider as EthProvider } from '@ethersproject/abstract-provider'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { Provider as AtomProvider, useAtom } from 'jotai'
 import { Provider as I18nProvider } from 'lib/i18n'
-import storeAtom from 'lib/state'
+import { providerAtom } from 'lib/state'
 import styled, { Provider as ThemeProvider, Theme } from 'lib/theme'
 import { ReactNode, useEffect, useState } from 'react'
 
@@ -33,11 +33,10 @@ export interface WidgetProps {
 }
 
 export default function Widget({ children, theme, locale = DEFAULT_LOCALE, provider }: WidgetProps) {
-  const [, setState] = useAtom(storeAtom)
+  const [, setProvider] = useAtom(providerAtom)
   useEffect(() => {
-    setState((prev) => ({ ...prev, provider }))
-  }, [provider, setState])
-
+    setProvider(provider)
+  }, [setProvider, provider])
   const [dialog, setDialog] = useState<HTMLDivElement | null>(null)
   return (
     <AtomProvider>
