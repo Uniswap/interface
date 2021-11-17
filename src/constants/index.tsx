@@ -378,4 +378,10 @@ export const OLD_SWPR: { [key: number]: Token } = {
   )
 }
 
+export const DXDAO_AVATAR_ADDRESS: { [key: number]: string } = {
+  [ChainId.MAINNET]: '0x519b70055af55a007110b4ff99b0ea33071c720a',
+  [ChainId.XDAI]: '0xe716ec63c5673b3a4732d22909b38d779fa47c3f',
+  [ChainId.RINKEBY]: '0x1A639b50D807ce7e61Dc9eeB091e6Cea8EcB1595'
+}
+
 export const SHOW_TESTNETS = true

@@ -2475,10 +2475,10 @@
   dependencies:
     "@swapr/core" "^0.3.17"
 
-"@swapr/sdk@^0.10.8":
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.8.tgz#0ab7d4d16abc3a34efcf7dd423fbab0113a48edb"
-  integrity sha512-L4Xp3p8LysAdjZg/qr7PEVAp9x973Wfcq/tdta57/dZiMe5s9C+SZJJZOVPbzUqwZNLB2qR86LWxkxcOvo+XJA==
+"@swapr/sdk@^0.10.11":
+  version "0.10.11"
+  resolved "https://registry.yarnpkg.com/@swapr/sdk/-/sdk-0.10.11.tgz#53a7436b5c7a0887f401c2c216656670fcb904c9"
+  integrity sha512-vqUcFWZ/88laBVBtf6ieCn/UGTYbSeE/IdxF9eC9BvbK1u2dejDuhqD+c2FXnGUIPRkGMEab/FY+9pD0rH9O+A==
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     "@swapr/core" "^0.3.18"
@@ -2918,10 +2918,10 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@uniswap/token-lists@^1.0.0-beta.24":
-  version "1.0.0-beta.24"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.24.tgz#6809b80bee58e4a2f235cdedc07113652c85a741"
-  integrity sha512-9IMltV7ITwxnjuK0LYXlUZhYIB8wVAdwx5NAbGjHF9ss+zKL9FTyFfWTFif/EL6PCWvST+2B15ofUwSVZd17RA==
+"@uniswap/token-lists@^1.0.0-beta.27":
+  version "1.0.0-beta.27"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.27.tgz#8b02a979b0b0024cc96f60e694a3f6db6b2ccab2"
+  integrity sha512-x5hmIniQ9TGqOBCRqfWcmZi/U5kB0qrHMDQ9igs3nMbK0wwmYLraL4owbIwXFGR/co6/lJYJC4K/Gjn4wZY5mQ==
 
 "@walletconnect/browser-utils@^1.5.2":
   version "1.5.2"
