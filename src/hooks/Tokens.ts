@@ -54,18 +54,7 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  const all = useTokensFromMap(allTokens, true)
-  console.log('ALL TOKENS', all)
-  const dummy = {
-    chainId: 702,
-    address: '0xfb4A1DeE8894fd44Ee3233aAB41C95d61C90c86d',
-    name: 'DummyToken',
-    symbol: 'DMY',
-    decimals: 18,
-    logoURI: 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/assets/tokens/dpi.svg',
-  }
-  // return { ...all, 0xfb4a1dee8894fd44ee3233aab41c95d61c90c86d: dummy }
-  return all
+  return useTokensFromMap(allTokens, true)
 }
 
 export function useUnsupportedTokens(): { [address: string]: Token } {
@@ -143,8 +132,6 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
 
   const address = isAddress(tokenAddress)
 
-  console.log('useToken address', address)
-
   const tokenContract = useTokenContract(address ? address : undefined, false)
 
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
@@ -162,7 +149,6 @@ export function useToken(tokenAddress?: string | null): Token | undefined | null
   const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
-    console.log({ token, tokenAddress, chainId, decimals, symbol, tokenName })
     if (token) return token
     if (tokenAddress === null) return null
     if (!chainId || !address) return undefined

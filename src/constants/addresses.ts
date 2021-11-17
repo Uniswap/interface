@@ -52,7 +52,7 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(
     SupportedChainId.ARBITRUM_RINKEBY,
   ]
 )
-export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6', [
+export const QUOTER_ADDRESSES: AddressMap = constructSameAddressMap('0xA3F10855F67c178b3986B2F9ead5c5080A1e4125', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
