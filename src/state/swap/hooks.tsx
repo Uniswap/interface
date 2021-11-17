@@ -2,7 +2,7 @@ import { parseUnits } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useBestTrade } from 'hooks/useBestV3Trade'
+import { useBestTrade } from 'hooks/useBestTrade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -169,7 +169,7 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  const allowedSlippage = useSwapSlippageTolerance(trade.trade ?? undefined)
+  const allowedSlippage = useSwapSlippageTolerance(trade.trade)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], trade.trade?.maximumAmountIn(allowedSlippage)]

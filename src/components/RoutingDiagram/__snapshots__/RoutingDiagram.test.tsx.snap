@@ -22,11 +22,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V2
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             75%
           </div>
@@ -71,11 +80,20 @@ exports[`renders multi route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             25%
           </div>
@@ -143,11 +161,20 @@ exports[`renders single route 1`] = `
           </svg>
         </div>
         <div
-          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll khxosM"
+          class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab css-15li2d9"
-            style="word-break: normal;"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+          >
+            <div
+              class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
+            >
+              V3
+            </div>
+          </div>
+          <div
+            class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-15li2d9"
+            style="min-width: auto;"
           >
             100%
           </div>

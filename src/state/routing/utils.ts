@@ -1,3 +1,4 @@
+import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
@@ -40,10 +41,8 @@ export function computeRoutes(
       return {
         routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
-        amount:
-          tradeType === TradeType.EXACT_INPUT
-            ? CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn)
-            : CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
+        inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
     })
   } catch (e) {
@@ -53,6 +52,27 @@ export function computeRoutes(
     console.error(e)
     return undefined
   }
+}
+
+export function transformRoutesToTrade<TTradeType extends TradeType>(
+  route: ReturnType<typeof computeRoutes>,
+  tradeType: TTradeType
+): Trade<Currency, Currency, TTradeType> {
+  return new Trade({
+    v2Routes:
+      route
+        ?.filter((r) => r.routev2 !== null)
+        // typescript does not perform type narrowing from filter
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .map(({ routev2, inputAmount, outputAmount }) => ({ routev2: routev2!, inputAmount, outputAmount })) ?? [],
+    v3Routes:
+      route
+        ?.filter((r) => r.routev3 !== null)
+        // typescript does not perform type narrowing from filter
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .map(({ routev3, inputAmount, outputAmount }) => ({ routev3: routev3!, inputAmount, outputAmount })) ?? [],
+    tradeType,
+  })
 }
 
 const parseToken = ({ address, chainId, decimals, symbol }: GetQuoteResult['route'][0][0]['tokenIn']): Token => {

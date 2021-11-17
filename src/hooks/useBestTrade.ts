@@ -20,7 +20,7 @@ export function useBestTrade(
   otherCurrency?: Currency
 ): {
   state: TradeState
-  trade: Trade<Currency, Currency, typeof tradeType> | undefined
+  trade: Trade<Currency, Currency, TradeType> | undefined
 } {
   const autoRouterSupported = useAutoRouterSupported()
   const isWindowVisible = useIsWindowVisible()

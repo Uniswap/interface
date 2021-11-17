@@ -63,13 +63,18 @@ const OpaqueBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg2};
   display: grid;
   grid-gap: 4px;
-  grid-auto-flow: row;
+  grid-auto-flow: column;
+  justify-content: start;
   z-index: ${Z_INDEX.sticky};
 `
 
 const ProtocolBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg3};
   z-index: ${Z_INDEX.sticky + 1};
+`
+
+const BadgeText = styled(TYPE.small)`
+  word-break: normal;
 `
 
 export default function RoutingDiagram({
@@ -104,12 +109,12 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
         <DotColor />
       </DottedLine>
       <OpaqueBadge>
-        <TYPE.small fontSize={12} style={{ wordBreak: 'normal' }}>
-          {percent.toSignificant(2)}%
-        </TYPE.small>
         <ProtocolBadge>
-          <TYPE.small fontSize={11}>{protocol.toUpperCase()}</TYPE.small>
+          <BadgeText fontSize={11}>{protocol.toUpperCase()}</BadgeText>
         </ProtocolBadge>
+        <BadgeText fontSize={12} style={{ minWidth: 'auto' }}>
+          {percent.toSignificant(2)}%
+        </BadgeText>
       </OpaqueBadge>
 
       <AutoRow gap="1px" width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>

@@ -8,8 +8,9 @@ import { Router } from 'state/routing/localRouter'
 import { GetQuoteResult } from './types'
 
 const DEFAULT_QUERY_PARAMS = {
-  // forceCrossProtocol: 'true',
-  protocols: 'v3',
+  forceCrossProtocol: 'true',
+  minSplits: '3',
+  // protocols: 'v3',
 }
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

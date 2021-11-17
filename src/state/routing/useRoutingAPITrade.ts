@@ -7,8 +7,7 @@ import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
 
 import { TradeState } from './types'
-import { useTradeFromRoute } from './useTradeFromRoute'
-import { computeRoutes } from './utils'
+import { computeRoutes, transformRoutesToTrade } from './utils'
 
 /** Plucks required properties of a `Token` to make it serializable */
 const tokenToSerializable = ({ address, chainId, symbol, decimals }: Token) => ({
@@ -94,8 +93,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [currencyIn, currencyOut, quoteResult, tradeType]
   )
 
-  const trade = useTradeFromRoute({ route, tradeType })
-
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {
       return {
@@ -128,10 +125,12 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
 
+    const trade = transformRoutesToTrade(route, tradeType)
+
     return {
       // always return VALID regardless of isFetching status
       state: TradeState.VALID,
       trade,
     }
-  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs, trade])
+  }, [currencyIn, currencyOut, isLoading, quoteResult, tradeType, isError, route, queryArgs])
 }
