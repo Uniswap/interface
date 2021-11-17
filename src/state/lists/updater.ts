@@ -12,7 +12,7 @@ import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { useActiveWeb3React } from '../../hooks'
 
 export default function Updater(): null {
-  const { library, chainId } = useActiveWeb3React()
+  const { library, chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const isWindowVisible = useIsWindowVisible()
 
@@ -33,6 +33,15 @@ export default function Updater(): null {
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
+
+  useEffect(() => {
+    if (account) {
+      const carrotList = lists['CARROT']
+      if (carrotList && !carrotList.current && !carrotList.loadingRequestId && !carrotList.error) {
+        fetchCarrotList().catch((error: Error) => console.debug('list added fetching error', error))
+      }
+    }
+  }, [account, fetchCarrotList, lists])
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {

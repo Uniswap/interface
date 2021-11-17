@@ -11,7 +11,7 @@ import { fetchTokenList } from '../state/lists/actions'
 import getTokenList from '../utils/getTokenList'
 import resolveENSContentHash from '../utils/resolveENSContentHash'
 import { gql } from 'graphql-request'
-import carrotListLogoUrl from '../assets/images/token-list/carrot-token-list.png'
+import carrotListLogoUrl from '../assets/images/carrot.png'
 import { KPI_TOKEN_CREATORS } from '../constants'
 
 export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
