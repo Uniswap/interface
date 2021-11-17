@@ -200,6 +200,7 @@ export default function VotePageV2({
     return <span>{content}</span>
   }
 
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">

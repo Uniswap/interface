@@ -1,4 +1,11 @@
 [
+  {
+    "constant":true,
+    "inputs":[],
+    "name":"owner",
+    "outputs":[{"name":"owner","type":"address"}],
+    "type":"function"
+  },
     {
       "constant": true,
       "inputs": [],

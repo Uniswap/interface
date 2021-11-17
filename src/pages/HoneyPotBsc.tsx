@@ -7,8 +7,12 @@ import styled from 'styled-components/macro'
 import { useWeb3React } from '@web3-react/core';
 import { AutoColumn } from 'components/Column';
 import { RowFixed } from 'components/Row';
-import { AlertOctagon, CheckCircle } from 'react-feather';
+import { AlertOctagon, CheckCircle, Info } from 'react-feather';
 import { useKiba } from './Vote/VotePage';
+import Swal from 'sweetalert2';
+import { useContractOwner } from 'components/swap/ConfirmSwapModal';
+import Badge, { BadgeVariant } from 'components/Badge';
+import Tooltip from 'components/Tooltip';
 const StyledHeader = styled.div`
   font-family:"Bangers", cursive;
   font-size:22px;
@@ -16,14 +20,16 @@ const StyledHeader = styled.div`
 export const HoneyPotBsc = ( ) => {
     const [msg, setMsg] = React.useState('')
     const [honeyData, setHoneyData] = React.useState<any>({})
-    
+    const [showTip, setShowTip] = React.useState(false)
     const provider = window.ethereum ? window.ethereum : walletconnect
     const [address, setAddress] = React.useState('')
     const web3 = new Web3(provider as any);
+    const contractOwner = useContractOwner(msg)
     const { account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const runInteraction = (address: string ) => {
         if(isAddress(address)) {
+          setMsg(address)
             const honey_data: Record<string, any> = { };
     const encodedAddress = web3.eth.abi.encodeParameter('address', address);
     const contractFuncData = '0xd66383cb';
@@ -34,7 +40,6 @@ export const HoneyPotBsc = ( ) => {
     const maxSell = 0;
     const maxTXAmount = 0;
     const bnbIN = 1000000000000000000;
-    let buy_tax = null, sell_tax = null;
     const maxTxBNB:any = null;
     const blacklisted: Record<string, string> = {
         '0xa914f69aef900beb60ae57679c5d4bc316a2536a': 'SPAMMING SCAM',
@@ -77,8 +82,9 @@ export const HoneyPotBsc = ( ) => {
         const sellActualOut = web3.utils.toBN(decoded[3]);
         const buyGasUsed = web3.utils.toBN(decoded[4]);
         const sellGasUsed = web3.utils.toBN(decoded[5]);
-        buy_tax = Math.round((+buyExpectedOut - +buyActualOut) / +buyExpectedOut * 100 * 10) / 10;
-        sell_tax = Math.round((+sellExpectedOut - +sellActualOut) / +sellExpectedOut * 100 * 10) / 10;
+        const buy_tax = Math.round((+buyExpectedOut - +buyActualOut) / +buyExpectedOut * 100 * 10) / 10;
+        const sell_tax = Math.round((+sellExpectedOut - +sellActualOut) / +sellExpectedOut * 100 * 10) / 10;
+
         honey_data['sellTax'] = sell_tax;
         honey_data['buyTax'] = buy_tax;
         if(+buy_tax + +sell_tax > 80) {
@@ -130,7 +136,11 @@ export const HoneyPotBsc = ( ) => {
         setHoneyData({ran: true, ...honey_data, isHoneyPot: true, message: "Honeypot detected. Do NOT invest.", name: tokenName, symbol: tokenSymbol })
     });
 
-    } else if (!address) setHoneyData({})
+    }  else {
+        if (address) Swal.fire({ title: "The address you entered was not a contract address", icon: 'error', toast: true, timer: 5000, timerProgressBar: true, showConfirmButton: false })
+        setHoneyData({})
+        setMsg('');
+      }
 }
 
 const hasInvalidPermissions = React.useMemo(() => !account || !kibaBalance || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
@@ -157,7 +167,13 @@ return (
       <AutoColumn>
         {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ textAlign: 'center', display: 'flex' }}><AlertOctagon /> HONEY POT DETECTED </div>}
         {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <div style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </div>}
-        {honeyData && +honeyData['buyTax'] > 0 && <div style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
+        {honeyData && honeyData['ran'] && contractOwner && <div style={{ paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
+        <div style={{ marginRight: '8px' }}>
+          <Badge variant={contractOwner === '0x0000000000000000000000000000000000000000' ? BadgeVariant.POSITIVE : BadgeVariant.WARNING}>Ownership {contractOwner !== '0x0000000000000000000000000000000000000000' && <> NOT </>} Renounced &nbsp; <Tooltip  show={showTip} text={<>{'The contract is owned by '} <a href={`https://bscscan.com/address/${contractOwner}`}>{contractOwner}</a> </>}> <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setTimeout(() => setShowTip(false), 1500)} /></Tooltip></Badge>
+        </div>
+      </div>
+        }
+        {honeyData && +honeyData['buyTax'] > 0 && <div style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingBottom: 15, display: 'flex', flexFlow: 'row wrap' }}>
           <div style={{ marginRight: '8px' }}>
             <StyledHeader>Buy Tax <br /> {honeyData['buyTax']}% </StyledHeader>
           </div>
