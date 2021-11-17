@@ -169,7 +169,7 @@ export const WETH9_EXTENDED: { [chainId: number]: Token } = {
   ...WETH9,
   [SupportedChainId.UZH]: new Token(
     SupportedChainId.UZH,
-    '0x2ED2B01D27446c9924A092f79BB0eD3Bf7E80698',
+    '0xC6dcF22C1Cc62139a01cC2Fd0e1B78045f42b5C4',
     18,
     'WETH',
     'Wrapped Ether'
