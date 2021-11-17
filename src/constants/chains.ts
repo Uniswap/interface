@@ -17,19 +17,8 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 }
 
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ROPSTEN,
-  SupportedChainId.RINKEBY,
-  SupportedChainId.GOERLI,
-  SupportedChainId.KOVAN,
-  SupportedChainId.UZH,
-
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.ARBITRUM_RINKEBY,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.OPTIMISTIC_KOVAN,
-]
+// only allow UZH Network
+export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [SupportedChainId.UZH]
 
 export const L1_CHAIN_IDS = [
   SupportedChainId.MAINNET,
