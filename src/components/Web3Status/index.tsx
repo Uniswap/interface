@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
@@ -211,7 +212,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
         <Text>
-          <Trans>Connect to a wallet</Trans>
+          <Trans>Connect Wallet</Trans>
         </Text>
       </Web3StatusConnect>
     )

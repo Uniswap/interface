@@ -9,6 +9,8 @@ import { Box } from 'rebass'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
+import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
+
 export interface RoutingDiagramEntry {
   percent: Percent
   path: [Currency, Currency, FeeAmount][]
@@ -40,13 +42,18 @@ const PoolBadge = styled(Badge)`
 `
 
 const DottedLine = styled.div`
-  border-color: ${({ theme }) => theme.bg4};
-  border-top-style: dotted;
-  border-width: 4px;
-  height: 0px;
+  display: flex;
+  align-items: center;
   position: absolute;
   width: calc(100%);
   z-index: 1;
+  opacity: 0.5;
+`
+
+const DotColor = styled(DotLine)`
+  path {
+    stroke: ${({ theme }) => theme.bg4};
+  }
 `
 
 const OpaqueBadge = styled(Badge)`
@@ -82,7 +89,9 @@ export default function RoutingDiagram({
 function Route({ percent, path }: { percent: RoutingDiagramEntry['percent']; path: RoutingDiagramEntry['path'] }) {
   return (
     <RouteRow>
-      <DottedLine />
+      <DottedLine>
+        <DotColor />
+      </DottedLine>
       <OpaqueBadge>
         <TYPE.small fontSize={12} style={{ wordBreak: 'normal' }}>
           {percent.toSignificant(2)}%
