@@ -1,3 +1,5 @@
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import useDebounce from 'hooks/useDebounce'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -23,7 +25,7 @@ function useQueryCacheInvalidator() {
 }
 
 export default function Updater(): null {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, library, connector } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
@@ -78,7 +80,12 @@ export default function Updater(): null {
   }, [dispatch, debouncedState.chainId])
 
   useEffect(() => {
-    if (!account || !library?.provider?.request || !library?.provider?.isMetaMask) {
+    const isCbWalletDappBrowser = window?.ethereum?.isCoinbaseWallet
+    const isWalletlink =
+      connector instanceof WalletLinkConnector || (connector instanceof InjectedConnector && window.walletLinkExtension)
+    const isCbWallet = isCbWalletDappBrowser || isWalletlink
+    const isMetamaskOrCbWallet = library?.provider?.isMetaMask || isCbWallet
+    if (!account || !library?.provider?.request || !isMetamaskOrCbWallet) {
       return
     }
     switchToNetwork({ library })
