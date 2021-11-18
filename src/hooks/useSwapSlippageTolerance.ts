@@ -28,6 +28,9 @@ function guestimateGas(
   return 100_000 + trade.swaps.reduce((memo, swap) => swap.route.pools.length + memo, 0) * 30_000
 }
 
+const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(50, 1000) // 0.5%
+const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
+
 export default function useSwapSlippageTolerance(
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
 ): Percent {
@@ -50,7 +53,10 @@ export default function useSwapSlippageTolerance(
 
     if (outputDollarValue && dollarGasCost) {
       const fraction = dollarGasCost.asFraction.divide(outputDollarValue.asFraction)
-      return new Percent(fraction.numerator, fraction.denominator)
+      const result = new Percent(fraction.numerator, fraction.denominator)
+      if (result.greaterThan(MAX_AUTO_SLIPPAGE_TOLERANCE)) return MAX_AUTO_SLIPPAGE_TOLERANCE
+      if (result.lessThan(MIN_AUTO_SLIPPAGE_TOLERANCE)) return MIN_AUTO_SLIPPAGE_TOLERANCE
+      return result
     }
 
     if (trade instanceof V2Trade) return V2_SWAP_DEFAULT_SLIPPAGE
