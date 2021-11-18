@@ -3,7 +3,7 @@
 exports[`renders multi route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   >
     <div
       class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
@@ -142,7 +142,7 @@ exports[`renders multi route 1`] = `
 exports[`renders single route 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   >
     <div
       class="sc-bdnxRM Row-sc-nrd8cx-0 RoutingDiagram__RouteContainerRow-sc-o1ook0-1 lmTMKd itvFNV iiQQUx"
@@ -209,7 +209,7 @@ exports[`renders single route 1`] = `
 exports[`renders when no routes are provided 1`] = `
 <DocumentFragment>
   <div
-    class="RoutingDiagram__Wrapper-sc-o1ook0-0 fUoVYh css-vurnku"
+    class="RoutingDiagram__Wrapper-sc-o1ook0-0 dMRWaC css-vurnku"
   />
 </DocumentFragment>
 `;

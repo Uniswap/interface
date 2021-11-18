@@ -10,7 +10,6 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Token } from '@uniswap/sdk-core'
 import qs from 'qs'
 
-// import SmartOrderRouterWorker from 'comlink-loader!./localRouter'
 import { GetQuoteResult } from './types'
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
@@ -18,7 +17,7 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 const DEFAULT_QUERY_PARAMS = {
   // forceCrossProtocol: 'true',
   // minSplits: '5',
-  protocols: protocols.join(','),
+  protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -34,25 +33,16 @@ async function getClientSideQuote({
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
-  // const router = new SmartOrderRouterWorker() as Router
-
-  try {
-    // return router.getQuote(
-    return (await import('./localRouter/index')).getQuote(
-      {
-        type,
-        chainId: tokenIn.chainId,
-        tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
-        tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
-        amount,
-      },
-      { protocols }
-    )
-  } catch (e) {
-    debugger
-    console.debug(e)
-    throw e
-  }
+  return (await import('./localRouter')).getQuote(
+    {
+      type,
+      chainId: tokenIn.chainId,
+      tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
+      tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
+      amount,
+    },
+    { protocols }
+  )
 }
 
 const baseQueryWithBailOut: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = retry(

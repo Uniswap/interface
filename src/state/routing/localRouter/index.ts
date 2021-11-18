@@ -52,7 +52,3 @@ export async function getQuote(
 
   return { data: processSwapRoute(type, amount, /*v3PoolProvider, v2PoolProvider,*/ swapRoute) }
 }
-
-export interface Router extends Worker {
-  getQuote: typeof getQuote
-}
