@@ -137,8 +137,8 @@
     "@walletconnect/ethereum-provider": "1.6.5"
   },
   "scripts": {
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*.json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "graphql:generate": "graphql-codegen --config codegen.yml",
     "prei18n:extract": "touch src/locales/en-US.po",
