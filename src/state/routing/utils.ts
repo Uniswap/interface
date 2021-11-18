@@ -5,8 +5,9 @@ import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from './types'
 
-/* Transforms a Routing API quote into an array of routes that
- * can be used to create a V3 `Trade`.
+/**
+ * Transforms a Routing API quote into an array of routes that can be used to create
+ * a V3 `Trade`.
  */
 export function computeRoutes(
   currencyIn: Currency | undefined,

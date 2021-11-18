@@ -2,7 +2,7 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
-import { processSwapRoute } from 'utils/processSwapRoute'
+import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 import { buildDependencies } from './dependencies'
 
@@ -48,7 +48,5 @@ export async function getQuote(
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  // const { v3PoolProvider, v2PoolProvider } = params
-
-  return { data: processSwapRoute(type, amount, /*v3PoolProvider, v2PoolProvider,*/ swapRoute) }
+  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
 }

@@ -46,24 +46,11 @@ async function getClientSideQuote({
   )
 }
 
-const baseQueryWithBailOut: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = retry(
-  async (args: string | FetchArgs, api, extraOptions) => {
-    const result = await fetchBaseQuery({
-      baseUrl: 'https://api.uniswap.org/v1/',
-    })(args, api, extraOptions)
-
-    if (result.error) {
-      retry.fail(result.error)
-    }
-
-    return result
-  }
-)
-
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  baseQuery: baseQueryWithBailOut,
-  endpoints: (build) => ({
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://api.uniswap.org/v1/',
+  }),  endpoints: (build) => ({
     getQuote: build.query<
       GetQuoteResult,
       {

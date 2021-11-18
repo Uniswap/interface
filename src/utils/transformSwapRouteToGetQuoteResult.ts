@@ -3,13 +3,10 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
-// transforms a SwapRoute into a GetQuoteResult
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
-export function processSwapRoute(
+export function transformSwapRouteToGetQuoteResult(
   type: 'exactIn' | 'exactOut',
   amount: CurrencyAmount<Currency>,
-  // v3PoolProvider: IV3PoolProvider,
-  // v2PoolProvider: IV2PoolProvider,
   {
     quote,
     quoteGasAdjusted,
@@ -47,7 +44,6 @@ export function processSwapRoute(
 
         curRoute.push({
           type: 'v3-pool',
-          // address: v3PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1, nextPool.fee).poolAddress,
           tokenIn: {
             chainId: tokenIn.chainId,
             decimals: tokenIn.decimals,
@@ -93,7 +89,6 @@ export function processSwapRoute(
 
         curRoute.push({
           type: 'v2-pool',
-          // address: v2PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1).poolAddress,
           tokenIn: {
             chainId: tokenIn.chainId,
             decimals: tokenIn.decimals,
