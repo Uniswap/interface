@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { connectors } from '../connectors'
 import { hooks as metaMaskHooks, metaMask } from '../connectors/metaMask'
 import { hooks as networkHooks, network } from '../connectors/network'
+
 function getName(connector: Connector) {
   if (connector instanceof MetaMask) {
     return 'MetaMask'
@@ -34,7 +35,7 @@ function Status({
   const accounts = useAccounts()
   const error = useError()
 
-  const connected = Boolean(chainId && accounts)
+  const connected = Boolean(chainId && accounts && accounts.length > 0)
 
   return (
     <div>
@@ -181,19 +182,23 @@ function Connect({
 }
 
 const Wrapper = styled.div`
+  background-color: rgb(32, 32, 32);
   display: flex;
   flex-direction: row;
+  margin-bottom: 14px;
 `
 const ConnectorWrapper = styled.div`
-  align-items: center;
-  border: 1px solid #ccc;
+  align-items: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
+  color: rgb(248, 248, 248);
   display: flex;
   flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Helvetica Neue', Helvetica, sans-serif;
   margin: 14px;
   padding: 14px;
 `
-export function Connectors() {
+export default function Connectors() {
   const [, setProvider] = useAtom(providerAtom)
   const isMetaMaskActive = metaMaskHooks.useIsActive()
   const isNetworkActive = networkHooks.useIsActive()
