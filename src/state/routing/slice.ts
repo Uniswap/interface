@@ -15,9 +15,10 @@ import { GetQuoteResult } from './types'
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
 
 const DEFAULT_QUERY_PARAMS = {
+  protocols: protocols.map((p) => p.toLowerCase()).join(','),
+  // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
-  protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -33,7 +34,7 @@ async function getClientSideQuote({
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
-  return (await import('./localRouter')).getQuote(
+  return (await import('./clientSideSmartOrderRouter')).getQuote(
     {
       type,
       chainId: tokenIn.chainId,
