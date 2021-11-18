@@ -24,6 +24,8 @@ target 'Uniswap' do
     # Pods for testing
   end
 
+  pod 'EthersRS', :path =>  '../node_modules/@cmcewen/ethers-rs-mobile'
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

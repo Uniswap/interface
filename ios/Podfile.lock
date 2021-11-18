@@ -1,6 +1,7 @@
 PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
+  - EthersRS (0.0.1)
   - ExpoModulesCore (0.2.0):
     - ExpoModulesCore/Core (= 0.2.0)
     - ExpoModulesCore/Interfaces (= 0.2.0)
@@ -59,7 +60,7 @@ PODS:
     - GoogleUtilities/Network (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
     - nanopb (~> 2.30908.0)
-  - GoogleDataTransport (9.1.0):
+  - GoogleDataTransport (9.1.2):
     - GoogleUtilities/Environment (~> 7.2)
     - nanopb (~> 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
@@ -80,24 +81,24 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.3.2)
     - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
   - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
-  - GoogleUtilities/AppDelegateSwizzler (7.5.2):
+  - GoogleUtilities/AppDelegateSwizzler (7.6.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.5.2):
+  - GoogleUtilities/Environment (7.6.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.5.2):
+  - GoogleUtilities/Logger (7.6.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.5.2):
+  - GoogleUtilities/MethodSwizzler (7.6.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.5.2):
+  - GoogleUtilities/Network (7.6.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.5.2)"
-  - GoogleUtilities/Reachability (7.5.2):
+  - "GoogleUtilities/NSData+zlib (7.6.0)"
+  - GoogleUtilities/Reachability (7.6.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.5.2):
+  - GoogleUtilities/UserDefaults (7.6.0):
     - GoogleUtilities/Logger
   - GoogleUtilitiesComponents (1.0.0):
     - GoogleUtilities/Logger
@@ -132,7 +133,7 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - PromisesObjC (2.0.0)
-  - Protobuf (3.18.1)
+  - Protobuf (3.19.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -473,6 +474,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - "EthersRS (from `../node_modules/@cmcewen/ethers-rs-mobile`)"
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -554,6 +556,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EthersRS:
+    :path: "../node_modules/@cmcewen/ethers-rs-mobile"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core/ios"
   EXSecureStore:
@@ -654,6 +658,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
+  EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
   ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
   EXSecureStore: 1aa80d49a3a101418bbd2675e2a0d32dceea10c2
   EXSplashScreen: 847e0d8026731c1090bf269ede3e15ac87d88958
@@ -667,10 +672,10 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
-  GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
+  GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleMLKit: db5007bddb78dedf52b60f4038d32e7bd006b519
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
-  GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
+  GoogleUtilities: 684ee790a24f73ebb2d1d966e9711c203f2a4237
   GoogleUtilitiesComponents: a69c0b3b369ba443e988141e75ef49d9010b1c80
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   MLImage: 647f3d580c10b3c9a3f6154f5d7baead60c42a0c
@@ -680,7 +685,7 @@ SPEC CHECKSUMS:
   MLKitVision: 53b8f93a864c8d9740f7f09041911f2e64150ec8
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
-  Protobuf: 0ac2cdc92fb5c33dab66dd1c4e9f9cc4c34d00ba
+  Protobuf: e9b99dd5da72f665ec503b19191f245a22188b4d
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
   RCTRequired: e4a18a90004e0ed97bba9081099104fd0f658dc9
   RCTTypeSafety: 8a3c31d38de58e1a6a7df6e4e643644a60b00e22
@@ -725,6 +730,6 @@ SPEC CHECKSUMS:
   VisionCamera: 41b059e8993e263efbac83eebb953ba6121c8e85
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
-PODFILE CHECKSUM: 075ff1bcdb7fdd50eff5975b47d8d96bde0c55d2
+PODFILE CHECKSUM: 9e79202d16cb1258d05a959ddebddce02643f949
 
 COCOAPODS: 1.11.2
