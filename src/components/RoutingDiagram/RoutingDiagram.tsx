@@ -70,6 +70,7 @@ const OpaqueBadge = styled(Badge)`
 
 const ProtocolBadge = styled(Badge)`
   background-color: ${({ theme }) => theme.bg3};
+  border-radius: 0.3rem;
   z-index: ${Z_INDEX.sticky + 1};
 `
 

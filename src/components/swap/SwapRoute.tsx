@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -34,6 +34,8 @@ export default memo(function SwapRoute({
 }) {
   const autoRouterSupported = useAutoRouterSupported()
 
+  const routes = getTokenPath(trade)
+
   return (
     <AutoColumn gap="12px">
       <RowBetween>
@@ -63,15 +65,16 @@ export default memo(function SwapRoute({
         <RoutingDiagram
           currencyIn={trade.inputAmount.currency}
           currencyOut={trade.outputAmount.currency}
-          routes={getTokenPath(trade)}
+          routes={routes}
         />
       )}
       {autoRouterSupported && (
         <TYPE.main fontSize={12} width={400}>
-          <Trans>
-            This route optimizes your price by considering split routes, multiple hops, and gas costs across Uniswap V2
-            and V3
-          </Trans>
+          <Plural
+            value={routes.length}
+            one="Best route via 1 hop on Uniswap V2 and V3"
+            other="Best route via # hops on Unsiwap V2 and V3"
+          />
         </TYPE.main>
       )}
     </AutoColumn>

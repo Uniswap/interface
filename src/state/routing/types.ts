@@ -12,7 +12,6 @@ export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decim
 
 export type V3PoolInRoute = {
   type: 'v3-pool'
-  address: string
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   sqrtRatioX96: string
@@ -21,6 +20,9 @@ export type V3PoolInRoute = {
   fee: string
   amountIn?: string
   amountOut?: string
+
+  // no used in the interface
+  address?: string
 }
 
 export type V2Reserve = {
@@ -30,13 +32,15 @@ export type V2Reserve = {
 
 export type V2PoolInRoute = {
   type: 'v2-pool'
-  address: string
   tokenIn: TokenInRoute
   tokenOut: TokenInRoute
   reserve0: V2Reserve
   reserve1: V2Reserve
   amountIn?: string
   amountOut?: string
+
+  // no used in the interface
+  address?: string
 }
 
 export interface GetQuoteResult {

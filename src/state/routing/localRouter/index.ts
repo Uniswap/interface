@@ -1,5 +1,5 @@
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
+import { AlphaRouter, AlphaRouterConfig, ChainId } from '@uniswap/smart-order-router'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { processSwapRoute } from 'utils/processSwapRoute'
@@ -8,19 +8,22 @@ import { buildDependencies } from './dependencies'
 
 const routerParamsByChain = buildDependencies()
 
-export async function getQuote({
-  type,
-  chainId,
-  tokenIn,
-  tokenOut,
-  amount: amountRaw,
-}: {
-  type: 'exactIn' | 'exactOut'
-  chainId: ChainId
-  tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
-  tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
-  amount: BigintIsh
-}): Promise<{ data: GetQuoteResult; error?: unknown }> {
+export async function getQuote(
+  {
+    type,
+    chainId,
+    tokenIn,
+    tokenOut,
+    amount: amountRaw,
+  }: {
+    type: 'exactIn' | 'exactOut'
+    chainId: ChainId
+    tokenIn: { address: string; chainId: number; decimals: number; symbol?: string }
+    tokenOut: { address: string; chainId: number; decimals: number; symbol?: string }
+    amount: BigintIsh
+  },
+  alphaRouterConfig: Partial<AlphaRouterConfig>
+): Promise<{ data: GetQuoteResult; error?: unknown }> {
   const params = routerParamsByChain[chainId]
   if (!params) {
     throw new Error('Router dependencies not initialized.')
@@ -38,14 +41,16 @@ export async function getQuote({
   const swapRoute = await router.route(
     amount,
     quoteCurrency,
-    type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
+    type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    /*swapConfig=*/ undefined,
+    alphaRouterConfig
   )
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  const { v3PoolProvider, v2PoolProvider } = params
+  // const { v3PoolProvider, v2PoolProvider } = params
 
-  return { data: processSwapRoute(type, amount, v3PoolProvider, v2PoolProvider, swapRoute) }
+  return { data: processSwapRoute(type, amount, /*v3PoolProvider, v2PoolProvider,*/ swapRoute) }
 }
 
 export interface Router extends Worker {

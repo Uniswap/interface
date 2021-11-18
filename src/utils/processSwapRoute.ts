@@ -1,6 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { IV2PoolProvider, IV3PoolProvider, routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
+import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
 // transforms a SwapRoute into a GetQuoteResult
@@ -8,8 +8,8 @@ import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/type
 export function processSwapRoute(
   type: 'exactIn' | 'exactOut',
   amount: CurrencyAmount<Currency>,
-  v3PoolProvider: IV3PoolProvider,
-  v2PoolProvider: IV2PoolProvider,
+  // v3PoolProvider: IV3PoolProvider,
+  // v2PoolProvider: IV2PoolProvider,
   {
     quote,
     quoteGasAdjusted,
@@ -47,8 +47,7 @@ export function processSwapRoute(
 
         curRoute.push({
           type: 'v3-pool',
-          // TODO: consider not processing address since it's not used
-          address: v3PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1, nextPool.fee).poolAddress,
+          // address: v3PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1, nextPool.fee).poolAddress,
           tokenIn: {
             chainId: tokenIn.chainId,
             decimals: tokenIn.decimals,
@@ -94,7 +93,7 @@ export function processSwapRoute(
 
         curRoute.push({
           type: 'v2-pool',
-          address: v2PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1).poolAddress,
+          // address: v2PoolProvider.getPoolAddress(nextPool.token0, nextPool.token1).poolAddress,
           tokenIn: {
             chainId: tokenIn.chainId,
             decimals: tokenIn.decimals,

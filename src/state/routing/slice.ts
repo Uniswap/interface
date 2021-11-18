@@ -1,16 +1,24 @@
-import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import {
+  BaseQueryFn,
+  createApi,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  retry,
+} from '@reduxjs/toolkit/query/react'
+import { Protocol } from '@uniswap/router-sdk'
 import { Token } from '@uniswap/sdk-core'
-import SmartOrderRouterWorker from 'comlink-loader!./localRouter'
 import qs from 'qs'
-import { AppState } from 'state'
-import { Router } from 'state/routing/localRouter'
 
+// import SmartOrderRouterWorker from 'comlink-loader!./localRouter'
 import { GetQuoteResult } from './types'
 
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+
 const DEFAULT_QUERY_PARAMS = {
-  forceCrossProtocol: 'true',
-  minSplits: '3',
-  // protocols: 'v3',
+  // forceCrossProtocol: 'true',
+  // minSplits: '5',
+  protocols: protocols.join(','),
 }
 
 type SerializableToken = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>
@@ -26,22 +34,44 @@ async function getClientSideQuote({
   amount: string
   type: 'exactIn' | 'exactOut'
 }) {
-  const router = new SmartOrderRouterWorker() as Router
+  // const router = new SmartOrderRouterWorker() as Router
 
-  return router.getQuote({
-    type,
-    chainId: tokenIn.chainId,
-    tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
-    tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
-    amount,
-  })
+  try {
+    // return router.getQuote(
+    return (await import('./localRouter/index')).getQuote(
+      {
+        type,
+        chainId: tokenIn.chainId,
+        tokenIn: { address: tokenIn.address, chainId: tokenIn.chainId, decimals: tokenIn.decimals },
+        tokenOut: { address: tokenOut.address, chainId: tokenOut.chainId, decimals: tokenOut.decimals },
+        amount,
+      },
+      { protocols }
+    )
+  } catch (e) {
+    debugger
+    console.debug(e)
+    throw e
+  }
 }
+
+const baseQueryWithBailOut: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = retry(
+  async (args: string | FetchArgs, api, extraOptions) => {
+    const result = await fetchBaseQuery({
+      baseUrl: 'https://api.uniswap.org/v1/',
+    })(args, api, extraOptions)
+
+    if (result.error) {
+      retry.fail(result.error)
+    }
+
+    return result
+  }
+)
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
-  }),
+  baseQuery: baseQueryWithBailOut,
   endpoints: (build) => ({
     getQuote: build.query<
       GetQuoteResult,
@@ -49,12 +79,12 @@ export const routingApi = createApi({
         tokenIn: SerializableToken
         tokenOut: SerializableToken
         amount: string
+        useClientSideRouter: boolean // included in key to invalidate on change
         type: 'exactIn' | 'exactOut'
       }
     >({
-      async queryFn(args, { getState }, _, fetch) {
-        const { tokenIn, tokenOut, amount, type } = args
-        const useClientSideRouter: boolean = (getState() as AppState).user.userClientSideRouter
+      async queryFn(args, _api, _extraOptions, fetch) {
+        const { tokenIn, tokenOut, amount, useClientSideRouter, type } = args
 
         let result
 

@@ -25,7 +25,7 @@ exports[`renders multi route 1`] = `
           class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bXzNiu"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
@@ -83,7 +83,7 @@ exports[`renders multi route 1`] = `
           class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bXzNiu"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"
@@ -164,7 +164,7 @@ exports[`renders single route 1`] = `
           class="Badge-sc-1mhw5si-0 RoutingDiagram__OpaqueBadge-sc-o1ook0-6 gayll lbVKrO"
         >
           <div
-            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll GVwnN"
+            class="Badge-sc-1mhw5si-0 RoutingDiagram__ProtocolBadge-sc-o1ook0-7 gayll bXzNiu"
           >
             <div
               class="theme__TextWrapper-sc-18nh1jk-0 cWOfab RoutingDiagram__BadgeText-sc-o1ook0-8 dYpdfO css-x9zcw6"

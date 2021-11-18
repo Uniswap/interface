@@ -1,10 +1,10 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import ms from 'ms.macro'
 import { useMemo } from 'react'
 import { useBlockNumber } from 'state/application/hooks'
 import { useGetQuoteQuery } from 'state/routing/slice'
+import { useClientSideRouter } from 'state/user/hooks'
 
 import { TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
@@ -43,14 +43,17 @@ function useRoutingAPIArguments({
   amount: CurrencyAmount<Currency> | undefined
   tradeType: TradeType
 }) {
+  const [clientSideRouter] = useClientSideRouter()
+
   if (!tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut)) {
     return undefined
   }
 
   return {
+    amount: amount.quotient.toString(),
     tokenIn: tokenToSerializable(tokenIn.wrapped),
     tokenOut: tokenToSerializable(tokenOut.wrapped),
-    amount: amount.quotient.toString(),
+    useClientSideRouter: clientSideRouter,
     type: (tradeType === TradeType.EXACT_INPUT ? 'exactIn' : 'exactOut') as 'exactIn' | 'exactOut',
   }
 }
@@ -82,8 +85,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const { isLoading, isError, data } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`10s`,
-    refetchOnFocus: true,
+    // pollingInterval: ms`10s`,
+    // refetchOnFocus: true,
   })
 
   const quoteResult = useFreshData(data, Number(data?.blockNumber) || 0)
