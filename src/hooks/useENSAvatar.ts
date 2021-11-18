@@ -19,7 +19,7 @@ export default function useENSAvatar(
   enforceOwnership = true
 ): { avatar: string | null; loading: boolean } {
   const debouncedAddress = useDebounce(address, 200)
-  const ensNode = useMemo(() => {
+  const node = useMemo(() => {
     if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
     try {
       return debouncedAddress ? namehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`) : undefined
@@ -28,7 +28,7 @@ export default function useENSAvatar(
     }
   }, [debouncedAddress])
 
-  const addressAvatar = useAvatarFromNode(ensNode)
+  const addressAvatar = useAvatarFromNode(node)
   const nameAvatar = useAvatarFromNode(namehash(useENSName(address).ENSName ?? ''))
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
@@ -44,15 +44,17 @@ export default function useENSAvatar(
   }
 }
 
-function useAvatarFromNode(node = ''): { avatar?: string; loading: boolean } {
+function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean } {
+  const nodeArgument = useMemo(() => [node], [node])
+  const textArgument = useMemo(() => [node, 'avatar'], [node])
   const registrarContract = useENSRegistrarContract(false)
-  const resolverAddress = useSingleCallResult(registrarContract, 'resolver', [node])
+  const resolverAddress = useSingleCallResult(registrarContract, 'resolver', nodeArgument)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
     false
   )
-  const avatar = useSingleCallResult(resolverContract, 'text', [node, 'avatar'])
+  const avatar = useSingleCallResult(resolverContract, 'text', textArgument)
 
   return {
     avatar: avatar.result?.[0],
@@ -100,10 +102,11 @@ function useERC721Uri(
   id: string | undefined,
   enforceOwnership: boolean
 ): { uri?: string; loading: boolean } {
+  const idArgument = useMemo(() => [id], [id])
   const { account } = useActiveWeb3React()
   const contract = useERC721Contract(contractAddress)
-  const owner = useSingleCallResult(contract, 'ownerOf', [id])
-  const uri = useSingleCallResult(contract, 'tokenURI', [id])
+  const owner = useSingleCallResult(contract, 'ownerOf', idArgument)
+  const uri = useSingleCallResult(contract, 'tokenURI', idArgument)
   return {
     uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
     loading: owner.loading || uri.loading,
@@ -116,9 +119,11 @@ function useERC1155Uri(
   enforceOwnership: boolean
 ): { uri?: string; loading: boolean } {
   const { account } = useActiveWeb3React()
+  const idArgument = useMemo(() => [id], [id])
+  const accountArgument = useMemo(() => [account || '', id], [account, id])
   const contract = useERC1155Contract(contractAddress)
-  const balance = useSingleCallResult(contract, 'balanceOf', [account || '', id])
-  const uri = useSingleCallResult(contract, 'uri', [id])
+  const balance = useSingleCallResult(contract, 'balanceOf', accountArgument)
+  const uri = useSingleCallResult(contract, 'uri', idArgument)
   return {
     uri: !enforceOwnership || balance.result?.[0] > 0 ? uri.result?.[0] : undefined,
     loading: balance.loading || uri.loading,
