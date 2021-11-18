@@ -27,6 +27,7 @@ import { TransferTokenScreen } from 'src/features/transfer/TransferTokenScreen'
 import { AccountsScreen } from 'src/screens/AccountsScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
+import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { darkTheme, theme } from 'src/styles/theme'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -91,6 +92,11 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
         <Stack.Screen
           name={Screens.TokenDetails}
           component={TokenDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={Screens.Notifications}
+          component={NotificationsScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

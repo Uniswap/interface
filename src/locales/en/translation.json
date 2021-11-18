@@ -18,6 +18,7 @@
   "Uniswap Wallet": "Uniswap Wallet",
   "Create New Account": "Create New Account",
   "Import Account": "Import Account",
+  "No Active Account": "No Active Account",
   "Transaction Settings": "Transaction Settings",
   "About Gas Price": "About Gas Price",
   "Gas price determines the priority with which your transaction is handled by the network.": "Gas price determines the priority with which your transaction is handled by the network.",

@@ -5,6 +5,7 @@ export enum Screens {
   Dev = 'Dev',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
+  Notifications = 'Notifications',
   SeedPhrase = 'SeedPhrase',
   Swap = 'Swap',
   SwapConfig = 'SwapConfig',

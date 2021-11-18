@@ -9,6 +9,7 @@ export type RootStackParamList = {
   [Screens.Dev]: undefined
   [Screens.Home]: undefined
   [Screens.ImportAccount]: undefined
+  [Screens.Notifications]: undefined
   [Screens.SeedPhrase]: { seedPhrase: string[] }
   [Screens.Swap]: undefined
   [Screens.SwapConfig]: undefined

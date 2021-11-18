@@ -62,6 +62,7 @@
     "react-native-svg": "^12.1.1",
     "react-native-unimodules": "^0.14.8",
     "react-native-vision-camera": "^2.8.3",
+    "react-native-webview": "^11.14.3",
     "react-query": "^3.29.0",
     "react-redux": "^7.2.5",
     "redux-persist": "^6.0.0",

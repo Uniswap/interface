@@ -17,12 +17,7 @@ export function AccountHeader({ children, onPressAccounts }: AccountHeaderProps)
   const { t } = useTranslation()
 
   return (
-    <Box
-      flexDirection="row"
-      alignItems="center"
-      height={50}
-      paddingHorizontal="md"
-      marginVertical="md">
+    <Box flex={1} flexDirection="row" alignItems="center" height={50} margin="md">
       <Button
         flex={1}
         flexDirection="row"
