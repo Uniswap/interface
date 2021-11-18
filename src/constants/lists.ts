@@ -11,6 +11,8 @@ export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json
 const ROLL_LIST = 'https://app.tryroll.com/tokens.json'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
+const UZHSWAP_LIST =
+  'https://gist.githubusercontent.com/dydent/6140a1d8794cc9d54454ddadde4699e5/raw/ac6826f4dd789147c7b4292cf472cef1bc7fba1f/uzhswap.tokenlist.json'
 const CUSTOM_LIST =
   'https://gist.githubusercontent.com/j0nezz/25a4c1dd4f4eab4a82a144f9388b3b27/raw/cfc9def2e96bbd930766d1f13133360d6fe5a971/list.json'
 
@@ -32,6 +34,7 @@ const DEFAULT_LIST_OF_LISTS_TO_DISPLAY: string[] = [
   OPTIMISM_LIST,
   GEMINI_LIST,
   CUSTOM_LIST,
+  UZHSWAP_LIST,
 ]
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [

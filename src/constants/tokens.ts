@@ -3,6 +3,70 @@ import { Ether, Token, WETH9 } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 import { SupportedChainId } from './chains'
 
+/*
+uzh swap tokens
+ */
+
+export const UZHSUSHI = new Token(
+  SupportedChainId.UZH,
+  '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
+  18,
+  'UZHSUS',
+  'UZHSushiToken'
+)
+
+export const INCOINGNITO = new Token(
+  SupportedChainId.UZH,
+  '0x8182965A5dC302e6b25b2b177c7CCa42C5099795',
+  18,
+  'ICG',
+  'Incoingnito '
+)
+
+export const UZHCRO = new Token(
+  SupportedChainId.UZH,
+  '0xEe9E427945A073c9C8801dC5da44a276aF339333',
+  18,
+  'UZHCRO',
+  'UZHCroToken'
+)
+
+export const INTELLICOIN = new Token(
+  SupportedChainId.UZH,
+  '0x2A35E060849Fa56Ba648C93a50E23359b5d14515',
+  18,
+  'ITC',
+  'Intellicoin '
+)
+
+export const PRIVATEPEDIA = new Token(
+  SupportedChainId.UZH,
+  '0x5e1bcb66D6CbFA4F98bB63BaF4357a543232BFbc',
+  18,
+  'PVT',
+  'Privatepedia '
+)
+
+export const COINICIOUS = new Token(
+  SupportedChainId.UZH,
+  '0xC486C817bE36F9ccf257BfF86CC33ff71a69D651',
+  18,
+  'CNS',
+  'Coinicious  '
+)
+
+export const CRYPTOOFFICIALCOIN = new Token(
+  SupportedChainId.UZH,
+  '0xd0b00725255C35514A8d702b4B4F78C141E8B5eF',
+  18,
+  'COC',
+  'Cryptofficailcoin  '
+)
+
+/*
+Example Tokens
+ */
+
 export const DMY = new Token(
   SupportedChainId.UZH,
   '0xfb4A1DeE8894fd44Ee3233aAB41C95d61C90c86d',
@@ -150,6 +214,7 @@ export const ETH2X_FLI = new Token(
   'ETH2x-FLI',
   'ETH 2x Flexible Leverage Index'
 )
+
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.UZH]: new Token(
     SupportedChainId.UZH,
