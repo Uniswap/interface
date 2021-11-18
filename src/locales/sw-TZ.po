@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -47,7 +47,7 @@ msgstr "(chukua)"
 msgid "(clear all)"
 msgstr "(futa zote)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(rekebisha)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Mapendekezo Yote"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Kura"
 
@@ -115,7 +115,7 @@ msgstr "<0>Kufungua upigaji kura</0> kujiandaa kwa pendekezo linalofuata."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Karibu kwenye timu ya Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika kuwasilisha mapendekezo"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Unda Dimbwi na Ugavi"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Unda Pendekezo"
 
@@ -597,7 +597,7 @@ msgstr "Shiriki Kura"
 msgid "Delegate voting power to {0}"
 msgstr "Kabidhi nguvu ya kupiga kura kwa {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Imekabidhiwa kwa:"
 
@@ -1313,7 +1313,7 @@ msgstr "Pendekezo limewasilishwa"
 msgid "Proposal Title"
 msgstr "Kichwa cha Pendekezo"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Mapendekezo"
 
@@ -1345,7 +1345,7 @@ msgstr "Viwango"
 msgid "Read more about UNI"
 msgstr "Soma zaidi kuhusu UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Soma zaidi kuhusu Uniswap utawala"
 
@@ -1445,7 +1445,7 @@ msgstr "Chagua kitendo"
 msgid "Selected Range"
 msgstr "Masafa yaliyochaguliwa"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Binafsi"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI katika mzunguko:"
 msgid "UNI price:"
 msgstr "Bei ya UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Ishara za UNI zinawakilisha hisa za kupiga kura katika utawala wa Uniswap. Unaweza kupiga kura kwa kila pendekezo mwenyewe au kupeana kura zako kwa mtu wa tatu."
 
@@ -1813,7 +1813,7 @@ msgstr "Hitilafu isiyotarajiwa. Haikuweza kukadiria gesi kwa ubadilishaji."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Suala lisilotarajiwa na kukadiria gesi. Tafadhali jaribu tena."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Utawala usiobadilika"
 
@@ -1849,12 +1849,12 @@ msgstr "Chanzo kisichojulikana"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Hitilafu isiyojulikana{0}. Jaribu kuongeza uvumilivu wako wa kuteleza. Kumbuka: ada ya uhamishaji na toa rehani haziendani na Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Fungua Kura"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Fungua Upigaji Kura"
 
@@ -1884,7 +1884,7 @@ msgstr "Unwrap"
 msgid "Unwrap <0/> to ETH"
 msgstr "Unwrap <0 /> hadi ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Sasisha Ujumbe"
 

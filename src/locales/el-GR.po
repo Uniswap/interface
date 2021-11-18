@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -47,7 +47,7 @@ msgstr "(διεκδίκηση)"
 msgid "(clear all)"
 msgstr "(καθαρισμός όλων)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(επεξεργασία)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Όλες Οι Προτάσεις"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Ψήφοι"
 
@@ -115,7 +115,7 @@ msgstr "<0>Ξεκλειδώστε τη ψηφοφορία</0> για να προ
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Καλώς ήρθατε στην ομάδα Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Απαιτείται ελάχιστο όριο 0,25% της συνολικής προσφοράς UNI για την υποβολή προτάσεων"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Δημιουργία Ψηφοφορίας & Παροχής"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Δημιουργία πρότασης"
 
@@ -597,7 +597,7 @@ msgstr "Ανάθεση Ψήφων"
 msgid "Delegate voting power to {0}"
 msgstr "Εκχωρήστε την εξουσία ψήφου στο {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Ανατέθηκε σε:"
 
@@ -1313,7 +1313,7 @@ msgstr "Υποβλήθηκε πρόταση"
 msgid "Proposal Title"
 msgstr "Τίτλος πρότασης"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Προτάσεις"
 
@@ -1345,7 +1345,7 @@ msgstr "Τιμές"
 msgid "Read more about UNI"
 msgstr "Διαβάστε περισσότερα για UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Διαβάστε περισσότερα για τη διακυβέρνηση Uniswap"
 
@@ -1445,7 +1445,7 @@ msgstr "Επιλέξτε μια ενέργεια"
 msgid "Selected Range"
 msgstr "Επιλεγμένο Εύρος"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Αυτοπροσώπως"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI σε κυκλοφορία:"
 msgid "UNI price:"
 msgstr "Τιμή UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Οι μάρκες UNI αντιπροσωπεύουν μετοχές με ψήφους στη διακυβέρνηση Uniswap. Μπορείτε να ψηφίσετε μόνοι σας για κάθε πρόταση ή να αναθέσετε τις ψήφους σας σε ένα τρίτο μέρος."
 
@@ -1813,7 +1813,7 @@ msgstr "Απρόσμενο σφάλμα. Δεν ήταν δυνατή η εκτ�
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Μη αναμενόμενο πρόβλημα με την εκτίμηση του αερίου. ΠΑΡΑΚΑΛΩ προσπαθησε ξανα."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap Διακυβέρνηση"
 
@@ -1849,12 +1849,12 @@ msgstr "Άγνωστη πηγή"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: οι χρεώσεις μεταφοράς και οι rebase μάρκες δεν είναι συμβατές με το Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Ξεκλείδωμα Ψήφων"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Ξεκλείδωμα Ψηφοφορίας"
 
@@ -1884,7 +1884,7 @@ msgstr "Αποκαλύπτω"
 msgid "Unwrap <0/> to ETH"
 msgstr "Ξετυλίξτε <0/> στο ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Ενημέρωση Ανάθεσης"
 

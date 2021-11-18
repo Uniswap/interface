@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -47,7 +47,7 @@ msgstr "(revendicare)"
 msgid "(clear all)"
 msgstr "(elimină tot)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(editează)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Toate propunerile"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "Voturi <0/>"
 
@@ -115,7 +115,7 @@ msgstr "<0>Deblochează votul </0> pentru a se pregăti pentru următoarea propu
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Bine ai venit la echipa Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Pentru depunerea propunerilor este necesar un prag minim de 0,25% din totalul aprovizionării UNI"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Crează Rezervă & Aprovizionare"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Creați o propunere"
 
@@ -597,7 +597,7 @@ msgstr "Voturi delegate"
 msgid "Delegate voting power to {0}"
 msgstr "Delegă puterea de vot la {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegat către:"
 
@@ -1313,7 +1313,7 @@ msgstr "Propunere trimisă"
 msgid "Proposal Title"
 msgstr "Titlul propunerii"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Propuneri"
 
@@ -1345,7 +1345,7 @@ msgstr "Tarife"
 msgid "Read more about UNI"
 msgstr "Citește mai multe despre UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Citește mai multe despre guvernarea Uniswap"
 
@@ -1445,7 +1445,7 @@ msgstr "Selectați o acțiune"
 msgid "Selected Range"
 msgstr "Gama Selectată"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Sine"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI în circulație:"
 msgid "UNI price:"
 msgstr "Preț UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Jetoanele UNI reprezintă acțiunile cu drept de vot în guvernarea Uniswap. Poți vota pentru fiecare propunere sau poți să delegi voturile unui terț."
 
@@ -1813,7 +1813,7 @@ msgstr "Eroare neașteptată. Nu s-a putut estima gazul pentru swap."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Problemă neașteptată cu estimarea gazului. Vă rugăm să încercați din nou."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Guvernare Uniswap"
 
@@ -1849,12 +1849,12 @@ msgstr "Sursă Necunoscută"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Eroare necunoscută{0}. Încercați să vă măriți toleranța la alunecare. Notă: taxa pentru jetoane de transfer și rebase sunt incompatibile cu Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Deblochează Voturi"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Deblochează Votarea"
 
@@ -1884,7 +1884,7 @@ msgstr "Despachetează"
 msgid "Unwrap <0/> to ETH"
 msgstr "Desfaceți <0 /> la ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Actualizează Delegarea"
 

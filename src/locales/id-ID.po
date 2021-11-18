@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -47,7 +47,7 @@ msgstr "(klaim)"
 msgid "(clear all)"
 msgstr "(Hapus semua)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(edit)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Semua Proposal"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Suara"
 
@@ -115,7 +115,7 @@ msgstr "<0>Buka voting</0> untuk mempersiapkan usulan berikutnya."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉</0>Selamat datang di tim Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Memerlukan minimal 0,25% dari total pasokan UNI untuk mengirimkan proposal"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Buat Pool & Pasokan"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Buat Proposal"
 
@@ -597,7 +597,7 @@ msgstr "Delegasikan Suara"
 msgid "Delegate voting power to {0}"
 msgstr "Delegasikan hak suara ke {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Didelegasikan ke:"
 
@@ -1313,7 +1313,7 @@ msgstr "Proposal Terkirim"
 msgid "Proposal Title"
 msgstr "Judul Proposal"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Usulan"
 
@@ -1345,7 +1345,7 @@ msgstr "Tarif"
 msgid "Read more about UNI"
 msgstr "Baca selengkapnya tentang UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Baca selengkapnya tentang pengaturan Uniswap"
 
@@ -1445,7 +1445,7 @@ msgstr "Pilih tindakan"
 msgid "Selected Range"
 msgstr "Rentang yang Dipilih"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Sendiri"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI yang beredar:"
 msgid "UNI price:"
 msgstr "Harga UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat memberikan suara secara langsung pada tiap usulan atau mendelegasikannya kepada pihak ketiga."
 
@@ -1813,7 +1813,7 @@ msgstr "Kesalahan yang tidak diduga. Tidak dapat memperkirakan gas untuk swap."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Masalah tak terduga dengan memperkirakan gas. Silakan coba lagi."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Tata Kelola Uniswap"
 
@@ -1849,12 +1849,12 @@ msgstr "Sumber tidak diketahui"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Kesalahan tidak diketahui{0}. Coba tingkatkan toleransi selip Anda. Catatan: biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Buka Suara"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Buka Kunci Voting"
 
@@ -1884,7 +1884,7 @@ msgstr "Membuka"
 msgid "Unwrap <0/> to ETH"
 msgstr "Buka bungkus </> ke ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Perbarui Delegasi"
 
