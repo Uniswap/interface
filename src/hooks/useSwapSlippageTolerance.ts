@@ -28,7 +28,7 @@ function guestimateGas(
   return 100_000 + trade.swaps.reduce((memo, swap) => swap.route.pools.length + memo, 0) * 30_000
 }
 
-const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(50, 1000) // 0.5%
+const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 export default function useSwapSlippageTolerance(
