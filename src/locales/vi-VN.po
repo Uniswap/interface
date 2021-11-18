@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -47,7 +47,7 @@ msgstr "(lấy)"
 msgid "(clear all)"
 msgstr "(xóa tất cả)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(chỉnh sửa)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Tất cả các đề xuất"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Phiếu bầu"
 
@@ -115,7 +115,7 @@ msgstr "<0>Mở khóa biểu quyết</0> để chuẩn bị cho đề xuất ti�
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0> Chào mừng đến với đội Unicorn :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Yêu cầu ngưỡng tối thiểu 0,25% tổng nguồn cung cấp UNI để gửi đề xuất"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Tạo Nhóm & Nguồn cung"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Tạo đề xuất"
 
@@ -597,7 +597,7 @@ msgstr "Phiếu bầu ủy quyền"
 msgid "Delegate voting power to {0}"
 msgstr "Ủy quyền biểu quyết thành {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Giao cho:"
 
@@ -1313,7 +1313,7 @@ msgstr "Đề xuất đã được đệ trình"
 msgid "Proposal Title"
 msgstr "Tiêu đề đề xuất"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Đề xuất"
 
@@ -1345,7 +1345,7 @@ msgstr "Tỷ giá"
 msgid "Read more about UNI"
 msgstr "Đọc thêm về UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Đọc thêm về quản trị Uniswap"
 
@@ -1445,7 +1445,7 @@ msgstr "Chọn một hành động"
 msgid "Selected Range"
 msgstr "Phạm vi đã chọn"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Bản thân"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI đang lưu hành:"
 msgid "UNI price:"
 msgstr "Giá UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Mã token UNI đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap. Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy thác phiếu bầu của mình cho bên thứ ba."
 
@@ -1813,7 +1813,7 @@ msgstr "Lỗi không mong đợi. Không thể ước tính khí cho hoán đổ
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Vấn đề không mong muốn với ước tính khí. Vui lòng thử lại."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Quản trị Uniswap"
 
@@ -1849,12 +1849,12 @@ msgstr "Nguồn không rõ"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Lỗi không xác định{0}. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý: phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Mở khóa phiếu bầu"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Mở khóa biểu quyết"
 
@@ -1884,7 +1884,7 @@ msgstr "Tháo"
 msgid "Unwrap <0/> to ETH"
 msgstr "Mở gói <0 /> thành ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Cập nhật ủy quyền"
 

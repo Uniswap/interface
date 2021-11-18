@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -47,7 +47,7 @@ msgstr "(eis)"
 msgid "(clear all)"
 msgstr "(maak alles skoon)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(wysig)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> Alle voorstelle"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> Stemme"
 
@@ -115,7 +115,7 @@ msgstr "<0> Ontsluit stem</0> om voor te berei vir die volgende voorstel."
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Welkom by die Unicorn span :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "'N Minimum drempel van 0,25% van die totale UNI-aanbod is nodig om voorstelle in te dien"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Skep Poel en Verskaf"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Skep 'n voorstel"
 
@@ -597,7 +597,7 @@ msgstr "Delegeer Stemme"
 msgid "Delegate voting power to {0}"
 msgstr "Delegeer stemreg na {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Afgevaardig na:"
 
@@ -1313,7 +1313,7 @@ msgstr "Voorstel ingedien"
 msgid "Proposal Title"
 msgstr "Voorstel Titel"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Voorstelle"
 
@@ -1345,7 +1345,7 @@ msgstr "Tariewe"
 msgid "Read more about UNI"
 msgstr "Lees meer oor UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Lees meer oor Uniswap-bestuur"
 
@@ -1445,7 +1445,7 @@ msgstr "Kies 'n aksie"
 msgid "Selected Range"
 msgstr "Geselekteerde reeks"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Self"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI in omloop:"
 msgid "UNI price:"
 msgstr "UNI-prys:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI-tekens verteenwoordig stemgeregtigde aandele in Uniswap-bestuur. U kan self oor elke voorstel stem of u stemme aan 'n derde party delegeer."
 
@@ -1813,7 +1813,7 @@ msgstr "Onverwagte fout. Kon nie gas vir die ruil skat nie."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Onverwagte probleem met die skatting van die gas. Probeer asseblief weer."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Onttrek bestuur"
 
@@ -1849,12 +1849,12 @@ msgstr "Onbekende bron"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Onbekende fout{0}. Probeer u glyverdraagsaamheid verhoog. Opmerking: fooi vir oordrag en herbasis-tekens is nie versoenbaar met Uniswap V3 nie."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Ontsluit stemme"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Ontsluit stemming"
 
@@ -1884,7 +1884,7 @@ msgstr "Maak oop"
 msgid "Unwrap <0/> to ETH"
 msgstr "Pak <0/> uit na ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Delegasie op te dateer"
 

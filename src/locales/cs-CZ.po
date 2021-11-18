@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -47,7 +47,7 @@ msgstr "(reklamace)"
 msgid "(clear all)"
 msgstr "(vyprázdnit vše)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(upravit)"
 
@@ -78,8 +78,8 @@ msgstr "75 %"
 msgid "<0/> All Proposals"
 msgstr "<0/> Všechny návrhy"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> hlasů"
 
@@ -115,7 +115,7 @@ msgstr "<0>Odblokujte hlasování,</0> abyste se mohli připravit na další ná
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>Vítejte v týmu Unicorn :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "K podání návrhů je nutná minimální hranice 0,25% z celkové nabídky UNI"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Vytvořit fond a zásobu"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Vytvořit návrh"
 
@@ -597,7 +597,7 @@ msgstr "Delegovat hlasy"
 msgid "Delegate voting power to {0}"
 msgstr "Delegujte hlasovací právo na {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegováno (komu):"
 
@@ -1313,7 +1313,7 @@ msgstr "Návrh předložen"
 msgid "Proposal Title"
 msgstr "Název návrhu"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Návrhy"
 
@@ -1345,7 +1345,7 @@ msgstr "Sazby"
 msgid "Read more about UNI"
 msgstr "Přečtěte si více o UNI"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Přečtěte si více o správě Uniswap"
 
@@ -1445,7 +1445,7 @@ msgstr "Vyberte akci"
 msgid "Selected Range"
 msgstr "Vybraný rozsah"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Sám"
 
@@ -1772,7 +1772,7 @@ msgstr "UNI v oběhu:"
 msgid "UNI price:"
 msgstr "Cena UNI:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Žetony UNI představují hlasovací podíly ve správě Uniswap. O každém návrhu můžete buďto hlasovat sami, nebo můžete delegovat své hlasy na nějakou třetí stranu."
 
@@ -1813,7 +1813,7 @@ msgstr "Neočekávaná chyba. Plyn pro výměnu se nepodařilo odhadnout."
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Neočekávaný problém s odhadem plynu. Prosím zkuste to znovu."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Správa Uniswap"
 
@@ -1849,12 +1849,12 @@ msgstr "Neznámý zdroj"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Neznámá chyba{0}. Zkuste zvýšit toleranci skluzu. Poznámka: Poplatky za žetony za převody a rebase nejsou kompatibilní s Uniswap V3."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Odblokovat hlasy"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Odblokovat hlasování"
 
@@ -1884,7 +1884,7 @@ msgstr "Rozbalit"
 msgid "Unwrap <0/> to ETH"
 msgstr "Rozbalte <0/> na ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Aktualizovat delegaci"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -47,7 +47,7 @@ msgstr "(請求)"
 msgid "(clear all)"
 msgstr "(すべてクリア)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(編集)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/>すべての提案"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/>投票"
 
@@ -115,7 +115,7 @@ msgstr "次の提案に備えるため <0>投票のロックを解除</0>"
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNIが必要です。"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "プール作成と流動性の追加"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "提案を作成"
 
@@ -597,7 +597,7 @@ msgstr "投票を委任する"
 msgid "Delegate voting power to {0}"
 msgstr "{0} に投票権を委任する"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "委任先:"
 
@@ -1313,7 +1313,7 @@ msgstr "提出された提案"
 msgid "Proposal Title"
 msgstr "提案のタイトル"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "提案"
 
@@ -1345,7 +1345,7 @@ msgstr "レート"
 msgid "Read more about UNI"
 msgstr "UNIについてもっと見る"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "Uniswapガバナンスについてもっと見る"
 
@@ -1445,7 +1445,7 @@ msgstr "アクションの選択"
 msgid "Selected Range"
 msgstr "設定した価格範囲"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "自分"
 
@@ -1772,7 +1772,7 @@ msgstr "流通しているUNI:"
 msgid "UNI price:"
 msgstr "UNIの価格:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNIトークンはUniswapガバナンスにおける投票権を表します。各提案に対して自分で投票するか、もしくは第三者に投票を委任することができます。"
 
@@ -1813,7 +1813,7 @@ msgstr "予期しないエラー。スワップのガスを見積もることが
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "ガスの見積もりに関する予期しない問題。もう一度やり直してください。"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswapのガバナンス"
 
@@ -1849,12 +1849,12 @@ msgstr "不明なソース"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "不明なエラー{0}。スリッページの許容範囲を広げてみてください。注：転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がありません。"
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "投票のロックを解除"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "投票のロックを解除"
 
@@ -1884,7 +1884,7 @@ msgstr "アンラップ"
 msgid "Unwrap <0/> to ETH"
 msgstr "<0 />をETHにアンラップ"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "委任を更新"
 

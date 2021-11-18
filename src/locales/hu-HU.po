@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -47,7 +47,7 @@ msgstr "(követel)"
 msgid "(clear all)"
 msgstr "(összes törlése)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(szerkesztés)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0 /> Minden javaslat"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0 /> Szavazatok"
 
@@ -115,7 +115,7 @@ msgstr "<0> Szavazás feloldása</0> a következő javaslatra való felkészül�
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0> 🎉</0> Üdvözöljük az Unicorn csapatában :) <1> 🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "A pályázatok benyújtásához az UNI teljes kínálatának minimum 0,25% -a szükséges"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "Pool és kínálat létrehozása"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "Javaslat létrehozása"
 
@@ -597,7 +597,7 @@ msgstr "Szavazatok delegálása"
 msgid "Delegate voting power to {0}"
 msgstr "Delegálja a szavazati jogot {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "Delegálva:"
 
@@ -1314,7 +1314,7 @@ msgstr "Javaslat benyújtva"
 msgid "Proposal Title"
 msgstr "A javaslat címe"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "Javaslatok"
 
@@ -1346,7 +1346,7 @@ msgstr "Árfolyamok"
 msgid "Read more about UNI"
 msgstr "További információk az UNI-ról"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "További információk az Uniswap irányításáról"
 
@@ -1446,7 +1446,7 @@ msgstr "Válasszon ki egy műveletet"
 msgid "Selected Range"
 msgstr "Kiválasztott tartomány"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "Saját"
 
@@ -1773,7 +1773,7 @@ msgstr "Forgalomban lévő UNI:"
 msgid "UNI price:"
 msgstr "UNI ár:"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "Az UNI tokenek szavazati részvényeket képviselnek az Uniswap irányításában. Az egyes javaslatokról saját maga is szavazhat, vagy szavazatait átruházhatja egy harmadik félre."
 
@@ -1814,7 +1814,7 @@ msgstr "Váratlan hiba. Nem sikerült megbecsülni a cseréhez szükséges gázt
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "Váratlan probléma a gáz becslésével. Kérlek próbáld újra."
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap irányítás"
 
@@ -1850,12 +1850,12 @@ msgstr "Ismeretlen forrás"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszástűrést. Megjegyzés: az átutalási és újbóli alapkivonási díjak nem kompatibilisek az Uniswap V3 -mal."
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "Szavazatok feloldása"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "Szavazás feloldása"
 
@@ -1885,7 +1885,7 @@ msgstr "Kicsomagolás"
 msgid "Unwrap <0/> to ETH"
 msgstr "Csomagolja ki a (z) <0/> gombot ETH -ra"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "Delegálás frissítése"
 

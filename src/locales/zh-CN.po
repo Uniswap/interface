@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 03:06\n"
+"PO-Revision-Date: 2021-11-18 06:11\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -47,7 +47,7 @@ msgstr "(领取)"
 msgid "(clear all)"
 msgstr "(全部清除)"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(编辑)"
 
@@ -78,8 +78,8 @@ msgstr "75%"
 msgid "<0/> All Proposals"
 msgstr "<0/> 所有提案"
 
-#: src/pages/Vote/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "<0/> Votes"
 msgstr "<0/> 票"
 
@@ -115,7 +115,7 @@ msgstr "<0>解锁投票</0>，以准备下一个提案。"
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 
@@ -543,7 +543,7 @@ msgid "Create Pool & Supply"
 msgstr "创建流动池和供应流动资金"
 
 #: src/pages/CreateProposal/index.tsx
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Create Proposal"
 msgstr "创建提案"
 
@@ -597,7 +597,7 @@ msgstr "委托投票"
 msgid "Delegate voting power to {0}"
 msgstr "将投票权委托给 {0}"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Delegated to:"
 msgstr "委托给："
 
@@ -1313,7 +1313,7 @@ msgstr "已提交提案"
 msgid "Proposal Title"
 msgstr "提案标题"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Proposals"
 msgstr "提案"
 
@@ -1345,7 +1345,7 @@ msgstr "费率"
 msgid "Read more about UNI"
 msgstr "阅读更多关于 UNI 代币的信息"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Read more about Uniswap governance"
 msgstr "阅读有关Uniswap治理的更多信息"
 
@@ -1445,7 +1445,7 @@ msgstr "选择一个操作。"
 msgid "Selected Range"
 msgstr "选定范围"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Self"
 msgstr "自我"
 
@@ -1772,7 +1772,7 @@ msgstr "流通中的 UNI 代币："
 msgid "UNI price:"
 msgstr "UNI 代币兑换率："
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
 msgstr "UNI代币代表了Uniswap治理中的投票份额。您可以自行为提案进行投票，或将您的投票权委托给第三方。"
 
@@ -1813,7 +1813,7 @@ msgstr "错误。无法估计兑换所需的gas。"
 msgid "Unexpected issue with estimating the gas. Please try again."
 msgstr "估计 gas 时遇到问题。请再试一次。"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Uniswap Governance"
 msgstr "Uniswap治理"
 
@@ -1849,12 +1849,12 @@ msgstr "未知来源"
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "未知错误{0}。可以尝试增加滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和弹性供应（rebase）代币都与Uniswap V3不兼容。"
 
+#: src/pages/Vote/Landing.tsx
 #: src/pages/Vote/VotePage.tsx
-#: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
 msgstr "解锁投票"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Unlock Voting"
 msgstr "解锁投票"
 
@@ -1884,7 +1884,7 @@ msgstr "展开"
 msgid "Unwrap <0/> to ETH"
 msgstr "将 <0/> 换回为 ETH"
 
-#: src/pages/Vote/index.tsx
+#: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
 msgstr "更新投票权委托"
 
