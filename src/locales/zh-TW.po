@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-12 17:09\n"
+"PO-Revision-Date: 2021-11-18 03:06\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -309,7 +309,7 @@ msgstr "適合穩定幣幣對。"
 
 #: src/components/FeeSelector/shared.tsx
 msgid "Best for very stable pairs."
-msgstr "最適合非常穩定的配對。"
+msgstr "適合非常穩定的幣對。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -1682,7 +1682,7 @@ msgstr "到（至少）"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "To start trading on {0}, first bridge your assets from L1 to L2. Please treat this as a beta release and learn about the risks before using {1}."
-msgstr "{0}上開始交易，首先將您的資產從 L1 橋接到 L2。請將此視為測試版並在使用 {1}之前了解風險。"
+msgstr "在 {0} 上交易，首先須將您的資產從 L1 橋接到 L2。請將此視為 Beta 版並在使用 {1} 之前了解風險。"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
