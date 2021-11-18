@@ -1,6 +1,6 @@
-import { initializeConnector } from '@web3-react/core'
-import { Network } from '@web3-react/network'
 import { SupportedChainId } from 'constants/chains'
+import { initializeConnector } from 'widgets-web3-react/core'
+import { Network } from 'widgets-web3-react/network'
 
 export const URLS = {
   [SupportedChainId.MAINNET]: [`https://eth-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
