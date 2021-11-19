@@ -132,6 +132,11 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
     console.error('Weekly apy overflow', farmSummary.farmName, e)
   }
 
+  const displayedPercentageReturn =
+    apy.denominator.toString() !== '0'
+      ? `${userAprMode ? apy.toFixed(0, { groupSeparator: ',' }) : quarterlyAPY}%`
+      : '-'
+
   return (
     <Wrapper showBackground={isStaking} bgColor={theme.primary1}>
       <CardNoise />
@@ -143,11 +148,16 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
             {token0?.symbol}-{token1?.symbol}
           </TYPE.white>
           {apy && apy.greaterThan('0') && (
-            <TYPE.white>
-              <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-                {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
-              </TYPE.small>
-            </TYPE.white>
+            <span
+              aria-label="Toggle APR/APY"
+              onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}
+            >
+              <TYPE.white>
+                <TYPE.small className="apr" fontWeight={400} fontSize={14}>
+                  {displayedPercentageReturn} {userAprMode ? 'APR' : 'APY'}
+                </TYPE.small>
+              </TYPE.white>
+            </span>
           )}
         </PoolInfo>
 
@@ -171,7 +181,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
           })}
         />
         {apy && apy.greaterThan('0') && (
-          <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
+          <div aria-label="Toggle APR/APY" onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
                 farmSummary.tvlUSD === '0' ? (
@@ -184,11 +194,7 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
                 )
               }
               statName={`${userAprMode ? 'APR' : 'APY'}`}
-              statValue={
-                apy.denominator.toString() !== '0'
-                  ? `${userAprMode ? apy.toFixed(0, { groupSeparator: ',' }) : quarterlyAPY}%`
-                  : '-'
-              }
+              statValue={displayedPercentageReturn}
             />
           </div>
         )}
