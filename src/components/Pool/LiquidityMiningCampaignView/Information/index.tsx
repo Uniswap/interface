@@ -422,7 +422,7 @@ function Information({
                   </AutoColumn>
                 </AutoRow>
                 <CarrotButton
-                  link={`https://bafybeicxahcpyp27mwbqau4xdc4ej3slv2vyaf3j5sltuo2c2mkieazrmy.ipfs.dweb.link/#/campaigns/${reward.token.kpiId}?chainId=${chainId}`}
+                  link={`https://carrot.eth.link/#/campaigns/${reward.token.kpiId}?chainId=${chainId}`}
                   text="Go to campaign"
                 />
               </RowBetween>
