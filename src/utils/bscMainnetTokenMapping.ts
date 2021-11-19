@@ -4,6 +4,8 @@ import { isAddress } from 'utils'
 export const getBscMainnetTokenLogoURL = (address: string) => {
   let uri
 
+  // TODO: Refactor rewards logo get logo image from token list instead of mapping like this
+
   if (address?.toLowerCase() === ZERO_ADDRESS) {
     //native token
     address = `0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c`
@@ -20,6 +22,12 @@ export const getBscMainnetTokenLogoURL = (address: string) => {
   } else if (address?.toLowerCase() === '0x339c72829ab7dd45c3c52f965e7abe358dd8761e') {
     //WANA
     uri = `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${address}/logo.png`
+  } else if (address?.toLowerCase() === '0x3944ac66b9b9b40a6474022d6962b6caa001b5e3') {
+    // EBA
+    uri = 'https://i.imgur.com/Tzs373u.png'
+  } else if (address?.toLowerCase() === '0xE81257d932280AE440B17AFc5f07C8A110D21432') {
+    // ZUKI
+    uri = 'https://zukimoba.com/images/logos/logo.png'
   }
 
   if (!uri) {

@@ -99,6 +99,22 @@ export const BSC_MAINNET_TOKEN_LIST = {
       decimals: 18,
       logoURI:
         'https://raw.githubusercontent.com/dforce-network/documents/2eea27372fda6a207f60fba4274ad68008d63694/logos/Lending/EUX.svg'
+    },
+    {
+      chainId: 56,
+      address: '0x3944aC66b9b9B40a6474022D6962b6cAA001b5E3',
+      symbol: 'EBA',
+      name: 'Elpis Battle',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/Tzs373u.png'
+    },
+    {
+      chainId: 56,
+      address: '0xE81257d932280AE440B17AFc5f07C8A110D21432',
+      symbol: 'ZUKI',
+      name: 'ZUKI MOBA',
+      decimals: 18,
+      logoURI: 'https://zukimoba.com/images/logos/logo.png'
     }
   ],
   version: {
