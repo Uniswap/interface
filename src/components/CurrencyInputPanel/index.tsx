@@ -1,5 +1,5 @@
-import { Currency, Pair } from '@dynamic-amm/sdk'
-import React, { useState, useContext, useCallback, ReactNode } from 'react'
+import { Currency, CurrencyAmount, Pair } from '@dynamic-amm/sdk'
+import React, { useState, useContext, useCallback, ReactNode, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
 import { t, Trans } from '@lingui/macro'
@@ -176,8 +176,23 @@ export default function CurrencyInputPanel({
   isSwitchMode = false
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
+
+  const [selectedCurrencyBalanceHasValue, setSelectedCurrencyBalanceHasValue] = useState<CurrencyAmount | undefined>(
+    undefined
+  )
+
+  useEffect(() => {
+    setSelectedCurrencyBalanceHasValue(undefined)
+  }, [chainId])
+
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  useEffect(() => {
+    if (!!selectedCurrencyBalance) {
+      setSelectedCurrencyBalanceHasValue(selectedCurrencyBalance)
+    }
+  }, [selectedCurrencyBalance?.toSignificant(20)])
+
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
@@ -206,8 +221,8 @@ export default function CurrencyInputPanel({
                 }}
               >
                 <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                  {(!hideBalance && !!currency && !!selectedCurrencyBalance && customBalanceText) ??
-                    t`Balance: ${selectedCurrencyBalance?.toSignificant(10)}`}
+                  {(!hideBalance && !!currency && !!selectedCurrencyBalanceHasValue && customBalanceText) ??
+                    t`Balance: ${selectedCurrencyBalanceHasValue?.toSignificant(10)}`}
                 </TYPE.body>
                 {showMaxButton && positionMax === 'top' && currency && (
                   <Text color={theme.primary1} fontSize="14px" marginLeft="0.5rem" fontWeight="500">
