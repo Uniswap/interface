@@ -143,9 +143,11 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
             {token0?.symbol}-{token1?.symbol}
           </TYPE.white>
           {apy && apy.greaterThan('0') && (
-            <TYPE.small className="apr" fontWeight={400} fontSize={14}>
-              {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
-            </TYPE.small>
+            <TYPE.white>
+              <TYPE.small className="apr" fontWeight={400} fontSize={14}>
+                {apy.denominator.toString() !== '0' ? `${quarterlyAPY}%` : '-'} APY
+              </TYPE.small>
+            </TYPE.white>
           )}
         </PoolInfo>
 

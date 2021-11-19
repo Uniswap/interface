@@ -32,15 +32,17 @@ export const useFarmRegistry = () => {
       '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec'
     )
     const lastBlock = await kit.web3.eth.getBlockNumber()
-    const farmInfoEvents = await farmRegistry.getPastEvents('FarmInfo', {
-      fromBlock: CREATION_BLOCK,
-      toBlock: lastBlock,
-    })
-    const lpInfoEvents = await farmRegistry.getPastEvents('LPInfo', { fromBlock: CREATION_BLOCK, toBlock: lastBlock })
-    const farmDataEvents = await farmRegistry.getPastEvents('FarmData', {
-      fromBlock: lastBlock - LAST_N_BLOCKS,
-      toBlock: lastBlock,
-    })
+    const [farmInfoEvents, lpInfoEvents, farmDataEvents] = await Promise.all([
+      farmRegistry.getPastEvents('FarmInfo', {
+        fromBlock: CREATION_BLOCK,
+        toBlock: lastBlock,
+      }),
+      farmRegistry.getPastEvents('LPInfo', { fromBlock: CREATION_BLOCK, toBlock: lastBlock }),
+      farmRegistry.getPastEvents('FarmData', {
+        fromBlock: lastBlock - LAST_N_BLOCKS,
+        toBlock: lastBlock,
+      }),
+    ])
 
     const lps: Record<string, [string, string]> = {}
     lpInfoEvents.forEach((e) => {
