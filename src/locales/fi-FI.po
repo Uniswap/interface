@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-18 19:06\n"
+"PO-Revision-Date: 2021-11-19 16:06\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -396,7 +396,7 @@ msgstr "UNI lunastettu!"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "Claimed!"
-msgstr "Väitetty!"
+msgstr "Lunastettu!"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -490,7 +490,7 @@ msgstr "Vahvista lompakkosi tapahtuma"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Confirm transaction in wallet"
-msgstr "Vahvista tapahtuma lompakossa"
+msgstr "Vahvista transaktio lompakossa"
 
 #: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -682,7 +682,7 @@ msgstr "Ansaitut UNI-rahakkeet edustavat äänioikeusosakkeita Uniswapin hallinn
 
 #: src/components/FeeSelector/index.tsx
 msgid "Edit"
-msgstr "Muokata"
+msgstr "Muokkaa"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Efficiency Comparison"
@@ -775,7 +775,7 @@ msgstr "Palkkiotaso"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Fee tier"
-msgstr "Maksutaso"
+msgstr "Palkkiotaso"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
