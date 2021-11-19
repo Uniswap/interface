@@ -2,15 +2,17 @@ import { SupportedChainId } from 'constants/chains'
 import { initializeConnector } from 'widgets-web3-react/core'
 import { Network } from 'widgets-web3-react/network'
 
+const ALCHEMY_KEY = '-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z'
+const alchemyUrl = (network: string) => `https://${network}.alchemyapi.io/v2/${ALCHEMY_KEY}`
+
 export const URLS = {
-  [SupportedChainId.MAINNET]: [`https://eth-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.ROPSTEN]: [`https://eth-ropsten.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.RINKEBY]: [`https://eth-rinkeby.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.GOERLI]: [`https://eth-goerli.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.KOVAN]: [`https://eth-kovan.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.OPTIMISM]: [`https://optimism-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  // [SupportedChainId.POLYGON]: [`https://polygon-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
-  [SupportedChainId.ARBITRUM_ONE]: [`https://arbitrum-mainnet.alchemyapi.io/v2/-mzwnEVG3Ssm75WVbmsEpYiekfTF3W1z`],
+  [SupportedChainId.MAINNET]: [alchemyUrl('eth-mainnet')],
+  [SupportedChainId.ROPSTEN]: [alchemyUrl('eth-ropsten')],
+  [SupportedChainId.RINKEBY]: [alchemyUrl('eth-rinkeby')],
+  [SupportedChainId.GOERLI]: [alchemyUrl('eth-goerli')],
+  [SupportedChainId.KOVAN]: [alchemyUrl('eth-kovan')],
+  [SupportedChainId.OPTIMISM]: [alchemyUrl('optimism-mainnet')],
+  [SupportedChainId.ARBITRUM_ONE]: [alchemyUrl('arbitrum-mainnet')],
 }
 
 export const [network, hooks] = initializeConnector<Network>(

@@ -17,25 +17,13 @@ import { hooks as networkHooks, network } from '../connectors/network'
 function getName(connector: Connector) {
   if (connector instanceof MetaMask) {
     return 'MetaMask'
-  } else if (connector instanceof Network) {
-    return 'Network'
-  } else {
-    return 'Unknown'
   }
+  return 'Network'
 }
 
-function Status({
-  connector,
-  hooks: { useChainId, useAccounts, useError },
-}: {
-  connector: Connector
-  hooks: Web3ReactHooks
-}) {
-  const chainId = useChainId()
-  const accounts = useAccounts()
+function Status({ connector, hooks: { useError, useIsActive } }: { connector: Connector; hooks: Web3ReactHooks }) {
   const error = useError()
-
-  const connected = Boolean(chainId && accounts && accounts.length > 0)
+  const connected = useIsActive()
 
   return (
     <div>
@@ -105,14 +93,13 @@ function Accounts({
   return (
     <div>
       Accounts:
-      {accounts === undefined
+      {accounts === undefined || accounts.length === 0
         ? ' -'
-        : accounts.length === 0
-        ? ' None'
         : accounts?.map((account, i) => (
             <ul key={account} style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
               <b>{ENSNames?.[i] ?? account}</b>
-              {balances?.[i] ? ` (Ξ${formatEther(balances[i])})` : null}
+              <br />
+              <span>{balances?.[i] ? ` (Ξ${formatEther(balances[i])})` : null}</span>
             </ul>
           ))}
     </div>
@@ -195,6 +182,7 @@ const ConnectorWrapper = styled.div`
   display: flex;
   flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, Ubuntu, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 14px;
   margin: 14px;
   padding: 14px;
 `
