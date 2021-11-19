@@ -128,7 +128,8 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
         ).toFixed(0, { groupSeparator: ',' })
       : undefined
   } catch (e) {
-    console.error('Weekly apy overflow', e)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    console.error('Weekly apy overflow', farmSummary.farmName, e)
   }
 
   return (
@@ -171,10 +172,14 @@ export const PoolCard: React.FC<Props> = ({ farmSummary }: Props) => {
           <div onClick={() => dispatch(updateUserAprMode({ userAprMode: !userAprMode }))}>
             <PoolStatRow
               helperText={
-                <>
-                  Reward APR: {rewardApy?.toSignificant(4)}%<br />
-                  Swap APR: {swapApy?.toSignificant(4)}%<br />
-                </>
+                farmSummary.tvlUSD === '0' ? (
+                  'Pool is empty'
+                ) : (
+                  <>
+                    Reward APR: {rewardApy?.greaterThan('0') && rewardApy?.toSignificant(4)}%<br />
+                    Swap APR: {swapApy?.greaterThan('0') && swapApy?.toSignificant(4)}%<br />
+                  </>
+                )
               }
               statName={`${userAprMode ? 'APR' : 'APY'}`}
               statValue={
