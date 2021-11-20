@@ -73,6 +73,8 @@
     "@web3-react/portis-connector": "^6.0.9",
     "@web3-react/walletconnect-connector": "^7.0.2-alpha.0",
     "@web3-react/walletlink-connector": "^6.2.3",
+    "@web3-react/types": "^6.0.7",
+    "@web3-react/abstract-connector": "^6.0.7",
     "ajv": "^6.12.3",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
@@ -182,6 +184,11 @@
     "rebass": "^4.0.7",
     "styled-components": "^5.3.0",
     "wcag-contrast": "^3.0.0",
-    "wicg-inert": "^3.1.1"
+    "wicg-inert": "^3.1.1",
+    "widgets-web3-react/core": "npm:@web3-react/core@8.0.10-alpha.0",
+    "widgets-web3-react/metamask": "npm:@web3-react/metamask@8.0.10-alpha.0",
+    "widgets-web3-react/network": "npm:@web3-react/network@8.0.10-alpha.0",
+    "widgets-web3-react/types": "npm:@web3-react/types@8.0.10-alpha.0",
+    "zustand": "^3.6.5"
   }
 }
