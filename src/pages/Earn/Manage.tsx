@@ -129,7 +129,7 @@ export default function Manage({
     userValueCUSD,
     userAmountTokenA,
     userAmountTokenB,
-  } = useStakingPoolValue(stakingInfo)
+  } = useStakingPoolValue(stakingInfo, stakingTokenPair)
 
   const countUpAmounts = stakingInfo?.earnedAmounts?.map((earnedAmount) => earnedAmount.toFixed(6) ?? '0') || []
   const countUpAmountsPrevious = usePrevious(countUpAmounts) ?? countUpAmounts
