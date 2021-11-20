@@ -73,7 +73,7 @@ function useSwapCallArguments(
     const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       recipient,
       slippageTolerance: allowedSlippage,
-      deadlineOrPreviousBlockhash: deadline.toString(),
+      deadlineOrPreviousBlockhash: deadline.toNumber(), //.toString(), // TODO: undo when router-sdk is upgraded
       ...(signatureData
         ? {
             inputTokenPermit:
