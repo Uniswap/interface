@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextStyle, TouchableOpacity } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { RootStackParamList } from 'src/app/navTypes'
-import { Screens } from 'src/app/Screens'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { RootStackParamList } from 'src/screens/navTypes'
+import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.SeedPhrase>
 

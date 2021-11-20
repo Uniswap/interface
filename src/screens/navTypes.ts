@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Screens } from 'src/app/Screens'
+import { Screens } from 'src/screens/Screens'
 
 // Route nav props go here
 export type RootStackParamList = {

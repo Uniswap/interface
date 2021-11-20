@@ -1,8 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
-import { RootStackParamList } from 'src/app/navTypes'
-import { Screens } from 'src/app/Screens'
 import Bell from 'src/assets/icons/bell.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AccountHeader } from 'src/components/AccountHeader'
@@ -14,6 +12,8 @@ import { ChainId } from 'src/constants/chains'
 import { useEthBalance, useTokenBalances } from 'src/features/balances/hooks'
 import { useAllTokens } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { RootStackParamList } from 'src/screens/navTypes'
+import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
 

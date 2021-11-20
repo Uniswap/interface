@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { RootStackParamList } from 'src/app/navTypes'
-import { Screens } from 'src/app/Screens'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
@@ -20,6 +18,8 @@ import { useGasFee } from 'src/features/gas/useGasFee'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { createAccountActions } from 'src/features/wallet/createAccount'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { RootStackParamList } from 'src/screens/navTypes'
+import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Home>
 
