@@ -135,6 +135,11 @@ export const dexListConfig: DexList = {
     icon: 'https://paintswap.finance/favicon.png',
     chainIds: [ChainId.FANTOM]
   },
+  synapse: {
+    name: 'Synapse',
+    icon: 'https://synapseprotocol.com/favicon.ico',
+    chainIds: [ChainId.MAINNET, ChainId.BSCMAINNET, ChainId.MATIC, ChainId.AVAXMAINNET, ChainId.FANTOM]
+  },
   balancer: {
     name: 'Balancer',
     icon: 'https://app.balancer.fi/favicon.ico',
@@ -183,7 +188,8 @@ export const dexTypes: DexTypes = {
     ellipsis: 2,
     nerve: 1,
     'iron-stable': 4,
-    balancer: 6
+    balancer: 6,
+    synapse: 4
   },
   [ChainId.MAINNET]: {},
   [ChainId.BSCMAINNET]: {},
