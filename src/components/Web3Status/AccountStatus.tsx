@@ -17,6 +17,7 @@ import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { ApplicationModal } from '../../state/application/actions'
 import { ChainLabel } from '../../constants'
+import { ENSAvatarData } from '../../hooks/useENSAvatar'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -52,6 +53,8 @@ const Web3StatusConnected = styled.button<{ pending?: boolean }>`
   text-transform: uppercase;
   cursor: pointer;
   outline: none;
+  display: flex;
+  align-items: center;
 `
 
 const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean; isConnected: boolean; clickable: boolean }>`
@@ -107,9 +110,18 @@ const AddressMobile = styled.span`
   `};
 `
 
+const Avatar = styled.img({
+  maxHeight: '100%',
+  maxWidth: '100%',
+  borderRadius: '50%',
+  marginRight: 6,
+  marginLeft: -12
+})
+
 interface AccountStatusProps {
   pendingTransactions: string[]
   ENSName?: string
+  avatar?: ENSAvatarData
   account: string | undefined | null
   connector: AbstractConnector | undefined
   networkConnectorChainId: ChainId | undefined
@@ -122,7 +134,8 @@ export function AccountStatus({
   account,
   connector,
   networkConnectorChainId,
-  onAddressClick
+  onAddressClick,
+  avatar
 }: AccountStatusProps) {
   const hasPendingTransactions = !!pendingTransactions.length
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
@@ -145,13 +158,16 @@ export function AccountStatus({
               </Text>{' '}
               <Loader />
             </RowBetween>
+          ) : ENSName ? (
+            <>
+              {avatar && <Avatar alt={ENSName} src={avatar.image} />}
+              <>{ENSName}</>
+            </>
           ) : (
-            ENSName || (
-              <>
-                <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
-                <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
-              </>
-            )
+            <>
+              <AddressDesktop>{shortenAddress(account)}</AddressDesktop>
+              <AddressMobile>{shortenAddress(account, 2)}</AddressMobile>
+            </>
           )}
         </Web3StatusConnected>
       )}
