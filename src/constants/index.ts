@@ -60,11 +60,11 @@ export const ROUTER_ADDRESSES_V2: { [chainId in ChainId]?: string } = {
 
 // TODO-swapv2: change aggregation executor contract
 export const AGGREGATION_EXECUTOR: { [chainId in ChainId]?: string } = {
-  [ChainId.BSCMAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
-  [ChainId.MATIC]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
-  [ChainId.AVAXMAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
-  [ChainId.MAINNET]: '0x276e31882ad6c784858cde5770b21ee09d79b744',
-  [ChainId.FANTOM]: '0x276e31882ad6c784858cde5770b21ee09d79b744'
+  [ChainId.BSCMAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
+  [ChainId.MATIC]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
+  [ChainId.AVAXMAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
+  [ChainId.MAINNET]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225',
+  [ChainId.FANTOM]: '0x18008A3d4de136E090D0a71cb1dE601Fc8246225'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
