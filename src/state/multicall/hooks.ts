@@ -159,7 +159,7 @@ function toCallState(
 export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
-  callInputs: OptionalMethodInputs[],
+  callInputs: Memo<OptionalMethodInputs[]>,
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
@@ -251,7 +251,7 @@ export function useMultipleContractSingleData(
 export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
-  inputs?: OptionalMethodInputs,
+  inputs?: Memo<OptionalMethodInputs>,
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState {
   return useSingleContractMultipleData(contract, methodName, [inputs], options)[0] ?? INVALID_CALL_STATE
