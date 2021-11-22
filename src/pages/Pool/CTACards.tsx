@@ -128,7 +128,6 @@ export default function CTACards() {
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
   return (
     <div>
-      <MinimalNetworkAlert />
       <CTASection>
         <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
           <ResponsiveColumn>

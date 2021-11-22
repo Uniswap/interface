@@ -20,8 +20,11 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-top: -14px;
   margin-bottom: -14px;
   left: calc(50% - 16px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
   /* transform: rotate(90deg); */
-  background-color: ${({ theme }) => theme.bg1};
+  background: radial-gradient(rgb(239, 146, 56), rgba(129, 3, 3, 0.95));
   border: 4px solid ${({ theme }) => theme.bg0};
   z-index: 2;
   ${({ clickable }) =>
@@ -29,7 +32,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       ? css`
           :hover {
             cursor: pointer;
-            opacity: 0.8;
+            color:yellow !important;
           }
         `
       : null}
