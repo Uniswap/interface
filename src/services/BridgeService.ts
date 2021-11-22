@@ -382,7 +382,8 @@ export class BridgeService {
       addBridgeTxn({
         assetName: tokenData.symbol,
         assetType: BridgeAssetType.ERC20,
-        assetAddress: erc20L2Address,
+        assetAddressL1: erc20L1Address,
+        assetAddressL2: erc20L2Address,
         type: 'withdraw',
         value,
         txHash: txn.hash,
@@ -403,7 +404,7 @@ export class BridgeService {
   }
 
   public collect = async (l2Tx: BridgeTransactionSummary) => {
-    const { batchIndex, batchNumber, value, assetAddress } = l2Tx
+    const { batchIndex, batchNumber, value, assetAddressL2 } = l2Tx
     if (!this.account || !this.bridge || !this.l1ChainId || !this.l2ChainId || !batchIndex || !batchNumber || !value)
       return
 
@@ -418,8 +419,8 @@ export class BridgeService {
 
       this.store.dispatch(
         addBridgeTxn({
-          assetName: assetAddress ? l2Tx.assetName : 'ETH',
-          assetType: assetAddress ? BridgeAssetType.ERC20 : BridgeAssetType.ETH,
+          assetName: assetAddressL2 ? l2Tx.assetName : 'ETH',
+          assetType: assetAddressL2 ? BridgeAssetType.ERC20 : BridgeAssetType.ETH,
           type: 'outbox',
           value,
           txHash: l1Tx.hash,
