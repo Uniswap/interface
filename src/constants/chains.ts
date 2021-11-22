@@ -3,6 +3,8 @@ import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import ms from 'ms.macro'
 
+import { ARBITRUM_LIST, OPTIMISM_LIST } from './lists'
+
 export enum SupportedChainId {
   MAINNET = 1,
   ROPSTEN = 3,
@@ -66,6 +68,7 @@ export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
   readonly logoUrl: string
   readonly statusPage?: string
+  readonly defaultListUrl: string
 }
 
 export type ChainInfo = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
@@ -77,6 +80,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_ONE]: {
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
+    defaultListUrl: ARBITRUM_LIST,
     docs: 'https://offchainlabs.com/',
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
@@ -88,6 +92,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     blockWaitMsBeforeWarning: ms`10m`,
     bridge: 'https://bridge.arbitrum.io/',
+    defaultListUrl: ARBITRUM_LIST,
     docs: 'https://offchainlabs.com/',
     explorer: 'https://rinkeby-explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
@@ -135,6 +140,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.OPTIMISM]: {
     blockWaitMsBeforeWarning: ms`15m`,
     bridge: 'https://gateway.optimism.io/',
+    defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
@@ -146,6 +152,7 @@ export const CHAIN_INFO: ChainInfo = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     blockWaitMsBeforeWarning: ms`15m`,
     bridge: 'https://gateway.optimism.io/',
+    defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
