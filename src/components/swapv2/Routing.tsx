@@ -172,6 +172,31 @@ const StyledExchange = styled.a`
     margin-top: 8px;
   }
 `
+const StyledExchangeStatic = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  margin-top: 4px;
+  font-size: 10px;
+  border-radius: 8px;
+  color: ${({ theme }) => theme.text11};
+  background-color: ${({ theme }) => theme.bg12};
+  line-height: 20px;
+  white-space: nowrap;
+  text-decoration: none;
+
+  & > .img--sm {
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    margin-right: 4px;
+  }
+
+  &:first-child {
+    margin-top: 8px;
+  }
+`
 
 const StyledPercent = styled.div`
   font-size: 12px;
@@ -305,16 +330,25 @@ const RouteRow = ({ route, chainId }: RouteRowProps) => {
                 {Array.isArray(subRoute)
                   ? subRoute.map((pool, i) => {
                       const dex = getExchangeConfig(pool.exchange, chainId)
-                      return (
-                        <StyledExchange
-                          key={`${i}-${pool.id}`}
-                          href={getEtherscanLink(chainId, pool.id, 'address')}
-                          target="_blank"
-                        >
+                      const link = (i => {
+                        return pool.id.length == 42 ? (
+                          <StyledExchange
+                            key={`${i}-${pool.id}`}
+                            href={getEtherscanLink(chainId, pool.id, 'address')}
+                            target="_blank"
+                          >
+                            {i}
+                          </StyledExchange>
+                        ) : (
+                          <StyledExchangeStatic>{i}</StyledExchangeStatic>
+                        )
+                      })(
+                        <>
                           {dex.icon ? <img src={dex.icon} alt="" className="img--sm" /> : <i className="img--sm" />}
                           {`${dex?.name || '--'}: ${pool.swapPercentage}%`}
-                        </StyledExchange>
+                        </>
                       )
+                      return link
                     })
                   : null}
               </StyledHop>
