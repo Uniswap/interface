@@ -264,7 +264,8 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 export function useUserDelegatee(): string {
   const { account } = useActiveWeb3React()
   const uniContract = useUniContract()
-  const { result } = useSingleCallResult(uniContract, 'delegates', [account ?? undefined])
+  const accountArgs = useMemo(() => [account ?? undefined], [account])
+  const { result } = useSingleCallResult(uniContract, 'delegates', accountArgs)
   return result?.[0] ?? undefined
 }
 
@@ -272,9 +273,10 @@ export function useUserDelegatee(): string {
 export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token> | undefined } {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
+  const accountArgs = useMemo(() => [account ?? undefined], [account])
 
   // check for available votes
-  const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])
+  const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', accountArgs)
   return useMemo(() => {
     const uni = chainId ? UNI[chainId] : undefined
     return { loading, votes: uni && result ? CurrencyAmount.fromRawAmount(uni, result?.[0]) : undefined }
@@ -285,11 +287,11 @@ export function useUserVotes(): { loading: boolean; votes: CurrencyAmount<Token>
 export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
+  const votesArgs = useMemo(() => [account ?? undefined, block ?? undefined], [account, block])
 
   // check for available votes
   const uni = chainId ? UNI[chainId] : undefined
-  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
-    ?.result?.[0]
+  const votes = useSingleCallResult(uniContract, 'getPriorVotes', votesArgs)?.result?.[0]
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
@@ -390,7 +392,8 @@ export function useCreateProposalCallback(): (
 
 export function useLatestProposalId(address: string | undefined): string | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
-  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
+  const addressArgs = useMemo(() => [address], [address])
+  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', addressArgs)
   return res?.result?.[0]?.toString()
 }
 

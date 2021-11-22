@@ -231,9 +231,9 @@ export function useV3DerivedMintInfo(
 
   // parse typed range values and determine closest ticks
   // lower should always be a smaller tick
-  const ticks: {
-    [key: string]: number | undefined
-  } = useMemo(() => {
+  const ticks = useMemo((): {
+    [bound in Bound]?: number | undefined
+  } => {
     return {
       [Bound.LOWER]:
         typeof existingPosition?.tickLower === 'number'

@@ -254,7 +254,8 @@ export function useSingleCallResult(
   inputs?: Memo<OptionalMethodInputs>,
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState {
-  return useSingleContractMultipleData(contract, methodName, [inputs], options)[0] ?? INVALID_CALL_STATE
+  const callInputs = useMemo(() => [inputs], [inputs])
+  return useSingleContractMultipleData(contract, methodName, callInputs, options)[0] ?? INVALID_CALL_STATE
 }
 
 // formats many calls to any number of functions on a single contract, with only the calldata specified

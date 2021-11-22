@@ -61,7 +61,7 @@ export function useContract<T extends Contract = Contract>(
       console.error('Failed to get contract', error)
       return null
     }
-  }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T
+  }, [addressOrAddressMap, ABI, library, chainId, withSignerIfPossible, account]) as T | null
 }
 
 export function useV2MigratorContract() {

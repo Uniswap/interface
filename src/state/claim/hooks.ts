@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { UNI } from '../../constants/tokens'
 import { useMerkleDistributorContract } from '../../hooks/useContract'
@@ -127,7 +127,8 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
 export function useUserHasAvailableClaim(account: string | null | undefined): boolean {
   const userClaimData = useUserClaimData(account)
   const distributorContract = useMerkleDistributorContract()
-  const isClaimedResult = useSingleCallResult(distributorContract, 'isClaimed', [userClaimData?.index])
+  const userClaimArgs = useMemo(() => [userClaimData?.index], [userClaimData])
+  const isClaimedResult = useSingleCallResult(distributorContract, 'isClaimed', userClaimArgs)
   // user is in blob and contract marks as unclaimed
   return Boolean(userClaimData && !isClaimedResult.loading && isClaimedResult.result?.[0] === false)
 }

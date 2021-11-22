@@ -471,7 +471,8 @@ export function PositionPage({
       })
   }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
-  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const tokenArgs = useMemo(() => [tokenId], [tokenId])
+  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', tokenArgs).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1

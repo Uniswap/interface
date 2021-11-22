@@ -64,10 +64,12 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
-
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
-    account ?? undefined,
-  ])
+  const accountArgs = useMemo(() => [account ?? undefined], [account])
+  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(
+    positionManager,
+    'balanceOf',
+    accountArgs
+  )
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()

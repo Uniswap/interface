@@ -73,7 +73,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
   const unsupportedTokens = useTokensFromMap(unsupportedTokensMap, false)
 
   // checks the default L2 lists to see if `bridgeInfo` has an L1 address value that is unsupported
-  const l2InferredBlockedTokens: typeof unsupportedTokens = useMemo(() => {
+  const l2InferredBlockedTokens = useMemo((): typeof unsupportedTokens => {
     if (!chainId || !L2_CHAIN_IDS.includes(chainId)) {
       return {}
     }
