@@ -129,9 +129,9 @@ const ButtonMenuItem = styled.button`
 `
 const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text1};
   display: flex;
   flex-direction: row;
@@ -198,24 +198,10 @@ export default function NetworkCard() {
         </NetworkInfo>
         {open && (
           <MenuFlyout>
-            <MenuItem href={info.bridge}>
-              <div>{isArbitrum ? <Trans>{info.label} Bridge</Trans> : <Trans>Optimistic L2 Gateway</Trans>}</div>
-              <LinkOutCircle />
-            </MenuItem>
-            <MenuItem href={info.explorer}>
-              {isArbitrum ? <Trans>{info.label} Explorer</Trans> : <Trans>Optimistic Etherscan</Trans>}
-              <LinkOutCircle />
-            </MenuItem>
-            <MenuItem href={info.docs}>
-              <div>
-                <Trans>Learn more</Trans>
-              </div>
-              <LinkOutCircle />
-            </MenuItem>
             {implements3085 ? (
               <ButtonMenuItem onClick={() => switchToNetwork({ library, chainId: SupportedChainId.MAINNET })}>
                 <div>
-                  <Trans>Switch to L1 (Mainnet)</Trans>
+                  <Trans>Switch to ETH <small>(Mainnet)</small></Trans>
                 </div>
                 <ToggleLeft opacity={0.6} size={16} />
               </ButtonMenuItem>

@@ -100,7 +100,7 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
 
                 {view === 'chart' && <>{Frame}</>}
                 {view === 'stats' && accessDenied === false && <div style={{ height: 500, overflowY: 'auto', padding: '9px 14px', background: '#222', color: '#fff', borderRadius: 6, display: 'table', flexFlow: 'column wrap', gridColumnGap: 50 }}>
-                    <StyledDiv style={{ width: '100%', display: 'block', paddingTop: 15, paddingBottom: 5 }}>{tokenData?.name} ({tokenData?.symbol})</StyledDiv>
+                    <StyledDiv style={{ width: '100%', display: 'block', paddingTop: 15, paddingBottom: 5 }}>Kiba Inu (KIBA)</StyledDiv>
                     <StyledDiv style={{}}>{tokenData.price}</StyledDiv>
 
 

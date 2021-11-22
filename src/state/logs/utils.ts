@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { ApolloClient } from 'apollo-client'
+import { ApolloClient, useQuery } from '@apollo/client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
 import moment from 'moment'
@@ -19,18 +19,20 @@ export interface Log {
   data: string
 }
 
+export const bscClient = new ApolloClient({
+  uri: INFO_CLIENT,
+  cache: new InMemoryCache() as any
+});
+
 export const client = new ApolloClient({
-  link: new HttpLink({
+ 
     uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswapv2',
-  }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache() as any
 })
 
 export const blockClient = new ApolloClient({
-  link: new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
-  }),
-  cache: new InMemoryCache(),
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
+  cache: new InMemoryCache() as any
 })
 
 
@@ -64,10 +66,10 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
       tokens(${block && block !== null && typeof(block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
       }
-      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
       }
-      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
         id
       }
     }
@@ -202,7 +204,6 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
       +twoDayData['tradeVolumeUSD'] ?? 0
     )
 
-    console.log(data)
     // calculate percentage changes and daily changes
     const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
       +data.untrackedVolumeUSD,
@@ -252,7 +253,6 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   return data
 }
 
-
 const getTokenTransactions = async (allPairsFormatted: any) => {
   const transactions: { mints?: any[]; burns?: any[]; swaps?: any[]; } = {}
   try {
@@ -273,52 +273,21 @@ const getTokenTransactions = async (allPairsFormatted: any) => {
 }
 
 export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
-  const [state, updateTokenTxns] = React.useState<any>({})
-  const tokenTxns = state?.[tokenAddress]
-  const [allPairsFormatted, setAllPairsFormatted] = React.useState<any[]>()
-  const {chainId } = useWeb3React()
-  React.useEffect(() => {
-      getTokenPairs(tokenAddress).then(setAllPairsFormatted);
-  }, [tokenAddress])
-
-  async function checkForTxns() {
-    if (allPairsFormatted?.length) {
-      const transactions = await getTokenTransactions(allPairsFormatted?.map((a: any) => a.id))
-      if (isEqual(transactions, tokenTxns?.txns) === false) {
-        console.log("Updating transaction data...")
-        console.log(transactions)
-        console.log("Time since last fetch, " + moment(new Date()).diff(moment(tokenTxns?.lastFetched), 'seconds') + " seconds");
-        updateTokenTxns({ ...state, [tokenAddress]: { txns: transactions, lastFetched: new Date() } })
-      }
-    }
-  }
-
-  React.useEffect(() => {
-    if (allPairsFormatted?.length && chainId === 1) 
-        checkForTxns();
-  }, [tokenAddress, chainId, allPairsFormatted, tokenTxns, interval])
-
-  useInterval(checkForTxns, interval, false)
-  const { txns: data, lastFetched } = React.useMemo(() => tokenTxns ? tokenTxns : { txns: [], lastFetched: undefined }, [tokenTxns, tokenAddress])
-  return { data, lastFetched };
+  const allPairsFormatted = usePairs(tokenAddress)
+  const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
+    variables: {
+      allPairs: allPairsFormatted ? [allPairsFormatted[0].id] : []
+    },
+    pollInterval: 2500
+  })
+  const data = React.useMemo(() => tokenTxns, [tokenTxns])
+  return { data: data.data, lastFetched: new Date() };
 }
 
-
-const getTokenPairs = async (tokenAddress: any) => {
-  try {
-    // fetch all current and historical data
-    const result = await client.query({
-      query: TOKEN_DATA(tokenAddress, null),
-      fetchPolicy: 'cache-first',
-    })
-    console.log(result)
-    return result.data?.['pairs0'].concat(result.data?.['pairs1'])
-  } catch (e) {
-    console.log(e)
-  }
+const usePairs = (tokenAddress: string) => {
+  const {data,loading,error} = useQuery(TOKEN_DATA(tokenAddress, null))
+  return data?.['pairs0'].concat(data?.['pairs1'])
 }
-
-
 
 export const ETH_PRICE = (block?: any) => {
   const queryString = block
@@ -385,7 +354,7 @@ const getEthPrice = async () => {
     ethPriceOneDay = oldPrice
     priceChangeETH = getPercentChange(+ethPrice, +ethPriceOneDay)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 
   return [ethPrice, ethPriceOneDay, priceChangeETH]
@@ -564,7 +533,6 @@ export const FILTERED_TRANSACTIONS = gql`
       transaction {
         id
         timestamp
-        blockNumber
       }
       id
       pair {

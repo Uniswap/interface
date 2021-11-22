@@ -7,6 +7,13 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import { Wrapper } from 'components/swap/styleds'
 import { walletconnect } from 'connectors'
 import { USDC } from 'constants/tokens'
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql
+} from "@apollo/client";
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useUSDCPrice, { useUSDCValue } from 'hooks/useUSDCPrice'
@@ -63,7 +70,7 @@ import VotePageV2 from './Vote/VotePageV2'
 import Swal from 'sweetalert2'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { Version } from 'hooks/useToggledVersion'
-import { useTokenData } from 'state/logs/utils'
+import { bscClient, client, useTokenData } from 'state/logs/utils'
 import { Field } from 'state/swap/actions'
 import Modal from 'components/Modal'
 import bg from '../assets/images/bg.jpeg';
@@ -71,7 +78,7 @@ import { DarkCard } from 'components/Card'
 import { HoneyPotBsc} from './HoneyPotBsc'
 import { ChartPage } from 'components/swap/ChartPage'
 import { SelectiveChart } from './Swap/SelectiveCharting'
-import { LimitOrders } from 'state/transactions/hooks'
+import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useContract } from 'hooks/useContract'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
@@ -436,13 +443,17 @@ export default function App() {
       </VideoWrapper>
     )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
-
+  const {chainId} = useWeb3React()
   const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
+        <ApolloProvider client={chainId && chainId === 1 ? client : chainId && chainId === 56 ? bscClient : new ApolloClient({
+          uri: '',
+          cache: new InMemoryCache() as any
+        })}>
         <AppWrapper>
           {Video}
           <HeaderWrapper>
@@ -518,6 +529,7 @@ export default function App() {
 
 
         </AppWrapper>
+        </ApolloProvider>
       </Web3ReactManager>
 
     </ErrorBoundary>
