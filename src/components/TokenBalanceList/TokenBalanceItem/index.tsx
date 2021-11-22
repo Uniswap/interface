@@ -41,12 +41,11 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
   return (
     <Button
       onPress={() => onPressToken(currencyAmount)}
-      backgroundColor="white"
       flexDirection="row"
       width="100%"
       justifyContent="space-between"
-      marginVertical="sm"
-      paddingHorizontal="md">
+      py="md"
+      px="lg">
       <Box flexDirection="row">
         <CurrencyLogo currency={currency} size={40} />
         <Box marginHorizontal="md" alignItems="flex-start">

@@ -1,10 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
-import Bell from 'src/assets/icons/bell.svg'
-import Settings from 'src/assets/icons/settings.svg'
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { AccountHeader } from 'src/components/AccountHeader'
-import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 import { TokenBalanceList } from 'src/components/TokenBalanceList'
@@ -29,7 +27,6 @@ export function HomeScreen({ navigation }: Props) {
   const ethBalance = useEthBalance(currentChain, activeAccount?.address)
 
   const onPressToken = (currencyAmount: CurrencyAmount<Currency>) => {
-    // TODO: specify chain when navigating to detail
     navigation.navigate(Screens.TokenDetails, { currencyAmount })
   }
 
@@ -49,23 +46,24 @@ export function HomeScreen({ navigation }: Props) {
   const balances = ethBalance ? [ethBalance, ...filteredTokenBalances] : filteredTokenBalances
 
   return (
-    <Screen backgroundColor="mainBackground">
-      <Box width="100%" flexDirection="row" alignItems="center">
+    <Box flex={1}>
+      <Svg height="100%" width="100%" opacity={0.05}>
+        <Defs>
+          <LinearGradient id="background" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#FF007A" stopOpacity="1" />
+            <Stop offset="1" stopColor="#426CFF" stopOpacity="0.3" />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill="url(#background)" />
+      </Svg>
+      <Box height="100%" width="100%" position="absolute" my="xxl">
         <AccountHeader onPressAccounts={() => navigation.navigate(Screens.Accounts)} />
-        <Box flexDirection="row" marginRight="md">
-          <Button marginRight="md">
-            <Settings height={30} width={30} />
-          </Button>
-          <Button onPress={() => navigation.navigate(Screens.Notifications)}>
-            <Bell height={30} width={30} />
-          </Button>
-        </Box>
+        <TokenBalanceList
+          loading={tokenBalancesLoading}
+          balances={balances}
+          onPressToken={onPressToken}
+        />
       </Box>
-      <TokenBalanceList
-        loading={tokenBalancesLoading}
-        balances={balances}
-        onPressToken={onPressToken}
-      />
-    </Screen>
+    </Box>
   )
 }

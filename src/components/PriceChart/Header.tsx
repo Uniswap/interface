@@ -1,10 +1,12 @@
 import { createRestyleComponent, createVariant, useTheme, VariantProps } from '@shopify/restyle'
 import React from 'react'
+import { StyleSheet } from 'react-native'
 import { interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
 import { Box } from 'src/components/layout/Box'
 import { HEIGHT } from 'src/components/PriceChart/Model'
 import { AnimatedIndex, AnimatedTranslation, GraphMetadatas } from 'src/components/PriceChart/types'
+import { fontFamily } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 
 interface HeaderProps {
@@ -44,9 +46,20 @@ export const Header = ({ translation, index, graphs }: HeaderProps) => {
   return (
     <Box flex={1} padding="md" justifyContent="center">
       <Box flex={1} alignItems="center">
-        <StyledReText variant="h1" text={priceFormatted} />
+        <StyledReText
+          style={{ ...styles.homeBalanceLabel, color: theme.colors.mainForeground }}
+          text={priceFormatted}
+        />
         <StyledReText variant="h3" style={style} text={percentChangeFormatted} />
       </Box>
     </Box>
   )
 }
+
+const styles = StyleSheet.create({
+  homeBalanceLabel: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 45,
+    lineHeight: 45,
+  },
+})

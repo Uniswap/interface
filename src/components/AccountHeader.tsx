@@ -17,19 +17,20 @@ export function AccountHeader({ children, onPressAccounts }: AccountHeaderProps)
   const { t } = useTranslation()
 
   return (
-    <Box flex={1} flexDirection="row" alignItems="center" height={50} margin="md">
+    <Box flexDirection="row" alignItems="center" px="md" py="sm" borderRadius="lg">
       <Button
         flex={1}
         flexDirection="row"
         alignItems="center"
         onPress={() => onPressAccounts?.()}
         testID="account_header/manage/button">
-        <Button
+        <Box
           marginRight="sm"
           width={40}
           height={40}
           borderRadius="full"
-          backgroundColor="gray100"
+          backgroundColor="blue"
+          opacity={0.2}
         />
         <Text variant="h3" textAlign="left">
           {activeAccount ? shortenAddress(activeAccount.address) : t`Connect Wallet`}

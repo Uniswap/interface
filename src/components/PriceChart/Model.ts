@@ -80,7 +80,7 @@ export function useGraphs(token: Token): GraphMetadatas | null {
         data: buildGraph(dailyTokenPrices.oneYear),
       },
       {
-        label: 'all',
+        label: 'ALL',
         index: 4,
         data: buildGraph(dailyTokenPrices.all),
       },

@@ -17,8 +17,8 @@ import { Text } from 'src/components/Text'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
-const SELECTION_WIDTH = WIDTH - 32
-const BUTTON_WIDTH = (WIDTH - 32) / NUM_GRAPHS
+const SELECTION_WIDTH = WIDTH - 50
+const BUTTON_WIDTH = SELECTION_WIDTH / NUM_GRAPHS
 
 interface GraphProps {
   graphs: GraphMetadatas
@@ -70,13 +70,13 @@ export const Graph = ({ graphs }: GraphProps) => {
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
             stroke="#FF007A"
-            strokeWidth={3}
+            strokeWidth={2}
           />
 
           <Defs>
             <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="gradient">
-              <Stop stopColor="#FF007A" offset="0%" stopOpacity="0.4" />
-              <Stop stopColor="#E762EA" offset="100%" stopOpacity="0" />
+              <Stop stopColor="#FF007A" offset="0%" stopOpacity="0.2" />
+              <Stop stopColor="#FF007A" offset="100%" stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
@@ -92,8 +92,8 @@ export const Graph = ({ graphs }: GraphProps) => {
       <Box flexDirection="row" width={SELECTION_WIDTH} alignSelf="center">
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="gray100"
-            borderRadius="md"
+            bg="pink"
+            borderRadius="lg"
             width={BUTTON_WIDTH}
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
           />
@@ -108,8 +108,11 @@ export const Graph = ({ graphs }: GraphProps) => {
                 currentGraphIndex.value = index
                 transition.value = withTiming(1)
               }}>
-              <AnimatedBox padding="sm" width={BUTTON_WIDTH}>
-                <Text variant="buttonLabel" color="primary1" textAlign="center">
+              <AnimatedBox padding="xs" width={BUTTON_WIDTH}>
+                <Text
+                  variant="buttonLabel"
+                  color={index === currentGraphIndex.value ? 'white' : 'primary1'}
+                  textAlign="center">
                   {graph.label}
                 </Text>
               </AnimatedBox>
