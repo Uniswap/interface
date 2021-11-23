@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Plus from 'src/assets/icons/plus.svg'
 import { AccountCard } from 'src/components/accounts/AccountCard'
@@ -13,6 +12,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
 import { RootStackParamList } from 'src/screens/navTypes'
 import { Screens } from 'src/screens/Screens'
+import { flex } from 'src/styles/flex'
 import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<RootStackParamList, Screens.Accounts>
@@ -31,7 +31,7 @@ export function AccountsScreen({ navigation }: Props) {
 
   return (
     <Screen bg="gray50">
-      <ScrollView contentContainerStyle={styles.scrollView}>
+      <ScrollView contentContainerStyle={flex.fill}>
         <Box>
           <AccountHeader>
             {!isEditMode ? (
@@ -69,7 +69,3 @@ export function AccountsScreen({ navigation }: Props) {
     </Screen>
   )
 }
-
-const styles = StyleSheet.create({
-  scrollView: { flex: 1 },
-})

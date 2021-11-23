@@ -5,6 +5,7 @@ import { Box } from 'src/components/layout/Box'
 import { PriceChart } from 'src/components/PriceChart'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { NULL_ADDRESS } from 'src/constants/accounts'
+import { flex } from 'src/styles/flex'
 
 interface TokenBalanceListProps {
   loading: boolean
@@ -32,7 +33,7 @@ export function TokenBalanceList({ loading, balances, onPressToken }: TokenBalan
   return (
     <Box flex={1}>
       <FlatList
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={flex.grow}
         data={balances}
         ListHeaderComponent={<PriceChart token={ethBalance!.currency.wrapped} />}
         renderItem={renderItem}
