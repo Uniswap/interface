@@ -81,7 +81,13 @@ export function DevScreen({ navigation }: Props) {
           </Text>
           <Box flexDirection="row" alignItems="center" justifyContent="center" flexWrap="wrap">
             {Object.values(Screens).map((s) => (
-              <Button label={s} onPress={() => activateWormhole(s)} m="xs" key={s} />
+              <Button
+                testID={`dev_screen/${s}`}
+                label={s}
+                onPress={() => activateWormhole(s)}
+                m="xs"
+                key={s}
+              />
             ))}
           </Box>
           <Text variant="body" mt="sm" textAlign="center">

@@ -50,9 +50,9 @@ exports[`renders correctly 1`] = `
             "lineHeight": 45,
           }
         }
-        text="$200"
+        text="$100"
         underlineColorAndroid="transparent"
-        value="$200"
+        value="$100"
       />
       <TextInput
         animatedStyle={
@@ -72,9 +72,9 @@ exports[`renders correctly 1`] = `
             "lineHeight": 26,
           }
         }
-        text="0%"
+        text="-50%"
         underlineColorAndroid="transparent"
-        value="0%"
+        value="-50%"
       />
     </View>
   </View>

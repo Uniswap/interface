@@ -6,9 +6,10 @@ export type AnimatedIndex = Animated.SharedValue<number>
 export type AnimatedTranslation = Vector<Animated.SharedValue<number>>
 
 export type GraphData = {
-  minPrice: number
-  maxPrice: number
-  startingPrice: number
+  lowPrice: number
+  highPrice: number
+  openPrice: number
+  closePrice: number
   path: Path
 }
 

@@ -114,14 +114,15 @@ export function buildGraph(datapoints: PriceList | undefined): GraphData | null 
   const prices = formattedValues.map(([, price]) => price)
   const dates = formattedValues.map(([date]) => date)
 
-  const minPrice = Math.min(...prices)
-  const maxPrice = Math.max(...prices)
-  const startingPrice = prices[0]
+  const lowPrice = Math.min(...prices)
+  const highPrice = Math.max(...prices)
+  const openPrice = prices[0]
+  const closePrice = prices[prices.length - 1]
 
   const scaleX = scaleLinear()
     .domain([dates[0], dates[dates.length - 1]])
     .range([0, WIDTH])
-  const scaleY = scaleLinear().domain([minPrice, maxPrice]).range([HEIGHT, 0])
+  const scaleY = scaleLinear().domain([lowPrice, highPrice]).range([HEIGHT, 0])
 
   const path = parse(
     line()
@@ -131,9 +132,10 @@ export function buildGraph(datapoints: PriceList | undefined): GraphData | null 
   )
 
   return {
-    minPrice,
-    maxPrice,
-    startingPrice,
+    lowPrice,
+    highPrice,
+    openPrice,
+    closePrice,
     path,
   }
 }

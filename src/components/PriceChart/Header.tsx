@@ -28,10 +28,12 @@ export const Header = ({ translation, index, graphs }: HeaderProps) => {
   const data = useDerivedValue(() => graphs[index.value].data)
 
   const price = useDerivedValue(() =>
-    interpolate(translation.y.value, [0, HEIGHT], [data.value.maxPrice, data.value.minPrice])
+    translation.y.value === 0
+      ? data.value.closePrice
+      : interpolate(translation.y.value, [0, HEIGHT], [data.value.highPrice, data.value.lowPrice])
   )
   const percentChange = useDerivedValue(
-    () => ((price.value - data.value.startingPrice) / data.value.startingPrice) * 100
+    () => ((price.value - data.value.openPrice) / data.value.openPrice) * 100
   )
 
   const priceFormatted = useDerivedValue(() => {

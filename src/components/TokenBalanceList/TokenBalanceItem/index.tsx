@@ -26,17 +26,20 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
   const percentChange = (function () {
     if (!prices || prices?.length === 0) return null
 
-    const startingPrice = prices[prices.length - 1].close
-    const closingPrice = prices[0].close
+    const startPrice = prices[prices.length - 1].close
+    const closePrice = prices[0].close
 
-    if (startingPrice === 0 && closingPrice === 0) return null
+    if (startPrice === 0 && closePrice === 0) return null
 
-    return ((closingPrice - startingPrice) / startingPrice) * 100
+    return ((closePrice - startPrice) / startPrice) * 100
   })()
 
   // TODO: get current price from chain.  Also, not all tokens have data from the Graph
   // Note that for ETH, this gets WETH price.
-  const currentPrice = prices && prices?.[0]?.close > 0 ? `$${prices[0].close.toFixed(2)}` : ''
+  const currentPrice = prices && prices?.[0]?.close > 0 && prices[0].close
+  const balance = currentPrice
+    ? `$${(currentPrice * parseFloat(currencyAmount.toSignificant(6))).toFixed(2)}`
+    : '-'
 
   return (
     <Button
@@ -59,7 +62,7 @@ export function TokenBalanceItem({ currencyAmount, onPressToken }: TokenBalanceI
       </Box>
       <Box alignItems="flex-end">
         <Text fontSize={20} fontWeight="400">
-          {currentPrice}
+          {balance}
         </Text>
         <Text
           fontSize={14}
