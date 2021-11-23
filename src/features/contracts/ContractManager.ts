@@ -42,13 +42,17 @@ export class ContractManager {
   }
 
   // Returns contract or null
-  getContract(chainId: ChainId, address: Address) {
-    return this._contracts[chainId]?.[address] ?? null
+  getContract<T extends Contract>(chainId: ChainId, address: Address) {
+    return (this._contracts[chainId]?.[address] as T | undefined) ?? null
   }
 
-  getOrCreateContract(chainId: ChainId, address: Address, provider: providers.Provider, ABI: any) {
-    const cachedContract = this.getContract(chainId, address)
-    if (cachedContract) return cachedContract
-    else return this.createContract(chainId, address, provider, ABI)
+  getOrCreateContract<T extends Contract = Contract>(
+    chainId: ChainId,
+    address: Address,
+    provider: providers.Provider,
+    ABI: any
+  ) {
+    const cachedContract = this.getContract<T>(chainId, address)
+    return (cachedContract ?? this.createContract(chainId, address, provider, ABI)) as T
   }
 }
