@@ -36,7 +36,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
   }
 
   const options = networkOptionsPreset
-    .filter(option => (option.tag && SHOW_TESTNETS) || !TESTNETS.includes(option.chainId))
+    .filter(option => SHOW_TESTNETS || !TESTNETS.includes(option.chainId))
     .map<NetworkOptionProps>(network => {
       const { chainId, logoSrc, name } = network
 
@@ -47,6 +47,7 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
         onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
       }
     })
+  console.log({ options })
 
   const tagFilteredArray = networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
     const tag = currentNet.tag ? currentNet.tag : 'default'
@@ -60,7 +61,21 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
 
     return taggedArray
   }, [])
-  console.log(tagFilteredArray)
+  console.log({ tagFilteredArray })
+
+  const optionsV2 = tagFilteredArray.map(element =>
+    element.networks.map<NetworkOptionProps>(network => {
+      const { chainId, logoSrc, name } = network
+
+      return {
+        logoSrc,
+        header: name,
+        disabled: isOptionDisabled(chainId),
+        onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
+      }
+    })
+  )
+  console.log({ optionsV2 })
 
   return (
     <NetworkSwitcher
