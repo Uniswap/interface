@@ -19,12 +19,13 @@ import { useBridgeService } from '../../contexts/BridgeServiceProvider'
 import { useBridgeTransactionsSummary } from '../../state/bridgeTransactions/hooks'
 import { useBridgeInfo, useBridgeActionHandlers, useBridgeModal, useBridgeTxsFilter } from '../../state/bridge/hooks'
 
-import { NETWORK_DETAIL, SHOW_TESTNETS } from '../../constants'
+import { SHOW_TESTNETS } from '../../constants'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { BridgeStep, createNetworkOptions, getNetworkOptionById } from './utils'
 import { BridgeTxsFilter } from '../../state/bridge/reducer'
 import { BridgeModalStatus } from '../../state/bridge/reducer'
 import { isToken } from '../../hooks/Tokens'
+import { useChains } from '../../hooks/useChains'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -72,7 +73,8 @@ const AssetWrapper = styled.div`
 
 export default function Bridge() {
   const bridgeService = useBridgeService()
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
+  const { chainId, isArbitrum } = useChains()
   const bridgeSummaries = useBridgeTransactionsSummary()
   const [modalData, setModalStatus, setModalData] = useBridgeModal()
   const { bridgeCurrency, currencyBalance, parsedAmount, typedValue, fromNetwork, toNetwork } = useBridgeInfo()
@@ -137,12 +139,12 @@ export default function Bridge() {
     if (isToken(bridgeCurrency)) {
       address = bridgeCurrency.address
     }
-    if (!NETWORK_DETAIL[chainId].isArbitrum) {
+    if (isArbitrum) {
       await bridgeService.deposit(typedValue, address)
     } else {
       await bridgeService.withdraw(typedValue, address)
     }
-  }, [bridgeCurrency, bridgeService, chainId, typedValue])
+  }, [bridgeCurrency, bridgeService, chainId, isArbitrum, typedValue])
 
   const handleModal = useCallback(async () => {
     setModalData({
@@ -156,7 +158,9 @@ export default function Bridge() {
 
   const handleCollect = useCallback(
     (tx: BridgeTransactionSummary) => {
-      onCurrencySelection(tx.assetAddress || 'ETH')
+      onCurrencySelection(
+        tx.assetAddressL1 && tx.assetAddressL2 ? (isArbitrum ? tx.assetAddressL2 : tx.assetAddressL1) : 'ETH'
+      )
       setStep(BridgeStep.Collect)
       setCollectableTx(tx)
       setModalData({
@@ -166,7 +170,7 @@ export default function Bridge() {
         toChainId: tx.toChainId
       })
     },
-    [onCurrencySelection, setModalData]
+    [isArbitrum, onCurrencySelection, setModalData]
   )
 
   const handleCollectConfirm = useCallback(async () => {
