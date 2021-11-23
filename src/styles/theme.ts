@@ -2,6 +2,7 @@ import { createTheme } from '@shopify/restyle'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { textVariants } from 'src/styles/font'
 import { borderRadii, spacing } from 'src/styles/sizing'
+import { zIndices } from 'src/styles/zIndices'
 
 export const theme = createTheme({
   colors: {
@@ -21,6 +22,7 @@ export const theme = createTheme({
     largeTablet: 1024,
   },
   borderRadii,
+  zIndices,
 })
 
 export const darkTheme: Theme = {
