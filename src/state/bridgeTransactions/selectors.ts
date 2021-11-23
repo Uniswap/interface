@@ -274,16 +274,10 @@ export const bridgeTxsSummarySelector = createSelector(
           return retVal.filter(summary => summary.status === 'redeem')
         case BridgeTxsFilter.RECENT:
           const passed24h = new Date().getTime() - 1000 * 60 * 60 * 24
-          const tst = retVal.filter(summary => {
+          return retVal.filter(summary => {
             if (!summary.timestampResolved) return true
             return summary.timestampResolved >= passed24h
           })
-          console.log(tst)
-          return tst
-        // return retVal.filter(summary => {
-        //   if (!summary.timestampResolved) return true
-        //   return summary.timestampResolved >= passed24h
-        // })
         default:
           return retVal
       }
