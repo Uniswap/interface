@@ -38,5 +38,5 @@ export type NetworkOptionsPreset = {
 
 export type NetworkList = {
   tag: string
-  networks: NetworkOptionsPreset[]
+  networks: NetworkOptionProps[]
 }

@@ -6,7 +6,13 @@ import { useActiveWeb3React } from '../../hooks'
 import { useNetworkSwitch } from '../../hooks/useNetworkSwitch'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals } from '../../state/application/hooks'
-import { NetworkSwitcher, NetworkOptionProps, networkOptionsPreset, NetworkList } from '../NetworkSwitcher'
+import {
+  NetworkSwitcher,
+  NetworkOptionProps,
+  networkOptionsPreset,
+  NetworkList,
+  NetworkOptionsPreset
+} from '../NetworkSwitcher'
 
 interface NetworkSwitcherPopoverProps {
   children: ReactNode
@@ -49,33 +55,29 @@ export default function NetworkSwitcherPopover({ children, modal, placement }: N
     })
   console.log({ options })
 
+  function optionsV3(network: NetworkOptionsPreset) {
+    const { chainId, logoSrc, name } = network
+    return {
+      logoSrc,
+      header: name,
+      disabled: isOptionDisabled(chainId),
+      onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
+    }
+  }
+
   const tagFilteredArray = networkOptionsPreset.reduce<NetworkList[]>((taggedArray, currentNet) => {
     const tag = currentNet.tag ? currentNet.tag : 'default'
     // check if tag exist and if not create array
     const tagArrIndex = taggedArray.findIndex(existingTagArr => existingTagArr.tag === tag)
     if (tagArrIndex > -1) {
-      taggedArray[tagArrIndex].networks.push(currentNet)
+      taggedArray[tagArrIndex].networks.push(optionsV3(currentNet))
     } else {
-      taggedArray.push({ tag, networks: [currentNet] })
+      taggedArray.push({ tag, networks: [optionsV3(currentNet)] })
     }
 
     return taggedArray
   }, [])
   console.log({ tagFilteredArray })
-
-  const optionsV2 = tagFilteredArray.map(element =>
-    element.networks.map<NetworkOptionProps>(network => {
-      const { chainId, logoSrc, name } = network
-
-      return {
-        logoSrc,
-        header: name,
-        disabled: isOptionDisabled(chainId),
-        onClick: chainId === ChainId.MAINNET ? selectEthereum : () => selectNetwork(chainId)
-      }
-    })
-  )
-  console.log({ optionsV2 })
 
   return (
     <NetworkSwitcher
