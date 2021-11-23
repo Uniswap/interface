@@ -62,14 +62,24 @@ function encodeParameters(types: any[], values: any[]): string {
 function encodeUniSwap(data: any) {
   return encodeParameters(
     ['address', 'address', 'address', 'uint256', 'uint256'],
-    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount]
+    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0']
   )
 }
 
-function encodeStableSwap(sequence: any) {
+function encodeStableSwap(data: any) {
   return encodeParameters(
-    ['address', 'address', 'address', 'uint256', 'uint256'],
-    [sequence.pool, sequence.tokenIn, sequence.tokenOut, sequence.swapAmount, '1']
+    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'uint256', 'address'],
+    [
+      data.pool,
+      data.tokenIn,
+      data.tokenOut,
+      data.extra?.tokenInIndex,
+      data.extra?.tokenOutIndex,
+      data.swapAmount,
+      data.limitReturnAmount || '0',
+      data.poolLength,
+      data.pool
+    ]
   )
 }
 
@@ -77,11 +87,29 @@ function encodeCurveSwap(data: any) {
   const poolType = data.poolType?.toLowerCase()
   // curve-base: exchange
   // curve-meta: exchange_underlying
-  const usePoolUnderlying = poolType !== 'curve-base'
-  // [pool, tokenFrom, tokenTo, dx, minDy, poolLength, usePoolUnderlying]
+  const usePoolUnderlying = data.extra?.underlying
+  const isTriCrypto = poolType === 'curve-tricrypto'
+
   return encodeParameters(
-    ['address', 'address', 'address', 'uint256', 'uint256', 'uint256', 'bool'],
-    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, '1', data.poolLength, usePoolUnderlying]
+    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'bool', 'bool'],
+    [
+      data.pool,
+      data.tokenIn,
+      data.tokenOut,
+      data.extra?.tokenInIndex,
+      data.extra?.tokenOutIndex,
+      data.swapAmount,
+      '0',
+      usePoolUnderlying,
+      isTriCrypto
+    ]
+  )
+}
+
+function encodeBalancerSwap(data: any) {
+  return encodeParameters(
+    ['address', 'bytes32', 'address', 'address', 'uint256', 'uint256'],
+    [data.extra?.vault, data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0']
   )
 }
 
@@ -93,10 +121,12 @@ export function encodeSwapExecutor(swaps: any[][], chainId: ChainId) {
       // dexOption: 16 bit (first 8 bit for dextype + last 8 bit is dexIds in uni swap type)
       const dexOption = dec2bin(dex.type, 8) + dec2bin(dex.id, 8)
       let data: string
-      if (dex.type === 1) {
+      if (dex.type === 1 || dex.type === 4) {
         data = encodeStableSwap(sequence)
       } else if (dex.type === 2) {
         data = encodeCurveSwap(sequence)
+      } else if (dex.type === 6) {
+        data = encodeBalancerSwap(sequence)
       } else {
         data = encodeUniSwap(sequence)
       }
