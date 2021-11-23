@@ -58,6 +58,9 @@ fastlane/builds
 # Bundle artifact
 *.jsbundle
 
+# Detox artifacts
+artifacts/
+
 # CocoaPods
 /ios/Pods/
 
